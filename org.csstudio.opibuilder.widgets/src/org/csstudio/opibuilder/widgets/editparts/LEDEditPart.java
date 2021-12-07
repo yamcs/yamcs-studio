@@ -29,9 +29,9 @@ public class LEDEditPart extends AbstractBoolEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final LEDModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        LEDFigure led = new LEDFigure();
+        var led = new LEDFigure();
 
         initializeCommonFigureProperties(led, model);
         led.setEffect3D(model.isEffect3D());
@@ -52,10 +52,8 @@ public class LEDEditPart extends AbstractBoolEditPart {
         // effect 3D
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                LEDFigure led = (LEDFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var led = (LEDFigure) refreshableFigure;
                 led.setEffect3D((Boolean) newValue);
                 return true;
             }
@@ -65,13 +63,11 @@ public class LEDEditPart extends AbstractBoolEditPart {
         // Sqaure LED
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                LEDFigure led = (LEDFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var led = (LEDFigure) refreshableFigure;
                 led.setSquareLED((Boolean) newValue);
                 if (!(Boolean) newValue) {
-                    int width = Math.min(getWidgetModel().getWidth(), getWidgetModel().getHeight());
+                    var width = Math.min(getWidgetModel().getWidth(), getWidgetModel().getHeight());
                     getWidgetModel().setSize(width, width);
                 }
                 return true;
@@ -80,14 +76,16 @@ public class LEDEditPart extends AbstractBoolEditPart {
         setPropertyChangeHandler(LEDModel.PROP_SQUARE_LED, handler);
 
         // force square size
-        final IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
+        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (getWidgetModel().isSquareLED())
+                if (getWidgetModel().isSquareLED()) {
                     return false;
-                if (((Integer) newValue) < LEDModel.MINIMUM_SIZE)
+                }
+                if (((Integer) newValue) < LEDModel.MINIMUM_SIZE) {
                     newValue = LEDModel.MINIMUM_SIZE;
+                }
                 getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
                 return false;
             }
@@ -150,8 +148,8 @@ public class LEDEditPart extends AbstractBoolEditPart {
                     }
                 });
 
-        for (int idx = 0; idx < LEDFigure.MAX_NSTATES; idx++) {
-            final int state = idx;
+        for (var idx = 0; idx < LEDFigure.MAX_NSTATES; idx++) {
+            var state = idx;
             // stateLabelN
             getWidgetModel().getProperty(String.format(LEDModel.PROP_STATE_LABEL, state))
                     .addPropertyChangeListener(new PropertyChangeListener() {
@@ -184,13 +182,13 @@ public class LEDEditPart extends AbstractBoolEditPart {
     }
 
     @Override
-    protected void initializeCommonFigureProperties(
-            final AbstractBoolFigure abstractFigure, final AbstractBoolWidgetModel abstractModel) {
+    protected void initializeCommonFigureProperties(AbstractBoolFigure abstractFigure,
+            AbstractBoolWidgetModel abstractModel) {
 
         super.initializeCommonFigureProperties(abstractFigure, abstractModel);
 
-        LEDModel model = (LEDModel) abstractModel;
-        LEDFigure figure = (LEDFigure) abstractFigure;
+        var model = (LEDModel) abstractModel;
+        var figure = (LEDFigure) abstractFigure;
 
         initializeStateBulbBorderColor(model.getBulbBorderColor(), figure, model);
         initializeStateBulbBorderWidth(model.getBulbBorderWidth(), figure, model);
@@ -198,7 +196,7 @@ public class LEDEditPart extends AbstractBoolEditPart {
         initializeNStatesProperties(LEDFigure.MAX_NSTATES, model.getNStates(), figure, model);
         initializeStateFallbackLabel(null, model.getStateFallbackLabel(), figure, model);
         initializeStateFallbackColor(null, model.getStateFallbackColor(), figure, model);
-        for (int state = 0; state < LEDFigure.MAX_NSTATES; state++) {
+        for (var state = 0; state < LEDFigure.MAX_NSTATES; state++) {
             initializeStateColor(state, null, model.getStateColor(state), figure, model);
             initializeStateLabel(state, null, model.getStateLabel(state), figure, model);
             initializeStateValue(state, 0.0, model.getStateValue(state), figure, model);
@@ -214,7 +212,7 @@ public class LEDEditPart extends AbstractBoolEditPart {
             model.setPropertyVisibleAndSavable(LEDModel.PROP_NSTATES, true, false);
             model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_COLOR, false, false);
             model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_LABEL, false, false);
-            for (int idx = 0; idx < oldNStates; idx++) {
+            for (var idx = 0; idx < oldNStates; idx++) {
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), false, false);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), false, false);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), false, false);
@@ -227,12 +225,12 @@ public class LEDEditPart extends AbstractBoolEditPart {
             model.setPropertyVisibleAndSavable(LEDModel.PROP_NSTATES, true, true);
             model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_COLOR, true, true);
             model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_LABEL, true, true);
-            for (int idx = 0; idx < newNStates; idx++) {
+            for (var idx = 0; idx < newNStates; idx++) {
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), true, true);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), true, true);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), true, true);
             }
-            for (int idx = newNStates; idx < oldNStates; idx++) {
+            for (var idx = newNStates; idx < oldNStates; idx++) {
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), false, false);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), false, false);
                 model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), false, false);

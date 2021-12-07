@@ -46,9 +46,8 @@ public class Sine extends SimFunction<VDouble> {
         this.currentValue = 0;
         this.samplesPerCycle = samplesPerCycle;
         range = this.max - this.min;
-        lastValue = newVDouble(0.0, alarmNone(), timeNow(),
-                newDisplay(min, min + range * 0.1, min + range * 0.2, "x", DOUBLE_FORMAT,
-                        min + range * 0.8, min + range * 0.9, max, min, max));
+        lastValue = newVDouble(0.0, alarmNone(), timeNow(), newDisplay(min, min + range * 0.1, min + range * 0.2, "x",
+                DOUBLE_FORMAT, min + range * 0.8, min + range * 0.9, max, min, max));
     }
 
     /**
@@ -75,7 +74,7 @@ public class Sine extends SimFunction<VDouble> {
 
     @Override
     VDouble nextValue() {
-        double value = Math.sin(currentValue * 2 * Math.PI / samplesPerCycle) * range / 2 + min + (range / 2);
+        var value = Math.sin(currentValue * 2 * Math.PI / samplesPerCycle) * range / 2 + min + (range / 2);
         currentValue++;
 
         return newValue(value, lastValue);

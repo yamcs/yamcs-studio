@@ -16,9 +16,9 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final ProgressBarModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        ProgressBarFigure bar = new ProgressBarFigure();
+        var bar = new ProgressBarFigure();
 
         initializeCommonFigureProperties(bar, model);
         bar.setFillColor(model.getFillColor());
@@ -56,7 +56,7 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillColor
         IWidgetPropertyChangeHandler fillColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setFillColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -64,7 +64,7 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillBackgroundColor
         IWidgetPropertyChangeHandler fillBackColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -72,7 +72,7 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setEffect3D((Boolean) newValue);
             return false;
         };
@@ -80,14 +80,14 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler showLabelHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setShowLabel((Boolean) newValue);
             return false;
         };
         setPropertyChangeHandler(ProgressBarModel.PROP_SHOW_LABEL, showLabelHandler);
 
         IWidgetPropertyChangeHandler indicatorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setIndicatorMode((Boolean) newValue);
             return false;
         };
@@ -95,9 +95,9 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // horizontal
         IWidgetPropertyChangeHandler horizontalHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setHorizontal((Boolean) newValue);
-            ProgressBarModel model = (ProgressBarModel) getModel();
+            var model = (ProgressBarModel) getModel();
 
             if ((Boolean) newValue) {
                 model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
@@ -116,7 +116,7 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
         // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
         // which is not the case for the scaled slider
         IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure slider = (ProgressBarFigure) refreshableFigure;
+            var slider = (ProgressBarFigure) refreshableFigure;
             slider.setEnabled((Boolean) newValue);
             return false;
         };
@@ -124,11 +124,9 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
 
         // Change fill color when "FillColor Alarm Sensitive" property changes.
         IWidgetPropertyChangeHandler fillColorAlarmSensitiveHandler = (oldValue, newValue, refreshableFigure) -> {
-            ProgressBarFigure figure = (ProgressBarFigure) refreshableFigure;
+            var figure = (ProgressBarFigure) refreshableFigure;
             boolean sensitive = (Boolean) newValue;
-            figure.setFillColor(
-                    delegate.calculateAlarmColor(sensitive,
-                            getWidgetModel().getFillColor()));
+            figure.setFillColor(delegate.calculateAlarmColor(sensitive, getWidgetModel().getFillColor()));
             return true;
         };
         setPropertyChangeHandler(ProgressBarModel.PROP_FILLCOLOR_ALARM_SENSITIVE, fillColorAlarmSensitiveHandler);
@@ -138,10 +136,9 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
             if (!getWidgetModel().isFillColorAlarmSensitive()) {
                 return false;
             }
-            ProgressBarFigure progress = (ProgressBarFigure) figure;
-            progress.setFillColor(
-                    delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
-                            getWidgetModel().getFillColor()));
+            var progress = (ProgressBarFigure) figure;
+            progress.setFillColor(delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
+                    getWidgetModel().getFillColor()));
             return true;
         });
     }

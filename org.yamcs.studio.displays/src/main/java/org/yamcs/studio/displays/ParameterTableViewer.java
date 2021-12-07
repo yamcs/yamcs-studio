@@ -27,8 +27,6 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
-import com.google.protobuf.Timestamp;
-
 public class ParameterTableViewer extends TableViewer {
 
     public static final String COL_NAME = "Parameter";
@@ -68,7 +66,7 @@ public class ParameterTableViewer extends TableViewer {
         setContentProvider(contentProvider);
         setInput(contentProvider);
 
-        TableViewerColumn column = new TableViewerColumn(this, SWT.LEFT);
+        var column = new TableViewerColumn(this, SWT.LEFT);
         column.getColumn().setText(COL_NAME);
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(40));
         column.setLabelProvider(new ColumnLabelProvider() {
@@ -80,7 +78,7 @@ public class ParameterTableViewer extends TableViewer {
 
             @Override
             public Image getImage(Object element) {
-                ParameterValue value = values.get(element);
+                var value = values.get(element);
                 if (value == null || !value.hasMonitoringResult()) {
                     return null;
                 }
@@ -109,7 +107,7 @@ public class ParameterTableViewer extends TableViewer {
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ParameterValue value = values.get(element);
+                var value = values.get(element);
                 if (value == null) {
                     return "-";
                 }
@@ -123,7 +121,7 @@ public class ParameterTableViewer extends TableViewer {
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ParameterValue value = values.get(element);
+                var value = values.get(element);
                 if (value == null) {
                     return "-";
                 }
@@ -137,12 +135,12 @@ public class ParameterTableViewer extends TableViewer {
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ParameterValue value = values.get(element);
+                var value = values.get(element);
                 if (value == null) {
                     return "-";
                 }
-                Timestamp proto = value.getGenerationTime();
-                Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                var proto = value.getGenerationTime();
+                var generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
                 return YamcsPlugin.getDefault().formatInstant(generationTime);
             }
         });
@@ -153,20 +151,20 @@ public class ParameterTableViewer extends TableViewer {
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ParameterValue value = values.get(element);
+                var value = values.get(element);
                 if (value == null) {
                     return "-";
                 }
-                Timestamp proto = value.getAcquisitionTime();
-                Instant receptionTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                var proto = value.getAcquisitionTime();
+                var receptionTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
                 return YamcsPlugin.getDefault().formatInstant(receptionTime);
             }
         });
     }
 
     private ImageDescriptor getImageDescriptor(String path) {
-        return ImageDescriptor.createFromURL(FileLocator
-                .find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
+        return ImageDescriptor
+                .createFromURL(FileLocator.find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
     }
 
     /*public void attachParameterInfo(ParameterInfo info) {

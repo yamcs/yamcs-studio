@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.util;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 public class DisplayUtils {
@@ -25,7 +24,7 @@ public class DisplayUtils {
      * @return non-null Display object
      */
     public static Display getDisplay() {
-        Display display = Display.getCurrent();
+        var display = Display.getCurrent();
         if (display == null && PlatformUI.isWorkbenchRunning()) {
             display = PlatformUI.getWorkbench().getDisplay();
         }
@@ -47,8 +46,7 @@ public class DisplayUtils {
 
         try {
             if (shell == null) {
-                IWorkbenchWindow activeWindow = PlatformUI.getWorkbench()
-                        .getActiveWorkbenchWindow();
+                var activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                 if (activeWindow != null) {
                     shell = activeWindow.getShell();
                 }
@@ -59,9 +57,8 @@ public class DisplayUtils {
         }
 
         if (shell == null) {
-            IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-                    .getWorkbenchWindows();
-            for (int i = 0; shell == null && i < windows.length; i++) {
+            var windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+            for (var i = 0; shell == null && i < windows.length; i++) {
                 shell = windows[i].getShell();
             }
         }

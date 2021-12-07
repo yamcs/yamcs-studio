@@ -35,26 +35,27 @@ public class PastePropertiesAction extends SelectionAction {
         super(part);
         setText("Paste Properties");
         setId(ID);
-        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/paste_properties.png"));
+        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                "icons/paste_properties.png"));
     }
 
     @Override
     protected boolean calculateEnabled() {
-        if (getSelectedWidgetModels().size() > 0 && getPropetiesCopyDataFromClipboard() != null)
+        if (getSelectedWidgetModels().size() > 0 && getPropetiesCopyDataFromClipboard() != null) {
             return true;
+        }
         return false;
     }
 
     public Command createPasteCommand() {
-        PropertiesCopyData propData = getPropetiesCopyDataFromClipboard();
-        CompoundCommand cmd = new CompoundCommand("Paste Properties");
+        var propData = getPropetiesCopyDataFromClipboard();
+        var cmd = new CompoundCommand("Paste Properties");
 
         for (AbstractWidgetModel targetWidget : getSelectedWidgetModels()) {
             for (String prop_id : propData.getPropIDList()) {
                 if (targetWidget.getAllPropertyIDs().contains(prop_id)) {
-                    cmd.add(new SetWidgetPropertyCommand(
-                            targetWidget, prop_id, propData.getWidgetModel().getPropertyValue(prop_id)));
+                    cmd.add(new SetWidgetPropertyCommand(targetWidget, prop_id,
+                            propData.getWidgetModel().getPropertyValue(prop_id)));
                 }
             }
         }
@@ -74,8 +75,7 @@ public class PastePropertiesAction extends SelectionAction {
      * @return a list with widget models or an empty list
      */
     private PropertiesCopyData getPropetiesCopyDataFromClipboard() {
-        Object result = getOPIEditor().getClipboard()
-                .getContents(PropertiesCopyDataTransfer.getInstance());
+        var result = getOPIEditor().getClipboard().getContents(PropertiesCopyDataTransfer.getInstance());
         if (result != null && result instanceof PropertiesCopyData) {
             return (PropertiesCopyData) result;
         }

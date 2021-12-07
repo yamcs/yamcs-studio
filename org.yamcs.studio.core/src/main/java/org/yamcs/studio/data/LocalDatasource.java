@@ -24,7 +24,7 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public boolean isConnected(IPV pv) {
-        LocalData localData = pv2data.get(pv);
+        var localData = pv2data.get(pv);
         return localData != null && localData.isConnected();
     }
 
@@ -35,7 +35,7 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public void writeValue(IPV pv, Object value, WriteCallback callback) {
-        LocalData localData = pv2data.get(pv);
+        var localData = pv2data.get(pv);
         if (localData != null) {
             localData.writeValue(value, callback);
         }
@@ -43,7 +43,7 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        LocalData localData = pv2data.get(pv);
+        var localData = pv2data.get(pv);
         if (localData != null) {
             return localData.getValue();
         }
@@ -52,10 +52,10 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        List<Object> tokens = tokenize(pv.getName());
-        String localName = tokens.get(0).toString();
+        var tokens = tokenize(pv.getName());
+        var localName = tokens.get(0).toString();
 
-        LocalData localData = name2data.computeIfAbsent(localName, x -> new LocalData(x));
+        var localData = name2data.computeIfAbsent(localName, x -> new LocalData(x));
         localData.setType((String) tokens.get(1));
         if (tokens.size() > 2) {
             localData.setInitialValue(tokens.get(2));
@@ -67,18 +67,18 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public void onStopped(IPV pv) {
-        LocalData localData = pv2data.remove(pv);
+        var localData = pv2data.remove(pv);
         if (localData != null) {
             localData.unregister(pv);
         }
     }
 
     private static List<Object> tokenize(String pvName) {
-        List<Object> tokens = FunctionParser.parseFunctionAnyParameter(".+", pvName);
-        String nameAndType = tokens.get(0).toString();
-        String name = nameAndType;
+        var tokens = FunctionParser.parseFunctionAnyParameter(".+", pvName);
+        var nameAndType = tokens.get(0).toString();
+        var name = nameAndType;
         String type = null;
-        int index = nameAndType.lastIndexOf('<');
+        var index = nameAndType.lastIndexOf('<');
         if (nameAndType.endsWith(">") && index != -1) {
             name = nameAndType.substring(0, index);
             type = nameAndType.substring(index + 1, nameAndType.length() - 1);
@@ -90,7 +90,7 @@ public class LocalDatasource implements Datasource {
         if ("VEnum".equals(type)) {
             List<Object> initialValueList = new ArrayList<>();
             initialValueList.add(tokens.remove(1));
-            Object labels = FunctionParser.asScalarOrList(tokens.subList(1, tokens.size()));
+            var labels = FunctionParser.asScalarOrList(tokens.subList(1, tokens.size()));
             if (!(labels instanceof List<?>)) {
                 throw new RuntimeException("Invalid format for VEnum channel.");
             }

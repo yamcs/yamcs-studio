@@ -21,8 +21,7 @@ public class ChoiceButtonEditpart extends AbstractChoiceEditPart {
 
     @Override
     protected AbstractChoiceFigure createChoiceFigure() {
-        ChoiceButtonFigure figure = new ChoiceButtonFigure(
-                getExecutionMode() == ExecutionMode.RUN_MODE);
+        var figure = new ChoiceButtonFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
         return figure;
     }
 

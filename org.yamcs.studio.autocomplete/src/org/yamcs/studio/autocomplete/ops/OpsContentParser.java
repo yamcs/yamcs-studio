@@ -24,12 +24,12 @@ public class OpsContentParser implements IContentParser {
 
     @Override
     public ContentDescriptor parse(ContentDescriptor desc) {
-        int startIndex = 0;
-        String contentToParse = desc.getValue();
+        var startIndex = 0;
+        var contentToParse = desc.getValue();
         if (contentToParse.startsWith(OPS_SOURCE)) {
             contentToParse = contentToParse.substring(OPS_SOURCE.length());
         }
-        ContentDescriptor currentDesc = new ContentDescriptor();
+        var currentDesc = new ContentDescriptor();
         currentDesc.setContentType(ContentType.PVName);
         currentDesc.setStartIndex(startIndex);
         currentDesc.setValue(contentToParse);

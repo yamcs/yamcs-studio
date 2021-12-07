@@ -43,8 +43,7 @@ public class WidgetIgnorableUITask {
      * @param display
      *            Associated Display.
      */
-    public WidgetIgnorableUITask(final Object identifyObject, final Runnable runnableTask,
-            final Display display) {
+    public WidgetIgnorableUITask(Object identifyObject, Runnable runnableTask, Display display) {
         this.identifyObject = identifyObject;
         this.runnableTask = runnableTask;
         this.display = display;
@@ -75,11 +74,12 @@ public class WidgetIgnorableUITask {
      *         {@link AbstractWidgetProperty}
      */
     @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof WidgetIgnorableUITask)
+    public boolean equals(Object obj) {
+        if (obj instanceof WidgetIgnorableUITask) {
             return identifyObject == ((WidgetIgnorableUITask) obj).getIdentifyObject();
-        else
+        } else {
             return false;
+        }
     }
 
     @Override

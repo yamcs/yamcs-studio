@@ -47,8 +47,7 @@ public class OPIBuilderMacroUtil {
      * @return the predefined macro map of the widget. This is the intrinsic map from the widget. Be careful to change
      *         the map contents.
      */
-    public static Map<String, String> getWidgetMacroMap(
-            AbstractWidgetModel widgetModel) {
+    public static Map<String, String> getWidgetMacroMap(AbstractWidgetModel widgetModel) {
         Map<String, String> macroMap;
         if (widgetModel instanceof AbstractContainerModel) {
             macroMap = ((AbstractContainerModel) widgetModel).getMacroMap();
@@ -81,7 +80,7 @@ class WidgetMacroTableProvider implements IMacroTableProvider {
         if (macroMap != null && macroMap.containsKey(macroName)) {
             return macroMap.get(macroName);
         } else if (widgetModel.getAllPropertyIDs().contains(macroName)) {
-            Object propertyValue = widgetModel.getRawPropertyValue(macroName);
+            var propertyValue = widgetModel.getRawPropertyValue(macroName);
             if (propertyValue != null) {
                 return propertyValue.toString();
             }
@@ -91,8 +90,8 @@ class WidgetMacroTableProvider implements IMacroTableProvider {
         } else if (macroName.equals(OPIBuilderMacroUtil.DNAME)) {
             return widgetModel.getRootDisplayModel().getName();
         } else if (macroName.equals(OPIBuilderMacroUtil.DLOC)) {
-            String uri = ResourceUtil.workspacePathToSysPath(widgetModel.getRootDisplayModel().getOpiFilePath())
-                    .toFile().getParentFile().toURI().toString();
+            var uri = ResourceUtil.workspacePathToSysPath(widgetModel.getRootDisplayModel().getOpiFilePath()).toFile()
+                    .getParentFile().toURI().toString();
             // Fix the file protocol: we need 'file:///' for absolute paths
             if (uri.matches("file:/[^/].*")) {
                 uri = "file:///" + uri.substring(6);

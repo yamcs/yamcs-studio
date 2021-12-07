@@ -16,11 +16,7 @@ import org.yamcs.protobuf.IndexEntry;
 public class Histogram extends Line {
 
     public static enum HistogramKind {
-        COMPLETENESS,
-        TM,
-        PP,
-        CMDHIST,
-        EVENT,
+        COMPLETENESS, TM, PP, CMDHIST, EVENT,
     }
 
     public static final int LINE_HEIGHT = 20;

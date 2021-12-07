@@ -3,10 +3,8 @@ package org.yamcs.studio.data.yamcs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.ArrayInt;
 import org.yamcs.studio.data.vtype.ListInt;
@@ -23,14 +21,14 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
     public EnumeratedArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         List<Integer> indexes = new ArrayList<>();
         data = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Value enumValue = value.getArrayValue(i);
-            int index = (int) enumValue.getSint64Value();
+        for (var i = 0; i < size; i++) {
+            var enumValue = value.getArrayValue(i);
+            var index = (int) enumValue.getSint64Value();
             indexes.add(index);
             data.add(enumValue.getStringValue());
         }
@@ -43,11 +41,9 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
         // TODO Get an id matching the qualified name from the info object
         // (not e.g. the opsname)
         // But be careful that any suffixes ('[]' or '.') are kept
-        NamedObjectId id = NamedObjectId.newBuilder()
-                .setName(getId().getName())
-                .build();
+        var id = NamedObjectId.newBuilder().setName(getId().getName()).build();
 
-        ParameterTypeInfo specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
+        var specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
         return EnumeratedVType.getLabelsForType(specificPtype);
     }
 

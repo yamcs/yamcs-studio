@@ -28,15 +28,15 @@ public class ConfigureRuntimePropertiesAction extends Action {
 
     public ConfigureRuntimePropertiesAction(Shell shell, AbstractWidgetModel widgetModel) {
         setText("Configure Runtime Properties...");
-        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/settingRuntimeProperty.gif"));
+        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                "icons/settingRuntimeProperty.gif"));
         this.widgetModel = widgetModel;
         this.shell = shell;
     }
 
     @Override
     public void run() {
-        RuntimePropertiesEditDialog dialog = new RuntimePropertiesEditDialog(shell, widgetModel);
+        var dialog = new RuntimePropertiesEditDialog(shell, widgetModel);
         if (dialog.open() == Window.OK) {
             for (PropertyData p : dialog.getOutput()) {
                 widgetModel.setPropertyValue(p.property.getPropertyID(), p.tmpValue);

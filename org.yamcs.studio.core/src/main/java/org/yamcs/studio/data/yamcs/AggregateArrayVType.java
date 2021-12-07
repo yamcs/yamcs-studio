@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.data.vtype.ArrayInt;
 import org.yamcs.studio.data.vtype.ListInt;
 import org.yamcs.studio.data.vtype.VStringArray;
@@ -19,12 +18,12 @@ public class AggregateArrayVType extends YamcsVType implements VStringArray {
     public AggregateArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         data = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Value aggregateValue = value.getArrayValue(i);
+        for (var i = 0; i < size; i++) {
+            var aggregateValue = value.getArrayValue(i);
             data.add(StringConverter.toString(aggregateValue));
         }
     }

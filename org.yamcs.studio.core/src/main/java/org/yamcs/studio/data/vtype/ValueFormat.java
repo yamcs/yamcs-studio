@@ -187,7 +187,7 @@ public abstract class ValueFormat extends Format {
      */
     public double parseDouble(String source) {
         try {
-            double value = Double.parseDouble(source);
+            var value = Double.parseDouble(source);
             return value;
         } catch (NumberFormatException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -205,7 +205,7 @@ public abstract class ValueFormat extends Format {
      */
     public float parseFloat(String source) {
         try {
-            float value = Float.parseFloat(source);
+            var value = Float.parseFloat(source);
             return value;
         } catch (NumberFormatException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -223,7 +223,7 @@ public abstract class ValueFormat extends Format {
      */
     public int parseInt(String source) {
         try {
-            int value = Integer.parseInt(source);
+            var value = Integer.parseInt(source);
             return value;
         } catch (NumberFormatException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -241,7 +241,7 @@ public abstract class ValueFormat extends Format {
      */
     public short parseShort(String source) {
         try {
-            short value = Short.parseShort(source);
+            var value = Short.parseShort(source);
             return value;
         } catch (NumberFormatException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -259,7 +259,7 @@ public abstract class ValueFormat extends Format {
      */
     public byte parseByte(String source) {
         try {
-            byte value = Byte.parseByte(source);
+            var value = Byte.parseByte(source);
             return value;
         } catch (NumberFormatException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -291,7 +291,7 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public int parseEnum(String source, List<String> labels) {
-        int index = labels.indexOf(source);
+        var index = labels.indexOf(source);
         if (index != -1) {
             return index;
         }
@@ -309,9 +309,9 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListDouble parseDoubleArray(String source) {
-        String[] tokens = source.split(",");
-        double[] values = new double[tokens.length];
-        for (int i = 0; i < values.length; i++) {
+        var tokens = source.split(",");
+        var values = new double[tokens.length];
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseDouble(tokens[i].trim());
         }
         return new ArrayDouble(values);
@@ -328,9 +328,9 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListFloat parseFloatArray(String source) {
-        String[] tokens = source.split(",");
-        float[] values = new float[tokens.length];
-        for (int i = 0; i < values.length; i++) {
+        var tokens = source.split(",");
+        var values = new float[tokens.length];
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseFloat(tokens[i].trim());
         }
         return new ArrayFloat(values);
@@ -347,9 +347,9 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListInt parseIntArray(String source) {
-        String[] tokens = source.split(",");
-        int[] values = new int[tokens.length];
-        for (int i = 0; i < values.length; i++) {
+        var tokens = source.split(",");
+        var values = new int[tokens.length];
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseInt(tokens[i].trim());
         }
         return new ArrayInt(values);
@@ -366,8 +366,8 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListShort parseShortArray(String source) {
-        String[] tokens = source.split(",");
-        short[] values = new short[tokens.length];
+        var tokens = source.split(",");
+        var values = new short[tokens.length];
         for (short i = 0; i < values.length; i++) {
             values[i] = parseShort(tokens[i].trim());
         }
@@ -385,8 +385,8 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListByte parseByteArray(String source) {
-        String[] tokens = source.split(",");
-        byte[] values = new byte[tokens.length];
+        var tokens = source.split(",");
+        var values = new byte[tokens.length];
         for (byte i = 0; i < values.length; i++) {
             values[i] = parseByte(tokens[i].trim());
         }
@@ -404,7 +404,7 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public List<String> parseStringArray(String source) {
-        String[] tokens = source.split(",");
+        var tokens = source.split(",");
         List<String> values = new ArrayList<>();
         for (String token : tokens) {
             values.add(parseString(token.trim()));
@@ -425,9 +425,9 @@ public abstract class ValueFormat extends Format {
      * @return the parsed representation
      */
     public ListInt parseEnumArray(String source, List<String> labels) {
-        String[] tokens = source.split(",");
-        int[] values = new int[tokens.length];
-        for (int i = 0; i < values.length; i++) {
+        var tokens = source.split(",");
+        var values = new int[tokens.length];
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseEnum(tokens[i].trim(), labels);
         }
         return new ArrayInt(values);

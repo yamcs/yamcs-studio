@@ -46,8 +46,9 @@ public abstract class AbstractWidgetTargetAction implements IObjectActionDelegat
      *            the command to execute
      */
     protected void execute(Command command) {
-        if (command == null || !command.canExecute() || getCommandStack() == null)
+        if (command == null || !command.canExecute() || getCommandStack() == null) {
             return;
+        }
         getCommandStack().execute(command);
     }
 
@@ -61,6 +62,7 @@ public abstract class AbstractWidgetTargetAction implements IObjectActionDelegat
         return targetPart.getAdapter(CommandStack.class);
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (selection instanceof IStructuredSelection) {
             this.selection = (IStructuredSelection) selection;
@@ -68,10 +70,11 @@ public abstract class AbstractWidgetTargetAction implements IObjectActionDelegat
     }
 
     protected IStructuredSelection getSelection() {
-        if (selection != null)
+        if (selection != null) {
             return selection;
-        else
+        } else {
             return StructuredSelection.EMPTY;
+        }
     }
 
 }

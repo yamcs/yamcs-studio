@@ -37,13 +37,13 @@ public class ScriptChoiceDialog extends Dialog {
     protected Control createContents(Composite parent) {
         parent.setLayout(new GridLayout(1, true));
 
-        Button chooseFileButton = new Button(parent, SWT.PUSH);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var chooseFileButton = new Button(parent, SWT.PUSH);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.heightHint = 50;
         chooseFileButton.setLayoutData(gd);
         chooseFileButton.setText("Choose Script File...");
-        chooseFileButton.setImage(CustomMediaFactory.getInstance().getImageFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/folder.gif"));
+        chooseFileButton.setImage(
+                CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/folder.gif"));
         chooseFileButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -51,11 +51,11 @@ public class ScriptChoiceDialog extends Dialog {
                 okPressed();
             }
         });
-        Button embedButton = new Button(parent, SWT.PUSH);
+        var embedButton = new Button(parent, SWT.PUSH);
         embedButton.setLayoutData(gd);
         embedButton.setText("Create an Embedded Script...");
-        embedButton.setImage(CustomMediaFactory.getInstance().getImageFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/edit.gif"));
+        embedButton.setImage(
+                CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/edit.gif"));
         embedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

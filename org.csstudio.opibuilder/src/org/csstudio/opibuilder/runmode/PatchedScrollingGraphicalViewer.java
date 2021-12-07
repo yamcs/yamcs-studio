@@ -16,7 +16,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * Patched Scrolling graphical viewer implementation.
@@ -47,7 +46,7 @@ public class PatchedScrollingGraphicalViewer extends ScrollingGraphicalViewer {
 
         // ... and rewritten here
         if (contextMenu != null) {
-            final IMenuListener menuListener = new IMenuListener() {
+            IMenuListener menuListener = new IMenuListener() {
                 @Override
                 public void menuAboutToShow(IMenuManager manager) {
                     flush();
@@ -56,7 +55,7 @@ public class PatchedScrollingGraphicalViewer extends ScrollingGraphicalViewer {
 
             contextMenu.addMenuListener(menuListener);
 
-            final Control control = getControl();
+            var control = getControl();
 
             if (control != null) {
                 control.addDisposeListener(new DisposeListener() {

@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.preferences;
 
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 
@@ -14,8 +13,8 @@ public abstract class ColorLabelProvider extends OwnerDrawLabelProvider {
 
     @Override
     protected void paint(Event event, Object element) {
-        Rectangle bounds = ((TableItem) event.item).getBounds(event.index);
-        int xoffset = Math.max((bounds.width - 40) / 2, 0);
+        var bounds = ((TableItem) event.item).getBounds(event.index);
+        var xoffset = Math.max((bounds.width - 40) / 2, 0);
         event.gc.setBackground(getColor(element));
         event.gc.fillRectangle(bounds.x + xoffset + 2, bounds.y + 2, 40, bounds.height - (2 * 2));
         event.gc.setForeground(getBorderColor(element));

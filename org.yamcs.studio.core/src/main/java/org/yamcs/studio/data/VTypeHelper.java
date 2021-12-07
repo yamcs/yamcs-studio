@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.yamcs.studio.data.vtype.Alarm;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
 import org.yamcs.studio.data.vtype.Array;
 import org.yamcs.studio.data.vtype.CollectionNumbers;
@@ -21,7 +20,6 @@ import org.yamcs.studio.data.vtype.ListNumber;
 import org.yamcs.studio.data.vtype.ListShort;
 import org.yamcs.studio.data.vtype.MultiScalar;
 import org.yamcs.studio.data.vtype.Scalar;
-import org.yamcs.studio.data.vtype.Time;
 import org.yamcs.studio.data.vtype.VByte;
 import org.yamcs.studio.data.vtype.VByteArray;
 import org.yamcs.studio.data.vtype.VDouble;
@@ -78,7 +76,7 @@ public class VTypeHelper {
             return Long.toUnsignedString(unsignedValue);
         }
         if (vValue instanceof Scalar) {
-            Object value = ((Scalar) vValue).getValue();
+            var value = ((Scalar) vValue).getValue();
             if (value instanceof Number) {
                 return formatScalarNumber(formatEnum, vValue, (Number) value, precision);
             } else if (value instanceof String) {
@@ -92,7 +90,7 @@ public class VTypeHelper {
             if (vValue instanceof VNumberArray) {
                 return formatNumberArray(formatEnum, (VNumberArray) vValue, precision);
             } else {
-                Object array = ((Array) vValue).getData();
+                var array = ((Array) vValue).getData();
                 if (array instanceof List) {
                     return formatObjectArray(((List<?>) array).toArray());
                 }
@@ -112,7 +110,7 @@ public class VTypeHelper {
      * @return the alarm name or empty if there is no alarm info from the object.
      */
     public static String getAlarmName(VType obj) {
-        Alarm alarmOf = ValueUtil.alarmOf(obj);
+        var alarmOf = ValueUtil.alarmOf(obj);
         if (alarmOf != null) {
             return alarmOf.getAlarmName();
         }
@@ -127,7 +125,7 @@ public class VTypeHelper {
      * @return the alarm severity or null if there is no alarm info from the object.
      */
     public static AlarmSeverity getAlarmSeverity(VType obj) {
-        Alarm alarmOf = ValueUtil.alarmOf(obj);
+        var alarmOf = ValueUtil.alarmOf(obj);
         if (alarmOf != null) {
             return alarmOf.getAlarmSeverity();
         }
@@ -213,8 +211,8 @@ public class VTypeHelper {
      *            the VType object.
      * @return double or NaN if no double value is available in the object.
      */
-    public static double getDouble(final VType obj) {
-        Double value = ValueUtil.numericValueOf(obj);
+    public static double getDouble(VType obj) {
+        var value = ValueUtil.numericValueOf(obj);
         return value == null ? Double.NaN : value;
     }
 
@@ -227,18 +225,18 @@ public class VTypeHelper {
      *            index of the double value
      * @return double or NaN if no double value is available in the object at the index.
      */
-    public static double getDouble(final VType obj, int index) {
+    public static double getDouble(VType obj, int index) {
         if (index == 0) {
             return getDouble(obj);
         }
         if (obj instanceof VNumberArray) {
-            final ListNumber data = ((VNumberArray) obj).getData();
+            var data = ((VNumberArray) obj).getData();
             if (index < data.size()) {
                 return data.getDouble(index);
             }
         }
         if (obj instanceof VEnumArray) {
-            final ListInt data = ((VEnumArray) obj).getIndexes();
+            var data = ((VEnumArray) obj).getIndexes();
             if (index < data.size()) {
                 return data.getDouble(index);
             }
@@ -256,18 +254,18 @@ public class VTypeHelper {
      */
     public static double[] getDoubleArray(VType obj) {
         if (obj instanceof Scalar) {
-            Object v = ((Scalar) obj).getValue();
+            var v = ((Scalar) obj).getValue();
             if (v instanceof Number) {
                 return new double[] { ((Number) v).doubleValue() };
             }
         }
         if (obj instanceof Array) {
-            Object array = ((Array) obj).getData();
+            var array = ((Array) obj).getData();
             if (array instanceof ListNumber) {
                 return ListNumberToDoubleArray((ListNumber) array);
             }
             if (obj instanceof VEnumArray) {
-                ListInt tArray = ((VEnumArray) obj).getIndexes();
+                var tArray = ((VEnumArray) obj).getIndexes();
                 return ListNumberToDoubleArray(tArray);
             }
         }
@@ -288,7 +286,7 @@ public class VTypeHelper {
         } else if (obj instanceof VEnum) {
             return ((VEnum) obj).getIndex();
         } else if (obj instanceof VNumberArray) {
-            ListNumber data = ((VNumberArray) obj).getData();
+            var data = ((VNumberArray) obj).getData();
             if (data != null && data.size() != 0) {
                 if (data instanceof ListByte) {
                     return data.getByte(0);
@@ -316,7 +314,7 @@ public class VTypeHelper {
                 return data.getInt(0);
             }
         } else if (obj instanceof MultiScalar) {
-            List values = ((MultiScalar) obj).getValues();
+            var values = ((MultiScalar) obj).getValues();
             if (!values.isEmpty()) {
                 return getNumber((VType) values.get(0));
             }
@@ -336,7 +334,7 @@ public class VTypeHelper {
             return getNumber(obj);
         }
         if (obj instanceof VNumberArray) {
-            final ListNumber data = ((VNumberArray) obj).getData();
+            var data = ((VNumberArray) obj).getData();
             if (index < data.size()) {
                 if (data != null && data.size() != 0) {
                     if (data instanceof ListByte) {
@@ -362,7 +360,7 @@ public class VTypeHelper {
             }
         }
         if (obj instanceof VEnumArray) {
-            final ListInt data = ((VEnumArray) obj).getIndexes();
+            var data = ((VEnumArray) obj).getIndexes();
             if (index < data.size()) {
                 return data.getInt(index);
             }
@@ -410,7 +408,7 @@ public class VTypeHelper {
      * @return the time or null if there is no time info in the object.
      */
     public static Instant getTimestamp(VType obj) {
-        Time timeOf = ValueUtil.timeOf(obj);
+        var timeOf = ValueUtil.timeOf(obj);
         if (timeOf != null) {
             return timeOf.getTimestamp();
         }
@@ -440,20 +438,18 @@ public class VTypeHelper {
      * @return true if it is a primary type array, such as byte[], int[], double[] etc.
      */
     public static boolean isPrimaryNumberArray(Object array) {
-        return array instanceof byte[] || array instanceof int[] || array instanceof long[]
-                || array instanceof double[] || array instanceof float[]
-                || array instanceof short[] || array instanceof char[];
+        return array instanceof byte[] || array instanceof int[] || array instanceof long[] || array instanceof double[]
+                || array instanceof float[] || array instanceof short[] || array instanceof char[];
     }
 
-    private static String formatNumberArray(FormatEnum formatEnum, VNumberArray pmArray,
-            int precision) {
-        ListNumber data = ((VNumberArray) pmArray).getData();
+    private static String formatNumberArray(FormatEnum formatEnum, VNumberArray pmArray, int precision) {
+        var data = ((VNumberArray) pmArray).getData();
         if (formatEnum == FormatEnum.STRING) {
-            final byte[] bytes = new byte[data.size()];
+            var bytes = new byte[data.size()];
             // Copy bytes until end _or_ '\0'
-            int len = 0;
+            var len = 0;
             while (len < bytes.length) {
-                final byte b = data.getByte(len);
+                var b = data.getByte(len);
                 if (b == 0) {
                     break;
                 } else {
@@ -466,11 +462,11 @@ public class VTypeHelper {
                 return "[]";
             }
 
-            int displayPrecision = calculatePrecision(pmArray, precision);
+            var displayPrecision = calculatePrecision(pmArray, precision);
 
-            StringBuilder sb = new StringBuilder(data.size());
+            var sb = new StringBuilder(data.size());
             sb.append(formatScalarNumber(formatEnum, data.getDouble(0), displayPrecision));
-            for (int i = 1; i < data.size(); i++) {
+            for (var i = 1; i < data.size(); i++) {
                 sb.append(ARRAY_ELEMENT_SEPARATOR);
                 sb.append(formatScalarNumber(formatEnum, data.getDouble(i), displayPrecision));
                 if (i >= MAX_FORMAT_VALUE_COUNT) {
@@ -490,9 +486,9 @@ public class VTypeHelper {
     }
 
     private static String formatObjectArray(Object[] array) {
-        StringBuilder sb = new StringBuilder(array.length);
+        var sb = new StringBuilder(array.length);
         sb.append(array[0]);
-        for (int i = 1; i < array.length; i++) {
+        for (var i = 1; i < array.length; i++) {
             sb.append(ARRAY_ELEMENT_SEPARATOR);
             sb.append(array[i]);
             if (i >= MAX_FORMAT_VALUE_COUNT) {
@@ -542,15 +538,14 @@ public class VTypeHelper {
      * @param precision
      * @return
      */
-    private static String formatScalarNumber(FormatEnum formatEnum, Object pmValue,
-            Number numValue, int precision) {
+    private static String formatScalarNumber(FormatEnum formatEnum, Object pmValue, Number numValue, int precision) {
         if (pmValue != null) {
             numValue = (Number) ((Scalar) pmValue).getValue();
         }
 
         NumberFormat numberFormat;
 
-        int displayPrecision = calculatePrecision(pmValue, precision);
+        var displayPrecision = calculatePrecision(pmValue, precision);
         double highDispLimit = 0.0, lowDispLimit = 0.0;
 
         switch (formatEnum) {
@@ -608,22 +603,21 @@ public class VTypeHelper {
             }
 
         case COMPACT:
-            double dValue = numValue.doubleValue();
-            if (((dValue > 0.0001) && (dValue < 10000))
-                    || ((dValue < -0.0001) && (dValue > -10000)) || dValue == 0.0) {
+            var dValue = numValue.doubleValue();
+            if (((dValue > 0.0001) && (dValue < 10000)) || ((dValue < -0.0001) && (dValue > -10000)) || dValue == 0.0) {
                 return formatScalarNumber(FormatEnum.DECIMAL, numValue, displayPrecision);
             } else {
                 return formatScalarNumber(FormatEnum.EXP, numValue, displayPrecision);
             }
 
         case ENG:
-            double value = numValue.doubleValue();
+            var value = numValue.doubleValue();
             if (value == 0) {
                 return formatScalarNumber(FormatEnum.EXP, numValue, displayPrecision);
             }
 
-            double log10 = Math.log10(Math.abs(value));
-            int power = 3 * (int) Math.floor(log10 / 3);
+            var log10 = Math.log10(Math.abs(value));
+            var power = 3 * (int) Math.floor(log10 / 3);
             return String.format("%." + displayPrecision + "fE%d", value / Math.pow(10, power), power);
 
         case SEXA:
@@ -675,8 +669,8 @@ public class VTypeHelper {
      * @return
      */
     private static NumberFormat getDecimalFormat(int precision) {
-        int absPrecision = Math.abs(precision);
-        NumberFormat numberFormat = decimalFormatCacheMap.get(absPrecision);
+        var absPrecision = Math.abs(precision);
+        var numberFormat = decimalFormatCacheMap.get(absPrecision);
         if (numberFormat == null) {
             numberFormat = new DecimalFormat("0");
             numberFormat.setMinimumFractionDigits(absPrecision);
@@ -695,15 +689,15 @@ public class VTypeHelper {
      * @return
      */
     private static NumberFormat getExponentialFormat(int precision) {
-        int absPrecision = Math.abs(precision);
-        NumberFormat numberFormat = expFormatCacheMap.get(absPrecision);
+        var absPrecision = Math.abs(precision);
+        var numberFormat = expFormatCacheMap.get(absPrecision);
         if (numberFormat == null) {
-            final StringBuffer pattern = new StringBuffer(10);
+            var pattern = new StringBuffer(10);
             pattern.append("0");
             if (precision > 0) {
                 pattern.append(".");
             }
-            for (int i = 0; i < precision; ++i) {
+            for (var i = 0; i < precision; ++i) {
                 pattern.append('0');
             }
             pattern.append("E0");
@@ -722,12 +716,12 @@ public class VTypeHelper {
      * @return
      */
     private static int calculatePrecision(Object pmValue, int precision) {
-        int displayPrecision = DEFAULT_PRECISION;
+        var displayPrecision = DEFAULT_PRECISION;
 
         if (precision != UNSET_PRECISION) {
             displayPrecision = precision;
         } else if (pmValue instanceof Display) {
-            final NumberFormat format = ((Display) pmValue).getFormat();
+            var format = ((Display) pmValue).getFormat();
             if (format != null) {
                 displayPrecision = format.getMinimumFractionDigits();
             }
@@ -737,13 +731,13 @@ public class VTypeHelper {
     }
 
     private static double[] ListNumberToDoubleArray(ListNumber listNumber) {
-        Object wrappedArray = CollectionNumbers.wrappedArray(listNumber);
+        var wrappedArray = CollectionNumbers.wrappedArray(listNumber);
         if (wrappedArray instanceof double[]) {
             return (double[]) wrappedArray;
         }
 
-        final double[] result = new double[listNumber.size()];
-        for (int i = 0; i < result.length; i++) {
+        var result = new double[listNumber.size()];
+        for (var i = 0; i < result.length; i++) {
             result[i] = listNumber.getDouble(i);
         }
         return result;
@@ -751,8 +745,7 @@ public class VTypeHelper {
 
     private static final int MAXPREC = 8;
 
-    private static final double[] prec_tab = new double[] {
-            1.0, 1.0 / 6.0, 1.0 / 60.0, 1.0 / 360.0, 1.0 / 3.6E3,
+    private static final double[] prec_tab = new double[] { 1.0, 1.0 / 6.0, 1.0 / 60.0, 1.0 / 360.0, 1.0 / 3.6E3,
             1.0 / 3.6E4, 1.0 / 3.6E5, 1.0 / 3.6E6, 1.0 / 3.6E7 };
 
     private static String doubleToSexagesimal(double value, int precision, double hopr, double lopr) {
@@ -783,7 +776,7 @@ public class VTypeHelper {
             value = value - Math.floor((value - lopr) / range) * range;
         }
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
         /* Insert a leading negative sign, if required */
         if (value < 0.0) {

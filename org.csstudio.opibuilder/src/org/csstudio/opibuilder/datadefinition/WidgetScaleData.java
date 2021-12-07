@@ -50,7 +50,6 @@ public class WidgetScaleData extends AbstractComplexData {
 
     @Override
     public String toString() {
-        return "" + isWidthScalable() + " " + isHeightScalable() +
-                " " + isKeepWHRatio();
+        return "" + isWidthScalable() + " " + isHeightScalable() + " " + isKeepWHRatio();
     }
 }

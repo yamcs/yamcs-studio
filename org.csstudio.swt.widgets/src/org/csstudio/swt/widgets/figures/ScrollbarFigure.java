@@ -62,9 +62,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ScrollbarFigure extends Figure implements Orientable, Introspectable {
 
-    class ThumbDragger
-            extends MouseMotionListener.Stub
-            implements MouseListener {
+    class ThumbDragger extends MouseMotionListener.Stub implements MouseListener {
         protected Point start;
         protected double dragRange;
         protected double revertValue;
@@ -79,10 +77,11 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
         @Override
         public void mouseDragged(MouseEvent me) {
-            if (!armed)
+            if (!armed) {
                 return;
-            Dimension difference = transposer.t(me.getLocation().getDifference(start));
-            double change = (getValueRange() + getExtent()) * difference.height / dragRange;
+            }
+            var difference = transposer.t(me.getLocation().getDifference(start));
+            var change = (getValueRange() + getExtent()) * difference.height / dragRange;
             manualSetValue(revertValue + change);
             me.consume();
         }
@@ -91,14 +90,15 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         public void mousePressed(MouseEvent me) {
             armed = true;
             start = me.getLocation();
-            Rectangle area = new Rectangle(transposer.t(getClientArea()));
-            Dimension thumbSize = transposer.t(thumb.getSize());
-            if (buttonUp != null)
+            var area = new Rectangle(transposer.t(getClientArea()));
+            var thumbSize = transposer.t(thumb.getSize());
+            if (buttonUp != null) {
                 area.height -= transposer.t(buttonUp.getSize()).height;
-            if (buttonDown != null)
+            }
+            if (buttonDown != null) {
                 area.height -= transposer.t(buttonDown.getSize()).height;
-            Dimension sizeDifference = new Dimension(area.width,
-                    area.height - thumbSize.height);
+            }
+            var sizeDifference = new Dimension(area.width, area.height - thumbSize.height);
             dragRange = sizeDifference.height;
             revertValue = getValue();
             me.consume();
@@ -106,8 +106,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
         @Override
         public void mouseReleased(MouseEvent me) {
-            if (!armed)
+            if (!armed) {
                 return;
+            }
             armed = false;
             me.consume();
         }
@@ -123,10 +124,8 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      */
     private static final int ENGINEERING_LIMIT = 2;
 
-    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GRAY);
-    private final static Color LABEL_COLOR = CustomMediaFactory.getInstance().getColor(
-            new RGB(255, 255, 150));
+    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
+    private final static Color LABEL_COLOR = CustomMediaFactory.getInstance().getColor(new RGB(255, 255, 150));
     private boolean horizontal;
     private boolean showValueTip = true;
     private Label label;
@@ -164,9 +163,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     private boolean valueIncreased;
 
-    private static final Color COLOR_TRACK = FigureUtilities.mixColors(
-            ColorConstants.white,
-            ColorConstants.button);
+    private static final Color COLOR_TRACK = FigureUtilities.mixColors(ColorConstants.white, ColorConstants.button);
 
     private String formatPattern;
 
@@ -182,8 +179,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     }
 
     public void addManualValueChangeListener(IManualValueChangeListener listener) {
-        if (listener != null)
+        if (listener != null) {
             listeners.add(listener);
+        }
     }
 
     /**
@@ -205,7 +203,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      * @since 2.0
      */
     protected IFigure createDefaultThumb() {
-        Panel thumb = new Panel();
+        var thumb = new Panel();
         thumb.setMinimumSize(new Dimension(6, 6));
         thumb.setBackgroundColor(ColorConstants.button);
 
@@ -242,24 +240,26 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      * @since 2.0
      */
     protected Clickable createPageUp() {
-        final Clickable clickable = new Clickable();
+        var clickable = new Clickable();
         clickable.setOpaque(true);
         clickable.setBackgroundColor(COLOR_TRACK);
         clickable.addChangeListener(new ChangeListener() {
             @Override
             public void handleStateChanged(ChangeEvent evt) {
-                if (clickable.getModel().isArmed())
+                if (clickable.getModel().isArmed()) {
                     clickable.setBackgroundColor(ColorConstants.black);
-                else
+                } else {
                     clickable.setBackgroundColor(COLOR_TRACK);
+                }
             }
         });
         return clickable;
     }
 
     private void fireManualValueChange(double value) {
-        for (IManualValueChangeListener listener : listeners)
+        for (IManualValueChangeListener listener : listeners) {
             listener.manualValueChanged(value);
+        }
     }
 
     @Override
@@ -299,14 +299,14 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * @return the pageIncrement
      */
-    public final double getPageIncrement() {
+    public double getPageIncrement() {
         return pageIncrement;
     }
 
     /**
      * @return the stepIncrement
      */
-    public final double getStepIncrement() {
+    public double getStepIncrement() {
         return stepIncrement;
     }
 
@@ -331,8 +331,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (!hasFocus())
+                if (!hasFocus()) {
                     requestFocus();
+                }
             }
         });
     }
@@ -345,18 +346,19 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
             @Override
             public void keyPressed(KeyEvent ke) {
-                if ((ke.keycode == SWT.ARROW_UP && !isHorizontal()) ||
-                        (ke.keycode == SWT.ARROW_LEFT && isHorizontal()))
+                if ((ke.keycode == SWT.ARROW_UP && !isHorizontal())
+                        || (ke.keycode == SWT.ARROW_LEFT && isHorizontal())) {
                     stepUp();
-                else if ((ke.keycode == SWT.ARROW_DOWN && !isHorizontal()) ||
-                        (ke.keycode == SWT.ARROW_RIGHT && isHorizontal()))
+                } else if ((ke.keycode == SWT.ARROW_DOWN && !isHorizontal())
+                        || (ke.keycode == SWT.ARROW_RIGHT && isHorizontal())) {
                     stepDown();
-                else if ((ke.keycode == SWT.PAGE_DOWN && !isHorizontal()) ||
-                        (ke.keycode == SWT.PAGE_UP && isHorizontal()))
+                } else if ((ke.keycode == SWT.PAGE_DOWN && !isHorizontal())
+                        || (ke.keycode == SWT.PAGE_UP && isHorizontal())) {
                     pageDown();
-                else if ((ke.keycode == SWT.PAGE_UP && !isHorizontal()) ||
-                        (ke.keycode == SWT.PAGE_DOWN && isHorizontal()))
+                } else if ((ke.keycode == SWT.PAGE_UP && !isHorizontal())
+                        || (ke.keycode == SWT.PAGE_DOWN && isHorizontal())) {
                     pageUp();
+                }
             }
 
             @Override
@@ -400,7 +402,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     private void initLabelTimer() {
         if (labelTimer == null) {
-            final Display display = Display.getCurrent();
+            var display = Display.getCurrent();
             labelTimer = new OPITimer();
             timerTask = new Runnable() {
 
@@ -436,16 +438,15 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     protected void layout() {
         super.layout();
         if (label.isVisible()) {
-            Rectangle thumbBounds = thumb.getBounds();
-            Dimension size = label.getPreferredSize();
-            if (isHorizontal())
-                label.setBounds(new Rectangle(
-                        thumbBounds.x + (valueIncreased ? -size.width : thumbBounds.width),
+            var thumbBounds = thumb.getBounds();
+            var size = label.getPreferredSize();
+            if (isHorizontal()) {
+                label.setBounds(new Rectangle(thumbBounds.x + (valueIncreased ? -size.width : thumbBounds.width),
                         thumbBounds.y, size.width, size.height));
-            else
+            } else {
                 label.setBounds(new Rectangle(thumbBounds.x,
-                        thumbBounds.y + (valueIncreased ? -size.height : thumbBounds.height),
-                        size.width, size.height));
+                        thumbBounds.y + (valueIncreased ? -size.height : thumbBounds.height), size.width, size.height));
+            }
         }
     }
 
@@ -456,17 +457,19 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      */
     public void manualSetValue(double value) {
         value = Math.max(getMinimum(), Math.min(getMaximum(), value));
-        if (this.value == value)
+        if (this.value == value) {
             return;
+        }
         if (showValueTip) {
             valueIncreased = value > this.value;
             label.setText("" + decimalFormat.format(value));
             label.setVisible(true);
             initLabelTimer();
-            if (!labelTimer.isDue())
+            if (!labelTimer.isDue()) {
                 labelTimer.reset();
-            else
+            } else {
                 labelTimer.start(timerTask, 1000);
+            }
         }
         setValue(value);
         fireManualValueChange(getValue());
@@ -488,14 +491,15 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
             graphics.setForegroundColor(ColorConstants.black);
             graphics.setBackgroundColor(ColorConstants.white);
 
-            Rectangle area = getClientArea();
+            var area = getClientArea();
             graphics.drawFocus(area.x, area.y, area.width - 1, area.height - 1);
         }
     }
 
     public void removeManualValueChangeListener(IManualValueChangeListener listener) {
-        if (listeners.contains(listener))
+        if (listeners.contains(listener)) {
             listeners.remove(listener);
+        }
     }
 
     /**
@@ -528,10 +532,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
         buttonDown = down;
         if (buttonDown != null) {
-            if (buttonDown instanceof Orientable)
-                ((Orientable) buttonDown).setDirection(isHorizontal()
-                        ? Orientable.EAST
-                        : Orientable.SOUTH);
+            if (buttonDown instanceof Orientable) {
+                ((Orientable) buttonDown).setDirection(isHorizontal() ? Orientable.EAST : Orientable.SOUTH);
+            }
             buttonDown.setFiringMethod(Clickable.REPEAT_FIRING);
             buttonDown.addActionListener(new ActionListener() {
                 @Override
@@ -548,8 +551,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      */
     @Override
     public void setEnabled(boolean value) {
-        if (isEnabled() == value)
+        if (isEnabled() == value) {
             return;
+        }
         super.setEnabled(value);
         setChildrenEnabled(value);
         if (thumb != null) {
@@ -563,8 +567,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      *            the extent to set
      */
     public void setExtent(double extent) {
-        if (this.extent == extent)
+        if (this.extent == extent) {
             return;
+        }
         this.extent = extent;
         revalidate();
     }
@@ -582,7 +587,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      *            <code>true</code> if the scrollbar should be horizontal
      * @since 2.0
      */
-    public final void setHorizontal(boolean value) {
+    public void setHorizontal(boolean value) {
         setOrientation(value ? HORIZONTAL : VERTICAL);
     }
 
@@ -591,8 +596,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      *            the maximum to set
      */
     public void setMaximum(double maximum) {
-        if (this.maximum == maximum)
+        if (this.maximum == maximum) {
             return;
+        }
         this.maximum = maximum;
         updateFormat();
         revalidate();
@@ -603,8 +609,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      *            the minimum to set
      */
     public void setMinimum(double minimum) {
-        if (this.minimum == minimum)
+        if (this.minimum == minimum) {
             return;
+        }
         this.minimum = minimum;
         updateFormat();
         revalidate();
@@ -616,8 +623,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      */
     @Override
     public void setOrientation(int value) {
-        if ((value == HORIZONTAL) == isHorizontal())
+        if ((value == HORIZONTAL) == isHorizontal()) {
             return;
+        }
         horizontal = value == HORIZONTAL;
         transposer.setEnabled(horizontal);
 
@@ -636,8 +644,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     public void setPageDown(Clickable down) {
         hookFocusListener(down);
 
-        if (pageDown != null)
+        if (pageDown != null) {
             remove(pageDown);
+        }
         pageDown = down;
         if (pageDown != null) {
             pageDown.setFiringMethod(Clickable.REPEAT_FIRING);
@@ -666,8 +675,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     public void setPageUp(Clickable up) {
         hookFocusListener(up);
 
-        if (pageUp != null)
+        if (pageUp != null) {
             remove(pageUp);
+        }
         pageUp = up;
         if (pageUp != null) {
             pageUp.setFiringMethod(Clickable.REPEAT_FIRING);
@@ -693,7 +703,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      * @param stepIncrement
      *            the stepIncrement to set
      */
-    public final void setStepIncrement(double stepIncrement) {
+    public void setStepIncrement(double stepIncrement) {
         this.stepIncrement = stepIncrement;
     }
 
@@ -706,14 +716,16 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      * @since 2.0
      */
     public void setThumb(IFigure figure) {
-        if (figure != null)
+        if (figure != null) {
             figure.addMouseListener(new MouseListener.Stub() {
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    if (!hasFocus())
+                    if (!hasFocus()) {
                         requestFocus();
+                    }
                 }
             });
+        }
         if (thumb != null) {
             thumb.removeMouseListener(thumbDragger);
             thumb.removeMouseMotionListener(thumbDragger);
@@ -742,10 +754,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
         buttonUp = up;
         if (up != null) {
-            if (up instanceof Orientable)
-                ((Orientable) up).setDirection(isHorizontal()
-                        ? Orientable.WEST
-                        : Orientable.NORTH);
+            if (up instanceof Orientable) {
+                ((Orientable) up).setDirection(isHorizontal() ? Orientable.WEST : Orientable.NORTH);
+            }
             buttonUp.setFiringMethod(Clickable.REPEAT_FIRING);
             buttonUp.addActionListener(new ActionListener() {
                 @Override
@@ -761,9 +772,10 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
      * @param value
      *            the value to set
      */
-    public void setValue(final double value) {
-        if (this.value == value)
+    public void setValue(double value) {
+        if (this.value == value) {
             return;
+        }
         this.value = value;
         revalidate();
         repaint();
@@ -778,14 +790,16 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     }
 
     private void updateFormat() {
-        if (this.formatPattern != null)
+        if (this.formatPattern != null) {
             return;
+        }
         String tempPattern;
         if ((maximum != 0 && Math.abs(Math.log10(Math.abs(maximum))) >= ENGINEERING_LIMIT)
-                || (minimum != 0 && Math.abs(Math.log10(Math.abs(minimum))) >= ENGINEERING_LIMIT))
+                || (minimum != 0 && Math.abs(Math.log10(Math.abs(minimum))) >= ENGINEERING_LIMIT)) {
             tempPattern = DEFAULT_ENGINEERING_FORMAT;
-        else
+        } else {
             tempPattern = DEFAULT_DECIMAL_FORMAT;
+        }
         decimalFormat = new DecimalFormat(tempPattern);
     }
 

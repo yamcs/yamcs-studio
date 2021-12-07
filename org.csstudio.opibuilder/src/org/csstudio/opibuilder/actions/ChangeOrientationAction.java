@@ -52,8 +52,7 @@ public class ChangeOrientationAction extends SelectionAction {
         }
 
         public ImageDescriptor getImageDescriptor() {
-            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, iconPath);
+            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
 
     }
@@ -70,7 +69,7 @@ public class ChangeOrientationAction extends SelectionAction {
 
     @Override
     public void run() {
-        CompoundCommand compoundCommand = new CompoundCommand(orientationType.getLabel());
+        var compoundCommand = new CompoundCommand(orientationType.getLabel());
         for (AbstractWidgetModel widgetModel : getSelectedWidgetModels()) {
             compoundCommand.add(new ChangeOrientationCommand(widgetModel, orientationType));
         }
@@ -84,8 +83,7 @@ public class ChangeOrientationAction extends SelectionAction {
 
         for (Object o : selection) {
             if (o instanceof AbstractBaseEditPart) {
-                selectedWidgetModels.add(
-                        (AbstractWidgetModel) ((EditPart) o).getModel());
+                selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }
         }
         return selectedWidgetModels;
@@ -93,10 +91,10 @@ public class ChangeOrientationAction extends SelectionAction {
 
     @Override
     protected boolean calculateEnabled() {
-        List<AbstractWidgetModel> selectedWidgetModels = getSelectedWidgetModels();
-        if (selectedWidgetModels.size() >= 1 &&
-                !(selectedWidgetModels.get(0) instanceof DisplayModel))
+        var selectedWidgetModels = getSelectedWidgetModels();
+        if (selectedWidgetModels.size() >= 1 && !(selectedWidgetModels.get(0) instanceof DisplayModel)) {
             return true;
+        }
         return false;
     }
 }

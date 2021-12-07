@@ -23,13 +23,12 @@ public class WidgetComponentEditPolicy extends ComponentEditPolicy {
 
     @Override
     protected Command createDeleteCommand(GroupRequest deleteRequest) {
-        Object containerModel = getHost().getParent().getModel();
-        Object widget = getHost().getModel();
+        var containerModel = getHost().getParent().getModel();
+        var widget = getHost().getModel();
 
-        if (containerModel instanceof AbstractContainerModel &&
-                widget instanceof AbstractWidgetModel)
-            return new WidgetDeleteCommand((AbstractContainerModel) containerModel,
-                    (AbstractWidgetModel) widget);
+        if (containerModel instanceof AbstractContainerModel && widget instanceof AbstractWidgetModel) {
+            return new WidgetDeleteCommand((AbstractContainerModel) containerModel, (AbstractWidgetModel) widget);
+        }
         return super.createDeleteCommand(deleteRequest);
     }
 

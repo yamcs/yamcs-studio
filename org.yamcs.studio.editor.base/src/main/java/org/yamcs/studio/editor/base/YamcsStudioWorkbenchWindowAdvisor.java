@@ -8,7 +8,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -31,7 +30,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void postWindowCreate() {
 
         // Add console view to the logger
-        ConsoleViewHandler handler = ConsoleViewHandler.install();
+        var handler = ConsoleViewHandler.install();
         if (handler != null) {
             handler.setLevel(Level.INFO);
             handler.setFormatter(new UserLogFormatter());
@@ -39,7 +38,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
         // Now that we know that the user will see it:
         if (logProductInfo) {
-            Logger log = Logger.getLogger(getClass().getName());
+            var log = Logger.getLogger(getClass().getName());
             logProductInfo(log);
             // Prevent this message from appearing when runtime window is opened from builder
             logProductInfo = false;
@@ -58,7 +57,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     @Override
     public void preWindowOpen() {
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+        var configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(1920, 1200));
         configurer.setShowMenuBar(true);
         configurer.setShowCoolBar(true);
@@ -91,8 +90,8 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             // This is required in order to at least partially clean up the mess that RCP leaves behind.
             // The code below will dispose of unused actions and a few other stuff that are not disposed from the
             // memory after the workbench window closes.
-            IWorkbenchWindow win = getWindowConfigurer().getWindow();
-            IWorkbenchPage[] pages = win.getPages();
+            var win = getWindowConfigurer().getWindow();
+            var pages = win.getPages();
             for (IWorkbenchPage p : pages) {
                 try {
                     p.close();
@@ -115,11 +114,11 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
 
     private void updateTitle() {
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-        String title = Platform.getProduct().getName();
-        IWorkbenchPage currentPage = configurer.getWindow().getActivePage();
+        var configurer = getWindowConfigurer();
+        var title = Platform.getProduct().getName();
+        var currentPage = configurer.getWindow().getActivePage();
         if (currentPage != null) {
-            IPerspectiveDescriptor perspective = currentPage.getPerspective();
+            var perspective = currentPage.getPerspective();
             if (perspective != null) {
                 title = perspective.getLabel();
             }

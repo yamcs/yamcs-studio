@@ -15,8 +15,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.yamcs.studio.autocomplete.AutoCompleteHelper;
 
@@ -31,20 +29,20 @@ public class TopProposalFinder {
         this.delimiters = delimiters;
     }
 
-    public List<Proposal> getTopProposals(String name,
-            Collection<String> proposals) {
+    public List<Proposal> getTopProposals(String name, Collection<String> proposals) {
         Set<Proposal> set = new LinkedHashSet<Proposal>();
 
-        if (delimiters == null || delimiters.isEmpty())
+        if (delimiters == null || delimiters.isEmpty()) {
             return new ArrayList<Proposal>(set); // empty result
+        }
 
-        String cleanedName = AutoCompleteHelper.trimWildcards(name);
-        Pattern namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
+        var cleanedName = AutoCompleteHelper.trimWildcards(name);
+        var namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
         Proposal topProposal = null;
         for (String proposal : proposals) {
-            Matcher m = namePattern.matcher(proposal);
+            var m = namePattern.matcher(proposal);
             if (m.find()) {
-                int start = m.end();
+                var start = m.end();
                 if (start == proposal.length()) {
                     topProposal = new Proposal(proposal, false);
                 } else {
@@ -60,27 +58,33 @@ public class TopProposalFinder {
     }
 
     private Proposal findToken(String s, int fromIndex) {
-        if (fromIndex < 0 || fromIndex >= s.length())
+        if (fromIndex < 0 || fromIndex >= s.length()) {
             return null;
-        String sub = s.substring(fromIndex);
-        StringTokenizer st = new StringTokenizer(sub, delimiters, true);
+        }
+        var sub = s.substring(fromIndex);
+        var st = new StringTokenizer(sub, delimiters, true);
         if (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            int endIndex = fromIndex + token.length();
+            var token = st.nextToken();
+            var endIndex = fromIndex + token.length();
             if (endIndex == s.length()) {
-                String value = s.substring(0, endIndex);
-                if (value != null && !value.isEmpty())
+                var value = s.substring(0, endIndex);
+                if (value != null && !value.isEmpty()) {
                     return new Proposal(value, false);
+                }
             }
-            boolean hasDelimiter = false;
-            for (char d : delimiters.toCharArray())
-                if (token.indexOf(d) >= 0)
+            var hasDelimiter = false;
+            for (char d : delimiters.toCharArray()) {
+                if (token.indexOf(d) >= 0) {
                     hasDelimiter = true;
-            if (!hasDelimiter)
+                }
+            }
+            if (!hasDelimiter) {
                 endIndex++;
-            String value = s.substring(0, endIndex);
-            if (value != null && !value.isEmpty())
+            }
+            var value = s.substring(0, endIndex);
+            if (value != null && !value.isEmpty()) {
                 return new Proposal(value, true);
+            }
         }
         return null;
     }

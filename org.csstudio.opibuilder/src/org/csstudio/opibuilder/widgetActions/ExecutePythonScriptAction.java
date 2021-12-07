@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgetActions;
 
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 
@@ -21,15 +20,11 @@ import org.csstudio.opibuilder.script.ScriptStoreFactory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.swt.widgets.Display;
 import org.python.core.PyCode;
-import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.core.PyStringMap;
 import org.python.core.PySystemState;
@@ -57,31 +52,31 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             try {
                 ScriptStoreFactory.initPythonInterpreter();
             } catch (Exception e) {
-                final String message = "Failed to initialize PythonInterpreter";
+                var message = "Failed to initialize PythonInterpreter";
                 OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
             }
             // read file
-            IPath absolutePath = getAbsolutePath();
+            var absolutePath = getAbsolutePath();
             state = new PySystemState();
 
             // Add the path of script to python module search path
             if (!isEmbedded() && absolutePath != null && !absolutePath.isEmpty()) {
                 // If it is a workspace file.
                 if (ResourceUtil.isExistingWorkspaceFile(absolutePath)) {
-                    IPath folderPath = absolutePath.removeLastSegments(1);
-                    String sysLocation = ResourceUtil.workspacePathToSysPath(folderPath).toOSString();
+                    var folderPath = absolutePath.removeLastSegments(1);
+                    var sysLocation = ResourceUtil.workspacePathToSysPath(folderPath).toOSString();
                     state.path.append(new PyString(sysLocation));
                 } else if (ResourceUtil.isExistingLocalFile(absolutePath)) {
-                    IPath folderPath = absolutePath.removeLastSegments(1);
+                    var folderPath = absolutePath.removeLastSegments(1);
                     state.path.append(new PyString(folderPath.toOSString()));
                 }
             }
 
             interpreter = new PythonInterpreter(null, state);
 
-            GraphicalViewer viewer = getWidgetModel().getRootDisplayModel().getViewer();
+            var viewer = getWidgetModel().getRootDisplayModel().getViewer();
             if (viewer != null) {
-                Object obj = viewer.getEditPartRegistry().get(getWidgetModel());
+                var obj = viewer.getEditPartRegistry().get(getWidgetModel());
                 if (obj != null && obj instanceof AbstractBaseEditPart) {
                     displayEditpart = (DisplayEditpart) (viewer.getContents());
                     widgetEditPart = (AbstractBaseEditPart) obj;
@@ -93,9 +88,8 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                String taskName = isEmbedded() ? "Execute Python Script" : "Connecting to " + getAbsolutePath();
-                monitor.beginTask(taskName,
-                        IProgressMonitor.UNKNOWN);
+                var taskName = isEmbedded() ? "Execute Python Script" : "Connecting to " + getAbsolutePath();
+                monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
                 runTask();
                 monitor.done();
                 return Status.OK_STATUS;
@@ -106,7 +100,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
     }
 
     public void runTask() {
-        Display display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
+        var display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
 
         try {
             if (code == null) {
@@ -115,7 +109,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
                 if (isEmbedded()) {
                     code = interpreter.compile(getScriptText());
                 } else {
-                    InputStream inputStream = getInputStream();
+                    var inputStream = getInputStream();
                     code = interpreter.compile(new InputStreamReader(inputStream));
                     inputStream.close();
                 }
@@ -128,12 +122,12 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
                     interpreter.set(ScriptService.DISPLAY, displayEditpart);
                     interpreter.exec(code);
                 } catch (Exception e) {
-                    final String message = "Error in script " + getPath();
+                    var message = "Error in script " + getPath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             });
         } catch (Exception e) {
-            final String message = "Failed to execute Python Script: " + getPath();
+            var message = "Failed to execute Python Script: " + getPath();
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
         }
     }
@@ -151,7 +145,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
     @Override
     public void dispose() {
         if (interpreter != null) {
-            PyObject o = interpreter.getLocals();
+            var o = interpreter.getLocals();
             if (o != null && o instanceof PyStringMap) {
                 ((PyStringMap) o).clear();
             }

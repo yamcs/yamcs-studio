@@ -1,7 +1,6 @@
 package org.yamcs.studio.autocomplete.state;
 
 import java.util.Collections;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.studio.autocomplete.AutoCompleteResult;
@@ -20,7 +19,7 @@ public class StateContentProvider implements IAutoCompleteProvider {
 
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
+        var result = new AutoCompleteResult();
 
         StateContentDescriptor stateDesc = null;
         if (desc instanceof StateContentDescriptor) {
@@ -36,10 +35,10 @@ public class StateContentProvider implements IAutoCompleteProvider {
     }
 
     private AutoCompleteResult provideFunctions(StateContentDescriptor stateDesc, int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
-        int count = 0;
+        var result = new AutoCompleteResult();
+        var count = 0;
 
-        String regex = stateDesc.getValue();
+        var regex = stateDesc.getValue();
         regex = regex.replaceAll("\\*", ".*");
         regex = regex.replaceAll("\\?", ".");
         Pattern valuePattern = null;
@@ -51,15 +50,15 @@ public class StateContentProvider implements IAutoCompleteProvider {
 
         Proposal topProposal = null;
         String closestMatchingFunction = null;
-        int offset = StateContentParser.STATE_SOURCE.length();
+        var offset = StateContentParser.STATE_SOURCE.length();
         for (String function : StateContentDescriptor.listFunctions()) {
-            Matcher m = valuePattern.matcher(function);
+            var m = valuePattern.matcher(function);
             if (m.find()) {
-                String fctDisplay = function;
+                var fctDisplay = function;
                 if (stateDesc.getDefaultDataSource() != StateContentParser.STATE_SOURCE) {
                     fctDisplay = StateContentParser.STATE_SOURCE + function;
                 }
-                Proposal proposal = new Proposal(fctDisplay, false);
+                var proposal = new Proposal(fctDisplay, false);
                 proposal.setDescription(StateContentDescriptor.getDescription(function));
                 proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));
                 proposal.setInsertionPos(stateDesc.getStartIndex());
@@ -67,8 +66,7 @@ public class StateContentProvider implements IAutoCompleteProvider {
                     result.addProposal(proposal);
                 }
                 count++;
-                if (closestMatchingFunction == null
-                        || closestMatchingFunction.compareTo(function) > 0) {
+                if (closestMatchingFunction == null || closestMatchingFunction.compareTo(function) > 0) {
                     closestMatchingFunction = function;
                     topProposal = proposal;
                 }

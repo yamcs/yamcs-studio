@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.editparts;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.model.ConnectionModel.LineJumpAdd;
@@ -42,9 +41,10 @@ public class PolylineJumpConnection extends PolylineConnection {
         this.widgetConnectionEditPart = widgetConnectionEditPart;
 
         setClippingStrategy((childFigure) -> {
-            Rectangle bounds = childFigure.getBounds();
-            if ((intersectionMap != null) && (lineJumpAdd != LineJumpAdd.NONE))
+            var bounds = childFigure.getBounds();
+            if ((intersectionMap != null) && (lineJumpAdd != LineJumpAdd.NONE)) {
                 bounds.expand(lineJumpSize * 2, lineJumpSize * 2);
+            }
             return new Rectangle[] { bounds };
         });
     }
@@ -70,9 +70,9 @@ public class PolylineJumpConnection extends PolylineConnection {
         pointsWithIntersection = this.widgetConnectionEditPart.getIntersectionPoints(this);
         intersectionMap = this.widgetConnectionEditPart.getIntersectionMap();
 
-        Point previousPoint = getStart();
-        for (int i = 1; i < pointsWithIntersection.size(); i++) {
-            Point point = pointsWithIntersection.getPoint(i);
+        var previousPoint = getStart();
+        for (var i = 1; i < pointsWithIntersection.size(); i++) {
+            var point = pointsWithIntersection.getPoint(i);
 
             // Skip drawing line if segment is intersection segment and lineJumpAdd is not none
             if (isPointInIntersectionRange(previousPoint, point, intersectionMap)
@@ -82,7 +82,7 @@ public class PolylineJumpConnection extends PolylineConnection {
                 continue;
             }
 
-            Polyline line = getPolyLine(previousPoint, point);
+            var line = getPolyLine(previousPoint, point);
             line.paint(graphics);
             this.setBounds(getBounds().union(line.getBounds()));
 
@@ -93,7 +93,7 @@ public class PolylineJumpConnection extends PolylineConnection {
             graphics.setLineWidth(getLineWidth());
             graphics.setLineStyle(getLineStyle());
 
-            for (final Entry<Point, PointList> currentEntry : intersectionMap.entrySet()) {
+            for (Entry<Point, PointList> currentEntry : intersectionMap.entrySet()) {
                 switch (lineJumpStyle) {
                 case ARC:
                     drawArc(currentEntry, graphics);
@@ -112,10 +112,10 @@ public class PolylineJumpConnection extends PolylineConnection {
         }
     }
 
-    private void drawArc(final Entry<Point, PointList> currentEntry, Graphics graphics) {
-        Point intersectionPoint = currentEntry.getKey();
-        PointList intersectionEdges = currentEntry.getValue();
-        int angle = (int) angleOf(intersectionEdges.getFirstPoint(), intersectionEdges.getLastPoint());
+    private void drawArc(Entry<Point, PointList> currentEntry, Graphics graphics) {
+        var intersectionPoint = currentEntry.getKey();
+        var intersectionEdges = currentEntry.getValue();
+        var angle = (int) angleOf(intersectionEdges.getFirstPoint(), intersectionEdges.getLastPoint());
         angle = angle % 180;
 
         // Correct small angle deviations caused by calculating intersecting points rounding to int
@@ -123,46 +123,44 @@ public class PolylineJumpConnection extends PolylineConnection {
             angle = 0;
         }
 
-        Arc arc = new Arc(intersectionPoint.x() - lineJumpSize, intersectionPoint.y() - lineJumpSize,
-                lineJumpSize * 2, lineJumpSize * 2, angle, 180);
+        var arc = new Arc(intersectionPoint.x() - lineJumpSize, intersectionPoint.y() - lineJumpSize, lineJumpSize * 2,
+                lineJumpSize * 2, angle, 180);
         this.setBounds(getBounds().union(arc.getBounds()));
         arc.paint(graphics);
     }
 
-    private void draw2Slides(final Entry<Point, PointList> currentEntry, Graphics graphics) {
-        PointList intersectionEdges = currentEntry.getValue();
-        Point tipPoint = computeTipPoint(intersectionEdges.getFirstPoint(),
-                intersectionEdges.getLastPoint(), true);
+    private void draw2Slides(Entry<Point, PointList> currentEntry, Graphics graphics) {
+        var intersectionEdges = currentEntry.getValue();
+        var tipPoint = computeTipPoint(intersectionEdges.getFirstPoint(), intersectionEdges.getLastPoint(), true);
 
         // If jump is right hand side, take it to left hand side
         if (tipPoint.x > intersectionEdges.getFirstPoint().x()) {
-            tipPoint = computeTipPoint(intersectionEdges.getFirstPoint(),
-                    intersectionEdges.getLastPoint(), false);
+            tipPoint = computeTipPoint(intersectionEdges.getFirstPoint(), intersectionEdges.getLastPoint(), false);
         }
 
-        Polyline triangleLine1 = getPolyLine(intersectionEdges.getFirstPoint(), tipPoint);
+        var triangleLine1 = getPolyLine(intersectionEdges.getFirstPoint(), tipPoint);
         this.setBounds(getBounds().union(triangleLine1.getBounds()));
 
-        Polyline triangleLine2 = getPolyLine(intersectionEdges.getLastPoint(), tipPoint);
+        var triangleLine2 = getPolyLine(intersectionEdges.getLastPoint(), tipPoint);
         this.setBounds(getBounds().union(triangleLine2.getBounds()));
         triangleLine1.paint(graphics);
         triangleLine2.paint(graphics);
     }
 
-    private void drawSquare(final Entry<Point, PointList> currentEntry, Graphics graphics) {
-        PointList intersectionEdges = currentEntry.getValue();
-        Point x1y1 = intersectionEdges.getFirstPoint();
-        Point x2y2 = intersectionEdges.getLastPoint();
+    private void drawSquare(Entry<Point, PointList> currentEntry, Graphics graphics) {
+        var intersectionEdges = currentEntry.getValue();
+        var x1y1 = intersectionEdges.getFirstPoint();
+        var x2y2 = intersectionEdges.getLastPoint();
 
-        int x3 = (int) (x1y1.x - (RATIO_30_DEGREES) * (x2y2.y - x1y1.y));
-        int y3 = (int) (x1y1.y - (RATIO_30_DEGREES) * (x2y2.x - x1y1.x));
-        Point squareCorner1 = new Point(x3, y3);
+        var x3 = (int) (x1y1.x - (RATIO_30_DEGREES) * (x2y2.y - x1y1.y));
+        var y3 = (int) (x1y1.y - (RATIO_30_DEGREES) * (x2y2.x - x1y1.x));
+        var squareCorner1 = new Point(x3, y3);
 
         // For Vertical Lines, If square is on right hand side, bring it to left hand side
         // Leave margin for rounding errors
         if (Math.abs(x1y1.x - x2y2.x) < 5) {
             if (x3 > x1y1.x) {
-                int length = Math.abs(x1y1.x - x3);
+                var length = Math.abs(x1y1.x - x3);
                 x3 = x1y1.x - length;
                 squareCorner1 = new Point(x3, y3);
             }
@@ -172,21 +170,21 @@ public class PolylineJumpConnection extends PolylineConnection {
         // Leave margin for rounding errors
         if (Math.abs(x1y1.y - x2y2.y) < 5) {
             if (y3 > x1y1.y) {
-                int length = Math.abs(x1y1.y - y3);
+                var length = Math.abs(x1y1.y - y3);
                 y3 = x1y1.y - length;
                 squareCorner1 = new Point(x3, y3);
             }
         }
 
-        int x4 = (int) (x2y2.x + (RATIO_30_DEGREES) * (x1y1.y - x2y2.y));
-        int y4 = (int) (x2y2.y + (RATIO_30_DEGREES) * (x1y1.x - x2y2.x));
-        Point squareCorner2 = new Point(x4, y4);
+        var x4 = (int) (x2y2.x + (RATIO_30_DEGREES) * (x1y1.y - x2y2.y));
+        var y4 = (int) (x2y2.y + (RATIO_30_DEGREES) * (x1y1.x - x2y2.x));
+        var squareCorner2 = new Point(x4, y4);
 
         // For Vertical Lines, If square is on right hand side, bring it to left hand side
         // Leave margin for rounding errors
         if (Math.abs(x1y1.x - x2y2.x) < 5) {
             if (x4 > x2y2.x) {
-                int length = Math.abs(x2y2.x - x4);
+                var length = Math.abs(x2y2.x - x4);
                 x4 = x2y2.x - length;
                 squareCorner2 = new Point(x4, y4);
             }
@@ -196,19 +194,19 @@ public class PolylineJumpConnection extends PolylineConnection {
         // Leave margin for rounding errors
         if (Math.abs(x1y1.y - x2y2.y) < 5) {
             if (y4 > x2y2.y) {
-                int length = Math.abs(x2y2.y - y4);
+                var length = Math.abs(x2y2.y - y4);
                 y4 = x2y2.y - length;
                 squareCorner2 = new Point(x4, y4);
             }
         }
 
-        final Polyline squareLine1 = getPolyLine(intersectionEdges.getFirstPoint(), squareCorner1);
+        var squareLine1 = getPolyLine(intersectionEdges.getFirstPoint(), squareCorner1);
         this.setBounds(getBounds().union(squareLine1.getBounds()));
 
-        final Polyline squareLine2 = getPolyLine(squareCorner1, squareCorner2);
+        var squareLine2 = getPolyLine(squareCorner1, squareCorner2);
         this.setBounds(getBounds().union(squareLine2.getBounds()));
 
-        final Polyline squareLine3 = getPolyLine(squareCorner2, intersectionEdges.getLastPoint());
+        var squareLine3 = getPolyLine(squareCorner2, intersectionEdges.getLastPoint());
         this.setBounds(getBounds().union(squareLine3.getBounds()));
 
         squareLine1.paint(graphics);
@@ -217,7 +215,7 @@ public class PolylineJumpConnection extends PolylineConnection {
     }
 
     private Polyline getPolyLine(Point firstPoint, Point lastPoint) {
-        Polyline line = new Polyline();
+        var line = new Polyline();
         line.addPoint(firstPoint);
         line.addPoint(lastPoint);
         line.setLineWidth(getLineWidth());
@@ -225,20 +223,19 @@ public class PolylineJumpConnection extends PolylineConnection {
         return line;
     }
 
-    private static Point computeTipPoint(
-            Point p0, Point p1, boolean right) {
+    private static Point computeTipPoint(Point p0, Point p1, boolean right) {
         double dx = p1.x() - p0.x();
         double dy = p1.y() - p0.y();
-        double length = Math.sqrt(dx * dx + dy * dy);
-        double dirX = dx / length;
-        double dirY = dy / length;
-        double height = Math.sqrt(3) / 2 * length;
-        double cx = p0.x() + dx * 0.5;
-        double cy = p0.y() + dy * 0.5;
-        double pDirX = -dirY;
-        double pDirY = dirX;
-        double rx = 0;
-        double ry = 0;
+        var length = Math.sqrt(dx * dx + dy * dy);
+        var dirX = dx / length;
+        var dirY = dy / length;
+        var height = Math.sqrt(3) / 2 * length;
+        var cx = p0.x() + dx * 0.5;
+        var cy = p0.y() + dy * 0.5;
+        var pDirX = -dirY;
+        var pDirY = dirX;
+        var rx = 0D;
+        var ry = 0D;
         if (right) {
             rx = cx + height * pDirX;
             ry = cy + height * pDirY;
@@ -250,19 +247,19 @@ public class PolylineJumpConnection extends PolylineConnection {
     }
 
     public static double angleOf(Point p1, Point p2) {
-        final double deltaY = (p1.y - p2.y);
-        final double deltaX = (p2.x - p1.x);
-        final double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
+        double deltaY = (p1.y - p2.y);
+        double deltaX = (p2.x - p1.x);
+        var result = Math.toDegrees(Math.atan2(deltaY, deltaX));
         return (result < 0) ? (360d + result) : result;
     }
 
-    private boolean isPointInIntersectionRange(final Point startPoint_, final Point endPoint_,
-            final HashMap<Point, PointList> intersectionMap_) {
+    private boolean isPointInIntersectionRange(Point startPoint_, Point endPoint_,
+            HashMap<Point, PointList> intersectionMap_) {
         if (intersectionMap_ != null && startPoint_ != null) {
-            Iterator<Entry<Point, PointList>> iterator = intersectionMap_.entrySet().iterator();
+            var iterator = intersectionMap_.entrySet().iterator();
             while (iterator.hasNext()) {
-                Entry<Point, PointList> currentPointList = iterator.next();
-                PointList value = currentPointList.getValue();
+                var currentPointList = iterator.next();
+                var value = currentPointList.getValue();
                 if (value != null && value.size() > 0) {
                     if (value.getFirstPoint() != null && (value.getLastPoint() != null)) {
                         if (value.getFirstPoint().equals(startPoint_)) {
@@ -279,7 +276,7 @@ public class PolylineJumpConnection extends PolylineConnection {
         return false;
     }
 
-    public void setLineJumpAdd(final LineJumpAdd lineJumpAdd_) {
+    public void setLineJumpAdd(LineJumpAdd lineJumpAdd_) {
         this.lineJumpAdd = lineJumpAdd_;
     }
 
@@ -287,7 +284,7 @@ public class PolylineJumpConnection extends PolylineConnection {
         this.lineJumpSize = lineJumpSize_;
     }
 
-    public void setLineJumpStyle(final LineJumpStyle lineJumpStyle_) {
+    public void setLineJumpStyle(LineJumpStyle lineJumpStyle_) {
         this.lineJumpStyle = lineJumpStyle_;
     }
 

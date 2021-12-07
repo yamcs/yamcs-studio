@@ -96,12 +96,12 @@ public interface FormulaFunction {
      *            a list of values
      * @return the latest time; can't be null
      */
-    public default Time latestValidTimeOrNowOf(final List<Object> args) {
+    public default Time latestValidTimeOrNowOf(List<Object> args) {
         Time finalTime = null;
 
         // Give priority to parameter time to prevent issues with sysdate associated to constants
         // being later than parameter time in case of replays.
-        boolean useOnlyParameterTime = false;
+        var useOnlyParameterTime = false;
         for (Object object : args) {
             if (object != null && object.getClass().getName().startsWith("org.yamcs")) {
                 useOnlyParameterTime = true;
@@ -139,8 +139,8 @@ public interface FormulaFunction {
      *            whether to consider null values
      * @return the highest alarm; can't be null
      */
-    public default Alarm highestSeverityOf(final List<Object> args, final boolean considerNull) {
-        Alarm finalAlarm = ValueFactory.alarmNone();
+    public default Alarm highestSeverityOf(List<Object> args, boolean considerNull) {
+        var finalAlarm = ValueFactory.alarmNone();
         for (Object object : args) {
             Alarm newAlarm;
             if (object == null && considerNull) {

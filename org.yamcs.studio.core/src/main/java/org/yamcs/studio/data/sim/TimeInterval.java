@@ -61,7 +61,7 @@ public class TimeInterval {
      * @return a new time interval
      */
     public static TimeInterval around(Duration duration, Instant reference) {
-        Duration half = duration.dividedBy(2);
+        var half = duration.dividedBy(2);
         return TimeInterval.between(reference.minus(half), reference.plus(half));
     }
 
@@ -117,10 +117,10 @@ public class TimeInterval {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof TimeInterval) {
-            TimeInterval other = (TimeInterval) obj;
-            boolean startEqual = (getStart() == other.getStart())
+            var other = (TimeInterval) obj;
+            var startEqual = (getStart() == other.getStart())
                     || (getStart() != null && getStart().equals(other.getStart()));
-            boolean endEqual = (getEnd() == other.getEnd()) || (getEnd() != null && getEnd().equals(other.getEnd()));
+            var endEqual = (getEnd() == other.getEnd()) || (getEnd() != null && getEnd().equals(other.getEnd()));
             return startEqual && endEqual;
         }
 
@@ -129,7 +129,7 @@ public class TimeInterval {
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        var hash = 5;
         hash = 29 * hash + (this.start != null ? this.start.hashCode() : 0);
         hash = 29 * hash + (this.end != null ? this.end.hashCode() : 0);
         return hash;

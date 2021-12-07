@@ -35,12 +35,10 @@ public class GridLayoutModel extends AbstractLayoutModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_NUMBER_OF_COLUMNS, "Number of Columns",
-                WidgetPropertyCategory.Display, 3, 1, 1000));
-        addProperty(new BooleanProperty(PROP_FILL_GRIDS, "Fill Grids",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new IntegerProperty(PROP_GRID_GAP, "Grid Gap",
-                WidgetPropertyCategory.Display, 2, 0, 100));
+        addProperty(new IntegerProperty(PROP_NUMBER_OF_COLUMNS, "Number of Columns", WidgetPropertyCategory.Display, 3,
+                1, 1000));
+        addProperty(new BooleanProperty(PROP_FILL_GRIDS, "Fill Grids", WidgetPropertyCategory.Display, false));
+        addProperty(new IntegerProperty(PROP_GRID_GAP, "Grid Gap", WidgetPropertyCategory.Display, 2, 0, 100));
 
         removeProperty(PROP_FONT);
 

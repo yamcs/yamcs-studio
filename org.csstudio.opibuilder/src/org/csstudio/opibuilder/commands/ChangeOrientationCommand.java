@@ -22,8 +22,7 @@ public class ChangeOrientationCommand extends Command {
 
     private OrientationType orientationType;
 
-    public ChangeOrientationCommand(AbstractWidgetModel widgetModel,
-            OrientationType orientationType) {
+    public ChangeOrientationCommand(AbstractWidgetModel widgetModel, OrientationType orientationType) {
         this.widgetModel = widgetModel;
         this.orientationType = orientationType;
     }

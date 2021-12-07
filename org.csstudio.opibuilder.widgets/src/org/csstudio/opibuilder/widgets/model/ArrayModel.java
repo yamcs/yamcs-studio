@@ -51,8 +51,8 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         }
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (ArrayDataType f : values()) {
                 result[i++] = f.toString();
             }
@@ -105,17 +105,16 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
     }
 
     @Override
-    public synchronized void addChild(AbstractWidgetModel child,
-            boolean changeParent) {
+    public synchronized void addChild(AbstractWidgetModel child, boolean changeParent) {
         if (!getChildren().isEmpty()) {
             return;
         }
         // child should not be scalable because their size are layoutted by the array figure.
         child.setScaleOptions(false, false, false);
         super.addChild(child, changeParent);
-        for (int i = 1; i < getVisibleElementsCount(); i++) {
+        for (var i = 1; i < getVisibleElementsCount(); i++) {
             try {
-                AbstractWidgetModel clone = XMLUtil.XMLElementToWidget(XMLUtil.widgetToXMLElement(child));
+                var clone = XMLUtil.XMLElementToWidget(XMLUtil.widgetToXMLElement(child));
                 super.addChild(clone, changeParent);
             } catch (Exception e) {
                 ErrorHandlerUtil.handleError("Failed to generate copy of the element widget in array widget.", e);
@@ -141,27 +140,24 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_ARRAY_LENGTH, "Array Length",
-                WidgetPropertyCategory.Behavior, 10, 0, Integer.MAX_VALUE));
-        addProperty(new IntegerProperty(PROP_SPINNER_WIDTH, "Spinner Width",
-                WidgetPropertyCategory.Display, 40, 0, 1000));
-        addProperty(new BooleanProperty(PROP_HORIZONTAL,
-                "Horizontal", WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_SHOW_SPINNER,
-                "Show Spinner", WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR,
-                "Show Scrollbar", WidgetPropertyCategory.Display, true));
+        addProperty(new IntegerProperty(PROP_ARRAY_LENGTH, "Array Length", WidgetPropertyCategory.Behavior, 10, 0,
+                Integer.MAX_VALUE));
+        addProperty(
+                new IntegerProperty(PROP_SPINNER_WIDTH, "Spinner Width", WidgetPropertyCategory.Display, 40, 0, 1000));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal", WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_SHOW_SPINNER, "Show Spinner", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar", WidgetPropertyCategory.Display, true));
         addProperty(new IntegerProperty(PROP_VISIBLE_ELEMENTS_COUNT, "Visible Elements Count",
                 WidgetPropertyCategory.Display, 1, 0, 1000));
-        addProperty(new ComboProperty(PROP_DATA_TYPE, "Data Type",
-                WidgetPropertyCategory.Behavior, ArrayDataType.stringValues(), 0));
+        addProperty(new ComboProperty(PROP_DATA_TYPE, "Data Type", WidgetPropertyCategory.Behavior,
+                ArrayDataType.stringValues(), 0));
 
         setPropertyVisibleAndSavable(PROP_VISIBLE_ELEMENTS_COUNT, false, true);
         getProperty(PROP_VISIBLE_ELEMENTS_COUNT).addPropertyChangeListener(evt -> {
             if (getChildren().size() < 1) {
                 return;
             }
-            AbstractWidgetModel child = getChildren().get(0);
+            var child = getChildren().get(0);
             removeAllChildren();
             addChild(child);
         });

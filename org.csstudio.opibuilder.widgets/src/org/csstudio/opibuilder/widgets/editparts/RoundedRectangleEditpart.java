@@ -24,8 +24,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        RoundedRectangleFigure figure = new RoundedRectangleFigure();
-        RoundedRectangleModel model = getWidgetModel();
+        var figure = new RoundedRectangleFigure();
+        var model = getWidgetModel();
         figure.setFill(model.getFillLevel());
         figure.setHorizontalFill(model.isHorizontalFill());
         figure.setTransparent(model.isTransparent());
@@ -49,10 +49,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (RoundedRectangleFigure) refreshableFigure;
                 figure.setFill((Double) newValue);
                 return true;
             }
@@ -62,10 +60,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         // fill orientaion
         IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (RoundedRectangleFigure) refreshableFigure;
                 figure.setHorizontalFill((Boolean) newValue);
                 return true;
             }
@@ -75,10 +71,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         // transparent
         IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (RoundedRectangleFigure) refreshableFigure;
                 figure.setTransparent((Boolean) newValue);
                 return true;
             }
@@ -88,24 +82,18 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ((RoundedRectangleFigure) refreshableFigure).setLineColor(
-                        ((OPIColor) newValue).getSWTColor());
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                ((RoundedRectangleFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
-                lineColorHandler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
 
         // corner width
         IWidgetPropertyChangeHandler cornerWidthHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (RoundedRectangleFigure) refreshableFigure;
                 figure.setCornerWidth((Integer) newValue);
                 return true;
             }
@@ -115,10 +103,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         // corner height
         IWidgetPropertyChangeHandler cornerHeightHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (RoundedRectangleFigure) refreshableFigure;
                 figure.setCornerHeight((Integer) newValue);
                 return true;
             }
@@ -161,8 +147,9 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
     public void setValue(Object value) {
         if (value instanceof Number) {
             ((RoundedRectangleFigure) getFigure()).setFill(((Number) value).doubleValue());
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override

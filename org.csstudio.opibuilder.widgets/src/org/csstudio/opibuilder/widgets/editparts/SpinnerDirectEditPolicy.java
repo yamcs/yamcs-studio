@@ -18,17 +18,16 @@ import org.eclipse.gef.requests.DirectEditRequest;
 /**
  * The Editpolicy to handle direct text edit in spinner.
  */
-public class SpinnerDirectEditPolicy
-        extends DirectEditPolicy {
+public class SpinnerDirectEditPolicy extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
     @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String labelText = (String) edit.getCellEditor().getValue();
-        SpinnerEditpart spinner = (SpinnerEditpart) getHost();
-        SpinnerEditCommand command = new SpinnerEditCommand((LabelModel) spinner.getModel(), labelText);
+        var labelText = (String) edit.getCellEditor().getValue();
+        var spinner = (SpinnerEditpart) getHost();
+        var command = new SpinnerEditCommand((LabelModel) spinner.getModel(), labelText);
         return command;
     }
 
@@ -51,10 +50,11 @@ public class SpinnerDirectEditPolicy
 
         public SpinnerEditCommand(LabelModel l, String s) {
             label = l;
-            if (s != null)
+            if (s != null) {
                 newText = s;
-            else
+            } else {
                 newText = "";
+            }
         }
 
         @Override

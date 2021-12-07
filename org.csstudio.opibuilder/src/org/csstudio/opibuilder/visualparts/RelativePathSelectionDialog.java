@@ -105,15 +105,14 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     }
 
     @Override
-    protected Control createDialogArea(final Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+    protected Control createDialogArea(Composite parent) {
+        var composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new GridLayout(1, false));
         if (_message != null) {
-            Label label = new Label(composite, SWT.WRAP);
+            var label = new Label(composite, SWT.WRAP);
             label.setText(_message);
-            GridData data = new GridData(GridData.GRAB_HORIZONTAL
-                    | GridData.HORIZONTAL_ALIGN_FILL
-                    | GridData.VERTICAL_ALIGN_CENTER);
+            var data = new GridData(
+                    GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
             data.horizontalSpan = 2;
             data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
             label.setLayoutData(data);
@@ -121,18 +120,16 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
 
         // The New Project and New Folder actions will be shown if there are
         // no file extensions, i.e. if the dialog is opened to select a folder.
-        boolean showNewContainerActions = (_fileExtensions == null
-                || _fileExtensions.length == 0);
+        var showNewContainerActions = (_fileExtensions == null || _fileExtensions.length == 0);
 
-        _resourceSelectionGroup = new ResourceSelectionGroup(composite, this,
-                _fileExtensions, showNewContainerActions);
+        _resourceSelectionGroup = new ResourceSelectionGroup(composite, this, _fileExtensions, showNewContainerActions);
         new Label(composite, SWT.NONE).setText("Resource Path:");
         _resourcePathText = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         _resourcePathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         if (_path != null && !_path.isEmpty()) {
             _resourcePathText.setText(_path.toString());
             if (!_path.contains("://")) {
-                IPath relPath = Path.fromPortableString(_path);
+                var relPath = Path.fromPortableString(_path);
                 if (relative) {
                     _resourceSelectionGroup.setSelectedResource(refPath.append(relPath));
                 } else {
@@ -141,7 +138,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
             }
         }
         // the check box for relative path
-        Button checkBox = new Button(composite, SWT.CHECK);
+        var checkBox = new Button(composite, SWT.CHECK);
         checkBox.setSelection(relative);
         checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         checkBox.setText("Return relative path");
@@ -150,7 +147,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
             public void widgetSelected(SelectionEvent e) {
                 relative = checkBox.getSelection();
                 if (relative && !_path.contains("://")) {
-                    IPath relPath = Path.fromPortableString(_path);
+                    var relPath = Path.fromPortableString(_path);
                     _resourcePathText.setText(ResourceUtil.buildRelativePath(refPath, relPath).toString());
                 } else {
                     _resourcePathText.setText(_path);
@@ -178,9 +175,9 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
 
     @Override
     public void handleEvent(Event event) {
-        ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
+        var widget = (ResourceSelectionGroup) event.widget;
 
-        IPath fullPath = widget.getFullPath();
+        var fullPath = widget.getFullPath();
         _path = (fullPath == null) ? null : fullPath.toPortableString();
         if (_path == null) {
             return;

@@ -24,7 +24,7 @@ public class MissionDatabase {
 
     public void addParameter(ParameterInfo parameter) {
         parameters.add(parameter);
-        NamedObjectId id = NamedObjectId.newBuilder().setName(parameter.getQualifiedName()).build();
+        var id = NamedObjectId.newBuilder().setName(parameter.getQualifiedName()).build();
         parametersById.put(id, parameter);
         for (NamedObjectId alias : parameter.getAliasList()) {
             parametersById.put(alias, parameter);
@@ -32,8 +32,8 @@ public class MissionDatabase {
 
         // Update unit index
         if (parameter.hasType() && parameter.getType().getUnitSetCount() > 0) {
-            String combinedUnit = parameter.getType().getUnitSet(0).getUnit();
-            for (int i = 1; i < parameter.getType().getUnitSetCount(); i++) {
+            var combinedUnit = parameter.getType().getUnitSet(0).getUnit();
+            for (var i = 1; i < parameter.getType().getUnitSetCount(); i++) {
                 combinedUnit += " " + parameter.getType().getUnitSet(i).getUnit();
             }
             unitsById.put(id, combinedUnit);
@@ -70,7 +70,7 @@ public class MissionDatabase {
      * ParameterInfo will then match the containing parameter.
      */
     public ParameterInfo getParameterInfo(NamedObjectId id) {
-        String[] parts = removeArrayAndAggregateOffset(id.getName());
+        var parts = removeArrayAndAggregateOffset(id.getName());
         if (parts[1] != null) {
             id = NamedObjectId.newBuilder(id).setName(parts[0]).build();
         }
@@ -86,14 +86,14 @@ public class MissionDatabase {
      * returned ParameterInfo will then match that specific path into the parameter.
      */
     public ParameterTypeInfo getParameterTypeInfo(NamedObjectId id) {
-        String suffix = removeArrayAndAggregateOffset(id.getName())[1];
+        var suffix = removeArrayAndAggregateOffset(id.getName())[1];
 
-        ParameterInfo parameter = getParameterInfo(id);
+        var parameter = getParameterInfo(id);
         if (parameter == null) {
             return null;
         }
 
-        String qualifiedNameWithSuffix = parameter.getQualifiedName();
+        var qualifiedNameWithSuffix = parameter.getQualifiedName();
         if (suffix != null) {
             qualifiedNameWithSuffix += suffix;
         }
@@ -109,17 +109,17 @@ public class MissionDatabase {
             return parent;
         } else {
             for (MemberInfo member : parent.getMemberList()) {
-                ParameterTypeInfo memberType = member.getType();
-                String name = parentName + "." + member.getName();
-                ParameterTypeInfo match = findMatchingParameterType(memberType, name, qualifiedNameWithSuffix);
+                var memberType = member.getType();
+                var name = parentName + "." + member.getName();
+                var match = findMatchingParameterType(memberType, name, qualifiedNameWithSuffix);
                 if (match != null) {
                     return match;
                 }
             }
             if (parent.hasArrayInfo()) {
-                ParameterTypeInfo entryType = parent.getArrayInfo().getType();
-                String name = parentName + "\\[[0-9]+\\]";
-                ParameterTypeInfo match = findMatchingParameterType(entryType, name, qualifiedNameWithSuffix);
+                var entryType = parent.getArrayInfo().getType();
+                var name = parentName + "\\[[0-9]+\\]";
+                var match = findMatchingParameterType(entryType, name, qualifiedNameWithSuffix);
                 if (match != null) {
                     return match;
                 }
@@ -138,16 +138,16 @@ public class MissionDatabase {
      * For example: "/bla/bloe.f[3].heh" becomes { "/bla/bloe", ".f[3].heh" }
      */
     private static String[] removeArrayAndAggregateOffset(String name) {
-        int searchFrom = name.lastIndexOf('/');
+        var searchFrom = name.lastIndexOf('/');
 
-        int trimFrom = -1;
+        var trimFrom = -1;
 
-        int arrayStart = name.indexOf('[', searchFrom);
+        var arrayStart = name.indexOf('[', searchFrom);
         if (arrayStart != -1) {
             trimFrom = arrayStart;
         }
 
-        int memberStart = name.indexOf('.', searchFrom);
+        var memberStart = name.indexOf('.', searchFrom);
         if (memberStart != -1) {
             if (trimFrom >= 0) {
                 trimFrom = Math.min(trimFrom, memberStart);

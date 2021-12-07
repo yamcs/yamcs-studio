@@ -25,7 +25,6 @@ import org.csstudio.opibuilder.commands.WidgetCreateCommand;
 import org.csstudio.opibuilder.commands.WidgetSetConstraintCommand;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
-import org.csstudio.opibuilder.feedback.IGraphicalFeedbackFactory;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
@@ -35,7 +34,6 @@ import org.csstudio.opibuilder.util.GuideUtil;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
@@ -61,48 +59,44 @@ import org.eclipse.gef.rulers.RulerProvider;
 public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
     @Override
-    protected EditPolicy createChildEditPolicy(final EditPart child) {
-        IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(
-                ((AbstractWidgetModel) child.getModel()).getTypeID());
+    protected EditPolicy createChildEditPolicy(EditPart child) {
+        var feedbackFactory = WidgetsService.getInstance()
+                .getWidgetFeedbackFactory(((AbstractWidgetModel) child.getModel()).getTypeID());
         if (feedbackFactory != null && child instanceof AbstractBaseEditPart) {
-            return new GraphicalFeedbackChildEditPolicy(
-                    (AbstractBaseEditPart) child, feedbackFactory);
-        } else
+            return new GraphicalFeedbackChildEditPolicy((AbstractBaseEditPart) child, feedbackFactory);
+        } else {
             return new ResizableEditPolicy() {
                 @Override
                 protected List<?> createSelectionHandles() {
                     @SuppressWarnings("unchecked")
                     List<Handle> handleList = super.createSelectionHandles();
-                    if (child.getModel() instanceof IPVWidgetModel
-                            && ((AbstractWidgetModel) (child.getModel()))
-                                    .getProperty(IPVWidgetModel.PROP_PVNAME)
-                                    .isVisibleInPropSheet()) {
-                        handleList.add(new PVWidgetSelectionHandle(
-                                (GraphicalEditPart) child));
+                    if (child.getModel() instanceof IPVWidgetModel && ((AbstractWidgetModel) (child.getModel()))
+                            .getProperty(IPVWidgetModel.PROP_PVNAME).isVisibleInPropSheet()) {
+                        handleList.add(new PVWidgetSelectionHandle((GraphicalEditPart) child));
                     }
                     return handleList;
                 }
             };
+        }
     }
 
     @Override
-    protected Command createChangeConstraintCommand(
-            ChangeBoundsRequest request, EditPart child, Object constraint) {
-        if (!(child instanceof AbstractBaseEditPart) || !(constraint instanceof Rectangle))
+    protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
+        if (!(child instanceof AbstractBaseEditPart) || !(constraint instanceof Rectangle)) {
             return super.createChangeConstraintCommand(request, child, constraint);
-        AbstractBaseEditPart part = (AbstractBaseEditPart) child;
-        AbstractWidgetModel widgetModel = part.getWidgetModel();
+        }
+        var part = (AbstractBaseEditPart) child;
+        var widgetModel = part.getWidgetModel();
 
-        IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance()
-                .getWidgetFeedbackFactory(widgetModel.getTypeID());
+        var feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(widgetModel.getTypeID());
 
         Command cmd = null;
-        if (feedbackFactory != null)
-            cmd = feedbackFactory.createChangeBoundsCommand(
-                    widgetModel, request, (Rectangle) constraint);
-        if (cmd == null)
-            cmd = new WidgetSetConstraintCommand(
-                    widgetModel, request, (Rectangle) constraint);
+        if (feedbackFactory != null) {
+            cmd = feedbackFactory.createChangeBoundsCommand(widgetModel, request, (Rectangle) constraint);
+        }
+        if (cmd == null) {
+            cmd = new WidgetSetConstraintCommand(widgetModel, request, (Rectangle) constraint);
+        }
 
         List<ConnectionModel> allConnections = new ArrayList<ConnectionModel>(
                 part.getWidgetModel().getSourceConnections());
@@ -114,23 +108,19 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
             }
         }
         if (allConnections.size() > 0) {
-            CompoundCommand reRouteCmd = new CompoundCommand();
+            var reRouteCmd = new CompoundCommand();
             for (ConnectionModel srcConn : allConnections) {
-                reRouteCmd.add(new SetWidgetPropertyCommand(srcConn,
-                        ConnectionModel.PROP_POINTS, new PointList()));
+                reRouteCmd.add(new SetWidgetPropertyCommand(srcConn, ConnectionModel.PROP_POINTS, new PointList()));
             }
             cmd = cmd.chain(reRouteCmd);
         }
         // for guide support
 
         if ((request.getResizeDirection() & PositionConstants.NORTH_SOUTH) != 0) {
-            Integer guidePos = (Integer) request.getExtendedData().get(
-                    SnapToGuides.KEY_HORIZONTAL_GUIDE);
+            var guidePos = (Integer) request.getExtendedData().get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
             if (guidePos != null) {
-                cmd = chainGuideAttachmentCommand(request, part, cmd,
-                        true);
-            } else if (GuideUtil.getInstance().getGuide(
-                    widgetModel, true) != null) {
+                cmd = chainGuideAttachmentCommand(request, part, cmd, true);
+            } else if (GuideUtil.getInstance().getGuide(widgetModel, true) != null) {
                 // SnapToGuides didn't provide a horizontal guide, but
                 // this part is attached
                 // to a horizontal guide. Now we check to see if the
@@ -139,9 +129,8 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 // the case, we need to
                 // detach the part from the guide; otherwise, we leave
                 // it alone.
-                int alignment = GuideUtil.getInstance().getGuide(
-                        widgetModel, true).getAlignment(widgetModel);
-                int edgeBeingResized = 0;
+                var alignment = GuideUtil.getInstance().getGuide(widgetModel, true).getAlignment(widgetModel);
+                var edgeBeingResized = 0;
                 if ((request.getResizeDirection() & PositionConstants.NORTH) != 0) {
                     edgeBeingResized = -1;
                 } else {
@@ -154,16 +143,12 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         }
 
         if ((request.getResizeDirection() & PositionConstants.EAST_WEST) != 0) {
-            Integer guidePos = (Integer) request.getExtendedData().get(
-                    SnapToGuides.KEY_VERTICAL_GUIDE);
+            var guidePos = (Integer) request.getExtendedData().get(SnapToGuides.KEY_VERTICAL_GUIDE);
             if (guidePos != null) {
-                cmd = chainGuideAttachmentCommand(request, part, cmd,
-                        false);
-            } else if (GuideUtil.getInstance().getGuide(
-                    widgetModel, false) != null) {
-                int alignment = GuideUtil.getInstance().getGuide(
-                        widgetModel, false).getAlignment(widgetModel);
-                int edgeBeingResized = 0;
+                cmd = chainGuideAttachmentCommand(request, part, cmd, false);
+            } else if (GuideUtil.getInstance().getGuide(widgetModel, false) != null) {
+                var alignment = GuideUtil.getInstance().getGuide(widgetModel, false).getAlignment(widgetModel);
+                var edgeBeingResized = 0;
                 if ((request.getResizeDirection() & PositionConstants.WEST) != 0) {
                     edgeBeingResized = -1;
                 } else {
@@ -175,8 +160,7 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
             }
         }
 
-        if (request.getType().equals(REQ_MOVE_CHILDREN)
-                || request.getType().equals(REQ_ALIGN_CHILDREN)) {
+        if (request.getType().equals(REQ_MOVE_CHILDREN) || request.getType().equals(REQ_ALIGN_CHILDREN)) {
             cmd = chainGuideAttachmentCommand(request, part, cmd, true);
             cmd = chainGuideAttachmentCommand(request, part, cmd, false);
             cmd = chainGuideDetachmentCommand(request, part, cmd, true);
@@ -188,20 +172,20 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     }
 
     @Override
-    protected Command createChangeConstraintCommand(EditPart child,
-            Object constraint) {
+    protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
         return null;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     protected Command createAddCommand(EditPart child, Object constraint) {
-        if (!(child instanceof AbstractBaseEditPart) || !(constraint instanceof Rectangle))
+        if (!(child instanceof AbstractBaseEditPart) || !(constraint instanceof Rectangle)) {
             return super.createAddCommand(child, constraint);
+        }
 
-        AbstractContainerModel container = (AbstractContainerModel) getHost().getModel();
-        AbstractWidgetModel widget = (AbstractWidgetModel) child.getModel();
-        CompoundCommand result = new CompoundCommand("Adding widgets to container");
+        var container = (AbstractContainerModel) getHost().getModel();
+        var widget = (AbstractWidgetModel) child.getModel();
+        var result = new CompoundCommand("Adding widgets to container");
 
         result.add(new AddWidgetCommand(container, widget, (Rectangle) constraint));
         return result;
@@ -209,30 +193,31 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
     @Override
     protected Command getCreateCommand(CreateRequest request) {
-        String typeId = determineTypeIdFromRequest(request);
+        var typeId = determineTypeIdFromRequest(request);
 
-        IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
+        var feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
 
-        Command widgetCreateCommand = createWidgetCreateCommand(request);
-        if (widgetCreateCommand == null)
+        var widgetCreateCommand = createWidgetCreateCommand(request);
+        if (widgetCreateCommand == null) {
             return null;
+        }
         if (feedbackFactory != null) {
-            CompoundCommand compoundCommand = new CompoundCommand();
+            var compoundCommand = new CompoundCommand();
             compoundCommand.add(widgetCreateCommand);
-            Command initialBoundsCommand = feedbackFactory.createInitialBoundsCommand(
+            var initialBoundsCommand = feedbackFactory.createInitialBoundsCommand(
                     (AbstractWidgetModel) request.getNewObject(), request, (Rectangle) getConstraintFor(request));
-            if (initialBoundsCommand != null)
+            if (initialBoundsCommand != null) {
                 compoundCommand.add(initialBoundsCommand);
+            }
             return compoundCommand;
-        } else
+        } else {
             return widgetCreateCommand;
+        }
     }
 
-    protected Command createWidgetCreateCommand(
-            CreateRequest request) {
-        WidgetCreateCommand widgetCreateCommand = new WidgetCreateCommand((AbstractWidgetModel) request.getNewObject(),
-                (AbstractContainerModel) getHost().getModel(),
-                (Rectangle) getConstraintFor(request), false, true);
+    protected Command createWidgetCreateCommand(CreateRequest request) {
+        var widgetCreateCommand = new WidgetCreateCommand((AbstractWidgetModel) request.getNewObject(),
+                (AbstractContainerModel) getHost().getModel(), (Rectangle) getConstraintFor(request), false, true);
         return widgetCreateCommand;
     }
 
@@ -244,14 +229,13 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      * @return custom feedback figure
      */
     @Override
-    protected IFigure createSizeOnDropFeedback(final CreateRequest request) {
-        String typeId = determineTypeIdFromRequest(request);
+    protected IFigure createSizeOnDropFeedback(CreateRequest request) {
+        var typeId = determineTypeIdFromRequest(request);
 
-        IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
+        var feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
 
         if (feedbackFactory != null) {
-            Shape feedbackFigure = feedbackFactory
-                    .createSizeOnDropFeedback(request);
+            var feedbackFigure = feedbackFactory.createSizeOnDropFeedback(request);
             if (feedbackFigure != null) {
                 addFeedback(feedbackFigure);
                 return feedbackFigure;
@@ -263,15 +247,14 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
     @Override
     protected void showSizeOnDropFeedback(CreateRequest request) {
-        String typeId = determineTypeIdFromRequest(request);
+        var typeId = determineTypeIdFromRequest(request);
 
-        IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
+        var feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(typeId);
 
         if (feedbackFactory != null) {
-            IFigure feedbackFigure = getSizeOnDropFeedback(request);
+            var feedbackFigure = getSizeOnDropFeedback(request);
 
-            feedbackFactory.showSizeOnDropFeedback(request, feedbackFigure,
-                    getCreationFeedbackOffset(request));
+            feedbackFactory.showSizeOnDropFeedback(request, feedbackFigure, getCreationFeedbackOffset(request));
 
             // feedbackFigure.repaint();
         } else {
@@ -288,10 +271,10 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      * @return the type identification
      */
     @SuppressWarnings("rawtypes")
-    private String determineTypeIdFromRequest(final CreateRequest request) {
-        Class newObject = (Class) request.getNewObjectType();
+    private String determineTypeIdFromRequest(CreateRequest request) {
+        var newObject = (Class) request.getNewObjectType();
         AbstractWidgetModel instance;
-        String typeId = "";
+        var typeId = "";
         try {
             instance = (AbstractWidgetModel) newObject.newInstance();
             typeId = instance.getTypeID();
@@ -315,23 +298,19 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      *            A boolean, true if the guide is horizontal, false otherwise
      * @return Command The given command
      */
-    private Command chainGuideAttachmentCommand(final Request request,
-            final AbstractBaseEditPart part, final Command cmd,
-            final boolean horizontal) {
-        Command result = cmd;
+    private Command chainGuideAttachmentCommand(Request request, AbstractBaseEditPart part, Command cmd,
+            boolean horizontal) {
+        var result = cmd;
 
         // Attach to guide, if one is given
-        Integer guidePos = (Integer) request.getExtendedData().get(
-                horizontal ? SnapToGuides.KEY_HORIZONTAL_GUIDE
-                        : SnapToGuides.KEY_VERTICAL_GUIDE);
+        var guidePos = (Integer) request.getExtendedData()
+                .get(horizontal ? SnapToGuides.KEY_HORIZONTAL_GUIDE : SnapToGuides.KEY_VERTICAL_GUIDE);
         if (guidePos != null) {
-            int alignment = ((Integer) request.getExtendedData().get(
-                    horizontal ? SnapToGuides.KEY_HORIZONTAL_ANCHOR
-                            : SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
-            ChangeGuideCommand cgm = new ChangeGuideCommand(
-                    part.getWidgetModel(), horizontal);
-            cgm.setNewGuide(findGuideAt(guidePos.intValue(), horizontal),
-                    alignment);
+            var alignment = ((Integer) request.getExtendedData()
+                    .get(horizontal ? SnapToGuides.KEY_HORIZONTAL_ANCHOR : SnapToGuides.KEY_VERTICAL_ANCHOR))
+                            .intValue();
+            var cgm = new ChangeGuideCommand(part.getWidgetModel(), horizontal);
+            cgm.setNewGuide(findGuideAt(guidePos.intValue(), horizontal), alignment);
             result = result.chain(cgm);
         }
 
@@ -351,18 +330,15 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      *            A boolean, true if the guide is horizontal, false otherwise
      * @return Command The given command
      */
-    private Command chainGuideDetachmentCommand(final Request request,
-            final AbstractBaseEditPart part, final Command cmd,
-            final boolean horizontal) {
-        Command result = cmd;
+    private Command chainGuideDetachmentCommand(Request request, AbstractBaseEditPart part, Command cmd,
+            boolean horizontal) {
+        var result = cmd;
 
         // Detach from guide, if none is given
-        Integer guidePos = (Integer) request.getExtendedData().get(
-                horizontal ? SnapToGuides.KEY_HORIZONTAL_GUIDE
-                        : SnapToGuides.KEY_VERTICAL_GUIDE);
+        var guidePos = (Integer) request.getExtendedData()
+                .get(horizontal ? SnapToGuides.KEY_HORIZONTAL_GUIDE : SnapToGuides.KEY_VERTICAL_GUIDE);
         if (guidePos == null) {
-            result = result.chain(new ChangeGuideCommand(part.getWidgetModel(),
-                    horizontal));
+            result = result.chain(new ChangeGuideCommand(part.getWidgetModel(), horizontal));
         }
 
         return result;
@@ -377,38 +353,32 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      *            The orientation of the guide
      * @return GuideModel The GuideModel
      */
-    private GuideModel findGuideAt(final int pos, final boolean horizontal) {
-        RulerProvider provider = ((RulerProvider) getHost().getViewer()
-                .getProperty(
-                        horizontal ? RulerProvider.PROPERTY_VERTICAL_RULER
-                                : RulerProvider.PROPERTY_HORIZONTAL_RULER));
+    private GuideModel findGuideAt(int pos, boolean horizontal) {
+        var provider = ((RulerProvider) getHost().getViewer().getProperty(
+                horizontal ? RulerProvider.PROPERTY_VERTICAL_RULER : RulerProvider.PROPERTY_HORIZONTAL_RULER));
         return (GuideModel) provider.getGuideAt(pos);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     protected Command getCloneCommand(ChangeBoundsRequest request) {
-        CloneCommand clone = new CloneCommand((AbstractContainerModel) getHost().getModel());
+        var clone = new CloneCommand((AbstractContainerModel) getHost().getModel());
 
         for (AbstractBaseEditPart part : sortSelectedWidgets(request.getEditParts())) {
             clone.addPart((AbstractWidgetModel) part.getModel(), (Rectangle) getConstraintForClone(part, request));
         }
 
         // Attach to horizontal guide, if one is given
-        Integer guidePos = (Integer) request.getExtendedData()
-                .get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
+        var guidePos = (Integer) request.getExtendedData().get(SnapToGuides.KEY_HORIZONTAL_GUIDE);
         if (guidePos != null) {
-            int hAlignment = ((Integer) request.getExtendedData()
-                    .get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
+            var hAlignment = ((Integer) request.getExtendedData().get(SnapToGuides.KEY_HORIZONTAL_ANCHOR)).intValue();
             clone.setGuide(findGuideAt(guidePos.intValue(), true), hAlignment, true);
         }
 
         // Attach to vertical guide, if one is given
-        guidePos = (Integer) request.getExtendedData()
-                .get(SnapToGuides.KEY_VERTICAL_GUIDE);
+        guidePos = (Integer) request.getExtendedData().get(SnapToGuides.KEY_VERTICAL_GUIDE);
         if (guidePos != null) {
-            int vAlignment = ((Integer) request.getExtendedData()
-                    .get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
+            var vAlignment = ((Integer) request.getExtendedData().get(SnapToGuides.KEY_VERTICAL_ANCHOR)).intValue();
             clone.setGuide(findGuideAt(guidePos.intValue(), false), vAlignment, false);
         }
         return clone;
@@ -426,39 +396,43 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         AbstractContainerModel parent = null;
         for (Object o : selection) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
-                AbstractWidgetModel widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
-                if (parent == null)
+                var widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
+                if (parent == null) {
                     parent = widgetModel.getParent();
-                if (widgetModel.getParent() == parent)
+                }
+                if (widgetModel.getParent() == parent) {
                     sameParentWidgets.add((AbstractBaseEditPart) o);
-                else
+                } else {
                     differentParentWidgets.add((AbstractBaseEditPart) o);
+                }
             }
         }
         // sort widgets to its original order
         if (sameParentWidgets.size() > 1) {
-            AbstractBaseEditPart[] modelArray = sameParentWidgets.toArray(new AbstractBaseEditPart[0]);
+            var modelArray = sameParentWidgets.toArray(new AbstractBaseEditPart[0]);
 
             Arrays.sort(modelArray, new Comparator<AbstractBaseEditPart>() {
 
                 @Override
-                public int compare(AbstractBaseEditPart o1,
-                        AbstractBaseEditPart o2) {
+                public int compare(AbstractBaseEditPart o1, AbstractBaseEditPart o2) {
                     if (o1.getWidgetModel().getParent().getChildren().indexOf(o1.getWidgetModel()) > o2.getWidgetModel()
-                            .getParent().getChildren().indexOf(o2.getWidgetModel()))
+                            .getParent().getChildren().indexOf(o2.getWidgetModel())) {
                         return 1;
-                    else
+                    } else {
                         return -1;
+                    }
                 }
 
             });
             result.addAll(Arrays.asList(modelArray));
-            if (differentParentWidgets.size() > 0)
+            if (differentParentWidgets.size() > 0) {
                 result.addAll(differentParentWidgets);
+            }
             return result;
         }
-        if (differentParentWidgets.size() > 0)
+        if (differentParentWidgets.size() > 0) {
             sameParentWidgets.addAll(differentParentWidgets);
+        }
 
         return sameParentWidgets;
     }
@@ -476,16 +450,14 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     // This has been overriden to fix a bug when handle bounds does not equal with bounds. For example, polyline figue.
     @Override
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
-        CompoundCommand resize = new CompoundCommand();
+        var resize = new CompoundCommand();
         Command c;
         GraphicalEditPart child;
         List<?> children = request.getEditParts();
 
-        for (int i = 0; i < children.size(); i++) {
+        for (var i = 0; i < children.size(); i++) {
             child = (GraphicalEditPart) children.get(i);
-            c = createChangeConstraintCommand(
-                    request,
-                    child,
+            c = createChangeConstraintCommand(request, child,
                     translateToModelConstraint(getConstraintForResize(request, child)));
             resize.add(c);
         }
@@ -505,9 +477,8 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      *            the child EditPart for which the constraint should be generated
      * @return the draw2d constraint
      */
-    protected Object getConstraintForResize(ChangeBoundsRequest request,
-            GraphicalEditPart child) {
-        Rectangle bounds = child.getFigure().getBounds();
+    protected Object getConstraintForResize(ChangeBoundsRequest request, GraphicalEditPart child) {
+        var bounds = child.getFigure().getBounds();
         if (child.getFigure() instanceof HandleBounds) {
             bounds = ((HandleBounds) child.getFigure()).getHandleBounds();
         }

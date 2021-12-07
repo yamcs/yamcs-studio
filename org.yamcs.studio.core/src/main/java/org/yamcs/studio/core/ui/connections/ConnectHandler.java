@@ -11,7 +11,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.connect.ConnectionPreferences;
@@ -29,10 +28,10 @@ public class ConnectHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        ConnectionsDialog dialog = new ConnectionsDialog(window.getShell());
+        var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        var dialog = new ConnectionsDialog(window.getShell());
         if (dialog.open() == Dialog.OK) {
-            YamcsConfiguration conf = dialog.getSelectedConfiguration();
+            var conf = dialog.getSelectedConfiguration();
             doConnect(HandlerUtil.getActiveShell(event), conf);
         }
 
@@ -44,7 +43,7 @@ public class ConnectHandler extends AbstractHandler {
 
         ConnectionPreferences.setLastUsedConnection(conf.getId());
         try {
-            YamcsConnector connector = new YamcsConnector(shell, conf);
+            var connector = new YamcsConnector(shell, conf);
             new ProgressMonitorDialog(shell).run(true, true, connector);
         } catch (InvocationTargetException e) {
             log.log(Level.SEVERE, "Failed to connect", e);

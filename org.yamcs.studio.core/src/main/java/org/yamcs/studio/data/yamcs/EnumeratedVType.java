@@ -33,11 +33,9 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
         // TODO Get an id matching the qualified name from the info object
         // (not e.g. the opsname)
         // But be careful that any suffixes ('[]' or '.') are kept
-        NamedObjectId id = NamedObjectId.newBuilder()
-                .setName(getId().getName())
-                .build();
+        var id = NamedObjectId.newBuilder().setName(getId().getName()).build();
 
-        ParameterTypeInfo specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
+        var specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
         return getLabelsForType(specificPtype);
     }
 
@@ -45,7 +43,7 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
         if (ptype == null) {
             return Collections.emptyList();
         }
-        List<EnumValue> enumValues = ptype.getEnumValueList();
+        var enumValues = ptype.getEnumValueList();
         if (enumValues != null) {
             List<String> labels = new ArrayList<>(enumValues.size());
             for (EnumValue enumValue : enumValues) {

@@ -63,8 +63,8 @@ public class StringTableProperty extends AbstractWidgetProperty {
      *            the title for each column. The length of titles array is the number of columns. it can be null if the
      *            property is not visible.
      */
-    public StringTableProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String[][] default_value, String[] titles) {
+    public StringTableProperty(String prop_id, String description, WidgetPropertyCategory category,
+            String[][] default_value, String[] titles) {
         this(prop_id, description, category, default_value, titles, null, null);
 
     }
@@ -84,9 +84,8 @@ public class StringTableProperty extends AbstractWidgetProperty {
      *            the title for each column. The length of titles array is the number of columns. it can be null if the
      *            property is not visible.
      */
-    public StringTableProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String[][] default_value, String[] titles,
-            CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
+    public StringTableProperty(String prop_id, String description, WidgetPropertyCategory category,
+            String[][] default_value, String[] titles, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(prop_id, description, category, default_value);
         this.titles = titles;
         this.cellEditorTypes = cellEditorTypes;
@@ -109,15 +108,14 @@ public class StringTableProperty extends AbstractWidgetProperty {
     @Override
     public Object getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            String[][] originValue = (String[][]) super.getPropertyValue();
+            var originValue = (String[][]) super.getPropertyValue();
             if (originValue.length <= 0) {
                 return originValue;
             }
-            String[][] result = new String[originValue.length][originValue[0].length];
-            for (int i = 0; i < originValue.length; i++) {
-                for (int j = 0; j < originValue[0].length; j++) {
-                    result[i][j] = OPIBuilderMacroUtil.replaceMacros(
-                            widgetModel, originValue[i][j]);
+            var result = new String[originValue.length][originValue[0].length];
+            for (var i = 0; i < originValue.length; i++) {
+                for (var j = 0; j < originValue[0].length; j++) {
+                    result[i][j] = OPIBuilderMacroUtil.replaceMacros(widgetModel, originValue[i][j]);
                 }
             }
             return result;
@@ -146,10 +144,10 @@ public class StringTableProperty extends AbstractWidgetProperty {
         if (rowChildren.size() == 0) {
             return new String[0][0];
         }
-        String[][] result = new String[rowChildren.size()][((Element) rowChildren.get(0)).getChildren().size()];
+        var result = new String[rowChildren.size()][((Element) rowChildren.get(0)).getChildren().size()];
         int i = 0, j = 0;
         for (Object oe : rowChildren) {
-            Element re = (Element) oe;
+            var re = (Element) oe;
             if (re.getName().equals(XML_ELEMENT_ROW)) {
                 j = 0;
                 for (Object oc : re.getChildren()) {
@@ -164,11 +162,11 @@ public class StringTableProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        String[][] data = (String[][]) propertyValue;
+        var data = (String[][]) propertyValue;
         for (String row[] : data) {
-            Element rowElement = new Element(XML_ELEMENT_ROW);
+            var rowElement = new Element(XML_ELEMENT_ROW);
             for (String e : row) {
-                Element colElement = new Element(XML_ELEMENT_COLUMN);
+                var colElement = new Element(XML_ELEMENT_COLUMN);
                 colElement.setText(e);
                 rowElement.addContent(colElement);
             }

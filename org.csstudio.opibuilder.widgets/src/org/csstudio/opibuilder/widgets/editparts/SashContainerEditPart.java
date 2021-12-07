@@ -22,7 +22,6 @@ import org.csstudio.swt.widgets.figures.SashContainerFigure;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutListener;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
@@ -35,8 +34,8 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final SashContainerFigure figure = new SashContainerFigure();
-        SashContainerModel model = getWidgetModel();
+        var figure = new SashContainerFigure();
+        var model = getWidgetModel();
         figure.setSashStyle(model.getSashStyle());
         figure.setSashWidth(model.getSashWidth());
         figure.setHorizontal(model.isHorizontal());
@@ -69,25 +68,26 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
             @Override
             public void postLayout(IFigure container) {
 
-                Rectangle[] bounds = getSashFigure().getSubPanelsBounds();
-                if (groupContainer1.getBounds().equals(bounds[0]) &&
-                        groupContainer2.getBounds().equals(bounds[1]))
+                var bounds = getSashFigure().getSubPanelsBounds();
+                if (groupContainer1.getBounds().equals(bounds[0]) && groupContainer2.getBounds().equals(bounds[1])) {
                     return;
+                }
                 // make sure the origin size has been recorded.
                 groupContainer1.getOriginSize();
                 groupContainer2.getOriginSize();
                 groupContainer1.setBounds(bounds[0]);
                 groupContainer2.setBounds(bounds[1]);
                 if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                    if (getWidgetModel().isPanel1AutoScaleChildren())
+                    if (getWidgetModel().isPanel1AutoScaleChildren()) {
                         groupContainer1.scaleChildren();
-                    if (getWidgetModel().isPanel2AutoScaleChildren())
+                    }
+                    if (getWidgetModel().isPanel2AutoScaleChildren()) {
                         groupContainer2.scaleChildren();
+                    }
                 }
                 if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
-                    getViewer().getEditDomain().getCommandStack().execute(
-                            new SetWidgetPropertyCommand(getWidgetModel(), SashContainerModel.PROP_SASH_POSITION,
-                                    getSashFigure().getSashPosition()));
+                    getViewer().getEditDomain().getCommandStack().execute(new SetWidgetPropertyCommand(getWidgetModel(),
+                            SashContainerModel.PROP_SASH_POSITION, getSashFigure().getSashPosition()));
                 }
             }
         });
@@ -97,7 +97,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
     }
 
     private GroupingContainerModel createGroupingContainerModel(boolean isPanel1) {
-        GroupingContainerModel groupingContainerModel = new GroupingContainerModel();
+        var groupingContainerModel = new GroupingContainerModel();
         groupingContainerModel.setName(isPanel1 ? "Panel 1" : "Panel 2");
         groupingContainerModel.setBorderStyle(BorderStyle.NONE);
         groupingContainerModel.setPropertyValue(GroupingContainerModel.PROP_TRANSPARENT, true);
@@ -110,8 +110,8 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
      * EditParts.
      */
     @Override
-    protected final EditPart createChild(final Object model) {
-        EditPart result = super.createChild(model);
+    protected final EditPart createChild(Object model) {
+        var result = super.createChild(model);
 
         // setup selection behavior for the new child
         if (result instanceof AbstractBaseEditPart) {
@@ -130,8 +130,9 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
         // the snap feedback effect
         installEditPolicy("Snap Feedback", null);
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE)
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, null);
+        }
 
     }
 

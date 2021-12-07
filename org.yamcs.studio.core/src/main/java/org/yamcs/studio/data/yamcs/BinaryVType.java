@@ -11,19 +11,19 @@ public class BinaryVType extends YamcsVType implements VString {
 
     @Override
     public String getValue() {
-        byte[] barr = value.getBinaryValue().toByteArray();
+        var barr = value.getBinaryValue().toByteArray();
         return "0x" + arrayToHexString(barr, 0, barr.length, false);
     }
 
     @Override
     public String toString() {
-        byte[] barr = value.getBinaryValue().toByteArray();
+        var barr = value.getBinaryValue().toByteArray();
         return "0x" + arrayToHexString(barr, 0, barr.length, false);
     }
 
     private static String arrayToHexString(byte[] b, int offset, int length, boolean beautify) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = offset; i < offset + length; i++) {
+        var sb = new StringBuilder();
+        for (var i = offset; i < offset + length; i++) {
             if (beautify && (i - offset) % 32 == 0) {
                 sb.append(String.format("\n0x%04X: ", (i - offset)));
             }

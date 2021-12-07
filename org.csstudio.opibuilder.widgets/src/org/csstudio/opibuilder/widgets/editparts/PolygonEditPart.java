@@ -25,8 +25,8 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        PolygonFigure polygon = new PolygonFigure();
-        PolygonModel model = getWidgetModel();
+        var polygon = new PolygonFigure();
+        var model = getWidgetModel();
         polygon.setPoints(model.getPoints());
         polygon.setFill(model.getFillLevel());
         polygon.setHorizontalFill(model.isHorizontalFill());
@@ -47,10 +47,8 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolygonFigure polygon = (PolygonFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var polygon = (PolygonFigure) refreshableFigure;
                 polygon.setFill((Double) newValue);
                 return true;
             }
@@ -60,10 +58,8 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
         // fill orientaion
         IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolygonFigure figure = (PolygonFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolygonFigure) refreshableFigure;
                 figure.setHorizontalFill((Boolean) newValue);
                 return true;
             }
@@ -73,10 +69,8 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
         // transparent
         IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolygonFigure figure = (PolygonFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolygonFigure) refreshableFigure;
                 figure.setTransparent((Boolean) newValue);
                 return true;
             }
@@ -86,16 +80,12 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ((PolygonFigure) refreshableFigure).setLineColor(
-                        ((OPIColor) newValue).getSWTColor());
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                ((PolygonFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
-                lineColorHandler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
 
     }
 
@@ -103,8 +93,9 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
     public void setValue(Object value) {
         if (value instanceof Number) {
             ((PolygonFigure) getFigure()).setFill(((Number) value).doubleValue());
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override

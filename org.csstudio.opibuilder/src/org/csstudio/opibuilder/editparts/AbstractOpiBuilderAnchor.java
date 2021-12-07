@@ -47,7 +47,7 @@ abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor 
      */
 
     public static void fixZoomEdgeRounding(Point point, IFigure owner) {
-        final Point checkPoint = point.getCopy();
+        var checkPoint = point.getCopy();
         owner.getParent().translateToRelative(checkPoint);
         if (checkPoint.x < 0) {
             point = point.translate(Math.abs(checkPoint.x), 0);

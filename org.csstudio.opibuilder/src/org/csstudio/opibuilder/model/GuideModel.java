@@ -59,7 +59,7 @@ public final class GuideModel implements Serializable {
      * @param position
      *            The position of this guide
      */
-    public GuideModel(final int position) {
+    public GuideModel(int position) {
         _position = position;
     }
 
@@ -69,7 +69,7 @@ public final class GuideModel implements Serializable {
      * @param isHorizontal
      *            The new orientation for this guide
      */
-    public void setOrientation(final boolean isHorizontal) {
+    public void setOrientation(boolean isHorizontal) {
         _isHorizontal = isHorizontal;
     }
 
@@ -79,9 +79,9 @@ public final class GuideModel implements Serializable {
      * @param position
      *            The new Position for this guide
      */
-    public void setPosition(final int position) {
+    public void setPosition(int position) {
         if (_position != position) {
-            int oldValue = _position;
+            var oldValue = _position;
             _position = position;
             _listeners.firePropertyChange(PROPERTY_POSITION_CHANGED, Integer.valueOf(oldValue),
                     Integer.valueOf(_position));
@@ -112,7 +112,7 @@ public final class GuideModel implements Serializable {
      * @param listener
      *            The listener to add
      */
-    public void addPropertyChangeListener(final PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         _listeners.addPropertyChangeListener(listener);
     }
 
@@ -122,7 +122,7 @@ public final class GuideModel implements Serializable {
      * @param listener
      *            The listener to remove
      */
-    public void removePropertyChangeListener(final PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         _listeners.removePropertyChangeListener(listener);
     }
 
@@ -134,7 +134,7 @@ public final class GuideModel implements Serializable {
      * @param alignment
      *            The alignment for the EditPart
      */
-    public void attachPart(final AbstractWidgetModel model, final int alignment) {
+    public void attachPart(AbstractWidgetModel model, int alignment) {
         if (getMap().containsKey(model) && getAlignment(model) == alignment) {
             return;
         }
@@ -149,7 +149,7 @@ public final class GuideModel implements Serializable {
      * @param model
      *            The part that is to be detached from this guide
      */
-    public void detachPart(final AbstractWidgetModel model) {
+    public void detachPart(AbstractWidgetModel model) {
         if (getMap().containsKey(model)) {
             getMap().remove(model);
             GuideUtil.getInstance().removeGuide(model, this.isHorizontal());
@@ -171,7 +171,7 @@ public final class GuideModel implements Serializable {
      * @return an int representing the edge along which the given part is attached to this guide; 1 is bottom or right;
      *         0, center; -1, top or left; -2 if the part is not attached to this guide
      */
-    public int getAlignment(final AbstractWidgetModel model) {
+    public int getAlignment(AbstractWidgetModel model) {
         if (getMap().get(model) != null) {
             return ((Integer) getMap().get(model)).intValue();
         }

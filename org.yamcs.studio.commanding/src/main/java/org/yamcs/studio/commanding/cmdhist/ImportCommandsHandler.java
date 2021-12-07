@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
@@ -19,11 +18,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.client.Command;
 import org.yamcs.client.StreamReceiver;
-import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportCommandsHandler extends AbstractHandler {
@@ -32,15 +29,15 @@ public class ImportCommandsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = HandlerUtil.getActiveShell(event);
-        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        CommandHistoryView view = (CommandHistoryView) part;
-        ImportPastCommandsDialog dialog = new ImportPastCommandsDialog(shell);
+        var shell = HandlerUtil.getActiveShell(event);
+        var part = HandlerUtil.getActivePartChecked(event);
+        var view = (CommandHistoryView) part;
+        var dialog = new ImportPastCommandsDialog(shell);
         if (dialog.open() == Window.OK) {
             try {
-                Instant start = dialog.getStart();
-                Instant stop = dialog.getStop();
-                CommandImporter importer = new CommandImporter(shell, start, stop, view);
+                var start = dialog.getStart();
+                var stop = dialog.getStop();
+                var importer = new CommandImporter(shell, start, stop, view);
                 new ProgressMonitorDialog(shell).run(true, true, importer);
             } catch (InvocationTargetException e) {
                 MessageDialog.openError(shell, "Failed to import events", e.getMessage());
@@ -71,19 +68,18 @@ public class ImportCommandsHandler extends AbstractHandler {
 
             List<Command> newCommands = new ArrayList<>();
 
-            ArchiveClient client = YamcsPlugin.getArchiveClient();
+            var client = YamcsPlugin.getArchiveClient();
 
             BulkCommandListener listener = batch -> {
                 newCommands.addAll(batch);
                 monitor.subTask(String.format("Fetched %,d commands", newCommands.size()));
             };
-            CommandBatchGenerator batchGenerator = new CommandBatchGenerator(listener);
-            CompletableFuture<Void> future = client.streamCommands(batchGenerator, start, stop)
-                    .whenComplete((data, exc) -> {
-                        if (!batchGenerator.commands.isEmpty()) {
-                            listener.processCommands(new ArrayList<>(batchGenerator.commands));
-                        }
-                    });
+            var batchGenerator = new CommandBatchGenerator(listener);
+            var future = client.streamCommands(batchGenerator, start, stop).whenComplete((data, exc) -> {
+                if (!batchGenerator.commands.isEmpty()) {
+                    listener.processCommands(new ArrayList<>(batchGenerator.commands));
+                }
+            });
 
             try {
                 while (!monitor.isCanceled() && !future.isDone()) {

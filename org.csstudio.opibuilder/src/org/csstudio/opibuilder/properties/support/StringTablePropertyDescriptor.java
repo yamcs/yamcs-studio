@@ -37,8 +37,8 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
      * @param displayName
      *            the name to display for the property
      */
-    public StringTablePropertyDescriptor(final Object id, final String displayName,
-            final TitlesProvider tilesProvider, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
+    public StringTablePropertyDescriptor(Object id, String displayName, TitlesProvider tilesProvider,
+            CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(id, displayName);
         this.displayName = displayName;
         this.columnTitles = tilesProvider;
@@ -47,21 +47,22 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
         setLabelProvider(new LabelProvider() {
             @Override
             public String getText(Object element) {
-                if (element == null)
+                if (element == null) {
                     return "";
-                else if (!(element instanceof String[][]))
+                } else if (!(element instanceof String[][])) {
                     return element.toString();
-                String[][] stringTable = (String[][]) element;
-                if (stringTable.length > 0)
-                    return Arrays.toString(stringTable[0]) +
-                            (stringTable.length > 1 ? "..." : "");
+                }
+                var stringTable = (String[][]) element;
+                if (stringTable.length > 0) {
+                    return Arrays.toString(stringTable[0]) + (stringTable.length > 1 ? "..." : "");
+                }
                 return "";
             }
         });
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new StringTableCellEditor(parent, "Edit " + displayName, columnTitles, cellEditorTypes,
                 cellEditorDatas);
         if (getValidator() != null) {

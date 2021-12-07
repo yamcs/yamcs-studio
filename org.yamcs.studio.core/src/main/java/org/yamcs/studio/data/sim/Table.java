@@ -36,31 +36,31 @@ public class Table extends SimFunction<VTable> {
     @Override
     VTable nextValue() {
         return newVTable(types, Arrays.asList("Text", "Value", "Index", "Timestamps"),
-                Arrays.asList((Object) generateStringColumn(10), generateDoubleColumn(10),
-                        generateIntegerColumn(10), generateTimestampColumn(10)));
+                Arrays.asList((Object) generateStringColumn(10), generateDoubleColumn(10), generateIntegerColumn(10),
+                        generateTimestampColumn(10)));
     }
 
     private final Random rand = new Random();
 
     ListInt generateIntegerColumn(int size) {
-        int[] column = new int[size];
-        for (int i = 0; i < column.length; i++) {
+        var column = new int[size];
+        for (var i = 0; i < column.length; i++) {
             column[i] = i;
         }
         return new ArrayInt(column);
     }
 
     ListDouble generateDoubleColumn(int size) {
-        double[] column = new double[size];
-        for (int i = 0; i < column.length; i++) {
+        var column = new double[size];
+        for (var i = 0; i < column.length; i++) {
             column[i] = rand.nextGaussian();
         }
         return new ArrayDouble(column);
     }
 
     List<String> generateStringColumn(int size) {
-        String[] column = new String[size];
-        for (int i = 0; i < column.length; i++) {
+        var column = new String[size];
+        for (var i = 0; i < column.length; i++) {
             column[i] = generateString(i);
         }
         return Arrays.asList(column);
@@ -68,7 +68,7 @@ public class Table extends SimFunction<VTable> {
 
     List<Instant> generateTimestampColumn(int size) {
         List<Instant> timestamps = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        for (var i = 0; i < size; i++) {
             timestamps.add(Instant.now());
         }
         return timestamps;
@@ -79,9 +79,9 @@ public class Table extends SimFunction<VTable> {
             return "A";
         }
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         while (id != 0) {
-            char letter = (char) ('A' + (id % 26));
+            var letter = (char) ('A' + (id % 26));
             sb.insert(0, letter);
             id = id / 26;
         }

@@ -15,7 +15,7 @@ public class SeparatorControl extends WorkbenchWindowControlContribution {
 
     @Override
     protected Control createControl(Composite parent) {
-        Label bla = new Label(parent, SWT.VERTICAL | SWT.SEPARATOR);
+        var bla = new Label(parent, SWT.VERTICAL | SWT.SEPARATOR);
         bla.setText("   ");
         return bla;
     }

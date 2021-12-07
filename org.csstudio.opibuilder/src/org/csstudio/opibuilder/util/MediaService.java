@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.util;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.osgi.framework.Bundle;
 
 /**
  * A service help to maintain the color macros.
@@ -50,13 +48,13 @@ public final class MediaService {
     public static final FontData DEFAULT_UNKNOWN_FONT = new FontData("Liberation Sans", 11, SWT.NONE);
 
     private MediaService() {
-        Display display = Display.getCurrent();
+        var display = Display.getCurrent();
         if (display != null) {
             loadBundledFonts(display);
             reloadColors();
             reloadFonts();
         } else {
-            Display finalDisplay = DisplayUtils.getDisplay();
+            var finalDisplay = DisplayUtils.getDisplay();
             finalDisplay.syncExec(() -> {
                 loadBundledFonts(finalDisplay);
                 reloadColors();
@@ -71,10 +69,10 @@ public final class MediaService {
             // pre-installed on the system, because then it is also available in the
             // platform-specific FontDialog.
             try {
-                Bundle bundle = OPIBuilderPlugin.getDefault().getBundle();
+                var bundle = OPIBuilderPlugin.getDefault().getBundle();
 
-                URL url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Regular.ttf"), null);
-                String fontFile = FileLocator.toFileURL(url).getPath().toString();
+                var url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Regular.ttf"), null);
+                var fontFile = FileLocator.toFileURL(url).getPath().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Regular'");
                 }
@@ -103,7 +101,7 @@ public final class MediaService {
     }
 
     private static boolean isFontAvailable(Display display, String faceName) {
-        FontData[] fontData = display.getFontList(faceName, true);
+        var fontData = display.getFontList(faceName, true);
         return fontData == null || fontData.length == 0;
     }
 
@@ -119,14 +117,14 @@ public final class MediaService {
      */
     public synchronized void reloadColors() {
         colorMap.clear();
-        colorMap.put(AlarmRepresentationScheme.MAJOR, new OPIColor(AlarmRepresentationScheme.MAJOR,
-                CustomMediaFactory.COLOR_RED, true));
-        colorMap.put(AlarmRepresentationScheme.MINOR, new OPIColor(AlarmRepresentationScheme.MINOR,
-                CustomMediaFactory.COLOR_ORANGE, true));
-        colorMap.put(AlarmRepresentationScheme.INVALID, new OPIColor(
-                AlarmRepresentationScheme.INVALID, CustomMediaFactory.COLOR_PINK, true));
-        colorMap.put(AlarmRepresentationScheme.DISCONNECTED, new OPIColor(
-                AlarmRepresentationScheme.DISCONNECTED, CustomMediaFactory.COLOR_X11_PURPLE, true));
+        colorMap.put(AlarmRepresentationScheme.MAJOR,
+                new OPIColor(AlarmRepresentationScheme.MAJOR, CustomMediaFactory.COLOR_RED, true));
+        colorMap.put(AlarmRepresentationScheme.MINOR,
+                new OPIColor(AlarmRepresentationScheme.MINOR, CustomMediaFactory.COLOR_ORANGE, true));
+        colorMap.put(AlarmRepresentationScheme.INVALID,
+                new OPIColor(AlarmRepresentationScheme.INVALID, CustomMediaFactory.COLOR_PINK, true));
+        colorMap.put(AlarmRepresentationScheme.DISCONNECTED,
+                new OPIColor(AlarmRepresentationScheme.DISCONNECTED, CustomMediaFactory.COLOR_X11_PURPLE, true));
 
         for (NamedColor color : OPIBuilderPlugin.getDefault().loadColors()) {
             colorMap.put(color.name, new OPIColor(color.name, color.rgb, true));
@@ -136,19 +134,19 @@ public final class MediaService {
     public synchronized void reloadFonts() {
         fontMap.clear();
 
-        FontData defaultFont = DEFAULT_UNKNOWN_FONT;
+        var defaultFont = DEFAULT_UNKNOWN_FONT;
 
         fontMap.put(DEFAULT_FONT, new OPIFont(DEFAULT_FONT, defaultFont));
-        int height = defaultFont.getHeight();
-        FontData defaultBoldFont = new FontData(defaultFont.getName(), height, SWT.BOLD);
+        var height = defaultFont.getHeight();
+        var defaultBoldFont = new FontData(defaultFont.getName(), height, SWT.BOLD);
         fontMap.put(DEFAULT_BOLD_FONT, new OPIFont(DEFAULT_BOLD_FONT, defaultBoldFont));
-        FontData header1 = new FontData(defaultFont.getName(), height + 8, SWT.BOLD);
+        var header1 = new FontData(defaultFont.getName(), height + 8, SWT.BOLD);
         fontMap.put(HEADER1, new OPIFont(HEADER1, header1));
-        FontData header2 = new FontData(defaultFont.getName(), height + 4, SWT.BOLD);
+        var header2 = new FontData(defaultFont.getName(), height + 4, SWT.BOLD);
         fontMap.put(HEADER2, new OPIFont(HEADER2, header2));
-        FontData header3 = new FontData(defaultFont.getName(), height + 2, SWT.BOLD);
+        var header3 = new FontData(defaultFont.getName(), height + 2, SWT.BOLD);
         fontMap.put(HEADER3, new OPIFont(HEADER3, header3));
-        FontData finePrint = new FontData(defaultFont.getName(), height - 2, SWT.NORMAL);
+        var finePrint = new FontData(defaultFont.getName(), height - 2, SWT.NORMAL);
         fontMap.put(FINE_PRINT, new OPIFont(FINE_PRINT, finePrint));
 
         for (OPIFont font : OPIBuilderPlugin.getDefault().loadFonts()) {
@@ -185,8 +183,8 @@ public final class MediaService {
     }
 
     public OPIColor[] getAllPredefinedColors() {
-        OPIColor[] result = new OPIColor[colorMap.size()];
-        int i = 0;
+        var result = new OPIColor[colorMap.size()];
+        var i = 0;
         for (OPIColor c : colorMap.values()) {
             result[i++] = c;
         }
@@ -225,8 +223,8 @@ public final class MediaService {
     }
 
     public OPIFont[] getAllPredefinedFonts() {
-        OPIFont[] result = new OPIFont[fontMap.size()];
-        int i = 0;
+        var result = new OPIFont[fontMap.size()];
+        var i = 0;
         for (OPIFont c : fontMap.values()) {
             result[i++] = new OPIFont(c);
         }

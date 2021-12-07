@@ -10,7 +10,6 @@
 
 package org.csstudio.opibuilder.actions;
 
-import java.util.List;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -29,14 +28,14 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
 
     private static OPIWidgetsTransfer instance;
 
-    private static final String TYPE_NAME = "OPIWidgetsTransfer:"
-            + System.currentTimeMillis();
+    private static final String TYPE_NAME = "OPIWidgetsTransfer:" + System.currentTimeMillis();
 
     private static final int TYPEID = registerType(TYPE_NAME);
 
     public synchronized static OPIWidgetsTransfer getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new OPIWidgetsTransfer();
+        }
         return instance;
     }
 
@@ -66,15 +65,16 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
 
     @Override
     public Object nativeToJava(TransferData transferData) {
-        if (!isSupportedType(transferData))
+        if (!isSupportedType(transferData)) {
             return null;
-        byte[] bytes = (byte[]) super.nativeToJava(transferData);
-        if (bytes == null)
+        }
+        var bytes = (byte[]) super.nativeToJava(transferData);
+        if (bytes == null) {
             return null;
+        }
         try {
-            DisplayModel displayModel = (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"),
-                    null);
-            List<AbstractWidgetModel> widgets = displayModel.getChildren();
+            var displayModel = (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"), null);
+            var widgets = displayModel.getChildren();
             return widgets;
         } catch (Exception e) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
@@ -91,10 +91,11 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
      *            the input to check
      * @return true, if the input object is valid, false otherwise
      */
-    private boolean checkInput(final Object input) {
+    private boolean checkInput(Object input) {
 
-        if (input == null)
+        if (input == null) {
             return false;
+        }
         return input instanceof String;
 
     }

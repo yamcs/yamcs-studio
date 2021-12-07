@@ -37,10 +37,8 @@ import org.eclipse.gef.requests.CreateRequest;
 public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
 
     @Override
-    protected Command createChangeConstraintCommand(
-            ChangeBoundsRequest request, EditPart child, Object constraint) {
-        if (request.getType().equals(REQ_MOVE_CHILDREN)
-                || request.getType().equals(REQ_ALIGN_CHILDREN)) {
+    protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
+        if (request.getType().equals(REQ_MOVE_CHILDREN) || request.getType().equals(REQ_ALIGN_CHILDREN)) {
             return null;
         }
         return super.createChangeConstraintCommand(request, child, constraint);
@@ -48,36 +46,31 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
     }
 
     @Override
-    protected Command createAddCommand(ChangeBoundsRequest request,
-            EditPart child, Object constraint) {
-        if (!(child instanceof AbstractBaseEditPart)
-                || !(constraint instanceof Rectangle))
+    protected Command createAddCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
+        if (!(child instanceof AbstractBaseEditPart) || !(constraint instanceof Rectangle)) {
             return super.createAddCommand(request, child, constraint);
+        }
 
-        AbstractContainerModel container = (AbstractContainerModel) getHost()
-                .getModel();
-        if (!container.getChildren().isEmpty())
+        var container = (AbstractContainerModel) getHost().getModel();
+        if (!container.getChildren().isEmpty()) {
             return null;
-        AbstractWidgetModel widget = (AbstractWidgetModel) child.getModel();
-        CompoundCommand result = new CompoundCommand("Add widget to array");
+        }
+        var widget = (AbstractWidgetModel) child.getModel();
+        var result = new CompoundCommand("Add widget to array");
         addUpdateContainerCommands(container, widget.getSize(), result);
-        result.add(new AddWidgetCommand(container, widget,
-                (Rectangle) constraint));
+        result.add(new AddWidgetCommand(container, widget, (Rectangle) constraint));
 
         return result;
     }
 
-    protected void addUpdateContainerCommands(AbstractContainerModel container,
-            Dimension widgetSize, CompoundCommand result) {
-        int elementsCount = getHostArrayEditPart().getArrayFigure()
-                .calcVisibleElementsCount(widgetSize);
-        Dimension proposedContainerSize = getHostArrayEditPart()
-                .getArrayFigure().calcWidgetSizeForElements(elementsCount,
-                        widgetSize);
+    protected void addUpdateContainerCommands(AbstractContainerModel container, Dimension widgetSize,
+            CompoundCommand result) {
+        var elementsCount = getHostArrayEditPart().getArrayFigure().calcVisibleElementsCount(widgetSize);
+        var proposedContainerSize = getHostArrayEditPart().getArrayFigure().calcWidgetSizeForElements(elementsCount,
+                widgetSize);
         result.add(new WidgetSetConstraintCommand(container, null,
                 new Rectangle(container.getLocation(), proposedContainerSize)));
-        result.add(new SetWidgetPropertyCommand(container,
-                ArrayModel.PROP_VISIBLE_ELEMENTS_COUNT, elementsCount));
+        result.add(new SetWidgetPropertyCommand(container, ArrayModel.PROP_VISIBLE_ELEMENTS_COUNT, elementsCount));
     }
 
     public ArrayEditPart getHostArrayEditPart() {
@@ -86,19 +79,18 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
 
     @Override
     protected Command createWidgetCreateCommand(CreateRequest request) {
-        AbstractContainerModel container = (AbstractContainerModel) getHost()
-                .getModel();
-        if (!container.getChildren().isEmpty())
+        var container = (AbstractContainerModel) getHost().getModel();
+        if (!container.getChildren().isEmpty()) {
             return null;
-        CompoundCommand result = new CompoundCommand("Create widget in array");
-        Dimension size = ((Rectangle) getConstraintFor(request)).getSize();
-        AbstractWidgetModel widget = (AbstractWidgetModel) request
-                .getNewObject();
-        if (size == null || size.width < 1 || size.height < 1)
+        }
+        var result = new CompoundCommand("Create widget in array");
+        var size = ((Rectangle) getConstraintFor(request)).getSize();
+        var widget = (AbstractWidgetModel) request.getNewObject();
+        if (size == null || size.width < 1 || size.height < 1) {
             size = widget.getSize();
+        }
         addUpdateContainerCommands(container, size, result);
-        WidgetCreateCommand widgetCreateCommand = new WidgetCreateCommand(
-                widget, container, (Rectangle) getConstraintFor(request),
+        var widgetCreateCommand = new WidgetCreateCommand(widget, container, (Rectangle) getConstraintFor(request),
                 false, true);
         result.add(widgetCreateCommand);
         return result;
@@ -112,19 +104,15 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
      */
     @Override
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
-        if (request.getType().equals(REQ_MOVE_CHILDREN)
-                || request.getType().equals(REQ_ALIGN_CHILDREN)) {
+        if (request.getType().equals(REQ_MOVE_CHILDREN) || request.getType().equals(REQ_ALIGN_CHILDREN)) {
             return null;
         }
-        CompoundCommand resize = new CompoundCommand();
+        var resize = new CompoundCommand();
         Command c;
         List<?> children = getHostArrayEditPart().getChildren();
-        GraphicalEditPart child = (GraphicalEditPart) request.getEditParts()
-                .get(0);
-        Object contraint = translateToModelConstraint(getConstraintForResize(
-                request, child));
-        c = createChangeConstraintCommand(request, (EditPart) children.get(0),
-                contraint);
+        var child = (GraphicalEditPart) request.getEditParts().get(0);
+        var contraint = translateToModelConstraint(getConstraintForResize(request, child));
+        c = createChangeConstraintCommand(request, (EditPart) children.get(0), contraint);
         resize.add(c);
 
         return resize.unwrap();
@@ -134,17 +122,14 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
      */
     @Override
     protected Command getAddCommand(Request generic) {
-        ChangeBoundsRequest request = (ChangeBoundsRequest) generic;
+        var request = (ChangeBoundsRequest) generic;
         List<?> editParts = request.getEditParts();
-        CompoundCommand command = new CompoundCommand();
+        var command = new CompoundCommand();
         command.setDebugLabel("Add in ConstrainedLayoutEditPolicy");
         GraphicalEditPart child;
         if (editParts.size() > 0) {
             child = (GraphicalEditPart) editParts.get(0);
-            command.add(createAddCommand(
-                    request,
-                    child,
-                    translateToModelConstraint(getConstraintFor(request, child))));
+            command.add(createAddCommand(request, child, translateToModelConstraint(getConstraintFor(request, child))));
         }
         return command.unwrap();
     }

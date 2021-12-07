@@ -4,7 +4,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -28,9 +27,9 @@ public class PopupMenuUtil {
      */
     public static void installPopupForView(Control control, IWorkbenchPartSite viewSite,
             ISelectionProvider selectionProvider) {
-        MenuManager menuMgr = new MenuManager();
+        var menuMgr = new MenuManager();
         menuMgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        Menu menu = menuMgr.createContextMenu(control);
+        var menu = menuMgr.createContextMenu(control);
         control.setMenu(menu);
         viewSite.registerContextMenu(menuMgr, selectionProvider);
         viewSite.setSelectionProvider(selectionProvider);

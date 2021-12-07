@@ -20,8 +20,7 @@ public class RadioBoxEditpart extends AbstractChoiceEditPart {
 
     @Override
     protected AbstractChoiceFigure createChoiceFigure() {
-        return new RadioBoxFigure(
-                getExecutionMode() == ExecutionMode.RUN_MODE);
+        return new RadioBoxFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
     }
 
 }

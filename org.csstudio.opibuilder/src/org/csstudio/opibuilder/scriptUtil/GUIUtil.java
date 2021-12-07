@@ -30,10 +30,9 @@ public class GUIUtil {
      *            the password
      * @return true if user has input the correct password and clicked OK button. false otherwise.
      */
-    public static boolean openPasswordDialog(final String dialogMessage, final String password) {
-        InputDialog dlg = new InputDialog(Display.getCurrent()
-                .getActiveShell(), "Password Input Dialog",
-                dialogMessage, "", newText -> {
+    public static boolean openPasswordDialog(String dialogMessage, String password) {
+        InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Password Input Dialog", dialogMessage,
+                "", newText -> {
                     if (newText.equals(password)) {
                         return null;
                     } else {
@@ -46,7 +45,7 @@ public class GUIUtil {
             }
         };
         dlg.setBlockOnOpen(true);
-        int val = dlg.open();
+        var val = dlg.open();
         if (val == Window.OK) {
             return true;
         }
@@ -60,11 +59,11 @@ public class GUIUtil {
      *            the message on the dialog.
      * @return true if user has clicked the YES button. False otherwise.
      */
-    public static boolean openConfirmDialog(final String dialogMessage) {
-        MessageBox mb = new MessageBox(DisplayUtils.getDefaultShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+    public static boolean openConfirmDialog(String dialogMessage) {
+        var mb = new MessageBox(DisplayUtils.getDefaultShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
         mb.setMessage(dialogMessage);
         mb.setText("Confirm Dialog");
-        int val = mb.open();
+        var val = mb.open();
         if (val == SWT.YES) {
             return true;
         }

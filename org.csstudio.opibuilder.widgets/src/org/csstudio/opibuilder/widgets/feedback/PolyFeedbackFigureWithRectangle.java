@@ -33,8 +33,7 @@ public final class PolyFeedbackFigureWithRectangle extends RectangleFigure {
      * @param points
      *            the polygon points
      */
-    public PolyFeedbackFigureWithRectangle(final Polyline polyline,
-            final PointList points) {
+    public PolyFeedbackFigureWithRectangle(Polyline polyline, PointList points) {
         assert polyline != null;
         _innerFigure = polyline;
         add(_innerFigure);
@@ -56,13 +55,13 @@ public final class PolyFeedbackFigureWithRectangle extends RectangleFigure {
      * @param points
      *            the point list
      */
-    public void setPoints(final PointList points) {
+    public void setPoints(PointList points) {
         _innerFigure.setPoints(points);
         setBounds(points.getBounds());
     }
 
     @Override
-    public void paint(final Graphics graphics) {
+    public void paint(Graphics graphics) {
         // enable tranparency
         graphics.setAlpha(120);
         super.paint(graphics);

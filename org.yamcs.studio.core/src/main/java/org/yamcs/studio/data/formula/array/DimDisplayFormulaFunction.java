@@ -66,9 +66,9 @@ class DimDisplayFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VNumber size = (VNumber) args.get(0);
-        VBoolean invert = (VBoolean) args.get(1);
+    public Object calculate(List<Object> args) {
+        var size = (VNumber) args.get(0);
+        var invert = (VBoolean) args.get(1);
 
         if (size == null || invert == null) {
             return null;

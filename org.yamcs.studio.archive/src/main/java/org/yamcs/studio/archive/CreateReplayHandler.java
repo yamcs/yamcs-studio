@@ -33,7 +33,7 @@ public class CreateReplayHandler extends AbstractHandler {
         var shell = HandlerUtil.getActiveShellChecked(event);
         var part = HandlerUtil.getActivePartChecked(event);
         SwingUtilities.invokeLater(() -> {
-            ArchiveView view = (ArchiveView) part;
+            var view = (ArchiveView) part;
 
             TimeInterval interval;
             var selectionStart = view.getTimeline().getSelectionStart();
@@ -54,9 +54,9 @@ public class CreateReplayHandler extends AbstractHandler {
             Collections.sort(pps);
 
             Display.getDefault().asyncExec(() -> {
-                CreateReplayDialog dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
+                var dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
                 dialog.initialize(interval, pps);
-                int result = dialog.open();
+                var result = dialog.open();
                 if (result == Dialog.OK) {
                     switchToReplay(shell, dialog.getRequest());
                 }
@@ -71,7 +71,7 @@ public class CreateReplayHandler extends AbstractHandler {
             new ProgressMonitorDialog(shell).run(true, true,
                     new ContextSwitcher(request.getInstance(), request.getName()));
         } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
+            var cause = e.getCause();
             log.log(Level.SEVERE, "Failed to switch processor", cause);
             MessageDialog.openError(shell, "Failed to switch processor", cause.getMessage());
         } catch (InterruptedException e) {

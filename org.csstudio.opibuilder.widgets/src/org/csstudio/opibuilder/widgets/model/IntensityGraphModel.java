@@ -187,10 +187,10 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     public static final String PROP_ROI_COUNT = "roi_count";
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = 0;
+    private static double DEFAULT_MIN = 0;
 
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = 255;
+    private static double DEFAULT_MAX = 255;
 
     /** The default color of the axis color property. */
     private static final RGB DEFAULT_AXIS_COLOR = new RGB(0, 0, 0);
@@ -221,56 +221,47 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         addPVProperty(new PVNameProperty(PROP_VERTICAL_PROFILE_Y_PV_NAME, "Vertical Profile Y PV",
                 WidgetPropertyCategory.Basic, ""), new PVValueProperty(PROP_VERTICAL_PROFILE_Y_PV_VALUE, null));
 
-        addPVProperty(new PVNameProperty(PROP_PIXEL_INFO_PV_NAME, "Pixel Info PV",
-                WidgetPropertyCategory.Basic, ""), new PVValueProperty(PROP_PIXEL_INFO_PV_VALUE, null));
+        addPVProperty(new PVNameProperty(PROP_PIXEL_INFO_PV_NAME, "Pixel Info PV", WidgetPropertyCategory.Basic, ""),
+                new PVValueProperty(PROP_PIXEL_INFO_PV_VALUE, null));
 
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN), true);
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN), true);
 
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX), true);
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX), true);
 
-        addProperty(new IntegerProperty(PROP_DATA_WIDTH, "Data Width",
-                WidgetPropertyCategory.Behavior, 0), true);
+        addProperty(new IntegerProperty(PROP_DATA_WIDTH, "Data Width", WidgetPropertyCategory.Behavior, 0), true);
 
-        addProperty(new IntegerProperty(PROP_DATA_HEIGHT, "Data Height",
-                WidgetPropertyCategory.Behavior, 0), true);
+        addProperty(new IntegerProperty(PROP_DATA_HEIGHT, "Data Height", WidgetPropertyCategory.Behavior, 0), true);
 
-        addProperty(new ColorMapProperty(PROP_COLOR_MAP, "Color Map",
-                WidgetPropertyCategory.Display, new ColorMap(PredefinedColorMap.JET, true, true)), true);
+        addProperty(new ColorMapProperty(PROP_COLOR_MAP, "Color Map", WidgetPropertyCategory.Display,
+                new ColorMap(PredefinedColorMap.JET, true, true)), true);
 
-        addProperty(new BooleanProperty(PROP_SHOW_RAMP, "Show Ramp",
-                WidgetPropertyCategory.Display, true), true);
+        addProperty(new BooleanProperty(PROP_SHOW_RAMP, "Show Ramp", WidgetPropertyCategory.Display, true), true);
 
-        addProperty(new IntegerProperty(PROP_GRAPH_AREA_WIDTH, "Graph Area Width",
-                WidgetPropertyCategory.Position, 0), true);
+        addProperty(new IntegerProperty(PROP_GRAPH_AREA_WIDTH, "Graph Area Width", WidgetPropertyCategory.Position, 0),
+                true);
 
-        addProperty(new IntegerProperty(PROP_GRAPH_AREA_HEIGHT, "Graph Area Height",
-                WidgetPropertyCategory.Position, 0), true);
+        addProperty(
+                new IntegerProperty(PROP_GRAPH_AREA_HEIGHT, "Graph Area Height", WidgetPropertyCategory.Position, 0),
+                true);
 
-        addProperty(new IntegerProperty(PROP_CROP_LEFT, "Crop Left",
-                WidgetPropertyCategory.Behavior, 0));
-        addProperty(new IntegerProperty(PROP_CROP_RIGHT, "Crop Right",
-                WidgetPropertyCategory.Behavior, 0));
-        addProperty(new IntegerProperty(PROP_CROP_TOP, "Crop Top",
-                WidgetPropertyCategory.Behavior, 0));
-        addProperty(new IntegerProperty(PROP_CROP_BOTTOM, "Crop Bottom",
-                WidgetPropertyCategory.Behavior, 0));
+        addProperty(new IntegerProperty(PROP_CROP_LEFT, "Crop Left", WidgetPropertyCategory.Behavior, 0));
+        addProperty(new IntegerProperty(PROP_CROP_RIGHT, "Crop Right", WidgetPropertyCategory.Behavior, 0));
+        addProperty(new IntegerProperty(PROP_CROP_TOP, "Crop Top", WidgetPropertyCategory.Behavior, 0));
+        addProperty(new IntegerProperty(PROP_CROP_BOTTOM, "Crop Bottom", WidgetPropertyCategory.Behavior, 0));
 
-        addProperty(new BooleanProperty(PROP_RGB_MODE, "RGB Mode",
-                WidgetPropertyCategory.Behavior, false), false);
+        addProperty(new BooleanProperty(PROP_RGB_MODE, "RGB Mode", WidgetPropertyCategory.Behavior, false), false);
 
-        addProperty(new ComboProperty(PROP_COLOR_DEPTH, "Color Depth",
-                WidgetPropertyCategory.Behavior, ColorDepth.stringValues(), 0), true);
+        addProperty(new ComboProperty(PROP_COLOR_DEPTH, "Color Depth", WidgetPropertyCategory.Behavior,
+                ColorDepth.stringValues(), 0), true);
 
         addProperty(new BooleanProperty(PROP_SINGLE_LINE_PROFILING, "Profile on Single Line",
                 WidgetPropertyCategory.Behavior, false), true);
 
-        addProperty(new ColorProperty(PROP_ROI_COLOR, "ROI Color",
-                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_CYAN), true);
+        addProperty(new ColorProperty(PROP_ROI_COLOR, "ROI Color", WidgetPropertyCategory.Display,
+                CustomMediaFactory.COLOR_CYAN), true);
 
-        addProperty(new IntegerProperty(PROP_ROI_COUNT, "ROI Count",
-                WidgetPropertyCategory.Behavior, 0, 0, MAX_ROIS_AMOUNT));
+        addProperty(new IntegerProperty(PROP_ROI_COUNT, "ROI Count", WidgetPropertyCategory.Behavior, 0, 0,
+                MAX_ROIS_AMOUNT));
 
         addAxisProperties();
         addROIProperties();
@@ -281,17 +272,13 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         super.processVersionDifference(boyVersionOnFile);
         if (UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile) > 0) {
             setPropertyValue(PROP_HORIZON_PROFILE_X_PV_NAME,
-                    UpgradeUtil.convertUtilityPVNameToPM(
-                            (String) getPropertyValue(PROP_HORIZON_PROFILE_X_PV_NAME)));
+                    UpgradeUtil.convertUtilityPVNameToPM((String) getPropertyValue(PROP_HORIZON_PROFILE_X_PV_NAME)));
             setPropertyValue(PROP_VERTICAL_PROFILE_X_PV_NAME,
-                    UpgradeUtil.convertUtilityPVNameToPM(
-                            (String) getPropertyValue(PROP_VERTICAL_PROFILE_X_PV_NAME)));
+                    UpgradeUtil.convertUtilityPVNameToPM((String) getPropertyValue(PROP_VERTICAL_PROFILE_X_PV_NAME)));
             setPropertyValue(PROP_HORIZON_PROFILE_Y_PV_NAME,
-                    UpgradeUtil.convertUtilityPVNameToPM(
-                            (String) getPropertyValue(PROP_HORIZON_PROFILE_Y_PV_NAME)));
+                    UpgradeUtil.convertUtilityPVNameToPM((String) getPropertyValue(PROP_HORIZON_PROFILE_Y_PV_NAME)));
             setPropertyValue(PROP_VERTICAL_PROFILE_Y_PV_NAME,
-                    UpgradeUtil.convertUtilityPVNameToPM(
-                            (String) getPropertyValue(PROP_VERTICAL_PROFILE_Y_PV_NAME)));
+                    UpgradeUtil.convertUtilityPVNameToPM((String) getPropertyValue(PROP_VERTICAL_PROFILE_Y_PV_NAME)));
         }
     }
 
@@ -300,7 +287,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     private void addROIProperties() {
-        for (int i = 0; i < MAX_ROIS_AMOUNT; i++) {
+        for (var i = 0; i < MAX_ROIS_AMOUNT; i++) {
             WidgetPropertyCategory category = new NameDefinedCategory("ROI " + i);
             for (ROIProperty roiProperty : ROIProperty.values()) {
                 addROIProperty(roiProperty, i, category);
@@ -309,7 +296,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     private void addROIProperty(ROIProperty roiProperty, int index, WidgetPropertyCategory category) {
-        String propID = makeROIPropID(roiProperty.propIDPre, index);
+        var propID = makeROIPropID(roiProperty.propIDPre, index);
         switch (roiProperty) {
         case TITLE:
             addProperty(new StringProperty(propID, roiProperty.description, category, category.toString()));
@@ -355,15 +342,14 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     private void addAxisProperty(String axisID, AxisProperty axisProperty, WidgetPropertyCategory category) {
-        String propID = makeAxisPropID(axisID, axisProperty.propIDPre);
+        var propID = makeAxisPropID(axisID, axisProperty.propIDPre);
 
         switch (axisProperty) {
         case TITLE:
             addProperty(new StringProperty(propID, axisProperty.toString(), category, category.toString()));
             break;
         case SCALE_FONT:
-            addProperty(new FontProperty(propID, axisProperty.toString(), category,
-                    MediaService.DEFAULT_FONT));
+            addProperty(new FontProperty(propID, axisProperty.toString(), category, MediaService.DEFAULT_FONT));
             break;
         case TITLE_FONT:
             addProperty(new FontProperty(propID, axisProperty.toString(), category, MediaService.DEFAULT_BOLD_FONT));
@@ -382,8 +368,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
             addProperty(new DoubleProperty(propID, axisProperty.toString(), category, 0));
             break;
         case MAJOR_TICK_STEP_HINT:
-            addProperty(new IntegerProperty(propID, axisProperty.toString(),
-                    category, 50, 1, 1000));
+            addProperty(new IntegerProperty(propID, axisProperty.toString(), category, 50, 1, 1000));
             break;
         default:
             break;

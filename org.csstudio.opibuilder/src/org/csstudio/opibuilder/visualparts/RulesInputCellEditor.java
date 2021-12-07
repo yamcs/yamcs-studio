@@ -24,14 +24,14 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
 
     private AbstractWidgetModel widgetModel;
 
-    public RulesInputCellEditor(Composite parent, final AbstractWidgetModel widgetModel, String title) {
+    public RulesInputCellEditor(Composite parent, AbstractWidgetModel widgetModel, String title) {
         super(parent, title);
         this.widgetModel = widgetModel;
     }
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        RulesInputDialog dialog = new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
+        var dialog = new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
 
         if (dialog.open() == Window.OK) {
             rulesInput = new RulesInput(dialog.getRuleDataList());

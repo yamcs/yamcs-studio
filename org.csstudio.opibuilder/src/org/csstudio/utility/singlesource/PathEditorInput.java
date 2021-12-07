@@ -9,11 +9,7 @@
  ********************************************************************************/
 package org.csstudio.utility.singlesource;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -36,7 +32,7 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
      * @param path
      *            {@link IPath} that identifies this input
      */
-    public PathEditorInput(final IPath path) {
+    public PathEditorInput(IPath path) {
         this.path = path;
     }
 
@@ -54,29 +50,26 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (!(obj instanceof IPathEditorInput)) {
             return false;
         }
-        final IPath other = ((IPathEditorInput) obj).getPath();
+        var other = ((IPathEditorInput) obj).getPath();
         // Try shortcut if it's the same PathEditorInput and thus path,
         // else compare portable representation
-        return other == path ||
-                other.toPortableString().equals(path.toPortableString());
+        return other == path || other.toPortableString().equals(path.toPortableString());
     }
 
     @Override
     public boolean exists() {
         // Try workspace file
-        final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-        if (resource != null &&
-                resource.isAccessible() &&
-                resource instanceof IFile) {
+        var resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+        if (resource != null && resource.isAccessible() && resource instanceof IFile) {
             return true;
         }
 
         // Try file outside of the workspace
-        File file = path.toFile();
+        var file = path.toFile();
         if (file != null) {
             return file.exists();
         }
@@ -106,16 +99,16 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Object getAdapter(final Class adapter) {
+    public Object getAdapter(Class adapter) {
         if (path == null) {
             return null;
         }
-        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        var root = ResourcesPlugin.getWorkspace().getRoot();
         return root.getFile(path);
     }
 
     @Override
-    public void saveState(final IMemento memento) {
+    public void saveState(IMemento memento) {
         memento.putString(PathEditorInputFactory.TAG_PATH, path.toPortableString());
     }
 

@@ -18,8 +18,6 @@ import org.csstudio.opibuilder.datadefinition.WidgetIgnorableUITask;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The listener on widget property change.
@@ -36,15 +34,14 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
      * @param editpart
      *            backlint to the editpart, which uses this listener.
      */
-    public WidgetPropertyChangeListener(AbstractBaseEditPart editpart,
-            AbstractWidgetProperty property) {
+    public WidgetPropertyChangeListener(AbstractBaseEditPart editpart, AbstractWidgetProperty property) {
         this.editpart = editpart;
         this.widgetProperty = property;
         handlers = new ArrayList<IWidgetPropertyChangeHandler>();
     }
 
     @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         Runnable runnable = new Runnable() {
             @Override
             public synchronized void run() {
@@ -52,19 +49,16 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
                     return;
                 }
                 for (IWidgetPropertyChangeHandler h : handlers) {
-                    IFigure figure = editpart.getFigure();
-                    h.handleChange(
-                            evt.getOldValue(), evt.getNewValue(), figure);
+                    var figure = editpart.getFigure();
+                    h.handleChange(evt.getOldValue(), evt.getNewValue(), figure);
 
                 }
             }
         };
-        Display display = editpart.getViewer().getControl().getDisplay();
-        WidgetIgnorableUITask task = new WidgetIgnorableUITask(widgetProperty, runnable, display);
+        var display = editpart.getViewer().getControl().getDisplay();
+        var task = new WidgetIgnorableUITask(widgetProperty, runnable, display);
 
-        GUIRefreshThread.getInstance(
-                editpart.getExecutionMode() == ExecutionMode.RUN_MODE)
-                .addIgnorableTask(task);
+        GUIRefreshThread.getInstance(editpart.getExecutionMode() == ExecutionMode.RUN_MODE).addIgnorableTask(task);
     }
 
     /**
@@ -72,7 +66,7 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
      * 
      * @param handler
      */
-    public void addHandler(final IWidgetPropertyChangeHandler handler) {
+    public void addHandler(IWidgetPropertyChangeHandler handler) {
         assert handler != null;
         handlers.add(handler);
     }

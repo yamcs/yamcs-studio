@@ -25,11 +25,8 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
@@ -46,9 +43,9 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final MenuButtonModel model = (MenuButtonModel) getWidgetModel();
+        var model = (MenuButtonModel) getWidgetModel();
         updatePropSheet(model.isActionsFromPV());
-        final MenuButtonFigure figure = new MenuButtonFigure();
+        var figure = new MenuButtonFigure();
         figure.setOpaque(!model.isTransparent());
         figure.setText(model.getLabel());
 
@@ -57,28 +54,24 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             figure.addMouseListener(new MouseListener() {
                 @Override
-                public void mouseDoubleClicked(final MouseEvent me) {
+                public void mouseDoubleClicked(MouseEvent me) {
                 }
 
                 @Override
-                public void mousePressed(final MouseEvent me) {
-                    if (me.button == 1 &&
-                            figure.containsPoint(me.getLocation())) {
+                public void mousePressed(MouseEvent me) {
+                    if (me.button == 1 && figure.containsPoint(me.getLocation())) {
                         me.consume();
                     }
                 }
 
                 @Override
-                public void mouseReleased(final MouseEvent me) {
+                public void mouseReleased(MouseEvent me) {
                     // Check location to ignore bogus mouse clicks,
                     // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-                    if (me.button == 1 &&
-                            getExecutionMode().equals(ExecutionMode.RUN_MODE) &&
-                            figure.containsPoint(me.getLocation())) {
-                        final org.eclipse.swt.graphics.Point cursorLocation = Display
-                                .getCurrent().getCursorLocation();
-                        showMenu(me.getLocation(), cursorLocation.x,
-                                cursorLocation.y);
+                    if (me.button == 1 && getExecutionMode().equals(ExecutionMode.RUN_MODE)
+                            && figure.containsPoint(me.getLocation())) {
+                        var cursorLocation = Display.getCurrent().getCursorLocation();
+                        showMenu(me.getLocation(), cursorLocation.x, cursorLocation.y);
                     }
                 }
 
@@ -88,11 +81,9 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             @Override
             public void mouseEntered(MouseEvent me) {
                 if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
-                    Color backColor = figure.getBackgroundColor();
-                    RGB darkColor = GraphicsUtil.mixColors(backColor.getRGB(),
-                            new RGB(0, 0, 0), 0.9);
-                    figure.setBackgroundColor(CustomMediaFactory.getInstance()
-                            .getColor(darkColor));
+                    var backColor = figure.getBackgroundColor();
+                    var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(0, 0, 0), 0.9);
+                    figure.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
                 }
 
             }
@@ -100,8 +91,8 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             @Override
             public void mouseExited(MouseEvent me) {
                 if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
-                    figure.setBackgroundColor(CustomMediaFactory.getInstance()
-                            .getColor(getWidgetModel().getBackgroundColor()));
+                    figure.setBackgroundColor(
+                            CustomMediaFactory.getInstance().getColor(getWidgetModel().getBackgroundColor()));
                 }
             }
         });
@@ -120,10 +111,9 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN)) {
-            new TextEditManager(this,
-                    new LabelCellEditorLocator(getFigure()), false).show();
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
+            new TextEditManager(this, new LabelCellEditorLocator(getFigure()), false).show();
         }
     }
 
@@ -142,17 +132,14 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
      * @param absolutY
      *            The y coordinate of the mouse on the monitor
      */
-    private void showMenu(final Point point, final int absolutX,
-            final int absolutY) {
+    private void showMenu(Point point, int absolutX, int absolutY) {
         if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
-            final Shell shell = PlatformUI.getWorkbench()
-                    .getActiveWorkbenchWindow().getShell();
-            MenuManager menuManager = new MenuManager();
-            for (AbstractWidgetAction action : getWidgetModel()
-                    .getActionsInput().getActionsList()) {
+            var shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+            var menuManager = new MenuManager();
+            for (AbstractWidgetAction action : getWidgetModel().getActionsInput().getActionsList()) {
                 menuManager.add(new WidgetActionMenuAction(action));
             }
-            Menu menu = menuManager.createContextMenu(shell);
+            var menu = menuManager.createContextMenu(shell);
 
             /*
              * We need to position the menu in absolute monitor coordinates.
@@ -160,8 +147,8 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
              * widget coordinates to these so that the menu opens on the
              * bottom left of the widget.
              */
-            int x = absolutX - point.x;
-            int y = absolutY - point.y;
+            var x = absolutX - point.x;
+            var y = absolutY - point.y;
             x += getWidgetModel().getLocation().x;
             y += getWidgetModel().getLocation().y + getWidgetModel().getSize().height;
 
@@ -180,38 +167,28 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
     private void registerLoadActionsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             if (getWidgetModel().isActionsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadActionsFromPVListener == null) {
                         loadActionsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
-                                if (value != null
-                                        && value instanceof VEnum) {
-                                    List<String> new_meta = ((VEnum) value).getLabels();
+                                var value = pv.getValue();
+                                if (value != null && value instanceof VEnum) {
+                                    var new_meta = ((VEnum) value).getLabels();
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
-                                        ActionsInput actionsInput = new ActionsInput();
+                                        var actionsInput = new ActionsInput();
                                         for (String writeValue : meta) {
-                                            WritePVAction action = new WritePVAction();
-                                            action.setPropertyValue(
-                                                    WritePVAction.PROP_PVNAME,
-                                                    getWidgetModel()
-                                                            .getPVName());
-                                            action.setPropertyValue(
-                                                    WritePVAction.PROP_VALUE,
-                                                    writeValue);
-                                            action.setPropertyValue(
-                                                    WritePVAction.PROP_DESCRIPTION,
-                                                    writeValue);
-                                            actionsInput.getActionsList().add(
-                                                    action);
+                                            var action = new WritePVAction();
+                                            action.setPropertyValue(WritePVAction.PROP_PVNAME,
+                                                    getWidgetModel().getPVName());
+                                            action.setPropertyValue(WritePVAction.PROP_VALUE, writeValue);
+                                            action.setPropertyValue(WritePVAction.PROP_DESCRIPTION, writeValue);
+                                            actionsInput.getActionsList().add(action);
                                         }
-                                        getWidgetModel()
-                                                .setPropertyValue(
-                                                        AbstractWidgetModel.PROP_ACTIONS,
-                                                        actionsInput);
+                                        getWidgetModel().setPropertyValue(AbstractWidgetModel.PROP_ACTIONS,
+                                                actionsInput);
 
                                     }
                                 }
@@ -229,7 +206,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isActionsFromPV()) {
-            IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
             if (pv != null && loadActionsFromPVListener != null) {
                 pv.removeListener(loadActionsFromPVListener);
             }
@@ -243,14 +220,12 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             registerLoadActionsListener();
             return false;
         };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME,
-                pvNameHandler);
+        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
 
         // PV_Value
         IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
             if ((newValue != null) && (newValue instanceof Scalar)) {
-                ((MenuButtonFigure) refreshableFigure).setText(VTypeHelper
-                        .getString((VType) newValue));
+                ((MenuButtonFigure) refreshableFigure).setText(VTypeHelper.getString((VType) newValue));
             }
             return true;
         };
@@ -268,29 +243,25 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             ((MenuButtonFigure) refreshableFigure).setOpaque(!(Boolean) newValue);
             return true;
         };
-        setPropertyChangeHandler(MenuButtonModel.PROP_TRANSPARENT,
-                transparentHandler);
+        setPropertyChangeHandler(MenuButtonModel.PROP_TRANSPARENT, transparentHandler);
 
         // Show down arrow
         IWidgetPropertyChangeHandler downArrowHandler = (oldValue, newValue, refreshableFigure) -> {
             ((MenuButtonFigure) refreshableFigure).setDownArrowVisible((boolean) newValue);
             return true;
         };
-        setPropertyChangeHandler(MenuButtonModel.PROP_SHOW_DOWN_ARROW,
-                downArrowHandler);
+        setPropertyChangeHandler(MenuButtonModel.PROP_SHOW_DOWN_ARROW, downArrowHandler);
 
-        final IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
             updatePropSheet((Boolean) newValue);
             return false;
         };
-        getWidgetModel().getProperty(MenuButtonModel.PROP_ACTIONS_FROM_PV)
-                .addPropertyChangeListener(evt -> handler.handleChange(evt.getOldValue(),
-                        evt.getNewValue(), getFigure()));
+        getWidgetModel().getProperty(MenuButtonModel.PROP_ACTIONS_FROM_PV).addPropertyChangeListener(
+                evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
     }
 
-    private void updatePropSheet(final boolean actionsFromPV) {
-        getWidgetModel().setPropertyVisible(MenuButtonModel.PROP_ACTIONS,
-                !actionsFromPV);
+    private void updatePropSheet(boolean actionsFromPV) {
+        getWidgetModel().setPropertyVisible(MenuButtonModel.PROP_ACTIONS, !actionsFromPV);
     }
 
     public int size() {

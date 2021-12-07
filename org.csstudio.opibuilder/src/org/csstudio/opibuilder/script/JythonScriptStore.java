@@ -14,15 +14,13 @@ import java.io.InputStreamReader;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.yamcs.studio.data.IPV;
-import org.eclipse.core.runtime.IPath;
 import org.python.core.Py;
 import org.python.core.PyCode;
-import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.core.PyStringMap;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
+import org.yamcs.studio.data.IPV;
 
 /**
  * This is the implementation of {@link AbstractScriptStore} for Jython PythonInterpreter.
@@ -34,26 +32,25 @@ public class JythonScriptStore extends AbstractScriptStore {
 
     private PyCode code;
 
-    public JythonScriptStore(final ScriptData scriptData, final AbstractBaseEditPart editpart,
-            final IPV[] pvArray) throws Exception {
+    public JythonScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
         super(scriptData, editpart, pvArray);
 
     }
 
     @Override
     protected void initScriptEngine() {
-        IPath scriptPath = getAbsoluteScriptPath();
+        var scriptPath = getAbsoluteScriptPath();
         // Add the path of script to python module search path
         state = Py.getSystemState();
         if (scriptPath != null && !scriptPath.isEmpty()) {
 
             // If it is a workspace file.
             if (ResourceUtil.isExistingWorkspaceFile(scriptPath)) {
-                IPath folderPath = scriptPath.removeLastSegments(1);
-                String sysLocation = ResourceUtil.workspacePathToSysPath(folderPath).toOSString();
+                var folderPath = scriptPath.removeLastSegments(1);
+                var sysLocation = ResourceUtil.workspacePathToSysPath(folderPath).toOSString();
                 state.path.append(new PyString(sysLocation));
             } else if (ResourceUtil.isExistingLocalFile(scriptPath)) {
-                IPath folderPath = scriptPath.removeLastSegments(1);
+                var folderPath = scriptPath.removeLastSegments(1);
                 state.path.append(new PyString(folderPath.toOSString()));
             }
         }
@@ -71,7 +68,7 @@ public class JythonScriptStore extends AbstractScriptStore {
     }
 
     @Override
-    protected void execScript(final IPV triggerPV) throws Exception {
+    protected void execScript(IPV triggerPV) throws Exception {
         interp.set(ScriptService.WIDGET, getEditPart());
         interp.set(ScriptService.PVS, getPvArray());
         interp.set(ScriptService.DISPLAY, getDisplayEditPart());
@@ -84,7 +81,7 @@ public class JythonScriptStore extends AbstractScriptStore {
     @Override
     protected void dispose() {
         if (interp != null) {
-            PyObject o = interp.getLocals();
+            var o = interp.getLocals();
             if (o != null && o instanceof PyStringMap) {
                 ((PyStringMap) o).clear();
             }

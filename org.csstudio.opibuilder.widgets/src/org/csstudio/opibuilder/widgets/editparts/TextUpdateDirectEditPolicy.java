@@ -17,17 +17,16 @@ import org.eclipse.gef.requests.DirectEditRequest;
 /**
  * The Editpolicy to handle direct text edit.
  */
-public class TextUpdateDirectEditPolicy
-        extends DirectEditPolicy {
+public class TextUpdateDirectEditPolicy extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
     @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String labelText = (String) edit.getCellEditor().getValue();
-        TextUpdateEditPart label = (TextUpdateEditPart) getHost();
-        TextIndicatorEditCommand command = new TextIndicatorEditCommand((TextUpdateModel) label.getModel(), labelText);
+        var labelText = (String) edit.getCellEditor().getValue();
+        var label = (TextUpdateEditPart) getHost();
+        var command = new TextIndicatorEditCommand((TextUpdateModel) label.getModel(), labelText);
         return command;
     }
 
@@ -50,10 +49,11 @@ public class TextUpdateDirectEditPolicy
 
         public TextIndicatorEditCommand(TextUpdateModel l, String s) {
             label = l;
-            if (s != null)
+            if (s != null) {
                 newText = s;
-            else
+            } else {
                 newText = "";
+            }
         }
 
         @Override

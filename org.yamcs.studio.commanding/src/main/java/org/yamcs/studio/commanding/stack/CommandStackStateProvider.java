@@ -58,7 +58,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
             }
         }
 
-        Map newState = getCurrentState();
+        var newState = getCurrentState();
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
 

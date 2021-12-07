@@ -3,7 +3,6 @@ package org.csstudio.opibuilder.script;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 import javax.script.ScriptEngine;
@@ -16,7 +15,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.osgi.framework.Bundle;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 import org.yamcs.studio.data.IPV;
@@ -36,13 +34,13 @@ public class ScriptStoreFactory {
         }
 
         // Add Jython's /lib PYTHONPATH
-        Bundle bundle = Platform.getBundle("org.python.jython");
+        var bundle = Platform.getBundle("org.python.jython");
         String pythonPath = null;
         if (bundle == null) {
             throw new Exception("Cannot locate jython bundle");
         }
         // Used to be packed as org.python.jython/jython.jar/Lib
-        URL fileURL = FileLocator.find(bundle, new Path("jython.jar"), null);
+        var fileURL = FileLocator.find(bundle, new Path("jython.jar"), null);
         if (fileURL != null) {
             pythonPath = FileLocator.resolve(fileURL).getPath() + "/Lib";
         } else { // Different packaging where jython.jar is expanded, /Lib at plugin root
@@ -54,11 +52,11 @@ public class ScriptStoreFactory {
             pythonPath = pythonPath.replace(".jar!", ".jar");
         }
 
-        Optional<String> prefPath = PreferencesHelper.getPythonPath();
+        var prefPath = PreferencesHelper.getPythonPath();
         if (prefPath.isPresent()) {
             pythonPath += System.getProperty("path.separator") + prefPath.get();
         }
-        final Properties props = new Properties();
+        var props = new Properties();
         props.setProperty("python.path", pythonPath);
         // Disable cachedir to avoid creation of cachedir folder.
         // See http://www.jython.org/jythonbook/en/1.0/ModulesPackages.html#java-package-scanning
@@ -82,9 +80,9 @@ public class ScriptStoreFactory {
      * @throws Exception
      */
     private static void initJdkJSEngine() throws Exception {
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        ScriptEngine engine = factory.getScriptEngine();
-        final Display display = Display.getCurrent();
+        var factory = new NashornScriptEngineFactory();
+        var engine = factory.getScriptEngine();
+        var display = Display.getCurrent();
         displayScriptEngineMap.put(display, engine);
     }
 
@@ -97,10 +95,10 @@ public class ScriptStoreFactory {
      * @return
      * @throws Exception
      */
-    public static AbstractScriptStore getScriptStore(
-            ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
-        if (!scriptData.isEmbedded() &&
-                (scriptData.getPath() == null || scriptData.getPath().getFileExtension() == null)) {
+    public static AbstractScriptStore getScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart,
+            IPV[] pvArray) throws Exception {
+        if (!scriptData.isEmbedded()
+                && (scriptData.getPath() == null || scriptData.getPath().getFileExtension() == null)) {
             if (scriptData instanceof RuleScriptData) {
                 return getJavaScriptStore(scriptData, editpart, pvArray);
             } else {
@@ -108,7 +106,7 @@ public class ScriptStoreFactory {
             }
         }
 
-        String fileExt = "";
+        var fileExt = "";
         if (scriptData.isEmbedded()) {
             if (scriptData.getScriptType() == ScriptType.JAVASCRIPT) {
                 fileExt = ScriptService.JS;
@@ -131,9 +129,9 @@ public class ScriptStoreFactory {
         }
     }
 
-    private static AbstractScriptStore getJavaScriptStore(
-            ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
-        boolean jdkJsEngineInitialized = displayScriptEngineMap.containsKey(Display.getCurrent());
+    private static AbstractScriptStore getJavaScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart,
+            IPV[] pvArray) throws Exception {
+        var jdkJsEngineInitialized = displayScriptEngineMap.containsKey(Display.getCurrent());
         if (!jdkJsEngineInitialized) {
             initJdkJSEngine();
         }
@@ -148,8 +146,8 @@ public class ScriptStoreFactory {
      *             on error, including invocation when not using <code>JavaScriptEngine.JDK</code>
      */
     public static ScriptEngine getJavaScriptEngine() throws Exception {
-        Display display = Display.getCurrent();
-        boolean jsEngineInitialized = displayScriptEngineMap.containsKey(display);
+        var display = Display.getCurrent();
+        var jsEngineInitialized = displayScriptEngineMap.containsKey(display);
         if (!jsEngineInitialized) {
             initJdkJSEngine();
         }

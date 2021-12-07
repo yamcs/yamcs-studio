@@ -15,7 +15,7 @@ public class ToolbarSpacer extends WorkbenchWindowControlContribution {
 
     @Override
     protected Control createControl(Composite parent) {
-        Label bla = new Label(parent, SWT.NONE);
+        var bla = new Label(parent, SWT.NONE);
         bla.setText("   ");
         return bla;
     }

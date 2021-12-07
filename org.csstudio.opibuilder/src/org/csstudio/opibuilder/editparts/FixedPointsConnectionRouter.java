@@ -6,14 +6,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.editparts.AbstractOpiBuilderAnchor.ConnectorOrientation;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.eclipse.draw2d.AbstractRouter;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 
 /**
@@ -55,36 +53,36 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
 
     @Override
     public void route(Connection conn) {
-        PointList connPoints = new PointList();
-        PointList constraintPoints = (PointList) getConstraint(conn);
+        var connPoints = new PointList();
+        var constraintPoints = (PointList) getConstraint(conn);
 
         // we get the absolute and relative start points of the connection
         // absolute: on screen, relative: according to parent. May be different if the OPI is being scrolled
-        Point startPoint = getStartPoint(conn);
-        Point startPointRel = startPoint.getCopy();
+        var startPoint = getStartPoint(conn);
+        var startPointRel = startPoint.getCopy();
         conn.translateToRelative(startPointRel);
 
         // we get the absolute and relative end points of the connection
-        Point endPoint = getEndPoint(conn);
-        Point endPointRel = endPoint.getCopy();
+        var endPoint = getEndPoint(conn);
+        var endPointRel = endPoint.getCopy();
         conn.translateToRelative(endPointRel);
 
         connPoints.addPoint(startPointRel);
 
-        AbstractOpiBuilderAnchor anchor = (AbstractOpiBuilderAnchor) conn.getSourceAnchor();
-        final ConnectorOrientation startDirection = anchor.getOrientation();
+        var anchor = (AbstractOpiBuilderAnchor) conn.getSourceAnchor();
+        var startDirection = anchor.getOrientation();
 
         anchor = (AbstractOpiBuilderAnchor) conn.getTargetAnchor();
-        final ConnectorOrientation endDirection = anchor.getOrientation();
+        var endDirection = anchor.getOrientation();
 
-        PointList newPoints = constraintPoints.getCopy();
-        final ScrollPane sp = getScrollPane();
+        var newPoints = constraintPoints.getCopy();
+        var sp = getScrollPane();
         if (connectionModel != null && sp != null) {
-            for (int i = 0; i < newPoints.size(); ++i) {
-                final Point point = newPoints.getPoint(i);
+            for (var i = 0; i < newPoints.size(); ++i) {
+                var point = newPoints.getPoint(i);
                 sp.translateToAbsolute(point);
                 conn.translateToRelative(point);
-                Rectangle bounds = sp.getBounds();
+                var bounds = sp.getBounds();
                 newPoints.setPoint(new Point(point.x() + bounds.x(), point.y() + bounds.y()), i);
             }
         }
@@ -112,13 +110,13 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
     private void simpleMove(PointList translatedPoints, ConnectorOrientation startDirection,
             ConnectorOrientation endDirection, Point startPointRel, Point endPointRel) {
         // Handle the start point
-        final Point firstPoint = translatedPoints.getFirstPoint();
+        var firstPoint = translatedPoints.getFirstPoint();
         onePointMove(firstPoint, startDirection, startPointRel);
         translatedPoints.setPoint(firstPoint, 0);
 
         // Handle the end point
-        final int lastIndex = translatedPoints.size() - 1;
-        final Point lastPoint = translatedPoints.getPoint(lastIndex);
+        var lastIndex = translatedPoints.size() - 1;
+        var lastPoint = translatedPoints.getPoint(lastIndex);
         onePointMove(lastPoint, endDirection, endPointRel);
         translatedPoints.setPoint(lastPoint, lastIndex);
     }
@@ -138,10 +136,10 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
     //
 
     private String buildPointDebug(String name, PointList points) {
-        final StringBuilder sb = new StringBuilder(points.size() * 8 + 32);
+        var sb = new StringBuilder(points.size() * 8 + 32);
         sb.append(name).append(": [");
-        for (int i = 0; i < points.size(); ++i) {
-            final Point p = points.getPoint(i);
+        for (var i = 0; i < points.size(); ++i) {
+            var p = points.getPoint(i);
             sb.append(p.toString()).append(i >= points.size() - 1 ? "" : ", ");
         }
         return sb.append(']').toString();
@@ -161,30 +159,34 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
                 return connectionModel.getScrollPane();
             } else {
                 // are both connected widgets defined - this should be always true
-                if ((connectionModel.getSource() == null) || (connectionModel.getTarget() == null))
+                if ((connectionModel.getSource() == null) || (connectionModel.getTarget() == null)) {
                     return null;
-                AbstractContainerModel sourceModel = connectionModel.getSource().getParent();
-                AbstractContainerModel targetModel = connectionModel.getTarget().getParent();
+                }
+                var sourceModel = connectionModel.getSource().getParent();
+                var targetModel = connectionModel.getTarget().getParent();
                 // if one of them is null, then at least one end if the connection is in the top-most container. No
                 // translation.
-                if ((sourceModel == null) || (targetModel == null))
+                if ((sourceModel == null) || (targetModel == null)) {
                     return null;
+                }
                 // otherwise, see if any of them is scrollable
-                AbstractScrollableEditpart sourceEditpart = getScrollable(sourceModel.getEditPart());
-                AbstractScrollableEditpart targetEditpart = getScrollable(targetModel.getEditPart());
+                var sourceEditpart = getScrollable(sourceModel.getEditPart());
+                var targetEditpart = getScrollable(targetModel.getEditPart());
 
                 // if one of them is not linking container, then return null
-                if ((sourceEditpart == null) || (targetEditpart == null))
+                if ((sourceEditpart == null) || (targetEditpart == null)) {
                     return null;
+                }
 
                 // now we have two options:
                 // - one linking container is inside the other
                 // - they are not one inside the other, but they have common parent
 
                 // option one?
-                ScrollPane scrollPane = getScrollPaneForContained(sourceEditpart, targetEditpart);
-                if (scrollPane != null)
+                var scrollPane = getScrollPaneForContained(sourceEditpart, targetEditpart);
+                if (scrollPane != null) {
                     return scrollPane;
+                }
 
                 // option two
                 return getCommonScrollableParent(sourceEditpart, targetEditpart);
@@ -194,22 +196,24 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
     }
 
     private AbstractScrollableEditpart getScrollable(EditPart container) {
-        EditPart c = container;
+        var c = container;
         while (c != null) {
-            if (c instanceof AbstractScrollableEditpart)
+            if (c instanceof AbstractScrollableEditpart) {
                 return (AbstractScrollableEditpart) c;
+            }
             c = c.getParent();
         }
         return null;
     }
 
     private ScrollPane getScrollPaneForContained(AbstractScrollableEditpart one, AbstractScrollableEditpart two) {
-        if (isAAncestorOfB(one, two))
+        if (isAAncestorOfB(one, two)) {
             return one.getScrollPane();
-        else if (isAAncestorOfB(two, one))
+        } else if (isAAncestorOfB(two, one)) {
             return two.getScrollPane();
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -223,21 +227,23 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
         EditPart part = b;
         // is two child of one?
         while (part != null) {
-            if (part == a)
+            if (part == a) {
                 return true;
+            }
             part = part.getParent();
         }
         return false;
     }
 
     private ScrollPane getCommonScrollableParent(AbstractScrollableEditpart one, AbstractScrollableEditpart two) {
-        AbstractScrollableEditpart partOne = one;
+        var partOne = one;
         // for each scrollable parent of one, check all scrollable parents of two
         while (partOne != null) {
-            AbstractScrollableEditpart partTwo = two;
+            var partTwo = two;
             while (partTwo != null) {
-                if (partOne == partTwo)
+                if (partOne == partTwo) {
                     return partOne.getScrollPane(); // common parent found
+                }
                 partTwo = getScrollable(partTwo.getParent());
             }
             partOne = getScrollable(partOne.getParent());

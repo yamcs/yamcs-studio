@@ -59,8 +59,7 @@ public class FontProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public FontProperty(String prop_id, String description,
-            WidgetPropertyCategory category, FontData defaultValue) {
+    public FontProperty(String prop_id, String description, WidgetPropertyCategory category, FontData defaultValue) {
         super(prop_id, description, category, new OPIFont(defaultValue));
     }
 
@@ -76,8 +75,7 @@ public class FontProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. It must be a exist font macro name in font file.
      */
-    public FontProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue) {
+    public FontProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue) {
         super(prop_id, description, category, MediaService.getInstance().getOPIFont(defaultValue));
     }
 
@@ -87,7 +85,7 @@ public class FontProperty extends AbstractWidgetProperty {
             return null;
         }
 
-        Object acceptedValue = value;
+        var acceptedValue = value;
 
         if (value instanceof OPIFont) {
             // Avoid getFontData() as this method can be called from off the UI thread.
@@ -112,7 +110,7 @@ public class FontProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        OPIFont opiFont = (OPIFont) getPropertyValue();
+        var opiFont = (OPIFont) getPropertyValue();
 
         Element fontElement;
 
@@ -122,12 +120,10 @@ public class FontProperty extends AbstractWidgetProperty {
         } else {
             fontElement = new Element(XML_ELEMENT_FONT);
         }
-        FontData fontData = opiFont.getRawFontData();
+        var fontData = opiFont.getRawFontData();
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_NAME, fontData.getName());
-        fontElement.setAttribute(XML_ATTRIBUTE_FONT_HEIGHT,
-                "" + fontData.getHeight());
-        fontElement.setAttribute(XML_ATTRIBUTE_FONT_STYLE,
-                "" + fontData.getStyle());
+        fontElement.setAttribute(XML_ATTRIBUTE_FONT_HEIGHT, "" + fontData.getHeight());
+        fontElement.setAttribute(XML_ATTRIBUTE_FONT_STYLE, "" + fontData.getStyle());
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_PIXELS, "" + opiFont.isSizeInPixels());
 
         propElement.addContent(fontElement);
@@ -135,26 +131,24 @@ public class FontProperty extends AbstractWidgetProperty {
 
     @Override
     public Object readValueFromXML(Element propElement) {
-        Element fontElement = propElement.getChild(XML_ELEMENT_FONT);
+        var fontElement = propElement.getChild(XML_ELEMENT_FONT);
         if (fontElement != null) {
             // Create the OPIFont with the raw font data from the XML.
-            OPIFont font = new OPIFont(
-                    new FontData(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME),
-                            (int) Double.parseDouble(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT)),
-                            Integer.parseInt(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE))));
+            var font = new OPIFont(new FontData(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME),
+                    (int) Double.parseDouble(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT)),
+                    Integer.parseInt(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE))));
             font.setSizeInPixels(Boolean.parseBoolean(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_PIXELS)));
             return font;
         } else {
             fontElement = propElement.getChild(XML_ELEMENT_FONTNAME);
             if (fontElement != null) {
                 OPIFont font = null;
-                String fontName = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME);
-                String fontHeight = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT);
-                String fontStyle = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE);
-                String heightInPixels = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_PIXELS);
+                var fontName = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME);
+                var fontHeight = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT);
+                var fontStyle = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE);
+                var heightInPixels = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_PIXELS);
                 if (fontName != null && fontHeight != null && fontStyle != null) {
-                    FontData fd = new FontData(fontName, (int) Double.parseDouble(fontHeight),
-                            Integer.parseInt(fontStyle));
+                    var fd = new FontData(fontName, (int) Double.parseDouble(fontHeight), Integer.parseInt(fontStyle));
                     font = MediaService.getInstance().getOPIFont(fontElement.getText(), fd);
                 } else {
                     font = MediaService.getInstance().getOPIFont(fontElement.getText());
@@ -164,7 +158,7 @@ public class FontProperty extends AbstractWidgetProperty {
                     // an older verison of BOY where points were assumed. To ensure the screens are not
                     // changed when re-saved, make this explicit.
                     if (heightInPixels != null) {
-                        boolean inPixels = Boolean.parseBoolean(heightInPixels);
+                        var inPixels = Boolean.parseBoolean(heightInPixels);
                         font.setSizeInPixels(inPixels);
                     } else {
                         font.setSizeInPixels(false);
@@ -184,13 +178,13 @@ public class FontProperty extends AbstractWidgetProperty {
 
     @Override
     public String toStringInRuleScript(Object propValue) {
-        OPIFont opiFont = (OPIFont) propValue;
+        var opiFont = (OPIFont) propValue;
         if (opiFont.isPreDefined()) {
             return QUOTE + opiFont.getFontMacroName() + QUOTE;
         } else {
-            FontData fontData = opiFont.getFontData();
-            return "ColorFontUtil.getFont(\"" +
-                    fontData.getName() + QUOTE + "," + fontData.getHeight() + "," + fontData.getStyle() + ")";
+            var fontData = opiFont.getFontData();
+            return "ColorFontUtil.getFont(\"" + fontData.getName() + QUOTE + "," + fontData.getHeight() + ","
+                    + fontData.getStyle() + ")";
         }
     }
 

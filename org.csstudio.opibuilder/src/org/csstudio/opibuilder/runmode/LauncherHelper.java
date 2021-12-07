@@ -5,10 +5,8 @@ import java.util.Iterator;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -34,8 +32,8 @@ public final class LauncherHelper {
         // This method was triggered from the resource navigator, therefore the current selection should contain the
         // resource that matches this path
 
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        ISelection selection = service.getSelection();
+        var service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+        var selection = service.getSelection();
 
         if (selection instanceof IStructuredSelection) {
             Iterator<?> elements = ((IStructuredSelection) selection).iterator();

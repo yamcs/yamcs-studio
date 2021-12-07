@@ -39,13 +39,13 @@ public class MacroEditDialog extends RowEditDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_composite = (Composite) super.createDialogArea(parent);
-        final Composite composite = new Composite(parent_composite, SWT.NONE);
+        var parent_composite = (Composite) super.createDialogArea(parent);
+        var composite = new Composite(parent_composite, SWT.NONE);
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         composite.setLayout(new GridLayout(2, false));
         GridData gd;
 
-        final Label titleLable = new Label(composite, 0);
+        var titleLable = new Label(composite, 0);
         titleLable.setText("Name");
         titleLable.setLayoutData(new GridData());
 
@@ -56,7 +56,7 @@ public class MacroEditDialog extends RowEditDialog {
         gd.widthHint = 300;
         titleText.setLayoutData(gd);
 
-        final Label detailsLable = new Label(composite, SWT.NONE);
+        var detailsLable = new Label(composite, SWT.NONE);
         detailsLable.setText("Value");
         detailsLable.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
 

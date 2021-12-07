@@ -41,13 +41,13 @@ public abstract class ListBoolean {
         }
 
         if (obj instanceof ListBoolean) {
-            ListBoolean other = (ListBoolean) obj;
+            var other = (ListBoolean) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (getBoolean(i) != other.getBoolean(i)) {
                     return false;
                 }
@@ -61,8 +61,8 @@ public abstract class ListBoolean {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
             result = 31 * result + (getBoolean(i) ? 1 : 0);
         }
         return result;

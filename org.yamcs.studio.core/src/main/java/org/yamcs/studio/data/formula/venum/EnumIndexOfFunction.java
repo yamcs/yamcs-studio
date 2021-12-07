@@ -72,11 +72,8 @@ class EnumIndexOfFunction implements FormulaFunction {
             return null;
         }
         // args[0] is a VEnum
-        VEnum value = (VEnum) args.get(0);
-        return newVInt(value.getIndex(),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+        var value = (VEnum) args.get(0);
+        return newVInt(value.getIndex(), highestSeverityOf(args, false), latestValidTimeOrNowOf(args), displayNone());
     }
 
     private static boolean containsNull(Collection<Object> args) {

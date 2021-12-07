@@ -44,7 +44,7 @@ public class OverviewOutlinePage extends Page implements IContentOutlinePage {
     @Override
     public void createControl(Composite parent) {
         overview = new Canvas(parent, SWT.NONE);
-        LightweightSystem lws = new LightweightSystem(overview);
+        var lws = new LightweightSystem(overview);
 
         thumbnail = new ScrollableThumbnail((Viewport) rootEP.getFigure());
         thumbnail.setBorder(new MarginBorder(3));
@@ -82,8 +82,7 @@ public class OverviewOutlinePage extends Page implements IContentOutlinePage {
     }
 
     @Override
-    public void addSelectionChangedListener(
-            ISelectionChangedListener listener) {
+    public void addSelectionChangedListener(ISelectionChangedListener listener) {
 
     }
 
@@ -93,8 +92,7 @@ public class OverviewOutlinePage extends Page implements IContentOutlinePage {
     }
 
     @Override
-    public void removeSelectionChangedListener(
-            ISelectionChangedListener listener) {
+    public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 
     }
 

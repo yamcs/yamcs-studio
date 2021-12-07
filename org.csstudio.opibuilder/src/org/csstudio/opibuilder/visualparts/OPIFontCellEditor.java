@@ -28,9 +28,10 @@ public class OPIFontCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        OPIFontDialog dialog = new OPIFontDialog(parentShell, opiFont, dialogTitle);
-        if (dialog.open() == Window.OK)
+        var dialog = new OPIFontDialog(parentShell, opiFont, dialogTitle);
+        if (dialog.open() == Window.OK) {
             opiFont = dialog.getOutput();
+        }
     }
 
     @Override
@@ -45,10 +46,11 @@ public class OPIFontCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof OPIFont))
+        if (value == null || !(value instanceof OPIFont)) {
             opiFont = MediaService.getInstance().getOPIFont("unknown");
-        else
+        } else {
             opiFont = (OPIFont) value;
+        }
     }
 
 }

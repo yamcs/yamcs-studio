@@ -38,8 +38,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     public AbstractWidgetAction() {
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
         configureProperties();
-        addProperty(new StringProperty(PROP_DESCRIPTION, "Description",
-                WidgetPropertyCategory.Basic, ""));
+        addProperty(new StringProperty(PROP_DESCRIPTION, "Description", WidgetPropertyCategory.Basic, ""));
     }
 
     /**
@@ -48,7 +47,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
      * @param property
      *            the property to be added.
      */
-    public void addProperty(final AbstractWidgetProperty property) {
+    public void addProperty(AbstractWidgetProperty property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -61,9 +60,10 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     }
 
     public String getDescription() {
-        String description = (String) getPropertyValue(PROP_DESCRIPTION);
-        if (description.trim().length() == 0)
+        var description = (String) getPropertyValue(PROP_DESCRIPTION);
+        if (description.trim().length() == 0) {
             description = getDefaultDescription();
+        }
         return description;
     }
 
@@ -72,10 +72,11 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     public abstract ActionType getActionType();
 
     public AbstractWidgetProperty[] getAllProperties() {
-        AbstractWidgetProperty[] propArray = new AbstractWidgetProperty[propertyMap.size()];
-        int i = 0;
-        for (AbstractWidgetProperty p : propertyMap.values())
+        var propArray = new AbstractWidgetProperty[propertyMap.size()];
+        var i = 0;
+        for (AbstractWidgetProperty p : propertyMap.values()) {
             propArray[i++] = p;
+        }
         return propArray;
     }
 
@@ -91,7 +92,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -114,12 +115,13 @@ public abstract class AbstractWidgetAction implements IAdaptable {
                     return new Object[0];
                 }
             });
+        }
 
         return null;
     }
 
     public AbstractWidgetAction getCopy() {
-        AbstractWidgetAction action = WidgetActionFactory.createWidgetAction(getActionType());
+        var action = WidgetActionFactory.createWidgetAction(getActionType());
         for (String id : propertyMap.keySet()) {
             action.setPropertyValue(id, getPropertyValue(id));
         }
@@ -155,8 +157,9 @@ public abstract class AbstractWidgetAction implements IAdaptable {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetProperty property : getAllProperties())
+        for (AbstractWidgetProperty property : getAllProperties()) {
             property.setWidgetModel(widgetModel);
+        }
     }
 
     /**

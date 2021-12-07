@@ -22,7 +22,7 @@ public class StringMatchFilter {
 
     public boolean filterRow(int rowIndex) {
         @SuppressWarnings("unchecked")
-        List<String> columnData = (List<String>) table.getColumnData(columnIndex);
+        var columnData = (List<String>) table.getColumnData(columnIndex);
         return columnData.get(rowIndex).contains(substring);
     }
 }

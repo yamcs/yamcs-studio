@@ -27,7 +27,6 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.ui.actions.WorkbenchPartAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -56,9 +55,8 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
         setText("Paste");
         setActionDefinitionId("org.eclipse.ui.edit.paste");
         setId(ActionFactory.PASTE.getId());
-        ISharedImages sharedImages = workbenchPart.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
-        setImageDescriptor(sharedImages
-                .getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+        var sharedImages = workbenchPart.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
     }
 
     @Override
@@ -73,42 +71,36 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
      */
     public Command createPasteCommand() {
 
-        AbstractContainerModel targetModel = getTargetContainerModel();
+        var targetModel = getTargetContainerModel();
 
-        List<AbstractWidgetModel> widgets = getWidgetsFromClipboard();
+        var widgets = getWidgetsFromClipboard();
 
         if (widgets != null) {
             if (_cursorLocation == null) {
                 this.fetchCurrentCursorLocation();
             }
-            Control cursorControl = Display.getCurrent().getCursorControl();
+            var cursorControl = Display.getCurrent().getCursorControl();
 
             Point pastePoint;
             if (isCursorAboveTargetContainer(cursorControl, targetModel)) {
-                pastePoint = getCursorRelativePositionToTargetContainer(
-                        getCursorLocationOnDisplay(cursorControl), targetModel);
+                pastePoint = getCursorRelativePositionToTargetContainer(getCursorLocationOnDisplay(cursorControl),
+                        targetModel);
                 // move the cursor location so that the user could know he has pasted how many widgets.
-                Display.getCurrent().setCursorLocation(
-                        _cursorLocation.x + 10,
-                        _cursorLocation.y + 10);
+                Display.getCurrent().setCursorLocation(_cursorLocation.x + 10, _cursorLocation.y + 10);
             } else {
-                Random rand = new Random();
+                var rand = new Random();
                 pastePoint = new Point(rand.nextInt(20), rand.nextInt(20));
             }
 
-            List<Point> intrinsicLocations = getWidgetsIntrinsicRelativePositions(widgets);
+            var intrinsicLocations = getWidgetsIntrinsicRelativePositions(widgets);
 
-            CompoundCommand cmd = new CompoundCommand("Paste "
-                    + widgets.size() + " Widget"
-                    + (widgets.size() > 0 ? "s" : ""));
-            int i = 0;
+            var cmd = new CompoundCommand("Paste " + widgets.size() + " Widget" + (widgets.size() > 0 ? "s" : ""));
+            var i = 0;
             for (AbstractWidgetModel widgetModel : widgets) {
 
                 // create command
                 cmd.add(new WidgetCreateCommand(widgetModel, targetModel,
-                        new Rectangle(
-                                intrinsicLocations.get(i).translate(pastePoint),
-                                widgetModel.getSize()),
+                        new Rectangle(intrinsicLocations.get(i).translate(pastePoint), widgetModel.getSize()),
                         (i == 0 ? false : true)));
                 i++;
 
@@ -128,15 +120,15 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
      *            The control where the mouse is above
      * @return true if the control is from the {@link DisplayEditor}, false otherwise
      */
-    private boolean isCursorAboveTargetContainer(final Control cursorControl,
-            final AbstractContainerModel targetContainer) {
-        Control parent = cursorControl;
+    private boolean isCursorAboveTargetContainer(Control cursorControl, AbstractContainerModel targetContainer) {
+        var parent = cursorControl;
         while (parent != null) {
             if (parent.equals(getOPIEditor().getParentComposite())) {
-                if (targetContainer instanceof DisplayModel)
+                if (targetContainer instanceof DisplayModel) {
                     return true;
-                Rectangle targetAbsoluteBound = new Rectangle(
-                        getAbsolutePosition(targetContainer), targetContainer.getSize());
+                }
+                var targetAbsoluteBound = new Rectangle(getAbsolutePosition(targetContainer),
+                        targetContainer.getSize());
                 return targetAbsoluteBound.contains(getCursorLocationOnDisplay(cursorControl));
 
             }
@@ -152,10 +144,9 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
      */
     @SuppressWarnings("unchecked")
     private List<AbstractWidgetModel> getWidgetsFromClipboard() {
-        Object result = getOPIEditor().getClipboard()
-                .getContents(OPIWidgetsTransfer.getInstance());
+        var result = getOPIEditor().getClipboard().getContents(OPIWidgetsTransfer.getInstance());
         if (result != null && result instanceof List<?>) {
-            List<AbstractWidgetModel> widgets = (List<AbstractWidgetModel>) result;
+            var widgets = (List<AbstractWidgetModel>) result;
             return widgets;
         }
         return null;
@@ -191,10 +182,10 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     }
 
     public AbstractContainerModel getTargetContainerModel() {
-        ISelection selection = ((GraphicalViewer) getOPIEditor().getAdapter(GraphicalViewer.class)).getSelection();
+        var selection = ((GraphicalViewer) getOPIEditor().getAdapter(GraphicalViewer.class)).getSelection();
         if (selection != null && selection instanceof IStructuredSelection
                 && ((IStructuredSelection) selection).size() == 1) {
-            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            var obj = ((IStructuredSelection) selection).getFirstElement();
             if (obj != null && obj instanceof EditPart) {
                 if (((EditPart) obj).getModel() instanceof AbstractContainerModel
                         && ((AbstractContainerModel) ((EditPart) obj).getModel()).isChildrenOperationAllowable()) {
@@ -210,11 +201,12 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
      * @return the absolute position of a widget relative to display.
      */
     private Point getAbsolutePosition(AbstractWidgetModel widgetModel) {
-        if (widgetModel instanceof DisplayModel)
+        if (widgetModel instanceof DisplayModel) {
             return new Point(0, 0);
+        }
 
-        Point result = widgetModel.getLocation();
-        AbstractContainerModel parent = widgetModel.getParent();
+        var result = widgetModel.getLocation();
+        var parent = widgetModel.getParent();
         while (!(parent instanceof DisplayModel)) {
             result.translate(parent.getLocation());
             parent = parent.getParent();
@@ -224,27 +216,27 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     }
 
     private Point getCursorLocationOnDisplay(Control cursorControl) {
-        org.eclipse.swt.graphics.Point swtPoint = cursorControl.toControl(_cursorLocation);
+        var swtPoint = cursorControl.toControl(_cursorLocation);
         return new Point(swtPoint.x, swtPoint.y);
     }
 
-    private Point getCursorRelativePositionToTargetContainer(
-            Point cursorLocationOnDisplay, AbstractContainerModel targetContainer) {
-        Point targetAbsolutePosition = getAbsolutePosition(targetContainer);
+    private Point getCursorRelativePositionToTargetContainer(Point cursorLocationOnDisplay,
+            AbstractContainerModel targetContainer) {
+        var targetAbsolutePosition = getAbsolutePosition(targetContainer);
         return cursorLocationOnDisplay.translate(-targetAbsolutePosition.x, -targetAbsolutePosition.y);
     }
 
     private List<Point> getWidgetsIntrinsicRelativePositions(List<AbstractWidgetModel> widgets) {
 
-        PointList pointList = new PointList(widgets.size());
+        var pointList = new PointList(widgets.size());
         for (AbstractWidgetModel widgetModel : widgets) {
             pointList.addPoint(widgetModel.getLocation());
         }
 
-        Point upperLeftCorner = pointList.getBounds().getLocation();
+        var upperLeftCorner = pointList.getBounds().getLocation();
 
         List<Point> result = new ArrayList<Point>(widgets.size());
-        for (int i = 0; i < widgets.size(); i++) {
+        for (var i = 0; i < widgets.size(); i++) {
             result.add(pointList.getPoint(i).translate(-upperLeftCorner.x, -upperLeftCorner.y));
         }
 

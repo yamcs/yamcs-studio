@@ -12,8 +12,6 @@ package org.csstudio.opibuilder.widgets.feedback;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.Polyline;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
@@ -42,7 +40,7 @@ public final class PolyPointLocator implements Locator {
      * @param pointIndex
      *            the index of the polygon point for which a handle should be placed
      */
-    public PolyPointLocator(final Polyline referenceFigure, final int pointIndex) {
+    public PolyPointLocator(Polyline referenceFigure, int pointIndex) {
         assert referenceFigure != null;
         assert pointIndex >= 0 : "pointIndex>=0";
         assert referenceFigure.getPoints().size() > pointIndex : "referenceFigure.getPoints().size()>pointIndex";
@@ -65,14 +63,13 @@ public final class PolyPointLocator implements Locator {
     }
 
     @Override
-    public void relocate(final IFigure target) {
-        Point p = _referenceFigure.getPoints().getPoint(_pointIndex);
+    public void relocate(IFigure target) {
+        var p = _referenceFigure.getPoints().getPoint(_pointIndex);
 
         _referenceFigure.translateToAbsolute(p);
         target.translateToRelative(p);
-        Rectangle relativeBounds = new PrecisionRectangle(getReferenceBox()
-                .getResized(-1, -1));
-        Dimension targetSize = target.getPreferredSize();
+        Rectangle relativeBounds = new PrecisionRectangle(getReferenceBox().getResized(-1, -1));
+        var targetSize = target.getPreferredSize();
 
         relativeBounds.x = p.x - ((targetSize.width + 1) / 2);
         relativeBounds.y = p.y - ((targetSize.height + 1) / 2);

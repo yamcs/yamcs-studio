@@ -26,7 +26,6 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.ScrollPane;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -38,8 +37,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
 
     private class Sash extends Figure {
 
-        class SashDragger extends MouseMotionListener.Stub implements
-                MouseListener {
+        class SashDragger extends MouseMotionListener.Stub implements MouseListener {
 
             private Point start;
 
@@ -56,65 +54,66 @@ public class SashContainerFigure extends Figure implements Introspectable {
 
             @Override
             public void mouseDragged(MouseEvent me) {
-                if (!armed)
+                if (!armed) {
                     return;
-                Dimension locDiff = me.getLocation().getDifference(start);
+                }
+                var locDiff = me.getLocation().getDifference(start);
 
                 if (horizontal) {
-                    int newLoc = startSashLoc + locDiff.width;
-                    int rightEdge = containerClientArea.x
-                            + containerClientArea.width - sashWidth / 2;
-                    if (newLoc > rightEdge)
+                    var newLoc = startSashLoc + locDiff.width;
+                    var rightEdge = containerClientArea.x + containerClientArea.width - sashWidth / 2;
+                    if (newLoc > rightEdge) {
                         newLoc = rightEdge;
-                    else {
-                        int leftEdge = containerClientArea.x + sashWidth / 2;
-                        if (newLoc < leftEdge)
+                    } else {
+                        var leftEdge = containerClientArea.x + sashWidth / 2;
+                        if (newLoc < leftEdge) {
                             newLoc = leftEdge;
+                        }
                     }
-                    setSashPosition((newLoc - containerClientArea.x)
-                            / (double) containerClientArea.width);
+                    setSashPosition((newLoc - containerClientArea.x) / (double) containerClientArea.width);
                 } else {
-                    int newLoc = startSashLoc + locDiff.height;
-                    int downEdge = containerClientArea.y
-                            + containerClientArea.height - sashWidth / 2;
-                    if (newLoc > downEdge)
+                    var newLoc = startSashLoc + locDiff.height;
+                    var downEdge = containerClientArea.y + containerClientArea.height - sashWidth / 2;
+                    if (newLoc > downEdge) {
                         newLoc = downEdge;
-                    else {
-                        int upEdge = containerClientArea.y + sashWidth / 2;
-                        if (newLoc < upEdge)
+                    } else {
+                        var upEdge = containerClientArea.y + sashWidth / 2;
+                        if (newLoc < upEdge) {
                             newLoc = upEdge;
+                        }
                     }
-                    setSashPosition((newLoc - containerClientArea.y)
-                            / (double) containerClientArea.height);
+                    setSashPosition((newLoc - containerClientArea.y) / (double) containerClientArea.height);
                 }
                 me.consume();
             }
 
             @Override
             public void mousePressed(MouseEvent me) {
-                if (me.button != 1)
+                if (me.button != 1) {
                     return;
+                }
                 armed = true;
                 start = me.getLocation();
                 startSashPosition = sashPosition;
 
                 containerClientArea = SashContainerFigure.this.getClientArea();
-                if (horizontal)
-                    startSashLoc = containerClientArea.x
-                            + (int) (containerClientArea.width * startSashPosition);
-                else
-                    startSashLoc = containerClientArea.y
-                            + (int) (containerClientArea.height * startSashPosition);
+                if (horizontal) {
+                    startSashLoc = containerClientArea.x + (int) (containerClientArea.width * startSashPosition);
+                } else {
+                    startSashLoc = containerClientArea.y + (int) (containerClientArea.height * startSashPosition);
+                }
 
                 me.consume();
             }
 
             @Override
             public void mouseReleased(MouseEvent me) {
-                if (me.button != 1)
+                if (me.button != 1) {
                     return;
-                if (!armed)
+                }
+                if (!armed) {
                     return;
+                }
                 armed = false;
                 me.consume();
             }
@@ -122,19 +121,20 @@ public class SashContainerFigure extends Figure implements Introspectable {
         }
 
         public Sash() {
-            SashDragger dragger = new SashDragger();
+            var dragger = new SashDragger();
             addMouseListener(dragger);
             addMouseMotionListener(dragger);
-            if (horizontal)
+            if (horizontal) {
                 setCursor(Cursors.SIZEWE);
-            else
+            } else {
                 setCursor(Cursors.SIZENS);
+            }
         }
 
         @Override
         protected void paintFigure(Graphics graphics) {
             super.paintFigure(graphics);
-            Rectangle bounds = getBounds();
+            var bounds = getBounds();
             graphics.pushState();
             PointList line1 = null, line2 = null;
             switch (sashStyle) {
@@ -142,18 +142,12 @@ public class SashContainerFigure extends Figure implements Introspectable {
             case ETCHED:
             case RIDGED:
                 if (horizontal) {
-                    line1 = new PointList(new int[] { bounds.x, bounds.y,
-                            bounds.x, bounds.y + bounds.height });
-                    line2 = new PointList(new int[] {
-                            bounds.x + bounds.width - 1, bounds.y,
-                            bounds.x + bounds.width - 1,
-                            bounds.y + bounds.height });
+                    line1 = new PointList(new int[] { bounds.x, bounds.y, bounds.x, bounds.y + bounds.height });
+                    line2 = new PointList(new int[] { bounds.x + bounds.width - 1, bounds.y,
+                            bounds.x + bounds.width - 1, bounds.y + bounds.height });
                 } else {
-                    line1 = new PointList(new int[] { bounds.x, bounds.y,
-                            bounds.x + bounds.width, bounds.y });
-                    line2 = new PointList(new int[] { bounds.x,
-                            bounds.y + bounds.height - 1,
-                            bounds.x + bounds.width,
+                    line1 = new PointList(new int[] { bounds.x, bounds.y, bounds.x + bounds.width, bounds.y });
+                    line2 = new PointList(new int[] { bounds.x, bounds.y + bounds.height - 1, bounds.x + bounds.width,
                             bounds.y + bounds.height - 1 });
                 }
                 break;
@@ -171,36 +165,33 @@ public class SashContainerFigure extends Figure implements Introspectable {
                 graphics.setForegroundColor(ColorConstants.buttonLightest);
                 graphics.drawLine(line1.getPoint(0), line1.getPoint(1));
                 graphics.setBackgroundColor(ColorConstants.button);
-                if (horizontal)
-                    graphics.fillRectangle(bounds.x + 1, bounds.y,
-                            bounds.width - 1, bounds.height);
-                else
-                    graphics.fillRectangle(bounds.x, bounds.y + 1,
-                            bounds.width, bounds.height - 1);
+                if (horizontal) {
+                    graphics.fillRectangle(bounds.x + 1, bounds.y, bounds.width - 1, bounds.height);
+                } else {
+                    graphics.fillRectangle(bounds.x, bounds.y + 1, bounds.width, bounds.height - 1);
+                }
                 graphics.setForegroundColor(ColorConstants.buttonDarker);
                 graphics.drawLine(line2.getPoint(0), line2.getPoint(1));
                 break;
             case LINE:
                 graphics.setLineWidth(sashWidth);
-                if (horizontal)
-                    graphics.drawLine(bounds.x + bounds.width / 2, bounds.y,
-                            bounds.x + bounds.width / 2, bounds.y
-                                    + bounds.height);
-                else
-                    graphics.drawLine(bounds.x, bounds.y + bounds.height / 2,
-                            bounds.x + bounds.width, bounds.y + bounds.height
-                                    / 2);
+                if (horizontal) {
+                    graphics.drawLine(bounds.x + bounds.width / 2, bounds.y, bounds.x + bounds.width / 2,
+                            bounds.y + bounds.height);
+                } else {
+                    graphics.drawLine(bounds.x, bounds.y + bounds.height / 2, bounds.x + bounds.width,
+                            bounds.y + bounds.height / 2);
+                }
                 break;
             case ETCHED:
                 graphics.setForegroundColor(ColorConstants.buttonDarker);
                 graphics.drawLine(line1.getPoint(0), line1.getPoint(1));
                 graphics.setBackgroundColor(ColorConstants.button);
-                if (horizontal)
-                    graphics.fillRectangle(bounds.x + 1, bounds.y,
-                            bounds.width - 1, bounds.height);
-                else
-                    graphics.fillRectangle(bounds.x, bounds.y + 1,
-                            bounds.width, bounds.height - 1);
+                if (horizontal) {
+                    graphics.fillRectangle(bounds.x + 1, bounds.y, bounds.width - 1, bounds.height);
+                } else {
+                    graphics.fillRectangle(bounds.x, bounds.y + 1, bounds.width, bounds.height - 1);
+                }
                 graphics.setForegroundColor(ColorConstants.buttonLightest);
                 graphics.drawLine(line2.getPoint(0), line2.getPoint(1));
                 break;
@@ -241,10 +232,11 @@ public class SashContainerFigure extends Figure implements Introspectable {
         DOUBLE_LINES("Double Lines");
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (SashStyle p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (SashStyle p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
 
@@ -340,9 +332,9 @@ public class SashContainerFigure extends Figure implements Introspectable {
      *         left/up panel. bounds[1] is the bounds of right/down panel.
      */
     public Rectangle[] getSubPanelsBounds() {
-        Rectangle boundsA = new Rectangle();
-        Rectangle boundsB = new Rectangle();
-        Rectangle clietArea = getClientArea();
+        var boundsA = new Rectangle();
+        var boundsB = new Rectangle();
+        var clietArea = getClientArea();
         if (horizontal) {
             boundsA.x = 0;
             boundsA.y = 0;
@@ -383,16 +375,16 @@ public class SashContainerFigure extends Figure implements Introspectable {
     @Override
     protected void layout() {
         super.layout();
-        Rectangle clientArea = getClientArea();
+        var clientArea = getClientArea();
         scrollPane.setBounds(clientArea);
-        if (horizontal)
-            sash.setBounds(new Rectangle(clientArea.x
-                    + (int) (sashPosition * clientArea.width - sashWidth / 2),
+        if (horizontal) {
+            sash.setBounds(new Rectangle(clientArea.x + (int) (sashPosition * clientArea.width - sashWidth / 2),
                     clientArea.y, sashWidth, clientArea.height));
-        else
-            sash.setBounds(new Rectangle(clientArea.x, clientArea.y
-                    + (int) (sashPosition * clientArea.height - sashWidth / 2),
-                    clientArea.width, sashWidth));
+        } else {
+            sash.setBounds(
+                    new Rectangle(clientArea.x, clientArea.y + (int) (sashPosition * clientArea.height - sashWidth / 2),
+                            clientArea.width, sashWidth));
+        }
         sashPositionDirty = false;
     }
 
@@ -401,8 +393,8 @@ public class SashContainerFigure extends Figure implements Introspectable {
         super.paintClientArea(graphics);
         switch (sashStyle) {
         case ROUNDED:
-            Rectangle clientArea = getClientArea();
-            Rectangle[] subBounds = getSubPanelsBounds();
+            var clientArea = getClientArea();
+            var subBounds = getSubPanelsBounds();
             subBounds[0].translate(clientArea.getLocation());
             subBounds[1].translate(clientArea.getLocation());
             subBounds[0].width -= 1;
@@ -424,10 +416,11 @@ public class SashContainerFigure extends Figure implements Introspectable {
      */
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
-        if (horizontal)
+        if (horizontal) {
             sash.setCursor(Cursors.SIZEWE);
-        else
+        } else {
             sash.setCursor(Cursors.SIZENS);
+        }
         revalidate();
     }
 
@@ -443,13 +436,15 @@ public class SashContainerFigure extends Figure implements Introspectable {
      *            sash position in percentage (0 - 1).
      */
     public void setSashPosition(double sashPosition) {
-        if (this.sashPosition == sashPosition)
+        if (this.sashPosition == sashPosition) {
             return;
+        }
         this.sashPosition = sashPosition;
         sashPositionDirty = true;
         revalidate();
-        if (sashStyle == SashStyle.ROUNDED)
+        if (sashStyle == SashStyle.ROUNDED) {
             repaint();
+        }
     }
 
     /**

@@ -17,7 +17,6 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -27,11 +26,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -76,9 +72,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
             .equalsIgnoreCase(Platform.getDebugOption(OPIBuilderPlugin.PLUGIN_ID + "/views"));
 
     /** Memento tags */
-    private static final String TAG_INPUT = "input",
-            TAG_FACTORY_ID = "factory_id",
-            TAG_MEMENTO = "memento";
+    private static final String TAG_INPUT = "input", TAG_FACTORY_ID = "factory_id", TAG_MEMENTO = "memento";
 
     protected OPIRuntimeDelegate opiRuntimeDelegate;
 
@@ -112,13 +106,14 @@ public class OPIView extends ViewPart implements IOPIRuntime {
     }
 
     @Override
-    public void init(final IViewSite site, IMemento memento) throws PartInitException {
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
         super.init(site, memento);
         this.site = site;
 
-        if (debug)
-            System.out.println(site.getId() + ":" + site.getSecondaryId() + " opened " +
-                    (memento == null ? ", no memento" : "with memento"));
+        if (debug) {
+            System.out.println(site.getId() + ":" + site.getSecondaryId() + " opened "
+                    + (memento == null ? ", no memento" : "with memento"));
+        }
 
         if (memento == null) {
             memento = findMementoFromPlaceholder();
@@ -127,21 +122,22 @@ public class OPIView extends ViewPart implements IOPIRuntime {
             return;
         }
         // Load previously displayed input from memento
-        final String factoryID = memento.getString(TAG_FACTORY_ID);
+        var factoryID = memento.getString(TAG_FACTORY_ID);
         if (factoryID == null) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, toString() + " has memento with empty factory ID");
             return;
         }
-        final IMemento inputMem = memento.getChild(TAG_INPUT);
-        final IElementFactory factory = PlatformUI.getWorkbench().getElementFactory(factoryID);
-        if (factory == null)
-            throw new PartInitException(NLS.bind(
-                    "Cannot instantiate input element factory {0} for OPIView",
-                    factoryID));
+        var inputMem = memento.getChild(TAG_INPUT);
+        var factory = PlatformUI.getWorkbench().getElementFactory(factoryID);
+        if (factory == null) {
+            throw new PartInitException(
+                    NLS.bind("Cannot instantiate input element factory {0} for OPIView", factoryID));
+        }
 
-        final IAdaptable element = factory.createElement(inputMem);
-        if (!(element instanceof IEditorInput))
+        var element = factory.createElement(inputMem);
+        if (!(element instanceof IEditorInput)) {
             throw new PartInitException("Instead of IEditorInput, " + factoryID + " returned " + element);
+        }
 
         // Set input, but don't persist to memento because we just read it from memento
         setOPIInput((IEditorInput) element, false);
@@ -154,10 +150,10 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      */
     private IMemento findMementoFromPlaceholder() {
         IMemento memento = null;
-        MPlaceholder placeholder = findPlaceholder();
+        var placeholder = findPlaceholder();
         if (placeholder != null) {
             if (placeholder.getPersistedState().containsKey(TAG_MEMENTO)) {
-                String mementoString = placeholder.getPersistedState().get(TAG_MEMENTO);
+                var mementoString = placeholder.getPersistedState().get(TAG_MEMENTO);
                 memento = loadMemento(mementoString);
             }
         }
@@ -171,7 +167,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      * @return
      */
     private IMemento loadMemento(String mementoString) {
-        StringReader reader = new StringReader(mementoString);
+        var reader = new StringReader(mementoString);
         try {
             return XMLMemento.createReadRoot(reader);
         } catch (WorkbenchException e) {
@@ -188,13 +184,12 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      */
     private MPlaceholder findPlaceholder() {
         // do not remove casting - RAP 3.0 still needs it
-        final IEclipseContext localContext = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
-        final MPart part = localContext.get(MPart.class);
-        final EModelService service = (EModelService) PlatformUI.getWorkbench().getService(EModelService.class);
-        final IEclipseContext globalContext = (IEclipseContext) PlatformUI.getWorkbench()
-                .getService(IEclipseContext.class);
-        final MApplication app = globalContext.get(MApplication.class);
-        final List<MPlaceholder> phs = service.findElements(app, null, MPlaceholder.class, null);
+        var localContext = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
+        var part = localContext.get(MPart.class);
+        var service = (EModelService) PlatformUI.getWorkbench().getService(EModelService.class);
+        var globalContext = (IEclipseContext) PlatformUI.getWorkbench().getService(IEclipseContext.class);
+        var app = globalContext.get(MApplication.class);
+        List<MPlaceholder> phs = service.findElements(app, null, MPlaceholder.class, null);
         for (MPlaceholder ph : phs) {
             if (ph.getRef() == part) {
                 return ph;
@@ -209,19 +204,21 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      * @param persist
      *            Persist the input to memento?
      */
-    public void setOPIInput(final IEditorInput input, final boolean persist) throws PartInitException {
+    public void setOPIInput(IEditorInput input, boolean persist) throws PartInitException {
         if (debug) {
-            final IViewSite view = getViewSite();
+            var view = getViewSite();
             System.out.println(view.getId() + ":" + view.getSecondaryId() + " displays " + input.getName());
         }
         this.input = input;
         setTitleToolTip(input.getToolTipText());
         opiRuntimeDelegate.init(site, input);
-        if (opiRuntimeToolBarDelegate != null)
+        if (opiRuntimeToolBarDelegate != null) {
             opiRuntimeToolBarDelegate.setActiveOPIRuntime(this);
+        }
 
-        if (persist)
+        if (persist) {
             persist();
+        }
     }
 
     /**
@@ -229,7 +226,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      *            Display file that this view should execute
      */
     @Override
-    public void setOPIInput(final IEditorInput input) throws PartInitException {
+    public void setOPIInput(IEditorInput input) throws PartInitException {
         // Persist _now_.
         // Framework only saves memento on exit.
         // If view happens to be hidden on exit, its input won't be saved,
@@ -238,7 +235,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
     }
 
     @Override
-    public void createPartControl(final Composite parent) {
+    public void createPartControl(Composite parent) {
         opiRuntimeDelegate.createGUI(parent);
         createToolbarButtons();
     }
@@ -260,7 +257,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      */
     public void positionFromModel() {
         Composite parent = getSite().getShell();
-        final Rectangle bounds = getBounds();
+        var bounds = getBounds();
         // Resize to that of model from OPI
         parent.getShell().setSize(bounds.width + 45, bounds.height + 65);
         // If OPI model specifies a location, honour it. Otherwise
@@ -268,19 +265,15 @@ public class OPIView extends ViewPart implements IOPIRuntime {
         if (bounds.x >= 0 && bounds.y > 1) {
             parent.getShell().setLocation(bounds.x, bounds.y);
         } else {
-            org.eclipse.swt.graphics.Rectangle winSize = getSite()
-                    .getWorkbenchWindow().getShell().getBounds();
-            parent.getShell().setLocation(
-                    winSize.x + winSize.width / 5
-                            + (int) (Math.random() * 100),
-                    winSize.y + winSize.height / 8
-                            + (int) (Math.random() * 100));
+            var winSize = getSite().getWorkbenchWindow().getShell().getBounds();
+            parent.getShell().setLocation(winSize.x + winSize.width / 5 + (int) (Math.random() * 100),
+                    winSize.y + winSize.height / 8 + (int) (Math.random() * 100));
         }
     }
 
     public void createToolbarButtons() {
         opiRuntimeToolBarDelegate = new OPIRuntimeToolBarDelegate();
-        IActionBars bars = getViewSite().getActionBars();
+        var bars = getViewSite().getActionBars();
         opiRuntimeToolBarDelegate.init(bars, getSite().getPage());
         opiRuntimeToolBarDelegate.contributeToToolBar(bars.getToolBarManager());
         opiRuntimeToolBarDelegate.setActiveOPIRuntime(this);
@@ -304,50 +297,49 @@ public class OPIView extends ViewPart implements IOPIRuntime {
 
         // Obtain E4 model element for E3 view,
         // based on http://www.vogella.com/tutorials/EclipsePlugIn/article.html#eclipsecontext
-        final IEclipseContext context = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
-        final MPart model = context.get(MPart.class);
+        var context = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
+        var model = context.get(MPart.class);
 
         // Based on org.eclipse.ui.internal.ViewReference#persist():
         //
         // XML version of memento is written to E4 model.
         // If compatibility layer changes its memento persistence,
         // this will break...
-        final XMLMemento root = XMLMemento.createWriteRoot("view");
+        var root = XMLMemento.createWriteRoot("view");
         saveState(root);
-        final StringWriter writer = new StringWriter();
+        var writer = new StringWriter();
         try {
             root.save(writer);
             model.getPersistedState().put(TAG_MEMENTO, writer.toString());
         } catch (Exception ex) {
-            OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                    toString() + " failed to persist input", ex);
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, toString() + " failed to persist input", ex);
         }
     }
 
     @Override
     public void saveState(IMemento memento) {
         super.saveState(memento);
-        if (input == null)
+        if (input == null) {
             return;
-        IPersistableElement persistable = input.getPersistable();
+        }
+        var persistable = input.getPersistable();
         if (persistable != null) {
             /*
              * Store IPersistable of the IEditorInput in a separate section since it could potentially use a tag already
              * used in the parent memento and thus overwrite data.
              */
-            IMemento persistableMemento = memento
-                    .createChild(TAG_INPUT);
+            var persistableMemento = memento.createChild(TAG_INPUT);
             persistable.saveState(persistableMemento);
-            memento.putString(TAG_FACTORY_ID,
-                    persistable.getFactoryId());
+            memento.putString(TAG_FACTORY_ID, persistable.getFactoryId());
             // save the name and tooltip separately so they can be restored
             // without having to instantiate the input, which can activate
             // plugins
             // memento.putString(IWorkbenchConstants.TAG_NAME, input.getName());
             // memento.putString(IWorkbenchConstants.TAG_TOOLTIP,
             // input.getToolTipText());
-            if (debug)
+            if (debug) {
                 System.out.println(this + " saved to memento");
+            }
         }
     }
 
@@ -366,7 +358,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
     @Override
     protected void setTitleToolTip(String tool_tip) {
         if (debug) {
-            final IViewSite view = getViewSite();
+            var view = getViewSite();
             tool_tip = view.getId() + ":" + view.getSecondaryId() + " - " + tool_tip;
         }
         super.setTitleToolTip(tool_tip);
@@ -388,13 +380,15 @@ public class OPIView extends ViewPart implements IOPIRuntime {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (opiRuntimeDelegate == null)
+        if (opiRuntimeDelegate == null) {
             return super.getAdapter(adapter);
-        T obj = opiRuntimeDelegate.getAdapter(adapter);
-        if (obj != null)
+        }
+        var obj = opiRuntimeDelegate.getAdapter(adapter);
+        if (obj != null) {
             return obj;
-        else
+        } else {
             return super.getAdapter(adapter);
+        }
     }
 
     public static boolean isOpenFromPerspective() {

@@ -1,10 +1,8 @@
 package org.yamcs.studio.data.formula;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.yamcs.studio.data.vtype.CollectionNumber;
-import org.yamcs.studio.data.vtype.IteratorNumber;
 
 /**
  * Utility class to calculate statistical information.
@@ -15,8 +13,8 @@ public class StatisticsUtil {
 
         private final int count;
         private final Range range;
-        private final double average;
-        private final double stdDev;
+        private double average;
+        private double stdDev;
 
         public StatisticsImpl(Range range, int count, double average, double stdDev) {
             this.count = count;
@@ -55,12 +53,12 @@ public class StatisticsUtil {
      * @return the calculated statistics
      */
     public static Statistics statisticsOf(CollectionNumber data) {
-        IteratorNumber iterator = data.iterator();
+        var iterator = data.iterator();
         if (!iterator.hasNext()) {
             return null;
         }
-        int count = 0;
-        double min = iterator.nextDouble();
+        var count = 0;
+        var min = iterator.nextDouble();
         while (Double.isNaN(min)) {
             if (!iterator.hasNext()) {
                 return null;
@@ -68,13 +66,13 @@ public class StatisticsUtil {
                 min = iterator.nextDouble();
             }
         }
-        double max = min;
-        double total = min;
-        double totalSquare = min * min;
+        var max = min;
+        var total = min;
+        var totalSquare = min * min;
         count++;
 
         while (iterator.hasNext()) {
-            double value = iterator.nextDouble();
+            var value = iterator.nextDouble();
             if (!Double.isNaN(value)) {
                 if (value > max) {
                     max = value;
@@ -88,8 +86,8 @@ public class StatisticsUtil {
             }
         }
 
-        double average = total / count;
-        double stdDev = Math.sqrt(totalSquare / count - average * average);
+        var average = total / count;
+        var stdDev = Math.sqrt(totalSquare / count - average * average);
 
         return new StatisticsImpl(Ranges.range(min, max), count, average, stdDev);
     }
@@ -106,7 +104,7 @@ public class StatisticsUtil {
             return null;
         }
 
-        Iterator<Statistics> iterator = data.iterator();
+        var iterator = data.iterator();
         if (!iterator.hasNext()) {
             return null;
         }
@@ -118,14 +116,14 @@ public class StatisticsUtil {
             return null;
         }
 
-        int count = first.getCount();
-        Range range = first.getRange();
-        double total = first.getAverage() * first.getCount();
-        double totalSquare = (first.getStdDev() * first.getStdDev() + first.getAverage() * first.getAverage())
+        var count = first.getCount();
+        var range = first.getRange();
+        var total = first.getAverage() * first.getCount();
+        var totalSquare = (first.getStdDev() * first.getStdDev() + first.getAverage() * first.getAverage())
                 * first.getCount();
 
         while (iterator.hasNext()) {
-            Statistics stats = iterator.next();
+            var stats = iterator.next();
             range = range.combine(stats.getRange());
             total += stats.getAverage() * stats.getCount();
             totalSquare += (stats.getStdDev() * stats.getStdDev() + stats.getAverage() * stats.getAverage())
@@ -133,8 +131,8 @@ public class StatisticsUtil {
             count += stats.getCount();
         }
 
-        double average = total / count;
-        double stdDev = Math.sqrt(totalSquare / count - average * average);
+        var average = total / count;
+        var stdDev = Math.sqrt(totalSquare / count - average * average);
 
         return new StatisticsImpl(range, count, average, stdDev);
     }

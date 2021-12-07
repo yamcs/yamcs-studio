@@ -13,8 +13,8 @@ public class IVEnumArray extends IVMetadata implements VEnumArray {
     public IVEnumArray(ListInt indexes, List<String> labels, ListInt sizes, Alarm alarm, Time time) {
         super(alarm, time);
         List<String> tempArray = new ArrayList<>(indexes.size());
-        for (int i = 0; i < indexes.size(); i++) {
-            int index = indexes.getInt(i);
+        for (var i = 0; i < indexes.size(); i++) {
+            var index = indexes.getInt(i);
             if (index < 0 || index >= labels.size()) {
                 throw new IndexOutOfBoundsException("VEnumArray indexes must be within the label range");
             }

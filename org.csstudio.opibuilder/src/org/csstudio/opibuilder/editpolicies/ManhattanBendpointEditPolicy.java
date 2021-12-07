@@ -44,23 +44,24 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
     @Override
     protected List<?> createSelectionHandles() {
         List<BendpointHandle> handles = new ArrayList<>();
-        final PointList points = getConnection().getPoints();
-        if (points.size() < 4)
+        var points = getConnection().getPoints();
+        if (points.size() < 4) {
             return handles;
-        for (int i = 1; i < points.size() - 2; i++) {
-            handles.add(new BendpointMoveHandle(getConnectionEditPart(), i - 1,
-                    new MidpointLocator(getConnection(), i)) {
+        }
+        for (var i = 1; i < points.size() - 2; i++) {
+            handles.add(
+                    new BendpointMoveHandle(getConnectionEditPart(), i - 1, new MidpointLocator(getConnection(), i)) {
 
-                @Override
-                protected Color getBorderColor() {
-                    return (isPrimary()) ? ColorConstants.darkGreen : ColorConstants.white;
-                }
+                        @Override
+                        protected Color getBorderColor() {
+                            return (isPrimary()) ? ColorConstants.darkGreen : ColorConstants.white;
+                        }
 
-                @Override
-                protected Color getFillColor() {
-                    return ColorConstants.yellow;
-                }
-            });
+                        @Override
+                        protected Color getFillColor() {
+                            return ColorConstants.yellow;
+                        }
+                    });
         }
         return handles;
     }
@@ -79,9 +80,8 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
     }
 
     private Command getMoveBendpointCommand(BendpointRequest request) {
-        PointList newPoints = getNewPoints(request);
-        return new SetWidgetPropertyCommand(
-                (AbstractWidgetModel) getConnectionEditPart().getModel(),
+        var newPoints = getNewPoints(request);
+        return new SetWidgetPropertyCommand((AbstractWidgetModel) getConnectionEditPart().getModel(),
                 ConnectionModel.PROP_POINTS, newPoints);
     }
 
@@ -92,20 +92,20 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
      * @return
      */
     private PointList getNewPoints(BendpointRequest request) {
-        PointList newPoints = getConnection().getPoints().getCopy();
-        int aIndex = request.getIndex() + 1;
-        Point oldA = newPoints.getPoint(aIndex);
-        Point oldB = newPoints.getPoint(aIndex + 1);
-        Point newM = request.getLocation().getCopy();
+        var newPoints = getConnection().getPoints().getCopy();
+        var aIndex = request.getIndex() + 1;
+        var oldA = newPoints.getPoint(aIndex);
+        var oldB = newPoints.getPoint(aIndex + 1);
+        var newM = request.getLocation().getCopy();
         Point newA, newB;
         getConnection().translateToRelative(newM);
 
         if (oldA.x == oldB.x) { // hozitontal move
-            int dx = newM.x - oldA.x;
+            var dx = newM.x - oldA.x;
             newA = oldA.getTranslated(dx, 0);
             newB = oldB.getTranslated(dx, 0);
         } else { // vertical move
-            int dy = newM.y - oldA.y;
+            var dy = newM.y - oldA.y;
             newA = oldA.getTranslated(0, dy);
             newB = oldB.getTranslated(0, dy);
         }
@@ -118,8 +118,9 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
 
     @Override
     public void showSourceFeedback(Request request) {
-        if (REQ_MOVE_BENDPOINT.equals(request.getType()))
+        if (REQ_MOVE_BENDPOINT.equals(request.getType())) {
             showMoveBendpointFeedback((BendpointRequest) request);
+        }
     }
 
     protected void showMoveBendpointFeedback(BendpointRequest request) {
@@ -127,8 +128,9 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
             originalRouter = getConnection().getConnectionRouter();
             getConnection().setConnectionRouter(new FixedPointsConnectionRouter());
         }
-        if (originalConstraint == null)
+        if (originalConstraint == null) {
             originalConstraint = getConnection().getRoutingConstraint();
+        }
         getConnection().setRoutingConstraint(getNewPoints(request));
     }
 
@@ -137,13 +139,15 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
      */
     @Override
     public void eraseSourceFeedback(Request request) {
-        if (REQ_MOVE_BENDPOINT.equals(request.getType()))
+        if (REQ_MOVE_BENDPOINT.equals(request.getType())) {
             eraseConnectionFeedback((BendpointRequest) request);
+        }
     }
 
     protected void eraseConnectionFeedback(BendpointRequest request) {
-        if (originalRouter != null)
+        if (originalRouter != null) {
             getConnection().setConnectionRouter(originalRouter);
+        }
         getConnection().setRoutingConstraint(originalConstraint);
         originalConstraint = null;
         originalRouter = null;

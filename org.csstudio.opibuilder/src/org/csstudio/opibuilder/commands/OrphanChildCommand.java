@@ -23,8 +23,7 @@ public class OrphanChildCommand extends Command {
 
     private int index;
 
-    public OrphanChildCommand(AbstractContainerModel parent,
-            AbstractWidgetModel child) {
+    public OrphanChildCommand(AbstractContainerModel parent, AbstractWidgetModel child) {
         super("Orphan Widget");
         this.parent = parent;
         this.child = child;

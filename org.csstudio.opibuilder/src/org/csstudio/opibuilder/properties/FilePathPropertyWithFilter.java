@@ -13,8 +13,8 @@ public class FilePathPropertyWithFilter extends FilePathProperty {
      */
     private String[] filters;
 
-    public FilePathPropertyWithFilter(String propertyID, String description,
-            WidgetPropertyCategory category, String defaultValue, String[] filters) {
+    public FilePathPropertyWithFilter(String propertyID, String description, WidgetPropertyCategory category,
+            String defaultValue, String[] filters) {
         super(propertyID, description, category, defaultValue, filters);
         this.filters = filters;
     }

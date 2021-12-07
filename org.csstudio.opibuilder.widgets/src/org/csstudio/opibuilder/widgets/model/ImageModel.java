@@ -20,7 +20,6 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgets.FigureTransparencyHelper;
 import org.csstudio.swt.widgets.symbol.util.PermutationMatrix;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -103,32 +102,21 @@ public final class ImageModel extends AbstractWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new FilePathProperty(PROP_IMAGE_FILE, "Image File",
-                WidgetPropertyCategory.Basic, "", FILE_EXTENSIONS));
-        addProperty(new IntegerProperty(PROP_TOPCROP, "Crop Top",
-                WidgetPropertyCategory.Image, 0));
-        addProperty(new IntegerProperty(PROP_BOTTOMCROP, "Crop Bottom",
-                WidgetPropertyCategory.Image, 0));
-        addProperty(new IntegerProperty(PROP_LEFTCROP, "Crop Left",
-                WidgetPropertyCategory.Image, 0));
-        addProperty(new IntegerProperty(PROP_RIGHTCROP, "Crop Right",
-                WidgetPropertyCategory.Image, 0));
-        addProperty(new BooleanProperty(PROP_STRETCH, "Stretch to Fit",
-                WidgetPropertyCategory.Image, false));
-        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
-                WidgetPropertyCategory.Image, true));
-        addProperty(new BooleanProperty(PROP_NO_ANIMATION, "No Animation",
-                WidgetPropertyCategory.Image, false));
+        addProperty(
+                new FilePathProperty(PROP_IMAGE_FILE, "Image File", WidgetPropertyCategory.Basic, "", FILE_EXTENSIONS));
+        addProperty(new IntegerProperty(PROP_TOPCROP, "Crop Top", WidgetPropertyCategory.Image, 0));
+        addProperty(new IntegerProperty(PROP_BOTTOMCROP, "Crop Bottom", WidgetPropertyCategory.Image, 0));
+        addProperty(new IntegerProperty(PROP_LEFTCROP, "Crop Left", WidgetPropertyCategory.Image, 0));
+        addProperty(new IntegerProperty(PROP_RIGHTCROP, "Crop Right", WidgetPropertyCategory.Image, 0));
+        addProperty(new BooleanProperty(PROP_STRETCH, "Stretch to Fit", WidgetPropertyCategory.Image, false));
+        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size", WidgetPropertyCategory.Image, true));
+        addProperty(new BooleanProperty(PROP_NO_ANIMATION, "No Animation", WidgetPropertyCategory.Image, false));
         addProperty(new BooleanProperty(PROP_ALIGN_TO_NEAREST_SECOND, "Animation aligned to the nearest second",
                 WidgetPropertyCategory.Image, false));
-        addProperty(new ComboProperty(PROP_DEGREE, "Rotation Angle",
-                WidgetPropertyCategory.Image, allowedDegrees, 0));
-        addProperty(new BooleanProperty(PROP_FLIP_HORIZONTAL,
-                "Flip Horizontal", WidgetPropertyCategory.Image, false));
-        addProperty(new BooleanProperty(PROP_FLIP_VERTICAL, "Flip Vertical",
-                WidgetPropertyCategory.Image, false));
-        addProperty(new MatrixProperty(PERMUTATION_MATRIX,
-                "Permutation Matrix", WidgetPropertyCategory.Image,
+        addProperty(new ComboProperty(PROP_DEGREE, "Rotation Angle", WidgetPropertyCategory.Image, allowedDegrees, 0));
+        addProperty(new BooleanProperty(PROP_FLIP_HORIZONTAL, "Flip Horizontal", WidgetPropertyCategory.Image, false));
+        addProperty(new BooleanProperty(PROP_FLIP_VERTICAL, "Flip Vertical", WidgetPropertyCategory.Image, false));
+        addProperty(new MatrixProperty(PERMUTATION_MATRIX, "Permutation Matrix", WidgetPropertyCategory.Image,
                 PermutationMatrix.generateIdentityMatrix().getMatrix()));
         setPropertyVisibleAndSavable(PERMUTATION_MATRIX, false, true);
 
@@ -139,9 +127,9 @@ public final class ImageModel extends AbstractWidgetModel {
      * Returns the path to the specified file.
      */
     public String getFilename() {
-        String absolutePath = (String) getProperty(PROP_IMAGE_FILE).getPropertyValue();
+        var absolutePath = (String) getProperty(PROP_IMAGE_FILE).getPropertyValue();
         if (!absolutePath.contains("://")) {
-            IPath path = Path.fromPortableString(absolutePath);
+            var path = Path.fromPortableString(absolutePath);
             if (!path.isAbsolute()) {
                 path = ResourceUtil.buildAbsolutePath(this, path);
                 absolutePath = path.toPortableString();
@@ -200,16 +188,14 @@ public final class ImageModel extends AbstractWidgetModel {
     }
 
     public boolean isAlignedToNearestSecond() {
-        return (Boolean) getProperty(PROP_ALIGN_TO_NEAREST_SECOND)
-                .getPropertyValue();
+        return (Boolean) getProperty(PROP_ALIGN_TO_NEAREST_SECOND).getPropertyValue();
     }
 
     /**
      * @return The permutation matrix
      */
     public PermutationMatrix getPermutationMatrix() {
-        return new PermutationMatrix((double[][]) getProperty(
-                PERMUTATION_MATRIX).getPropertyValue());
+        return new PermutationMatrix((double[][]) getProperty(PERMUTATION_MATRIX).getPropertyValue());
     }
 
     public int getDegree(int index) {

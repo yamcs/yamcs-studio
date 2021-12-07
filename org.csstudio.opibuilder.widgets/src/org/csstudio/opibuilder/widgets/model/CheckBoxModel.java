@@ -50,14 +50,11 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_BIT, "Bit",
-                WidgetPropertyCategory.Behavior, 0, -1, 63));
-        addProperty(new StringProperty(PROP_LABEL, "Label",
-                WidgetPropertyCategory.Display, ""));
-        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color",
-                WidgetPropertyCategory.Display, new RGB(77, 77, 77)));
+        addProperty(new IntegerProperty(PROP_BIT, "Bit", WidgetPropertyCategory.Behavior, 0, -1, 63));
+        addProperty(new StringProperty(PROP_LABEL, "Label", WidgetPropertyCategory.Display, ""));
+        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size", WidgetPropertyCategory.Display, false));
+        addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color", WidgetPropertyCategory.Display,
+                new RGB(77, 77, 77)));
     }
 
     @Override

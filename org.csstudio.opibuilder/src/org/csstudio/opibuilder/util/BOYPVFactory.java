@@ -17,8 +17,7 @@ public class BOYPVFactory {
     /**
      * The default background thread for PV change event notification.
      */
-    private final static ExecutorService BOY_PV_THREAD = Executors
-            .newSingleThreadExecutor();
+    private final static ExecutorService BOY_PV_THREAD = Executors.newSingleThreadExecutor();
 
     private final static ExceptionHandler exceptionHandler = ex -> ErrorHandlerUtil
             .handleError("Error from pv connection layer: ", ex);
@@ -37,7 +36,7 @@ public class BOYPVFactory {
      *            the fastest update duration.
      */
     public static IPV createPV(String name, int updateDuration) throws Exception {
-        PVFactory pvFactory = PVFactory.getInstance();
+        var pvFactory = PVFactory.getInstance();
         return pvFactory.createPV(name, false, BOY_PV_THREAD, exceptionHandler);
     }
 }

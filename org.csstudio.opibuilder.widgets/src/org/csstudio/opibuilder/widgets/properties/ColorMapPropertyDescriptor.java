@@ -29,14 +29,13 @@ public class ColorMapPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public ColorMapPropertyDescriptor(final Object id, final String displayName,
-            final IntensityGraphModel intensityGraphModel) {
+    public ColorMapPropertyDescriptor(Object id, String displayName, IntensityGraphModel intensityGraphModel) {
         super(id, displayName);
         this.intensityGraphModel = intensityGraphModel;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new ColorMapCellEditor(parent, "Edit Color Map", intensityGraphModel);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

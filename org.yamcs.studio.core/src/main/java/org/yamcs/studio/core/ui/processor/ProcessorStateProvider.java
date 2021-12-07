@@ -25,9 +25,8 @@ public class ProcessorStateProvider extends AbstractSourceProvider implements Ya
     public static final String STATE_KEY_REPLAY = "org.yamcs.studio.core.ui.processor.state.replay";
     public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.core.ui.processor.state.speed";
 
-    private static final String[] SOURCE_NAMES = {
-            STATE_KEY_NAME, STATE_KEY_REPLAY, STATE_KEY_PROCESSING, STATE_KEY_REPLAY_SPEED
-    };
+    private static final String[] SOURCE_NAMES = { STATE_KEY_NAME, STATE_KEY_REPLAY, STATE_KEY_PROCESSING,
+            STATE_KEY_REPLAY_SPEED };
 
     private String name = "";
     private boolean replay = false;
@@ -61,7 +60,7 @@ public class ProcessorStateProvider extends AbstractSourceProvider implements Ya
                 }
             }
 
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new processing state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });

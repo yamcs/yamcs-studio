@@ -19,14 +19,10 @@ import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.progress.UIJob;
@@ -55,20 +51,20 @@ public class OpenFileAction extends AbstractWidgetAction {
             @Override
             public IStatus runInUIThread(IProgressMonitor monitor) {
                 // Open editor on new file.
-                IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                var dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                 if (dw == null) {
                     return Status.OK_STATUS; // Not really OK..
                 }
                 try {
-                    IWorkbenchPage page = Objects.requireNonNull(dw.getActivePage());
+                    var page = Objects.requireNonNull(dw.getActivePage());
 
-                    IPath absolutePath = getPath();
+                    var absolutePath = getPath();
                     if (!absolutePath.isAbsolute()) {
                         absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), absolutePath);
                     }
 
                     // Workspace file?
-                    IFile file = ResourceUtil.getIFileFromIPath(absolutePath);
+                    var file = ResourceUtil.getIFileFromIPath(absolutePath);
                     if (file != null) { // Clear the last-used-editor info to always get the default editor,
                                         // the one configurable via Preferences, General, Editors, File Associations,
                                         // and not whatever one user may have used last via Navigator's "Open With..".
@@ -78,14 +74,14 @@ public class OpenFileAction extends AbstractWidgetAction {
                         IDE.openEditor(page, file, true);
                     } else if (ResourceUtil.isExistingLocalFile(absolutePath)) { // Local file system
                         try {
-                            IFileStore localFile = EFS.getLocalFileSystem().getStore(absolutePath);
+                            var localFile = EFS.getLocalFileSystem().getStore(absolutePath);
                             IDE.openEditorOnFileStore(page, localFile);
                         } catch (Exception e) {
                             throw new Exception("Cannot open local file system location " + getPath(), e);
                         }
                     }
                 } catch (Exception e) {
-                    String message = "Failed to open file " + getPath();
+                    var message = "Failed to open file " + getPath();
                     ExceptionDetailsErrorDialog.openError(dw.getShell(), "Failed to open file", message, e);
                     OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);
                 }

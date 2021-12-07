@@ -23,7 +23,7 @@ public class GaussianWaveform extends SimFunction<VDoubleArray> {
 
     private Random rand = new Random();
     private double[] buffer;
-    private final double periodInSeconds;
+    private double periodInSeconds;
     private VDoubleArray lastValue;
     private Instant initialRefernce;
 
@@ -49,28 +49,28 @@ public class GaussianWaveform extends SimFunction<VDoubleArray> {
      */
     public GaussianWaveform(Double periodInSeconds, Double stdDev, Double nSamples, Double updateRateInSeconds) {
         super(updateRateInSeconds);
-        int size = nSamples.intValue();
+        var size = nSamples.intValue();
         this.periodInSeconds = periodInSeconds;
         buffer = new double[size];
         populateGaussian(buffer, stdDev);
     }
 
     static void populateGaussian(double[] array, double stdDev) {
-        for (int i = 0; i < array.length; i++) {
+        for (var i = 0; i < array.length; i++) {
             array[i] = gaussian(i, array.length / 2.0, stdDev);
         }
     }
 
     private double[] generateNewValue(double omega, double t) {
-        double x = t * omega / (2 * Math.PI);
-        double normalizedX = x - (double) (long) x;
-        int offset = (int) (normalizedX * buffer.length);
+        var x = t * omega / (2 * Math.PI);
+        var normalizedX = x - (double) (long) x;
+        var offset = (int) (normalizedX * buffer.length);
         if (offset == buffer.length) {
             offset = 0;
         }
-        int localCounter = offset;
-        double[] newArray = new double[buffer.length];
-        for (int i = 0; i < newArray.length; i++) {
+        var localCounter = offset;
+        var newArray = new double[buffer.length];
+        for (var i = 0; i < newArray.length; i++) {
             newArray[i] = buffer[localCounter];
             localCounter++;
             if (localCounter >= buffer.length) {
@@ -105,9 +105,8 @@ public class GaussianWaveform extends SimFunction<VDoubleArray> {
             initialRefernce = lastTime;
         }
         double t = initialRefernce.until(lastTime, ChronoUnit.SECONDS);
-        double omega = 2 * Math.PI / periodInSeconds;
-        return newVDoubleArray(new ArrayDouble(generateNewValue(omega, t)), alarmNone(),
-                newTime(lastTime), newDisplay(0.0, 0.0, 0.0, "x", DOUBLE_FORMAT,
-                        1.0, 1.0, 1.0, 0.0, 1.0));
+        var omega = 2 * Math.PI / periodInSeconds;
+        return newVDoubleArray(new ArrayDouble(generateNewValue(omega, t)), alarmNone(), newTime(lastTime),
+                newDisplay(0.0, 0.0, 0.0, "x", DOUBLE_FORMAT, 1.0, 1.0, 1.0, 0.0, 1.0));
     }
 }

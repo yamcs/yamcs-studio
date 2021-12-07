@@ -10,7 +10,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
@@ -42,7 +41,7 @@ public class OpenActionProvider extends CommonActionProvider {
             aMenu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openFileAction);
         }
 
-        IPerspectiveDescriptor perspective = viewSite.getPage().getPerspective();
+        var perspective = viewSite.getPage().getPerspective();
         if (!perspective.getId().equals("org.csstudio.opibuilder.OPIRuntime.perspective")) {
             addOpenWithMenu(aMenu);
         }
@@ -53,7 +52,7 @@ public class OpenActionProvider extends CommonActionProvider {
         if (!contribute) {
             return;
         }
-        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
+        var selection = (IStructuredSelection) getContext().getSelection();
         if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
             theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openFileAction);
         }
@@ -61,13 +60,13 @@ public class OpenActionProvider extends CommonActionProvider {
     }
 
     private void addOpenWithMenu(IMenuManager aMenu) {
-        IStructuredSelection ss = (IStructuredSelection) getContext().getSelection();
+        var ss = (IStructuredSelection) getContext().getSelection();
 
         if (ss == null || ss.size() != 1) {
             return;
         }
 
-        Object o = ss.getFirstElement();
+        var o = ss.getFirstElement();
 
         // first try IResource
         IAdaptable openable = Adapters.adapt(o, IResource.class);

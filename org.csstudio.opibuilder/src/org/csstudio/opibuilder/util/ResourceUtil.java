@@ -21,12 +21,8 @@ import java.util.logging.Logger;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -46,7 +42,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.osgi.framework.Bundle;
 
 /**
  * Utility functions for resources.
@@ -65,11 +60,11 @@ public class ResourceUtil {
      */
     public static Cursor getCopyPvCursor() {
         if (copyPvCursor == null) {
-            Bundle bundle = Platform.getBundle(OPIBuilderPlugin.PLUGIN_ID);
+            var bundle = Platform.getBundle(OPIBuilderPlugin.PLUGIN_ID);
             IPath path = new Path(CURSOR_PATH);
-            URL url = FileLocator.find(bundle, path, null);
+            var url = FileLocator.find(bundle, path, null);
             try {
-                InputStream inputStream = url.openConnection().getInputStream();
+                var inputStream = url.openConnection().getInputStream();
                 copyPvCursor = new Cursor(Display.getCurrent(), new ImageData(inputStream), 0, 0);
             } catch (IOException e) {
                 copyPvCursor = Cursors.HELP;
@@ -89,14 +84,14 @@ public class ResourceUtil {
      *             in case of an error
      */
     public static File getFile(IPath path) throws Exception {
-        IFile workspace_file = getIFileFromIPath(path);
+        var workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
         if (workspace_file != null && workspace_file.exists()) {
             return workspace_file.getLocation().toFile().getAbsoluteFile();
         }
 
         // Not a workspace file. Try local file system
-        File local_file = path.toFile();
+        var local_file = path.toFile();
         // Path URL for "file:..." so that it opens as FileInputStream
         if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
@@ -118,7 +113,7 @@ public class ResourceUtil {
      */
     public static InputStream pathToInputStream(IPath path) throws Exception {
         // Try workspace location
-        IFile workspaceFile = getIFileFromIPath(path);
+        var workspaceFile = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
         if (workspaceFile != null && workspaceFile.exists()) {
             return workspaceFile.getContents();
@@ -126,13 +121,13 @@ public class ResourceUtil {
 
         try {
             // Not a workspace file. Try local file system
-            File localFile = path.toFile();
+            var localFile = path.toFile();
             // Path URL for "file:..." so that it opens as FileInputStream
             if (localFile.getPath().startsWith("file:")) {
                 localFile = new File(localFile.getPath().substring(5));
                 return new FileInputStream(localFile);
             } else if (localFile.getPath().startsWith("platform:")) {
-                URL url = new URL(path.toString());
+                var url = new URL(path.toString());
                 return url.openConnection().getInputStream();
             } else {
                 return new FileInputStream(localFile);
@@ -153,15 +148,13 @@ public class ResourceUtil {
         InputStream result = null;
         if (editorInput instanceof FileEditorInput) {
             try {
-                result = ((FileEditorInput) editorInput).getFile()
-                        .getContents();
+                result = ((FileEditorInput) editorInput).getFile().getContents();
             } catch (CoreException e) {
                 LOGGER.log(Level.SEVERE, "Error while trying to access input stream of an editor.", e);
                 e.printStackTrace();
             }
         } else if (editorInput instanceof FileStoreEditorInput) {
-            IPath path = URIUtil.toPath(((FileStoreEditorInput) editorInput)
-                    .getURI());
+            var path = URIUtil.toPath(((FileStoreEditorInput) editorInput).getURI());
             try {
                 result = new FileInputStream(path.toFile());
             } catch (FileNotFoundException e) {
@@ -183,7 +176,7 @@ public class ResourceUtil {
 
     public static boolean isExistingLocalFile(IPath path) {
         // Not a workspace file. Try local file system
-        File local_file = path.toFile();
+        var local_file = path.toFile();
 
         // // Path URL for "file:..." so that it opens as FileInputStream
         if (local_file.getPath().startsWith("file:")) {
@@ -251,8 +244,7 @@ public class ResourceUtil {
         } else if (input instanceof IPathEditorInput) {
             return ((IPathEditorInput) input).getPath();
         } else if (input instanceof FileStoreEditorInput) {
-            IPath path = URIUtil.toPath(((FileStoreEditorInput) input)
-                    .getURI());
+            var path = URIUtil.toPath(((FileStoreEditorInput) input).getURI());
             return path;
         }
         return null;
@@ -276,9 +268,9 @@ public class ResourceUtil {
      * @return the corresponding system path. null if it is not exist.
      */
     public static IPath workspacePathToSysPath(IPath path) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRoot root = workspace.getRoot();
-        IResource resource = root.findMember(path);
+        var workspace = ResourcesPlugin.getWorkspace();
+        var root = workspace.getRoot();
+        var resource = root.findMember(path);
         if (resource != null) {
             return resource.getLocation(); // existing resource
         } else {
@@ -307,13 +299,11 @@ public class ResourceUtil {
 
     public static IEditorInput editorInputFromPath(IPath path) {
         IEditorInput editorInput = null;
-        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        var file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
         // Files outside the workspace are handled differently
         // by Eclipse.
-        if (!ResourceUtil.isExistingWorkspaceFile(path)
-                && ResourceUtil.isExistingLocalFile(path)) {
-            IFileStore fileStore = EFS.getLocalFileSystem()
-                    .getStore(file.getFullPath());
+        if (!ResourceUtil.isExistingWorkspaceFile(path) && ResourceUtil.isExistingLocalFile(path)) {
+            var fileStore = EFS.getLocalFileSystem().getStore(file.getFullPath());
             editorInput = new FileStoreEditorInput(fileStore);
         } else {
             editorInput = new FileEditorInput(file);
@@ -329,9 +319,8 @@ public class ResourceUtil {
      * @return the screenshot image
      */
     public static Image getScreenshotImage(GraphicalViewer viewer) {
-        GC gc = new GC(viewer.getControl());
-        Image image = new Image(Display.getDefault(), viewer.getControl()
-                .getSize().x, viewer.getControl().getSize().y);
+        var gc = new GC(viewer.getControl());
+        var image = new Image(Display.getDefault(), viewer.getControl().getSize().x, viewer.getControl().getSize().y);
         gc.copyArea(image, 0, 0);
         /*
          * This is a workaround for issue 2345 - empty screenshot
@@ -351,9 +340,9 @@ public class ResourceUtil {
         file.deleteOnExit();
 
         // Create snapshot file
-        ImageLoader loader = new ImageLoader();
+        var loader = new ImageLoader();
 
-        Image image = ResourceUtil.getScreenshotImage(viewer);
+        var image = ResourceUtil.getScreenshotImage(viewer);
         loader.data = new ImageData[] { image.getImageData() };
         image.dispose();
         loader.save(file.getAbsolutePath(), SWT.IMAGE_PNG);
@@ -367,12 +356,11 @@ public class ResourceUtil {
      *            Path to file in workspace
      * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
      */
-    public static IFile getIFileFromIPath(final IPath path) {
+    public static IFile getIFileFromIPath(IPath path) {
         try {
-            final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
-                    path, false);
+            var r = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
             if (r != null && r instanceof IFile) {
-                final IFile file = (IFile) r;
+                var file = (IFile) r;
                 if (file.exists()) {
                     return file;
                 }

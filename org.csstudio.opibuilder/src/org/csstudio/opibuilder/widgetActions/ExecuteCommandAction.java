@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.widgetActions;
 
 import java.util.logging.Level;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -19,7 +18,6 @@ import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
-import org.eclipse.core.runtime.IPath;
 
 /**
  * The action executing a system command.
@@ -33,12 +31,11 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new StringProperty(
-                PROP_COMMAND, "Command", WidgetPropertyCategory.Basic, ""));
-        addProperty(new StringProperty(
-                PROP_DIRECTORY, "Command Directory[path]", WidgetPropertyCategory.Basic, "$(user.home)"));
-        addProperty(new IntegerProperty(
-                PROP_WAIT_TIME, "Wait Time(s)", WidgetPropertyCategory.Basic, 10, 1, Integer.MAX_VALUE));
+        addProperty(new StringProperty(PROP_COMMAND, "Command", WidgetPropertyCategory.Basic, ""));
+        addProperty(new StringProperty(PROP_DIRECTORY, "Command Directory[path]", WidgetPropertyCategory.Basic,
+                "$(user.home)"));
+        addProperty(new IntegerProperty(PROP_WAIT_TIME, "Wait Time(s)", WidgetPropertyCategory.Basic, 10, 1,
+                Integer.MAX_VALUE));
 
     }
 
@@ -59,7 +56,7 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
     }
 
     public String getDirectory() {
-        String directory = (String) getPropertyValue(PROP_DIRECTORY);
+        var directory = (String) getPropertyValue(PROP_DIRECTORY);
         try {
             return replaceProperties(directory);
         } catch (Exception e) {
@@ -79,13 +76,13 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
      * @throws Exception
      *             on error
      */
-    private String replaceProperties(final String value) throws Exception {
-        final Matcher matcher = Pattern.compile("\\$\\((.*)\\)").matcher(value);
+    private String replaceProperties(String value) throws Exception {
+        var matcher = Pattern.compile("\\$\\((.*)\\)").matcher(value);
         if (matcher.matches()) {
-            final String prop_name = matcher.group(1);
-            String prop = System.getProperty(prop_name);
+            var prop_name = matcher.group(1);
+            var prop = System.getProperty(prop_name);
             if (prop == null && prop_name.equals(OPI_DIR)) {
-                IPath opiFilePath = getWidgetModel().getRootDisplayModel().getOpiFilePath();
+                var opiFilePath = getWidgetModel().getRootDisplayModel().getOpiFilePath();
                 if (ResourceUtil.isExistingWorkspaceFile(opiFilePath)) {
                     opiFilePath = ResourceUtil.workspacePathToSysPath(opiFilePath);
                 }

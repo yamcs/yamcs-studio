@@ -31,9 +31,8 @@ public class EventLogItem {
         if (!(obj instanceof EventLogItem) || obj == null) {
             return false;
         }
-        Event other = ((EventLogItem) obj).event;
-        return event.getSeqNumber() == other.getSeqNumber()
-                && event.getGenerationTime() == other.getGenerationTime()
+        var other = ((EventLogItem) obj).event;
+        return event.getSeqNumber() == other.getSeqNumber() && event.getGenerationTime() == other.getGenerationTime()
                 && event.getSource().equals(other.getSource());
     }
 

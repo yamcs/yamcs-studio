@@ -24,14 +24,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -48,11 +44,11 @@ public class ParameterTableEditor extends EditorPart {
     private ParameterTable model;
 
     public static ParameterTableEditor createPVTableEditor() {
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-        IWorkbenchPage page = window.getActivePage();
+        var workbench = PlatformUI.getWorkbench();
+        var window = workbench.getActiveWorkbenchWindow();
+        var page = window.getActivePage();
         try {
-            EmptyEditorInput input = new EmptyEditorInput();
+            var input = new EmptyEditorInput();
             return (ParameterTableEditor) page.openEditor(input, ParameterTableEditor.ID);
         } catch (Exception e) {
             ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(),
@@ -72,22 +68,22 @@ public class ParameterTableEditor extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        FillLayout fl = new FillLayout();
+        var fl = new FillLayout();
         fl.marginHeight = 0;
         fl.marginWidth = 0;
         parent.setLayout(fl);
 
-        SashForm sash = new SashForm(parent, SWT.VERTICAL);
+        var sash = new SashForm(parent, SWT.VERTICAL);
 
-        Composite tableWrapper = new Composite(sash, SWT.NONE);
+        var tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         tableViewer = new ParameterTableViewer(tableWrapper);
-        ParameterTableContentProvider provider = (ParameterTableContentProvider) tableViewer.getContentProvider();
+        var provider = (ParameterTableContentProvider) tableViewer.getContentProvider();
 
         try {
-            Gson gson = new Gson();
-            InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
+            var gson = new Gson();
+            var reader = new InputStreamReader(input.getFile().getContents());
             model = gson.fromJson(reader, ParameterTable.class);
             if (model == null) {
                 model = new ParameterTable();
@@ -95,8 +91,8 @@ public class ParameterTableEditor extends EditorPart {
             provider.setParameters(model.getParameters());
 
             for (String parameter : model.getParameters()) {
-                NamedObjectId id = NamedObjectId.newBuilder().setName(parameter).build();
-                ParameterInfo meta = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
+                var id = NamedObjectId.newBuilder().setName(parameter).build();
+                var meta = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
                 if (meta != null) {
                     // tableViewer.attachParameterInfo(meta);
                 }
@@ -110,11 +106,11 @@ public class ParameterTableEditor extends EditorPart {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        IEditorInput input = getEditorInput();
+        var input = getEditorInput();
         try {
             if (input.exists()) {
-                IFile file = (IFile) input.getAdapter(IFile.class);
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                var file = (IFile) input.getAdapter(IFile.class);
+                var out = new ByteArrayOutputStream();
                 saveToStream(monitor, tableViewer.getParameters(), out);
                 file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);
             } else { // First save of Editor with empty input, prompt for name
@@ -135,9 +131,9 @@ public class ParameterTableEditor extends EditorPart {
             monitor.beginTask("Save", IProgressMonitor.UNKNOWN);
         }
 
-        try (PrintWriter out = new PrintWriter(stream)) {
-            Gson gson = new Gson();
-            ParameterTableContentProvider provider = (ParameterTableContentProvider) tableViewer.getContentProvider();
+        try (var out = new PrintWriter(stream)) {
+            var gson = new Gson();
+            var provider = (ParameterTableContentProvider) tableViewer.getContentProvider();
 
             model.setParameters(parameters);
             gson.toJson(model, out);

@@ -33,25 +33,27 @@ public class ContentParserHelper {
      * @return {@link FunctionDescriptor} filled from the content.
      */
     public static FunctionDescriptor parseStandardFunction(String content) {
-        FunctionDescriptor token = new FunctionDescriptor();
-        if (content == null || content.isEmpty())
+        var token = new FunctionDescriptor();
+        if (content == null || content.isEmpty()) {
             return token;
+        }
         ExprFunction function = null;
         try {
-            Expr e = ExprParser.parse(content);
-            if (e == null)
+            var e = ExprParser.parse(content);
+            if (e == null) {
                 return token;
-            else if (e.type == ExprType.Function)
+            } else if (e.type == ExprType.Function) {
                 function = (ExprFunction) e;
-            else if (e.type == ExprType.Variable) {
+            } else if (e.type == ExprType.Variable) {
                 function = new ExprFunction(((ExprVariable) e).getName(), null);
             }
         } catch (IOException | ExprException e) {
             AutoCompletePlugin.getLogger().log(Level.SEVERE,
                     "Failed to parse function \"" + content + "\": " + e.getMessage());
         }
-        if (function == null)
+        if (function == null) {
             return token;
+        }
         token.setValue(content);
         token.setFunctionName(function.getName());
         if (function.getArgs() != null) {

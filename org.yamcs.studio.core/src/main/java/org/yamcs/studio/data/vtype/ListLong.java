@@ -85,13 +85,13 @@ public abstract class ListLong implements ListNumber, CollectionLong {
         }
 
         if (obj instanceof ListLong) {
-            ListLong other = (ListLong) obj;
+            var other = (ListLong) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (getLong(i) != other.getLong(i)) {
                     return false;
                 }
@@ -105,10 +105,10 @@ public abstract class ListLong implements ListNumber, CollectionLong {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
-            long element = getLong(i);
-            int elementHash = (int) (element ^ (element >>> 32));
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
+            var element = getLong(i);
+            var elementHash = (int) (element ^ (element >>> 32));
             result = 31 * result + elementHash;
         }
         return result;

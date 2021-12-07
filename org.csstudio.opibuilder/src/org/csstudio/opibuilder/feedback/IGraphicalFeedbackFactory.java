@@ -39,8 +39,7 @@ public interface IGraphicalFeedbackFactory {
      *            the initial bounds
      * @return a customized feedback figure during draging, null if not necessary.
      */
-    IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model,
-            Rectangle initalBounds);
+    IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model, Rectangle initalBounds);
 
     /**
      * This method will be called, when the size or location of the feedback changes during drag or resize operations.
@@ -58,8 +57,7 @@ public interface IGraphicalFeedbackFactory {
      * @param request
      *            the change request
      */
-    void showChangeBoundsFeedback(AbstractWidgetModel widgetModel,
-            PrecisionRectangle bounds, IFigure feedbackFigure,
+    void showChangeBoundsFeedback(AbstractWidgetModel widgetModel, PrecisionRectangle bounds, IFigure feedbackFigure,
             ChangeBoundsRequest request);
 
     /**
@@ -85,8 +83,7 @@ public interface IGraphicalFeedbackFactory {
      * @param insets
      *            any insets that need to be applied to the creation feedback's bounds
      */
-    void showSizeOnDropFeedback(CreateRequest request, IFigure feedbackFigure,
-            Insets insets);
+    void showSizeOnDropFeedback(CreateRequest request, IFigure feedbackFigure, Insets insets);
 
     /**
      * Gets the class type of a custom creation tool for the kind of objects, this factory is responsible for.
@@ -111,8 +108,8 @@ public interface IGraphicalFeedbackFactory {
      * @return a undoable command, which handles the size and location changes, null if default change bounds command
      *         should be used.
      */
-    Command createChangeBoundsCommand(AbstractWidgetModel widgetModel,
-            ChangeBoundsRequest request, Rectangle targetBounds);
+    Command createChangeBoundsCommand(AbstractWidgetModel widgetModel, ChangeBoundsRequest request,
+            Rectangle targetBounds);
 
     /**
      * Returns a command, which handles the initial size and location during the creation of new widget models.
@@ -127,8 +124,7 @@ public interface IGraphicalFeedbackFactory {
      * @return a undoable command, which sets up the initial size and location changes. null if it is not necessary to
      *         initialize size and location.
      */
-    Command createInitialBoundsCommand(AbstractWidgetModel widgetModel,
-            final CreateRequest request, Rectangle targetBounds);
+    Command createInitialBoundsCommand(AbstractWidgetModel widgetModel, CreateRequest request, Rectangle targetBounds);
 
     /**
      * Creates and returns custom handles {@link Handle} for the specified edit part.

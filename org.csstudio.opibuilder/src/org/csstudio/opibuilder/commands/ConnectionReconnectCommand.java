@@ -82,8 +82,7 @@ public class ConnectionReconnectCommand extends Command {
     @Override
     public void execute() {
         if (newSource != null && newSourceTerminal != null) {
-            connection.connect(newSource, newSourceTerminal,
-                    oldTarget, oldTargetTerminal);
+            connection.connect(newSource, newSourceTerminal, oldTarget, oldTargetTerminal);
         } else if (newTarget != null && newTargetTerminal != null) {
             connection.connect(oldSource, oldSourceTerminal, newTarget, newTargetTerminal);
         } else {

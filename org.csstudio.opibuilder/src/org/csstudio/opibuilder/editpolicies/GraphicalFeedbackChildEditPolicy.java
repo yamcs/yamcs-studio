@@ -16,8 +16,6 @@ import org.csstudio.opibuilder.feedback.IGraphicalFeedbackFactory;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.IPVWidgetModel;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
@@ -48,8 +46,7 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
      * @param child
      *            An edit part.
      */
-    protected GraphicalFeedbackChildEditPolicy(final AbstractBaseEditPart child,
-            IGraphicalFeedbackFactory feedbackFactory) {
+    protected GraphicalFeedbackChildEditPolicy(AbstractBaseEditPart child, IGraphicalFeedbackFactory feedbackFactory) {
         _child = child;
         this.feedbackFactory = feedbackFactory;
     }
@@ -57,10 +54,8 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
     @Override
     protected IFigure createDragSourceFeedbackFigure() {
 
-        IFigure feedbackFigure = feedbackFactory
-                .createDragSourceFeedbackFigure(
-                        (AbstractWidgetModel) _child.getModel(),
-                        getInitialFeedbackBounds());
+        var feedbackFigure = feedbackFactory.createDragSourceFeedbackFigure((AbstractWidgetModel) _child.getModel(),
+                getInitialFeedbackBounds());
         if (feedbackFigure != null) {
             addFeedback(feedbackFigure);
             return feedbackFigure;
@@ -75,24 +70,21 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
      *            the request
      */
     @Override
-    protected void showChangeBoundsFeedback(
-            final ChangeBoundsRequest request) {
+    protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
 
-        IFigure feedbackFigure = getDragSourceFeedbackFigure();
+        var feedbackFigure = getDragSourceFeedbackFigure();
 
-        PrecisionRectangle rect = new PrecisionRectangle(
-                getInitialFeedbackBounds().getCopy());
+        var rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy());
         getHostFigure().translateToAbsolute(rect);
 
-        Point moveDelta = request.getMoveDelta();
+        var moveDelta = request.getMoveDelta();
         rect.translate(moveDelta);
 
-        Dimension sizeDelta = request.getSizeDelta();
+        var sizeDelta = request.getSizeDelta();
         rect.resize(sizeDelta);
 
-        feedbackFactory.showChangeBoundsFeedback(
-                (AbstractWidgetModel) getHost().getModel(), rect,
-                feedbackFigure, request);
+        feedbackFactory.showChangeBoundsFeedback((AbstractWidgetModel) getHost().getModel(), rect, feedbackFigure,
+                request);
 
         feedbackFigure.repaint();
     }
@@ -105,21 +97,17 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
 
         // add contributed handles
 
-        GraphicalEditPart hostEP = (GraphicalEditPart) getHost();
+        var hostEP = (GraphicalEditPart) getHost();
 
-        List<Handle> contributedHandles = feedbackFactory
-                .createCustomHandles(hostEP);
+        var contributedHandles = feedbackFactory.createCustomHandles(hostEP);
 
         if (contributedHandles != null) {
             handleList.addAll(contributedHandles);
         }
 
-        if (hostEP.getModel() instanceof IPVWidgetModel
-                && ((AbstractWidgetModel) (hostEP.getModel()))
-                        .getProperty(IPVWidgetModel.PROP_PVNAME)
-                        .isVisibleInPropSheet()) {
-            handleList.add(new PVWidgetSelectionHandle(
-                    (GraphicalEditPart) hostEP));
+        if (hostEP.getModel() instanceof IPVWidgetModel && ((AbstractWidgetModel) (hostEP.getModel()))
+                .getProperty(IPVWidgetModel.PROP_PVNAME).isVisibleInPropSheet()) {
+            handleList.add(new PVWidgetSelectionHandle((GraphicalEditPart) hostEP));
         }
         return handleList;
     }

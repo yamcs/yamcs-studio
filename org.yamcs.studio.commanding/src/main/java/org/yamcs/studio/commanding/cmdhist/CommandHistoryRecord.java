@@ -48,7 +48,7 @@ public class CommandHistoryRecord {
 
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
         if (value.getType() == Value.Type.TIMESTAMP) {
-            Instant valueTime = Instant.parse(value.getStringValue());
+            var valueTime = Instant.parse(value.getStringValue());
             cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION,
                     command.getGenerationTime().toEpochMilli() - valueTime.toEpochMilli());
             cellPropsByColumn.get(columnName).put(KEY_VALUE, valueTime);
@@ -61,17 +61,15 @@ public class CommandHistoryRecord {
     }
 
     private String toHumanTimeDiff(Instant generationTime, Instant timestamp) {
-        long millis = generationTime.toEpochMilli() - timestamp.toEpochMilli();
-        String sign = (millis >= 0) ? "+" : "-";
+        var millis = generationTime.toEpochMilli() - timestamp.toEpochMilli();
+        var sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
             return YamcsPlugin.getDefault().formatInstant(timestamp);
         } else if (millis >= ONE_HOUR) {
-            return sign + String.format("%d h, %d m",
-                    MILLISECONDS.toHours(millis),
+            return sign + String.format("%d h, %d m", MILLISECONDS.toHours(millis),
                     MILLISECONDS.toMinutes(millis) - HOURS.toMinutes(MILLISECONDS.toHours(millis)));
         } else if (millis >= ONE_MINUTE) {
-            return sign + String.format("%d m, %d s",
-                    MILLISECONDS.toMinutes(millis),
+            return sign + String.format("%d m, %d s", MILLISECONDS.toMinutes(millis),
                     MILLISECONDS.toSeconds(millis) - MINUTES.toSeconds(MILLISECONDS.toMinutes(millis)));
         } else {
             return String.format(Locale.US, "%+,d ms", millis);
@@ -93,7 +91,7 @@ public class CommandHistoryRecord {
     }
 
     public String getTextForColumn(String columnName, boolean showRelativeTime) {
-        Map<String, Object> props = cellPropsByColumn.get(columnName);
+        var props = cellPropsByColumn.get(columnName);
         if (props != null) {
             if (showRelativeTime && props.get(KEY_RELATIVE_VALUE) != null) {
                 return String.valueOf(props.get(KEY_RELATIVE_VALUE));
@@ -105,7 +103,7 @@ public class CommandHistoryRecord {
     }
 
     public String getImageForColumn(String columnName) {
-        Map<String, Object> props = cellPropsByColumn.get(columnName);
+        var props = cellPropsByColumn.get(columnName);
         if (props != null && props.get(KEY_IMAGE) != null) {
             return String.valueOf(props.get(KEY_IMAGE));
         }
@@ -113,7 +111,7 @@ public class CommandHistoryRecord {
     }
 
     public String getTooltipForColumn(String columnName) {
-        Map<String, Object> props = cellPropsByColumn.get(columnName);
+        var props = cellPropsByColumn.get(columnName);
         if (props != null && props.get(KEY_TOOLTIP) != null) {
             return String.valueOf(props.get(KEY_TOOLTIP));
         }
@@ -124,7 +122,7 @@ public class CommandHistoryRecord {
      * How long it took before the ACK for this dynamic column arrived. (relative to generationtime for the row)
      */
     public long getAckDurationForColumn(String columnName) {
-        Map<String, Object> props = cellPropsByColumn.get(columnName);
+        var props = cellPropsByColumn.get(columnName);
         if (props != null && props.get(KEY_ACK_DURATION) != null) {
             return (long) props.get(KEY_ACK_DURATION);
         }

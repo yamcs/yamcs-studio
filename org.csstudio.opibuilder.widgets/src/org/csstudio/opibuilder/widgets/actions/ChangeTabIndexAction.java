@@ -25,18 +25,18 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
-        int activeTabIndex = getSelectedTabWidget().getActiveTabIndex();
-        InputDialog newIndexDialog = new InputDialog(
-                null, "Change Tab Index", "New Index", "" + activeTabIndex,
+        var activeTabIndex = getSelectedTabWidget().getActiveTabIndex();
+        var newIndexDialog = new InputDialog(null, "Change Tab Index", "New Index", "" + activeTabIndex,
                 new IInputValidator() {
 
                     @Override
                     public String isValid(String newText) {
                         try {
-                            int newIndex = Integer.parseInt(newText);
-                            int itemCount = getSelectedTabWidget().getTabItemCount();
-                            if (newIndex < 0 || newIndex >= itemCount)
+                            var newIndex = Integer.parseInt(newText);
+                            var itemCount = getSelectedTabWidget().getTabItemCount();
+                            if (newIndex < 0 || newIndex >= itemCount) {
                                 return NLS.bind("Invalid Tab Index! It must be between [0, {0}]", itemCount - 1);
+                            }
                         } catch (Exception e) {
                             return "It must be an integer!";
                         }
@@ -44,7 +44,7 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
                     }
                 });
         if (newIndexDialog.open() == Window.OK) {
-            int newIndex = Integer.parseInt(newIndexDialog.getValue());
+            var newIndex = Integer.parseInt(newIndexDialog.getValue());
             if (newIndex != activeTabIndex) {
                 Command command = new ChangeTabIndexCommand(getSelectedTabWidget(), newIndex);
                 execute(command);

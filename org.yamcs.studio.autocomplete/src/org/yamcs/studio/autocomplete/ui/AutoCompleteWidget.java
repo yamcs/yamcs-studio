@@ -11,8 +11,6 @@ package org.yamcs.studio.autocomplete.ui;
 
 import java.util.List;
 
-import org.yamcs.studio.autocomplete.ui.content.ContentProposalAdapter;
-import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
@@ -22,6 +20,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.studio.autocomplete.ui.content.ContentProposalAdapter;
+import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 
 /**
  * Enable auto-completed content on the specified {@link Control}.
@@ -58,8 +58,7 @@ public class AutoCompleteWidget {
      * @param historyHandlers
      *            control which trigger add entry event on history
      */
-    public AutoCompleteWidget(Control control, String type,
-            List<Control> historyHandlers) {
+    public AutoCompleteWidget(Control control, String type, List<Control> historyHandlers) {
         this(control, type);
         if (historyHandlers != null) {
             for (Control handler : historyHandlers) {
@@ -93,8 +92,7 @@ public class AutoCompleteWidget {
      * @param historyHandlers
      *            control which trigger add entry event on history
      */
-    public AutoCompleteWidget(CellEditor cellEditor, String type,
-            List<Control> historyHandlers) {
+    public AutoCompleteWidget(CellEditor cellEditor, String type, List<Control> historyHandlers) {
         this(cellEditor, type);
         if (historyHandlers != null) {
             for (Control handler : historyHandlers) {
@@ -109,17 +107,16 @@ public class AutoCompleteWidget {
      * @return - character array of trigger chars
      */
     protected static char[] getAutoactivationChars() {
-        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
-        String uppercaseLetters = lowercaseLetters.toUpperCase();
-        String numbers = "0123456789";
+        var lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        var uppercaseLetters = lowercaseLetters.toUpperCase();
+        var numbers = "0123456789";
         // String delete = new String(new char[] {SWT.DEL});
         // the event in {@link ContentProposalAdapter#addControlListener(Control
         // control)}
         // holds onto a character and when the DEL key is pressed that char
         // value is 8 so the line below catches the DEL key press
-        String delete = new String(new char[] { 8 });
-        String allChars = lowercaseLetters + uppercaseLetters + numbers
-                + delete + "*?/<>(),.\"\': ";
+        var delete = new String(new char[] { 8 });
+        var allChars = lowercaseLetters + uppercaseLetters + numbers + delete + "*?/<>(),.\"\': ";
         return allChars.toCharArray();
     }
 
@@ -131,26 +128,23 @@ public class AutoCompleteWidget {
     protected static KeyStroke getActivationKeystroke() {
         // keyStroke = KeyStroke.getInstance("Ctrl+Space");
         // Activate on <ctrl><space>
-        return KeyStroke.getInstance(new Integer(SWT.CTRL).intValue(),
-                new Integer(' ').intValue());
+        return KeyStroke.getInstance(new Integer(SWT.CTRL).intValue(), new Integer(' ').intValue());
     }
 
     private void enableContentProposal() {
         if (control instanceof Combo) {
 
-            Combo combo = (Combo) control;
+            var combo = (Combo) control;
             provider = new AutoCompleteProposalProvider(type);
-            adapter = new ContentProposalAdapter(combo,
-                    new ComboContentAdapter(), provider,
-                    getActivationKeystroke(), getAutoactivationChars());
+            adapter = new ContentProposalAdapter(combo, new ComboContentAdapter(), provider, getActivationKeystroke(),
+                    getAutoactivationChars());
 
         } else if (control instanceof Text) {
 
-            Text text = (Text) control;
+            var text = (Text) control;
             provider = new AutoCompleteProposalProvider(type);
-            adapter = new ContentProposalAdapter(text,
-                    new TextContentAdapter(), provider,
-                    getActivationKeystroke(), getAutoactivationChars());
+            adapter = new ContentProposalAdapter(text, new TextContentAdapter(), provider, getActivationKeystroke(),
+                    getAutoactivationChars());
 
         }
     }

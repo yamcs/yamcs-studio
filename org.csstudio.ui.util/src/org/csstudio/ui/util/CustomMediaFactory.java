@@ -66,7 +66,7 @@ public class CustomMediaFactory {
      * Private constructor to avoid instantiation.
      */
     private CustomMediaFactory() {
-        Display display = Display.getDefault();
+        var display = Display.getDefault();
         colorRegistry = new ColorRegistry(display);
         imageRegistry = new ImageRegistry(display);
         fontRegistry = new FontRegistry(display);
@@ -104,7 +104,7 @@ public class CustomMediaFactory {
         assert rgb != null : "rgb!=null";
         Color result = null;
 
-        String key = String.valueOf(rgb.hashCode());
+        var key = String.valueOf(rgb.hashCode());
 
         if (!colorRegistry.hasValueFor(key)) {
             colorRegistry.put(key, rgb);
@@ -121,9 +121,9 @@ public class CustomMediaFactory {
     public Font getFont(String name, int height, int style) {
         assert name != null : "name!=null";
 
-        FontData fd = new FontData(name, height, style);
+        var fd = new FontData(name, height, style);
 
-        String key = String.valueOf(fd.hashCode());
+        var key = String.valueOf(fd.hashCode());
         if (!fontRegistry.hasValueFor(key)) {
             fontRegistry.put(key, new FontData[] { fd });
         }
@@ -135,7 +135,7 @@ public class CustomMediaFactory {
      * Create the <code>Font</code> for the given <code>FontData</code>.
      */
     public Font getFont(FontData[] fontData) {
-        FontData f = fontData[0];
+        var f = fontData[0];
         return getFont(f.getName(), f.getHeight(), f.getStyle());
     }
 
@@ -143,8 +143,8 @@ public class CustomMediaFactory {
      * Create the <code>Font</code> for the given <code>FontData</code> and the given style code.
      */
     public Font getFont(FontData[] fontData, int style) {
-        FontData f = fontData[0];
-        Font font = getFont(f.getName(), f.getHeight(), style);
+        var f = fontData[0];
+        var font = getFont(f.getName(), f.getHeight(), style);
         return font;
     }
 
@@ -178,11 +178,11 @@ public class CustomMediaFactory {
      * @return The <code>Image</code> from the given path in the given plugin.
      */
     public Image getImageFromPlugin(String pluginId, String relativePath) {
-        String key = pluginId + "." + relativePath;
+        var key = pluginId + "." + relativePath;
 
         // does image exist
         if (imageRegistry.get(key) == null) {
-            ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
+            var descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
             imageRegistry.put(key, descr);
         }
 
@@ -203,15 +203,15 @@ public class CustomMediaFactory {
      * @return The <code>Image</code> from the given path in the given plugin.
      */
     public Image getImageFromPlugin(Plugin plugin, String pluginId, String relativePath) {
-        String key = pluginId + "." + relativePath;
+        var key = pluginId + "." + relativePath;
         // does image exist
         if (imageRegistry.get(key) == null) {
             if (plugin != null) {
-                ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
+                var descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
                 imageRegistry.put(key, descr);
             } else {
-                final Display display = Display.getCurrent();
-                final Image img = new Image(display, relativePath);
+                var display = Display.getCurrent();
+                var img = new Image(display, relativePath);
                 imageRegistry.put(key, ImageDescriptor.createFromImage(img));
             }
         }
@@ -229,11 +229,11 @@ public class CustomMediaFactory {
      * @return The <code>ImageDescriptor</code> from the given path in the given plugin.
      */
     public ImageDescriptor getImageDescriptorFromPlugin(String pluginId, String relativePath) {
-        String key = pluginId + "." + relativePath;
+        var key = pluginId + "." + relativePath;
 
         // does image exist
         if (imageRegistry.get(key) == null) {
-            ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
+            var descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
             imageRegistry.put(key, descr);
         }
 

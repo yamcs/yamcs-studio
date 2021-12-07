@@ -13,7 +13,7 @@ public class UserLogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
 
         // Displayed dates use the local timezone (overridable via -Duser.timezone)
         date.setTime(record.getMillis());

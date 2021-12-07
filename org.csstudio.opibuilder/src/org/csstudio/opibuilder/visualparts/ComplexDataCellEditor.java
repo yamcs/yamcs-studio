@@ -28,8 +28,7 @@ public class ComplexDataCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        PropertiesEditDialog dialog = new PropertiesEditDialog(parentShell, complexData.getAllProperties(),
-                dialogTitle);
+        var dialog = new PropertiesEditDialog(parentShell, complexData.getAllProperties(), dialogTitle);
 
         if (dialog.open() == Window.OK) {
             complexData = complexData.getCopy();

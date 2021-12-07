@@ -11,11 +11,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class ExportCommandsHandler extends AbstractHandler {
@@ -23,14 +21,14 @@ public class ExportCommandsHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        Shell shell = HandlerUtil.getActiveShell(event);
-        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        CommandHistoryView view = (CommandHistoryView) part;
+        var shell = HandlerUtil.getActiveShell(event);
+        var part = HandlerUtil.getActivePartChecked(event);
+        var view = (CommandHistoryView) part;
 
         // Ask for file to export
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+        var dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.csv" });
-        String targetFile = dialog.open();
+        var targetFile = dialog.open();
         if (targetFile == null) { // cancelled
             return null;
         }
@@ -48,8 +46,8 @@ public class ExportCommandsHandler extends AbstractHandler {
     }
 
     private void writeEvents(File targetFile, Table table) throws IOException {
-        try (FileWriter writer = new FileWriter(targetFile)) {
-            boolean first = true;
+        try (var writer = new FileWriter(targetFile)) {
+            var first = true;
             for (TableColumn tc : table.getColumns()) {
                 if (!first) {
                     writer.write("\t");
@@ -59,8 +57,8 @@ public class ExportCommandsHandler extends AbstractHandler {
             }
 
             for (TableItem item : table.getItems()) {
-                String[] rec = new String[table.getColumnCount()];
-                for (int i = 0; i < table.getColumnCount(); i++) {
+                var rec = new String[table.getColumnCount()];
+                for (var i = 0; i < table.getColumnCount(); i++) {
                     rec[i] = item.getText(i);
                 }
                 writer.write(String.join("\t", rec));

@@ -154,8 +154,8 @@ public class IPV {
      * @return true if write successful or false otherwise.
      */
     public boolean setValue(Object value, int timeout) throws Exception {
-        AtomicBoolean result = new AtomicBoolean();
-        CountDownLatch latch = new CountDownLatch(1);
+        var result = new AtomicBoolean();
+        var latch = new CountDownLatch(1);
         // Ensure PV is fully started (including execution of onStarted)
         startFinished.get(timeout, TimeUnit.MILLISECONDS);
         datasource.writeValue(this, value, err -> {

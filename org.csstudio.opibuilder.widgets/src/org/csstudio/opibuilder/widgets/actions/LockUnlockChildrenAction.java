@@ -27,17 +27,16 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
 
-        final GroupingContainerModel containerModel = getSelectedContainer();
+        var containerModel = getSelectedContainer();
 
-        Command cmd = createLockUnlockCommand(containerModel);
+        var cmd = createLockUnlockCommand(containerModel);
         execute(cmd);
 
     }
 
-    public static Command createLockUnlockCommand(
-            final GroupingContainerModel containerModel) {
-        Command cmd = new SetWidgetPropertyCommand(containerModel,
-                GroupingContainerModel.PROP_LOCK_CHILDREN, !containerModel.isLocked()) {
+    public static Command createLockUnlockCommand(GroupingContainerModel containerModel) {
+        Command cmd = new SetWidgetPropertyCommand(containerModel, GroupingContainerModel.PROP_LOCK_CHILDREN,
+                !containerModel.isLocked()) {
             @Override
             public void execute() {
                 super.execute();
@@ -52,17 +51,16 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
 
             private void selectWidgets() {
                 // must be queued so it is executed after property has been changed.
-                GUIRefreshThread.getInstance(false).addIgnorableTask(
-                        new WidgetIgnorableUITask(this,
-                                new Runnable() {
+                GUIRefreshThread.getInstance(false).addIgnorableTask(new WidgetIgnorableUITask(this, new Runnable() {
 
-                                    public void run() {
-                                        // if(!containerModel.isLocked())
-                                        // containerModel.selectWidgets(containerModel.getChildren(), false);
-                                        // else
-                                        containerModel.getParent().selectWidget(containerModel, false);
-                                    }
-                                }, Display.getCurrent()));
+                    @Override
+                    public void run() {
+                        // if(!containerModel.isLocked())
+                        // containerModel.selectWidgets(containerModel.getChildren(), false);
+                        // else
+                        containerModel.getParent().selectWidget(containerModel, false);
+                    }
+                }, Display.getCurrent()));
 
             }
         };

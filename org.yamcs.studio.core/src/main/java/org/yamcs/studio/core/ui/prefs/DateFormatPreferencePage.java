@@ -2,9 +2,7 @@ package org.yamcs.studio.core.ui.prefs;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -26,19 +24,19 @@ public class DateFormatPreferencePage extends FieldEditorPreferencePage implemen
 
     @Override
     protected void createFieldEditors() {
-        Composite parent = getFieldEditorParent();
+        var parent = getFieldEditorParent();
         format = new StringFieldEditor(PREF_DATEFORMAT, "Date Format:", parent);
         addField(format);
     }
 
     @Override
     public boolean performOk() {
-        IPreferenceStore store = YamcsPlugin.getDefault().getPreferenceStore();
+        var store = YamcsPlugin.getDefault().getPreferenceStore();
 
-        boolean propertiesChanged = !format.getStringValue().equals(store.getString(PREF_DATEFORMAT));
+        var propertiesChanged = !format.getStringValue().equals(store.getString(PREF_DATEFORMAT));
 
         // Save to store
-        boolean ret = super.performOk();
+        var ret = super.performOk();
 
         if (propertiesChanged) {
             YamcsPlugin.getDefault().setDateFormat(format.getStringValue());
@@ -49,12 +47,9 @@ public class DateFormatPreferencePage extends FieldEditorPreferencePage implemen
     }
 
     private static void warningApply() {
-        MessageDialog dialog = new MessageDialog(
-                null,
-                "Apply changes",
-                null,
-                "To apply preference to views, close and re-open them",
-                MessageDialog.INFORMATION, new String[] { "OK" }, 0);
+        var dialog = new MessageDialog(null, "Apply changes", null,
+                "To apply preference to views, close and re-open them", MessageDialog.INFORMATION,
+                new String[] { "OK" }, 0);
         dialog.open();
     }
 }

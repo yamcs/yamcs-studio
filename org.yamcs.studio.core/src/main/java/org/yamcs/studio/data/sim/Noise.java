@@ -51,9 +51,8 @@ public class Noise extends SimFunction<VDouble> {
         this.min = min;
         this.max = max;
         range = this.max - this.min;
-        lastValue = newVDouble(min, alarmNone(), timeNow(),
-                newDisplay(min, min + range * 0.1, min + range * 0.2, "x", DOUBLE_FORMAT,
-                        min + range * 0.8, min + range * 0.9, max, min, max));
+        lastValue = newVDouble(min, alarmNone(), timeNow(), newDisplay(min, min + range * 0.1, min + range * 0.2, "x",
+                DOUBLE_FORMAT, min + range * 0.8, min + range * 0.9, max, min, max));
     }
 
     @Override

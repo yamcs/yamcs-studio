@@ -29,30 +29,26 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
     protected void createFieldEditors() {
 
         // separator
-        Label label = new Label(getFieldEditorParent(), SWT.NONE);
+        var label = new Label(getFieldEditorParent(), SWT.NONE);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 3, 1));
 
         // beep fields
-        String[][] typeOfBeepTriggers = { { "No beep", "NONE" },
-                { "Increasing severity", "FIRST" },
+        String[][] typeOfBeepTriggers = { { "No beep", "NONE" }, { "Increasing severity", "FIRST" },
                 { "Each out-of-limit update", "EACH" } };
-        triggerBeep = new ComboFieldEditor("triggerBeep", "Beep on event:",
-                typeOfBeepTriggers, getFieldEditorParent());
+        triggerBeep = new ComboFieldEditor("triggerBeep", "Beep on event:", typeOfBeepTriggers, getFieldEditorParent());
         addField(triggerBeep);
 
-        beepWarning = new BooleanFieldEditor("beepWarning", "Beep on warning",
-                getFieldEditorParent());
+        beepWarning = new BooleanFieldEditor("beepWarning", "Beep on warning", getFieldEditorParent());
         addField(beepWarning);
 
-        beepCritical = new BooleanFieldEditor("beepCritical",
-                "Beep on critical", getFieldEditorParent());
+        beepCritical = new BooleanFieldEditor("beepCritical", "Beep on critical", getFieldEditorParent());
         addField(beepCritical);
     }
 
     @Override
     public boolean performOk() {
         // Save to store
-        boolean ret = super.performOk();
+        var ret = super.performOk();
 
         // Apply preference in Severity Handler Sound class
         Activator.getDefault().getBeeper().updatePreference();

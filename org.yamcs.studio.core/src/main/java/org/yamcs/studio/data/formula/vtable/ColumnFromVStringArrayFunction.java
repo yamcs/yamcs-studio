@@ -68,9 +68,9 @@ class ColumnFromVStringArrayFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VString name = (VString) args.get(0);
-        VStringArray data = (VStringArray) args.get(1);
+    public Object calculate(List<Object> args) {
+        var name = (VString) args.get(0);
+        var data = (VStringArray) args.get(1);
 
         if (name == null || data == null) {
             return null;

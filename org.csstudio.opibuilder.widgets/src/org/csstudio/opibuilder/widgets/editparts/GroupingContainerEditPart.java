@@ -32,7 +32,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     protected IFigure doCreateFigure() {
-        GroupingContainerFigure f = new GroupingContainerFigure();
+        var f = new GroupingContainerFigure();
         f.setOpaque(!getWidgetModel().isTransparent());
         f.setShowScrollBar(getWidgetModel().isShowScrollbar());
         return f;
@@ -65,8 +65,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
     protected void registerPropertyChangeHandlers() {
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 figure.setOpaque(!(Boolean) newValue);
                 return true;
             }
@@ -76,8 +75,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
                     child.setEnabled((Boolean) newValue);
                 }
@@ -89,8 +87,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 lockChildren((Boolean) newValue);
                 return true;
             }
@@ -103,10 +100,9 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
             removeAllPropertyChangeHandlers(AbstractWidgetModel.PROP_VISIBLE);
             IWidgetPropertyChangeHandler visibilityHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(final Object oldValue, final Object newValue,
-                        final IFigure refreshableFigure) {
+                public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
                     boolean visible = (Boolean) newValue;
-                    final IFigure figure = getFigure();
+                    var figure = getFigure();
                     figure.setVisible(visible);
                     return true;
                 }
@@ -116,7 +112,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
         IWidgetPropertyChangeHandler showBarHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue, final Object newValue, final IFigure refreshableFigure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
                 ((GroupingContainerFigure) refreshableFigure).setShowScrollBar((Boolean) newValue);
                 return true;
             }
@@ -125,9 +121,10 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
         IWidgetPropertyChangeHandler fowardColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue, final Object newValue, final IFigure refreshableFigure) {
-                if (getWidgetModel().isForwardColors())
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                if (getWidgetModel().isForwardColors()) {
                     forwardColors();
+                }
                 return true;
             }
         };
@@ -136,28 +133,24 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         setPropertyChangeHandler(GroupingContainerModel.PROP_COLOR_FOREGROUND, fowardColorHandler);
 
         // use property listener because it doesn't need to be queued in GUIRefreshThread.
-        getWidgetModel().getProperty(
-                AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(
-                        new PropertyChangeListener() {
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH)
+                .addPropertyChangeListener(new PropertyChangeListener() {
 
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                resizeChildren((Integer) (evt.getNewValue()),
-                                        (Integer) (evt.getOldValue()), true);
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), true);
 
-                            }
-                        });
+                    }
+                });
 
-        getWidgetModel().getProperty(
-                AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(
-                        new PropertyChangeListener() {
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT)
+                .addPropertyChangeListener(new PropertyChangeListener() {
 
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                resizeChildren((Integer) (evt.getNewValue()),
-                                        (Integer) (evt.getOldValue()), false);
-                            }
-                        });
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), false);
+                    }
+                });
 
     }
 
@@ -178,8 +171,9 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
      *            true if the children should be locked.
      */
     private void lockChildren(boolean lock) {
-        if (getExecutionMode() == ExecutionMode.RUN_MODE)
+        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             return;
+        }
         for (Object o : getChildren()) {
             if (o instanceof AbstractBaseEditPart) {
                 ((AbstractBaseEditPart) o).setSelectable(!lock);
@@ -189,11 +183,10 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     protected EditPart createChild(Object model) {
-        EditPart result = super.createChild(model);
+        var result = super.createChild(model);
 
         // setup selection behavior for the new child
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE &&
-                result instanceof AbstractBaseEditPart) {
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && result instanceof AbstractBaseEditPart) {
             ((AbstractBaseEditPart) result).setSelectable(!getWidgetModel().isLocked());
         }
 
@@ -201,14 +194,16 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
     }
 
     private void resizeChildren(int newValue, int oldValue, boolean isWidth) {
-        if (!getWidgetModel().isLocked())
+        if (!getWidgetModel().isLocked()) {
             return;
-        if (getExecutionMode() == ExecutionMode.RUN_MODE &&
-                getWidgetModel().getRootDisplayModel().getDisplayScaleData().isAutoScaleWidgets()
-                && (getWidgetModel().getScaleOptions().isHeightScalable() ||
-                        getWidgetModel().getScaleOptions().isWidthScalable()))
+        }
+        if (getExecutionMode() == ExecutionMode.RUN_MODE
+                && getWidgetModel().getRootDisplayModel().getDisplayScaleData().isAutoScaleWidgets()
+                && (getWidgetModel().getScaleOptions().isHeightScalable()
+                        || getWidgetModel().getScaleOptions().isWidthScalable())) {
             return;
-        double ratio = (newValue - oldValue) / (double) oldValue;
+        }
+        var ratio = (newValue - oldValue) / (double) oldValue;
         for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
             if (isWidth) {
                 child.setX((int) (child.getX() * (1 + ratio)));
@@ -222,16 +217,17 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-        if (adapter == IActionFilter.class)
+        if (adapter == IActionFilter.class) {
             return new BaseEditPartActionFilter() {
                 @Override
-                public boolean testAttribute(Object target, String name,
-                        String value) {
-                    if (name.equals("allowAutoSize") && value.equals("TRUE"))
+                public boolean testAttribute(Object target, String name, String value) {
+                    if (name.equals("allowAutoSize") && value.equals("TRUE")) {
                         return getExecutionMode() == ExecutionMode.EDIT_MODE;
+                    }
                     return super.testAttribute(target, name, value);
                 }
             };
+        }
         return super.getAdapter(adapter);
     }
 

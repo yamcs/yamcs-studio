@@ -27,8 +27,7 @@ public class ChangeOrderCommand extends Command {
 
     private AbstractWidgetModel widget;
 
-    public ChangeOrderCommand(int newIndex, AbstractContainerModel container,
-            AbstractWidgetModel widget) {
+    public ChangeOrderCommand(int newIndex, AbstractContainerModel container, AbstractWidgetModel widget) {
         Assert.isNotNull(container);
         Assert.isNotNull(widget);
         this.newIndex = newIndex;

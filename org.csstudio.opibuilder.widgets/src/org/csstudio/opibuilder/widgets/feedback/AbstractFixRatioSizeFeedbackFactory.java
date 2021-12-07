@@ -19,7 +19,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
@@ -38,8 +37,8 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     private Shape sizeOnDropFeedback;
 
     @Override
-    public Command createChangeBoundsCommand(AbstractWidgetModel widgetModel,
-            ChangeBoundsRequest request, Rectangle targetBounds) {
+    public Command createChangeBoundsCommand(AbstractWidgetModel widgetModel, ChangeBoundsRequest request,
+            Rectangle targetBounds) {
 
         return new ChangeSquareBoundsCommand(widgetModel, targetBounds, "Move/Resize");
     }
@@ -50,10 +49,9 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     }
 
     @Override
-    public IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model,
-            Rectangle initalBounds) {
+    public IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model, Rectangle initalBounds) {
         // Use a ghost rectangle for feedback
-        RectangleFigure r = new RectangleFigure();
+        var r = new RectangleFigure();
         FigureUtilities.makeGhostShape(r);
         r.setLineStyle(Graphics.LINE_DOT);
         r.setForegroundColor(ColorConstants.white);
@@ -62,8 +60,8 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     }
 
     @Override
-    public Command createInitialBoundsCommand(AbstractWidgetModel widgetModel,
-            CreateRequest request, Rectangle targetBounds) {
+    public Command createInitialBoundsCommand(AbstractWidgetModel widgetModel, CreateRequest request,
+            Rectangle targetBounds) {
         return new InitialSquareBoundsCommand(widgetModel, targetBounds);
     }
 
@@ -79,17 +77,18 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     }
 
     @Override
-    public void showChangeBoundsFeedback(AbstractWidgetModel widgetModel,
-            PrecisionRectangle newBounds, IFigure feedbackFigure,
-            ChangeBoundsRequest request) {
+    public void showChangeBoundsFeedback(AbstractWidgetModel widgetModel, PrecisionRectangle newBounds,
+            IFigure feedbackFigure, ChangeBoundsRequest request) {
         if (newBounds.getSize().getArea() != widgetModel.getSize().getArea()) {
             if (isSquareSizeRequired(widgetModel)) {
-                if (newBounds.getSize().getArea() > widgetModel.getSize().getArea())
+                if (newBounds.getSize().getArea() > widgetModel.getSize().getArea()) {
                     newBounds.width = Math.max(newBounds.width, getWidthFromHeight(newBounds.height, widgetModel));
-                else
+                } else {
                     newBounds.width = Math.min(newBounds.width, getWidthFromHeight(newBounds.height, widgetModel));
-                if (newBounds.width < getMinimumWidth())
+                }
+                if (newBounds.width < getMinimumWidth()) {
                     newBounds.width = getMinimumWidth();
+                }
                 newBounds.height = getHeightFromWidth(newBounds.width, widgetModel);
             }
         }
@@ -98,19 +97,19 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     }
 
     @Override
-    public void showSizeOnDropFeedback(CreateRequest request,
-            IFigure feedbackFigure, Insets insets) {
-        Point p = new Point(request.getLocation().getCopy());
-        IFigure feedback = getSizeOnDropFeedback(request);
+    public void showSizeOnDropFeedback(CreateRequest request, IFigure feedbackFigure, Insets insets) {
+        var p = new Point(request.getLocation().getCopy());
+        var feedback = getSizeOnDropFeedback(request);
         feedback.translateToRelative(p);
-        Dimension size = request.getSize().getCopy();
+        var size = request.getSize().getCopy();
         feedback.translateToRelative(size);
         if (isSquareSizeRequired((AbstractWidgetModel) request.getNewObject())) {
-            if (size.width < getMinimumWidth() && size.height < getMinimumWidth())
+            if (size.width < getMinimumWidth() && size.height < getMinimumWidth()) {
                 size.width = getMinimumWidth();
-            else
+            } else {
                 size.width = Math.max(size.width,
                         getWidthFromHeight(size.height, (AbstractWidgetModel) request.getNewObject()));
+            }
             size.height = getHeightFromWidth(size.width, (AbstractWidgetModel) request.getNewObject());
         }
         feedback.setBounds(new Rectangle(p, size).expand(insets));
@@ -124,8 +123,9 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
      * @return the size-on-drop feedback figure
      */
     protected IFigure getSizeOnDropFeedback(CreateRequest createRequest) {
-        if (sizeOnDropFeedback == null)
+        if (sizeOnDropFeedback == null) {
             sizeOnDropFeedback = createSizeOnDropFeedback(createRequest);
+        }
 
         return getSizeOnDropFeedback();
     }
@@ -182,11 +182,11 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
 
         private final AbstractWidgetModel widget;
 
-        public ChangeSquareBoundsCommand(AbstractWidgetModel widgetModel,
-                Rectangle newBounds, String label) {
+        public ChangeSquareBoundsCommand(AbstractWidgetModel widgetModel, Rectangle newBounds, String label) {
             super(label);
-            if (widgetModel == null || newBounds == null)
+            if (widgetModel == null || newBounds == null) {
                 throw new IllegalArgumentException();
+            }
             this.widget = widgetModel;
             this.newBounds = newBounds;
 
@@ -201,16 +201,19 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
         @Override
         public void redo() {
             widget.setLocation(newBounds.x, newBounds.y);
-            if (newBounds.getSize().getArea() == oldBounds.getSize().getArea())
+            if (newBounds.getSize().getArea() == oldBounds.getSize().getArea()) {
                 return;
+            }
             if (isSquareSizeRequired(widget)) {
-                if (newBounds.getSize().getArea() > oldBounds.getSize().getArea())
+                if (newBounds.getSize().getArea() > oldBounds.getSize().getArea()) {
                     newBounds.width = Math.max(newBounds.width, getWidthFromHeight(newBounds.height, widget));
-                else
+                } else {
                     newBounds.width = Math.min(newBounds.width, getWidthFromHeight(newBounds.height, widget));
+                }
 
-                if (newBounds.width < getMinimumWidth())
+                if (newBounds.width < getMinimumWidth()) {
                     newBounds.width = getMinimumWidth();
+                }
                 newBounds.height = getHeightFromWidth(newBounds.width, widget);
             }
             widget.setSize(newBounds.width, newBounds.height);
@@ -232,10 +235,10 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
 
         private final AbstractWidgetModel widget;
 
-        public InitialSquareBoundsCommand(AbstractWidgetModel widgetModel,
-                Rectangle newBounds) {
-            if (widgetModel == null || newBounds == null)
+        public InitialSquareBoundsCommand(AbstractWidgetModel widgetModel, Rectangle newBounds) {
+            if (widgetModel == null || newBounds == null) {
                 throw new IllegalArgumentException();
+            }
             this.widget = widgetModel;
             this.newBounds = newBounds;
 
@@ -251,16 +254,18 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
         public void redo() {
             widget.setLocation(newBounds.x, newBounds.y);
             if (isSquareSizeRequired(widget)) {
-                if (newBounds.width <= 0 || newBounds.height <= 0)
+                if (newBounds.width <= 0 || newBounds.height <= 0) {
                     newBounds.width = oldBounds.width;
-                else if (newBounds.width < getMinimumWidth() && newBounds.height < getMinimumWidth())
+                } else if (newBounds.width < getMinimumWidth() && newBounds.height < getMinimumWidth()) {
                     newBounds.width = getMinimumWidth();
-                else
+                } else {
                     newBounds.width = Math.max(newBounds.width, getWidthFromHeight(newBounds.height, widget));
+                }
                 newBounds.height = getHeightFromWidth(newBounds.width, widget);
             }
-            if (newBounds.width > 0 && newBounds.height > 0)
+            if (newBounds.width > 0 && newBounds.height > 0) {
                 widget.setSize(newBounds.width, newBounds.height);
+            }
         }
 
         @Override

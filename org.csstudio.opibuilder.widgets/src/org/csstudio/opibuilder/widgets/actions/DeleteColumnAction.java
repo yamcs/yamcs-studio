@@ -28,7 +28,7 @@ public class DeleteColumnAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        TableEditPart tableEditPart = getSelectedWidget();
+        var tableEditPart = getSelectedWidget();
 
         tableEditPart.getTable().deleteColumn(tableEditPart.getMenuTriggeredCell().y);
     }
@@ -43,8 +43,9 @@ public class DeleteColumnAction implements IObjectActionDelegate {
     private TableEditPart getSelectedWidget() {
         if (selection.getFirstElement() instanceof TableEditPart) {
             return (TableEditPart) selection.getFirstElement();
-        } else
+        } else {
             return null;
+        }
     }
 
     @Override

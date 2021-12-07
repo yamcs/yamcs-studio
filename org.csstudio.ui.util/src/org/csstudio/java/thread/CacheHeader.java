@@ -19,7 +19,7 @@ public class CacheHeader {
      * @param seconds
      *            Seconds after which clients should no longer cache the HTML
      */
-    public CacheHeader(final long seconds) {
+    public CacheHeader(long seconds) {
         timestamp = new Date();
         expiration = new Date(timestamp.getTime() + seconds * 1000L);
     }

@@ -29,7 +29,7 @@ public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
 
     @Override
     protected InputStream getInitialContents() {
-        String s = ScriptService.DEFAULT_JS_HEADER;
+        var s = ScriptService.DEFAULT_JS_HEADER;
         InputStream result = new ByteArrayInputStream(s.getBytes());
         return result;
     }

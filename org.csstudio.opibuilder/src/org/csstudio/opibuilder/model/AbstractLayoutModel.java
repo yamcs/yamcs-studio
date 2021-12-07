@@ -44,9 +44,10 @@ public abstract class AbstractLayoutModel extends AbstractWidgetModel {
 
     @Override
     public void setPropertyValue(Object id, Object value) {
-        if (((id.equals(PROP_XPOS) || id.equals(PROP_YPOS)) && ((Integer) value) != 0) ||
-                ((id.equals(PROP_WIDTH) || id.equals(PROP_HEIGHT)) && ((Integer) value) != FIXED_WIDTH))
+        if (((id.equals(PROP_XPOS) || id.equals(PROP_YPOS)) && ((Integer) value) != 0)
+                || ((id.equals(PROP_WIDTH) || id.equals(PROP_HEIGHT)) && ((Integer) value) != FIXED_WIDTH)) {
             return;
+        }
 
         super.setPropertyValue(id, value);
     }

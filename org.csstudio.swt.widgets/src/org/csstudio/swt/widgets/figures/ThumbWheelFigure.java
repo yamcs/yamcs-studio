@@ -32,7 +32,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -54,7 +53,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
 
         public CharBox(char ch) {
 
-            BorderLayout layout = new BorderLayout();
+            var layout = new BorderLayout();
             layout.setVerticalSpacing(0);
 
             setLayoutManager(layout);
@@ -119,9 +118,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         private DigitBox right = null;
         private DigitBox left = null;
 
-        public DigitBox(final int positionIndex, final boolean isDecimal) {
+        public DigitBox(int positionIndex, boolean isDecimal) {
 
-            BorderLayout layout = new BorderLayout();
+            var layout = new BorderLayout();
             layout.setVerticalSpacing(0);
 
             setLayoutManager(layout);
@@ -142,8 +141,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
                 up.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent event) {
-                        fireIncrementIntegerListeners(integerDigits
-                                - positionIndex - 1);
+                        fireIncrementIntegerListeners(integerDigits - positionIndex - 1);
                     }
                 });
             }
@@ -169,8 +167,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
                 down.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent event) {
-                        fireDecrementIntegerListeners(integerDigits
-                                - positionIndex - 1);
+                        fireDecrementIntegerListeners(integerDigits - positionIndex - 1);
                     }
                 });
             }
@@ -185,8 +182,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
                 addMouseListener(new MouseListener.Stub() {
                     @Override
                     public void mousePressed(MouseEvent me) {
-                        if (!hasFocus())
+                        if (!hasFocus()) {
                             requestFocus();
+                        }
                         me.consume();
                     }
                 });
@@ -222,15 +220,13 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
                             if (isDecimal) {
                                 fireIncrementDecimalListeners(positionIndex);
                             } else {
-                                fireIncrementIntegerListeners(integerDigits
-                                        - positionIndex - 1);
+                                fireIncrementIntegerListeners(integerDigits - positionIndex - 1);
                             }
                         } else if (ke.keycode == SWT.ARROW_DOWN) {
                             if (isDecimal) {
                                 fireDecrementDecimalListeners(positionIndex);
                             } else {
-                                fireDecrementIntegerListeners(integerDigits
-                                        - positionIndex - 1);
+                                fireDecrementIntegerListeners(integerDigits - positionIndex - 1);
                             }
                         } else if (ke.keycode == SWT.ARROW_LEFT && left != null) {
                             left.requestFocus();
@@ -391,7 +387,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public GridData createGridData() {
-        GridData data = new GridData();
+        var data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.verticalAlignment = GridData.FILL;
         data.grabExcessVerticalSpace = true;
@@ -417,8 +413,8 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         add(minus);
         setConstraint(minus, createGridData());
         wholePart = new DigitBox[integerDigits];
-        for (int i = 0; i < integerDigits; i++) {
-            DigitBox box = new DigitBox(i, false);
+        for (var i = 0; i < integerDigits; i++) {
+            var box = new DigitBox(i, false);
             box.setButtonVisibility(showButtons);
             add(box);
             wholePart[integerDigits - i - 1] = box;
@@ -431,8 +427,8 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         setConstraint(dot, createGridData());
 
         decimalPart = new DigitBox[decimalDigits];
-        for (int i = 0; i < decimalDigits; i++) {
-            DigitBox box = new DigitBox(i, true);
+        for (var i = 0; i < decimalDigits; i++) {
+            var box = new DigitBox(i, true);
             box.setButtonVisibility(showButtons);
             add(box);
             decimalPart[i] = box;
@@ -447,7 +443,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
 
         // Set the order to be able to change focus when left/right
         // key is pressed.
-        for (int i = 0; i < integerDigits; i++) {
+        for (var i = 0; i < integerDigits; i++) {
             if (i != integerDigits - 1) {
                 wholePart[i].setLeftDigitBox(wholePart[i + 1]);
             }
@@ -461,7 +457,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             decimalPart[0].setLeftDigitBox(wholePart[0]);
         }
 
-        for (int i = 0; i < decimalDigits; i++) {
+        for (var i = 0; i < decimalDigits; i++) {
             if (i != 0) {
                 decimalPart[i].setLeftDigitBox(decimalPart[i - 1]);
             }
@@ -556,9 +552,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     @Override
-    public void paintFigure(final Graphics graphics) {
+    public void paintFigure(Graphics graphics) {
         graphics.setBackgroundColor(this.getBackgroundColor());
-        Rectangle bounds = this.getBounds().getCopy();
+        var bounds = this.getBounds().getCopy();
         bounds.crop(this.getInsets());
         graphics.fillRectangle(bounds);
         super.paintFigure(graphics);
@@ -569,17 +565,19 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public void setDecimalDigits(int decimalDigits) {
-        if (decimalDigits < 0 || decimalDigits > 64)
+        if (decimalDigits < 0 || decimalDigits > 64) {
             throw new IllegalArgumentException();
-        if (this.decimalDigits == decimalDigits)
+        }
+        if (this.decimalDigits == decimalDigits) {
             return;
+        }
         this.decimalDigits = decimalDigits;
         createWidgets();
 
     }
 
     public void setDecimalWheel(int index, char value) {
-        DigitBox box = decimalPart[index];
+        var box = decimalPart[index];
         box.setValue("" + value);
     }
 
@@ -591,24 +589,26 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public void setIntegerDigits(int integerDigits) {
-        if (integerDigits < 0 || integerDigits > 64)
+        if (integerDigits < 0 || integerDigits > 64) {
             throw new IllegalArgumentException();
-        if (this.integerDigits == integerDigits)
+        }
+        if (this.integerDigits == integerDigits) {
             return;
+        }
         this.integerDigits = integerDigits;
         createWidgets();
 
     }
 
     public void setIntegerWheel(int index, char value) {
-        DigitBox box = wholePart[index];
+        var box = wholePart[index];
         box.setValue("" + value);
 
     }
 
     public void setInternalBorderColor(Color color) {
         this.internalBorderColor = color;
-        Color col = color;
+        var col = color;
 
         for (DigitBox box : wholePart) {
             box.setBorderColor(col);
@@ -624,7 +624,7 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
 
     public void setInternalFocusedBorderColor(Color color) {
         this.internalFocusedBorderColor = color;
-        Color col = color;
+        var col = color;
 
         for (DigitBox box : wholePart) {
             box.setFocusedBorderColor(col);
@@ -636,8 +636,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public void setInternalBorderThickness(int thickness) {
-        if (thickness < 0)
+        if (thickness < 0) {
             throw new IllegalArgumentException();
+        }
         this.internalBorderThickness = thickness;
         for (DigitBox box : wholePart) {
             box.setBorderThickness(thickness);
@@ -656,8 +657,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public void setWheelFont(Font font) {
-        if (this.wheelFont != null && this.wheelFont.equals(font))
+        if (this.wheelFont != null && this.wheelFont.equals(font)) {
             return;
+        }
         this.wheelFont = font;
         if (font == null) {
             return;
@@ -692,8 +694,9 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     public void setButtonVisibility(boolean b) {
-        if (showButtons == b)
+        if (showButtons == b) {
             return;
+        }
 
         showButtons = b;
 

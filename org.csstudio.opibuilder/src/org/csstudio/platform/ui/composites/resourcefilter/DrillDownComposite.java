@@ -15,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 /**
@@ -67,7 +66,7 @@ public class DrillDownComposite extends Composite {
 
         // Create a toolbar.
         _toolBarMgr = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = _toolBarMgr.createControl(this);
+        var toolBar = _toolBarMgr.createControl(this);
         gid = new GridData();
         gid.horizontalAlignment = GridData.FILL;
         gid.verticalAlignment = GridData.BEGINNING;
@@ -80,7 +79,7 @@ public class DrillDownComposite extends Composite {
      * @param aViewer
      *            the new child viewer
      */
-    public final void setChildTree(final TreeViewer aViewer) {
+    public void setChildTree(TreeViewer aViewer) {
         // Save viewer.
         _fChildTree = aViewer;
 
@@ -90,8 +89,7 @@ public class DrillDownComposite extends Composite {
         _toolBarMgr.update(true);
 
         // Set tree layout.
-        _fChildTree.getTree().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        _fChildTree.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         layout();
     }
 

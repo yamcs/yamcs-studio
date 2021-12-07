@@ -20,22 +20,27 @@ public class ExprInteger extends ExprNumber {
         this.value = value;
     }
 
+    @Override
     public int intValue() {
         return value;
     }
 
+    @Override
     public double doubleValue() {
         return value;
     }
 
+    @Override
     public int hashCode() {
         return value;
     }
 
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof ExprInteger && value == ((ExprInteger) obj).value;
     }
 
+    @Override
     public String toString() {
         return Integer.toString(value);
     }

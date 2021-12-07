@@ -30,8 +30,7 @@ public class WidgetDeleteCommand extends Command {
 
     private List<ConnectionModel> sourceConnections, targetConnections;
 
-    public WidgetDeleteCommand(AbstractContainerModel container,
-            AbstractWidgetModel widget) {
+    public WidgetDeleteCommand(AbstractContainerModel container, AbstractWidgetModel widget) {
         assert container != null;
         assert widget != null;
         this.container = container;
@@ -50,8 +49,7 @@ public class WidgetDeleteCommand extends Command {
         result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
         if (widget instanceof AbstractContainerModel) {
             for (AbstractWidgetModel child : ((AbstractContainerModel) widget).getAllDescendants()) {
-                result.addAll(
-                        source ? child.getSourceConnections() : child.getTargetConnections());
+                result.addAll(source ? child.getSourceConnections() : child.getTargetConnections());
             }
         }
         return result;

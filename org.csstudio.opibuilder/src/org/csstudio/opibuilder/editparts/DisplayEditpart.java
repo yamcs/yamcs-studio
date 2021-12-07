@@ -29,7 +29,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
@@ -42,7 +41,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * The editpart for the root display.
@@ -58,8 +56,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         super.createEditPolicies();
 
         // disallows the removal of this edit part from its parent
-        installEditPolicy(EditPolicy.COMPONENT_ROLE,
-                new RootComponentEditPolicy());
+        installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
         removeEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE);
     }
 
@@ -68,21 +65,22 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         super.activate();
         initProperties();
 
-        if (getExecutionMode() == ExecutionMode.RUN_MODE &&
-                getWidgetModel().getDisplayScaleData().isAutoScaleWidgets()) {
-            originSize = new org.eclipse.swt.graphics.Point(
-                    getWidgetModel().getWidth(), getWidgetModel().getHeight());
+        if (getExecutionMode() == ExecutionMode.RUN_MODE
+                && getWidgetModel().getDisplayScaleData().isAutoScaleWidgets()) {
+            originSize = new org.eclipse.swt.graphics.Point(getWidgetModel().getWidth(), getWidgetModel().getHeight());
             oldSize = originSize;
             scaleListener = new ControlAdapter() {
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (getViewer() == null || getViewer().getControl().isDisposed())
+                    if (getViewer() == null || getViewer().getControl().isDisposed()) {
                         return;
-                    org.eclipse.swt.graphics.Point size = getViewer().getControl().getSize();
-                    if (size.equals(oldSize))
+                    }
+                    var size = getViewer().getControl().getSize();
+                    if (size.equals(oldSize)) {
                         return;
-                    double widthRatio = size.x / (double) originSize.x;
-                    double heightRatio = size.y / (double) originSize.y;
+                    }
+                    var widthRatio = size.x / (double) originSize.x;
+                    var heightRatio = size.y / (double) originSize.y;
                     oldSize = size;
                     getWidgetModel().scale(widthRatio, heightRatio);
                     // oldSize = size;
@@ -99,19 +97,20 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         }
 
         if (getExecutionMode() == ExecutionMode.RUN_MODE && getWidgetModel().isAutoZoomToFitAll()) {
-            originSize = new org.eclipse.swt.graphics.Point(
-                    getWidgetModel().getWidth(), getWidgetModel().getHeight());
+            originSize = new org.eclipse.swt.graphics.Point(getWidgetModel().getWidth(), getWidgetModel().getHeight());
             oldSize = originSize;
             zoomListener = new ControlAdapter() {
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (!isActive() || getViewer() == null || getViewer().getControl().isDisposed())
+                    if (!isActive() || getViewer() == null || getViewer().getControl().isDisposed()) {
                         return;
-                    org.eclipse.swt.graphics.Point size = ((Canvas) getViewer().getControl()).getSize();
-                    if (size.equals(oldSize))
+                    }
+                    var size = ((Canvas) getViewer().getControl()).getSize();
+                    if (size.equals(oldSize)) {
                         return;
+                    }
                     if (size.x * size.y > 0) {
-                        DisplayModel displayModel = (DisplayModel) getModel();
+                        var displayModel = (DisplayModel) getModel();
                         getZoomManager().getScalableFigure().setPreferredSize(displayModel.getSize());
                         getZoomManager().setZoomAsText(Draw2dSingletonUtil.ZoomManager_FIT_ALL);
                     }
@@ -130,8 +129,9 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         UIBundlingThread.getInstance().addRunnable(new Runnable() {
             @Override
             public void run() {
-                if (getViewer() != null && getViewer().getControl() != null && !getViewer().getControl().isDisposed())
+                if (getViewer() != null && getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
                     getViewer().getControl().forceFocus();
+                }
             }
         });
 
@@ -139,10 +139,10 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
     @Override
     public void deactivate() {
-        final Control control = getViewer().getControl();
+        var control = getViewer().getControl();
         if (getViewer() != null && !control.isDisposed()) {
             // This needs to be executed in UI Thread
-            final ZoomManager zoomManager = getZoomManager();
+            var zoomManager = getZoomManager();
             control.getDisplay().asyncExec(new Runnable() {
 
                 @Override
@@ -171,8 +171,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
     private void initProperties() {
         for (String prop_id : getWidgetModel().getAllPropertyIDs()) {
-            getWidgetModel().getProperty(prop_id).firePropertyChange(null,
-                    getWidgetModel().getPropertyValue(prop_id));
+            getWidgetModel().getProperty(prop_id).firePropertyChange(null, getWidgetModel().getPropertyValue(prop_id));
         }
     }
 
@@ -180,11 +179,10 @@ public class DisplayEditpart extends AbstractContainerEditpart {
     protected void registerPropertyChangeHandlers() {
         IWidgetPropertyChangeHandler backColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 figure.setBackgroundColor(((OPIColor) newValue).getSWTColor());
-                getViewer().getControl().setBackground(
-                        CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
+                getViewer().getControl()
+                        .setBackground(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
                 return false;
             }
         };
@@ -194,11 +192,10 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             IWidgetPropertyChangeHandler gridColorHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
-                    ((ScalableFreeformRootEditPart) getViewer().getRootEditPart())
-                            .getLayer(LayerConstants.GRID_LAYER).setForegroundColor(CustomMediaFactory.getInstance()
-                                    .getColor(((OPIColor) newValue).getRGBValue()));
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+                    ((ScalableFreeformRootEditPart) getViewer().getRootEditPart()).getLayer(LayerConstants.GRID_LAYER)
+                            .setForegroundColor(
+                                    CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
                     return false;
                 }
             };
@@ -206,8 +203,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
             IWidgetPropertyChangeHandler gridSpaceHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                     getViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING,
                             new Dimension((Integer) newValue, (Integer) newValue));
                     return false;
@@ -217,8 +213,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
             IWidgetPropertyChangeHandler showGridHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                     getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, (Boolean) newValue);
                     getViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, (Boolean) newValue);
                     return false;
@@ -228,10 +223,8 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
             IWidgetPropertyChangeHandler showRulerHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
-                    getViewer().setProperty(
-                            RulerProvider.PROPERTY_RULER_VISIBILITY, (Boolean) newValue);
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+                    getViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY, (Boolean) newValue);
                     return false;
                 }
             };
@@ -239,8 +232,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
             IWidgetPropertyChangeHandler snapGeoHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                     getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, (Boolean) newValue);
                     return false;
                 }
@@ -249,8 +241,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
             IWidgetPropertyChangeHandler showEditRangeHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        IFigure figure) {
+                public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                     figure.repaint();
                     return true;
                 }
@@ -266,13 +257,11 @@ public class DisplayEditpart extends AbstractContainerEditpart {
             @Override
             protected void paintFigure(Graphics graphics) {
                 super.paintFigure(graphics);
-                if (getExecutionMode() == ExecutionMode.EDIT_MODE &&
-                        ((DisplayModel) getModel()).isShowEditRange()) {
+                if (getExecutionMode() == ExecutionMode.EDIT_MODE && ((DisplayModel) getModel()).isShowEditRange()) {
                     graphics.pushState();
                     graphics.setLineStyle(SWT.LINE_DASH);
                     graphics.setForegroundColor(ColorConstants.black);
-                    graphics.drawRectangle(
-                            new Rectangle(new Point(0, 0), getWidgetModel().getSize()));
+                    graphics.drawRectangle(new Rectangle(new Point(0, 0), getWidgetModel().getSize()));
                     graphics.popState();
                 }
             }
@@ -296,15 +285,16 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         } catch (Exception e) {
             // search from connection widgets
             for (ConnectionModel conn : getWidgetModel().getConnectionList()) {
-                if (conn.getName().equals(name))
+                if (conn.getName().equals(name)) {
                     return (EditPart) getViewer().getEditPartRegistry().get(conn);
+                }
             }
             throw e;
         }
     }
 
     private ZoomManager getZoomManager() {
-        RootEditPart editpart = getRoot();
+        var editpart = getRoot();
         if (editpart instanceof ScalableFreeformRootEditPart) {
             return ((ScalableFreeformRootEditPart) editpart).getZoomManager();
         } else if (editpart instanceof ScalableRootEditPart) {

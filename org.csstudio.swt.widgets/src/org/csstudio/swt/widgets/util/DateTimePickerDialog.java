@@ -44,11 +44,11 @@ public class DateTimePickerDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
+        var area = (Composite) super.createDialogArea(parent);
 
         calendarWidget = new CalendarWidget(area, SWT.None);
         if (dateTime != null) {
-            Calendar calendar = Calendar.getInstance();
+            var calendar = Calendar.getInstance();
             calendar.setTime(dateTime);
             calendarWidget.setCalendar(calendar);
         }

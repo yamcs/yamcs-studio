@@ -13,8 +13,6 @@ import org.csstudio.ui.util.AdapterUtil;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class OpenOPIProbeHandler extends AbstractHandler {
@@ -23,26 +21,26 @@ public class OpenOPIProbeHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection selection = HandlerUtil.getActiveMenuSelection(event);
-        ProcessVariable[] pvs = AdapterUtil.convert(selection, ProcessVariable.class);
+        var selection = HandlerUtil.getActiveMenuSelection(event);
+        var pvs = AdapterUtil.convert(selection, ProcessVariable.class);
 
-        IPath probeOPIPath = PreferencesHelper.getProbeOPIPath();
+        var probeOPIPath = PreferencesHelper.getProbeOPIPath();
         if (probeOPIPath == null || probeOPIPath.isEmpty()) {
             probeOPIPath = ResourceUtil.getPathFromString("platform:/plugin/org.csstudio.opibuilder/opi/probe.opi");
         }
 
-        LinkedHashMap<String, String> macros = new LinkedHashMap<>();
+        var macros = new LinkedHashMap<String, String>();
         if (pvs.length > 0) {
             macros.put(MACRO_NAME, pvs[0].getName());
         }
 
-        int i = 0;
+        var i = 0;
         for (ProcessVariable pv : pvs) {
             macros.put(MACRO_NAME + "_" + Integer.toString(i), pv.getName());
             i++;
         }
 
-        MacrosInput macrosInput = new MacrosInput(macros, true);
+        var macrosInput = new MacrosInput(macros, true);
 
         // Errors in here will show in dialog and error log
         RunModeService.openDisplay(probeOPIPath, Optional.of(macrosInput), DisplayMode.NEW_TAB_DETACHED,

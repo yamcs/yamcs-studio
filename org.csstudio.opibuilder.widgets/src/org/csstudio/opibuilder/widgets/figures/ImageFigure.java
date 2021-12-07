@@ -28,7 +28,6 @@ import org.csstudio.swt.widgets.util.TextPainter;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * An image figure.
@@ -133,14 +132,14 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
     // ************************************************************
 
     public void resizeImage() {
-        Rectangle bounds = getBounds().getCopy();
+        var bounds = getBounds().getCopy();
         if (image != null) {
             image.setBounds(bounds);
         }
         repaint();
     }
 
-    public void setAutoSize(final boolean autoSize) {
+    public void setAutoSize(boolean autoSize) {
         if (symbolProperties != null) {
             symbolProperties.setAutoSize(autoSize);
         }
@@ -158,7 +157,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         if (image == null) {
             return null;
         }
-        Dimension dim = image.getAutoSizedDimension();
+        var dim = image.getAutoSizedDimension();
         if (dim == null) {
             return null;
         }
@@ -169,7 +168,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
     // Image crop calculation delegation
     // ************************************************************
 
-    public void setLeftCrop(final int newval) {
+    public void setLeftCrop(int newval) {
         if (symbolProperties != null) {
             symbolProperties.setLeftCrop(newval);
         }
@@ -179,7 +178,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         repaint();
     }
 
-    public void setRightCrop(final int newval) {
+    public void setRightCrop(int newval) {
         if (symbolProperties != null) {
             symbolProperties.setRightCrop(newval);
         }
@@ -189,7 +188,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         repaint();
     }
 
-    public void setBottomCrop(final int newval) {
+    public void setBottomCrop(int newval) {
         if (symbolProperties != null) {
             symbolProperties.setBottomCrop(newval);
         }
@@ -199,7 +198,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         repaint();
     }
 
-    public void setTopCrop(final int newval) {
+    public void setTopCrop(int newval) {
         if (symbolProperties != null) {
             symbolProperties.setTopCrop(newval);
         }
@@ -213,7 +212,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
     // Image flip & degree & stretch calculation delegation
     // ************************************************************
 
-    public void setStretch(final boolean newval) {
+    public void setStretch(boolean newval) {
         if (symbolProperties != null) {
             symbolProperties.setStretch(newval);
         }
@@ -274,7 +273,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         return animationDisabled;
     }
 
-    public void setAnimationDisabled(final boolean stop) {
+    public void setAnimationDisabled(boolean stop) {
         if (animationDisabled == stop) {
             return;
         }
@@ -288,7 +287,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         repaint();
     }
 
-    public void setAlignedToNearestSecond(final boolean aligned) {
+    public void setAlignedToNearestSecond(boolean aligned) {
         if (symbolProperties != null) {
             symbolProperties.setAlignedToNearestSecond(aligned);
         }

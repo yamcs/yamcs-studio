@@ -20,7 +20,6 @@ import org.csstudio.opibuilder.visualparts.BorderStyle;
 import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.editparts.LinkingContainerEditpart;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gef.GraphicalViewer;
 import org.osgi.framework.Version;
 
 /**
@@ -42,17 +41,12 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
      * How should the container behave when the OPI it is wrapping has content of a different size to the widget.
      */
     public enum ResizeBehaviour {
-        SIZE_OPI_TO_CONTAINER,
-        SIZE_CONTAINER_TO_OPI,
-        CROP_OPI,
-        SCROLL_OPI;
+        SIZE_OPI_TO_CONTAINER, SIZE_CONTAINER_TO_OPI, CROP_OPI, SCROLL_OPI;
 
-        public final static String[] stringValues = {
-                "Size *.opi to fit the container",
+        public final static String[] stringValues = { "Size *.opi to fit the container",
                 "Size the container to fit the linked *.opi",
                 "Don't resize anything, crop if *.opi too large for container",
-                "Don't resize anything, add scrollbars if *.opi too large for container",
-        };
+                "Don't resize anything, add scrollbars if *.opi too large for container", };
     }
 
     /**
@@ -105,9 +99,8 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
         addProperty(new BooleanProperty(PROP_AUTO_SIZE, "Auto Size", WidgetPropertyCategory.Display, true));
         setPropertyVisibleAndSavable(PROP_AUTO_SIZE, false, false);
 
-        addProperty(new ComboProperty(PROP_RESIZE_BEHAVIOUR, "Resize Behaviour",
-                WidgetPropertyCategory.Display, ResizeBehaviour.stringValues,
-                ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()));
+        addProperty(new ComboProperty(PROP_RESIZE_BEHAVIOUR, "Resize Behaviour", WidgetPropertyCategory.Display,
+                ResizeBehaviour.stringValues, ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()));
     }
 
     @Override
@@ -162,8 +155,9 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     @Override
     public void scale(double widthRatio, double heightRatio) {
         super.scale(widthRatio, heightRatio);
-        if (!isAutoFit())
+        if (!isAutoFit()) {
             scaleChildren();
+        }
 
     }
 
@@ -187,51 +181,55 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
      */
     @Override
     public void scaleChildren() {
-        if (isAutoFit())
+        if (isAutoFit()) {
             return;
+        }
         // The linking container model doesn't hold its children actually, so it
         // has to ask editpart to get its children.
-        GraphicalViewer viewer = getRootDisplayModel().getViewer();
-        if (viewer == null)
+        var viewer = getRootDisplayModel().getViewer();
+        if (viewer == null) {
             return;
-        LinkingContainerEditpart editpart = (LinkingContainerEditpart) viewer.getEditPartRegistry().get(this);
-        Dimension size = getSize();
-        double newWidthRatio = size.width / (double) getOriginSize().width;
-        double newHeightRatio = size.height / (double) getOriginSize().height;
-        boolean allowScale = true;
+        }
+        var editpart = (LinkingContainerEditpart) viewer.getEditPartRegistry().get(this);
+        var size = getSize();
+        var newWidthRatio = size.width / (double) getOriginSize().width;
+        var newHeightRatio = size.height / (double) getOriginSize().height;
+        var allowScale = true;
         if (getDisplayModel() != null) {
             allowScale = getDisplayModel().getDisplayScaleData().isAutoScaleWidgets();
             if (allowScale) {
-                int minWidth = getDisplayModel().getDisplayScaleData()
-                        .getMinimumWidth();
+                var minWidth = getDisplayModel().getDisplayScaleData().getMinimumWidth();
 
                 if (minWidth < 0) {
                     minWidth = getDisplayModel().getWidth();
                 }
-                int minHeight = getDisplayModel().getDisplayScaleData()
-                        .getMinimumHeight();
+                var minHeight = getDisplayModel().getDisplayScaleData().getMinimumHeight();
                 if (minHeight < 0) {
                     minHeight = getDisplayModel().getHeight();
                 }
-                if (getWidth() * newWidthRatio < minWidth)
+                if (getWidth() * newWidthRatio < minWidth) {
                     newWidthRatio = minWidth / (double) getOriginSize().width;
-                if (getHeight() * newHeightRatio < minHeight)
-                    newHeightRatio = minHeight
-                            / (double) getOriginSize().height;
+                }
+                if (getHeight() * newHeightRatio < minHeight) {
+                    newHeightRatio = minHeight / (double) getOriginSize().height;
+                }
             }
 
         }
-        if (allowScale)
-            for (Object child : editpart.getChildren())
+        if (allowScale) {
+            for (Object child : editpart.getChildren()) {
                 ((AbstractBaseEditPart) child).getWidgetModel().scale(newWidthRatio, newHeightRatio);
+            }
+        }
     }
 
     @Override
     public Dimension getOriginSize() {
-        if (childrenGeoSize == null)
+        if (childrenGeoSize == null) {
             return super.getOriginSize();
-        else
+        } else {
             return childrenGeoSize;
+        }
     }
 
     public void setChildrenGeoSize(Dimension childrenGeoSize) {

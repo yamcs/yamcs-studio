@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.yamcs.protobuf.Yamcs.Event;
 
 public class EventLogSearchBoxFilter extends ViewerFilter {
 
@@ -17,7 +16,7 @@ public class EventLogSearchBoxFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof EventLogItem) {
-            Event event = ((EventLogItem) element).event;
+            var event = ((EventLogItem) element).event;
             if (pattern.matcher(event.getMessage()).matches()
                     || (event.hasType() && pattern.matcher(event.getType()).matches())
                     || (event.hasSource() && pattern.matcher(event.getSource()).matches())) {

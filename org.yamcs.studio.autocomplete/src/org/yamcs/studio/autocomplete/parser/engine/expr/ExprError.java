@@ -36,6 +36,7 @@ public class ExprError extends Expr {
         return message;
     }
 
+    @Override
     public String toString() {
         return "#" + message;
     }

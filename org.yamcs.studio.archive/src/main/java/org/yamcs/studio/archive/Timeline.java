@@ -218,16 +218,12 @@ public class Timeline extends Composite {
     }
 
     public List<Histogram> getHistograms() {
-        return drawables.stream()
-                .filter(drawable -> (drawable instanceof Histogram))
-                .map(drawable -> (Histogram) drawable)
-                .collect(Collectors.toList());
+        return drawables.stream().filter(drawable -> (drawable instanceof Histogram))
+                .map(drawable -> (Histogram) drawable).collect(Collectors.toList());
     }
 
     public List<Histogram> getHistograms(HistogramKind kind) {
-        return getHistograms().stream()
-                .filter(histogram -> histogram.getKind() == kind)
-                .collect(Collectors.toList());
+        return getHistograms().stream().filter(histogram -> histogram.getKind() == kind).collect(Collectors.toList());
     }
 
     private void drawSelection(GC gc) {

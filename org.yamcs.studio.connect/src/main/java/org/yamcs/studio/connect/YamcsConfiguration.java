@@ -10,8 +10,7 @@ import java.util.UUID;
 public class YamcsConfiguration {
 
     public enum AuthType {
-        STANDARD,
-        KERBEROS;
+        STANDARD, KERBEROS;
     }
 
     // Used for linking a password from secure storage
@@ -138,7 +137,7 @@ public class YamcsConfiguration {
         // Temp to avoid migration issues with
         // Different clients making use of same connection settings
         try {
-            URI uri = new URI(url);
+            var uri = new URI(url);
             primaryHost = uri.getHost();
             primaryPort = uri.getPort();
             ssl = "https".equals(uri.getScheme());

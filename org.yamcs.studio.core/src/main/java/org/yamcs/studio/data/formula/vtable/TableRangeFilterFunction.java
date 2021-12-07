@@ -68,17 +68,17 @@ class TableRangeFilterFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VTable table = (VTable) args.get(0);
-        VString columnName = (VString) args.get(1);
-        VType min = (VType) args.get(2);
-        VType max = (VType) args.get(3);
+    public Object calculate(List<Object> args) {
+        var table = (VTable) args.get(0);
+        var columnName = (VString) args.get(1);
+        var min = (VType) args.get(2);
+        var max = (VType) args.get(3);
 
         if (columnName == null || columnName.getValue() == null || table == null || min == null || max == null) {
             return null;
         }
 
-        VTable result = VTableFactory.tableRangeFilter(table, columnName.getValue(), min, max);
+        var result = VTableFactory.tableRangeFilter(table, columnName.getValue(), min, max);
 
         return result;
     }

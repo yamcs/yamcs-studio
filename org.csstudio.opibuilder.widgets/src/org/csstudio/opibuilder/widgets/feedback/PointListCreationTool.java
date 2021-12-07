@@ -16,7 +16,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -67,7 +66,7 @@ public final class PointListCreationTool extends TargetingTool {
     }
 
     @Override
-    protected void applyProperty(final Object key, final Object value) {
+    protected void applyProperty(Object key, Object value) {
         if (PROPERTY_CREATION_FACTORY.equals(key)) {
             if (value instanceof CreationFactory) {
                 setFactory((CreationFactory) value);
@@ -80,7 +79,7 @@ public final class PointListCreationTool extends TargetingTool {
     @Override
     protected Request createTargetRequest() {
         _points = new PointList();
-        CreateRequest request = new CreateRequest();
+        var request = new CreateRequest();
         request.setFactory(getFactory());
         return request;
     }
@@ -133,8 +132,7 @@ public final class PointListCreationTool extends TargetingTool {
         _points.removePoint(_points.size() - 1);
 
         // perform creation of the material
-        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS,
-                STATE_TERMINAL)) {
+        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS, STATE_TERMINAL)) {
             eraseTargetFeedback();
             unlockTargetEditPart();
             performCreation(button);
@@ -148,7 +146,7 @@ public final class PointListCreationTool extends TargetingTool {
     }
 
     @Override
-    protected boolean handleButtonDown(final int button) {
+    protected boolean handleButtonDown(int button) {
         if (getTargetEditPart() != null) {
             _snap2Helper = getTargetEditPart().getAdapter(SnapToHelper.class);
         }
@@ -180,18 +178,18 @@ public final class PointListCreationTool extends TargetingTool {
         if (commonEditParts == null) {
             // This is the first point. Register all ancestors to the list.
             commonEditParts = new ArrayList<EditPart>();
-            EditPart ep = getTargetEditPart();
+            var ep = getTargetEditPart();
             while (ep != null) {
                 commonEditParts.add(ep);
                 ep = ep.getParent();
             }
         } else {
             // Remove all EditParts which the added point does not belong to.
-            int index = commonEditParts.indexOf(getTargetEditPart());
+            var index = commonEditParts.indexOf(getTargetEditPart());
             if (index == -1) {
                 commonEditParts.clear();
             } else {
-                for (int i = 0; i < index; i++) {
+                for (var i = 0; i < index; i++) {
                     commonEditParts.remove(i);
                 }
             }
@@ -203,7 +201,7 @@ public final class PointListCreationTool extends TargetingTool {
     }
 
     @Override
-    protected boolean handleButtonUp(final int button) {
+    protected boolean handleButtonUp(int button) {
         return true;
     }
 
@@ -246,7 +244,7 @@ public final class PointListCreationTool extends TargetingTool {
         if (getState() != STATE_TERMINAL && getState() != STATE_INVALID) {
             if (_points.size() > 0) {
                 // snap
-                PrecisionPoint location = getSnapedLocation();
+                var location = getSnapedLocation();
 
                 // update the last point in the list to update the graphical
                 // feedback
@@ -268,14 +266,12 @@ public final class PointListCreationTool extends TargetingTool {
      * @return the point of the snapped location
      */
     private PrecisionPoint getSnapedLocation() {
-        CreateRequest req = getCreateRequest();
-        PrecisionPoint location = new PrecisionPoint(getLocation().x,
-                getLocation().y);
+        var req = getCreateRequest();
+        var location = new PrecisionPoint(getLocation().x, getLocation().y);
 
         if (_snap2Helper != null) {
             _snap2Helper.snapPoint(req, PositionConstants.NORTH_WEST,
-                    new PrecisionPoint(getLocation().x, getLocation().y),
-                    location);
+                    new PrecisionPoint(getLocation().x, getLocation().y), location);
         }
         return location;
     }
@@ -288,8 +284,8 @@ public final class PointListCreationTool extends TargetingTool {
      * @param button
      *            the button that was pressed
      */
-    protected void performCreation(final int button) {
-        EditPartViewer viewer = getCurrentViewer();
+    protected void performCreation(int button) {
+        var viewer = getCurrentViewer();
         executeCurrentCommand();
         selectAddedObject(viewer);
     }
@@ -300,17 +296,18 @@ public final class PointListCreationTool extends TargetingTool {
      * @param viewer
      *            the EditPartViewer
      */
-    private void selectAddedObject(final EditPartViewer viewer) {
-        final Object model = getCreateRequest().getNewObject();
+    private void selectAddedObject(EditPartViewer viewer) {
+        var model = getCreateRequest().getNewObject();
         if (model == null || viewer == null) {
             return;
         }
-        Object editpart = viewer.getEditPartRegistry().get(model);
+        var editpart = viewer.getEditPartRegistry().get(model);
         if (editpart instanceof EditPart) {
             // Force the new object to get positioned in the viewer.
             viewer.flush();
-            if (((EditPart) editpart).isSelectable())
+            if (((EditPart) editpart).isSelectable()) {
                 viewer.select((EditPart) editpart);
+            }
         }
     }
 
@@ -320,29 +317,27 @@ public final class PointListCreationTool extends TargetingTool {
      * @param factory
      *            the factory
      */
-    public void setFactory(final CreationFactory factory) {
+    public void setFactory(CreationFactory factory) {
         _factory = factory;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void updateTargetRequest() {
-        CreateRequest req = getCreateRequest();
+        var req = getCreateRequest();
 
         if (isInState(STATE_DRAG_IN_PROGRESS)) {
             // use the rectangle, which is defined by the point lists as new
             // bounds
-            Rectangle bounds = _points.getBounds();
+            var bounds = _points.getBounds();
             req.setSize(bounds.getSize());
             req.setLocation(bounds.getLocation());
-            req.getExtendedData().put(AbstractPolyFeedbackFactory.PROP_POINTS,
-                    _points);
+            req.getExtendedData().put(AbstractPolyFeedbackFactory.PROP_POINTS, _points);
             // req.getExtendedData().clear();
             if (!getCurrentInput().isAltKeyDown() && _snap2Helper != null) {
-                PrecisionRectangle baseRect = new PrecisionRectangle(bounds);
-                PrecisionRectangle result = baseRect.getPreciseCopy();
-                _snap2Helper.snapRectangle(req, PositionConstants.NSEW,
-                        baseRect, result);
+                var baseRect = new PrecisionRectangle(bounds);
+                var result = baseRect.getPreciseCopy();
+                _snap2Helper.snapRectangle(req, PositionConstants.NSEW, baseRect, result);
                 req.setLocation(result.getLocation());
                 req.setSize(result.getSize());
             }
@@ -355,14 +350,17 @@ public final class PointListCreationTool extends TargetingTool {
     @Override
     protected EditPartViewer.Conditional getTargetingConditional() {
         return new EditPartViewer.Conditional() {
+            @Override
             public boolean evaluate(EditPart editpart) {
-                EditPart targetEditPart = editpart.getTargetEditPart(getTargetRequest());
-                if (targetEditPart == null)
+                var targetEditPart = editpart.getTargetEditPart(getTargetRequest());
+                if (targetEditPart == null) {
                     return false;
+                }
 
                 // If there is no point, the EditPart under the mouse is the target.
-                if (commonEditParts == null)
+                if (commonEditParts == null) {
                     return true;
+                }
 
                 // If the EditPart under the mouse is not listed in the list of EditPart,
                 // it cannot be the target.

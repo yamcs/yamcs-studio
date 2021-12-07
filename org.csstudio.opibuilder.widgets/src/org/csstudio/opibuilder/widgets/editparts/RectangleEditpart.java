@@ -26,8 +26,8 @@ public class RectangleEditpart extends AbstractShapeEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        OPIRectangleFigure figure = new OPIRectangleFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
-        RectangleModel model = getWidgetModel();
+        var figure = new OPIRectangleFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
+        var model = getWidgetModel();
         figure.setFill(model.getFillLevel());
         figure.setHorizontalFill(model.isHorizontalFill());
         figure.setTransparent(model.isTransparent());
@@ -50,10 +50,9 @@ public class RectangleEditpart extends AbstractShapeEditPart {
         super.registerPropertyChangeHandlers();
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                OPIRectangleFigure figure = (OPIRectangleFigure) refreshableFigure;
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (OPIRectangleFigure) refreshableFigure;
                 figure.setFill((Double) newValue);
                 return true;
             }
@@ -63,10 +62,8 @@ public class RectangleEditpart extends AbstractShapeEditPart {
         // fill orientaion
         IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                OPIRectangleFigure figure = (OPIRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (OPIRectangleFigure) refreshableFigure;
                 figure.setHorizontalFill((Boolean) newValue);
                 return true;
             }
@@ -76,10 +73,8 @@ public class RectangleEditpart extends AbstractShapeEditPart {
         // transparent
         IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                OPIRectangleFigure figure = (OPIRectangleFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (OPIRectangleFigure) refreshableFigure;
                 figure.setTransparent((Boolean) newValue);
                 return true;
             }
@@ -89,16 +84,12 @@ public class RectangleEditpart extends AbstractShapeEditPart {
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ((OPIRectangleFigure) refreshableFigure).setLineColor(
-                        ((OPIColor) newValue).getSWTColor());
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                ((OPIRectangleFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
-                lineColorHandler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
 
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
 
@@ -136,8 +127,9 @@ public class RectangleEditpart extends AbstractShapeEditPart {
     public void setValue(Object value) {
         if (value instanceof Number) {
             ((OPIRectangleFigure) getFigure()).setFill(((Number) value).doubleValue());
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override
@@ -152,9 +144,9 @@ public class RectangleEditpart extends AbstractShapeEditPart {
      * @return whether the rectangle is selectable
      */
     private boolean determineSelectable() {
-        boolean hasActions = !getWidgetModel().getActionsInput().getActionsList().isEmpty();
-        boolean hasTooltip = getWidgetModel().getTooltip().trim().length() > 0;
-        boolean opaque = !getWidgetModel().isTransparent();
+        var hasActions = !getWidgetModel().getActionsInput().getActionsList().isEmpty();
+        var hasTooltip = getWidgetModel().getTooltip().trim().length() > 0;
+        var opaque = !getWidgetModel().isTransparent();
         return hasActions || hasTooltip || opaque;
     }
 

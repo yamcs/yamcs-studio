@@ -30,9 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.yamcs.studio.data.formula.FormulaFunction;
-import org.yamcs.studio.data.formula.Statistics;
 import org.yamcs.studio.data.formula.StatisticsUtil;
-import org.yamcs.studio.data.vtype.Display;
 import org.yamcs.studio.data.vtype.ListDouble;
 import org.yamcs.studio.data.vtype.NumberFormats;
 import org.yamcs.studio.data.vtype.VNumber;
@@ -73,11 +71,11 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         ListDouble data = new ListDouble() {
             @Override
             public double getDouble(int index) {
-                VNumber number = (VNumber) args.get(index);
+                var number = (VNumber) args.get(index);
                 if (number == null || number.getValue() == null) {
                     return Double.NaN;
                 } else {
@@ -98,24 +96,21 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
             }
         }
 
-        Display display = displayNone();
+        var display = displayNone();
         if (firstNonNull != null) {
             if (ValueUtil.displayHasValidDisplayLimits(firstNonNull)) {
                 display = firstNonNull;
             } else {
-                Statistics stats = StatisticsUtil.statisticsOf(data);
+                var stats = StatisticsUtil.statisticsOf(data);
                 display = newDisplay(stats.getRange().getMinimum(), stats.getRange().getMinimum(),
-                        stats.getRange().getMinimum(),
-                        "", NumberFormats.toStringFormat(), stats.getRange().getMaximum(),
-                        stats.getRange().getMaximum(), stats.getRange().getMaximum(),
+                        stats.getRange().getMinimum(), "", NumberFormats.toStringFormat(),
+                        stats.getRange().getMaximum(), stats.getRange().getMaximum(), stats.getRange().getMaximum(),
                         stats.getRange().getMinimum(), stats.getRange().getMaximum());
             }
 
         }
 
-        return ValueFactory.newVNumberArray(data,
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
+        return ValueFactory.newVNumberArray(data, highestSeverityOf(args, false), latestValidTimeOrNowOf(args),
                 display);
     }
 }

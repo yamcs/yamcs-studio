@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.ui;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.UserInfo;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.RCPUtils;
@@ -49,15 +48,15 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         Display.getDefault().asyncExec(() -> {
             setErrorText(null, null);
             setImage(null);
-            UserInfo user = YamcsPlugin.getUser();
-            String host = YamcsPlugin.getYamcsClient().getHost();
+            var user = YamcsPlugin.getUser();
+            var host = YamcsPlugin.getYamcsClient().getHost();
             setText(user.getName() + "@" + host);
         });
     }
 
     @Override
     public void onYamcsDisconnected() {
-        Display display = Display.getDefault();
+        var display = Display.getDefault();
         if (display.isDisposed()) {
             return;
         }

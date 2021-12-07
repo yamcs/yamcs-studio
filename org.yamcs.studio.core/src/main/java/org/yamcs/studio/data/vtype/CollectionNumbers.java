@@ -156,9 +156,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static float[] floatArrayCopyOf(CollectionNumber coll) {
-        float[] data = new float[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new float[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextFloat();
             index++;
@@ -174,9 +174,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static double[] doubleArrayCopyOf(CollectionNumber coll) {
-        double[] data = new double[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new double[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextDouble();
             index++;
@@ -192,9 +192,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static byte[] byteArrayCopyOf(CollectionNumber coll) {
-        byte[] data = new byte[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new byte[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextByte();
             index++;
@@ -210,9 +210,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static short[] shortArrayCopyOf(CollectionNumber coll) {
-        short[] data = new short[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new short[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextShort();
             index++;
@@ -228,9 +228,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static int[] intArrayCopyOf(CollectionNumber coll) {
-        int[] data = new int[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new int[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextInt();
             index++;
@@ -246,9 +246,9 @@ public class CollectionNumbers {
      * @return the array
      */
     public static long[] longArrayCopyOf(CollectionNumber coll) {
-        long[] data = new long[coll.size()];
-        IteratorNumber iter = coll.iterator();
-        int index = 0;
+        var data = new long[coll.size()];
+        var iter = coll.iterator();
+        var index = 0;
         while (iter.hasNext()) {
             data[index] = iter.nextLong();
             index++;
@@ -265,7 +265,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static float[] floatArrayWrappedOrCopy(CollectionNumber coll) {
-        float[] array = wrappedFloatArray(coll);
+        var array = wrappedFloatArray(coll);
         if (array != null) {
             return array;
         }
@@ -281,7 +281,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static double[] doubleArrayWrappedOrCopy(CollectionNumber coll) {
-        double[] array = wrappedDoubleArray(coll);
+        var array = wrappedDoubleArray(coll);
         if (array != null) {
             return array;
         }
@@ -297,7 +297,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static byte[] byteArrayWrappedOrCopy(CollectionNumber coll) {
-        byte[] array = wrappedByteArray(coll);
+        var array = wrappedByteArray(coll);
         if (array != null) {
             return array;
         }
@@ -313,7 +313,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static short[] shortArrayWrappedOrCopy(CollectionNumber coll) {
-        short[] array = wrappedShortArray(coll);
+        var array = wrappedShortArray(coll);
         if (array != null) {
             return array;
         }
@@ -329,7 +329,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static int[] intArrayWrappedOrCopy(CollectionNumber coll) {
-        int[] array = wrappedIntArray(coll);
+        var array = wrappedIntArray(coll);
         if (array != null) {
             return array;
         }
@@ -345,7 +345,7 @@ public class CollectionNumbers {
      * @return the array
      */
     public static long[] longArrayWrappedOrCopy(CollectionNumber coll) {
-        long[] array = wrappedLongArray(coll);
+        var array = wrappedLongArray(coll);
         if (array != null) {
             return array;
         }

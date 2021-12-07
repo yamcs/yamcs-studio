@@ -32,8 +32,7 @@ public class ComboProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public ComboProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String[] labelsArray,
+    public ComboProperty(String prop_id, String description, WidgetPropertyCategory category, String[] labelsArray,
             int defaultValue) {
         super(prop_id, description, category, Integer.valueOf(defaultValue));
         this.labelsArray = labelsArray;
@@ -42,8 +41,9 @@ public class ComboProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         Integer acceptedValue = null;
 
         // check type
@@ -71,8 +71,7 @@ public class ComboProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        return new ComboBoxPropertyDescriptor(
-                prop_id, description, labelsArray);
+        return new ComboBoxPropertyDescriptor(prop_id, description, labelsArray);
     }
 
     @Override

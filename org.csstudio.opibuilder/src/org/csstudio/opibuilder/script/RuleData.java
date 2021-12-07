@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.script;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -75,7 +74,7 @@ public class RuleData implements IAdaptable {
      * @param name
      *            the name to set
      */
-    public final void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -90,7 +89,7 @@ public class RuleData implements IAdaptable {
      * @param propId
      *            the propId to set
      */
-    public final void setPropId(String propId) {
+    public void setPropId(String propId) {
         this.propId = propId;
     }
 
@@ -107,8 +106,9 @@ public class RuleData implements IAdaptable {
     }
 
     public void addExpression(Expression exp) {
-        if (!expressionList.contains(exp))
+        if (!expressionList.contains(exp)) {
             expressionList.add(exp);
+        }
     }
 
     public void removeExpression(Expression exp) {
@@ -140,48 +140,59 @@ public class RuleData implements IAdaptable {
      * @return the script string
      */
     public String generateScript() {
-        if (expressionList.size() <= 0)
+        if (expressionList.size() <= 0) {
             return "";
-        StringBuilder sb = new StringBuilder(
-                "importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n");
+        }
+        var sb = new StringBuilder("importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n");
 
-        AbstractWidgetProperty property = widgetModel.getProperty(propId);
+        var property = widgetModel.getProperty(propId);
         boolean needDbl = false, needInt = false, needStr = false, needSev = false;
         for (Expression exp : expressionList) {
-            if (!needDbl)
-                needDbl = containRegex(exp.getBooleanExpression(), "pv\\d") ||
-                        (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d"));
+            if (!needDbl) {
+                needDbl = containRegex(exp.getBooleanExpression(), "pv\\d")
+                        || (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d"));
+            }
             if (!needInt) {
-                if (exp.getBooleanExpression().contains("pvInt"))
+                if (exp.getBooleanExpression().contains("pvInt")) {
                     needInt = true;
-                if (outputExpValue && exp.getValue().toString().contains("pvInt"))
+                }
+                if (outputExpValue && exp.getValue().toString().contains("pvInt")) {
                     needInt = true;
+                }
             }
             if (!needStr) {
-                if (exp.getBooleanExpression().contains("pvStr"))
+                if (exp.getBooleanExpression().contains("pvStr")) {
                     needStr = true;
-                if (outputExpValue && exp.getValue().toString().contains("pvStr"))
+                }
+                if (outputExpValue && exp.getValue().toString().contains("pvStr")) {
                     needStr = true;
+                }
             }
             if (!needSev) {
-                if (exp.getBooleanExpression().contains("pvSev"))
+                if (exp.getBooleanExpression().contains("pvSev")) {
                     needSev = true;
-                if (outputExpValue && exp.getValue().toString().contains("pvSev"))
+                }
+                if (outputExpValue && exp.getValue().toString().contains("pvSev")) {
                     needSev = true;
+                }
             }
 
         }
-        for (int i = 0; i < pvList.size(); i++) {
-            if (needDbl)
+        for (var i = 0; i < pvList.size(); i++) {
+            if (needDbl) {
                 sb.append("var pv" + i + " = PVUtil." + "getDouble(pvs[" + i + "]);\n");
-            if (needInt)
+            }
+            if (needInt) {
                 sb.append("var pvInt" + i + " = PVUtil." + "getLong(pvs[" + i + "]);\n");
-            if (needStr)
+            }
+            if (needStr) {
                 sb.append("var pvStr" + i + " = PVUtil." + "getString(pvs[" + i + "]);\n");
-            if (needSev)
+            }
+            if (needSev) {
                 sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");
+            }
         }
-        int i = 0;
+        var i = 0;
         for (Expression exp : expressionList) {
             sb.append(i == 0 ? "if(" : "else if(");
             sb.append(expressionList.get(i++).getBooleanExpression());
@@ -189,18 +200,17 @@ public class RuleData implements IAdaptable {
 
             sb.append("\twidget.setPropertyValue(\"" + propId + "\",");
 
-            String propValue = generatePropValueString(property, exp);
+            var propValue = generatePropValueString(property, exp);
             sb.append(propValue + ");\n");
         }
         sb.append("else\n");
-        sb.append("\twidget.setPropertyValue(\"" + propId + "\"," +
-                generatePropValueString(property, null) + ");\n");
+        sb.append("\twidget.setPropertyValue(\"" + propId + "\"," + generatePropValueString(property, null) + ");\n");
 
         return sb.toString();
     }
 
     public RuleData getCopy() {
-        RuleData result = new RuleData(widgetModel);
+        var result = new RuleData(widgetModel);
         result.setName(name);
         result.setOutputExpValue(outputExpValue);
         result.setPropId(propId);
@@ -219,21 +229,22 @@ public class RuleData implements IAdaptable {
      * @param propValue
      * @return
      */
-    private String generatePropValueString(AbstractWidgetProperty property,
-            Expression exp) {
+    private String generatePropValueString(AbstractWidgetProperty property, Expression exp) {
         Object value;
         String propValue;
         if (exp != null && outputExpValue) {
             propValue = exp.getValue().toString();
             return propValue;
         } else {
-            if (exp != null)
+            if (exp != null) {
                 value = exp.getValue();
-            else
+            } else {
                 value = property.getPropertyValue();
+            }
 
-            if (value == null)
+            if (value == null) {
                 return "null";
+            }
 
             propValue = property.toStringInRuleScript(value);
         }
@@ -252,7 +263,7 @@ public class RuleData implements IAdaptable {
      * @return
      */
     public RuleScriptData convertToScriptData() {
-        RuleScriptData ruleScriptData = new RuleScriptData(this);
+        var ruleScriptData = new RuleScriptData(this);
         ruleScriptData.setPVList(pvList);
         ruleScriptData.setScriptString(generateScript());
         return ruleScriptData;
@@ -260,7 +271,7 @@ public class RuleData implements IAdaptable {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -275,8 +286,8 @@ public class RuleData implements IAdaptable {
 
                 @Override
                 public ImageDescriptor getImageDescriptor(Object object) {
-                    return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, "icons/js.gif");
+                    return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            "icons/js.gif");
                 }
 
                 @Override
@@ -284,6 +295,7 @@ public class RuleData implements IAdaptable {
                     return new Object[0];
                 }
             });
+        }
 
         return null;
     }
@@ -301,9 +313,9 @@ public class RuleData implements IAdaptable {
      *            the regular expression.
      * @return true if the source string contains the input regex. false other wise.
      */
-    private static boolean containRegex(final String source, final String regex) {
-        final Pattern p = Pattern.compile(regex);
-        final Matcher m = p.matcher(source);
+    private static boolean containRegex(String source, String regex) {
+        var p = Pattern.compile(regex);
+        var m = p.matcher(source);
         return m.find();
     }
 }

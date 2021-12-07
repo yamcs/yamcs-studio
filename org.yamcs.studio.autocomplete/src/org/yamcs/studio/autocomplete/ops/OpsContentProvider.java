@@ -1,6 +1,5 @@
 package org.yamcs.studio.autocomplete.ops;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.protobuf.Mdb.ParameterInfo;
@@ -12,7 +11,6 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 import org.yamcs.studio.autocomplete.parser.ContentType;
 import org.yamcs.studio.autocomplete.proposals.Proposal;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
-import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -32,26 +30,26 @@ public class OpsContentProvider implements IAutoCompleteProvider {
 
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
-        String content = desc.getValue();
+        var content = desc.getValue();
         if (content.startsWith(OpsContentParser.OPS_SOURCE)) {
             content = content.substring(OpsContentParser.OPS_SOURCE.length());
         }
 
         content = AutoCompleteHelper.trimWildcards(content);
-        Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
+        var namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
 
-        AutoCompleteResult pvs = new AutoCompleteResult();
-        int matchCount = 0;
-        MissionDatabase mdb = YamcsPlugin.getMissionDatabase();
+        var pvs = new AutoCompleteResult();
+        var matchCount = 0;
+        var mdb = YamcsPlugin.getMissionDatabase();
         if (mdb != null) {
             for (ParameterInfo para : mdb.getParameters()) {
-                String opsname = findOpsname(para);
+                var opsname = findOpsname(para);
                 if (opsname != null) {
-                    String proposalValue = OpsContentParser.OPS_SOURCE + opsname;
-                    Matcher m = namePattern.matcher(proposalValue);
+                    var proposalValue = OpsContentParser.OPS_SOURCE + opsname;
+                    var m = namePattern.matcher(proposalValue);
                     if (m.find()) {
-                        Proposal p = new Proposal(proposalValue, false);
+                        var p = new Proposal(proposalValue, false);
                         p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                         pvs.addProposal(p);
                         matchCount++;

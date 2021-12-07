@@ -28,7 +28,7 @@ public class DeleteRowAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        TableEditPart tableEditPart = getSelectedWidget();
+        var tableEditPart = getSelectedWidget();
         tableEditPart.getTable().deleteRow(tableEditPart.getMenuTriggeredCell().x);
     }
 
@@ -42,8 +42,9 @@ public class DeleteRowAction implements IObjectActionDelegate {
     private TableEditPart getSelectedWidget() {
         if (selection.getFirstElement() instanceof TableEditPart) {
             return (TableEditPart) selection.getFirstElement();
-        } else
+        } else {
             return null;
+        }
     }
 
     @Override

@@ -13,7 +13,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -24,13 +23,13 @@ public class PlaceHolderView extends ViewPart {
     public static final String ID = "org.csstudio.opibuilder.placeHolder";
 
     @Override
-    public void createPartControl(final Composite parent) {
-        final IViewSite site = getViewSite();
+    public void createPartControl(Composite parent) {
+        var site = getViewSite();
         parent.setLayout(new FillLayout());
 
-        final Text text = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
-        text.setText("Placeholder for displays that should appear in this location.\n" +
-                "Close after all displays have been arranged.");
+        var text = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+        text.setText("Placeholder for displays that should appear in this location.\n"
+                + "Close after all displays have been arranged.");
         setPartName(site.getSecondaryId());
     }
 

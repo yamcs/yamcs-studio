@@ -32,8 +32,8 @@ public class UnchangableStringProperty extends StringProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public UnchangableStringProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue) {
+    public UnchangableStringProperty(String prop_id, String description, WidgetPropertyCategory category,
+            String defaultValue) {
         super(prop_id, description, category, defaultValue);
     }
 

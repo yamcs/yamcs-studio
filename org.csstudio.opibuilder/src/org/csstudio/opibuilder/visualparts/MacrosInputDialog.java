@@ -55,16 +55,15 @@ public class MacrosInputDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite container = (Composite) super.createDialogArea(parent);
+        var container = (Composite) super.createDialogArea(parent);
         // Table editor should stretch to fill the dialog space, but
         // at least on OS X, it has some minimum size below which it
         // doesn't properly shrink.
-        tableEditor = new StringTableEditor(
-                container, new String[] { "Name", "Value" }, new boolean[] { true, true },
+        tableEditor = new StringTableEditor(container, new String[] { "Name", "Value" }, new boolean[] { true, true },
                 contents, new MacroEditDialog(getShell()), new int[] { 150, 150 });
         tableEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        final Button checkBox = new Button(container, SWT.CHECK);
+        var checkBox = new Button(container, SWT.CHECK);
         checkBox.setSelection(includeParentMacros);
         checkBox.setText("Include macros from parent.");
         checkBox.setLayoutData(new GridData(SWT.FILL, 0, true, false));
@@ -78,7 +77,7 @@ public class MacrosInputDialog extends Dialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
@@ -86,7 +85,7 @@ public class MacrosInputDialog extends Dialog {
     }
 
     public MacrosInput getResult() {
-        LinkedHashMap<String, String> macrosMap = new LinkedHashMap<String, String>();
+        var macrosMap = new LinkedHashMap<String, String>();
         for (String[] row : contents) {
             macrosMap.put(row[0], row[1]);
         }

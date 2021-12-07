@@ -19,7 +19,7 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
 
     @Override
     public void run() {
-        String path = promptForWorkspace();
+        var path = promptForWorkspace();
         if (path == null) {
             return;
         }
@@ -29,14 +29,14 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
     }
 
     private void restart(String path) {
-        String commandline = buildCommandLine(path);
+        var commandline = buildCommandLine(path);
         System.setProperty("eclipse.exitcode", IApplication.EXIT_RELAUNCH.toString());
         System.setProperty("eclipse.exitdata", commandline);
         window.getWorkbench().restart();
     }
 
     private String promptForWorkspace() {
-        SelectWorkspaceDialog dialog = new SelectWorkspaceDialog();
+        var dialog = new SelectWorkspaceDialog();
         if (dialog.open() == SelectWorkspaceDialog.OK) {
             return dialog.getSelectedWorkspace();
         } else {
@@ -53,21 +53,20 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
      * @return New command line or <code>null</code> on error
      */
     private String buildCommandLine(String workspace) {
-        String property = System.getProperty("eclipse.vm");
+        var property = System.getProperty("eclipse.vm");
         if (property == null) {
-            MessageDialog.openError(null,
-                    "Error",
+            MessageDialog.openError(null, "Error",
                     "Cannot determine virtual machine, need 'eclipse.vm ...' command-line argument\n"
                             + "Workspace switch does not work when started from within IDE!");
             return null;
         }
 
-        final StringBuffer buf = new StringBuffer(512);
+        var buf = new StringBuffer(512);
         buf.append(property);
         buf.append("\n");
 
         // append the vmargs and commands. Assume that these already end in \n
-        final String vmargs = System.getProperty("eclipse.vmargs");
+        var vmargs = System.getProperty("eclipse.vmargs");
         if (vmargs != null) {
             buf.append(vmargs);
         }
@@ -81,13 +80,12 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
             buf.append("\n");
         } else {
             // find the index of the arg to replace its value
-            int cmd_data_pos = property.lastIndexOf("-data");
+            var cmd_data_pos = property.lastIndexOf("-data");
             if (cmd_data_pos != -1) {
                 cmd_data_pos += "-data".length() + 1;
                 buf.append(property.substring(0, cmd_data_pos));
                 buf.append(workspace);
-                buf.append(property.substring(property.indexOf('\n',
-                        cmd_data_pos)));
+                buf.append(property.substring(property.indexOf('\n', cmd_data_pos)));
             } else {
                 buf.append("-data");
                 buf.append("\n");

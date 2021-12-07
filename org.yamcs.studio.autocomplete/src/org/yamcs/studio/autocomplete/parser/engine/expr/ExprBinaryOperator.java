@@ -22,45 +22,57 @@ public class ExprBinaryOperator extends Expr implements IBinaryOperator {
         this.rhs = rhs;
     }
 
+    @Override
     public Expr getLHS() {
         return lhs;
     }
 
+    @Override
     public void setLHS(Expr lhs) {
         this.lhs = lhs;
     }
 
+    @Override
     public Expr getRHS() {
         return rhs;
     }
 
+    @Override
     public void setRHS(Expr rhs) {
         this.rhs = rhs;
     }
 
+    @Override
     public void validate() throws ExprException {
-        if (lhs == null)
+        if (lhs == null) {
             throw new ExprException("LHS of operator missing");
+        }
         lhs.validate();
-        if (rhs == null)
+        if (rhs == null) {
             throw new ExprException("RHS of operator missing");
+        }
         rhs.validate();
     }
 
+    @Override
     public int hashCode() {
-        int hc = type.ordinal();
-        if (lhs != null)
+        var hc = type.ordinal();
+        if (lhs != null) {
             hc ^= lhs.hashCode();
-        if (rhs != null)
+        }
+        if (rhs != null) {
             hc ^= rhs.hashCode();
+        }
         return hc;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!obj.getClass().equals(getClass()))
+        if (!obj.getClass().equals(getClass())) {
             return false;
+        }
 
-        ExprBinaryOperator b = (ExprBinaryOperator) obj;
+        var b = (ExprBinaryOperator) obj;
         return Reflect.equals(b.lhs, lhs) && Reflect.equals(b.rhs, rhs);
     }
 }

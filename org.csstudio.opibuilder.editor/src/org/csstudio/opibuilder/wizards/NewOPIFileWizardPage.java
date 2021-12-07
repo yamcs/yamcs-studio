@@ -31,9 +31,9 @@ public class NewOPIFileWizardPage extends WizardNewFileCreationPage {
 
     @Override
     protected InputStream getInitialContents() {
-        DisplayModel displayModel = new DisplayModel();
+        var displayModel = new DisplayModel();
         SchemaService.getInstance().applySchema(displayModel);
-        String s = XMLUtil.widgetToXMLString(displayModel, true);
+        var s = XMLUtil.widgetToXMLString(displayModel, true);
         InputStream result = new ByteArrayInputStream(s.getBytes());
         return result;
     }

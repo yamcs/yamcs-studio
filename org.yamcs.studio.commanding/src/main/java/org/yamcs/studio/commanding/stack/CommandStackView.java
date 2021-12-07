@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -44,7 +43,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
@@ -124,7 +122,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         level5Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
 
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.verticalSpacing = 1;
@@ -179,17 +177,17 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
         };
 
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
+        var tableWrapper = new Composite(parent, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         commandTableViewer = new CommandStackTableViewer(tableWrapper, tcl, this);
         commandTableViewer.addDoubleClickListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
-                StackedCommand cmd = (StackedCommand) sel.getFirstElement();
+                var cmd = (StackedCommand) sel.getFirstElement();
                 if (cmd.getStackedState() != StackedState.ISSUED && cmd.getStackedState() != StackedState.SKIPPED) {
-                    EditStackedCommandDialog dialog = new EditStackedCommandDialog(parent.getShell(), cmd);
+                    var dialog = new EditStackedCommandDialog(parent.getShell(), cmd);
                     if (dialog.open() == Window.OK) {
                         refreshState();
                     }
@@ -197,8 +195,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
         });
 
-        Composite controls = new Composite(parent, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var controls = new Composite(parent, SWT.NONE);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 30;
         controls.setLayoutData(gd);
         gl = new GridLayout(2, false);
@@ -233,7 +231,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         messageLabel.setText("");
         messageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Composite bottomRight = new Composite(controls, SWT.NONE);
+        var bottomRight = new Composite(controls, SWT.NONE);
         gd = new GridData(GridData.FILL_BOTH);
         gd.verticalAlignment = SWT.CENTER;
         gd.horizontalAlignment = SWT.RIGHT;
@@ -246,7 +244,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         bottomRight.setLayout(gl);
 
         // Stack parameters (manual/auto stack)
-        Composite stackParameters = new Composite(bottomRight, SWT.NONE);
+        var stackParameters = new Composite(bottomRight, SWT.NONE);
         gl = new GridLayout(5, false);
         gl.marginHeight = 0;
         gl.marginWidth = 50;
@@ -259,12 +257,12 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         stackModeLabel.setText("Stack mode: ");
 
         advanceModeCombo = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
-        String[] items = new String[] { "Manual", "Automatic" };
+        var items = new String[] { "Manual", "Automatic" };
         advanceModeCombo.setItems(items);
         advanceModeCombo.select(0);
 
         autoOptionsCombo = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
-        String[] items2 = new String[] { "AFAP (no delay)", "Fixed Delay", "Stack Delay" };
+        var items2 = new String[] { "AFAP (no delay)", "Fixed Delay", "Stack Delay" };
         autoOptionsCombo.setItems(items2);
         autoOptionsCombo.select(0);
         autoOptionsCombo.setVisible(false);
@@ -277,16 +275,16 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         fixDelaySpinner.setPageIncrement(100);
         fixDelaySpinner.setVisible(false);
         fixDelaySpinner.addListener(SWT.Selection, evt -> {
-            CommandStack stack = CommandStack.getInstance();
+            var stack = CommandStack.getInstance();
             stack.fixDelayMs = fixDelaySpinner.getSelection();
         });
 
-        Label labelUnit = new Label(stackParameters, SWT.NONE);
+        var labelUnit = new Label(stackParameters, SWT.NONE);
         labelUnit.setText("ms");
         labelUnit.setVisible(false);
         advanceModeCombo.addListener(SWT.Selection, evt -> {
-            CommandStack stack = CommandStack.getInstance();
-            int index = advanceModeCombo.getSelectionIndex();
+            var stack = CommandStack.getInstance();
+            var index = advanceModeCombo.getSelectionIndex();
             if (index == StackMode.MANUAL.index()) {
                 // Manual
                 stack.stackMode = StackMode.MANUAL;
@@ -323,7 +321,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
         });
         autoOptionsCombo.addListener(SWT.Selection, evt -> {
-            CommandStack stack = CommandStack.getInstance();
+            var stack = CommandStack.getInstance();
             if (stack.stackMode == StackMode.AUTOMATIC) {
                 if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                     // fix delay
@@ -361,16 +359,14 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         armButton.setToolTipText("Arm the selected command");
         armButton.setEnabled(false);
         armButton.addListener(SWT.Selection, evt -> {
-            CommandStack stack = CommandStack.getInstance();
+            var stack = CommandStack.getInstance();
             if (armButton.getSelection()) {
-                ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-                IEvaluationService evaluationService = (IEvaluationService) getViewSite()
-                        .getService(IEvaluationService.class);
+                var commandService = (ICommandService) getViewSite().getService(ICommandService.class);
+                var evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
 
                 if (stack.stackMode == StackMode.AUTOMATIC) {
                     // automatic stack, arm all commands
-                    org.eclipse.core.commands.Command cmd = commandService
-                            .getCommand("org.yamcs.studio.commanding.stack.armAll");
+                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
                     try {
                         cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
                                 evaluationService.getCurrentState()));
@@ -379,8 +375,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                     }
                 } else {
                     // manual stack, individual arm
-                    org.eclipse.core.commands.Command cmd = commandService
-                            .getCommand("org.yamcs.studio.commanding.stack.arm");
+                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
                     try {
                         cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
                                 evaluationService.getCurrentState()));
@@ -403,10 +398,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         issueButton.setToolTipText("Issue the selected command");
         issueButton.setEnabled(false);
         issueButton.addListener(SWT.Selection, evt -> {
-            CommandStack stack = CommandStack.getInstance();
-            ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-            IEvaluationService evaluationService = (IEvaluationService) getViewSite()
-                    .getService(IEvaluationService.class);
+            var stack = CommandStack.getInstance();
+            var commandService = (ICommandService) getViewSite().getService(ICommandService.class);
+            var evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
 
             org.eclipse.core.commands.Command cmd = null;
             if (stack.stackMode == StackMode.AUTOMATIC) {
@@ -426,9 +420,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         });
 
         commandTableViewer.addSelectionChangedListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             updateMessagePanel(sel);
-            CommandStack stack = CommandStack.getInstance();
+            var stack = CommandStack.getInstance();
             armButton.setSelection(false);
             stack.disarmArmed();
             if (sel.isEmpty() || !stack.isValid() || !sel.getFirstElement().equals(stack.getActiveCommand())) {
@@ -445,8 +439,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
         // Set up connection state, and listen to changes
         connectionStateProvider = RCPUtils.findSourceProvider(getViewSite(),
-                ConnectionStateProvider.STATE_KEY_CONNECTED,
-                ConnectionStateProvider.class);
+                ConnectionStateProvider.STATE_KEY_CONNECTED, ConnectionStateProvider.class);
         connectionStateProvider.addSourceProviderListener(sourceProviderListener);
 
         // Add the popup menu for pasting commands
@@ -465,15 +458,13 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         }
 
         if (processor != null) {
-            YamcsClient client = YamcsPlugin.getYamcsClient();
+            var client = YamcsPlugin.getYamcsClient();
             subscription = client.createCommandSubscription();
             subscription.addListener(command -> {
                 Display.getDefault().asyncExec(() -> processCommand(command));
             });
-            subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
-                    .setInstance(instance)
-                    .setProcessor(processor)
-                    .build());
+            subscription.sendMessage(
+                    SubscribeCommandsRequest.newBuilder().setInstance(instance).setProcessor(processor).build());
         }
     }
 
@@ -523,17 +514,17 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     }
 
     public void selectFirst() {
-        CommandStack stack = CommandStack.getInstance();
+        var stack = CommandStack.getInstance();
         if (!stack.isEmpty()) {
-            StructuredSelection sel = new StructuredSelection(stack.getCommands().get(0));
+            var sel = new StructuredSelection(stack.getCommands().get(0));
             commandTableViewer.setSelection(sel, true);
         }
     }
 
     public void selectActiveCommand() {
-        CommandStack stack = CommandStack.getInstance();
+        var stack = CommandStack.getInstance();
         if (stack.hasRemaining()) {
-            StructuredSelection sel = new StructuredSelection(stack.getActiveCommand());
+            var sel = new StructuredSelection(stack.getActiveCommand());
             commandTableViewer.setSelection(sel, true);
         }
     }
@@ -541,7 +532,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     private void updateMessagePanel(IStructuredSelection sel) {
         if (!sel.isEmpty()) {
             for (Object element : sel.toArray()) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (!cmd.isValid()) {
                     messageLabel.setText(cmd.getMessages().get(0));
                     return;
@@ -624,13 +615,13 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
     public void refreshState() {
         commandTableViewer.refresh();
-        CommandStack stack = CommandStack.getInstance();
+        var stack = CommandStack.getInstance();
 
-        IStructuredSelection sel = (IStructuredSelection) commandTableViewer.getSelection();
+        var sel = (IStructuredSelection) commandTableViewer.getSelection();
         updateMessagePanel(sel);
-        boolean mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
+        var mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
         if (connectionStateProvider.isConnected() && !sel.isEmpty()) {
-            StackedCommand selectedCommand = (StackedCommand) sel.getFirstElement();
+            var selectedCommand = (StackedCommand) sel.getFirstElement();
             if (mayCommand && selectedCommand == stack.getActiveCommand()) {
                 if (stack.stackMode == StackMode.MANUAL && selectedCommand.isArmed()
                         || stack.stackMode == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
@@ -659,8 +650,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         autoOptionsCombo.setEnabled(mayCommand && connectionStateProvider.isConnected());
 
         // State for plugin.xml handlers
-        CommandStackStateProvider executionStateProvider = RCPUtils.findSourceProvider(
-                getSite(), CommandStackStateProvider.STATE_KEY_ARMED, CommandStackStateProvider.class);
+        var executionStateProvider = RCPUtils.findSourceProvider(getSite(), CommandStackStateProvider.STATE_KEY_ARMED,
+                CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
     }
 
@@ -684,9 +675,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     }
 
     enum PastingType {
-        BEFORE_ITEM,
-        AFTER_ITEM,
-        APPEND
+        BEFORE_ITEM, AFTER_ITEM, APPEND
     }
 
     private void addPopupMenu() {
@@ -701,7 +690,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 // check something is selected
-                TableItem[] selection = commandTableViewer.getTable().getSelection();
+                var selection = commandTableViewer.getTable().getSelection();
                 if (selection == null || selection.length == 0) {
                     return;
                 }
@@ -709,7 +698,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 // copy each selected items
                 List<StackedCommand> scs = new ArrayList<>();
                 for (TableItem ti : selection) {
-                    StackedCommand sc = (StackedCommand) (ti.getData());
+                    var sc = (StackedCommand) (ti.getData());
                     if (sc == null) {
                         continue;
                     }
@@ -742,7 +731,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 StackedCommand sc = null;
 
                 // sanity checks
-                TableItem[] selection = commandTableViewer.getTable().getSelection();
+                var selection = commandTableViewer.getTable().getSelection();
                 if (selection != null && selection.length > 0) {
                     sc = (StackedCommand) (commandTableViewer.getTable().getSelection()[0].getData());
                 }
@@ -755,11 +744,10 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 try {
                     copyedCommands = CommandClipboard.getCopiedCommands();
                 } catch (Exception e) {
-                    String errorMessage = "Unable to build Stacked Command from the specifed source: ";
+                    var errorMessage = "Unable to build Stacked Command from the specifed source: ";
                     log.log(Level.WARNING, errorMessage, e);
                     commandTableViewer.getTable().getDisplay().asyncExec(() -> {
-                        MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(),
-                                SWT.ICON_ERROR | SWT.OK);
+                        var dialog = new MessageBox(commandTableViewer.getTable().getShell(), SWT.ICON_ERROR | SWT.OK);
                         dialog.setText("Command Stack Edition");
                         dialog.setMessage(errorMessage + e.getMessage());
                         // open dialog and await user selection
@@ -772,7 +760,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 }
 
                 // paste
-                int index = commandTableViewer.getIndex(sc);
+                var index = commandTableViewer.getIndex(sc);
                 for (StackedCommand pastedCommand : copyedCommands) {
                     if (pastingType == PastingType.APPEND) {
                         commandTableViewer.addTelecommand(pastedCommand);
@@ -790,42 +778,42 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 // refresh command stack view state
                 IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                         .findView(CommandStackView.ID);
-                CommandStackView commandStackView = (CommandStackView) part;
+                var commandStackView = (CommandStackView) part;
                 commandStackView.refreshState();
             }
         }
 
-        Table table = commandTableViewer.getTable();
-        Menu contextMenu = new Menu(commandTableViewer.getTable());
+        var table = commandTableViewer.getTable();
+        var contextMenu = new Menu(commandTableViewer.getTable());
         table.setMenu(contextMenu);
 
-        MenuItem mItemCopy = new MenuItem(contextMenu, SWT.None);
+        var mItemCopy = new MenuItem(contextMenu, SWT.None);
         mItemCopy.setText("Copy");
         mItemCopy.addSelectionListener(new CopySelectionListener(false));
 
-        MenuItem mItemCut = new MenuItem(contextMenu, SWT.None);
+        var mItemCut = new MenuItem(contextMenu, SWT.None);
         mItemCut.setText("Cut");
         mItemCut.addSelectionListener(new CopySelectionListener(true));
 
         new MenuItem(contextMenu, SWT.SEPARATOR);
 
-        MenuItem mItemPasteBefore = new MenuItem(contextMenu, SWT.None);
+        var mItemPasteBefore = new MenuItem(contextMenu, SWT.None);
         mItemPasteBefore.setText("Paste Before");
         mItemPasteBefore.addSelectionListener(new PasteSelectionListener(PastingType.BEFORE_ITEM));
 
-        MenuItem mItemPasteAfter = new MenuItem(contextMenu, SWT.None);
+        var mItemPasteAfter = new MenuItem(contextMenu, SWT.None);
         mItemPasteAfter.setText("Paste After");
         mItemPasteAfter.addSelectionListener(new PasteSelectionListener(PastingType.AFTER_ITEM));
 
-        MenuItem mItemPaste = new MenuItem(contextMenu, SWT.None);
+        var mItemPaste = new MenuItem(contextMenu, SWT.None);
         mItemPaste.setText("Paste Append");
         mItemPaste.addSelectionListener(new PasteSelectionListener(PastingType.APPEND));
 
         commandTableViewer.getTable().addListener(SWT.MouseDown, event -> {
-            TableItem[] selection = commandTableViewer.getTable().getSelection();
+            var selection = commandTableViewer.getTable().getSelection();
 
-            boolean pastBeforeAuthorized = true;
-            boolean pastAfterAuthorized = true;
+            var pastBeforeAuthorized = true;
+            var pastAfterAuthorized = true;
 
             StackedCommand sc1 = null;
             StackedCommand sc2 = null;
@@ -833,7 +821,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 // prevent to edit part of the command stack that has already been executed
                 sc1 = (StackedCommand) selection[0].getData();
                 sc2 = (StackedCommand) selection[selection.length - 1].getData();
-                int lastSelectionIndex = commandTableViewer.getIndex(sc2);
+                var lastSelectionIndex = commandTableViewer.getIndex(sc2);
                 sc2 = (StackedCommand) commandTableViewer.getElementAt(lastSelectionIndex + 1);
 
                 pastBeforeAuthorized = sc1 != null && sc1.getStackedState() == StackedState.DISARMED;

@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editpolicies;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.commands.OrphanChildCommand;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -33,12 +31,10 @@ public class WidgetContainerEditPolicy extends ContainerEditPolicy {
 
     @Override
     protected Command getOrphanChildrenCommand(GroupRequest request) {
-        @SuppressWarnings("rawtypes")
-        List parts = request.getEditParts();
-        CompoundCommand result = new CompoundCommand("Orphan Children");
-        for (int i = 0; i < parts.size(); i++) {
-            OrphanChildCommand orphan = new OrphanChildCommand(
-                    (AbstractContainerModel) (getHost().getModel()),
+        var parts = request.getEditParts();
+        var result = new CompoundCommand("Orphan Children");
+        for (var i = 0; i < parts.size(); i++) {
+            var orphan = new OrphanChildCommand((AbstractContainerModel) (getHost().getModel()),
                     (AbstractWidgetModel) ((EditPart) parts.get(i)).getModel());
             orphan.setLabel("Reparenting widget");
             result.add(orphan);

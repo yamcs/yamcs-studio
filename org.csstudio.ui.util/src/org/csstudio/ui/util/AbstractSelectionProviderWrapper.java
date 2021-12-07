@@ -20,14 +20,13 @@ public abstract class AbstractSelectionProviderWrapper implements ISelectionProv
     private final ISelectionProvider wrappedProvider;
     private final ISelectionProvider eventSource;
 
-    public AbstractSelectionProviderWrapper(ISelectionProvider wrappedProvider,
-            ISelectionProvider eventSource) {
+    public AbstractSelectionProviderWrapper(ISelectionProvider wrappedProvider, ISelectionProvider eventSource) {
         this.wrappedProvider = wrappedProvider;
         this.eventSource = eventSource;
     }
 
     @Override
-    public void addSelectionChangedListener(final ISelectionChangedListener listener) {
+    public void addSelectionChangedListener(ISelectionChangedListener listener) {
         wrappedProvider.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -49,15 +48,14 @@ public abstract class AbstractSelectionProviderWrapper implements ISelectionProv
     }
 
     @Override
-    public void removeSelectionChangedListener(
-            ISelectionChangedListener listener) {
+    public void removeSelectionChangedListener(ISelectionChangedListener listener) {
         // TODO: this doesn't actually work!
         wrappedProvider.removeSelectionChangedListener(listener);
     }
 
     @Override
     public ISelection getSelection() {
-        ISelection selection = wrappedProvider.getSelection();
+        var selection = wrappedProvider.getSelection();
         if (selection instanceof IStructuredSelection) {
             return transform((IStructuredSelection) wrappedProvider.getSelection());
         } else {

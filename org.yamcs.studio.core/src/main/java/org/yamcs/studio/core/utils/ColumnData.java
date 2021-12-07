@@ -16,7 +16,7 @@ public class ColumnData {
     }
 
     public void addColumn(String name, int width, boolean visible, boolean resizable, boolean moveable) {
-        ColumnDef column = new ColumnDef(name, columns.size());
+        var column = new ColumnDef(name, columns.size());
         column.visible = visible;
         column.resizable = resizable;
         column.moveable = moveable;

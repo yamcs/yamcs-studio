@@ -20,9 +20,7 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
@@ -33,9 +31,7 @@ import org.eclipse.swt.graphics.RGB;
 public class AbstractBoolFigure extends Figure implements Introspectable {
 
     public enum TotalBits {
-        BITS_16,
-        BITS_32,
-        BITS_64
+        BITS_16, BITS_32, BITS_64
     }
 
     public enum BoolLabelPosition {
@@ -52,8 +48,8 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
         BOTTOM_RIGHT("Bottom Right");
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (BoolLabelPosition h : values()) {
                 result[i++] = h.toString();
             }
@@ -90,11 +86,9 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
 
     protected BoolLabelPosition boolLabelPosition = BoolLabelPosition.DEFAULT;
 
-    protected Color onColor = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GREEN);
+    protected Color onColor = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GREEN);
 
-    protected Color offColor = CustomMediaFactory.getInstance().getColor(
-            new RGB(0, 128, 0));
+    protected Color offColor = CustomMediaFactory.getInstance().getColor(new RGB(0, 128, 0));
 
     private Point labelLocation;
 
@@ -113,10 +107,9 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
             labelLocation = defaultLocation;
             return;
         }
-        Rectangle textArea = getClientArea();
-        Dimension textSize = Draw2dSingletonUtil.getTextUtilities().getTextExtents(
-                boolLabel.getText(), getFont());
-        int x = 0;
+        var textArea = getClientArea();
+        var textSize = Draw2dSingletonUtil.getTextUtilities().getTextExtents(boolLabel.getText(), getFont());
+        var x = 0;
         if (textArea.width > textSize.width) {
             switch (boolLabelPosition) {
             case CENTER:
@@ -134,7 +127,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
             }
         }
 
-        int y = 0;
+        var y = 0;
         if (textArea.height > textSize.height) {
             switch (boolLabelPosition) {
             case CENTER:
@@ -172,7 +165,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
         return booleanValue;
     }
 
-    protected Point getLabelLocation(final int x, final int y) {
+    protected Point getLabelLocation(int x, int y) {
         return getLabelLocation(new Point(x, y));
     }
 

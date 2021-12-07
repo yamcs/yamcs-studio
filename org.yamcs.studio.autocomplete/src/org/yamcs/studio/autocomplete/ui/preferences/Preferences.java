@@ -1,8 +1,7 @@
 package org.yamcs.studio.autocomplete.ui.preferences;
 
-import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 
 public class Preferences {
 
@@ -14,16 +13,15 @@ public class Preferences {
     }
 
     private static String getString(String setting, String default_value) {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         if (service == null) {
             return default_value;
         }
-        return service.getString(AutoCompletePlugin.PLUGIN_ID, setting, default_value,
-                null);
+        return service.getString(AutoCompletePlugin.PLUGIN_ID, setting, default_value, null);
     }
 
     public static int getHistorySize() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         if (service == null) {
             return 100; // default
         }

@@ -91,15 +91,14 @@ public class FormulaRegistry {
 
     private void registerFormulaFunction(FormulaFunction formulaFunction) {
         // Get the map based by name
-        Map<Integer, Collection<FormulaFunction>> functionForName = formulaFunctions.get(formulaFunction.getName());
+        var functionForName = formulaFunctions.get(formulaFunction.getName());
         if (functionForName == null) {
             functionForName = new ConcurrentHashMap<>();
             formulaFunctions.put(formulaFunction.getName(), functionForName);
         }
 
         // Get the collection based on number of arguments
-        Collection<FormulaFunction> functionsForNArguments = functionForName
-                .get(formulaFunction.getArgumentNames().size());
+        var functionsForNArguments = functionForName.get(formulaFunction.getArgumentNames().size());
         if (functionsForNArguments == null) {
             functionsForNArguments = Collections.newSetFromMap(new ConcurrentHashMap<FormulaFunction, Boolean>());
             functionForName.put(formulaFunction.getArgumentNames().size(), functionsForNArguments);
@@ -142,8 +141,8 @@ public class FormulaRegistry {
         Set<FormulaFunction> functions = new HashSet<>();
         for (FormulaFunctionSet formulaFunctionSet : functionSets.values()) {
             for (FormulaFunction formulaFunction : formulaFunctionSet.getFunctions()) {
-                if (formulaFunction.getName().equals(functionName) &&
-                        FormulaFunctions.matchArgumentCount(nArguments, formulaFunction)) {
+                if (formulaFunction.getName().equals(functionName)
+                        && FormulaFunctions.matchArgumentCount(nArguments, formulaFunction)) {
                     functions.add(formulaFunction);
                 }
             }

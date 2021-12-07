@@ -19,8 +19,7 @@ import org.jdom.Verifier;
 /**
  * The preference page for OPIBuilder
  */
-public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
-        implements IWorkbenchPreferencePage {
+public class OPIRuntimePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     private String wrongMacroName = "";
 
@@ -34,11 +33,11 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
 
     @Override
     protected void createFieldEditors() {
-        final Composite parent = getFieldEditorParent();
+        var parent = getFieldEditorParent();
 
-        macrosEditor = new StringTableFieldEditor(
-                PreferencesHelper.RUN_MACROS, "Macros: ", parent, new String[] { "Name", "Value" },
-                new boolean[] { true, true }, new MacroEditDialog(parent.getShell()), new int[] { 120, 120 }) {
+        macrosEditor = new StringTableFieldEditor(PreferencesHelper.RUN_MACROS, "Macros: ", parent,
+                new String[] { "Name", "Value" }, new boolean[] { true, true }, new MacroEditDialog(parent.getShell()),
+                new int[] { 120, 120 }) {
 
             @Override
             public boolean isValid() {
@@ -67,7 +66,7 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
                 tableEditor.getTableViewer().getTable().addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyReleased(KeyEvent e) {
-                        boolean valid = isValid();
+                        var valid = isValid();
                         fireStateChanged(IS_VALID, !valid, valid);
                     }
                 });
@@ -75,13 +74,13 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
 
                     @Override
                     public void focusLost(FocusEvent e) {
-                        boolean valid = isValid();
+                        var valid = isValid();
                         fireStateChanged(IS_VALID, !valid, valid);
                     }
 
                     @Override
                     public void focusGained(FocusEvent e) {
-                        boolean valid = isValid();
+                        var valid = isValid();
                         fireStateChanged(IS_VALID, !valid, valid);
                     }
                 });
@@ -90,36 +89,34 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         };
         addField(macrosEditor);
 
-        IntegerFieldEditor guiRefreshCycleEditor = new IntegerFieldEditor(PreferencesHelper.OPI_GUI_REFRESH_CYCLE,
+        var guiRefreshCycleEditor = new IntegerFieldEditor(PreferencesHelper.OPI_GUI_REFRESH_CYCLE,
                 "OPI GUI Refresh Cycle (ms)", parent);
         guiRefreshCycleEditor.setValidRange(10, 5000);
-        guiRefreshCycleEditor.getTextControl(parent).setToolTipText(
-                "The fastest refresh cycle for OPI GUI in millisecond");
+        guiRefreshCycleEditor.getTextControl(parent)
+                .setToolTipText("The fastest refresh cycle for OPI GUI in millisecond");
         addField(guiRefreshCycleEditor);
 
-        IntegerFieldEditor pulsingMinorPeriodFieldEditor = new IntegerFieldEditor(
-                PreferencesHelper.PULSING_ALARM_MINOR_PERIOD,
+        var pulsingMinorPeriodFieldEditor = new IntegerFieldEditor(PreferencesHelper.PULSING_ALARM_MINOR_PERIOD,
                 "Time period of MINOR alarm if pulsing alarm selected (ms)", parent);
         pulsingMinorPeriodFieldEditor.setValidRange(100, 10000);
-        pulsingMinorPeriodFieldEditor.getTextControl(parent).setToolTipText(
-                "If the pulsing alarm box is checked for a widget that monitors a PV, " +
-                        "then what is the time period of the pulse with the PV is in MINOR alarm severity");
+        pulsingMinorPeriodFieldEditor.getTextControl(parent)
+                .setToolTipText("If the pulsing alarm box is checked for a widget that monitors a PV, "
+                        + "then what is the time period of the pulse with the PV is in MINOR alarm severity");
         addField(pulsingMinorPeriodFieldEditor);
 
-        IntegerFieldEditor pulsingMajorPeriodFieldEditor = new IntegerFieldEditor(
-                PreferencesHelper.PULSING_ALARM_MAJOR_PERIOD,
+        var pulsingMajorPeriodFieldEditor = new IntegerFieldEditor(PreferencesHelper.PULSING_ALARM_MAJOR_PERIOD,
                 "Time period of MAJOR alarm if pulsing alarm selected (ms)", parent);
         pulsingMajorPeriodFieldEditor.setValidRange(100, 10000);
-        pulsingMajorPeriodFieldEditor.getTextControl(parent).setToolTipText(
-                "If the pulsing alarm box is checked for a widget that monitors a PV, " +
-                        "then what is the time period of the pulse with the PV is in MAJOR alarm severity");
+        pulsingMajorPeriodFieldEditor.getTextControl(parent)
+                .setToolTipText("If the pulsing alarm box is checked for a widget that monitors a PV, "
+                        + "then what is the time period of the pulse with the PV is in MAJOR alarm severity");
         addField(pulsingMajorPeriodFieldEditor);
 
-        StringFieldEditor pythonPathEditor = new StringFieldEditor(PreferencesHelper.PYTHON_PATH, "PYTHONPATH", parent);
+        var pythonPathEditor = new StringFieldEditor(PreferencesHelper.PYTHON_PATH, "PYTHONPATH", parent);
         pythonPathEditor.getTextControl(parent).setToolTipText("The path to search python modules");
         addField(pythonPathEditor);
 
-        BooleanFieldEditor showFullScreenDialogEditor = new BooleanFieldEditor(PreferencesHelper.SHOW_FULLSCREEN_DIALOG,
+        var showFullScreenDialogEditor = new BooleanFieldEditor(PreferencesHelper.SHOW_FULLSCREEN_DIALOG,
                 "Show tip dialog about how to exit fullscreen", parent);
         addField(showFullScreenDialogEditor);
     }
@@ -131,9 +128,9 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
     @Override
     public void propertyChange(PropertyChangeEvent event) {
         super.propertyChange(event);
-        Object src = event.getSource();
+        var src = event.getSource();
         if (src instanceof FieldEditor) {
-            String prefName = ((FieldEditor) src).getPreferenceName();
+            var prefName = ((FieldEditor) src).getPreferenceName();
             if (prefName.equals(PreferencesHelper.RUN_MACROS)) {
                 if ((Boolean) event.getNewValue()) {
                     setMessage(null);

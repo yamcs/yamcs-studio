@@ -16,7 +16,7 @@ public class SymbolImageFactory {
         if (imagePath == null || imagePath.isEmpty()) {
             return createEmptyImage(runMode);
         }
-        SymbolImage symbolImage = createImageFromPath(imagePath, sip, runMode);
+        var symbolImage = createImageFromPath(imagePath, sip, runMode);
         symbolImage.setListener(listener);
         symbolImage.asyncLoadImage();
         return symbolImage;
@@ -26,7 +26,7 @@ public class SymbolImageFactory {
         if (imagePath == null || imagePath.isEmpty()) {
             return createEmptyImage(runMode);
         }
-        SymbolImage symbolImage = createImageFromPath(imagePath, sip, runMode);
+        var symbolImage = createImageFromPath(imagePath, sip, runMode);
         symbolImage.syncLoadImage();
         return symbolImage;
     }
@@ -37,9 +37,9 @@ public class SymbolImageFactory {
 
     private static SymbolImage createImageFromPath(String imagePath, SymbolImageProperties props, boolean runMode) {
         SymbolImage symbolImage = null;
-        int idx = imagePath.lastIndexOf('.');
+        var idx = imagePath.lastIndexOf('.');
         if (idx != -1) {
-            String ext = imagePath.substring(idx).toLowerCase();
+            var ext = imagePath.substring(idx).toLowerCase();
             switch (ext) {
             case ".png":
             case ".jpg":

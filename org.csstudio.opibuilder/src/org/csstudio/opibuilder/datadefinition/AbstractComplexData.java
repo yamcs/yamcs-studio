@@ -38,7 +38,7 @@ public abstract class AbstractComplexData {
      * @param property
      *            the property to be added.
      */
-    public void addProperty(final AbstractWidgetProperty property) {
+    public void addProperty(AbstractWidgetProperty property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -50,10 +50,11 @@ public abstract class AbstractComplexData {
     protected abstract void configureProperties();
 
     public AbstractWidgetProperty[] getAllProperties() {
-        AbstractWidgetProperty[] propArray = new AbstractWidgetProperty[propertyMap.size()];
-        int i = 0;
-        for (AbstractWidgetProperty p : propertyMap.values())
+        var propArray = new AbstractWidgetProperty[propertyMap.size()];
+        var i = 0;
+        for (AbstractWidgetProperty p : propertyMap.values()) {
             propArray[i++] = p;
+        }
         return propArray;
     }
 
@@ -62,7 +63,7 @@ public abstract class AbstractComplexData {
     }
 
     public AbstractComplexData getCopy() {
-        AbstractComplexData copy = createInstance();
+        var copy = createInstance();
         for (String id : propertyMap.keySet()) {
             copy.setPropertyValue(id, getPropertyValue(id));
         }
@@ -97,8 +98,9 @@ public abstract class AbstractComplexData {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetProperty property : getAllProperties())
+        for (AbstractWidgetProperty property : getAllProperties()) {
             property.setWidgetModel(widgetModel);
+        }
     }
 
     /**
@@ -108,23 +110,25 @@ public abstract class AbstractComplexData {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof AbstractComplexData))
+        if (obj == null || !(obj instanceof AbstractComplexData)) {
             return false;
-        AbstractComplexData objData = ((AbstractComplexData) obj);
+        }
+        var objData = ((AbstractComplexData) obj);
         for (AbstractWidgetProperty property : getAllProperties()) {
-            if (objData.getProperty(property.getPropertyID()) == null)
+            if (objData.getProperty(property.getPropertyID()) == null) {
                 return false;
-            if (!(property.getPropertyValue().equals(
-                    objData.getPropertyValue(property.getPropertyID()))))
+            }
+            if (!(property.getPropertyValue().equals(objData.getPropertyValue(property.getPropertyID())))) {
                 return false;
+            }
         }
         return true;
     }
 
     @Override
     public int hashCode() {
-        AbstractWidgetProperty[] properties = getAllProperties();
-        int result = getClass().hashCode();
+        var properties = getAllProperties();
+        var result = getClass().hashCode();
         for (AbstractWidgetProperty p : properties) {
             result = 31 * result + p.getPropertyID().hashCode();
             result = 31 * result + (p.getPropertyValue() == null ? 0 : p.getPropertyValue().hashCode());

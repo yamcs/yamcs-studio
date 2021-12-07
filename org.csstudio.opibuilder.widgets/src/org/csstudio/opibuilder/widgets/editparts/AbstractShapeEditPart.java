@@ -29,8 +29,8 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure createFigure() {
-        Shape shape = (Shape) super.createFigure();
-        AbstractShapeModel model = getWidgetModel();
+        var shape = (Shape) super.createFigure();
+        var model = getWidgetModel();
         shape.setOutline(model.getLineWidth() != 0);
         shape.setLineWidth(model.getLineWidth());
         shape.setLineStyle(model.getLineStyle());
@@ -48,7 +48,7 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         // line width
         IWidgetPropertyChangeHandler lineWidthHandler = (oldValue, newValue, refreshableFigure) -> {
-            Shape shape = (Shape) refreshableFigure;
+            var shape = (Shape) refreshableFigure;
             if (((Integer) newValue).equals(0)) {
                 shape.setOutline(false);
             } else {
@@ -58,17 +58,15 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
 
             return true;
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_WIDTH,
-                lineWidthHandler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_WIDTH, lineWidthHandler);
 
         // line style
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            Shape shape = (Shape) refreshableFigure;
+            var shape = (Shape) refreshableFigure;
             shape.setLineStyle(LineStyle.values()[(Integer) newValue].getStyle());
             return true;
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_STYLE,
-                handler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_STYLE, handler);
 
         handler = (oldValue, newValue, figure) -> {
             ((Shape) figure).setAntialias(((Boolean) newValue) ? SWT.ON : null);

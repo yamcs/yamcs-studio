@@ -12,13 +12,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.client.ClientException;
-import org.yamcs.client.Page;
 import org.yamcs.client.YamcsClient;
-import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions;
 import org.yamcs.protobuf.GetServerInfoResponse;
-import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.UserInfo;
 import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.connect.YamcsConfiguration;
@@ -42,7 +38,7 @@ public class YamcsConnector implements IRunnableWithProgress {
 
         // All the things we want to fetch from Yamcs
         // (when the whole setup is successful, these get stored in YamcsPlugin
-        RemoteEntityHolder holder = new RemoteEntityHolder();
+        var holder = new RemoteEntityHolder();
 
         monitor.beginTask("Connecting to " + conf, IProgressMonitor.UNKNOWN);
         try {
@@ -54,7 +50,7 @@ public class YamcsConnector implements IRunnableWithProgress {
                 // We allow this for when studio is used to make new sessions from a bare Yamcs.
                 log.warning("Connected to Yamcs but no instance was specified in the login dialog");
             } else {
-                YamcsInstance instanceInfo = verifyInstance(monitor, holder.yamcsClient, conf.getInstance().trim());
+                var instanceInfo = verifyInstance(monitor, holder.yamcsClient, conf.getInstance().trim());
                 holder.instance = instanceInfo.getName();
 
                 if (instanceInfo.getProcessorsCount() > 0) {
@@ -83,15 +79,13 @@ public class YamcsConnector implements IRunnableWithProgress {
 
     private YamcsClient doConnect(IProgressMonitor monitor) throws InterruptedException, BootstrapException {
         try {
-            YamcsClient.Builder clientBuilder = YamcsClient
-                    .newBuilder(conf.getURL())
-                    .withVerifyTls(false)
+            var clientBuilder = YamcsClient.newBuilder(conf.getURL()).withVerifyTls(false)
                     .withUserAgent(YamcsPlugin.getProductString());
 
             if (conf.getCaCertFile() != null) {
                 clientBuilder.withCaCertFile(Paths.get(conf.getCaCertFile()));
             }
-            YamcsClient yamcsClient = clientBuilder.build();
+            var yamcsClient = clientBuilder.build();
 
             log.info("Connecting to " + conf);
             if (conf.getAuthType() == AuthType.KERBEROS) {
@@ -100,7 +94,7 @@ public class YamcsConnector implements IRunnableWithProgress {
             } else if (conf.getUser() == null) {
                 yamcsClient.connectWebSocket();
             } else {
-                String password = conf.getTransientPassword();
+                var password = conf.getTransientPassword();
                 if (password != null && !password.isEmpty()) {
                     yamcsClient.login(conf.getUser(), password.toCharArray());
                     yamcsClient.connectWebSocket();
@@ -148,12 +142,12 @@ public class YamcsConnector implements IRunnableWithProgress {
     private MissionDatabase loadMissionDatabase(IProgressMonitor monitor, YamcsClient client, String instance)
             throws InterruptedException, BootstrapException {
         monitor.subTask("Loading mission database");
-        MissionDatabase missionDatabase = new MissionDatabase();
+        var missionDatabase = new MissionDatabase();
 
-        MissionDatabaseClient mdbClient = client.createMissionDatabaseClient(instance);
+        var mdbClient = client.createMissionDatabaseClient(instance);
         try {
             log.fine("Fetching available parameters");
-            Page<ParameterInfo> page = mdbClient.listParameters(ListOptions.limit(500)).get();
+            var page = mdbClient.listParameters(ListOptions.limit(500)).get();
             page.iterator().forEachRemaining(missionDatabase::addParameter);
             while (page.hasNextPage()) {
                 page = page.getNextPage().get();
@@ -161,7 +155,7 @@ public class YamcsConnector implements IRunnableWithProgress {
             }
 
             log.fine("Fetching available commands");
-            Page<CommandInfo> commandPage = mdbClient.listCommands(ListOptions.limit(200)).get();
+            var commandPage = mdbClient.listCommands(ListOptions.limit(200)).get();
             commandPage.iterator().forEachRemaining(missionDatabase::addCommand);
             while (commandPage.hasNextPage()) {
                 commandPage = commandPage.getNextPage().get();

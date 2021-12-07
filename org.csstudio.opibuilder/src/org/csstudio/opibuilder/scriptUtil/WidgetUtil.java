@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.scriptUtil;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.eclipse.osgi.util.NLS;
 
@@ -30,12 +29,12 @@ public class WidgetUtil {
      *             if the widget type ID does not exist.
      */
     public static AbstractWidgetModel createWidgetModel(String widgetTypeID) throws Exception {
-        WidgetDescriptor widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(widgetTypeID);
-        if (widgetDescriptor != null)
+        var widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(widgetTypeID);
+        if (widgetDescriptor != null) {
             return widgetDescriptor.getWidgetModel();
-        else
-            throw new RuntimeException(
-                    NLS.bind("The widget type ID: {0} does not exist!", widgetTypeID));
+        } else {
+            throw new RuntimeException(NLS.bind("The widget type ID: {0} does not exist!", widgetTypeID));
+        }
     }
 
 }

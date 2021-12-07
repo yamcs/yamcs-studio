@@ -85,13 +85,13 @@ public abstract class ListShort implements ListNumber, CollectionShort {
         }
 
         if (obj instanceof ListShort) {
-            ListShort other = (ListShort) obj;
+            var other = (ListShort) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (getShort(i) != other.getShort(i)) {
                     return false;
                 }
@@ -105,8 +105,8 @@ public abstract class ListShort implements ListNumber, CollectionShort {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
             result = 31 * result + getShort(i);
         }
         return result;

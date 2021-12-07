@@ -94,7 +94,7 @@ public class ActionsInputDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
@@ -224,14 +224,12 @@ public class ActionsInputDialog extends TrayDialog {
      */
     private void refreshGUIOnSelection() {
         var selection = (IStructuredSelection) actionsViewer.getSelection();
-        if (!selection.isEmpty()
-                && selection.getFirstElement() instanceof AbstractWidgetAction) {
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
             removeAction.setEnabled(true);
             moveUpAction.setEnabled(true);
             moveDownAction.setEnabled(true);
             copyAction.setEnabled(true);
-            propertiesViewer.setInput(((AbstractWidgetAction) selection
-                    .getFirstElement()).getAllProperties());
+            propertiesViewer.setInput(((AbstractWidgetAction) selection.getFirstElement()).getAllProperties());
             propertiesViewer.getTable().setEnabled(true);
         } else {
             removeAction.setEnabled(false);
@@ -258,7 +256,7 @@ public class ActionsInputDialog extends TrayDialog {
      *            The parent for the table
      * @return The {@link TableViewer}
      */
-    private TableViewer createActionsTableViewer(final Composite parent) {
+    private TableViewer createActionsTableViewer(Composite parent) {
         var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
@@ -318,7 +316,7 @@ public class ActionsInputDialog extends TrayDialog {
             }
 
             @Override
-            public Menu getMenu(final Control parent) {
+            public Menu getMenu(Control parent) {
                 if (menu != null) {
                     menu.dispose();
                 }
@@ -327,7 +325,7 @@ public class ActionsInputDialog extends TrayDialog {
             }
 
             @Override
-            public Menu getMenu(final Menu parent) {
+            public Menu getMenu(Menu parent) {
                 return null;
             }
 
@@ -335,17 +333,14 @@ public class ActionsInputDialog extends TrayDialog {
 
         addAction.setToolTipText("Add an action");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         copyAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) actionsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    AbstractWidgetAction newAction = ((AbstractWidgetAction) selection.getFirstElement()).getCopy();
+                var selection = (IStructuredSelection) actionsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
+                    var newAction = ((AbstractWidgetAction) selection.getFirstElement()).getCopy();
                     actionsInput.addAction(newAction);
                     actionsViewer.setSelection(new StructuredSelection(newAction));
                     refreshActionsViewer(newAction);
@@ -353,20 +348,16 @@ public class ActionsInputDialog extends TrayDialog {
             }
         };
         copyAction.setText("Copy Action");
-        copyAction
-                .setToolTipText("Copy the selected action");
+        copyAction.setToolTipText("Copy the selected action");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/copy.gif"));
         copyAction.setEnabled(false);
 
         removeAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) actionsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof AbstractWidgetAction) {
+                var selection = (IStructuredSelection) actionsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
                     actionsList.remove((AbstractWidgetAction) selection.getFirstElement());
                     refreshActionsViewer(null);
                     this.setEnabled(false);
@@ -374,23 +365,18 @@ public class ActionsInputDialog extends TrayDialog {
             }
         };
         removeAction.setText("Remove Action");
-        removeAction
-                .setToolTipText("Remove the selected action from the list");
+        removeAction.setToolTipText("Remove the selected action from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) actionsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    AbstractWidgetAction widgetAction = (AbstractWidgetAction) selection
-                            .getFirstElement();
-                    int i = actionsList.indexOf(widgetAction);
+                var selection = (IStructuredSelection) actionsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
+                    var widgetAction = (AbstractWidgetAction) selection.getFirstElement();
+                    var i = actionsList.indexOf(widgetAction);
                     if (i > 0) {
                         actionsList.remove(widgetAction);
                         actionsList.add(i - 1, widgetAction);
@@ -402,20 +388,16 @@ public class ActionsInputDialog extends TrayDialog {
         moveUpAction.setText("Move Up Action");
         moveUpAction.setToolTipText("Move up the selected action");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) actionsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    AbstractWidgetAction widgetAction = (AbstractWidgetAction) selection
-                            .getFirstElement();
-                    int i = actionsList.indexOf(widgetAction);
+                var selection = (IStructuredSelection) actionsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
+                    var widgetAction = (AbstractWidgetAction) selection.getFirstElement();
+                    var i = actionsList.indexOf(widgetAction);
                     if (i < actionsList.size() - 1) {
                         actionsList.remove(widgetAction);
                         actionsList.add(i + 1, widgetAction);
@@ -427,8 +409,7 @@ public class ActionsInputDialog extends TrayDialog {
         moveDownAction.setText("Move Down Action");
         moveDownAction.setToolTipText("Move down the selected action");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 

@@ -12,9 +12,9 @@ package org.yamcs.studio.autocomplete.proposals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 import org.yamcs.studio.autocomplete.tooltips.TooltipDataHandler;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * Defines a proposal as it will be displayed.
@@ -153,26 +153,31 @@ public class Proposal implements Comparable<Proposal> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        Proposal other = (Proposal) obj;
+        }
+        var other = (Proposal) obj;
         if (value == null) {
-            if (other.value != null)
+            if (other.value != null) {
                 return false;
-        } else if (!value.equals(other.value))
+            }
+        } else if (!value.equals(other.value)) {
             return false;
+        }
         return true;
     }
 
@@ -195,12 +200,10 @@ public class Proposal implements Comparable<Proposal> {
 
     @Override
     public String toString() {
-        return "Proposal [value=" + value + ", description=" + description
-                + ", styles=" + styles + ", isPartial=" + isPartial
-                + ", isFunction=" + isFunction + ", startWithContent="
-                + startWithContent + ", occurrence=" + occurrence
-                + ", insertionPos=" + insertionPos + ", originalValue="
-                + originalValue + ", tooltips=" + tooltips + "]";
+        return "Proposal [value=" + value + ", description=" + description + ", styles=" + styles + ", isPartial="
+                + isPartial + ", isFunction=" + isFunction + ", startWithContent=" + startWithContent + ", occurrence="
+                + occurrence + ", insertionPos=" + insertionPos + ", originalValue=" + originalValue + ", tooltips="
+                + tooltips + "]";
     }
 
 }

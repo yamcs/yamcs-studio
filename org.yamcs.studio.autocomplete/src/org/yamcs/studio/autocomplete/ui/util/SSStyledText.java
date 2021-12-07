@@ -34,7 +34,7 @@ public class SSStyledText {
     }
 
     public void setStyle(Color color, int fontStyle, int start, int length) {
-        StyleRange styleRange = new StyleRange();
+        var styleRange = new StyleRange();
         styleRange.fontStyle = fontStyle;
         styleRange.foreground = color;
         styleRange.start = start;

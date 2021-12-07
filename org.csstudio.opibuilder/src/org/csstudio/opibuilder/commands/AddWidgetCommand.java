@@ -28,8 +28,7 @@ public class AddWidgetCommand extends Command {
     private Rectangle oldBounds;
     private Rectangle newBounds;
 
-    public AddWidgetCommand(final AbstractContainerModel containerModel,
-            final AbstractWidgetModel widget, Rectangle newBounds) {
+    public AddWidgetCommand(AbstractContainerModel containerModel, AbstractWidgetModel widget, Rectangle newBounds) {
         this.containerModel = containerModel;
         this.widget = widget;
         this.newBounds = newBounds;
@@ -38,11 +37,10 @@ public class AddWidgetCommand extends Command {
     @Override
     public void execute() {
         oldBounds = widget.getBounds();
-        if (widget instanceof AbstractLayoutModel && containerModel
-                .getLayoutWidget() != null) {
+        if (widget instanceof AbstractLayoutModel && containerModel.getLayoutWidget() != null) {
             MessageDialog.openError(null, "Creating widget failed",
-                    "There is already a layout widget in the container. " +
-                            "Please delete it before you can add a new layout widget.");
+                    "There is already a layout widget in the container. "
+                            + "Please delete it before you can add a new layout widget.");
             return;
         }
         widget.setBounds(newBounds);

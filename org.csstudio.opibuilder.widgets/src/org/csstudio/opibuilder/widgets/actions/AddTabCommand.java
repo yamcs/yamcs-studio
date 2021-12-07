@@ -24,17 +24,19 @@ public class AddTabCommand extends Command {
 
     public AddTabCommand(TabEditPart tabEditPart, boolean before) {
         this.tabModel = tabEditPart.getWidgetModel();
-        if (before)
+        if (before) {
             this.tabIndex = tabEditPart.getActiveTabIndex();
-        else
+        } else {
             this.tabIndex = tabEditPart.getActiveTabIndex() + 1;
+        }
         setLabel("Add Tab");
     }
 
     @Override
     public void execute() {
-        if (tabItem == null)
+        if (tabItem == null) {
             tabItem = new TabItem(tabModel, tabIndex);
+        }
         tabModel.addTab(tabIndex, tabItem);
     }
 

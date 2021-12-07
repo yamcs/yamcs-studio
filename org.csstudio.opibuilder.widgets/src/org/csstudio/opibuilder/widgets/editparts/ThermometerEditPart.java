@@ -15,9 +15,9 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ThermometerModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        ThermometerFigure thermometer = new ThermometerFigure();
+        var thermometer = new ThermometerFigure();
 
         initializeCommonFigureProperties(thermometer, model);
         thermometer.setFillColor(model.getFillColor());
@@ -40,7 +40,7 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillColor
         IWidgetPropertyChangeHandler fillColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure thermometer = (ThermometerFigure) refreshableFigure;
+            var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setFillColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -48,7 +48,7 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillBackgroundColor
         IWidgetPropertyChangeHandler fillBackColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure thermometer = (ThermometerFigure) refreshableFigure;
+            var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -56,7 +56,7 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // show bulb
         IWidgetPropertyChangeHandler showBulbHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure thermometer = (ThermometerFigure) refreshableFigure;
+            var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setShowBulb((Boolean) newValue);
             return false;
         };
@@ -64,7 +64,7 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // unit
         IWidgetPropertyChangeHandler fahrenheitHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure thermometer = (ThermometerFigure) refreshableFigure;
+            var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setTemperatureUnit(TemperatureUnit.values()[(Integer) newValue]);
             return false;
         };
@@ -72,7 +72,7 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure thermo = (ThermometerFigure) refreshableFigure;
+            var thermo = (ThermometerFigure) refreshableFigure;
             thermo.setEffect3D((Boolean) newValue);
             return false;
         };
@@ -80,11 +80,9 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
 
         // Change fill color when "FillColor Alarm Sensitive" property changes.
         IWidgetPropertyChangeHandler fillColorAlarmSensitiveHandler = (oldValue, newValue, refreshableFigure) -> {
-            ThermometerFigure figure = (ThermometerFigure) refreshableFigure;
+            var figure = (ThermometerFigure) refreshableFigure;
             boolean sensitive = (Boolean) newValue;
-            figure.setFillColor(
-                    delegate.calculateAlarmColor(sensitive,
-                            getWidgetModel().getFillColor()));
+            figure.setFillColor(delegate.calculateAlarmColor(sensitive, getWidgetModel().getFillColor()));
             return true;
         };
         setPropertyChangeHandler(ThermometerModel.PROP_FILLCOLOR_ALARM_SENSITIVE, fillColorAlarmSensitiveHandler);
@@ -94,10 +92,9 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
             if (!getWidgetModel().isFillColorAlarmSensitive()) {
                 return false;
             }
-            ThermometerFigure thermo = (ThermometerFigure) figure;
-            thermo.setFillColor(
-                    delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
-                            getWidgetModel().getFillColor()));
+            var thermo = (ThermometerFigure) figure;
+            thermo.setFillColor(delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
+                    getWidgetModel().getFillColor()));
             return true;
         });
     }

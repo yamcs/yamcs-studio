@@ -24,7 +24,7 @@ public final class WebBrowserEditPart extends AbstractBaseEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        WebBrowserModel model = getWidgetModel();
+        var model = getWidgetModel();
         AbstractWebBrowserFigure<?> figure = new WebBrowserFigure(this, model.isShowToolBar());
         figure.setUrl(model.getURL());
         return figure;

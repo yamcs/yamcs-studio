@@ -57,14 +57,13 @@ public class MeterModel extends AbstractMarkedWidgetModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new ColorProperty(PROP_NEEDLE_COLOR, "Needle Color",
-                WidgetPropertyCategory.Display, DEFAULT_NEEDLE_COLOR));
+        addProperty(new ColorProperty(PROP_NEEDLE_COLOR, "Needle Color", WidgetPropertyCategory.Display,
+                DEFAULT_NEEDLE_COLOR));
 
-        addProperty(new BooleanProperty(PROP_RAMP_GRADIENT, "Ramp Gradient",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_RAMP_GRADIENT, "Ramp Gradient", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_VALUE_LABEL, "Show Value Label",
-                WidgetPropertyCategory.Display, true));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_VALUE_LABEL, "Show Value Label", WidgetPropertyCategory.Display, true));
 
         setPropertyDescription(PROP_SHOW_MARKERS, "Show Ramp");
 

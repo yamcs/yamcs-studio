@@ -26,7 +26,7 @@ public class SimDatasource implements Datasource {
 
     @Override
     public boolean isConnected(IPV pv) {
-        SimData simData = pv2data.get(pv);
+        var simData = pv2data.get(pv);
         return simData != null && simData.isConnected();
     }
 
@@ -37,7 +37,7 @@ public class SimDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        SimData simData = pv2data.get(pv);
+        var simData = pv2data.get(pv);
         if (simData != null) {
             return simData.getValue();
         }
@@ -51,13 +51,13 @@ public class SimDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        String basename = pv.getName().substring(SCHEME.length());
+        var basename = pv.getName().substring(SCHEME.length());
 
-        SimData simData = name2data.computeIfAbsent(basename, x -> {
+        var simData = name2data.computeIfAbsent(basename, x -> {
             if (basename.startsWith("const(")) {
-                List<Object> tokens = FunctionParser.parseFunctionWithScalarOrArrayArguments(basename,
+                var tokens = FunctionParser.parseFunctionWithScalarOrArrayArguments(basename,
                         "Wrong syntax. Correct examples: const(3.14), const(\"Bob\"), const(\"ON\", \"OFF\"))");
-                VType constantValue = ValueFactory.toVTypeChecked(tokens.get(1));
+                var constantValue = ValueFactory.toVTypeChecked(tokens.get(1));
                 return new SimData(constantValue);
             } else {
                 SimFunction<?> function = (SimFunction<?>) NameParser.createFunction(basename);
@@ -71,7 +71,7 @@ public class SimDatasource implements Datasource {
 
     @Override
     public void onStopped(IPV pv) {
-        SimData simData = pv2data.remove(pv);
+        var simData = pv2data.remove(pv);
         if (simData != null) {
             simData.unregister(pv);
         }

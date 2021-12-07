@@ -8,8 +8,8 @@ public class IVStatistics extends IVNumeric implements VStatistics {
     private Double max;
     private Integer nSamples;
 
-    public IVStatistics(Double average, Double stdDev, Double min, Double max, Integer nSamples,
-            Alarm alarm, Time time, Display display) {
+    public IVStatistics(Double average, Double stdDev, Double min, Double max, Integer nSamples, Alarm alarm, Time time,
+            Display display) {
         super(alarm, time, display);
         this.average = average;
         this.stdDev = stdDev;

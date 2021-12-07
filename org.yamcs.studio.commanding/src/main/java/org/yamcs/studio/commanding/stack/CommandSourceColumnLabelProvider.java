@@ -1,7 +1,6 @@
 package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -20,8 +19,8 @@ public class CommandSourceColumnLabelProvider extends StyledCellLabelProvider {
 
     @Override
     public void update(ViewerCell cell) {
-        StackedCommand cmd = (StackedCommand) cell.getElement();
-        StyledString str = cmd.toStyledString(styleProvider);
+        var cmd = (StackedCommand) cell.getElement();
+        var str = cmd.toStyledString(styleProvider);
         cell.setText(str.toString());
         cell.setImage(cmd.isValid() ? null : errorImage);
         cell.setStyleRanges(str.getStyleRanges());

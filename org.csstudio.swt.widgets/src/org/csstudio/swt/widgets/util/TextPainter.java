@@ -11,7 +11,6 @@ package org.csstudio.swt.widgets.util;
 
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
 /**
@@ -43,7 +42,7 @@ public final class TextPainter {
      * @return the point at which the text is to be drawn
      */
     public static Point getDelta(Graphics gfx, String text, int align) {
-        Dimension td = FigureUtilities.getTextExtents(text, gfx.getFont());
+        var td = FigureUtilities.getTextExtents(text, gfx.getFont());
 
         if (align == TOP_LEFT) {
             return new Point(0, 0);
@@ -93,7 +92,7 @@ public final class TextPainter {
      *            where on the bounding box the anchor is
      */
     public static void drawText(Graphics gfx, String text, int x, int y, int align) {
-        Point d = getDelta(gfx, text, align);
+        var d = getDelta(gfx, text, align);
         gfx.drawText(text, x + d.x, y + d.y);
     }
 
@@ -114,8 +113,8 @@ public final class TextPainter {
      * @param align
      *            where on the bounding box the anchor is
      */
-    public static void drawRotatedText(final Graphics gfx, String text, double angle, int x, int y, int align) {
-        Point d = getDelta(gfx, text, align);
+    public static void drawRotatedText(Graphics gfx, String text, double angle, int x, int y, int align) {
+        var d = getDelta(gfx, text, align);
 
         gfx.translate(x, y);
         try {

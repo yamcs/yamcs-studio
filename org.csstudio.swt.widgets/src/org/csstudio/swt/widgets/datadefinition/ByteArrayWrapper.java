@@ -24,10 +24,12 @@ public class ByteArrayWrapper implements IPrimaryArrayWrapper {
         this.data = data;
     }
 
+    @Override
     public double get(int i) {
         return data[i];
     }
 
+    @Override
     public int getSize() {
         return data.length;
     }

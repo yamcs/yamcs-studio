@@ -40,30 +40,32 @@ public class WidgetEditPartFactory implements EditPartFactory {
 
     @Override
     public EditPart createEditPart(EditPart context, Object model) {
-        EditPart part = getPartForModel(model);
+        var part = getPartForModel(model);
         if (part != null) {
             part.setModel(model);
             if (part instanceof AbstractBaseEditPart) {
                 ((AbstractBaseEditPart) part).setExecutionMode(executionMode);
                 ((AbstractBaseEditPart) part).setSite(site);
-            } else if (part instanceof WidgetConnectionEditPart)
+            } else if (part instanceof WidgetConnectionEditPart) {
                 ((WidgetConnectionEditPart) part).setExecutionMode(executionMode);
+            }
         }
         return part;
     }
 
     private EditPart getPartForModel(Object model) {
-        if (model instanceof DisplayModel)
+        if (model instanceof DisplayModel) {
             return new DisplayEditpart();
-        if (model instanceof ConnectionModel)
+        }
+        if (model instanceof ConnectionModel) {
             return new WidgetConnectionEditPart();
+        }
         if (model instanceof AbstractWidgetModel) {
-            AbstractBaseEditPart editpart = WidgetsService.getInstance().getWidgetDescriptor(
-                    ((AbstractWidgetModel) model).getTypeID()).getWidgetEditpart();
+            var editpart = WidgetsService.getInstance().getWidgetDescriptor(((AbstractWidgetModel) model).getTypeID())
+                    .getWidgetEditpart();
             return editpart;
         }
-        OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                "Cannot create editpart for model object {0}",
+        OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot create editpart for model object {0}",
                 model == null ? "null" : model.getClass().getName());
         return null;
     }

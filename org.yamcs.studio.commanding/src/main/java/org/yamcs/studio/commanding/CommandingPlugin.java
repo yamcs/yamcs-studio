@@ -32,8 +32,8 @@ public class CommandingPlugin extends AbstractUIPlugin {
     }
 
     public IDialogSettings getCommandHistoryTableSettings() {
-        IDialogSettings settings = getDialogSettings();
-        IDialogSettings section = settings.getSection("cmdhist-table");
+        var settings = getDialogSettings();
+        var section = settings.getSection("cmdhist-table");
         if (section == null) {
             section = settings.addNewSection("cmdhist-table");
         }

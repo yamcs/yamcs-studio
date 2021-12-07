@@ -74,16 +74,14 @@ class ConcatStringsFunction implements FormulaFunction {
         }
 
         // Concatenate strings
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         for (Object object : args) {
-            VString str = (VString) object;
+            var str = (VString) object;
             sb.append(str.getValue());
         }
 
         // Return new value
-        return ValueFactory.newVString(sb.toString(),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args));
+        return ValueFactory.newVString(sb.toString(), highestSeverityOf(args, false), latestValidTimeOrNowOf(args));
     }
 
     private static boolean containsNull(Collection<Object> args) {

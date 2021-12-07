@@ -15,14 +15,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -41,9 +36,7 @@ import com.google.common.io.ByteStreams;
 public class ResourceUtil {
 
     private static final LoadingCache<String, byte[]> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(2, TimeUnit.MINUTES)
-            .maximumSize(1000)
-            .build(new CacheLoader<String, byte[]>() {
+            .expireAfterWrite(2, TimeUnit.MINUTES).maximumSize(1000).build(new CacheLoader<String, byte[]>() {
                 @Override
                 public byte[] load(String file) throws IOException, Exception {
                     return ByteStreams.toByteArray(pathToInputStream(file));
@@ -58,9 +51,9 @@ public class ResourceUtil {
      * @return the corresponding system path. null if it is not exist.
      */
     public static IPath workspacePathToSysPath(IPath path) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRoot root = workspace.getRoot();
-        IResource resource = root.findMember(path);
+        var workspace = ResourcesPlugin.getWorkspace();
+        var root = workspace.getRoot();
+        var resource = root.findMember(path);
         if (resource != null) {
             return resource.getLocation(); // existing resource
         } else {
@@ -82,7 +75,7 @@ public class ResourceUtil {
      */
     public static void pathToInputStreamInJob(String path, AbstractInputStreamRunnable uiTask, String jobName,
             IJobErrorHandler errorHandler) {
-        Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
+        var display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
         Job job = new Job(jobName) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
@@ -110,7 +103,7 @@ public class ResourceUtil {
 
     private static InputStream workspaceFileToInputStream(IPath path) {
         // Try workspace location
-        IFile workspace_file = getIFileFromIPath(path);
+        var workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
         if (workspace_file != null && workspace_file.exists()) {
             try {
@@ -132,9 +125,9 @@ public class ResourceUtil {
      */
     private static IFile getIFileFromIPath(IPath path) {
         try {
-            IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
+            var r = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
             if (r != null && r instanceof IFile) {
-                IFile file = (IFile) r;
+                var file = (IFile) r;
                 if (file.exists()) {
                     return file;
                 }
@@ -156,7 +149,7 @@ public class ResourceUtil {
      */
     public static InputStream pathToInputStream(String path) throws Exception {
         // Not a workspace file. Try local file system
-        File local_file = new File(path);
+        var local_file = new File(path);
         if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
         }
@@ -173,9 +166,9 @@ public class ResourceUtil {
         // Must be a URL
         // Allow URLs with spaces. Ideally, the URL class would handle this?
         urlString = urlString.replaceAll(" ", "%20");
-        URI uri = new URI(urlString);
-        URL url = uri.toURL();
-        URLConnection connection = url.openConnection();
+        var uri = new URI(urlString);
+        var url = uri.toURL();
+        var connection = url.openConnection();
         connection.setReadTimeout(5000);
         return connection.getInputStream();
     }

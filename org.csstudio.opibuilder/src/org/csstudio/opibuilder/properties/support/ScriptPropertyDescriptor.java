@@ -30,13 +30,13 @@ public class ScriptPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public ScriptPropertyDescriptor(final Object id, final AbstractWidgetModel widgetModel, final String displayName) {
+    public ScriptPropertyDescriptor(Object id, AbstractWidgetModel widgetModel, String displayName) {
         super(id, displayName);
         this.widgetModel = widgetModel;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new ScriptsInputCellEditor(parent, widgetModel, "Attach Scripts");
         if (getValidator() != null) {
             editor.setValidator(getValidator());

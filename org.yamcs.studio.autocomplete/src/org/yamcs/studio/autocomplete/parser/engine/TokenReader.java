@@ -22,36 +22,40 @@ public class TokenReader extends Reader {
         this.r = r;
     }
 
+    @Override
     public void close() throws IOException {
         r.close();
     }
 
+    @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
         if (peek != -1) {
-            int read = 1;
+            var read = 1;
             cbuf[off] = (char) peek;
-            if (len > 1)
+            if (len > 1) {
                 read = r.read(cbuf, off + 1, len - 1);
-            if (read != -1)
+            }
+            if (read != -1) {
                 read += 1;
+            }
             peek = -1;
             currentIndex += read;
             return read;
         }
-        int read = r.read(cbuf, off, len);
+        var read = r.read(cbuf, off, len);
         currentIndex += read;
         return read;
     }
 
     public char ignoreWhitespace() throws IOException {
         if (peek != -1 && !Character.isWhitespace(peek)) {
-            char ret = (char) peek;
+            var ret = (char) peek;
             peek = -1;
             currentIndex++;
             return (char) ret;
         }
         while (true) {
-            char c = (char) r.read();
+            var c = (char) r.read();
             currentIndex++;
             if (!Character.isWhitespace(c)) {
                 return c;
@@ -60,14 +64,15 @@ public class TokenReader extends Reader {
     }
 
     public int peek() throws IOException {
-        if (peek != -1)
+        if (peek != -1) {
             return peek;
-        else
+        } else {
             return peek = read();
+        }
     }
 
     public String readUntil(char token) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         char c = 0;
         while ((c = (char) r.read()) != token) {
             sb.append(c);

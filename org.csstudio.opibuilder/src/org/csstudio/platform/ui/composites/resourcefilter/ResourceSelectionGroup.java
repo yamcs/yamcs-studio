@@ -53,8 +53,7 @@ public final class ResourceSelectionGroup extends Composite {
             _shell = shell;
             this.setText("Create new folder");
             this.setToolTipText("Creates a new folder");
-            this.setImageDescriptor(
-                    ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png"));
+            this.setImageDescriptor(ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png"));
         }
 
         @Override
@@ -64,8 +63,7 @@ public final class ResourceSelectionGroup extends Composite {
             buffer.append(" (");
             buffer.append(resource.getFullPath());
             buffer.append("/..)");
-            var inputDialog = new InputDialog(_shell, "Create a new Folder",
-                    buffer.toString(), "", null);
+            var inputDialog = new InputDialog(_shell, "Create a new Folder", buffer.toString(), "", null);
             var ret = inputDialog.open();
             if (ret == Window.OK) {
                 var folderName = inputDialog.getValue();
@@ -87,7 +85,7 @@ public final class ResourceSelectionGroup extends Composite {
 
         private final Shell _shell;
 
-        public NewProjectAction(final Shell shell) {
+        public NewProjectAction(Shell shell) {
             _shell = shell;
             this.setText("Create new project");
             this.setToolTipText("Creates a new project");
@@ -96,8 +94,8 @@ public final class ResourceSelectionGroup extends Composite {
 
         @Override
         public void run() {
-            var inputDialog = new InputDialog(_shell, "Create a new Project",
-                    "Please enter the name of the project.", "", null);
+            var inputDialog = new InputDialog(_shell, "Create a new Project", "Please enter the name of the project.",
+                    "", null);
             var ret = inputDialog.open();
 
             if (ret == Window.OK) {
@@ -169,9 +167,8 @@ public final class ResourceSelectionGroup extends Composite {
      * @param showNewContainerActions
      *            Whether to show the New Folder and New Project actions.
      */
-    public ResourceSelectionGroup(final Composite parent,
-            final Listener listener, final String[] filters,
-            final boolean showNewContainerActions) {
+    public ResourceSelectionGroup(Composite parent, Listener listener, String[] filters,
+            boolean showNewContainerActions) {
         this(parent, listener, filters, null, showNewContainerActions);
     }
 
@@ -188,9 +185,8 @@ public final class ResourceSelectionGroup extends Composite {
      * @param showNewContainerActions
      *            Whether to show the New Folder and New Project actions.
      */
-    public ResourceSelectionGroup(final Composite parent,
-            final Listener listener, final String[] filters,
-            final String message, final boolean showNewContainerActions) {
+    public ResourceSelectionGroup(Composite parent, Listener listener, String[] filters, String message,
+            boolean showNewContainerActions) {
         this(parent, listener, filters, message, true, showNewContainerActions);
     }
 
@@ -209,13 +205,9 @@ public final class ResourceSelectionGroup extends Composite {
      * @param showNewContainerActions
      *            Whether to show the New Folder and New Project actions.
      */
-    public ResourceSelectionGroup(final Composite parent,
-            final Listener listener, final String[] filters,
-            final String message,
-            final boolean showClosedProjects,
-            final boolean showNewContainerActions) {
-        this(parent, listener, filters, message, showClosedProjects,
-                showNewContainerActions,
+    public ResourceSelectionGroup(Composite parent, Listener listener, String[] filters, String message,
+            boolean showClosedProjects, boolean showNewContainerActions) {
+        this(parent, listener, filters, message, showClosedProjects, showNewContainerActions,
                 SIZING_SELECTION_PANE_HEIGHT, SIZING_SELECTION_PANE_WIDTH);
     }
 
@@ -238,11 +230,8 @@ public final class ResourceSelectionGroup extends Composite {
      * @param widthHint
      *            width hint for the drill down composite
      */
-    public ResourceSelectionGroup(final Composite parent,
-            final Listener listener, final String[] filters,
-            final String message, final boolean showClosedProjects,
-            final boolean showNewContainerActions,
-            final int heightHint, final int widthHint) {
+    public ResourceSelectionGroup(Composite parent, Listener listener, String[] filters, String message,
+            boolean showClosedProjects, boolean showNewContainerActions, int heightHint, int widthHint) {
         super(parent, SWT.NONE);
         _listener = listener;
         _showClosedProjects = showClosedProjects;
@@ -250,8 +239,7 @@ public final class ResourceSelectionGroup extends Composite {
         if (message != null) {
             createContents(message, filters, heightHint, widthHint);
         } else {
-            createContents("Select the folder:",
-                    filters, heightHint, widthHint);
+            createContents("Select the folder:", filters, heightHint, widthHint);
         }
     }
 
@@ -320,8 +308,7 @@ public final class ResourceSelectionGroup extends Composite {
         var contentProvider = new WorkspaceResourceContentProvider(filters);
         contentProvider.showClosedProjects(_showClosedProjects);
         _treeViewer.setContentProvider(contentProvider);
-        _treeViewer.setLabelProvider(WorkbenchLabelProvider
-                .getDecoratingWorkbenchLabelProvider());
+        _treeViewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
         _treeViewer.setSorter(new ViewerSorter());
         _treeViewer.setUseHashlookup(true);
         _treeViewer.addSelectionChangedListener(event -> {
@@ -364,7 +351,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param viewer
      *            The TreeViewer, which selection should be set
      */
-    private void setDefaultSelection(final TreeViewer viewer) {
+    private void setDefaultSelection(TreeViewer viewer) {
         var item = viewer.getTree().getItemCount() > 0 ? viewer.getTree().getItem(0) : null;
         if (item != null) {
             viewer.getTree().setSelection(item);
@@ -377,7 +364,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param manager
      *            The ToolBarManager, where the Actions are added
      */
-    private void addNewContainerActions(final ToolBarManager manager) {
+    private void addNewContainerActions(ToolBarManager manager) {
         if (_showNewContainerActions) {
             _newFolderAction = new NewFolderAction(this.getShell());
             _newFolderAction.setEnabled(false);
@@ -395,7 +382,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param viewer
      *            The TreeViewer, where the PopupMenu is added
      */
-    private void addPopupMenu(final TreeViewer viewer) {
+    private void addPopupMenu(TreeViewer viewer) {
         var popupMenu = new MenuManager();
         if (_showNewContainerActions) {
             popupMenu.add(_newFolderAction);
@@ -445,15 +432,15 @@ public final class ResourceSelectionGroup extends Composite {
         _treeViewer.setSelection(new StructuredSelection(resource), true);
     }
 
-    public void setSelectedResource(final IPath path) {
+    public void setSelectedResource(IPath path) {
         IContainer workspace = ResourcesPlugin.getWorkspace().getRoot();
-        IResource res = workspace.findMember(path);
+        var res = workspace.findMember(path);
         if (res != null) {
             setSelectedResource(res);
         }
     }
 
-    public void refreshTreeWithFilter(final String[] filters) {
+    public void refreshTreeWithFilter(String[] filters) {
         if (_treeViewer == null) {
             return;
         }

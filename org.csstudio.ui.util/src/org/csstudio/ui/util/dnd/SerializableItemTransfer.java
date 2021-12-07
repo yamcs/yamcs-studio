@@ -50,8 +50,8 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Transfer[] getTransfers(Class[] classes) {
-        final Transfer[] transfers = new Transfer[classes.length];
-        for (int i = 0; i < classes.length; i++) {
+        var transfers = new Transfer[classes.length];
+        for (var i = 0; i < classes.length; i++) {
             Transfer transfer = getTransfer(classes[i]);
             transfers[i] = transfer;
         }
@@ -76,7 +76,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
      * @return Transfer for that type
      */
     public static SerializableItemTransfer getTransfer(String className) {
-        SerializableItemTransfer transfer = instances.get(className);
+        var transfer = instances.get(className);
         if (transfer == null) {
             transfer = new SerializableItemTransfer(className);
             instances.put(className, transfer);
@@ -90,7 +90,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
      * @param clazz
      *            Type handled by this Transfer
      */
-    private SerializableItemTransfer(final String className) {
+    private SerializableItemTransfer(String className) {
         this.className = className;
         typeName = "java:" + className;
         typeId = registerType(typeName);
@@ -114,7 +114,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
      * Serialize item
      */
     @Override
-    public void javaToNative(final Object object, final TransferData transferData) {
+    public void javaToNative(Object object, TransferData transferData) {
         // Check that it's an object of the right type
         if (!ReflectUtil.isInstance(object, getClassName())) {
             throw new IllegalArgumentException("Trying to serialize and object of the wrong type");
@@ -122,10 +122,10 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
 
         try {
             // Write data to a byte array
-            final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            final ObjectOutputStream oos = new ObjectOutputStream(out);
+            var out = new ByteArrayOutputStream();
+            var oos = new ObjectOutputStream(out);
             oos.writeObject(object);
-            final byte[] buffer = out.toByteArray();
+            var buffer = out.toByteArray();
             oos.close();
 
             // ByteArrayTransfer converts to medium
@@ -139,18 +139,20 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
      * De-serialize items
      */
     @Override
-    public Object nativeToJava(final TransferData transferData) {
-        if (!isSupportedType(transferData))
+    public Object nativeToJava(TransferData transferData) {
+        if (!isSupportedType(transferData)) {
             return null;
+        }
 
-        final byte[] buffer = (byte[]) super.nativeToJava(transferData);
-        if (buffer == null)
+        var buffer = (byte[]) super.nativeToJava(transferData);
+        if (buffer == null) {
             return null;
+        }
 
-        final Object obj;
+        Object obj;
         try {
-            final ByteArrayInputStream in = new ByteArrayInputStream(buffer);
-            final ObjectInputStream readIn = new ObjectInputStreamWithOsgiClassResolution(in);
+            var in = new ByteArrayInputStream(buffer);
+            ObjectInputStream readIn = new ObjectInputStreamWithOsgiClassResolution(in);
             obj = readIn.readObject();
             readIn.close();
             return obj;

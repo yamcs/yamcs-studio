@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editpolicies;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.commands.ChangeOrderCommand;
 import org.csstudio.opibuilder.commands.WidgetCreateCommand;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
@@ -32,20 +30,17 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
 
     @Override
     protected Command getAddCommand(ChangeBoundsRequest request) {
-        CompoundCommand cmd = new CompoundCommand();
-        @SuppressWarnings("rawtypes")
-        List editparts = request.getEditParts();
-        int index = findIndexOfTreeItemAt(request.getLocation());
-        for (int i = 0; i < editparts.size(); i++) {
-            EditPart child = (EditPart) editparts.get(index >= 0 ? editparts.size() - 1 - i : i);
+        var cmd = new CompoundCommand();
+        var editparts = request.getEditParts();
+        var index = findIndexOfTreeItemAt(request.getLocation());
+        for (var i = 0; i < editparts.size(); i++) {
+            var child = (EditPart) editparts.get(index >= 0 ? editparts.size() - 1 - i : i);
             if (isAncestor(child, getHost())) {
                 cmd.add(UnexecutableCommand.INSTANCE);
             } else {
-                AbstractWidgetModel childModel = (AbstractWidgetModel) child.getModel();
-                cmd.add(createCreateCommand(
-                        childModel,
-                        new Rectangle(new Point(), childModel.getSize()),
-                        index, "Reparent Widgets"));
+                var childModel = (AbstractWidgetModel) child.getModel();
+                cmd.add(createCreateCommand(childModel, new Rectangle(new Point(), childModel.getSize()), index,
+                        "Reparent Widgets"));
             }
         }
         return cmd;
@@ -53,25 +48,23 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
 
     @Override
     protected Command getCreateCommand(CreateRequest request) {
-        AbstractWidgetModel widgetModel = (AbstractWidgetModel) request.getNewObject();
-        int index = findIndexOfTreeItemAt(request.getLocation());
+        var widgetModel = (AbstractWidgetModel) request.getNewObject();
+        var index = findIndexOfTreeItemAt(request.getLocation());
         return createCreateCommand(widgetModel, null, index, "Create Widget");
     }
 
     @Override
     protected Command getMoveChildrenCommand(ChangeBoundsRequest request) {
-        CompoundCommand command = new CompoundCommand();
-        @SuppressWarnings("rawtypes")
-        List editparts = request.getEditParts();
-        @SuppressWarnings("rawtypes")
-        List children = getHost().getChildren();
-        int newIndex = findIndexOfTreeItemAt(request.getLocation());
-        int tempIndex = newIndex;
+        var command = new CompoundCommand();
+        var editparts = request.getEditParts();
+        var children = getHost().getChildren();
+        var newIndex = findIndexOfTreeItemAt(request.getLocation());
+        var tempIndex = newIndex;
 
-        for (int i = 0; i < editparts.size(); i++) {
-            EditPart child = (EditPart) editparts.get(editparts.size() - 1 - i);
+        for (var i = 0; i < editparts.size(); i++) {
+            var child = (EditPart) editparts.get(editparts.size() - 1 - i);
 
-            int oldIndex = children.indexOf(child);
+            var oldIndex = children.indexOf(child);
             if (oldIndex == tempIndex || oldIndex + 1 == tempIndex) {
                 command.add(UnexecutableCommand.INSTANCE);
                 return command;
@@ -79,18 +72,14 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
                 tempIndex--;
             }
 
-            command.add(new ChangeOrderCommand(tempIndex,
-                    (AbstractContainerModel) getHost().getModel(),
+            command.add(new ChangeOrderCommand(tempIndex, (AbstractContainerModel) getHost().getModel(),
                     (AbstractWidgetModel) child.getModel()));
         }
         return command;
     }
 
-    protected Command createCreateCommand(AbstractWidgetModel widgetModel,
-            Rectangle r, int index, String label) {
-
-        WidgetCreateCommand cmd = new WidgetCreateCommand(
-                widgetModel, (AbstractContainerModel) getHost().getModel(), r, false, true);
+    protected Command createCreateCommand(AbstractWidgetModel widgetModel, Rectangle r, int index, String label) {
+        var cmd = new WidgetCreateCommand(widgetModel, (AbstractContainerModel) getHost().getModel(), r, false, true);
         cmd.setLabel(label);
         cmd.setIndex(index);
         return cmd;
@@ -98,11 +87,12 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
     }
 
     protected boolean isAncestor(EditPart source, EditPart target) {
-        if (source == target)
+        if (source == target) {
             return true;
-        if (target.getParent() != null)
+        }
+        if (target.getParent() != null) {
             return isAncestor(source, target.getParent());
+        }
         return false;
     }
-
 }

@@ -33,7 +33,7 @@ public class Ranges {
      *            maximum value
      * @return the range
      */
-    public static Range range(final double minValue, final double maxValue) {
+    public static Range range(double minValue, double maxValue) {
         if (minValue > maxValue) {
             throw new IllegalArgumentException(
                     "minValue should be less then or equal to maxValue (" + minValue + ", " + maxValue + ")");
@@ -98,11 +98,11 @@ public class Ranges {
      * @return from 0 (if there is no intersection) to 1 (if the ranges are the same)
      */
     public static double overlap(Range range, Range otherRange) {
-        double minOverlap = Math.max(range.getMinimum(), otherRange.getMinimum());
-        double maxOverlap = Math.min(range.getMaximum(), otherRange.getMaximum());
-        double overlapWidth = maxOverlap - minOverlap;
-        double rangeWidth = range.getMaximum() - range.getMinimum();
-        double fraction = Math.max(0.0, overlapWidth / rangeWidth);
+        var minOverlap = Math.max(range.getMinimum(), otherRange.getMinimum());
+        var maxOverlap = Math.min(range.getMaximum(), otherRange.getMaximum());
+        var overlapWidth = maxOverlap - minOverlap;
+        var rangeWidth = range.getMaximum() - range.getMinimum();
+        var fraction = Math.max(0.0, overlapWidth / rangeWidth);
         return fraction;
     }
 }

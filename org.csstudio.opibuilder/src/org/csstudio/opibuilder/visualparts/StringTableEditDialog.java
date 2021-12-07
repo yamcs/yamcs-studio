@@ -35,8 +35,8 @@ public class StringTableEditDialog extends Dialog {
     private Object[] cellEditorDatas;
     private CellEditorType[] cellEditorTypes;
 
-    public StringTableEditDialog(Shell parentShell, List<String[]> inputData,
-            String dialogTitle, String[] columnTitles, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
+    public StringTableEditDialog(Shell parentShell, List<String[]> inputData, String dialogTitle, String[] columnTitles,
+            CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(parentShell);
         this.title = dialogTitle;
         this.columnTitles = columnTitles;
@@ -52,23 +52,23 @@ public class StringTableEditDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite container = (Composite) super.createDialogArea(parent);
+        var container = (Composite) super.createDialogArea(parent);
         // Table editor should stretch to fill the dialog space, but
         // at least on OS X, it has some minimum size below which it
         // doesn't properly shrink.
-        int[] columnWidths = new int[columnTitles.length];
+        var columnWidths = new int[columnTitles.length];
         Arrays.fill(columnWidths, 80);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.heightHint = 200;
-        tableEditor = new StringTableEditor(container, columnTitles,
-                null, contents, null, columnWidths, cellEditorTypes, cellEditorDatas);
+        tableEditor = new StringTableEditor(container, columnTitles, null, contents, null, columnWidths,
+                cellEditorTypes, cellEditorDatas);
         tableEditor.setLayoutData(gd);
 
         return container;
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);

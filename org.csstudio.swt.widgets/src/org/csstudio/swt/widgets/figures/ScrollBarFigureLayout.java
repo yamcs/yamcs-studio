@@ -20,8 +20,7 @@ import org.eclipse.draw2d.geometry.Transposer;
 /**
  * Lays out the Figures that make up a ScrollBar.
  */
-public class ScrollBarFigureLayout
-        extends AbstractLayout {
+public class ScrollBarFigureLayout extends AbstractLayout {
 
     /** Used as a constraint for the up arrow figure. */
     public static final String UP_ARROW = "up arrow";
@@ -77,8 +76,8 @@ public class ScrollBarFigureLayout
      */
     @Override
     protected Dimension calculatePreferredSize(IFigure parent, int w, int h) {
-        Insets insets = transposer.t(parent.getInsets());
-        Dimension d = new Dimension(16, 16 * 4);
+        var insets = transposer.t(parent.getInsets());
+        var d = new Dimension(16, 16 * 4);
         d.expand(insets.getWidth(), insets.getHeight());
         return transposer.t(d);
     }
@@ -88,18 +87,17 @@ public class ScrollBarFigureLayout
      */
     @Override
     public void layout(IFigure parent) {
-        ScrollbarFigure scrollBar = (ScrollbarFigure) parent;
+        var scrollBar = (ScrollbarFigure) parent;
 
-        Rectangle trackBounds = layoutButtons(scrollBar);
+        var trackBounds = layoutButtons(scrollBar);
 
-        double extent = scrollBar.getExtent();
-        double max = scrollBar.getMaximum() + extent;
-        double min = scrollBar.getMinimum();
-        double totalRange = max - min;
-        double valueRange = totalRange - extent;
+        var extent = scrollBar.getExtent();
+        var max = scrollBar.getMaximum() + extent;
+        var min = scrollBar.getMinimum();
+        var totalRange = max - min;
+        var valueRange = totalRange - extent;
         if (!scrollBar.isEnabled() || Double.isNaN(min) || Double.isNaN(max)) {
-            Rectangle boundsUpper = new Rectangle(trackBounds),
-                    boundsLower = new Rectangle(trackBounds);
+            Rectangle boundsUpper = new Rectangle(trackBounds), boundsLower = new Rectangle(trackBounds);
             boundsUpper.height /= 2;
             boundsLower.y += boundsUpper.height;
             boundsLower.height = trackBounds.height - boundsUpper.height;
@@ -115,7 +113,7 @@ public class ScrollBarFigureLayout
         if (totalRange == 0) {
             return;
         }
-        int thumbHeight = (int) Math.max(thumb == null ? 0 : thumb.getMinimumSize().height,
+        var thumbHeight = (int) Math.max(thumb == null ? 0 : thumb.getMinimumSize().height,
                 trackBounds.height * extent / totalRange);
 
         if (thumb != null) {
@@ -127,33 +125,23 @@ public class ScrollBarFigureLayout
             thumb.setVisible(false);
             thumbY = trackBounds.y;
         } else {
-            thumbY = (int) (trackBounds.y + (trackBounds.height - thumbHeight)
-                    * (scrollBar.getCoercedValue() - min) / valueRange);
+            thumbY = (int) (trackBounds.y
+                    + (trackBounds.height - thumbHeight) * (scrollBar.getCoercedValue() - min) / valueRange);
         }
 
-        Rectangle thumbBounds = new Rectangle(
-                trackBounds.x,
-                thumbY,
-                trackBounds.width,
-                thumbHeight);
+        var thumbBounds = new Rectangle(trackBounds.x, thumbY, trackBounds.width, thumbHeight);
 
         if (thumb != null && thumb.isVisible()) {
             thumb.setBounds(transposer.t(thumbBounds));
         }
 
         if (pageUp != null) {
-            pageUp.setBounds(transposer.t(new Rectangle(
-                    trackBounds.x,
-                    trackBounds.y,
-                    trackBounds.width,
-                    thumbBounds.y - trackBounds.y)));
+            pageUp.setBounds(transposer
+                    .t(new Rectangle(trackBounds.x, trackBounds.y, trackBounds.width, thumbBounds.y - trackBounds.y)));
         }
 
         if (pageDown != null) {
-            pageDown.setBounds(transposer.t(new Rectangle(
-                    trackBounds.x,
-                    thumbBounds.y + thumbHeight,
-                    trackBounds.width,
+            pageDown.setBounds(transposer.t(new Rectangle(trackBounds.x, thumbBounds.y + thumbHeight, trackBounds.width,
                     trackBounds.bottom() - thumbBounds.bottom())));
         }
     }
@@ -169,26 +157,19 @@ public class ScrollBarFigureLayout
      * @since 2.0
      */
     protected Rectangle layoutButtons(ScrollbarFigure scrollBar) {
-        Rectangle bounds = transposer.t(scrollBar.getClientArea());
-        Dimension buttonSize = new Dimension(
-                bounds.width,
-                Math.min(bounds.width, bounds.height / 2));
+        var bounds = transposer.t(scrollBar.getClientArea());
+        var buttonSize = new Dimension(bounds.width, Math.min(bounds.width, bounds.height / 2));
 
         if (up != null) {
-            up.setBounds(transposer.t(
-                    new Rectangle(bounds.getTopLeft(), buttonSize)));
+            up.setBounds(transposer.t(new Rectangle(bounds.getTopLeft(), buttonSize)));
         }
         if (down != null) {
-            Rectangle r = new Rectangle(
-                    bounds.x, bounds.bottom() - buttonSize.height,
-                    buttonSize.width, buttonSize.height);
+            var r = new Rectangle(bounds.x, bounds.bottom() - buttonSize.height, buttonSize.width, buttonSize.height);
             down.setBounds(transposer.t(r));
         }
 
-        Rectangle trackBounds = bounds.getCropped(
-                new Insets(
-                        (up == null) ? 0 : buttonSize.height, 0,
-                        (down == null) ? 0 : buttonSize.height, 0));
+        var trackBounds = bounds.getCropped(
+                new Insets((up == null) ? 0 : buttonSize.height, 0, (down == null) ? 0 : buttonSize.height, 0));
 
         return trackBounds;
     }

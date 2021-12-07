@@ -182,8 +182,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _addAction.setText("Add " + _title);
             _addAction.setToolTipText("Adds a new " + _title + " to the list");
             _addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                            "icons/add.gif"));
+                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
             manager.add(_addAction);
             _editAction = new Action() {
                 @Override
@@ -195,8 +194,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _editAction.setText("Edit " + _title);
             _editAction.setToolTipText("Edits the selected " + _title);
             _editAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                            "icons/edit.gif"));
+                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/edit.gif"));
             _editAction.setEnabled(false);
             manager.add(_editAction);
             _removeAction = new Action() {
@@ -209,8 +207,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _removeAction.setText("Remove " + _title);
             _removeAction.setToolTipText("Removes the selected " + _title + " from the list");
             _removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                            "icons/delete.gif"));
+                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
             _removeAction.setEnabled(false);
             manager.add(_removeAction);
             manager.add(new Separator());
@@ -223,8 +220,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _upAction.setText("Move up");
             _upAction.setToolTipText("Increases the index of the selected Point");
             _upAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                            "icons/search_prev.gif"));
+                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
             _upAction.setEnabled(false);
             manager.add(_upAction);
             _downAction = new Action() {
@@ -236,8 +232,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _downAction.setText("Move down");
             _downAction.setToolTipText("Decreases the index of the selected Point");
             _downAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                            "icons/search_next.gif"));
+                    .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
             _downAction.setEnabled(false);
             manager.add(_downAction);
             manager.update(true);
@@ -250,7 +245,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                 @Override
                 public String getText(Object element) {
                     if (element instanceof Point) {
-                        Point p = (Point) element;
+                        var p = (Point) element;
                         return p.toString();// p.x+","+p.y;
                     }
                     return element.toString();
@@ -363,8 +358,8 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          *            True, if the Point should be moved up, false otherwise
          */
         private void movePoint(boolean up) {
-            int newIndex = _viewer.getList().getSelectionIndex();
-            Point point = _pointList.get(newIndex);
+            var newIndex = _viewer.getList().getSelectionIndex();
+            var point = _pointList.get(newIndex);
             _pointList.remove(newIndex);
             if (up) {
                 newIndex = newIndex - 1;
@@ -466,9 +461,8 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             if (_message != null) {
                 var label = new Label(composite, SWT.WRAP);
                 label.setText(_message);
-                var data = new GridData(GridData.GRAB_HORIZONTAL
-                        | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-                        | GridData.VERTICAL_ALIGN_CENTER);
+                var data = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL
+                        | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
                 data.horizontalSpan = 2;
                 data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
                 label.setLayoutData(data);

@@ -64,7 +64,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VNumber vNumber) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vNumber);
         builder.append(type.getSimpleName()).append('[').append(vNumber.getValue());
         appendAlarm(builder, vNumber);
@@ -81,7 +81,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VString vString) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vString);
         builder.append(type.getSimpleName()).append("[").append(vString.getValue());
         appendAlarm(builder, vString);
@@ -98,7 +98,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VBoolean vBoolean) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vBoolean);
         builder.append(type.getSimpleName()).append("[").append(vBoolean.getValue());
         appendAlarm(builder, vBoolean);
@@ -115,7 +115,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VEnum vEnum) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vEnum);
         builder.append(type.getSimpleName()).append("[").append(vEnum.getValue()).append("(").append(vEnum.getIndex())
                 .append(")");
@@ -137,7 +137,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VNumberArray vNumberArray) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vNumberArray);
         builder.append(type.getSimpleName()).append("[");
         builder.append(format.format(vNumberArray));
@@ -156,7 +156,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VStringArray vStringArray) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vStringArray);
         builder.append(type.getSimpleName()).append("[");
         builder.append(format.format(vStringArray));
@@ -175,7 +175,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VBooleanArray vBooleanArray) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vBooleanArray);
         builder.append(type.getSimpleName()).append("[");
         builder.append(format.format(vBooleanArray));
@@ -194,7 +194,7 @@ public class VTypeToString {
      * @return the string representation
      */
     public static String toString(VEnumArray vEnumArray) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vEnumArray);
         builder.append(type.getSimpleName()).append("[");
         builder.append(format.format(vEnumArray));
@@ -212,8 +212,8 @@ public class VTypeToString {
      *            the object
      * @return the string representation
      */
-    public static String toString(final VTable vTable) {
-        StringBuilder builder = new StringBuilder();
+    public static String toString(VTable vTable) {
+        var builder = new StringBuilder();
         builder.append("VTable").append("[").append(vTable.getColumnCount()).append("x").append(vTable.getRowCount())
                 .append(", ");
         builder.append(format.format(ValueFactory.newVStringArray(VTableFactory.columnNames(vTable),

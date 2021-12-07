@@ -27,7 +27,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,8 +63,7 @@ public class MultipleSelectionCombo<T> extends Composite {
     final private static String SEPARATOR = ", ";
     final private static String SEPERATOR_PATTERN = "\\s*,\\s*";
 
-    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(
-            this);
+    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private Display display;
 
@@ -100,7 +98,7 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @param parent
      * @param style
      */
-    public MultipleSelectionCombo(final Composite parent, final int style) {
+    public MultipleSelectionCombo(Composite parent, int style) {
         super(parent, style);
         createComponents(parent);
     }
@@ -110,9 +108,9 @@ public class MultipleSelectionCombo<T> extends Composite {
      *
      * @param parent
      */
-    private void createComponents(final Composite parent) {
+    private void createComponents(Composite parent) {
         display = parent.getDisplay();
-        final GridLayout layout = new GridLayout();
+        var layout = new GridLayout();
         layout.numColumns = 2;
         layout.marginWidth = 0;
         setLayout(layout);
@@ -139,13 +137,13 @@ public class MultipleSelectionCombo<T> extends Composite {
         });
 
         text = new Text(this, SWT.BORDER);
-        GridData gd = new GridData(SWT.FILL, 0, true, false);
+        var gd = new GridData(SWT.FILL, 0, true, false);
         text.setLayoutData(gd);
         text.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
                 // Analyze text, update selection
-                final String items_text = text.getText();
+                var items_text = text.getText();
                 modify = true;
                 setSelection(items_text);
                 modify = false;
@@ -153,7 +151,7 @@ public class MultipleSelectionCombo<T> extends Composite {
         });
         text.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(final KeyEvent e) {
+            public void keyPressed(KeyEvent e) {
                 switch (e.keyCode) {
                 case SWT.ARROW_DOWN:
                     drop(true);
@@ -174,30 +172,32 @@ public class MultipleSelectionCombo<T> extends Composite {
         drop_down.setLayoutData(gd);
         drop_down.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(final SelectionEvent e) {
+            public void widgetSelected(SelectionEvent e) {
                 // Was list open, user clicked this button to close,
                 // and list self-closed because is lost focus?
 
                 // e.time is an unsigned integer and should be AND'ed with
                 // 0xFFFFFFFFL so that it can be treated as a signed long.
-                if ((e.time & 0xFFFFFFFFL) - lost_focus <= 300)
+                if ((e.time & 0xFFFFFFFFL) - lost_focus <= 300) {
                     return; // Done
+                }
 
                 // If list is not open, open it
-                if (!isDropped())
+                if (!isDropped()) {
                     drop(true);
+                }
             }
         });
     }
 
     @Override
-    public void setForeground(final Color color) {
+    public void setForeground(Color color) {
         text_color = color;
         text.setForeground(color);
     }
 
     @Override
-    public void setToolTipText(final String tooltip) {
+    public void setToolTipText(String tooltip) {
         tool_tip = tooltip;
         text.setToolTipText(tooltip);
         drop_down.setToolTipText(tooltip);
@@ -209,8 +209,8 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @param new_items
      *            Items to display in the list
      */
-    public void setItems(final List<T> items) {
-        List<T> oldValue = this.items;
+    public void setItems(List<T> items) {
+        var oldValue = this.items;
         this.items = items;
         changeSupport.firePropertyChange("items", oldValue, this.items);
     }
@@ -233,19 +233,17 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @param sel_items
      *            Items to select in the list
      */
-    public void setSelection(final List<T> selection) {
-        List<Integer> oldValue = this.selectionIndex;
-        List<Integer> newSelectionIndex = new ArrayList<Integer>(
-                selection.size());
+    public void setSelection(List<T> selection) {
+        var oldValue = this.selectionIndex;
+        List<Integer> newSelectionIndex = new ArrayList<Integer>(selection.size());
         for (T t : selection) {
-            int index = items.indexOf(t);
+            var index = items.indexOf(t);
             if (index >= 0) {
                 newSelectionIndex.add(items.indexOf(t));
             }
         }
         this.selectionIndex = newSelectionIndex;
-        changeSupport.firePropertyChange("selection", oldValue,
-                this.selectionIndex);
+        changeSupport.firePropertyChange("selection", oldValue, this.selectionIndex);
     }
 
     /**
@@ -255,10 +253,8 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @param selection_text
      *            Items to select in the list as comma-separated string
      */
-    public void setSelection(final String selection) {
-        setSelection("".equals(selection) ? new String[0]
-                : selection
-                        .split(SEPERATOR_PATTERN));
+    public void setSelection(String selection) {
+        setSelection("".equals(selection) ? new String[0] : selection.split(SEPERATOR_PATTERN));
     }
 
     /**
@@ -266,8 +262,8 @@ public class MultipleSelectionCombo<T> extends Composite {
      *
      * @param selections
      */
-    public void setSelection(final String[] selections) {
-        List<Integer> oldValue = this.selectionIndex;
+    public void setSelection(String[] selections) {
+        var oldValue = this.selectionIndex;
         List<Integer> newSelectionIndex;
         if (selections.length > 0) {
             newSelectionIndex = new ArrayList<Integer>(selections.length);
@@ -288,8 +284,7 @@ public class MultipleSelectionCombo<T> extends Composite {
             newSelectionIndex = Collections.emptyList();
         }
         this.selectionIndex = newSelectionIndex;
-        changeSupport.firePropertyChange("selection", oldValue,
-                this.selectionIndex);
+        changeSupport.firePropertyChange("selection", oldValue, this.selectionIndex);
     }
 
     /**
@@ -327,10 +322,11 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     /** Update <code>text</code> to reflect <code>selection</code> */
     private void updateText() {
-        final StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         for (Integer index : selectionIndex) {
-            if (buf.length() > 0)
+            if (buf.length() > 0) {
                 buf.append(SEPARATOR);
+            }
             buf.append(stringRepresention(items.get(index)));
         }
         text.setText(buf.toString());
@@ -347,12 +343,14 @@ public class MultipleSelectionCombo<T> extends Composite {
      *            Display drop-down?
      */
     private void drop(boolean drop) {
-        if (drop == isDropped())
+        if (drop == isDropped()) {
             return;
-        if (drop)
+        }
+        if (drop) {
             createPopup();
-        else
+        } else {
             hidePopup();
+        }
     }
 
     /** Create shell that simulates drop-down */
@@ -363,11 +361,10 @@ public class MultipleSelectionCombo<T> extends Composite {
         list.setToolTipText(tool_tip);
 
         // Position popup under the text box
-        Rectangle bounds = text.getBounds();
+        var bounds = text.getBounds();
         bounds.y += bounds.height;
         // As high as necessary for items
-        bounds.height = 5 + 2 * list.getBorderWidth() + list.getItemHeight()
-                * items.size();
+        bounds.height = 5 + 2 * list.getBorderWidth() + list.getItemHeight() * items.size();
         // ..with limitation
         bounds.height = Math.min(bounds.height, display.getBounds().height / 2);
         // Map to screen coordinates
@@ -391,13 +388,13 @@ public class MultipleSelectionCombo<T> extends Composite {
             }
         });
 
-        String[] stringItems = new String[items.size()];
-        for (int i = 0; i < items.size(); i++) {
+        var stringItems = new String[items.size()];
+        for (var i = 0; i < items.size(); i++) {
             stringItems[i] = stringRepresention(items.get(i));
         }
         list.setItems(stringItems);
-        int[] intSelectionIndex = new int[selectionIndex.size()];
-        for (int i = 0; i < intSelectionIndex.length; i++) {
+        var intSelectionIndex = new int[selectionIndex.size()];
+        for (var i = 0; i < intSelectionIndex.length; i++) {
             intSelectionIndex[i] = selectionIndex.get(i);
         }
         list.setSelection(intSelectionIndex);
@@ -414,7 +411,7 @@ public class MultipleSelectionCombo<T> extends Composite {
         // Hide popup when loosing focus
         list.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost(final FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 // This field is an unsigned integer and should be AND'ed with
                 // 0xFFFFFFFFL so that it can be treated as a signed long.
                 lost_focus = e.time & 0xFFFFFFFFL;

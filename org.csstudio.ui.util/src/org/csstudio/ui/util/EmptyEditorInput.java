@@ -19,7 +19,7 @@ public class EmptyEditorInput implements IEditorInput {
      * @param icon
      *            Desired icon
      */
-    public EmptyEditorInput(final ImageDescriptor icon) {
+    public EmptyEditorInput(ImageDescriptor icon) {
         this.icon = icon;
     }
 

@@ -47,12 +47,9 @@ public class ArcModel extends AbstractShapeModel {
         removeProperty(PROP_HORIZONTAL_FILL);
         removeProperty(PROP_TRANSPARENT);
         removeProperty(PROP_LINE_COLOR);
-        addProperty(new BooleanProperty(PROP_FILL, "Fill",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new IntegerProperty(PROP_START_ANGLE, "Start Angle",
-                WidgetPropertyCategory.Display, 0));
-        addProperty(new IntegerProperty(PROP_TOTAL_ANGLE, "Total Angle",
-                WidgetPropertyCategory.Display, 90));
+        addProperty(new BooleanProperty(PROP_FILL, "Fill", WidgetPropertyCategory.Display, false));
+        addProperty(new IntegerProperty(PROP_START_ANGLE, "Start Angle", WidgetPropertyCategory.Display, 0));
+        addProperty(new IntegerProperty(PROP_TOTAL_ANGLE, "Total Angle", WidgetPropertyCategory.Display, 90));
 
     }
 
@@ -131,8 +128,9 @@ public class ArcModel extends AbstractShapeModel {
     private static int regularDegree(int r) {
         if (r >= 360) {
             return r % 360;
-        } else if (r < 0)
+        } else if (r < 0) {
             return 360 + r % 360;
+        }
         return r;
     }
 

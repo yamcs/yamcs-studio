@@ -67,7 +67,7 @@ class NaturalJoinFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         List<VTable> tables = new ArrayList<>();
         for (Object object : args) {
             if (object != null) {

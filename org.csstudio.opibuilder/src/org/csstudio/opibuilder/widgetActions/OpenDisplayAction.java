@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.widgetActions;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -20,7 +19,6 @@ import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.FilePathProperty;
 import org.csstudio.opibuilder.properties.MacrosProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.runmode.IOPIRuntime;
 import org.csstudio.opibuilder.runmode.RunModeService;
 import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
 import org.csstudio.opibuilder.util.MacrosInput;
@@ -58,23 +56,21 @@ public class OpenDisplayAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new FilePathProperty(PROP_PATH, "File Path",
-                WidgetPropertyCategory.Basic, "", new String[] { "opi" }, false) {
+        addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
+                new String[] { "opi" }, false) {
             @Override
             public Object readValueFromXML(Element propElement) {
                 handleLegacySettings(propElement);
                 return super.readValueFromXML(propElement);
             }
         });
-        addProperty(new MacrosProperty(PROP_MACROS, "Macros",
-                WidgetPropertyCategory.Basic, new MacrosInput(
-                        new LinkedHashMap<String, String>(), true)));
-        addProperty(new ComboProperty(PROP_MODE, "Mode",
-                WidgetPropertyCategory.Basic, DisplayMode.stringValues(),
+        addProperty(new MacrosProperty(PROP_MACROS, "Macros", WidgetPropertyCategory.Basic,
+                new MacrosInput(new LinkedHashMap<String, String>(), true)));
+        addProperty(new ComboProperty(PROP_MODE, "Mode", WidgetPropertyCategory.Basic, DisplayMode.stringValues(),
                 DisplayMode.REPLACE.ordinal()));
     }
 
-    protected void handleLegacySettings(final Element path_element) {
+    protected void handleLegacySettings(Element path_element) {
         // Original OpenDisplayAction had property "replace".
         // True - Replace existing display
         // False - Open new display
@@ -99,10 +95,10 @@ public class OpenDisplayAction extends AbstractWidgetAction {
         // This OpenDisplayAction has a property "mode" that combines all of the above.
         // For legacy displays, hook into loading the "path" property which was found
         // in all versions and navigate the XML for older properties.
-        final Element action_element = path_element.getParentElement();
+        var action_element = path_element.getParentElement();
         // action_element.getName() should be "action"
 
-        Element legacy = action_element.getChild("Position");
+        var legacy = action_element.getChild("Position");
         if (legacy != null) {
             switch (Integer.parseInt(legacy.getValue())) {
             case 0:
@@ -151,8 +147,8 @@ public class OpenDisplayAction extends AbstractWidgetAction {
         }
     }
 
-    private void openOPI(final IPath absolutePath, final boolean ctrlPressed, final boolean shiftPressed) {
-        DisplayMode mode = getDisplayMode();
+    private void openOPI(IPath absolutePath, boolean ctrlPressed, boolean shiftPressed) {
+        var mode = getDisplayMode();
 
         if (ctrlPressed && !shiftPressed) {
             mode = DisplayMode.NEW_TAB;
@@ -162,7 +158,7 @@ public class OpenDisplayAction extends AbstractWidgetAction {
             mode = DisplayMode.NEW_SHELL;
         }
 
-        final IOPIRuntime runtime = getWidgetModel().getRootDisplayModel().getOpiRuntime();
+        var runtime = getWidgetModel().getRootDisplayModel().getOpiRuntime();
         RunModeService.openDisplay(absolutePath, Optional.ofNullable(getMacrosInput()), mode,
                 Optional.ofNullable(runtime));
     }
@@ -175,20 +171,19 @@ public class OpenDisplayAction extends AbstractWidgetAction {
      * @param shiftPressed
      *            True if Shift was held while invoking the action
      */
-    public void runWithModifiers(final boolean ctrlPressed, final boolean shiftPressed) {
+    public void runWithModifiers(boolean ctrlPressed, boolean shiftPressed) {
         // Determine absolute path
         // TODO Do this in RuntimeDelegate, after settling View-or-Editor
-        IPath absolutePath = getPath();
+        var absolutePath = getPath();
         if (!absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
         }
         if (absolutePath != null && ResourceUtil.isExsitingFile(absolutePath, true)) {
             openOPI(absolutePath, ctrlPressed, shiftPressed);
         } else {
-            final String error = NLS.bind("The file {0} does not exist.", getPath().toString());
+            var error = NLS.bind("The file {0} does not exist.", getPath().toString());
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, error);
-            MessageDialog.openError(Display.getDefault().getActiveShell(),
-                    "File Open Error", error);
+            MessageDialog.openError(Display.getDefault().getActiveShell(), "File Open Error", error);
         }
     }
 
@@ -198,23 +193,19 @@ public class OpenDisplayAction extends AbstractWidgetAction {
     }
 
     protected IPath getPath() {
-        String path = (String) getPropertyValue(PROP_PATH);
+        var path = (String) getPropertyValue(PROP_PATH);
         return path != null ? Path.fromPortableString(path) : null;
     }
 
     protected MacrosInput getMacrosInput() {
-        MacrosInput result = new MacrosInput(
-                new LinkedHashMap<String, String>(), true);
+        var result = new MacrosInput(new LinkedHashMap<String, String>(), true);
 
-        MacrosInput macrosInput = ((MacrosInput) getPropertyValue(PROP_MACROS))
-                .getCopy();
+        var macrosInput = ((MacrosInput) getPropertyValue(PROP_MACROS)).getCopy();
 
         if (macrosInput.isInclude_parent_macros()) {
-            Map<String, String> macrosMap = getWidgetModel() instanceof AbstractContainerModel
-                    ? ((AbstractContainerModel) getWidgetModel())
-                            .getParentMacroMap()
-                    : getWidgetModel().getParent()
-                            .getMacroMap();
+            var macrosMap = getWidgetModel() instanceof AbstractContainerModel
+                    ? ((AbstractContainerModel) getWidgetModel()).getParentMacroMap()
+                    : getWidgetModel().getParent().getMacroMap();
             result.getMacrosMap().putAll(macrosMap);
         }
         result.getMacrosMap().putAll(macrosInput.getMacrosMap());

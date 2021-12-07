@@ -20,7 +20,7 @@ public class LayoutWidgetsAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
 
-        AbstractLayoutEditpart layoutWidget = getLayoutWidget();
+        var layoutWidget = getLayoutWidget();
 
         LayoutWidgetsImp.run(layoutWidget, getCommandStack());
 

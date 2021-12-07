@@ -29,13 +29,12 @@ public final class WidgetActionMenuAction extends Action {
      * @param widgetAction
      *            The encapsulated {@link AbstractWidgetAction}
      */
-    public WidgetActionMenuAction(final AbstractWidgetAction widgetAction) {
+    public WidgetActionMenuAction(AbstractWidgetAction widgetAction) {
         _widgetAction = widgetAction;
         this.setText(_widgetAction.getDescription());
         Object adapter = widgetAction.getAdapter(IWorkbenchAdapter.class);
         if (adapter != null && adapter instanceof IWorkbenchAdapter) {
-            this.setImageDescriptor(((IWorkbenchAdapter) adapter)
-                    .getImageDescriptor(widgetAction));
+            this.setImageDescriptor(((IWorkbenchAdapter) adapter).getImageDescriptor(widgetAction));
         }
         setEnabled(widgetAction.isEnabled());
     }

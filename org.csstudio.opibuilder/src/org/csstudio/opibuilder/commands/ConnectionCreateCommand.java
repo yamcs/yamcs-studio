@@ -38,8 +38,7 @@ public class ConnectionCreateCommand extends Command {
      * @throws IllegalArgumentException
      *             if source is null
      */
-    public ConnectionCreateCommand(AbstractWidgetModel source,
-            String sourceTerminal) {
+    public ConnectionCreateCommand(AbstractWidgetModel source, String sourceTerminal) {
         if (source == null) {
             throw new IllegalArgumentException();
         }

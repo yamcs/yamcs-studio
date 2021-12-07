@@ -44,7 +44,7 @@ public class ExprToken {
 
     public final ExprTokenType type;
     public final String val;
-    public final double doubleValue;
+    public double doubleValue;
     public final int integerValue;
 
     public ExprToken(ExprTokenType type, String val) {
@@ -68,6 +68,7 @@ public class ExprToken {
         this.integerValue = integerValue;
     }
 
+    @Override
     public String toString() {
         return type.toString() + ":" + val;
     }

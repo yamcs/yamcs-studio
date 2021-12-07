@@ -20,7 +20,7 @@ public class EqualValueFilter {
         } else {
             throw new UnsupportedOperationException("Natural join only supports numbers and Strings");
         }
-        for (int i = 1; i < columnIndexes.length; i++) {
+        for (var i = 1; i < columnIndexes.length; i++) {
             Class<?> tableType = tables.get(i).getColumnType(columnIndexes[i]);
             if (type == double.class) {
                 if (!tableType.isPrimitive()) {
@@ -38,15 +38,15 @@ public class EqualValueFilter {
 
     public boolean filterRow(int[] rowIndexes) {
         if (type == double.class) {
-            double value = ((ListNumber) tables.get(0).getColumnData(columnIndexes[0])).getDouble(rowIndexes[0]);
-            for (int i = 1; i < rowIndexes.length; i++) {
+            var value = ((ListNumber) tables.get(0).getColumnData(columnIndexes[0])).getDouble(rowIndexes[0]);
+            for (var i = 1; i < rowIndexes.length; i++) {
                 if (value != ((ListNumber) tables.get(i).getColumnData(columnIndexes[i])).getDouble(rowIndexes[i])) {
                     return false;
                 }
             }
         } else {
-            Object value = ((List) tables.get(0).getColumnData(columnIndexes[0])).get(rowIndexes[0]);
-            for (int i = 1; i < rowIndexes.length; i++) {
+            var value = ((List) tables.get(0).getColumnData(columnIndexes[0])).get(rowIndexes[0]);
+            for (var i = 1; i < rowIndexes.length; i++) {
                 if (!Objects.equals(value, ((List) tables.get(i).getColumnData(columnIndexes[i])).get(rowIndexes[i]))) {
                     return false;
                 }

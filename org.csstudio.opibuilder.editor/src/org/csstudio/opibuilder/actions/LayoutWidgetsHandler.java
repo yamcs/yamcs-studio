@@ -16,10 +16,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.CommandStack;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -30,20 +27,19 @@ public class LayoutWidgetsHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart activeEditor = page.getActiveEditor();
+        var page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        var activeEditor = page.getActiveEditor();
 
         if (activeEditor instanceof OPIEditor) {
-            ISelection currentSelection = ((GraphicalViewer) ((OPIEditor) activeEditor)
-                    .getAdapter(GraphicalViewer.class)).getSelection();
+            var currentSelection = ((GraphicalViewer) ((OPIEditor) activeEditor).getAdapter(GraphicalViewer.class))
+                    .getSelection();
             if (currentSelection instanceof IStructuredSelection) {
-                Object element = ((IStructuredSelection) currentSelection)
-                        .getFirstElement();
+                var element = ((IStructuredSelection) currentSelection).getFirstElement();
                 if (element instanceof AbstractLayoutEditpart) {
-                    CommandStack commandStack = (CommandStack) ((OPIEditor) activeEditor)
-                            .getAdapter(CommandStack.class);
-                    if (commandStack != null)
+                    var commandStack = (CommandStack) ((OPIEditor) activeEditor).getAdapter(CommandStack.class);
+                    if (commandStack != null) {
                         LayoutWidgetsImp.run((AbstractLayoutEditpart) element, commandStack);
+                    }
                 }
             }
 

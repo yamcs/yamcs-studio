@@ -11,19 +11,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.yamcs.client.ParameterSubscription;
-import org.yamcs.protobuf.Mdb.AlarmInfo;
 import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.SubscribeParametersRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Display;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class PVComposite extends Composite implements YamcsAware, ParameterSubscription.Listener {
@@ -71,23 +67,18 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         if (processor != null && pvInfo.getParameterInfo() != null) {
             subscription = YamcsPlugin.getYamcsClient().createParameterSubscription();
             subscription.addListener(this);
-            subscription.sendMessage(SubscribeParametersRequest.newBuilder()
-                    .setInstance(instance)
-                    .setProcessor(processor)
-                    .setAbortOnInvalid(false)
-                    .setUpdateOnExpiration(true)
-                    .setSendFromCache(true)
-                    .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName()))
-                    .build());
+            subscription.sendMessage(SubscribeParametersRequest.newBuilder().setInstance(instance)
+                    .setProcessor(processor).setAbortOnInvalid(false).setUpdateOnExpiration(true).setSendFromCache(true)
+                    .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName())).build());
         }
     }
 
     private void createYamcsProperties(ParameterInfo pinfo) {
         createKeyValueTextPair("Yamcs Data Source", capitalize(pinfo.getDataSource().toString()));
         createKeyValueTextPair("Qualified Name", pinfo.getQualifiedName());
-        for (int i = 0; i < pinfo.getAliasCount(); i++) {
-            NamedObjectId alias = pinfo.getAlias(i);
-            String key = (i == 0) ? "Aliases" : null;
+        for (var i = 0; i < pinfo.getAliasCount(); i++) {
+            var alias = pinfo.getAlias(i);
+            var key = (i == 0) ? "Aliases" : null;
             createKeyValueTextPair(key, alias.getNamespace() + "; " + alias.getName());
         }
 
@@ -101,11 +92,11 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         createSeparator();
         createHeader("MDB");
 
-        ParameterTypeInfo type = pinfo.getType();
+        var type = pinfo.getType();
         createKeyValueTextPair("Data Encoding", capitalize(type.getDataEncoding().getType().toString()));
         createKeyValueTextPair("Engineering Type", capitalize(type.getEngType()));
         if (type.getUnitSetCount() > 0) {
-            String units = "";
+            var units = "";
             for (UnitInfo unit : type.getUnitSetList()) {
                 units += unit.getUnit() + " ";
             }
@@ -115,15 +106,15 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         if (type.getDefaultAlarm() != null && type.getDefaultAlarm().getStaticAlarmRangeCount() > 0) {
             createSeparator();
             createHeader("Default Alarm");
-            AlarmInfo defaultAlarm = type.getDefaultAlarm();
+            var defaultAlarm = type.getDefaultAlarm();
             createKeyValueTextPair("Min. Violations", "" + defaultAlarm.getMinViolations());
 
             // Backwards for lower limits
-            for (int i = defaultAlarm.getStaticAlarmRangeCount() - 1; i >= 0; i--) {
-                AlarmRange range = defaultAlarm.getStaticAlarmRange(i);
+            for (var i = defaultAlarm.getStaticAlarmRangeCount() - 1; i >= 0; i--) {
+                var range = defaultAlarm.getStaticAlarmRange(i);
                 if (range.hasMinInclusive()) {
-                    String label = capitalize(range.getLevel().toString()) + " Low";
-                    String limit = new DecimalFormat("#.############").format(range.getMinInclusive());
+                    var label = capitalize(range.getLevel().toString()) + " Low";
+                    var limit = new DecimalFormat("#.############").format(range.getMinInclusive());
                     createKeyValueTextPair(label, limit);
                 }
             }
@@ -131,8 +122,8 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             // Now forwards for upper limits
             for (AlarmRange range : defaultAlarm.getStaticAlarmRangeList()) {
                 if (range.hasMaxInclusive()) {
-                    String label = capitalize(range.getLevel().toString()) + " High";
-                    String limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
+                    var label = capitalize(range.getLevel().toString()) + " High";
+                    var limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
                     createKeyValueTextPair(label, limit);
                 }
             }
@@ -151,8 +142,8 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
     }
 
     private void createPVProperties(PVInfo pvInfo) {
-        IPV pv = pvInfo.getPV();
-        StringBuilder stateInfo = new StringBuilder();
+        var pv = pvInfo.getPV();
+        var stateInfo = new StringBuilder();
         if (!pv.isStarted()) {
             stateInfo.append("Not started");
         } else if (pv.isConnected()) {
@@ -167,7 +158,7 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
 
         if (pv.getValue() != null) {
             createKeyValueTextPair("Last Received Value", pv.getValue().toString());
-            Display displayInfo = VTypeHelper.getDisplayInfo(pv.getValue());
+            var displayInfo = VTypeHelper.getDisplayInfo(pv.getValue());
             if (displayInfo != null) {
                 createKeyValueTextPair("Units", displayInfo.getUnits());
                 createKeyValueTextPair("Precision", "" + displayInfo.getFormat().getMaximumFractionDigits());
@@ -182,18 +173,18 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
     }
 
     private StyledText createKeyValueTextPair(String key, String value) {
-        Label lbl = new Label(this, SWT.NONE);
+        var lbl = new Label(this, SWT.NONE);
         if (key != null) {
             lbl.setText(key + ":");
         }
-        GridData gd = new GridData();
+        var gd = new GridData();
         gd.horizontalAlignment = SWT.END;
         gd.verticalAlignment = SWT.BEGINNING;
         lbl.setLayoutData(gd);
 
         // StyledText instead of Label, so that text is selectable
         // TODO should wrap, but can't get it to work right now
-        StyledText txt = new StyledText(this, SWT.WRAP);
+        var txt = new StyledText(this, SWT.WRAP);
         txt.setBackground(getBackground());
         txt.setEditable(false);
         txt.setCaret(null);
@@ -203,25 +194,25 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
     }
 
     private void createSeparator() {
-        Label divider = new Label(this, SWT.HORIZONTAL | SWT.SEPARATOR);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var divider = new Label(this, SWT.HORIZONTAL | SWT.SEPARATOR);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         divider.setLayoutData(gd);
     }
 
     private void createHeader(String title) {
-        Label header = new Label(this, SWT.NONE);
+        var header = new Label(this, SWT.NONE);
         header.setText(title);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         header.setLayoutData(gd);
         header.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
     }
 
     private static String capitalize(String string) {
-        char[] chars = string.toLowerCase().toCharArray();
-        boolean found = false;
-        for (int i = 0; i < chars.length; i++) {
+        var chars = string.toLowerCase().toCharArray();
+        var found = false;
+        for (var i = 0; i < chars.length; i++) {
             if (!found && Character.isLetter(chars[i])) {
                 chars[i] = Character.toUpperCase(chars[i]);
                 found = true;
@@ -249,9 +240,9 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                         .ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
                         .toString());
 
-                String engValue = StringConverter.toString(pval.getEngValue());
+                var engValue = StringConverter.toString(pval.getEngValue());
                 if (pvInfo.getParameterInfo().hasType()) {
-                    ParameterTypeInfo ptype = pvInfo.getParameterInfo().getType();
+                    var ptype = pvInfo.getParameterInfo().getType();
                     if (ptype.getUnitSetCount() > 0) {
                         for (UnitInfo unitInfo : ptype.getUnitSetList()) {
                             engValue += " " + unitInfo.getUnit();

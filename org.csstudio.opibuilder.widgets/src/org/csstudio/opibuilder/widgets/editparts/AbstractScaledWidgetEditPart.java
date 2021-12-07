@@ -7,11 +7,10 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
 import org.csstudio.utility.batik.Activator;
-import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 
 /**
  * Base editPart controller for a widget based on {@link AbstractScaledWidgetModel}.
@@ -22,8 +21,8 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
      * Sets those properties on the figure that are defined in the {@link AbstractScaledWidgetFigure} base class. This
      * method is provided for the convenience of subclasses, which can call this method in their implementation of
      */
-    protected void initializeCommonFigureProperties(
-            final AbstractScaledWidgetFigure figure, final AbstractScaledWidgetModel model) {
+    protected void initializeCommonFigureProperties(AbstractScaledWidgetFigure figure,
+            AbstractScaledWidgetModel model) {
 
         figure.setRange(model.getMinimum(), model.getMaximum());
         figure.setValue((model.getMinimum() + model.getMaximum()) / 2);
@@ -48,7 +47,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
             if (newValue == null) {
                 return false;
             }
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setValue(VTypeHelper.getDouble((VType) newValue));
             return false;
         };
@@ -56,7 +55,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // minimum
         IWidgetPropertyChangeHandler minimumHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setRange((Double) newValue, ((AbstractScaledWidgetModel) getModel()).getMaximum());
             return false;
         };
@@ -64,7 +63,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // maximum
         IWidgetPropertyChangeHandler maximumHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setRange(((AbstractScaledWidgetModel) getModel()).getMinimum(), (Double) newValue);
             return false;
         };
@@ -72,7 +71,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // major tick step hint
         IWidgetPropertyChangeHandler majorTickHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setMajorTickMarkStepHint((Integer) newValue);
             return false;
         };
@@ -80,7 +79,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // logScale
         IWidgetPropertyChangeHandler logScaleHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setLogScale((Boolean) newValue);
             return false;
         };
@@ -88,7 +87,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // showScale
         IWidgetPropertyChangeHandler showScaleHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setShowScale((Boolean) newValue);
             return false;
         };
@@ -96,7 +95,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // showMinorTicks
         IWidgetPropertyChangeHandler showMinorTicksHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setShowMinorTicks((Boolean) newValue);
             return false;
         };
@@ -104,14 +103,14 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // Transparent
         IWidgetPropertyChangeHandler transparentHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setTransparent((Boolean) newValue);
             return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_TRANSPARENT, transparentHandler);
 
         IWidgetPropertyChangeHandler scaleFontHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.getScale().setFont(((OPIFont) newValue).getSWTFont());
             return false;
         };
@@ -119,7 +118,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // scale format
         IWidgetPropertyChangeHandler numericFormatHandler = (oldValue, newValue, figure) -> {
-            AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
+            var scaleFigure = (AbstractScaledWidgetFigure) figure;
             setScaleFormat(scaleFigure, (String) newValue);
             return false;
         };
@@ -127,7 +126,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
         // value label format
         IWidgetPropertyChangeHandler valueFormatHandler = (oldValue, newValue, figure) -> {
-            AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
+            var scaleFigure = (AbstractScaledWidgetFigure) figure;
             setValueLabelFormat(scaleFigure, (String) newValue);
             return false;
         };
@@ -136,7 +135,7 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
     }
 
     private void setScaleFormat(AbstractScaledWidgetFigure scaleFigure, String numericFormat) {
-        AbstractScale scale = scaleFigure.getScale();
+        var scale = scaleFigure.getScale();
         if (numericFormat.trim().equals("")) {
             scale.setAutoFormat(true);
         } else {
@@ -144,8 +143,8 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
                 scale.setAutoFormat(false);
                 scale.setFormatPattern(numericFormat);
             } catch (Exception e) {
-                Activator.getLogger().log(Level.SEVERE, numericFormat +
-                        " is not a valid numeric format. The scale will be auto formatted.");
+                Activator.getLogger().log(Level.SEVERE,
+                        numericFormat + " is not a valid numeric format. The scale will be auto formatted.");
                 scale.setAutoFormat(true);
             }
         }
@@ -153,14 +152,12 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
         scaleFigure.setValue(scaleFigure.getValue());
     }
 
-    private void setValueLabelFormat(AbstractScaledWidgetFigure scaleFigure,
-            String valueLabelFormat) {
+    private void setValueLabelFormat(AbstractScaledWidgetFigure scaleFigure, String valueLabelFormat) {
         try {
             scaleFigure.setValueLabelFormat(valueLabelFormat);
         } catch (Exception e) {
-            Activator.getLogger().log(Level.SEVERE, valueLabelFormat +
-                    " is not a valid numeric format." +
-                    " The value label will be formatted in the same way as scale.");
+            Activator.getLogger().log(Level.SEVERE, valueLabelFormat + " is not a valid numeric format."
+                    + " The value label will be formatted in the same way as scale.");
             scaleFigure.setValueLabelFormat("");
         }
     }

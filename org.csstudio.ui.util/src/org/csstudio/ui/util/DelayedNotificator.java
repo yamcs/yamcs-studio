@@ -47,7 +47,7 @@ public class DelayedNotificator {
      * @param command
      *            the command to execute
      */
-    public void delayedExec(final Widget widget, final Runnable command) {
+    public void delayedExec(Widget widget, Runnable command) {
         if (future != null) {
             if (!future.isDone()) {
                 future.cancel(false);

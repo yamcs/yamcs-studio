@@ -31,10 +31,8 @@ class GenericBeanInfo extends SimpleBeanInfo {
     private MethodDescriptor[] methods;
     private BeanInfo targetBeanInfo;
 
-    public GenericBeanInfo(BeanDescriptor beanDescriptor,
-            EventSetDescriptor[] events, int defaultEvent,
-            PropertyDescriptor[] properties, int defaultProperty,
-            MethodDescriptor[] methods, BeanInfo targetBeanInfo) {
+    public GenericBeanInfo(BeanDescriptor beanDescriptor, EventSetDescriptor[] events, int defaultEvent,
+            PropertyDescriptor[] properties, int defaultProperty, MethodDescriptor[] methods, BeanInfo targetBeanInfo) {
         this.beanDescriptor = beanDescriptor;
         this.events = events;
         this.defaultEvent = defaultEvent;
@@ -44,30 +42,37 @@ class GenericBeanInfo extends SimpleBeanInfo {
         this.targetBeanInfo = targetBeanInfo;
     }
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         return properties;
     }
 
+    @Override
     public int getDefaultPropertyIndex() {
         return defaultProperty;
     }
 
+    @Override
     public EventSetDescriptor[] getEventSetDescriptors() {
         return events;
     }
 
+    @Override
     public int getDefaultEventIndex() {
         return defaultEvent;
     }
 
+    @Override
     public MethodDescriptor[] getMethodDescriptors() {
         return methods;
     }
 
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         return beanDescriptor;
     }
 
+    @Override
     public java.awt.Image getIcon(int iconKind) {
         if (targetBeanInfo != null) {
             return targetBeanInfo.getIcon(iconKind);

@@ -14,7 +14,6 @@ import org.csstudio.swt.widgets.figures.ThumbWheelFigure;
 import org.csstudio.swt.widgets.figures.ThumbWheelFigure.WheelListener;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.graphics.FontData;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
@@ -33,19 +32,17 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
     protected IFigure doCreateFigure() {
         model = (ThumbWheelModel) getWidgetModel();
 
-        logic = new ThumbWheelLogic(0, model
-                .getWholePartDigits(), model.getDecimalPartDigits());
+        logic = new ThumbWheelLogic(0, model.getWholePartDigits(), model.getDecimalPartDigits());
 
         logic.setMax(model.getMaximum());
         logic.setMin(model.getMinimum());
 
-        figure = new ThumbWheelFigure(logic.getIntegerWheels(),
-                logic.getDecimalWheels(), this.getExecutionMode() == ExecutionMode.RUN_MODE);
+        figure = new ThumbWheelFigure(logic.getIntegerWheels(), logic.getDecimalWheels(),
+                this.getExecutionMode() == ExecutionMode.RUN_MODE);
         model.setWholePartDigits(logic.getIntegerWheels());
         model.setDecimalPartDigits(logic.getDecimalWheels());
-        FontData fontData = model.getFont().getFontData();
-        figure.setWheelFont(CustomMediaFactory.getInstance().getFont(
-                fontData.getName(), fontData.getHeight(),
+        var fontData = model.getFont().getFontData();
+        figure.setWheelFont(CustomMediaFactory.getInstance().getFont(fontData.getName(), fontData.getHeight(),
                 fontData.getStyle()));
         figure.setInternalBorderColor(model.getInternalBorderColor());
         figure.setInternalFocusedBorderColor(model.getInternalFocusedBorderColor());
@@ -63,7 +60,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                     updateWheelValues();
                     // write value to pv if pv name is not empty
                     if (getWidgetModel().getPVName().trim().length() > 0) {
-                        double doubleValue = logic.getValue();
+                        var doubleValue = logic.getValue();
                         setPVValue(AbstractPVWidgetModel.PROP_PVNAME, doubleValue);
                     }
                 }
@@ -76,7 +73,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                     updateWheelValues();
                     // write value to pv if pv name is not empty
                     if (getWidgetModel().getPVName().trim().length() > 0) {
-                        double doubleValue = logic.getValue();
+                        var doubleValue = logic.getValue();
                         setPVValue(AbstractPVWidgetModel.PROP_PVNAME, doubleValue);
                     }
                 }
@@ -89,7 +86,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                     updateWheelValues();
                     // write value to pv if pv name is not empty
                     if (getWidgetModel().getPVName().trim().length() > 0) {
-                        double doubleValue = logic.getValue();
+                        var doubleValue = logic.getValue();
                         setPVValue(AbstractPVWidgetModel.PROP_PVNAME, doubleValue);
                     }
                 }
@@ -102,7 +99,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                     updateWheelValues();
                     // write value to pv if pv name is not empty
                     if (getWidgetModel().getPVName().trim().length() > 0) {
-                        double doubleValue = logic.getValue();
+                        var doubleValue = logic.getValue();
                         setPVValue(AbstractPVWidgetModel.PROP_PVNAME, doubleValue);
                     }
                 }
@@ -116,15 +113,15 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
     private void updateWheelValues() {
 
         // update all wheels
-        int limit = model.getWholePartDigits();
+        var limit = model.getWholePartDigits();
 
-        for (int i = 0; i < limit; i++) {
+        for (var i = 0; i < limit; i++) {
             figure.setIntegerWheel(i, logic.getIntegerDigitAt(i));
         }
 
         limit = model.getDecimalPartDigits();
 
-        for (int i = 0; i < limit; i++) {
+        for (var i = 0; i < limit; i++) {
             figure.setDecimalWheel(i, logic.getDecimalDigitAt(i));
         }
 
@@ -161,24 +158,22 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
      */
     private void registerLoadLimitsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-            final ThumbWheelModel model = getWidgetModel();
+            var model = getWidgetModel();
             if (model.isLimitsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
-                                Display displayInfo = VTypeHelper.getDisplayInfo(value);
+                                var value = pv.getValue();
+                                var displayInfo = VTypeHelper.getDisplayInfo(value);
                                 if (value != null && displayInfo != null) {
-                                    Display new_meta = displayInfo;
+                                    var new_meta = displayInfo;
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
-                                        model.setPropertyValue(ThumbWheelModel.PROP_MAX,
-                                                meta.getUpperDisplayLimit());
-                                        model.setPropertyValue(ThumbWheelModel.PROP_MIN,
-                                                meta.getLowerDisplayLimit());
+                                        model.setPropertyValue(ThumbWheelModel.PROP_MAX, meta.getUpperDisplayLimit());
+                                        model.setPropertyValue(ThumbWheelModel.PROP_MIN, meta.getLowerDisplayLimit());
                                     }
                                 }
                             }
@@ -197,7 +192,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
         // PV value
         IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
             if (newValue != null) {
-                double doubleValue = VTypeHelper.getDouble((VType) newValue);
+                var doubleValue = VTypeHelper.getDouble((VType) newValue);
                 logic.setValue(doubleValue);
                 updateWheelValues();
             }
@@ -209,12 +204,11 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
             registerLoadLimitsListener();
             return false;
         };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME,
-                pvNameHandler);
+        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
 
         // decimal wheels
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
 
             logic.setDecimalWheels((Integer) newValue);
             figure.setDecimalDigits(logic.getDecimalWheels());
@@ -222,12 +216,11 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
             updateWheelValues();
             return true;
         };
-        setPropertyChangeHandler(ThumbWheelModel.PROP_DECIMAL_DIGITS_PART,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_DECIMAL_DIGITS_PART, handler);
 
         // integer wheels
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
 
             logic.setIntegerWheels((Integer) newValue);
             figure.setIntegerDigits(logic.getIntegerWheels());
@@ -236,8 +229,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
             return true;
         };
 
-        setPropertyChangeHandler(ThumbWheelModel.PROP_INTEGER_DIGITS_PART,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_INTEGER_DIGITS_PART, handler);
 
         // min
         handler = (oldValue, newValue, refreshableFigure) -> {
@@ -259,8 +251,8 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         // value
         // handler = new IWidgetPropertyChangeHandler() {
-        // public boolean handleChange(final Object oldValue,
-        // final Object newValue, final IFigure refreshableFigure) {
+        // public boolean handleChange(Object oldValue,
+        // final Object newValue, IFigure refreshableFigure) {
         // logic.setValue((Double) newValue);
         // updateWheelValues();
         // return true;
@@ -270,10 +262,9 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         // font
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
-            FontData fontData = ((OPIFont) newValue).getFontData();
-            figure.setWheelFont(CustomMediaFactory.getInstance().getFont(
-                    fontData.getName(), fontData.getHeight(),
+            var figure = (ThumbWheelFigure) refreshableFigure;
+            var fontData = ((OPIFont) newValue).getFontData();
+            figure.setWheelFont(CustomMediaFactory.getInstance().getFont(fontData.getName(), fontData.getHeight(),
                     fontData.getStyle()));
             return true;
         };
@@ -281,39 +272,35 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         // border color
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
             figure.setInternalBorderColor(((OPIColor) newValue).getSWTColor());
             return true;
         };
-        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FRAME_COLOR,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FRAME_COLOR, handler);
 
         // focused border color
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
             figure.setInternalFocusedBorderColor(((OPIColor) newValue).getSWTColor());
             return true;
         };
-        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FOCUSED_FRAME_COLOR,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FOCUSED_FRAME_COLOR, handler);
 
         // border width
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
             figure.setInternalBorderThickness((Integer) newValue);
             return true;
         };
-        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FRAME_THICKNESS,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_INTERNAL_FRAME_THICKNESS, handler);
 
         // show button
         handler = (oldValue, newValue, refreshableFigure) -> {
-            ThumbWheelFigure figure = (ThumbWheelFigure) refreshableFigure;
+            var figure = (ThumbWheelFigure) refreshableFigure;
             figure.setButtonVisibility((Boolean) newValue);
             return true;
         };
-        setPropertyChangeHandler(ThumbWheelModel.PROP_SHOW_BUTTONS,
-                handler);
+        setPropertyChangeHandler(ThumbWheelModel.PROP_SHOW_BUTTONS, handler);
     }
 
     /**
@@ -339,8 +326,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         public static final int WHEEL_LIMIT = 15;
 
-        public ThumbWheelLogic(double value, int integerWheels,
-                int decimalWheels) {
+        public ThumbWheelLogic(double value, int integerWheels, int decimalWheels) {
             setValue(value);
             setIntegerWheels(integerWheels);
             setDecimalWheels(decimalWheels);
@@ -392,9 +378,8 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         private void increment(int index, String numberGenerator) {
             // generate new number using the string ("1E" or "1E-" or similar)
-            BigDecimal decrementor = new BigDecimal(numberGenerator + index,
-                    MathContext.UNLIMITED);
-            BigDecimal newValue = value.add(decrementor);
+            var decrementor = new BigDecimal(numberGenerator + index, MathContext.UNLIMITED);
+            var newValue = value.add(decrementor);
 
             // handle over the zero handling
             if (!isZero(newValue) && !equalSign(value, newValue)) {
@@ -403,8 +388,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
             // if value is already beyond the upper limit or upper wheel limit
             // just ignore the request
-            if ((max != null && greater(value, max))
-                    || greater(value, wheelMax)) {
+            if ((max != null && greater(value, max)) || greater(value, wheelMax)) {
                 return;
             }
 
@@ -453,9 +437,8 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
         private void decrement(int index, String numberGenerator) {
             // generate new number using the string ("1E" or "1E-" or similar)
-            BigDecimal decrementor = new BigDecimal(numberGenerator + index,
-                    MathContext.UNLIMITED);
-            BigDecimal newValue = value.add(decrementor);
+            var decrementor = new BigDecimal(numberGenerator + index, MathContext.UNLIMITED);
+            var newValue = value.add(decrementor);
 
             // handle over the zero handling
             if (!isZero(newValue) && !equalSign(value, newValue)) {
@@ -505,9 +488,9 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
             if (beyondDisplayLimit()) {
                 return BEYOND_LIMIT_CHAR;
             }
-            String plainString = value.toPlainString();
+            var plainString = value.toPlainString();
             // get rid of decimal part
-            int dot = plainString.indexOf('.');
+            var dot = plainString.indexOf('.');
             if (dot >= 0) {
                 plainString = plainString.substring(0, dot);
             }
@@ -536,7 +519,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                 return BEYOND_LIMIT_CHAR;
             }
 
-            String plainString = value.toPlainString();
+            var plainString = value.toPlainString();
 
             if (plainString.indexOf('.') < 0) {
                 return '0';
@@ -561,15 +544,11 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
         }
 
         public void setMax(Double max) {
-            this.max = Double.isNaN(max) ? null
-                    : new BigDecimal(Double
-                            .toString(max), MathContext.UNLIMITED);
+            this.max = Double.isNaN(max) ? null : new BigDecimal(Double.toString(max), MathContext.UNLIMITED);
         }
 
         public void setMin(Double min) {
-            this.min = Double.isNaN(min) ? null
-                    : new BigDecimal(Double
-                            .toString(min), MathContext.UNLIMITED);
+            this.min = Double.isNaN(min) ? null : new BigDecimal(Double.toString(min), MathContext.UNLIMITED);
         }
 
         public int getIntegerWheels() {
@@ -584,14 +563,14 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
             this.integerWheels = integerWheels;
 
-            StringBuilder nines = new StringBuilder();
-            for (int i = 0; i < integerWheels; i++) {
+            var nines = new StringBuilder();
+            for (var i = 0; i < integerWheels; i++) {
                 nines.append("9");
             }
 
             if (decimalWheels > 0) {
                 nines.append(".");
-                for (int i = 0; i < decimalWheels; i++) {
+                for (var i = 0; i < decimalWheels; i++) {
                     nines.append("9");
                 }
             }
@@ -611,9 +590,9 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                 return;
             }
             this.decimalWheels = decimalWheels;
-            StringBuilder nines = new StringBuilder();
+            var nines = new StringBuilder();
             if (integerWheels > 0) {
-                for (int i = 0; i < integerWheels; i++) {
+                for (var i = 0; i < integerWheels; i++) {
                     nines.append("9");
                 }
             } else {
@@ -621,7 +600,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
             }
 
             nines.append(".");
-            for (int i = 0; i < decimalWheels; i++) {
+            for (var i = 0; i < decimalWheels; i++) {
                 nines.append("9");
             }
 
@@ -645,17 +624,17 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public Object getValue() {
-        Double doubleObject = new Double(logic.getValue());
+        var doubleObject = new Double(logic.getValue());
         return doubleObject;
     }
 
     @Override
     public void setValue(Object value) {
         if (value instanceof Number) {
-            double doubleValue = ((Number) value).doubleValue();
+            var doubleValue = ((Number) value).doubleValue();
             logic.setValue(doubleValue);
         } else if (value instanceof String) {
-            double doubleValue = Double.parseDouble((String) value);
+            var doubleValue = Double.parseDouble((String) value);
             logic.setValue(doubleValue);
         } else {
             super.setValue(value);

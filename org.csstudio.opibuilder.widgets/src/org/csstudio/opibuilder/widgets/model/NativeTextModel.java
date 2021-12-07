@@ -16,6 +16,7 @@ import org.csstudio.opibuilder.visualparts.BorderStyle;
 
 /**
  * Model for native text widget.
+ * 
  * @deprecated not used anymore. Only leave this here in case we need to reverse back.
  */
 @Deprecated
@@ -46,18 +47,16 @@ public final class NativeTextModel extends TextInputModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new BooleanProperty(PROP_SHOW_NATIVE_BORDER, "Show Native Border",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_PASSWORD_INPUT, "Password Input",
-                WidgetPropertyCategory.Behavior, false));
-        addProperty(new BooleanProperty(PROP_READ_ONLY, "Read Only",
-                WidgetPropertyCategory.Behavior, true));
-        addProperty(new BooleanProperty(PROP_SHOW_H_SCROLL, "Show Horizontal Scrollbar",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_SHOW_V_SCROLL, "Show Vertical Scrollbar",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new ComboProperty(PROP_NEXT_FOCUS, "Next Focus",
-                WidgetPropertyCategory.Behavior, FOCUS_TRAVERSE.stringValues(), 0));
+        addProperty(new BooleanProperty(PROP_SHOW_NATIVE_BORDER, "Show Native Border", WidgetPropertyCategory.Display,
+                false));
+        addProperty(new BooleanProperty(PROP_PASSWORD_INPUT, "Password Input", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_READ_ONLY, "Read Only", WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_SHOW_H_SCROLL, "Show Horizontal Scrollbar", WidgetPropertyCategory.Display,
+                false));
+        addProperty(new BooleanProperty(PROP_SHOW_V_SCROLL, "Show Vertical Scrollbar", WidgetPropertyCategory.Display,
+                false));
+        addProperty(new ComboProperty(PROP_NEXT_FOCUS, "Next Focus", WidgetPropertyCategory.Behavior,
+                FOCUS_TRAVERSE.stringValues(), 0));
         removeProperty(PROP_TRANSPARENT);
         removeProperty(PROP_ROTATION);
         removeProperty(PROP_ALIGN_V);

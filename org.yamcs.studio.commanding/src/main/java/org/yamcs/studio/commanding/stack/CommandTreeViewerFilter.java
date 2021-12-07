@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
 
@@ -30,7 +29,7 @@ public class CommandTreeViewerFilter extends ViewerFilter {
 
     private boolean elementMatches(Object element) {
         if (element instanceof XtceCommandNode) {
-            CommandInfo cmd = ((XtceCommandNode) element).getCommandInfo();
+            var cmd = ((XtceCommandNode) element).getCommandInfo();
             for (NamedObjectId alias : cmd.getAliasList()) {
                 if (alias.getName().matches(regex)) {
                     return true;
@@ -38,7 +37,7 @@ public class CommandTreeViewerFilter extends ViewerFilter {
             }
             return cmd.getQualifiedName().matches(regex);
         } else if (element instanceof XtceSubSystemNode) {
-            Object[] children = contentProvider.getChildren(element);
+            var children = contentProvider.getChildren(element);
             for (Object child : children) {
                 if (elementMatches(child)) {
                     return true;

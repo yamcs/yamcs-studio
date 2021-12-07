@@ -35,17 +35,16 @@ public final class OPIEditorRulerProvider extends RulerProvider {
      */
     private PropertyChangeListener rulerListener = new PropertyChangeListener() {
         @Override
-        public void propertyChange(final PropertyChangeEvent evt) {
+        public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(RulerModel.PROPERTY_CHILDREN_CHANGED)) {
-                GuideModel guide = (GuideModel) evt.getNewValue();
+                var guide = (GuideModel) evt.getNewValue();
                 if (getGuides().contains(guide)) {
                     guide.addPropertyChangeListener(guideListener);
                 } else {
                     guide.removePropertyChangeListener(guideListener);
                 }
-                for (int i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i))
-                            .notifyGuideReparented(guide);
+                for (var i = 0; i < listeners.size(); i++) {
+                    ((RulerChangeListener) listeners.get(i)).notifyGuideReparented(guide);
                 }
             }
         }
@@ -56,16 +55,15 @@ public final class OPIEditorRulerProvider extends RulerProvider {
      */
     private PropertyChangeListener guideListener = new PropertyChangeListener() {
         @Override
-        public void propertyChange(final PropertyChangeEvent evt) {
+        public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(GuideModel.PROPERTY_CHILDREN_CHANGED)) {
-                for (int i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i))
-                            .notifyPartAttachmentChanged(evt.getNewValue(), evt.getSource());
+                for (var i = 0; i < listeners.size(); i++) {
+                    ((RulerChangeListener) listeners.get(i)).notifyPartAttachmentChanged(evt.getNewValue(),
+                            evt.getSource());
                 }
             } else {
-                for (int i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i))
-                            .notifyGuideMoved(evt.getSource());
+                for (var i = 0; i < listeners.size(); i++) {
+                    ((RulerChangeListener) listeners.get(i)).notifyGuideMoved(evt.getSource());
                 }
             }
         }
@@ -82,11 +80,11 @@ public final class OPIEditorRulerProvider extends RulerProvider {
      * @param ruler
      *            The RulerModel fore this provider
      */
-    public OPIEditorRulerProvider(final RulerModel ruler) {
+    public OPIEditorRulerProvider(RulerModel ruler) {
         this.ruler = ruler;
         this.ruler.addPropertyChangeListener(rulerListener);
-        List<GuideModel> guides = getGuides();
-        for (int i = 0; i < guides.size(); i++) {
+        var guides = getGuides();
+        for (var i = 0; i < guides.size(); i++) {
             ((GuideModel) guides.get(i)).addPropertyChangeListener(guideListener);
         }
     }
@@ -102,37 +100,37 @@ public final class OPIEditorRulerProvider extends RulerProvider {
     }
 
     @Override
-    public List<AbstractWidgetModel> getAttachedModelObjects(final Object guide) {
+    public List<AbstractWidgetModel> getAttachedModelObjects(Object guide) {
         return new ArrayList<AbstractWidgetModel>(((GuideModel) guide).getAttachedModels());
     }
 
     @Override
-    public Command getMoveGuideCommand(final Object guide, final int pDelta) {
+    public Command getMoveGuideCommand(Object guide, int pDelta) {
         return new MoveGuideCommand((GuideModel) guide, pDelta);
     }
 
     @Override
-    public Command getCreateGuideCommand(final int position) {
+    public Command getCreateGuideCommand(int position) {
         return new CreateGuideCommand(ruler, position);
     }
 
     @Override
-    public Command getDeleteGuideCommand(final Object guide) {
+    public Command getDeleteGuideCommand(Object guide) {
         return new DeleteGuideCommand((GuideModel) guide, ruler);
     }
 
     @Override
     public int[] getGuidePositions() {
-        List<GuideModel> guides = getGuides();
-        int[] result = new int[guides.size()];
-        for (int i = 0; i < guides.size(); i++) {
+        var guides = getGuides();
+        var result = new int[guides.size()];
+        for (var i = 0; i < guides.size(); i++) {
             result[i] = ((GuideModel) guides.get(i)).getPosition();
         }
         return result;
     }
 
     @Override
-    public int getGuidePosition(final Object guide) {
+    public int getGuidePosition(Object guide) {
         return ((GuideModel) guide).getPosition();
     }
 

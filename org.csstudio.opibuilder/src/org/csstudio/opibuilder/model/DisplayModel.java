@@ -123,30 +123,23 @@ public class DisplayModel extends AbstractContainerModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_GRID_SPACE, "Grid Space",
-                WidgetPropertyCategory.Display, 6, 1, 1000));
-        addProperty(new BooleanProperty(PROP_SHOW_GRID, "Show Grid",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_RULER, "Show Ruler",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SNAP_GEOMETRY, "Snap to Geometry",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_EDIT_RANGE,
-                "Show Edit Range", WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_AUTO_ZOOM_TO_FIT_ALL,
-                "Auto Zoom to Fit All", WidgetPropertyCategory.Behavior, false));
-        addProperty(new ComplexDataProperty(
-                PROP_AUTO_SCALE_WIDGETS, "Auto Scale Widgets (at Runtime)",
+        addProperty(new IntegerProperty(PROP_GRID_SPACE, "Grid Space", WidgetPropertyCategory.Display, 6, 1, 1000));
+        addProperty(new BooleanProperty(PROP_SHOW_GRID, "Show Grid", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_RULER, "Show Ruler", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SNAP_GEOMETRY, "Snap to Geometry", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_EDIT_RANGE, "Show Edit Range", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_AUTO_ZOOM_TO_FIT_ALL, "Auto Zoom to Fit All",
+                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ComplexDataProperty(PROP_AUTO_SCALE_WIDGETS, "Auto Scale Widgets (at Runtime)",
                 WidgetPropertyCategory.Behavior, new DisplayScaleData(this), "Scale Widgets as windows resizes"));
 
-        addProperty(new BooleanProperty(PROP_SHOW_CLOSE_BUTTON,
-                "Show Close Button", WidgetPropertyCategory.Display, true));
-        Version version = new Version(0, 0, 0);
-        addProperty(new VersionProperty(PROP_BOY_VERSION, "BOY Version",
-                WidgetPropertyCategory.Basic, version.toString()));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_CLOSE_BUTTON, "Show Close Button", WidgetPropertyCategory.Display, true));
+        var version = new Version(0, 0, 0);
+        addProperty(
+                new VersionProperty(PROP_BOY_VERSION, "BOY Version", WidgetPropertyCategory.Basic, version.toString()));
 
-        addProperty(new DoubleProperty(PROP_FRAME_RATE, "Frame Rate",
-                WidgetPropertyCategory.Display, -1.0));
+        addProperty(new DoubleProperty(PROP_FRAME_RATE, "Frame Rate", WidgetPropertyCategory.Display, -1.0));
 
         setPropertyVisible(PROP_BORDER_COLOR, false);
         setPropertyVisible(PROP_BORDER_STYLE, false);
@@ -158,8 +151,7 @@ public class DisplayModel extends AbstractContainerModel {
         setPropertyVisible(PROP_FONT, false);
         setPropertyVisibleAndSavable(PROP_FRAME_RATE, false, false);
         setPropertyVisibleAndSavable(PROP_BOY_VERSION, false, true);
-        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
         setPropertyDescription(PROP_COLOR_FOREGROUND, "Grid Color");
         setPropertyValue(PROP_NAME, "");
         removeProperty(PROP_SCALE_OPTIONS);
@@ -283,7 +275,7 @@ public class DisplayModel extends AbstractContainerModel {
      * targets.
      */
     public void syncConnections() {
-        List<AbstractWidgetModel> allDescendants = getAllDescendants();
+        var allDescendants = getAllDescendants();
         for (AbstractWidgetModel widget : allDescendants) {
             if (!widget.getSourceConnections().isEmpty()) {
                 for (ConnectionModel connectionModel : widget.getSourceConnections()) {
@@ -305,7 +297,7 @@ public class DisplayModel extends AbstractContainerModel {
 
     private List<ConnectionModel> getConnectionList(AbstractContainerModel container) {
         Set<ConnectionModel> connectionModels = new HashSet<ConnectionModel>();
-        List<AbstractWidgetModel> allDescendants = getAllDescendants();
+        var allDescendants = getAllDescendants();
         for (AbstractWidgetModel widget : allDescendants) {
             if (!widget.getSourceConnections().isEmpty()) {
                 for (ConnectionModel connectionModel : widget.getSourceConnections()) {
@@ -329,16 +321,15 @@ public class DisplayModel extends AbstractContainerModel {
         return getWidgetFromWUID(this, wuid);
     }
 
-    private static AbstractWidgetModel getWidgetFromWUID(
-            AbstractContainerModel container, String wuid) {
+    private static AbstractWidgetModel getWidgetFromWUID(AbstractContainerModel container, String wuid) {
         for (AbstractWidgetModel widget : container.getChildren()) {
-            if (widget.getWUID().equals(wuid))
+            if (widget.getWUID().equals(wuid)) {
                 return widget;
-            else if (widget instanceof AbstractContainerModel) {
-                AbstractWidgetModel w = getWidgetFromWUID(
-                        (AbstractContainerModel) widget, wuid);
-                if (w != null)
+            } else if (widget instanceof AbstractContainerModel) {
+                var w = getWidgetFromWUID((AbstractContainerModel) widget, wuid);
+                if (w != null) {
                     return w;
+                }
             }
         }
         return null;
@@ -346,20 +337,23 @@ public class DisplayModel extends AbstractContainerModel {
 
     @Override
     public void scale(double widthRatio, double heightRatio) {
-        int minWidth = getDisplayScaleData().getMinimumWidth();
+        var minWidth = getDisplayScaleData().getMinimumWidth();
         if (minWidth < 0) {
             minWidth = getWidth();
         }
-        int minHeight = getDisplayScaleData().getMinimumHeight();
+        var minHeight = getDisplayScaleData().getMinimumHeight();
         if (minHeight < 0) {
             minHeight = getHeight();
         }
-        if (getWidth() * widthRatio < minWidth)
+        if (getWidth() * widthRatio < minWidth) {
             widthRatio = minWidth / (double) getWidth();
-        if (getHeight() * heightRatio < minHeight)
+        }
+        if (getHeight() * heightRatio < minHeight) {
             heightRatio = minHeight / (double) getHeight();
-        for (AbstractWidgetModel child : getChildren())
+        }
+        for (AbstractWidgetModel child : getChildren()) {
             child.scale(widthRatio, heightRatio);
+        }
     }
 
     /**

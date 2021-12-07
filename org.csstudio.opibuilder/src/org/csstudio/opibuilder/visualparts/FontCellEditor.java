@@ -46,14 +46,14 @@ public final class FontCellEditor extends CellEditor {
      * @param parent
      *            The parent table.
      */
-    public FontCellEditor(final Composite parent) {
+    public FontCellEditor(Composite parent) {
         super(parent, SWT.NONE);
         _shell = parent.getShell();
     }
 
     @Override
     public void activate() {
-        FontDialog dialog = new FontDialog(_shell);
+        var dialog = new FontDialog(_shell);
         if (_value != null) {
             dialog.setFontList(new FontData[] { _value });
         }
@@ -64,7 +64,7 @@ public final class FontCellEditor extends CellEditor {
     }
 
     @Override
-    protected Control createControl(final Composite parent) {
+    protected Control createControl(Composite parent) {
         return null;
     }
 
@@ -79,7 +79,7 @@ public final class FontCellEditor extends CellEditor {
     }
 
     @Override
-    protected void doSetValue(final Object value) {
+    protected void doSetValue(Object value) {
         Assert.isTrue(value instanceof FontData);
         this._value = (FontData) value;
     }

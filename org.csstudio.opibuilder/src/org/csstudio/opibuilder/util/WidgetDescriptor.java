@@ -74,9 +74,8 @@ public class WidgetDescriptor {
      * @param pluginId
      *            The pluginID where the widget belongs to.
      */
-    public WidgetDescriptor(IConfigurationElement element, String typeID,
-            String name, String description, String iconPath, String category, String pluginId,
-            String onlineHelpHtml) {
+    public WidgetDescriptor(IConfigurationElement element, String typeID, String name, String description,
+            String iconPath, String category, String pluginId, String onlineHelpHtml) {
         this.element = element;
         this.typeID = typeID;
         this.name = name;

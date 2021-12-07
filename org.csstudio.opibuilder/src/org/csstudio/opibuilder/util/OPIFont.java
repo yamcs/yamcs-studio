@@ -60,7 +60,7 @@ public class OPIFont {
     }
 
     private int pixelsToPoints(int pixels) {
-        float result = (float) pixels * POINTS_PER_INCH / Display.getDefault().getDPI().y;
+        var result = (float) pixels * POINTS_PER_INCH / Display.getDefault().getDPI().y;
         return Math.round(result);
     }
 
@@ -112,7 +112,7 @@ public class OPIFont {
      * @return the scaled FontData
      */
     public FontData getFontData() {
-        int rawSize = rawFontData.getHeight();
+        var rawSize = rawFontData.getHeight();
         if (this.sizeInPixels) {
             rawSize = pixelsToPoints(rawSize);
         }
@@ -151,8 +151,8 @@ public class OPIFont {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((rawFontData == null) ? 0 : rawFontData.hashCode());
         result = prime * result + ((fontName == null) ? 0 : fontName.hashCode());
         result = prime * result + ((this.sizeInPixels) ? 0 : 1);
@@ -170,7 +170,7 @@ public class OPIFont {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        OPIFont other = (OPIFont) obj;
+        var other = (OPIFont) obj;
         if (other.sizeInPixels != sizeInPixels) {
             return false;
         }

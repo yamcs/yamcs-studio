@@ -19,8 +19,7 @@ import org.eclipse.swt.graphics.ImageData;
 
 public interface SymbolImage {
 
-    public final static Color DISABLE_COLOR = CustomMediaFactory.getInstance()
-            .getColor(CustomMediaFactory.COLOR_GRAY);
+    public final static Color DISABLE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
 
     /** The alpha (0 is transparency and 255 is opaque) for disabled paint */
     public static final int DISABLED_ALPHA = 100;
@@ -72,7 +71,7 @@ public interface SymbolImage {
      *
      * @param autoSize
      */
-    public void setAutoSize(final boolean autoSize);
+    public void setAutoSize(boolean autoSize);
 
     /**
      * Set the stretch state for the image.
@@ -80,7 +79,7 @@ public interface SymbolImage {
      * @param newval
      *            true, if it should be stretched, false otherwise)
      */
-    public void setStretch(final boolean newval);
+    public void setStretch(boolean newval);
 
     /**
      * Get the auto sized widget dimension according to the static image size.

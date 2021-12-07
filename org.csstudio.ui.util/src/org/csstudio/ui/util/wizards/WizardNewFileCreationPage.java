@@ -15,10 +15,8 @@ import java.util.Iterator;
 
 import org.csstudio.ui.util.composites.ResourceAndContainerGroup;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -100,8 +98,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param selection
      *            the current resource selection
      */
-    public WizardNewFileCreationPage(final String pageName,
-            final IStructuredSelection selection) {
+    public WizardNewFileCreationPage(String pageName, IStructuredSelection selection) {
         this(pageName, selection, true);
     }
 
@@ -116,8 +113,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param canChooseProject
      *            flag to allow the selection of the target project
      */
-    public WizardNewFileCreationPage(final String pageName,
-            final IStructuredSelection selection, final boolean canChooseProject) {
+    public WizardNewFileCreationPage(String pageName, IStructuredSelection selection, boolean canChooseProject) {
         super(pageName);
         setPageComplete(false);
         _currentSelection = selection;
@@ -125,18 +121,16 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     @Override
-    public final void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         initializeDialogUnits(parent);
         // top level group
-        Composite topLevel = new Composite(parent, SWT.NONE);
+        var topLevel = new Composite(parent, SWT.NONE);
         topLevel.setLayout(new GridLayout());
-        topLevel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
-                | GridData.HORIZONTAL_ALIGN_FILL));
+        topLevel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
         topLevel.setFont(parent.getFont());
 
         // resource and container group
-        _resourceGroup = new ResourceAndContainerGroup(topLevel, this,
-                getNewFileLabel(), "file", false, 250);
+        _resourceGroup = new ResourceAndContainerGroup(topLevel, this, getNewFileLabel(), "file", false, 250);
 
         if (getFileExtension() != null) {
             _resourceGroup.setFileExtension(getFileExtension());
@@ -168,25 +162,23 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @exception CoreException
      *                if the operation fails
      */
-    protected final void createFile(final IFile fileHandle,
-            final InputStream contents) throws CoreException {
-        InputStream inputStream = contents;
+    protected void createFile(IFile fileHandle, InputStream contents) throws CoreException {
+        var inputStream = contents;
 
         if (inputStream == null) {
             inputStream = new ByteArrayInputStream(new byte[0]);
         }
 
         try {
-            IPath path = fileHandle.getFullPath();
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-            int numSegments = path.segmentCount();
-            if (numSegments > 2
-                    && !root.getFolder(path.removeLastSegments(1)).exists()) {
+            var path = fileHandle.getFullPath();
+            var root = ResourcesPlugin.getWorkspace().getRoot();
+            var numSegments = path.segmentCount();
+            if (numSegments > 2 && !root.getFolder(path.removeLastSegments(1)).exists()) {
                 // If the direct parent of the path doesn't exist, try to
                 // create the
                 // necessary directories.
-                for (int i = numSegments - 2; i > 0; i--) {
-                    IFolder folder = root.getFolder(path.removeLastSegments(i));
+                for (var i = numSegments - 2; i > 0; i--) {
+                    var folder = root.getFolder(path.removeLastSegments(i));
                     if (!folder.exists()) {
                         folder.create(false, true, null);
                     }
@@ -212,7 +204,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @return the new file resource handle
      * @see #createFile
      */
-    protected final IFile createFileHandle(final IPath filePath) {
+    protected final IFile createFileHandle(IPath filePath) {
         return ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
     }
 
@@ -240,16 +232,15 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
 
         // create the new file and cache it if successful
 
-        final IPath containerPath = _resourceGroup.getContainerFullPath();
-        IPath newFilePath = containerPath.append(_resourceGroup.getResource());
-        IFile newFileHandle = createFileHandle(newFilePath);
-        final InputStream initialContents = getInitialContents();
+        var containerPath = _resourceGroup.getContainerFullPath();
+        var newFilePath = containerPath.append(_resourceGroup.getResource());
+        var newFileHandle = createFileHandle(newFilePath);
+        var initialContents = getInitialContents();
 
         try {
             createFile(newFileHandle, initialContents);
         } catch (CoreException e) {
-            ErrorDialog.openError(getContainer().getShell(),
-                    "Creation Problems", null, e.getStatus());
+            ErrorDialog.openError(getContainer().getShell(), "Creation Problems", null, e.getStatus());
 
             newFileHandle = null;
         }
@@ -317,7 +308,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * Sets the initial contents of the container name entry field, based upon either a previously-specified initial
      * value or the ability to determine such a value.
      */
-    protected final void initialPopulateContainerNameField() {
+    protected void initialPopulateContainerNameField() {
         if (_initialContainerFullPath != null) {
             _resourceGroup.setContainerFullPath(_initialContainerFullPath);
         } else {
@@ -328,16 +319,14 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
                 if (object instanceof IResource) {
                     selectedResource = (IResource) object;
                 } else if (object instanceof IAdaptable) {
-                    selectedResource = (IResource) ((IAdaptable) object)
-                            .getAdapter(IResource.class);
+                    selectedResource = (IResource) ((IAdaptable) object).getAdapter(IResource.class);
                 }
                 if (selectedResource != null) {
                     if (selectedResource.getType() == IResource.FILE) {
                         selectedResource = selectedResource.getParent();
                     }
                     if (selectedResource.isAccessible()) {
-                        _resourceGroup.setContainerFullPath(selectedResource
-                                .getFullPath());
+                        _resourceGroup.setContainerFullPath(selectedResource.getFullPath());
                     }
                 }
             }
@@ -351,7 +340,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param path
      *            the full path to the container
      */
-    public final void setContainerFullPath(final IPath path) {
+    public void setContainerFullPath(IPath path) {
         if (_resourceGroup == null) {
             _initialContainerFullPath = path;
         } else {
@@ -366,7 +355,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param value
      *            new file name
      */
-    public final void setFileName(final String value) {
+    public void setFileName(String value) {
         if (_resourceGroup == null) {
             _initialFileName = value;
         } else {
@@ -380,7 +369,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @return <code>true</code> if all controls are valid, and <code>false</code> if at least one is invalid
      */
     protected final boolean validatePage() {
-        boolean valid = true;
+        var valid = true;
 
         if (!_resourceGroup.areAllValuesValid()) {
             // if blank name then fail silently
@@ -402,7 +391,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     @Override
-    public final void setVisible(final boolean visible) {
+    public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
             _resourceGroup.setFocus();

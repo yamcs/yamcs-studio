@@ -59,10 +59,10 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     public static final String PROP_VALUE_LABEL_FORMAT = "value_label_format";
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = 0;
+    private static double DEFAULT_MIN = 0;
 
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = 100;
+    private static double DEFAULT_MAX = 100;
 
     /** The default value of the major tick step hint property. */
     private static final int DEFAULT_MAJOR_TICK_STEP_HINT = 50;
@@ -70,35 +70,30 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     @Override
     protected void configureProperties() {
 
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent Background",
-                WidgetPropertyCategory.Display, true));
+        addProperty(
+                new BooleanProperty(PROP_TRANSPARENT, "Transparent Background", WidgetPropertyCategory.Display, true));
 
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN));
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
 
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX));
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
 
         addProperty(new IntegerProperty(PROP_MAJOR_TICK_STEP_HINT, "Major Tick Step Hint",
                 WidgetPropertyCategory.Display, DEFAULT_MAJOR_TICK_STEP_HINT, 1, 1000));
 
-        addProperty(new BooleanProperty(PROP_SHOW_MINOR_TICKS, "Show Minor Ticks",
-                WidgetPropertyCategory.Display, true));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_MINOR_TICKS, "Show Minor Ticks", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_SCALE, "Show Scale",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_SCALE, "Show Scale", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_LOG_SCALE, "Log Scale",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_LOG_SCALE, "Log Scale", WidgetPropertyCategory.Display, false));
 
-        addProperty(new FontProperty(PROP_SCALE_FONT, "Scale Font",
-                WidgetPropertyCategory.Display, MediaService.DEFAULT_FONT));
+        addProperty(new FontProperty(PROP_SCALE_FONT, "Scale Font", WidgetPropertyCategory.Display,
+                MediaService.DEFAULT_FONT));
 
-        addProperty(new StringProperty(PROP_SCALE_FORMAT, "Scale Format",
-                WidgetPropertyCategory.Display, ""));
+        addProperty(new StringProperty(PROP_SCALE_FORMAT, "Scale Format", WidgetPropertyCategory.Display, ""));
 
-        addProperty(new StringProperty(PROP_VALUE_LABEL_FORMAT, "Value Label Format",
-                WidgetPropertyCategory.Display, ""));
+        addProperty(
+                new StringProperty(PROP_VALUE_LABEL_FORMAT, "Value Label Format", WidgetPropertyCategory.Display, ""));
     }
 
     /**

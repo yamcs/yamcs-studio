@@ -45,7 +45,7 @@ public class RunnerInputFactory implements IElementFactory {
 
     public static IAdaptable createInput(IMemento memento) {
         // Get the file name.
-        String pathString = memento.getString(TAG_PATH);
+        var pathString = memento.getString(TAG_PATH);
         if (pathString == null) {
             return null;
         }
@@ -54,13 +54,12 @@ public class RunnerInputFactory implements IElementFactory {
         // to a resource that does not exist in workspace
         IPath path = new Path(pathString);
         MacrosInput macrosInput = null;
-        String macroString = memento.getString(TAG_MACRO);
+        var macroString = memento.getString(TAG_MACRO);
         if (macroString != null) {
             try {
                 macrosInput = MacrosInput.recoverFromString(macroString);
             } catch (Exception e) {
-                OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                        "Failed to recover macro", e);
+                OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to recover macro", e);
             }
         }
         return new RunnerInput(path, null, macrosInput);
@@ -82,9 +81,9 @@ public class RunnerInputFactory implements IElementFactory {
      *            the opi runner input
      */
     public static void saveState(IMemento memento, IRunnerInput input) {
-        IPath path = ((IRunnerInput) input).getPath();
+        var path = ((IRunnerInput) input).getPath();
         memento.putString(TAG_PATH, path.toString());
-        MacrosInput macros = ((IRunnerInput) input).getMacrosInput();
+        var macros = ((IRunnerInput) input).getMacrosInput();
         if (macros != null) {
             memento.putString(TAG_MACRO, macros.toPersistenceString());
         }

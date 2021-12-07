@@ -51,10 +51,10 @@ public class AddParameterPage extends WizardPage {
 
     @Override
     public void createControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+        var composite = new Composite(parent, SWT.NONE);
         setControl(composite);
 
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.numColumns = 2;
@@ -63,7 +63,7 @@ public class AddParameterPage extends WizardPage {
 
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Composite tableWrapper1 = new Composite(composite, SWT.NONE);
+        var tableWrapper1 = new Composite(composite, SWT.NONE);
         contentProvider = new ParameterContentProvider();
         trcl = new TreeColumnLayout();
         tableWrapper1.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -74,19 +74,19 @@ public class AddParameterPage extends WizardPage {
         treeViewer.getTree().setLinesVisible(true);
 
         // column container
-        TreeViewerColumn pathColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
+        var pathColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
         pathColumn.getColumn().setText(COL_NAMESPACE);
         pathColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                String namespace = (String) element;
+                var namespace = (String) element;
                 return namespace.substring(namespace.lastIndexOf("/") + 1);
             }
         });
         trcl.setColumnData(pathColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
         treeViewer.addSelectionChangedListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
                 contentProvider.setNamespace(null);
                 return;
@@ -100,14 +100,14 @@ public class AddParameterPage extends WizardPage {
         treeViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
-                String n1 = (String) o1;
-                String n2 = (String) o2;
+                var n1 = (String) o1;
+                var n2 = (String) o2;
                 return n1.compareTo(n2);
 
             }
         });
 
-        Composite tableWrapper2 = new Composite(composite, SWT.NONE);
+        var tableWrapper2 = new Composite(composite, SWT.NONE);
         tcl = new TableColumnLayout();
         tableWrapper2.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper2.setLayout(tcl);
@@ -116,19 +116,19 @@ public class AddParameterPage extends WizardPage {
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
 
-        TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        var nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         nameColumn.getColumn().setText(COL_NAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ParameterInfo obj = (ParameterInfo) element;
+                var obj = (ParameterInfo) element;
                 return obj.getQualifiedName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
         tableViewer.addSelectionChangedListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
                 setParameter(new ArrayList<>());
                 return;
@@ -149,7 +149,7 @@ public class AddParameterPage extends WizardPage {
         YamcsPlugin.getMissionDatabase().getParameters().forEach(pmtr -> {
 
             for (NamedObjectId alias : pmtr.getAliasList()) {
-                String namespace = alias.getNamespace();
+                var namespace = alias.getNamespace();
                 if (!namespace.startsWith("/")) {
                     return;
                 }
@@ -159,7 +159,7 @@ public class AddParameterPage extends WizardPage {
 
                 parameterInfos.get(namespace).add(pmtr);
 
-                String parentns = namespace.substring(0, namespace.lastIndexOf("/"));
+                var parentns = namespace.substring(0, namespace.lastIndexOf("/"));
                 while (!parentns.isEmpty()) {
                     if (!parameterInfos.containsKey(parentns)) {
                         parameterInfos.put(parentns, new ArrayList<>());
@@ -176,8 +176,8 @@ public class AddParameterPage extends WizardPage {
         tableViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
-                ParameterInfo n1 = (ParameterInfo) o1;
-                ParameterInfo n2 = (ParameterInfo) o2;
+                var n1 = (ParameterInfo) o1;
+                var n2 = (ParameterInfo) o2;
                 return n1.getQualifiedName().compareTo(n2.getQualifiedName());
 
             }
@@ -254,7 +254,7 @@ public class AddParameterPage extends WizardPage {
 
         @Override
         public Object[] getChildren(Object parentElement) {
-            String parent = (String) parentElement;
+            var parent = (String) parentElement;
             List<String> children = new ArrayList<>();
             for (String name : parameterInfos.keySet()) {
                 if (name != parent && name.startsWith(parent)
@@ -269,9 +269,9 @@ public class AddParameterPage extends WizardPage {
         @Override
         public Object getParent(Object element) {
 
-            String namespace = (String) element;
+            var namespace = (String) element;
 
-            String parent = namespace.substring(0, namespace.lastIndexOf("/"));
+            var parent = namespace.substring(0, namespace.lastIndexOf("/"));
             if (parent.isEmpty()) {
                 return null;
 

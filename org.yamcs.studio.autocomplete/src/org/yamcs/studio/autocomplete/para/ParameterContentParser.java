@@ -27,12 +27,12 @@ public class ParameterContentParser implements IContentParser {
 
     @Override
     public ContentDescriptor parse(ContentDescriptor desc) {
-        int startIndex = 0;
-        String contentToParse = desc.getValue();
+        var startIndex = 0;
+        var contentToParse = desc.getValue();
         if (contentToParse.startsWith(PARA_SOURCE)) {
             contentToParse = contentToParse.substring(PARA_SOURCE.length());
         }
-        ContentDescriptor currentDesc = new ContentDescriptor();
+        var currentDesc = new ContentDescriptor();
         currentDesc.setContentType(ContentType.PVName);
         currentDesc.setStartIndex(startIndex);
         currentDesc.setValue(contentToParse);

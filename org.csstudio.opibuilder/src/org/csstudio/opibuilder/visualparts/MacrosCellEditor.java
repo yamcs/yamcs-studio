@@ -30,7 +30,7 @@ public class MacrosCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        MacrosInputDialog dialog = new MacrosInputDialog(parentShell, macrosInput, dialogTitle);
+        var dialog = new MacrosInputDialog(parentShell, macrosInput, dialogTitle);
         if (dialog.open() == Window.OK) {
             macrosInput = dialog.getResult();
         }
@@ -48,10 +48,11 @@ public class MacrosCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof MacrosInput))
+        if (value == null || !(value instanceof MacrosInput)) {
             macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
-        else
+        } else {
             macrosInput = (MacrosInput) value;
+        }
 
     }
 

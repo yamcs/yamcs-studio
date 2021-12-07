@@ -21,8 +21,7 @@ public interface IRunnerInput extends IPathEditorInput, IPersistableElement {
      * @param displayOpenManager
      *            the displayOpenManager to set
      */
-    public void setDisplayOpenManager(
-            DisplayOpenManager displayOpenManager);
+    public void setDisplayOpenManager(DisplayOpenManager displayOpenManager);
 
     /**
      * @return the displayOpenManager

@@ -27,21 +27,20 @@ public class ImportYSSLandingWizard extends Wizard implements IImportWizard {
             @Override
             public void createControl(Composite parent) {
                 setTitle("Install YSS Landing");
-                Composite container = new Composite(parent, SWT.NONE);
+                var container = new Composite(parent, SWT.NONE);
                 container.setLayout(new GridLayout());
                 setControl(container);
 
-                Label label = new Label(container, SWT.WRAP);
-                GridData gd = new GridData();
+                var label = new Label(container, SWT.WRAP);
+                var gd = new GridData();
                 gd.widthHint = 500;
                 label.setLayoutData(gd);
 
-                label.setText("The 'YSS Landing' project will be imported to your workspace. This project " +
-                        "is useful for demo purposes and runs against the simulation example included " +
-                        "in the Yamcs repository.\n\n" +
-                        "If there is already a project named \"" + InstallYSSLandingAction.PROJECT_NAME
-                        + "\" in your workspace, the import will fail. " +
-                        "Please rename or delete it and import again.");
+                label.setText("The 'YSS Landing' project will be imported to your workspace. This project "
+                        + "is useful for demo purposes and runs against the simulation example included "
+                        + "in the Yamcs repository.\n\n" + "If there is already a project named \""
+                        + InstallYSSLandingAction.PROJECT_NAME + "\" in your workspace, the import will fail. "
+                        + "Please rename or delete it and import again.");
             }
         });
     }

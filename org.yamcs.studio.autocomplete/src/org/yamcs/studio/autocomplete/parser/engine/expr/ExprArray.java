@@ -56,16 +56,18 @@ public class ExprArray extends Expr {
         return array;
     }
 
+    @Override
     public int hashCode() {
         return 567 ^ rows ^ columns ^ array.length;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExprArray))
+        if (!(obj instanceof ExprArray)) {
             return false;
+        }
 
-        ExprArray a = (ExprArray) obj;
-        return a.rows == rows && a.columns == columns
-                && Arrays.equals(a.array, array);
+        var a = (ExprArray) obj;
+        return a.rows == rows && a.columns == columns && Arrays.equals(a.array, array);
     }
 }

@@ -64,8 +64,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
      * @param category
      *            the category of the widget.
      */
-    public ScriptProperty(String prop_id, String description,
-            WidgetPropertyCategory category) {
+    public ScriptProperty(String prop_id, String description, WidgetPropertyCategory category) {
         super(prop_id, description, category, new ScriptsInput());
 
     }
@@ -86,13 +85,13 @@ public class ScriptProperty extends AbstractWidgetProperty {
     @Override
     public Object getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
-            ScriptsInput value = (ScriptsInput) super.getPropertyValue();
+            var value = (ScriptsInput) super.getPropertyValue();
             for (ScriptData sd : value.getScriptList()) {
                 for (Object pv : sd.getPVList().toArray()) {
-                    PVTuple pvTuple = (PVTuple) pv;
-                    String newPV = OPIBuilderMacroUtil.replaceMacros(widgetModel, pvTuple.pvName);
+                    var pvTuple = (PVTuple) pv;
+                    var newPV = OPIBuilderMacroUtil.replaceMacros(widgetModel, pvTuple.pvName);
                     if (!newPV.equals(pvTuple.pvName)) {
-                        int i = sd.getPVList().indexOf(pv);
+                        var i = sd.getPVList().indexOf(pv);
                         sd.getPVList().remove(pv);
                         sd.getPVList().add(i, new PVTuple(newPV, pvTuple.trigger));
                     }
@@ -111,10 +110,10 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     @Override
     public ScriptsInput readValueFromXML(Element propElement) {
-        ScriptsInput result = new ScriptsInput();
+        var result = new ScriptsInput();
         for (Object oe : propElement.getChildren(XML_ELEMENT_PATH)) {
-            Element se = (Element) oe;
-            ScriptData sd = new ScriptData();
+            var se = (Element) oe;
+            var sd = new ScriptData();
             if (se.getAttributeValue(XML_ATTRIBUTE_PATHSTRING).equals(EMBEDDEDJS)) {
                 sd.setEmbedded(true);
                 sd.setScriptType(ScriptType.JAVASCRIPT);
@@ -129,16 +128,15 @@ public class ScriptProperty extends AbstractWidgetProperty {
                 sd = new ScriptData(new Path(se.getAttributeValue(XML_ATTRIBUTE_PATHSTRING)));
             }
             if (se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT) != null) {
-                sd.setCheckConnectivity(
-                        Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT)));
+                sd.setCheckConnectivity(Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT)));
             }
             if (se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR) != null) {
                 sd.setStopExecuteOnError(
                         Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR)));
             }
             for (Object o : se.getChildren(XML_ELEMENT_PV)) {
-                Element pve = (Element) o;
-                boolean trig = true;
+                var pve = (Element) o;
+                var trig = true;
                 if (pve.getAttribute(XML_ATTRIBUTE_TRIGGER) != null) {
                     trig = Boolean.parseBoolean(pve.getAttributeValue(XML_ATTRIBUTE_TRIGGER));
                 }
@@ -152,7 +150,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
     @Override
     public void writeToXML(Element propElement) {
         for (ScriptData scriptData : ((ScriptsInput) getPropertyValue()).getScriptList()) {
-            Element pathElement = new Element(XML_ELEMENT_PATH);
+            var pathElement = new Element(XML_ELEMENT_PATH);
             String pathString = null;
             if (scriptData.isEmbedded()) {
                 if (scriptData.getScriptType() == ScriptType.JAVASCRIPT) {
@@ -160,23 +158,21 @@ public class ScriptProperty extends AbstractWidgetProperty {
                 } else if (scriptData.getScriptType() == ScriptType.PYTHON) {
                     pathString = EMBEDDEDPY;
                 }
-                Element scriptNameElement = new Element(XML_ELEMENT_SCRIPT_NAME);
+                var scriptNameElement = new Element(XML_ELEMENT_SCRIPT_NAME);
                 scriptNameElement.setText(scriptData.getScriptName());
                 pathElement.addContent(scriptNameElement);
-                Element scriptTextElement = new Element(XML_ELEMENT_SCRIPT_TEXT);
+                var scriptTextElement = new Element(XML_ELEMENT_SCRIPT_TEXT);
                 scriptTextElement.setContent(new CDATA(scriptData.getScriptText()));
                 pathElement.addContent(scriptTextElement);
             } else {
                 pathString = scriptData.getPath().toPortableString();
             }
-            pathElement.setAttribute(XML_ATTRIBUTE_PATHSTRING,
-                    pathString);
-            pathElement.setAttribute(XML_ATTRIBUTE_CHECKCONNECT,
-                    Boolean.toString(scriptData.isCheckConnectivity()));
+            pathElement.setAttribute(XML_ATTRIBUTE_PATHSTRING, pathString);
+            pathElement.setAttribute(XML_ATTRIBUTE_CHECKCONNECT, Boolean.toString(scriptData.isCheckConnectivity()));
             pathElement.setAttribute(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR,
                     Boolean.toString(scriptData.isStopExecuteOnError()));
             for (PVTuple pv : scriptData.getPVList()) {
-                Element pvElement = new Element(XML_ELEMENT_PV);
+                var pvElement = new Element(XML_ELEMENT_PV);
                 pvElement.setText(pv.pvName);
                 pvElement.setAttribute(XML_ATTRIBUTE_TRIGGER, Boolean.toString(pv.trigger));
                 pathElement.addContent(pvElement);

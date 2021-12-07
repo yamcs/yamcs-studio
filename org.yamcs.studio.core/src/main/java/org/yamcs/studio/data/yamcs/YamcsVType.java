@@ -96,8 +96,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             // Assumes ordered ranges
             for (var range : pval.getAlarmRangeList()) {
-                if (range.getLevel() == AlarmLevelType.WATCH
-                        || range.getLevel() == AlarmLevelType.WARNING
+                if (range.getLevel() == AlarmLevelType.WATCH || range.getLevel() == AlarmLevelType.WARNING
                         || range.getLevel() == AlarmLevelType.DISTRESS) {
                     if (range.hasMinInclusive()) {
                         return range.getMinInclusive();
@@ -118,8 +117,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             // Assumes ordered ranges
             for (var range : pval.getAlarmRangeList()) {
-                if (range.getLevel() == AlarmLevelType.WATCH
-                        || range.getLevel() == AlarmLevelType.WARNING
+                if (range.getLevel() == AlarmLevelType.WATCH || range.getLevel() == AlarmLevelType.WARNING
                         || range.getLevel() == AlarmLevelType.DISTRESS) {
                     if (range.hasMaxInclusive()) {
                         return range.getMaxInclusive();
@@ -137,8 +135,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             // Assumes ordered ranges
             for (var range : pval.getAlarmRangeList()) {
-                if (range.getLevel() == AlarmLevelType.CRITICAL
-                        || range.getLevel() == AlarmLevelType.SEVERE) {
+                if (range.getLevel() == AlarmLevelType.CRITICAL || range.getLevel() == AlarmLevelType.SEVERE) {
                     if (range.hasMinInclusive()) {
                         return range.getMinInclusive();
                     } else if (range.hasMinExclusive()) {
@@ -158,8 +155,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             // Assumes ordered ranges
             for (var range : pval.getAlarmRangeList()) {
-                if (range.getLevel() == AlarmLevelType.CRITICAL
-                        || range.getLevel() == AlarmLevelType.SEVERE) {
+                if (range.getLevel() == AlarmLevelType.CRITICAL || range.getLevel() == AlarmLevelType.SEVERE) {
                     if (range.hasMaxInclusive()) {
                         return range.getMaxInclusive();
                     } else if (range.hasMaxExclusive()) {
@@ -206,7 +202,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             var mdb = YamcsPlugin.getMissionDatabase();
             if (mdb != null) {
-                String unit = mdb.getCombinedUnit(pval.getId());
+                var unit = mdb.getCombinedUnit(pval.getId());
                 return (unit == null) ? "" : unit;
             }
         }
@@ -294,8 +290,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
                 }
             }
         default:
-            throw new IllegalStateException(
-                    "Unexpected type for parameter value. Got: " + value.getType());
+            throw new IllegalStateException("Unexpected type for parameter value. Got: " + value.getType());
         }
     }
 }

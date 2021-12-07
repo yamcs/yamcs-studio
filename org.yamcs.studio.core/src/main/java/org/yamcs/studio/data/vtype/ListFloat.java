@@ -85,13 +85,13 @@ public abstract class ListFloat implements ListNumber, CollectionFloat {
         }
 
         if (obj instanceof ListFloat) {
-            ListFloat other = (ListFloat) obj;
+            var other = (ListFloat) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (Float.floatToIntBits(getFloat(i)) != Float.floatToIntBits(other.getFloat(i))) {
                     return false;
                 }
@@ -105,8 +105,8 @@ public abstract class ListFloat implements ListNumber, CollectionFloat {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
             result = 31 * result + Float.floatToIntBits(getFloat(i));
         }
         return result;

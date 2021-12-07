@@ -6,7 +6,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -22,12 +21,10 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
-import org.osgi.framework.Version;
 
 public class Application implements IApplication {
 
@@ -40,31 +37,31 @@ public class Application implements IApplication {
         // 3. Override with last used workspace (via ~/.config/yamcs-studio/workspace_history (if present)
         // 4. Override with -workspace command option (if specified)
 
-        Path userHome = Paths.get(System.getProperty("user.home"));
+        var userHome = Paths.get(System.getProperty("user.home"));
 
-        Path userDataDir = UserPreferences.getDataDir();
+        var userDataDir = UserPreferences.getDataDir();
         Files.createDirectories(userDataDir);
 
-        String workspace = System.getProperty("workspace.default");
+        var workspace = System.getProperty("workspace.default");
         if (workspace == null) {
             workspace = userHome.resolve("yamcs-studio").toString();
         }
         workspace = workspace.replace("@user.home", userHome.toString());
 
-        List<String> workspaceHistory = UserPreferences.readWorkspaceHistory();
+        var workspaceHistory = UserPreferences.readWorkspaceHistory();
         if (!workspaceHistory.isEmpty()) {
             workspace = workspaceHistory.get(0);
         }
 
-        boolean workspacePrompt = false;
+        var workspacePrompt = false;
 
         configureLogging(userDataDir);
 
         String args[] = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
-        for (int i = 0; i < args.length; i++) {
+        for (var i = 0; i < args.length; i++) {
             switch (args[i]) {
             case "-version":
-                Version version = context.getBrandingBundle().getVersion();
+                var version = context.getBrandingBundle().getVersion();
                 System.out.println(context.getBrandingName() + " " + version);
                 return EXIT_OK;
             case "-help":
@@ -79,9 +76,9 @@ public class Application implements IApplication {
             }
         }
 
-        Display display = PlatformUI.createDisplay();
+        var display = PlatformUI.createDisplay();
         try {
-            boolean success = YamcsStudioWorkspace.prompt(new URL("file:" + workspace), workspacePrompt);
+            var success = YamcsStudioWorkspace.prompt(new URL("file:" + workspace), workspacePrompt);
             if (!success) {
                 System.exit(0); // TODO remove?
                 return EXIT_OK;
@@ -105,7 +102,7 @@ public class Application implements IApplication {
     }
 
     private void configureLogging(Path userDataDir) throws IOException {
-        Logger root = Logger.getLogger("");
+        var root = Logger.getLogger("");
 
         // We use the convention where INFO goes to end-user (via 'Console View' inside Yamcs Studio)
         // And FINE goes to stdout (--> debuggable by end-user if needed, and visible in PDE/UI)
@@ -119,12 +116,12 @@ public class Application implements IApplication {
         Logger.getLogger("org.yamcs.studio").setLevel(Level.FINE);
 
         // Java installs only a console handler. Add a file handler as well.
-        Path logDir = userDataDir.resolve("logs");
+        var logDir = userDataDir.resolve("logs");
         Files.createDirectories(logDir);
-        String pattern = logDir.resolve("main.log").toString();
-        int limit = 10_000_000; // ~10 MB
-        int count = 10;
-        FileHandler fileHandler = new FileHandler(pattern, limit, count);
+        var pattern = logDir.resolve("main.log").toString();
+        var limit = 10_000_000; // ~10 MB
+        var count = 10;
+        var fileHandler = new FileHandler(pattern, limit, count);
         fileHandler.setFormatter(new LogFormatter());
         root.addHandler(fileHandler);
 
@@ -147,10 +144,10 @@ public class Application implements IApplication {
     }
 
     private int runWorkbench(Display display, IApplicationContext context) {
-        Logger log = Logger.getLogger(getClass().getName());
+        var log = Logger.getLogger(getClass().getName());
 
         // Run the workbench
-        int returnCode = PlatformUI.createAndRunWorkbench(display, createWorkbenchAdvisor());
+        var returnCode = PlatformUI.createAndRunWorkbench(display, createWorkbenchAdvisor());
 
         // Plain exit from IWorkbench.close()
         if (returnCode != PlatformUI.RETURN_RESTART) {
@@ -158,7 +155,7 @@ public class Application implements IApplication {
         }
 
         // IWorkbench.restart() was called.
-        Integer exitCode = Integer.getInteger("eclipse.exitcode");
+        var exitCode = Integer.getInteger("eclipse.exitcode");
         if (EXIT_RELAUNCH.equals(exitCode)) { // RELAUCH with new command line
             log.fine(String.format("RELAUNCH, command line: %s", System.getProperty("eclipse.exitdata")));
             return EXIT_RELAUNCH;
@@ -168,7 +165,7 @@ public class Application implements IApplication {
     }
 
     protected IProject createProject(URL location, String sourceFolder) throws CoreException {
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(sourceFolder);
+        var project = ResourcesPlugin.getWorkspace().getRoot().getProject(sourceFolder);
         try {
             project.create(new NullProgressMonitor());
             project.open(new NullProgressMonitor());
@@ -179,10 +176,9 @@ public class Application implements IApplication {
         }
 
         try {
-            File templateRoot = new File(location.getPath(), sourceFolder);
-            RelativeFileSystemStructureProvider structureProvider = new RelativeFileSystemStructureProvider(
-                    templateRoot);
-            ImportOperation operation = new ImportOperation(project.getFullPath(), templateRoot, structureProvider,
+            var templateRoot = new File(location.getPath(), sourceFolder);
+            var structureProvider = new RelativeFileSystemStructureProvider(templateRoot);
+            var operation = new ImportOperation(project.getFullPath(), templateRoot, structureProvider,
                     pathString -> IOverwriteQuery.ALL, structureProvider.getChildren(templateRoot));
 
             operation.setContext(Display.getDefault().getActiveShell());
@@ -196,11 +192,11 @@ public class Application implements IApplication {
 
     @Override
     public void stop() {
-        IWorkbench workbench = PlatformUI.getWorkbench();
+        var workbench = PlatformUI.getWorkbench();
         if (workbench == null) {
             return;
         }
-        Display display = workbench.getDisplay();
+        var display = workbench.getDisplay();
         display.syncExec(() -> {
             if (!display.isDisposed()) {
                 workbench.close();

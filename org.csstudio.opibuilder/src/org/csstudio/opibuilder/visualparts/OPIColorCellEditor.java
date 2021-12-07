@@ -27,9 +27,10 @@ public class OPIColorCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        OPIColorDialog dialog = new OPIColorDialog(parentShell, opiColor, dialogTitle);
-        if (dialog.open() == Window.OK)
+        var dialog = new OPIColorDialog(parentShell, opiColor, dialogTitle);
+        if (dialog.open() == Window.OK) {
             opiColor = dialog.getOutput();
+        }
     }
 
     @Override
@@ -44,10 +45,11 @@ public class OPIColorCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof OPIColor))
+        if (value == null || !(value instanceof OPIColor)) {
             opiColor = new OPIColor("unknown");
-        else
+        } else {
             opiColor = (OPIColor) value;
+        }
     }
 
 }

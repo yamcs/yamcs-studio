@@ -56,7 +56,7 @@ public class OPIFontDialog extends TrayDialog {
             pointsButton.setText("points");
             pixelsButton = new Button(radioGroup, SWT.RADIO);
             pixelsButton.setText("pixels");
-            GridLayout layout = new GridLayout();
+            var layout = new GridLayout();
             layout.numColumns = 2;
             radioGroup.setLayout(layout);
             radioGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -97,7 +97,7 @@ public class OPIFontDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
@@ -106,36 +106,35 @@ public class OPIFontDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
 
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
+        var mainComposite = new Composite(parent_Composite, SWT.None);
         mainComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = 300;
         mainComposite.setLayoutData(gridData);
-        final Composite leftComposite = new Composite(mainComposite, SWT.None);
+        var leftComposite = new Composite(mainComposite, SWT.None);
         leftComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 250;
         leftComposite.setLayoutData(gd);
         createLabel(leftComposite, "Choose from Predefined Fonts:");
 
         preDefinedFontsViewer = createPredefinedFontsTableViewer(leftComposite);
-        preDefinedFontsViewer.setInput(
-                MediaService.getInstance().getAllPredefinedFonts());
+        preDefinedFontsViewer.setInput(MediaService.getInstance().getAllPredefinedFonts());
 
-        Composite rightComposite = new Composite(mainComposite, SWT.None);
+        var rightComposite = new Composite(mainComposite, SWT.None);
         rightComposite.setLayout(new GridLayout(1, false));
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 250;
         rightComposite.setLayoutData(gd);
 
         @SuppressWarnings("unused") // This label doesn't need to do anything but exist.
-        Label spacer = new Label(rightComposite, SWT.NONE);
-        Button fontDialogButton = new Button(rightComposite, SWT.PUSH);
+        var spacer = new Label(rightComposite, SWT.NONE);
+        var fontDialogButton = new Button(rightComposite, SWT.PUSH);
         // Push radioButtons to bottom of rightComposite.
-        Label spacer2 = new Label(rightComposite, SWT.NONE);
-        GridData gd2 = new GridData();
+        var spacer2 = new Label(rightComposite, SWT.NONE);
+        var gd2 = new GridData();
         gd2.grabExcessVerticalSpace = true;
         spacer2.setLayoutData(gd2);
         pixelsOrPointsBox = new PixelsOrPointsBox(rightComposite, SWT.NONE);
@@ -146,9 +145,9 @@ public class OPIFontDialog extends TrayDialog {
         fontDialogButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                FontDialog dialog = new FontDialog(Display.getCurrent().getActiveShell());
+                var dialog = new FontDialog(Display.getCurrent().getActiveShell());
                 dialog.setFontList(new FontData[] { opiFont.getRawFontData() });
-                FontData fontdata = dialog.open();
+                var fontdata = dialog.open();
                 pixelsOrPointsBox.setEnabled(true);
                 if (fontdata != null) {
                     opiFont = new OPIFont(fontdata);
@@ -172,7 +171,7 @@ public class OPIFontDialog extends TrayDialog {
         };
         pixelsOrPointsBox.addSelectionListener(radioSelectionListener);
 
-        Group group = new Group(mainComposite, SWT.None);
+        var group = new Group(mainComposite, SWT.None);
         gd = new GridData(SWT.FILL, SWT.END, true, true, 2, 1);
         gd.heightHint = 100;
         group.setLayoutData(gd);
@@ -202,7 +201,7 @@ public class OPIFontDialog extends TrayDialog {
     }
 
     private TableViewer createPredefinedFontsTableViewer(Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @Override
             public Object[] getElements(Object element) {
@@ -217,8 +216,7 @@ public class OPIFontDialog extends TrayDialog {
     }
 
     private void refreshGUIOnSelection() {
-        IStructuredSelection selection = (IStructuredSelection) preDefinedFontsViewer
-                .getSelection();
+        var selection = (IStructuredSelection) preDefinedFontsViewer.getSelection();
         if (!selection.isEmpty() && selection.getFirstElement() instanceof OPIFont) {
             opiFont = new OPIFont((OPIFont) selection.getFirstElement());
             outputTextLabel.setText(opiFont.getFontMacroName());
@@ -230,7 +228,7 @@ public class OPIFontDialog extends TrayDialog {
     }
 
     private void createLabel(Composite parent, String text) {
-        Label label = new Label(parent, SWT.WRAP);
+        var label = new Label(parent, SWT.WRAP);
         label.setText(text);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
     }

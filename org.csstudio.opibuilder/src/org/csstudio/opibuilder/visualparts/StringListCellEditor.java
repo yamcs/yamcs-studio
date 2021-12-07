@@ -30,7 +30,7 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        StringListEditDialog dialog = new StringListEditDialog(parentShell, data, dialogTitle);
+        var dialog = new StringListEditDialog(parentShell, data, dialogTitle);
         if (dialog.open() == Window.OK) {
             data = dialog.getResult();
         }
@@ -49,10 +49,11 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
     @SuppressWarnings("unchecked")
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof List))
+        if (value == null || !(value instanceof List)) {
             data = new ArrayList<String>();
-        else
+        } else {
             data = (List<String>) value;
+        }
 
     }
 

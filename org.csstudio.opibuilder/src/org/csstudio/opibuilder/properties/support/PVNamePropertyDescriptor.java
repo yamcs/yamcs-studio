@@ -33,9 +33,9 @@ public class PVNamePropertyDescriptor extends TextPropertyDescriptor {
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
 
-        final PVNameTextCellEditor editor = new PVNameTextCellEditor(parent);
+        var editor = new PVNameTextCellEditor(parent);
         editor.getControl().setToolTipText(getDescription());
         return editor;
     }

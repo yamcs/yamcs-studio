@@ -17,7 +17,7 @@ public abstract class XtceTreeContentProvider<T> implements ITreeContentProvider
     @Override
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof XtceSubSystemNode) {
-            XtceSubSystemNode subSystem = (XtceSubSystemNode) parentElement;
+            var subSystem = (XtceSubSystemNode) parentElement;
             return subSystem.getChildren().toArray();
         } else {
             return new Object[0];
@@ -27,7 +27,7 @@ public abstract class XtceTreeContentProvider<T> implements ITreeContentProvider
     @Override
     @SuppressWarnings("unchecked")
     public Object getParent(Object element) {
-        XtceTreeNode<T> node = (XtceTreeNode<T>) element;
+        var node = (XtceTreeNode<T>) element;
         return node.getParent();
     }
 
@@ -43,16 +43,16 @@ public abstract class XtceTreeContentProvider<T> implements ITreeContentProvider
      */
     @SuppressWarnings("unchecked")
     public void addElement(String qualifiedName, T data) {
-        String[] parts = qualifiedName.split("\\/");
+        var parts = qualifiedName.split("\\/");
 
-        boolean isDirectLeaf = parts.length == 1;
+        var isDirectLeaf = parts.length == 1;
         if (isDirectLeaf) {
-            String name = parts[1];
+            var name = parts[1];
             roots.put(name, createXtceTreeNode(null, name, data));
         } else {
-            XtceSubSystemNode root = findOrCreateRootSpaceSystem(parts[1]);
-            XtceSubSystemNode parent = root;
-            for (int i = 2; i < parts.length - 1; i++) {
+            var root = findOrCreateRootSpaceSystem(parts[1]);
+            var parent = root;
+            for (var i = 2; i < parts.length - 1; i++) {
                 XtceTreeNode<T> node = parent.getChild(parts[i]);
                 if (node == null) {
                     node = new XtceSubSystemNode(parent, parts[i]);
@@ -60,16 +60,16 @@ public abstract class XtceTreeContentProvider<T> implements ITreeContentProvider
                 }
                 parent = (XtceSubSystemNode) node;
             }
-            String name = parts[parts.length - 1];
+            var name = parts[parts.length - 1];
             parent.addChild(createXtceTreeNode(parent, name, data));
         }
     }
 
     @SuppressWarnings("unchecked")
     private XtceSubSystemNode findOrCreateRootSpaceSystem(String name) {
-        XtceTreeNode<T> root = roots.get(name);
+        var root = roots.get(name);
         if (root == null) {
-            XtceSubSystemNode newRoot = new XtceSubSystemNode(null, name);
+            var newRoot = new XtceSubSystemNode(null, name);
             roots.put(name, newRoot);
             return newRoot;
         } else if (root instanceof XtceSubSystemNode) {

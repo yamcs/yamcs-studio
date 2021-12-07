@@ -27,9 +27,9 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final GaugeModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        GaugeFigure gauge = new GaugeFigure();
+        var gauge = new GaugeFigure();
 
         initializeCommonFigureProperties(gauge, model);
         gauge.setNeedleColor(CustomMediaFactory.getInstance().getColor((model.getNeedleColor())));
@@ -52,10 +52,8 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         // needle Color
         IWidgetPropertyChangeHandler needleColorColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                GaugeFigure gauge = (GaugeFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var gauge = (GaugeFigure) refreshableFigure;
                 gauge.setNeedleColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -65,10 +63,8 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                GaugeFigure gauge = (GaugeFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var gauge = (GaugeFigure) refreshableFigure;
                 gauge.setEffect3D((Boolean) newValue);
                 return false;
             }
@@ -78,22 +74,21 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         // Ramp gradient
         IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                GaugeFigure gauge = (GaugeFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var gauge = (GaugeFigure) refreshableFigure;
                 gauge.setGradient((Boolean) newValue);
                 return false;
             }
         };
         setPropertyChangeHandler(GaugeModel.PROP_RAMP_GRADIENT, gradientHandler);
 
-        final IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
+        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (((Integer) newValue) < GaugeModel.MINIMUM_SIZE)
+                if (((Integer) newValue) < GaugeModel.MINIMUM_SIZE) {
                     newValue = GaugeModel.MINIMUM_SIZE;
+                }
                 getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
                 return false;
             }

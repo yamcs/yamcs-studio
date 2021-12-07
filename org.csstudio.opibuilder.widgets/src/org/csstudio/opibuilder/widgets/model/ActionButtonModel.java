@@ -19,7 +19,6 @@ import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Version;
 
@@ -28,8 +27,7 @@ import org.osgi.framework.Version;
  */
 public class ActionButtonModel extends AbstractPVWidgetModel implements ITextModel {
     public enum Style {
-        CLASSIC("Classic"),
-        NATIVE("Native");
+        CLASSIC("Classic"), NATIVE("Native");
 
         private String description;
 
@@ -43,8 +41,8 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
         }
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (Style f : values()) {
                 result[i++] = f.toString();
             }
@@ -120,26 +118,23 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
     @Override
     protected void configureProperties() {
 
-        addProperty(new ComboProperty(PROP_STYLE, "Style", WidgetPropertyCategory.Basic,
-                Style.stringValues(), Style.CLASSIC.ordinal()));
+        addProperty(new ComboProperty(PROP_STYLE, "Style", WidgetPropertyCategory.Basic, Style.stringValues(),
+                Style.CLASSIC.ordinal()));
 
-        addProperty(new StringProperty(PROP_TEXT, "Text",
-                WidgetPropertyCategory.Display, "$(actions)", true));
-        addProperty(new IntegerProperty(PROP_ACTION_INDEX, "Click Action Index",
-                WidgetPropertyCategory.Behavior, 0, -1, Integer.MAX_VALUE));
+        addProperty(new StringProperty(PROP_TEXT, "Text", WidgetPropertyCategory.Display, "$(actions)", true));
+        addProperty(new IntegerProperty(PROP_ACTION_INDEX, "Click Action Index", WidgetPropertyCategory.Behavior, 0, -1,
+                Integer.MAX_VALUE));
 
         addProperty(new IntegerProperty(PROP_RELEASED_ACTION_INDEX, "Release Action Index",
                 WidgetPropertyCategory.Behavior, 0, -1, Integer.MAX_VALUE));
 
-        addProperty(new BooleanProperty(PROP_TOGGLE_BUTTON, "Toggle Button",
-                WidgetPropertyCategory.Behavior, DEFAULT_TOGGLE_BUTTON));
+        addProperty(new BooleanProperty(PROP_TOGGLE_BUTTON, "Toggle Button", WidgetPropertyCategory.Behavior,
+                DEFAULT_TOGGLE_BUTTON));
 
-        addProperty(new FilePathProperty(PROP_IMAGE, "Icon File",
-                WidgetPropertyCategory.Display, "", FILE_EXTENSIONS));
+        addProperty(new FilePathProperty(PROP_IMAGE, "Icon File", WidgetPropertyCategory.Display, "", FILE_EXTENSIONS));
 
         removeProperty(PROP_ACTIONS);
-        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
 
         setPropertyVisible(PROP_RELEASED_ACTION_INDEX, DEFAULT_TOGGLE_BUTTON);
 
@@ -175,9 +170,9 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
     }
 
     public String getImagePath() {
-        String absolutePath = (String) getProperty(PROP_IMAGE).getPropertyValue();
+        var absolutePath = (String) getProperty(PROP_IMAGE).getPropertyValue();
         if (!absolutePath.contains("://")) {
-            IPath path = Path.fromPortableString(absolutePath);
+            var path = Path.fromPortableString(absolutePath);
             if (!path.isAbsolute()) {
                 path = ResourceUtil.buildAbsolutePath(this, path);
                 absolutePath = path.toPortableString();

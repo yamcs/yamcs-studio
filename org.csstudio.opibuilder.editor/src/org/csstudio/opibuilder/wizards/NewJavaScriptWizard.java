@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.wizards;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -40,15 +39,15 @@ public class NewJavaScriptWizard extends Wizard implements INewWizard {
 
     @Override
     public boolean performFinish() {
-        IFile file = jsFilePage.createNewFile();
+        var file = jsFilePage.createNewFile();
 
         if (file == null) {
             return false;
         }
 
         try {
-            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.csstudio.opibuilder.jseditor");
+            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
+                    "org.csstudio.opibuilder.jseditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open JavaScript File error",
                     "Failed to open the newly created JavaScript File. \n" + e.getMessage());

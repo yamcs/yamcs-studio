@@ -21,7 +21,7 @@ public class SelectParentAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
 
-        AbstractContainerEditpart containerEditpart = getParentContainerEditpart();
+        var containerEditpart = getParentContainerEditpart();
         containerEditpart.getViewer().select(containerEditpart);
 
     }

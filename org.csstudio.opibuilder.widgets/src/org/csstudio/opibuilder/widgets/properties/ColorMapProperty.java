@@ -57,20 +57,22 @@ public class ColorMapProperty extends AbstractWidgetProperty {
      */
     public static final String XML_ATTRIBUTE_BLUE = "blue";
 
-    public ColorMapProperty(String prop_id, String description,
-            WidgetPropertyCategory category, ColorMap defaultValue) {
+    public ColorMapProperty(String prop_id, String description, WidgetPropertyCategory category,
+            ColorMap defaultValue) {
         super(prop_id, description, category, defaultValue);
 
     }
 
     @Override
     public Object checkValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         ColorMap acceptableValue = null;
         if (value instanceof ColorMap) {
-            if (((ColorMap) value).getMap().size() >= 2)
+            if (((ColorMap) value).getMap().size() >= 2) {
                 acceptableValue = (ColorMap) value;
+            }
         } else if (value instanceof String) {
             for (PredefinedColorMap map : ColorMap.PredefinedColorMap.values()) {
                 if (map.toString().equals(value)) {
@@ -91,19 +93,16 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
     @Override
     public ColorMap readValueFromXML(Element propElement) {
-        ColorMap result = new ColorMap();
-        result.setInterpolate(Boolean.parseBoolean(
-                propElement.getChild(XML_ELEMENT_INTERPOLATE).getValue()));
-        result.setAutoScale(Boolean.parseBoolean(
-                propElement.getChild(XML_ELEMENT_AUTOSCALE).getValue()));
+        var result = new ColorMap();
+        result.setInterpolate(Boolean.parseBoolean(propElement.getChild(XML_ELEMENT_INTERPOLATE).getValue()));
+        result.setAutoScale(Boolean.parseBoolean(propElement.getChild(XML_ELEMENT_AUTOSCALE).getValue()));
         if (propElement.getChild(XML_ELEMENT_MAP).getChildren().size() == 0) {
-            PredefinedColorMap p = PredefinedColorMap.fromIndex(Integer.parseInt(
-                    propElement.getChild(XML_ELEMENT_MAP).getValue()));
+            var p = PredefinedColorMap.fromIndex(Integer.parseInt(propElement.getChild(XML_ELEMENT_MAP).getValue()));
             result.setPredefinedColorMap(p);
         } else {
-            LinkedHashMap<Double, RGB> map = new LinkedHashMap<Double, RGB>();
+            var map = new LinkedHashMap<Double, RGB>();
             for (Object o : propElement.getChild(XML_ELEMENT_MAP).getChildren()) {
-                Element e = (Element) o;
+                var e = (Element) o;
                 map.put(Double.parseDouble(e.getValue()),
                         new RGB(Integer.parseInt(e.getAttributeValue(XML_ATTRIBUTE_RED)),
                                 Integer.parseInt(e.getAttributeValue(XML_ATTRIBUTE_GREEN)),
@@ -117,26 +116,25 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        ColorMap colorMap = (ColorMap) getPropertyValue();
-        Element interpolateElement = new Element(XML_ELEMENT_INTERPOLATE);
+        var colorMap = (ColorMap) getPropertyValue();
+        var interpolateElement = new Element(XML_ELEMENT_INTERPOLATE);
         interpolateElement.setText(Boolean.toString(colorMap.isInterpolate()));
-        Element autoScaleElement = new Element(XML_ELEMENT_AUTOSCALE);
+        var autoScaleElement = new Element(XML_ELEMENT_AUTOSCALE);
         autoScaleElement.setText(Boolean.toString(colorMap.isAutoScale()));
 
-        Element preDefinedElement = new Element(XML_ELEMENT_MAP);
+        var preDefinedElement = new Element(XML_ELEMENT_MAP);
         if (colorMap.getPredefinedColorMap() == PredefinedColorMap.None) {
             for (Double k : colorMap.getMap().keySet()) {
-                Element colorElement = new Element(XML_ELEMENT_E);
+                var colorElement = new Element(XML_ELEMENT_E);
                 colorElement.setText(k.toString());
-                RGB color = colorMap.getMap().get(k);
+                var color = colorMap.getMap().get(k);
                 colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red);
                 colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green);
                 colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue);
                 preDefinedElement.addContent(colorElement);
             }
         } else {
-            preDefinedElement.setText(Integer.toString(
-                    PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap())));
+            preDefinedElement.setText(Integer.toString(PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap())));
         }
         propElement.addContent(interpolateElement);
         propElement.addContent(autoScaleElement);

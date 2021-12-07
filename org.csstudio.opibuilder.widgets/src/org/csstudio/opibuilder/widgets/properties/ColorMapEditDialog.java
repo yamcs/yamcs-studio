@@ -206,8 +206,7 @@ public class ColorMapEditDialog extends TrayDialog {
         autoScaleCheckBox.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false));
         autoScaleCheckBox.setSelection(autoScale);
         autoScaleCheckBox.setText("Auto Scale");
-        autoScaleCheckBox.setToolTipText("Scale the color map values to the range of" +
-                " (" + min + ", " + max + ").");
+        autoScaleCheckBox.setToolTipText("Scale the color map values to the range of" + " (" + min + ", " + max + ").");
 
         var group = new Group(rightComposite, SWT.None);
         group.setLayoutData(new GridData(SWT.FILL, SWT.END, true, true));
@@ -256,8 +255,7 @@ public class ColorMapEditDialog extends TrayDialog {
      * Refresh GUI when color map data changed.
      */
     private void refreshGUI() {
-        var originalImage = new Image(Display.getCurrent(),
-                getOutput().drawImage(mapData, 256, 1, max, min));
+        var originalImage = new Image(Display.getCurrent(), getOutput().drawImage(mapData, 256, 1, max, min));
 
         if (colorMapImage != null && !colorMapImage.isDisposed()) {
             colorMapImage.dispose();
@@ -265,8 +263,8 @@ public class ColorMapEditDialog extends TrayDialog {
         }
         colorMapImage = new Image(Display.getCurrent(), 300, 40);
         var gc = new GC(colorMapImage);
-        gc.drawImage(originalImage, 0, 0, 256, 1,
-                0, 0, colorMapImage.getBounds().width, colorMapImage.getBounds().height);
+        gc.drawImage(originalImage, 0, 0, 256, 1, 0, 0, colorMapImage.getBounds().width,
+                colorMapImage.getBounds().height);
         colorMapLabel.setImage(colorMapImage);
         colorMapLabel.setAlignment(SWT.CENTER);
         gc.dispose();
@@ -288,8 +286,7 @@ public class ColorMapEditDialog extends TrayDialog {
     private void refreshToolbarOnSelection() {
 
         var selection = (IStructuredSelection) colorListViewer.getSelection();
-        if (!selection.isEmpty()
-                && selection.getFirstElement() instanceof ColorTuple) {
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof ColorTuple) {
             removeAction.setEnabled(true);
             moveUpAction.setEnabled(true);
             moveDownAction.setEnabled(true);
@@ -373,25 +370,22 @@ public class ColorMapEditDialog extends TrayDialog {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                ColorTuple tuple = new ColorTuple(0, new RGB(0, 0, 0));
+                var tuple = new ColorTuple(0, new RGB(0, 0, 0));
                 colorList.add(tuple);
                 refreshColorListViewerForAction(tuple);
             }
         };
         addAction.setToolTipText("Add a color tuple");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         copyAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) colorListViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ColorTuple) {
-                    ColorTuple o = (ColorTuple) selection.getFirstElement();
-                    ColorTuple tuple = new ColorTuple(o.value, o.rgb);
+                var selection = (IStructuredSelection) colorListViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ColorTuple) {
+                    var o = (ColorTuple) selection.getFirstElement();
+                    var tuple = new ColorTuple(o.value, o.rgb);
                     colorList.add(tuple);
                     refreshColorListViewerForAction(tuple);
                 }
@@ -400,8 +394,7 @@ public class ColorMapEditDialog extends TrayDialog {
         copyAction.setText("Copy");
         copyAction.setToolTipText("Copy the selected color tuple");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/copy.gif"));
         copyAction.setEnabled(false);
 
         removeAction = new Action() {
@@ -416,11 +409,9 @@ public class ColorMapEditDialog extends TrayDialog {
             }
         };
         removeAction.setText("Remove");
-        removeAction
-                .setToolTipText("Remove the selected color tuple from the list");
+        removeAction.setToolTipText("Remove the selected color tuple from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
@@ -441,16 +432,14 @@ public class ColorMapEditDialog extends TrayDialog {
         moveUpAction.setText("Move Up");
         moveUpAction.setToolTipText("Move up the selected color tuple");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
             @Override
             public void run() {
                 var selection = (IStructuredSelection) colorListViewer.getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ColorTuple) {
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ColorTuple) {
                     var tuple = (ColorTuple) selection.getFirstElement();
                     var i = colorList.indexOf(tuple);
                     if (i < colorList.size() - 1) {
@@ -464,8 +453,7 @@ public class ColorMapEditDialog extends TrayDialog {
         moveDownAction.setText("Move Down");
         moveDownAction.setToolTipText("Move down the selected color tuple");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 

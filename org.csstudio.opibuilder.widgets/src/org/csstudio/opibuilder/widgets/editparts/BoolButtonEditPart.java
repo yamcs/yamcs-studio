@@ -1,7 +1,5 @@
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
@@ -11,7 +9,6 @@ import org.eclipse.draw2d.IFigure;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.vtype.VEnum;
-import org.yamcs.studio.data.vtype.VType;
 
 public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
@@ -19,9 +16,9 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final BoolButtonModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        BoolButtonFigure btn = new BoolButtonFigure();
+        var btn = new BoolButtonFigure();
 
         initializeCommonFigureProperties(btn, model);
         btn.setEffect3D(model.isEffect3D());
@@ -50,7 +47,7 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            BoolButtonFigure btn = (BoolButtonFigure) refreshableFigure;
+            var btn = (BoolButtonFigure) refreshableFigure;
             btn.setEffect3D((Boolean) newValue);
             return true;
         };
@@ -58,7 +55,7 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
         // Square LED
         handler = (oldValue, newValue, refreshableFigure) -> {
-            BoolButtonFigure btn = (BoolButtonFigure) refreshableFigure;
+            var btn = (BoolButtonFigure) refreshableFigure;
             btn.setSquareButton((Boolean) newValue);
             return true;
         };
@@ -66,7 +63,7 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
         // Show LED
         handler = (oldValue, newValue, refreshableFigure) -> {
-            BoolButtonFigure btn = (BoolButtonFigure) refreshableFigure;
+            var btn = (BoolButtonFigure) refreshableFigure;
             btn.setShowLED((Boolean) newValue);
             return true;
         };
@@ -79,15 +76,15 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
     private void registerLoadLabelsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             if (getWidgetModel().isLabelsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadLabelsFromPVListener == null) {
                         loadLabelsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
+                                var value = pv.getValue();
                                 if (value != null && value instanceof VEnum) {
-                                    List<String> enumLabels = ((VEnum) value).getLabels();
+                                    var enumLabels = ((VEnum) value).getLabels();
                                     // This is a bool button so we require exactly two labels.
                                     if (enumLabels.size() > 0) {
                                         getWidgetModel().setPropertyValue(BoolButtonModel.PROP_OFF_LABEL,

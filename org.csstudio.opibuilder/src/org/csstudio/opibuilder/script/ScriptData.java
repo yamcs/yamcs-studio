@@ -116,7 +116,7 @@ public class ScriptData implements IAdaptable {
     }
 
     public ScriptData getCopy() {
-        ScriptData copy = new ScriptData();
+        var copy = new ScriptData();
         copy.setPath(path);
         copy.setCheckConnectivity(checkConnectivity);
         copy.setStopExecuteOnError(stopExecuteOnError);
@@ -157,14 +157,13 @@ public class ScriptData implements IAdaptable {
                         } else {
                             icon = "icons/jsEmbedded.gif";
                         }
-                    } else if (path != null && !path.isEmpty()
-                            && path.getFileExtension().equals(ScriptService.PY)) {
+                    } else if (path != null && !path.isEmpty() && path.getFileExtension().equals(ScriptService.PY)) {
                         icon = "icons/python_file.gif";
                     } else {
                         icon = "icons/js.gif";
                     }
-                    return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, icon);
+                    return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            icon);
                 }
 
                 @Override
@@ -181,8 +180,7 @@ public class ScriptData implements IAdaptable {
      * @param stopExecuteOnError
      *            If true, stop to execute the script if error is detected in script.
      */
-    public void setStopExecuteOnError(
-            boolean stopExecuteOnError) {
+    public void setStopExecuteOnError(boolean stopExecuteOnError) {
         this.stopExecuteOnError = stopExecuteOnError;
     }
 

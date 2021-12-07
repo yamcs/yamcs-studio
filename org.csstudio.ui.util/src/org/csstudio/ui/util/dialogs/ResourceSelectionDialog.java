@@ -67,11 +67,9 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
      *            the file extensions of files to show in the dialog. Use an empty array or <code>null</code> to show
      *            only containers (folders).
      */
-    public ResourceSelectionDialog(final Shell parentShell,
-            final String dialogMessage, final String[] fileExtensions) {
+    public ResourceSelectionDialog(Shell parentShell, String dialogMessage, String[] fileExtensions) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE
-                | SWT.BORDER | SWT.RESIZE);
+        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
         _message = dialogMessage;
         _fileExtensions = fileExtensions;
     }
@@ -82,26 +80,25 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
      * @param path
      *            the path to the initially selected resource.
      */
-    public void setSelectedResource(final IPath path) {
+    public void setSelectedResource(IPath path) {
         _path = path;
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
 
     @Override
-    protected Control createDialogArea(final Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+    protected Control createDialogArea(Composite parent) {
+        var composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new GridLayout(1, false));
         if (_message != null) {
-            Label label = new Label(composite, SWT.WRAP);
+            var label = new Label(composite, SWT.WRAP);
             label.setText(_message);
-            GridData data = new GridData(GridData.GRAB_HORIZONTAL
-                    | GridData.HORIZONTAL_ALIGN_FILL
-                    | GridData.VERTICAL_ALIGN_CENTER);
+            var data = new GridData(
+                    GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
             data.horizontalSpan = 2;
             data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
             label.setLayoutData(data);
@@ -109,11 +106,9 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
 
         // The New Project and New Folder actions will be shown if there are
         // no file extensions, i.e. if the dialog is opened to select a folder.
-        boolean showNewContainerActions = (_fileExtensions == null
-                || _fileExtensions.length == 0);
+        var showNewContainerActions = (_fileExtensions == null || _fileExtensions.length == 0);
 
-        _resourceSelectionGroup = new ResourceSelectionGroup(composite, this,
-                _fileExtensions, showNewContainerActions);
+        _resourceSelectionGroup = new ResourceSelectionGroup(composite, this, _fileExtensions, showNewContainerActions);
         new Label(composite, SWT.NONE).setText("Resource Path:");
         _resourcePathText = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         _resourcePathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -141,9 +136,10 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
         return _path;
     }
 
+    @Override
     public void handleEvent(Event event) {
         if (event != null) {
-            ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
+            var widget = (ResourceSelectionGroup) event.widget;
             if (widget != null && widget.getFullPath() != null) {
                 _resourcePathText.setText(widget.getFullPath().toString());
             }

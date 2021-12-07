@@ -49,8 +49,7 @@ public class EllipseModel extends AbstractShapeModel {
                 WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new ColorProperty(PROP_FOREGROUND_GRADIENT_START_COLOR, "Foreground Gradient Start Color",
                 WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
-        addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient", WidgetPropertyCategory.Display, false));
     }
 
     @Override

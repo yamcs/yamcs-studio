@@ -23,12 +23,12 @@ public class StateContentParser implements IContentParser {
 
     @Override
     public ContentDescriptor parse(ContentDescriptor desc) {
-        int startIndex = 0;
-        String contentToParse = desc.getValue();
+        var startIndex = 0;
+        var contentToParse = desc.getValue();
         if (contentToParse.startsWith(STATE_SOURCE)) {
             contentToParse = contentToParse.substring(STATE_SOURCE.length());
         }
-        StateContentDescriptor currentDesc = new StateContentDescriptor();
+        var currentDesc = new StateContentDescriptor();
         currentDesc.setContentType(StateContentType.StateFunction);
         currentDesc.setStartIndex(startIndex);
         currentDesc.setValue(contentToParse);

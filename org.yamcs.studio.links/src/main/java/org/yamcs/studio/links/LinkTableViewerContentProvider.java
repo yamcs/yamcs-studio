@@ -1,6 +1,5 @@
 package org.yamcs.studio.links;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +30,12 @@ public class LinkTableViewerContentProvider implements IStructuredContentProvide
 
     @Override
     public Object[] getElements(Object inputElement) {
-        Collection<LinkRecord> records = linksByName.values();
+        var records = linksByName.values();
         return (records != null) ? records.toArray() : new Object[0];
     }
 
     public void processLinkInfo(LinkInfo incoming) {
-        LinkRecord rec = linksByName.get(incoming.getName());
+        var rec = linksByName.get(incoming.getName());
         if (rec == null) {
             rec = new LinkRecord(incoming);
             linksByName.put(incoming.getName(), rec);
@@ -51,7 +50,7 @@ public class LinkTableViewerContentProvider implements IStructuredContentProvide
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<LinkRecord> recs = linksByName.values();
+            var recs = linksByName.values();
             tableViewer.remove(recs.toArray());
             tableViewer.getTable().setRedraw(true);
         });
@@ -61,7 +60,7 @@ public class LinkTableViewerContentProvider implements IStructuredContentProvide
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<LinkRecord> recs = linksByName.values();
+            var recs = linksByName.values();
             tableViewer.remove(recs.toArray());
             linksByName.clear();
             tableViewer.getTable().setRedraw(true);

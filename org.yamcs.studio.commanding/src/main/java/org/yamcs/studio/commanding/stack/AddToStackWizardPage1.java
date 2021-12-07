@@ -27,9 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.TreeItem;
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -65,16 +63,16 @@ public class AddToStackWizardPage1 extends WizardPage {
     // Add dynamically columns for each alias of a command
     private void addAliasColumn(String namespace) {
 
-        TreeViewerColumn aliasColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
+        var aliasColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
         aliasColumn.getColumn().setText(namespace);
 
         aliasColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 if (element instanceof XtceCommandNode) {
-                    XtceCommandNode node = (XtceCommandNode) element;
-                    CommandInfo cmd = node.getCommandInfo();
-                    List<NamedObjectId> aliases = cmd.getAliasList();
+                    var node = (XtceCommandNode) element;
+                    var cmd = node.getCommandInfo();
+                    var aliases = cmd.getAliasList();
                     for (NamedObjectId aliase : aliases) {
                         if (aliase.getNamespace().equals(namespace)) {
                             return aliase.getName();
@@ -89,40 +87,40 @@ public class AddToStackWizardPage1 extends WizardPage {
 
     @Override
     public void createControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+        var composite = new Composite(parent, SWT.NONE);
         setControl(composite);
 
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         composite.setLayout(gl);
 
         // grid for expand+filter box
-        GridLayout gl2 = new GridLayout(3, false);
+        var gl2 = new GridLayout(3, false);
         gl2.marginHeight = 0;
         gl2.marginWidth = 0;
-        Composite row = new Composite(composite, SWT.NONE);
+        var row = new Composite(composite, SWT.NONE);
         row.setLayout(gl2);
         row.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // add expand all / collapse all button
-        Button expandAll = new Button(row, SWT.ARROW | SWT.DOWN);
-        GridData expandAllData = new GridData(SWT.NONE);
+        var expandAll = new Button(row, SWT.ARROW | SWT.DOWN);
+        var expandAllData = new GridData(SWT.NONE);
         expandAll.setLayoutData(expandAllData);
         expandAll.setText("Expand All");
         expandAll.setToolTipText("Expand All");
         expandAll.setVisible(false);
         expandAllData.exclude = true;
 
-        Button collapseAll = new Button(row, SWT.ARROW | SWT.RIGHT);
-        GridData collapseAllData = new GridData(SWT.NONE);
+        var collapseAll = new Button(row, SWT.ARROW | SWT.RIGHT);
+        var collapseAllData = new GridData(SWT.NONE);
         collapseAll.setLayoutData(collapseAllData);
         collapseAll.setText("Collapse All");
         collapseAll.setToolTipText("Collapse All");
         collapseAll.setVisible(true);
 
         // add filter box
-        Text searchbox = new Text(row, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        var searchbox = new Text(row, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         expandAll.addSelectionListener(new SelectionListener() {
@@ -189,9 +187,9 @@ public class AddToStackWizardPage1 extends WizardPage {
         level5Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level5s.png"));
 
-        Composite treeWrapper = new Composite(composite, SWT.NONE);
+        var treeWrapper = new Composite(composite, SWT.NONE);
         tcl = new TreeColumnLayout();
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var gd = new GridData(GridData.FILL_BOTH);
         gd.widthHint = 800;
         gd.heightHint = 500;
         treeWrapper.setLayoutData(gd);
@@ -202,16 +200,16 @@ public class AddToStackWizardPage1 extends WizardPage {
         commandsTreeTable.getTree().setLinesVisible(true);
 
         // column xtce path
-        TreeViewerColumn pathColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
+        var pathColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
         pathColumn.getColumn().setText(COL_PATH);
         pathColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 if (element instanceof XtceSubSystemNode) {
-                    XtceSubSystemNode node = (XtceSubSystemNode) element;
+                    var node = (XtceSubSystemNode) element;
                     return node.getName();
                 } else {
-                    XtceCommandNode node = (XtceCommandNode) element;
+                    var node = (XtceCommandNode) element;
                     return node.getCommandInfo().getName();
                 }
             }
@@ -219,7 +217,7 @@ public class AddToStackWizardPage1 extends WizardPage {
         tcl.setColumnData(pathColumn.getColumn(), new ColumnPixelData(300));
 
         // column significance
-        TreeViewerColumn significanceColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
+        var significanceColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
         significanceColumn.getColumn().setText(COL_SIGN);
         significanceColumn.getColumn().setToolTipText("Significance Level");
         significanceColumn.getColumn().setAlignment(SWT.CENTER);
@@ -227,8 +225,8 @@ public class AddToStackWizardPage1 extends WizardPage {
             @Override
             public Image getImage(Object element) {
                 if (element instanceof XtceCommandNode) {
-                    XtceCommandNode node = (XtceCommandNode) element;
-                    CommandInfo cmd = node.getCommandInfo();
+                    var node = (XtceCommandNode) element;
+                    var cmd = node.getCommandInfo();
                     if (cmd.getSignificance() == null) {
                         return level0Image;
                     }
@@ -256,15 +254,15 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         // on item selection update significance message and page completion status
         commandsTreeTable.addSelectionChangedListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
                 setMessage(null);
                 return;
             }
 
-            Object selectedElement = sel.getFirstElement();
+            var selectedElement = sel.getFirstElement();
             if (selectedElement instanceof XtceCommandNode) {
-                CommandInfo cmd = ((XtceCommandNode) sel.getFirstElement()).getCommandInfo();
+                var cmd = ((XtceCommandNode) sel.getFirstElement()).getCommandInfo();
                 // setMessage(getMessage(cmd));
 
                 command.setMetaCommand(cmd);
@@ -273,7 +271,7 @@ public class AddToStackWizardPage1 extends WizardPage {
                 setPageComplete(false);
             }
         });
-        CommandTreeContentProvider commandTreeContentProvider = new CommandTreeContentProvider();
+        var commandTreeContentProvider = new CommandTreeContentProvider();
         commandsTreeTable.setContentProvider(commandTreeContentProvider);
         commandsTreeTable.setInput(commandTreeContentProvider);
 
@@ -281,7 +279,7 @@ public class AddToStackWizardPage1 extends WizardPage {
             if (!cmd.hasAbstract() || !cmd.getAbstract()) {
                 // add aliases columns
                 for (NamedObjectId alias : cmd.getAliasList()) {
-                    String namespace = alias.getNamespace();
+                    var namespace = alias.getNamespace();
                     if (!namespaces.contains(namespace) && !namespace.startsWith("/")) {
                         namespaces.add(namespace);
                         addAliasColumn(namespace);
@@ -293,13 +291,13 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         commandsTreeTable.expandAll();
 
-        CommandTreeViewerFilter filter = new CommandTreeViewerFilter(commandTreeContentProvider);
+        var filter = new CommandTreeViewerFilter(commandTreeContentProvider);
         commandsTreeTable.addFilter(filter);
         searchbox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.keyCode == SWT.ARROW_DOWN) {
-                    TreeItem[] items = commandsTreeTable.getTree().getItems();
+                    var items = commandsTreeTable.getTree().getItems();
                     if (items.length > 0) {
                         IStructuredSelection sel = new StructuredSelection(items[0].getData());
                         commandsTreeTable.setSelection(sel);
@@ -340,11 +338,11 @@ public class AddToStackWizardPage1 extends WizardPage {
             return null;
         }
 
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
 
         buf.append(cmd.getQualifiedName());
 
-        SignificanceInfo significance = cmd.getSignificance();
+        var significance = cmd.getSignificance();
         if (significance != null) {
             buf.append("\n");
             if (significance.getConsequenceLevel() != SignificanceLevelType.NONE) {

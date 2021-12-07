@@ -37,27 +37,32 @@ public class DataSourceParser implements IContentParser {
         Set<String> supportedTypes = new HashSet<>();
         supportedTypes.addAll(AutoCompleteHelper.retrievePVManagerSupported());
         dataSources = new ArrayList<>();
-        for (String supportedType : supportedTypes)
+        for (String supportedType : supportedTypes) {
             dataSources.add(supportedType + AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR);
+        }
         Collections.sort(dataSources);
     }
 
     @Override
-    public boolean accept(final ContentDescriptor desc) {
-        String content = desc.getValue();
-        if (content == null || content.isEmpty())
+    public boolean accept(ContentDescriptor desc) {
+        var content = desc.getValue();
+        if (content == null || content.isEmpty()) {
             return false;
+        }
         if (desc.getAutoCompleteType().equals(AutoCompleteType.PV)
-                || desc.getAutoCompleteType().equals(AutoCompleteType.Formula))
-            for (String ds : dataSources)
-                if (ds.startsWith(content) && content.length() < ds.length())
+                || desc.getAutoCompleteType().equals(AutoCompleteType.Formula)) {
+            for (String ds : dataSources) {
+                if (ds.startsWith(content) && content.length() < ds.length()) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 
     @Override
-    public ContentDescriptor parse(final ContentDescriptor desc) {
-        ContentDescriptor currentToken = new ContentDescriptor();
+    public ContentDescriptor parse(ContentDescriptor desc) {
+        var currentToken = new ContentDescriptor();
         currentToken.setContentType(ContentType.PVDataSource);
         currentToken.setValue(desc.getValue());
         return currentToken;

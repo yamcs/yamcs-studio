@@ -26,12 +26,12 @@ public final class StringListPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public StringListPropertyDescriptor(final Object id, final String displayName) {
+    public StringListPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new StringListCellEditor(parent, "Edit String List");
         if (getValidator() != null) {
             editor.setValidator(getValidator());

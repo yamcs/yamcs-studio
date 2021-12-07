@@ -17,7 +17,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -40,23 +39,16 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                 @Override
                 public void mouseEntered(MouseEvent me) {
                     if (isRunMode()) {
-                        Color backColor = BoolButtonFigure.this
-                                .getBackgroundColor();
-                        RGB darkColor = GraphicsUtil
-                                .mixColors(backColor.getRGB(), new RGB(255,
-                                        255, 255), 0.5);
-                        EllipseButton.this
-                                .setBackgroundColor(CustomMediaFactory
-                                        .getInstance().getColor(darkColor));
+                        var backColor = BoolButtonFigure.this.getBackgroundColor();
+                        var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(255, 255, 255), 0.5);
+                        EllipseButton.this.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
                     }
                 }
 
                 @Override
                 public void mouseExited(MouseEvent me) {
                     if (isRunMode()) {
-                        EllipseButton.this
-                                .setBackgroundColor(BoolButtonFigure.this
-                                        .getBackgroundColor());
+                        EllipseButton.this.setBackgroundColor(BoolButtonFigure.this.getBackgroundColor());
                     }
 
                 }
@@ -72,39 +64,38 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
          *            the y coordinate
          * @return <code>true</code>if the given point is contained
          */
+        @Override
         public boolean containsPoint(int x, int y) {
-            if (!super.containsPoint(x, y))
+            if (!super.containsPoint(x, y)) {
                 return false;
-            Rectangle r = getBounds();
+            }
+            var r = getBounds();
             long ux = x - r.x - r.width / 2;
             long uy = y - r.y - r.height / 2;
-            return ((ux * ux) << 10) / (r.width * r.width)
-                    + ((uy * uy) << 10) / (r.height * r.height) <= 256;
+            return ((ux * ux) << 10) / (r.width * r.width) + ((uy * uy) << 10) / (r.height * r.height) <= 256;
         }
 
         @Override
         protected void paintFigure(Graphics graphics) {
             graphics.setAntialias(SWT.ON);
-            Rectangle clientArea = getClientArea().getCopy();
+            var clientArea = getClientArea().getCopy();
             // if oval button
-            boolean support3D = GraphicsUtil.testPatternSupported(graphics);
+            var support3D = GraphicsUtil.testPatternSupported(graphics);
             if (effect3D && support3D) {
                 graphics.setBackgroundColor(WHITE_COLOR);
                 graphics.fillOval(clientArea);
                 Pattern pattern;
-                int a = clientArea.width / 2;
-                int b = clientArea.height / 2;
-                double w = Math.sqrt(a * a + b * b);
+                var a = clientArea.width / 2;
+                var b = clientArea.height / 2;
+                var w = Math.sqrt(a * a + b * b);
                 double wp = b - a;
-                Point ul = new Point(clientArea.x + a + (wp - w) / 2 - 1, clientArea.y + b - (wp + w) / 2 - 1);
-                Point br = new Point(clientArea.x + a + (wp + w) / 2 + 5, clientArea.y + b - (wp - w) / 2 + 5);
+                var ul = new Point(clientArea.x + a + (wp - w) / 2 - 1, clientArea.y + b - (wp + w) / 2 - 1);
+                var br = new Point(clientArea.x + a + (wp + w) / 2 + 5, clientArea.y + b - (wp - w) / 2 + 5);
                 if (booleanValue) {
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y,
-                            br.x, br.y,
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y, br.x, br.y,
                             DARK_GRAY_COLOR, 255, WHITE_COLOR, 0);
                 } else {
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y,
-                            br.x, br.y,
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y, br.x, br.y,
                             WHITE_COLOR, 0, DARK_GRAY_COLOR, 255);
                 }
 
@@ -117,36 +108,34 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                 graphics.fillOval(clientArea);
             }
             graphics.setBackgroundColor(getBackgroundColor());
-            Rectangle inRect = clientArea.getCopy().shrink(ELLIPSE_BORDER_WIDTH, ELLIPSE_BORDER_WIDTH);
+            var inRect = clientArea.getCopy().shrink(ELLIPSE_BORDER_WIDTH, ELLIPSE_BORDER_WIDTH);
             graphics.fillOval(inRect);
 
             // draw LED on Button
             if (showLED) {
-                int ledDiameter = (int) (0.25 * (clientArea.width + clientArea.height) / 2.0);
-                if (ledDiameter > Math.min(clientArea.width, clientArea.height))
+                var ledDiameter = (int) (0.25 * (clientArea.width + clientArea.height) / 2.0);
+                if (ledDiameter > Math.min(clientArea.width, clientArea.height)) {
                     ledDiameter = Math.min(clientArea.width, clientArea.height) - 8;
+                }
                 Rectangle ledArea;
                 if (clientArea.width >= clientArea.height) {
-                    ledArea = new Rectangle(
-                            (int) (clientArea.x + clientArea.width * LED_POSITION - ledDiameter / 2.0),
+                    ledArea = new Rectangle((int) (clientArea.x + clientArea.width * LED_POSITION - ledDiameter / 2.0),
                             (int) (clientArea.y + clientArea.height / 2.0 - ledDiameter / 2.0), ledDiameter,
                             ledDiameter);
                 } else {
-                    ledArea = new Rectangle(
-                            (int) (clientArea.x + clientArea.width / 2.0 - ledDiameter / 2.0),
+                    ledArea = new Rectangle((int) (clientArea.x + clientArea.width / 2.0 - ledDiameter / 2.0),
                             (int) (clientArea.y + (1 - LED_POSITION) * clientArea.height - ledDiameter / 2.0),
                             ledDiameter, ledDiameter);
                 }
 
                 // Fills the circle with solid bulb color
-                Color ledColor = booleanValue ? onColor : offColor;
+                var ledColor = booleanValue ? onColor : offColor;
                 graphics.setBackgroundColor(ledColor);
                 graphics.fillOval(ledArea);
                 if (effect3D && support3D) {
                     // diagonal linear gradient
-                    Pattern p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ledArea.x, ledArea.y,
-                            ledArea.x + ledArea.width, ledArea.y + ledArea.height,
-                            WHITE_COLOR, 255, ledColor, 0);
+                    var p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ledArea.x, ledArea.y,
+                            ledArea.x + ledArea.width, ledArea.y + ledArea.height, WHITE_COLOR, 255, ledColor, 0);
                     graphics.setBackgroundPattern(p);
                     graphics.fillOval(ledArea);
                     p.dispose();
@@ -163,13 +152,9 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                 @Override
                 public void mouseEntered(MouseEvent me) {
                     if (isRunMode()) {
-                        Color backColor = BoolButtonFigure.this
-                                .getBackgroundColor();
-                        RGB darkColor = GraphicsUtil
-                                .mixColors(backColor.getRGB(), new RGB(255,
-                                        255, 255), 0.5);
-                        SquareButton.this.setBackgroundColor(CustomMediaFactory
-                                .getInstance().getColor(darkColor));
+                        var backColor = BoolButtonFigure.this.getBackgroundColor();
+                        var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(255, 255, 255), 0.5);
+                        SquareButton.this.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
                     }
                 }
 
@@ -177,9 +162,7 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                 public void mouseExited(MouseEvent me) {
 
                     if (isRunMode()) {
-                        SquareButton.this
-                                .setBackgroundColor(BoolButtonFigure.this
-                                        .getBackgroundColor());
+                        SquareButton.this.setBackgroundColor(BoolButtonFigure.this.getBackgroundColor());
                     }
 
                 }
@@ -189,6 +172,7 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
         /**
          * This must be implemented to make tool tip work. I don't know why.
          */
+        @Override
         public boolean containsPoint(int x, int y) {
             return getBounds().getCopy().shrink(2, 2).contains(x, y);
         }
@@ -197,8 +181,8 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
         protected void paintClientArea(Graphics graphics) {
             graphics.pushState();
             graphics.setAntialias(SWT.ON);
-            Rectangle clientArea = getClientArea().getCopy();
-            boolean support3D = GraphicsUtil.testPatternSupported(graphics);
+            var clientArea = getClientArea().getCopy();
+            var support3D = GraphicsUtil.testPatternSupported(graphics);
             int border;
 
             if (effect3D && support3D) {
@@ -208,68 +192,59 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                 Pattern pattern;
                 if (booleanValue) {
                     border = SQURE_BORDER_WIDTH_THICK;
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x, clientArea.y,
-                            clientArea.x, clientArea.y + SQURE_BORDER_WIDTH_THICK,
-                            BLACK_COLOR, GRAY_COLOR);
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
+                            clientArea.y, clientArea.x, clientArea.y + SQURE_BORDER_WIDTH_THICK, BLACK_COLOR,
+                            GRAY_COLOR);
                 } else {
                     border = SQURE_BORDER_WIDTH_THIN;
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x, clientArea.y,
-                            clientArea.x, clientArea.y + SQURE_BORDER_WIDTH_THIN,
-                            WHITE_COLOR, WHITE_COLOR);
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
+                            clientArea.y, clientArea.x, clientArea.y + SQURE_BORDER_WIDTH_THIN, WHITE_COLOR,
+                            WHITE_COLOR);
                 }
 
                 graphics.setBackgroundPattern(pattern);
-                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y,
-                        clientArea.x + border, clientArea.y + border,
-                        clientArea.x + clientArea.width - border, clientArea.y + border,
+                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y, clientArea.x + border,
+                        clientArea.y + border, clientArea.x + clientArea.width - border, clientArea.y + border,
                         clientArea.x + clientArea.width, clientArea.y });
                 pattern.dispose();
 
                 // draw left border
                 if (booleanValue) {
                     border = SQURE_BORDER_WIDTH_THICK;
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x, clientArea.y,
-                            clientArea.x + SQURE_BORDER_WIDTH_THICK, clientArea.y,
-                            BLACK_COLOR, GRAY_COLOR);
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
+                            clientArea.y, clientArea.x + SQURE_BORDER_WIDTH_THICK, clientArea.y, BLACK_COLOR,
+                            GRAY_COLOR);
                 } else {
                     border = SQURE_BORDER_WIDTH_THIN;
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x, clientArea.y,
-                            clientArea.x + SQURE_BORDER_WIDTH_THIN, clientArea.y,
-                            WHITE_COLOR, WHITE_COLOR);
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
+                            clientArea.y, clientArea.x + SQURE_BORDER_WIDTH_THIN, clientArea.y, WHITE_COLOR,
+                            WHITE_COLOR);
                 }
 
                 graphics.setBackgroundPattern(pattern);
-                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y,
-                        clientArea.x + border, clientArea.y + border,
-                        clientArea.x + border, clientArea.y + clientArea.height - border,
+                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y, clientArea.x + border,
+                        clientArea.y + border, clientArea.x + border, clientArea.y + clientArea.height - border,
                         clientArea.x, clientArea.y + clientArea.height });
                 pattern.dispose();
 
                 // draw bottom border
                 if (booleanValue) {
                     border = SQURE_BORDER_WIDTH_THIN;
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x, clientArea.y + clientArea.height - SQURE_BORDER_WIDTH_THIN,
-                            clientArea.x, clientArea.y + clientArea.height,
-                            WHITE_COLOR, WHITE_COLOR);
+                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
+                            clientArea.y + clientArea.height - SQURE_BORDER_WIDTH_THIN, clientArea.x,
+                            clientArea.y + clientArea.height, WHITE_COLOR, WHITE_COLOR);
                 } else {
                     border = SQURE_BORDER_WIDTH_THICK;
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), clientArea.x,
-                            clientArea.y + clientArea.height - SQURE_BORDER_WIDTH_THICK,
-                            clientArea.x, clientArea.y + clientArea.height,
-                            GRAY_COLOR, BLACK_COLOR);
+                            clientArea.y + clientArea.height - SQURE_BORDER_WIDTH_THICK, clientArea.x,
+                            clientArea.y + clientArea.height, GRAY_COLOR, BLACK_COLOR);
                 }
 
                 graphics.setBackgroundPattern(pattern);
-                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y + clientArea.height,
-                        clientArea.x + border, clientArea.y + clientArea.height - border,
-                        clientArea.x + clientArea.width - border,
-                        clientArea.y + clientArea.height - border,
-                        clientArea.x + clientArea.width, clientArea.y + clientArea.height });
+                graphics.fillPolygon(new int[] { clientArea.x, clientArea.y + clientArea.height, clientArea.x + border,
+                        clientArea.y + clientArea.height - border, clientArea.x + clientArea.width - border,
+                        clientArea.y + clientArea.height - border, clientArea.x + clientArea.width,
+                        clientArea.y + clientArea.height });
                 pattern.dispose();
 
                 // draw right border
@@ -277,14 +252,12 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
                     border = SQURE_BORDER_WIDTH_THIN;
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
                             clientArea.x + clientArea.width - SQURE_BORDER_WIDTH_THIN, clientArea.y,
-                            clientArea.x + clientArea.width, clientArea.y,
-                            WHITE_COLOR, WHITE_COLOR);
+                            clientArea.x + clientArea.width, clientArea.y, WHITE_COLOR, WHITE_COLOR);
                 } else {
                     border = SQURE_BORDER_WIDTH_THICK;
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            clientArea.x + clientArea.width - SQURE_BORDER_WIDTH_THICK,
-                            clientArea.y, clientArea.x + clientArea.width, clientArea.y,
-                            GRAY_COLOR, BLACK_COLOR);
+                            clientArea.x + clientArea.width - SQURE_BORDER_WIDTH_THICK, clientArea.y,
+                            clientArea.x + clientArea.width, clientArea.y, GRAY_COLOR, BLACK_COLOR);
                 }
 
                 graphics.setBackgroundPattern(pattern);
@@ -312,31 +285,29 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
 
             // draw LED on Button
             if (showLED) {
-                int ledDiameter = (int) (0.3 * (clientArea.width + clientArea.height) / 2.0);
-                if (ledDiameter > Math.min(clientArea.width, clientArea.height))
+                var ledDiameter = (int) (0.3 * (clientArea.width + clientArea.height) / 2.0);
+                if (ledDiameter > Math.min(clientArea.width, clientArea.height)) {
                     ledDiameter = Math.min(clientArea.width, clientArea.height) - 2;
+                }
                 Rectangle ledArea;
                 if (clientArea.width >= clientArea.height) {
-                    ledArea = new Rectangle(
-                            (int) (clientArea.x + clientArea.width * LED_POSITION - ledDiameter / 2.0),
+                    ledArea = new Rectangle((int) (clientArea.x + clientArea.width * LED_POSITION - ledDiameter / 2.0),
                             (int) (clientArea.y + clientArea.height / 2.0 - ledDiameter / 2.0), ledDiameter,
                             ledDiameter);
                 } else {
-                    ledArea = new Rectangle(
-                            (int) (clientArea.x + clientArea.width / 2.0 - ledDiameter / 2.0),
+                    ledArea = new Rectangle((int) (clientArea.x + clientArea.width / 2.0 - ledDiameter / 2.0),
                             (int) (clientArea.y + (1 - LED_POSITION) * clientArea.height - ledDiameter / 2.0),
                             ledDiameter, ledDiameter);
                 }
 
                 // Fills the circle with solid bulb color
-                Color ledColor = booleanValue ? onColor : offColor;
+                var ledColor = booleanValue ? onColor : offColor;
                 graphics.setBackgroundColor(ledColor);
                 graphics.fillOval(ledArea);
                 if (effect3D && support3D) {
                     // diagonal linear gradient
-                    Pattern p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ledArea.x, ledArea.y,
-                            ledArea.x + ledArea.width, ledArea.y + ledArea.height,
-                            WHITE_COLOR, 255, ledColor, 0);
+                    var p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ledArea.x, ledArea.y,
+                            ledArea.x + ledArea.width, ledArea.y + ledArea.height, WHITE_COLOR, 255, ledColor, 0);
                     graphics.setBackgroundPattern(p);
                     graphics.fillOval(ledArea);
                     p.dispose();
@@ -398,18 +369,20 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
 
     @Override
     protected void layout() {
-        Rectangle clientArea = getClientArea().getCopy();
-        if (ellipseButton.isVisible() && !squareButton)
+        var clientArea = getClientArea().getCopy();
+        if (ellipseButton.isVisible() && !squareButton) {
             ellipseButton.setBounds(clientArea);
-        if (squareButtonFigure.isVisible() && squareButton)
+        }
+        if (squareButtonFigure.isVisible() && squareButton) {
             squareButtonFigure.setBounds(clientArea);
+        }
         if (boolLabel.isVisible()) {
-            Dimension labelSize = boolLabel.getPreferredSize();
-            Rectangle labelBounds = new Rectangle(clientArea.x + clientArea.width / 2 - labelSize.width / 2,
-                    clientArea.y + clientArea.height / 2 - labelSize.height / 2,
-                    labelSize.width, labelSize.height);
-            if (getBooleanValue())
+            var labelSize = boolLabel.getPreferredSize();
+            var labelBounds = new Rectangle(clientArea.x + clientArea.width / 2 - labelSize.width / 2,
+                    clientArea.y + clientArea.height / 2 - labelSize.height / 2, labelSize.width, labelSize.height);
+            if (getBooleanValue()) {
                 labelBounds.translate(1, 1);
+            }
             boolLabel.setBounds(labelBounds);
         }
         super.layout();
@@ -438,8 +411,9 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
      *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
-        if (this.effect3D == effect3D)
+        if (this.effect3D == effect3D) {
             return;
+        }
         this.effect3D = effect3D;
         repaint();
     }
@@ -449,20 +423,23 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
         super.setEnabled(value);
         if (runMode) {
             if (value) {
-                if (cursor == null || cursor.isDisposed())
+                if (cursor == null || cursor.isDisposed()) {
                     cursor = Cursors.HAND;
+                }
             } else {
                 cursor = null;
             }
         }
-        if (squareButton)
+        if (squareButton) {
             squareButtonFigure.setEnabled(value);
-        else
+        } else {
             ellipseButton.setEnabled(value);
-        if (ellipseButton.isVisible())
+        }
+        if (ellipseButton.isVisible()) {
             ellipseButton.setCursor(runMode ? cursor : null);
-        else if (squareButtonFigure.isVisible())
+        } else if (squareButtonFigure.isVisible()) {
             squareButtonFigure.setCursor(runMode ? cursor : null);
+        }
     }
 
     @Override
@@ -478,8 +455,9 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
      *            the showLED to set
      */
     public void setShowLED(boolean showLED) {
-        if (this.showLED == showLED)
+        if (this.showLED == showLED) {
             return;
+        }
         this.showLED = showLED;
         repaint();
     }
@@ -489,26 +467,33 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
      *            the squareLED to set
      */
     public void setSquareButton(boolean squareButton) {
-        if (this.squareButton == squareButton)
+        if (this.squareButton == squareButton) {
             return;
+        }
         this.squareButton = squareButton;
 
         if (squareButton) {
-            if (getChildren().contains(ellipseButton))
+            if (getChildren().contains(ellipseButton)) {
                 remove(ellipseButton);
-            if (!getChildren().contains(squareButtonFigure))
+            }
+            if (!getChildren().contains(squareButtonFigure)) {
                 add(squareButtonFigure);
-            if (ellipseButton.getChildren().contains(boolLabel))
+            }
+            if (ellipseButton.getChildren().contains(boolLabel)) {
                 ellipseButton.remove(boolLabel);
+            }
             squareButtonFigure.add(boolLabel);
             squareButtonFigure.setCursor(runMode ? cursor : null);
         } else {
-            if (getChildren().contains(squareButtonFigure))
+            if (getChildren().contains(squareButtonFigure)) {
                 remove(squareButtonFigure);
-            if (!getChildren().contains(ellipseButton))
+            }
+            if (!getChildren().contains(ellipseButton)) {
                 add(ellipseButton);
-            if (squareButtonFigure.getChildren().contains(boolLabel))
+            }
+            if (squareButtonFigure.getChildren().contains(boolLabel)) {
                 squareButtonFigure.remove(boolLabel);
+            }
             ellipseButton.add(boolLabel);
             ellipseButton.setCursor(runMode ? cursor : null);
         }

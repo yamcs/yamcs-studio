@@ -22,9 +22,9 @@ public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final MeterModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        MeterFigure xMeter = new MeterFigure();
+        var xMeter = new MeterFigure();
 
         initializeCommonFigureProperties(xMeter, model);
         xMeter.setNeedleColor((model.getNeedleColor()));
@@ -46,22 +46,19 @@ public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
         // needle Color
         IWidgetPropertyChangeHandler needleColorColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                MeterFigure xMeter = (MeterFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var xMeter = (MeterFigure) refreshableFigure;
                 xMeter.setNeedleColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
-        setPropertyChangeHandler(MeterModel.PROP_NEEDLE_COLOR,
-                needleColorColorHandler);
+        setPropertyChangeHandler(MeterModel.PROP_NEEDLE_COLOR, needleColorColorHandler);
 
         // Ramp gradient
         IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                MeterFigure xMeter = (MeterFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var xMeter = (MeterFigure) refreshableFigure;
                 xMeter.setGradient((Boolean) newValue);
                 return false;
             }
@@ -71,9 +68,8 @@ public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
         // Show Value Label
         IWidgetPropertyChangeHandler valueLabelHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                MeterFigure xMeter = (MeterFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var xMeter = (MeterFigure) refreshableFigure;
                 xMeter.setValueLabelVisibility((Boolean) newValue);
                 return false;
             }

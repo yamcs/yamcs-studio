@@ -1,19 +1,16 @@
 package org.yamcs.studio.core.utils;
 
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.StatusLineLayoutData;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.ISharedImages;
@@ -91,7 +88,7 @@ public class StatusLineContributionItem extends ContributionItem {
     public void fill(Composite parent) {
         statusLine = parent;
 
-        Label sep = new Label(parent, SWT.SEPARATOR);
+        var sep = new Label(parent, SWT.SEPARATOR);
         label = new CLabel(statusLine, SWT.SHADOW_NONE);
         updateMessageLabel();
 
@@ -102,20 +99,20 @@ public class StatusLineContributionItem extends ContributionItem {
         if (charWidth == CALC_TRUE_WIDTH) {
             // compute the size of the label to get the width hint for the
             // contribution
-            Point preferredSize = label.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+            var preferredSize = label.computeSize(SWT.DEFAULT, SWT.DEFAULT);
             widthHint = preferredSize.x;
             heightHint = preferredSize.y;
         } else if (widthHint < 0) {
             // Compute the size base on 'charWidth' average char widths
-            GC gc = new GC(statusLine);
+            var gc = new GC(statusLine);
             gc.setFont(statusLine.getFont());
-            FontMetrics fm = gc.getFontMetrics();
+            var fm = gc.getFontMetrics();
             widthHint = ((int) fm.getAverageCharacterWidth()) * charWidth;
             heightHint = fm.getHeight();
             gc.dispose();
         }
 
-        StatusLineLayoutData data = new StatusLineLayoutData();
+        var data = new StatusLineLayoutData();
         data.widthHint = widthHint;
         label.setLayoutData(data);
 
@@ -133,7 +130,7 @@ public class StatusLineContributionItem extends ContributionItem {
 
     private void updateMessageLabel() {
         if (label != null && !label.isDisposed()) {
-            Display display = label.getDisplay();
+            var display = label.getDisplay();
             if (errorText != null && errorText.length() > 0) {
                 label.setForeground(JFaceColors.getErrorText(display));
                 label.setText(escape(errorText));
@@ -229,7 +226,7 @@ public class StatusLineContributionItem extends ContributionItem {
         if (this.text.length() == 0) {
             if (isVisible()) {
                 setVisible(false);
-                IContributionManager contributionManager = getParent();
+                var contributionManager = getParent();
 
                 if (contributionManager != null) {
                     contributionManager.update(true);
@@ -239,7 +236,7 @@ public class StatusLineContributionItem extends ContributionItem {
             // Always update if using 'CALC_TRUE_WIDTH'
             if (!isVisible() || charWidth == CALC_TRUE_WIDTH) {
                 setVisible(true);
-                IContributionManager contributionManager = getParent();
+                var contributionManager = getParent();
 
                 if (contributionManager != null) {
                     contributionManager.update(true);

@@ -9,9 +9,7 @@
  ********************************************************************************/
 package org.yamcs.studio.core.utils;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -64,8 +62,8 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
 
     @Override
     protected Control createDialogContentArea(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(4, false);
+        var composite = new Composite(parent, SWT.NONE);
+        var gridLayout = new GridLayout(4, false);
         gridLayout.marginHeight = 0;
         composite.setLayout(gridLayout);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -75,7 +73,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         createVisibleTable(composite);
         createUpDownBtt(composite);
         createWidthArea(composite);
-        Object element = visibleViewer.getElementAt(0);
+        var element = visibleViewer.getElementAt(0);
         if (element != null) {
             visibleViewer.setSelection(new StructuredSelection(element));
         }
@@ -87,15 +85,15 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
      * The Up and Down button to change column ordering.
      */
     private Control createUpDownBtt(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout compositeLayout = new GridLayout();
+        var composite = new Composite(parent, SWT.NONE);
+        var compositeLayout = new GridLayout();
         compositeLayout.marginHeight = 0;
         compositeLayout.marginWidth = 0;
         composite.setLayout(compositeLayout);
         composite.setLayoutData(new GridData(SWT.NONE, SWT.FILL, false, true));
 
-        Composite bttArea = new Composite(composite, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var bttArea = new Composite(composite, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginHeight = 0;
         bttArea.setLayout(layout);
         bttArea.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, true));
@@ -115,25 +113,23 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     }
 
     private Control createWidthArea(Composite parent) {
-        Label dummy = new Label(parent, SWT.NONE);
+        var dummy = new Label(parent, SWT.NONE);
         dummy.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
 
-        Composite widthComposite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(2, false);
+        var widthComposite = new Composite(parent, SWT.NONE);
+        var gridLayout = new GridLayout(2, false);
         gridLayout.marginHeight = 0;
         widthComposite.setLayout(gridLayout);
         widthComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         widthLabel = new Label(widthComposite, SWT.NONE);
         widthLabel.setText("&Width of the selected shown column:");
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+        var gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         widthLabel.setLayoutData(gridData);
 
         widthText = new Text(widthComposite, SWT.BORDER);
         widthText.addVerifyListener(e -> {
-            if (e.character != 0 && e.keyCode != SWT.BS
-                    && e.keyCode != SWT.DEL
-                    && !Character.isDigit(e.character)) {
+            if (e.character != 0 && e.keyCode != SWT.BS && e.keyCode != SWT.DEL && !Character.isDigit(e.character)) {
                 e.doit = false;
             }
         });
@@ -143,8 +139,8 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         widthText.setLayoutData(gridData);
         widthText.addModifyListener(e -> {
             try {
-                int width = Integer.parseInt(widthText.getText());
-                ColumnDef data = (ColumnDef) visibleViewer.getStructuredSelection().getFirstElement();
+                var width = Integer.parseInt(widthText.getText());
+                var data = (ColumnDef) visibleViewer.getStructuredSelection().getFirstElement();
                 if (data != null) {
                     data.width = width;
                 }
@@ -158,22 +154,22 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     }
 
     private Control createVisibleTable(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(1, false);
+        var composite = new Composite(parent, SWT.NONE);
+        var gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
         composite.setLayout(gridLayout);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label label = new Label(composite, SWT.NONE);
+        var label = new Label(composite, SWT.NONE);
         label.setText("Sh&own:");
 
-        Table table = new Table(composite, SWT.BORDER | SWT.MULTI);
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var table = new Table(composite, SWT.BORDER | SWT.MULTI);
+        var data = new GridData(SWT.FILL, SWT.FILL, true, true);
         data.widthHint = convertWidthInCharsToPixels(20);
         data.heightHint = table.getItemHeight() * 15;
         table.setLayoutData(data);
 
-        TableColumn column = new TableColumn(table, SWT.NONE);
+        var column = new TableColumn(table, SWT.NONE);
         column.setText("Sh&own:");
         Listener columnResize = event -> column.setWidth(table.getClientArea().width);
         table.addListener(SWT.Resize, columnResize);
@@ -188,25 +184,25 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     }
 
     private Control createInvisibleTable(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(1, false);
+        var composite = new Composite(parent, SWT.NONE);
+        var gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
         composite.setLayout(gridLayout);
 
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label label = new Label(composite, SWT.NONE);
+        var label = new Label(composite, SWT.NONE);
         label.setText("H&idden:");
         applyDialogFont(label);
         tableLabelSize = label.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-        Table table = new Table(composite, SWT.BORDER | SWT.MULTI);
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var table = new Table(composite, SWT.BORDER | SWT.MULTI);
+        var data = new GridData(SWT.FILL, SWT.FILL, true, true);
         data.widthHint = convertWidthInCharsToPixels(20);
         data.heightHint = table.getItemHeight() * 15;
         table.setLayoutData(data);
 
-        TableColumn column = new TableColumn(table, SWT.NONE);
+        var column = new TableColumn(table, SWT.NONE);
         column.setText("H&idden:");
         Listener columnResize = event -> column.setWidth(table.getClientArea().width);
         table.addListener(SWT.Resize, columnResize);
@@ -221,15 +217,15 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     }
 
     private Control createMoveButtons(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout compositeLayout = new GridLayout();
+        var composite = new Composite(parent, SWT.NONE);
+        var compositeLayout = new GridLayout();
         compositeLayout.marginHeight = 0;
         compositeLayout.marginWidth = 0;
         composite.setLayout(compositeLayout);
         composite.setLayoutData(new GridData(SWT.NONE, SWT.FILL, false, true));
 
-        Composite bttArea = new Composite(composite, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var bttArea = new Composite(composite, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginHeight = 0;
         bttArea.setLayout(layout);
         bttArea.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, true));
@@ -255,7 +251,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
      * Handles a selection change in the viewer that lists out the non-visible columns
      */
     void handleNonVisibleSelection(ISelection selection) {
-        Object[] nvKeys = ((IStructuredSelection) selection).toArray();
+        var nvKeys = ((IStructuredSelection) selection).toArray();
         toVisibleButton.setEnabled(nvKeys.length > 0);
         if (visibleViewer.getControl().isFocusControl() && visible.size() <= 1) {
             handleStatusUdpate(IStatus.INFO, "There must be at least one visible column.");
@@ -270,19 +266,19 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     void handleVisibleSelection(ISelection selection) {
         @SuppressWarnings("unchecked")
         List<ColumnDef> selVCols = ((IStructuredSelection) selection).toList();
-        List<ColumnDef> allVCols = visible;
+        var allVCols = visible;
         toNonVisibleButton.setEnabled(selVCols.size() > 0 && allVCols.size() > selVCols.size());
 
         boolean moveDown = !selVCols.isEmpty(), moveUp = !selVCols.isEmpty();
-        Iterator<ColumnDef> iterator = selVCols.iterator();
+        var iterator = selVCols.iterator();
         while (iterator.hasNext()) {
-            ColumnDef columnObj = iterator.next();
+            var columnObj = iterator.next();
             if (!columnObj.moveable) {
                 moveUp = false;
                 moveDown = false;
                 break;
             }
-            int i = allVCols.indexOf(columnObj);
+            var i = allVCols.indexOf(columnObj);
             if (i == 0) {
                 moveUp = false;
                 if (!moveDown) {
@@ -299,11 +295,11 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         upButton.setEnabled(moveUp);
         downButton.setEnabled(moveDown);
 
-        boolean edit = selVCols.size() == 1 && selVCols.get(0).resizable;
+        var edit = selVCols.size() == 1 && selVCols.get(0).resizable;
         widthLabel.setEnabled(edit);
         widthText.setEnabled(edit);
         if (edit) {
-            int width = selVCols.get(0).width;
+            var width = selVCols.get(0).width;
             widthText.setText(Integer.toString(width));
         } else {
             widthText.setText("");
@@ -314,13 +310,13 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
      * Applies to visible columns, and handles the changes in the order of columns
      */
     private void handleDownButton(Event e) {
-        IStructuredSelection selection = visibleViewer.getStructuredSelection();
+        var selection = visibleViewer.getStructuredSelection();
         @SuppressWarnings("unchecked")
         List<ColumnDef> selVCols = selection.toList();
-        List<ColumnDef> allVCols = visible;
-        for (int i = selVCols.size() - 1; i >= 0; i--) {
-            ColumnDef colObj = selVCols.get(i);
-            int index = allVCols.indexOf(colObj);
+        var allVCols = visible;
+        for (var i = selVCols.size() - 1; i >= 0; i--) {
+            var colObj = selVCols.get(i);
+            var index = allVCols.indexOf(colObj);
             colObj.newIndex = index + 1;
             allVCols.remove(index);
             allVCols.add(index + 1, colObj);
@@ -333,13 +329,13 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
      * Applies to visible columns, and handles the changes in the order of columns
      */
     private void handleUpButton(Event e) {
-        IStructuredSelection selection = visibleViewer.getStructuredSelection();
+        var selection = visibleViewer.getStructuredSelection();
         @SuppressWarnings("unchecked")
         List<ColumnDef> selVCols = selection.toList();
-        List<ColumnDef> allVCols = visible;
-        for (int i = 0; i < selVCols.size(); i++) {
-            ColumnDef colObj = selVCols.get(i);
-            int index = allVCols.indexOf(colObj);
+        var allVCols = visible;
+        for (var i = 0; i < selVCols.size(); i++) {
+            var colObj = selVCols.get(i);
+            var index = allVCols.indexOf(colObj);
             colObj.newIndex = index - 1;
             allVCols.remove(index);
             allVCols.add(index - 1, colObj);
@@ -352,7 +348,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
      * Moves selected columns from non-visible to visible state
      */
     private void handleToVisibleButton(Event e) {
-        IStructuredSelection selection = nonVisibleViewer.getStructuredSelection();
+        var selection = nonVisibleViewer.getStructuredSelection();
         @SuppressWarnings("unchecked")
         List<ColumnDef> selVCols = selection.toList();
         nonVisible.removeAll(selVCols);
@@ -377,7 +373,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
             handleStatusUdpate(IStatus.INFO, "There must be at least one visible column.");
             return;
         }
-        IStructuredSelection structuredSelection = visibleViewer.getStructuredSelection();
+        var structuredSelection = visibleViewer.getStructuredSelection();
         @SuppressWarnings("unchecked")
         List<ColumnDef> selVCols = structuredSelection.toList();
         visible.removeAll(selVCols);
@@ -395,7 +391,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
     }
 
     private void renumber(List<ColumnDef> list) {
-        ListIterator<ColumnDef> iterator = list.listIterator();
+        var iterator = list.listIterator();
         while (iterator.hasNext()) {
             iterator.next().newIndex = iterator.previousIndex();
         }
@@ -428,7 +424,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
 
         @Override
         public String getColumnText(Object element, int columnIndex) {
-            String text = getText(element);
+            var text = getText(element);
             if (text == null || text.equals("")) {
                 return "(no-name)";
             } else {

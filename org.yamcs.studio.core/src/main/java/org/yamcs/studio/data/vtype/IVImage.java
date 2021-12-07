@@ -8,8 +8,7 @@ public class IVImage extends IVMetadata implements VImage {
     private final VImageDataType imageDataType;
     private final VImageType imageType;
 
-    public IVImage(int height, int width, ListNumber data,
-            VImageDataType imageDataType, VImageType imageType,
+    public IVImage(int height, int width, ListNumber data, VImageDataType imageDataType, VImageType imageType,
             Alarm alarm, Time time) {
         super(alarm, time);
         this.height = height;

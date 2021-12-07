@@ -41,11 +41,10 @@ public class IArrayDimensionDisplay implements ArrayDimensionDisplay {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IArrayDimensionDisplay) {
-            IArrayDimensionDisplay info = (IArrayDimensionDisplay) obj;
-            return Objects.equals(info.getSize(), getSize()) &&
-                    Objects.equals(info.isReversed(), isReversed()) &&
-                    Objects.equals(info.getUnits(), getUnits()) &&
-                    Objects.equals(info.getCellBoundaries(), getCellBoundaries());
+            var info = (IArrayDimensionDisplay) obj;
+            return Objects.equals(info.getSize(), getSize()) && Objects.equals(info.isReversed(), isReversed())
+                    && Objects.equals(info.getUnits(), getUnits())
+                    && Objects.equals(info.getCellBoundaries(), getCellBoundaries());
 
         }
 

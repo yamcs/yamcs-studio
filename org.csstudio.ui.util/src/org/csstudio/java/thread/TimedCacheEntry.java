@@ -17,7 +17,7 @@ public class TimedCacheEntry<VALUETYPE> {
      * @param valid_seconds
      *            Duration in seconds, how long this entry is valid
      */
-    public TimedCacheEntry(final VALUETYPE value, final long valid_seconds) {
+    public TimedCacheEntry(VALUETYPE value, long valid_seconds) {
         this.value = value;
         header = new CacheHeader(valid_seconds);
     }
@@ -34,7 +34,7 @@ public class TimedCacheEntry<VALUETYPE> {
 
     /** @return <code>true</code> if entry is still valid */
     public boolean isStillValid() {
-        final Date now = new Date();
+        var now = new Date();
         return now.before(header.getExpirationDate());
     }
 }

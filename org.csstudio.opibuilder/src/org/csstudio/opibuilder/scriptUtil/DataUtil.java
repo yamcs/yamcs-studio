@@ -30,7 +30,7 @@ public class DataUtil {
      * @return an int array with given size.
      */
     public final static int[] createIntArray(int size) {
-        int[] result = new int[size];
+        var result = new int[size];
         return result;
     }
 
@@ -42,7 +42,7 @@ public class DataUtil {
      * @return a double array with given size.
      */
     public final static double[] createDoubleArray(int size) {
-        double[] result = new double[size];
+        var result = new double[size];
         return result;
     }
 
@@ -54,9 +54,9 @@ public class DataUtil {
      * @return java int array.
      */
     public final static int[] toJavaIntArray(Object array) {
-        Object[] objArray = ((List<?>) array).toArray();
-        int[] result = new int[objArray.length];
-        for (int i = 0; i < objArray.length; i++) {
+        var objArray = ((List<?>) array).toArray();
+        var result = new int[objArray.length];
+        for (var i = 0; i < objArray.length; i++) {
             if (objArray[i] instanceof Number) {
                 result[i] = ((Number) objArray[i]).intValue();
             } else {
@@ -74,9 +74,9 @@ public class DataUtil {
      * @return java array.
      */
     public final static double[] toJavaDoubleArray(Object array) {
-        Object[] objArray = ((List<?>) array).toArray();
-        double[] result = new double[objArray.length];
-        for (int i = 0; i < objArray.length; i++) {
+        var objArray = ((List<?>) array).toArray();
+        var result = new double[objArray.length];
+        for (var i = 0; i < objArray.length; i++) {
             if (objArray[i] instanceof Number) {
                 result[i] = ((Number) objArray[i]).doubleValue();
             } else {

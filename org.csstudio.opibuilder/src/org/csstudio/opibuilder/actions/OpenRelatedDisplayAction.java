@@ -29,9 +29,9 @@ public class OpenRelatedDisplayAction extends Action {
         NEW_WINDOW("Open in New Workbench"),
         NEW_SHELL("Open in Standalone Window");
 
-        final private String description;
+        private String description;
 
-        private OpenDisplayTarget(final String desc) {
+        private OpenDisplayTarget(String desc) {
             description = desc;
         }
 
@@ -45,8 +45,7 @@ public class OpenRelatedDisplayAction extends Action {
 
     final private OpenDisplayTarget target;
 
-    public OpenRelatedDisplayAction(final OpenDisplayAction openDisplayAction,
-            final OpenDisplayTarget target) {
+    public OpenRelatedDisplayAction(OpenDisplayAction openDisplayAction, OpenDisplayTarget target) {
         this.openDisplayAction = openDisplayAction;
         this.target = target;
         setText(target.toString());

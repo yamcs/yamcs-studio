@@ -72,8 +72,8 @@ public class NoiseWaveform extends SimFunction<VDoubleArray> {
     }
 
     private double[] generateNewValue() {
-        double[] newArray = new double[nSamples];
-        for (int i = 0; i < newArray.length; i++) {
+        var newArray = new double[nSamples];
+        for (var i = 0; i < newArray.length; i++) {
             newArray[i] = min + rand.nextDouble() * (max - min);
         }
         return newArray;
@@ -84,8 +84,8 @@ public class NoiseWaveform extends SimFunction<VDoubleArray> {
         if (lastTime == null) {
             lastTime = Instant.now();
         }
-        return ValueFactory.newVDoubleArray(new ArrayDouble(generateNewValue()), alarmNone(),
-                newTime(lastTime), newDisplay(min, min + range * 0.1, min + range * 0.2, "x", DOUBLE_FORMAT,
-                        min + range * 0.8, min + range * 0.9, max, min, max));
+        return ValueFactory.newVDoubleArray(new ArrayDouble(generateNewValue()), alarmNone(), newTime(lastTime),
+                newDisplay(min, min + range * 0.1, min + range * 0.2, "x", DOUBLE_FORMAT, min + range * 0.8,
+                        min + range * 0.9, max, min, max));
     }
 }

@@ -75,7 +75,7 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("Edit Script");
     }
@@ -88,18 +88,18 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
      * @param text
      *            The text for the label
      */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
+    private void createLabel(Composite parent, String text) {
+        var label = new Label(parent, SWT.WRAP);
         label.setText(text);
         label.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, false, false));
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite dialogArea = (Composite) super.createDialogArea(parent);
+        var dialogArea = (Composite) super.createDialogArea(parent);
         dialogArea.setLayout(new GridLayout(2, false));
         createLabel(dialogArea, "Name: ");
-        GridData gd = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+        var gd = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
         nameText = new Text(dialogArea, SWT.BORDER);
         if (scriptData != null) {
             nameText.setText(scriptData.getScriptName());
@@ -121,11 +121,11 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (scriptData == null) {
-                    if (scriptTypeCombo.getSelectionIndex() == ScriptType.JAVASCRIPT.ordinal() &&
-                            scriptText.getText().trim().equals(ScriptService.DEFAULT_PYTHONSCRIPT_HEADER.trim())) {
+                    if (scriptTypeCombo.getSelectionIndex() == ScriptType.JAVASCRIPT.ordinal()
+                            && scriptText.getText().trim().equals(ScriptService.DEFAULT_PYTHONSCRIPT_HEADER.trim())) {
                         scriptText.setText(ScriptService.DEFAULT_JS_HEADER);
-                    } else if (scriptTypeCombo.getSelectionIndex() == ScriptType.PYTHON.ordinal() &&
-                            scriptText.getText().trim().equals(ScriptService.DEFAULT_JS_HEADER.trim())) {
+                    } else if (scriptTypeCombo.getSelectionIndex() == ScriptType.PYTHON.ordinal()
+                            && scriptText.getText().trim().equals(ScriptService.DEFAULT_JS_HEADER.trim())) {
                         scriptText.setText(ScriptService.DEFAULT_PYTHONSCRIPT_HEADER);
                     }
                 }

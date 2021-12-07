@@ -9,11 +9,11 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.ByteMonitorModel;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.ByteMonitorFigure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.osgi.util.NLS;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 
 /**
  * This class implements the widget edit part for the Byte Monitor widget. This displays the bits in a value as s series
@@ -43,9 +43,9 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ByteMonitorModel model = (ByteMonitorModel) getWidgetModel();
+        var model = (ByteMonitorModel) getWidgetModel();
 
-        ByteMonitorFigure fig = new ByteMonitorFigure();
+        var fig = new ByteMonitorFigure();
         setModel(model);
         setFigure(fig);
         fig.setStartBit(((Integer) model.getPropertyValue(ByteMonitorModel.PROP_START_BIT)));
@@ -75,8 +75,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerBasePropertyChangeHandlers();
-        getFigure().setEnabled(getWidgetModel().isEnabled() &&
-                (getExecutionMode() == ExecutionMode.RUN_MODE));
+        getFigure().setEnabled(getWidgetModel().isEnabled() && (getExecutionMode() == ExecutionMode.RUN_MODE));
 
         removeAllPropertyChangeHandlers(AbstractWidgetModel.PROP_ENABLED);
 
@@ -91,9 +90,9 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // PV_Value
         IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
-            boolean succeed = true;
+            var succeed = true;
             if ((newValue != null) && (newValue instanceof VType)) {
-                Number number = VTypeHelper.getNumber(((VType) newValue));
+                var number = VTypeHelper.getNumber(((VType) newValue));
                 if (number != null) {
                     setValue(number);
                 } else {
@@ -105,9 +104,8 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
             }
             if (!succeed) {
                 setValue(0);
-                Activator.getLogger().log(Level.SEVERE, NLS.bind(
-                        "{0} does not accept non-numeric value.",
-                        getWidgetModel().getName()));
+                Activator.getLogger().log(Level.SEVERE,
+                        NLS.bind("{0} does not accept non-numeric value.", getWidgetModel().getName()));
             }
             return false;
         };
@@ -115,7 +113,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // on color
         IWidgetPropertyChangeHandler colorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setOnColor(((OPIColor) newValue).getSWTColor());
             figure.drawValue();
             return true;
@@ -124,7 +122,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // off color
         colorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setOffColor(((OPIColor) newValue).getSWTColor());
             figure.drawValue();
             return true;
@@ -133,9 +131,9 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // change orientation of the bit display
         IWidgetPropertyChangeHandler horizontalHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setHorizontal((Boolean) newValue);
-            ByteMonitorModel model = getWidgetModel();
+            var model = getWidgetModel();
             if ((Boolean) newValue) {
                 model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
                         model.getLocation().y + model.getSize().height / 2 - model.getSize().width / 2);
@@ -154,7 +152,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // change the display order of the bits
         IWidgetPropertyChangeHandler reverseBitsHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setReverseBits((Boolean) newValue);
             figure.drawValue();
             return true;
@@ -164,7 +162,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // Set the bit to use as a starting point
         IWidgetPropertyChangeHandler startBitHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setStartBit((Integer) newValue);
             figure.drawValue();
             return true;
@@ -174,7 +172,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // Set the number of bits to display
         IWidgetPropertyChangeHandler numBitsHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setNumBits((Integer) newValue);
             figure.drawValue();
             return true;
@@ -184,7 +182,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // Square LED
         IWidgetPropertyChangeHandler squareLEDHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure bm = (ByteMonitorFigure) refreshableFigure;
+            var bm = (ByteMonitorFigure) refreshableFigure;
             bm.setSquareLED((Boolean) newValue);
             return true;
         };
@@ -192,7 +190,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // LED spacing
         IWidgetPropertyChangeHandler ledBorderWidthHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure bm = (ByteMonitorFigure) refreshableFigure;
+            var bm = (ByteMonitorFigure) refreshableFigure;
             bm.setLedBorderWidth((int) newValue);
             return true;
         };
@@ -200,7 +198,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // LED border color
         IWidgetPropertyChangeHandler ledBorderColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure bm = (ByteMonitorFigure) refreshableFigure;
+            var bm = (ByteMonitorFigure) refreshableFigure;
             bm.setLedBorderColor(((OPIColor) newValue).getSWTColor());
             return true;
         };
@@ -208,7 +206,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure bmFig = (ByteMonitorFigure) refreshableFigure;
+            var bmFig = (ByteMonitorFigure) refreshableFigure;
             bmFig.setEffect3D((Boolean) newValue);
             return true;
         };
@@ -216,8 +214,8 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // labels
         IWidgetPropertyChangeHandler labelsHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure bmFig = (ByteMonitorFigure) refreshableFigure;
-            ByteMonitorModel model = getWidgetModel();
+            var bmFig = (ByteMonitorFigure) refreshableFigure;
+            var model = getWidgetModel();
             bmFig.setLabels(model.getLabels());
             return true;
         };
@@ -225,7 +223,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         // Set the LED rendering style
         IWidgetPropertyChangeHandler packHandler = (oldValue, newValue, refreshableFigure) -> {
-            ByteMonitorFigure figure = (ByteMonitorFigure) refreshableFigure;
+            var figure = (ByteMonitorFigure) refreshableFigure;
             figure.setPackedLEDs((Boolean) newValue);
             figure.drawValue();
             return true;

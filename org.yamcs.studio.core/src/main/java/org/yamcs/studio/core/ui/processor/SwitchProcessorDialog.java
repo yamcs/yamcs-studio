@@ -19,12 +19,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.client.InstanceFilter;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.protobuf.YamcsInstance.InstanceState;
@@ -47,14 +45,14 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
+        var area = (Composite) super.createDialogArea(parent);
 
-        Composite composite = new Composite(area, SWT.NONE);
+        var composite = new Composite(area, SWT.NONE);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         composite.setLayout(new GridLayout());
 
-        Composite tableWrapper = new Composite(composite, SWT.NONE);
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tableWrapper = new Composite(composite, SWT.NONE);
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper.setLayout(tcl);
 
@@ -62,34 +60,34 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         processorsTable.getTable().setHeaderVisible(true);
         processorsTable.getTable().setLinesVisible(true);
 
-        TableViewerColumn instanceColumn = new TableViewerColumn(processorsTable, SWT.NONE);
+        var instanceColumn = new TableViewerColumn(processorsTable, SWT.NONE);
         instanceColumn.getColumn().setText("Instance");
         instanceColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ProcessorInfo info = (ProcessorInfo) element;
+                var info = (ProcessorInfo) element;
                 return info.getInstance();
             }
         });
         tcl.setColumnData(instanceColumn.getColumn(), new ColumnPixelData(100));
 
-        TableViewerColumn nameColumn = new TableViewerColumn(processorsTable, SWT.NONE);
+        var nameColumn = new TableViewerColumn(processorsTable, SWT.NONE);
         nameColumn.getColumn().setText("Processor");
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ProcessorInfo info = (ProcessorInfo) element;
+                var info = (ProcessorInfo) element;
                 return info.getName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
 
-        TableViewerColumn typeColumn = new TableViewerColumn(processorsTable, SWT.NONE);
+        var typeColumn = new TableViewerColumn(processorsTable, SWT.NONE);
         typeColumn.getColumn().setText("Type");
         typeColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                ProcessorInfo info = (ProcessorInfo) element;
+                var info = (ProcessorInfo) element;
                 return info.getType();
             }
         });
@@ -103,19 +101,19 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
                 if (e1 == null || e2 == null) {
                     return 0;
                 }
-                ProcessorInfo p1 = (ProcessorInfo) e1;
-                ProcessorInfo p2 = (ProcessorInfo) e2;
-                int c = p1.getInstance().compareTo(p2.getInstance());
+                var p1 = (ProcessorInfo) e1;
+                var p2 = (ProcessorInfo) e2;
+                var c = p1.getInstance().compareTo(p2.getInstance());
                 return (c != 0) ? c : p1.getName().compareTo(p2.getName());
             }
         });
         processorsTable.addSelectionChangedListener(event -> {
-            Button okButton = getButton(IDialogConstants.OK_ID);
+            var okButton = getButton(IDialogConstants.OK_ID);
             okButton.setEnabled(!event.getSelection().isEmpty());
         });
 
-        YamcsClient client = YamcsPlugin.getYamcsClient();
-        InstanceFilter filter = new InstanceFilter();
+        var client = YamcsPlugin.getYamcsClient();
+        var filter = new InstanceFilter();
         filter.setState(InstanceState.RUNNING);
         client.listInstances(filter).whenComplete((response, exc) -> {
             parent.getDisplay().asyncExec(() -> {
@@ -135,13 +133,13 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
-        Button okButton = getButton(IDialogConstants.OK_ID);
+        var okButton = getButton(IDialogConstants.OK_ID);
         okButton.setEnabled(false);
     }
 
     @Override
     protected void okPressed() {
-        IStructuredSelection sel = (IStructuredSelection) processorsTable.getSelection();
+        var sel = (IStructuredSelection) processorsTable.getSelection();
         if (!sel.isEmpty()) {
             processorInfo = (ProcessorInfo) sel.getFirstElement();
         }

@@ -11,11 +11,8 @@ package org.csstudio.ui.util.composites;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.fieldassist.FieldAssistColors;
 import org.eclipse.swt.SWT;
@@ -148,9 +145,8 @@ public final class ResourceAndContainerGroup implements Listener {
      *            one word, in lowercase, to describe the resource to the user (file, folder, project) height hint for
      *            the container selection widget group
      */
-    public ResourceAndContainerGroup(final Composite parent,
-            final Listener client, final String resourceFieldLabel,
-            final String resourceType) {
+    public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel,
+            String resourceType) {
         this(parent, client, resourceFieldLabel, resourceType, true);
     }
 
@@ -168,11 +164,9 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param showClosedProjects
      *            whether or not to show closed projects height hint for the container selection widget group
      */
-    public ResourceAndContainerGroup(final Composite parent,
-            final Listener client, final String resourceFieldLabel,
-            final String resourceType, final boolean showClosedProjects) {
-        this(parent, client, resourceFieldLabel, resourceType,
-                showClosedProjects, SWT.DEFAULT);
+    public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel,
+            String resourceType, boolean showClosedProjects) {
+        this(parent, client, resourceFieldLabel, resourceType, showClosedProjects, SWT.DEFAULT);
     }
 
     /**
@@ -191,10 +185,8 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param heightHint
      *            height hint for the container selection widget group
      */
-    public ResourceAndContainerGroup(final Composite parent,
-            final Listener client, final String resourceFieldLabel,
-            final String resourceType, final boolean showClosedProjects,
-            final int heightHint) {
+    public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel,
+            String resourceType, boolean showClosedProjects, int heightHint) {
         super();
         _resourceType = resourceType;
         _showClosedProjects = showClosedProjects;
@@ -221,13 +213,12 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param resourceLabelString
      *            resource label text.
      */
-    private void createContents(final Composite parent,
-            final String resourceLabelString, final int heightHint) {
+    private void createContents(Composite parent, String resourceLabelString, int heightHint) {
 
         // Font font = parent.getFont();
         // server name group
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var composite = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = 0;
         layout.marginHeight = 0;
         composite.setLayout(layout);
@@ -236,45 +227,39 @@ public final class ResourceAndContainerGroup implements Listener {
 
         // container group
         if (heightHint == SWT.DEFAULT) {
-            _containerGroup = new ResourceSelectionGroup(composite, this,
-                    null, null, _showClosedProjects);
+            _containerGroup = new ResourceSelectionGroup(composite, this, null, null, _showClosedProjects);
         } else {
-            _containerGroup = new ResourceSelectionGroup(composite, this,
-                    null, null, _showClosedProjects, true, heightHint,
-                    SIZING_TEXT_FIELD_WIDTH);
+            _containerGroup = new ResourceSelectionGroup(composite, this, null, null, _showClosedProjects, true,
+                    heightHint, SIZING_TEXT_FIELD_WIDTH);
         }
 
         // resource name group
-        Composite nameGroup = new Composite(composite, SWT.NONE);
+        var nameGroup = new Composite(composite, SWT.NONE);
         layout = new GridLayout();
         layout.numColumns = 2;
         layout.marginWidth = 0;
         nameGroup.setLayout(layout);
-        nameGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.GRAB_HORIZONTAL));
+        nameGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         // nameGroup.setFont(font);
 
-        Label label = new Label(nameGroup, SWT.NONE);
+        var label = new Label(nameGroup, SWT.NONE);
         label.setText(resourceLabelString);
         // label.setFont(font);
 
         // resource name entry field
         _resourceNameField = new Text(nameGroup, SWT.BORDER);
         _resourceNameField.addListener(SWT.Modify, this);
-        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.GRAB_HORIZONTAL);
+        var data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         _resourceNameField.setLayoutData(data);
         // _resourceNameField.setFont(font);
-        _resourceNameField.setBackground(FieldAssistColors
-                .getRequiredFieldBackgroundColor(_resourceNameField));
+        _resourceNameField.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(_resourceNameField));
 
         // full path
         label = new Label(nameGroup, SWT.NONE);
         label.setText("Full path:");
         _fullPathLabel = new Label(nameGroup, SWT.NONE | SWT.WRAP);
-        data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.GRAB_HORIZONTAL);
+        data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         _fullPathLabel.setLayoutData(data);
         this.refreshFullPath();
@@ -327,7 +312,7 @@ public final class ResourceAndContainerGroup implements Listener {
      *            org.eclipse.swt.widgets.Event
      */
     @Override
-    public void handleEvent(final Event e) {
+    public void handleEvent(Event e) {
         validateControls();
         this.refreshFullPath();
         if (_client != null) {
@@ -341,7 +326,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param value
      *            Flag that signals of it is allows to enter the names of already existing resources.
      */
-    public void setAllowExistingResources(final boolean value) {
+    public void setAllowExistingResources(boolean value) {
         _allowExistingResources = value;
     }
 
@@ -351,9 +336,8 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param path
      *            Full path to the container.
      */
-    public void setContainerFullPath(final IPath path) {
-        IResource initial = ResourcesPlugin.getWorkspace().getRoot()
-                .findMember(path);
+    public void setContainerFullPath(IPath path) {
+        var initial = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
         if (initial != null) {
             if (!(initial instanceof IContainer)) {
                 initial = initial.getParent();
@@ -368,8 +352,7 @@ public final class ResourceAndContainerGroup implements Listener {
      */
     public void setFocus() {
         // select the whole resource name.
-        _resourceNameField.setSelection(0, _resourceNameField.getText()
-                .length());
+        _resourceNameField.setSelection(0, _resourceNameField.getText().length());
         _resourceNameField.setFocus();
     }
 
@@ -379,7 +362,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param value
      *            new value
      */
-    public void setResource(final String value) {
+    public void setResource(String value) {
         _resourceNameField.setText(value);
         validateControls();
     }
@@ -391,22 +374,21 @@ public final class ResourceAndContainerGroup implements Listener {
      * @return <code>boolean</code> indicating validity of the container name
      */
     private boolean validateContainer() {
-        IPath path = _containerGroup.getFullPath();
+        var path = _containerGroup.getFullPath();
         if (path == null) {
             _problemType = PROBLEM_CONTAINER_EMPTY;
             _problemMessage = "The folder is empty.";
             return false;
         }
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        String projectName = path.segment(0);
-        if (projectName == null
-                || !workspace.getRoot().getProject(projectName).exists()) {
+        var workspace = ResourcesPlugin.getWorkspace();
+        var projectName = path.segment(0);
+        if (projectName == null || !workspace.getRoot().getProject(projectName).exists()) {
             _problemType = PROBLEM_PROJECT_DOES_NOT_EXIST;
             _problemMessage = "The specified project does not exist.";
             return false;
         }
         // path is invalid if any prefix is occupied by a file
-        IWorkspaceRoot root = workspace.getRoot();
+        var root = workspace.getRoot();
         while (path.segmentCount() > 1) {
             if (root.getFile(path).exists()) {
                 _problemType = PROBLEM_PATH_OCCUPIED;
@@ -437,8 +419,7 @@ public final class ResourceAndContainerGroup implements Listener {
             return false;
         }
 
-        IPath path = _containerGroup.getFullPath().append(
-                getResourceNameWithExtension());
+        var path = _containerGroup.getFullPath().append(getResourceNameWithExtension());
         return validateFullResourcePath(path);
     }
 
@@ -451,20 +432,18 @@ public final class ResourceAndContainerGroup implements Listener {
      *            the path to validate
      * @return <code>boolean</code> indicating validity of the resource path
      */
-    private boolean validateFullResourcePath(final IPath resourcePath) {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    private boolean validateFullResourcePath(IPath resourcePath) {
+        var workspace = ResourcesPlugin.getWorkspace();
 
-        IStatus result = workspace.validatePath(resourcePath.toString(),
-                IResource.FOLDER);
+        var result = workspace.validatePath(resourcePath.toString(), IResource.FOLDER);
         if (!result.isOK()) {
             _problemType = PROBLEM_PATH_INVALID;
             _problemMessage = result.getMessage();
             return false;
         }
 
-        if (!_allowExistingResources
-                && (workspace.getRoot().getFolder(resourcePath).exists() || workspace
-                        .getRoot().getFile(resourcePath).exists())) {
+        if (!_allowExistingResources && (workspace.getRoot().getFolder(resourcePath).exists()
+                || workspace.getRoot().getFile(resourcePath).exists())) {
             _problemType = PROBLEM_RESOURCE_EXIST;
             _problemMessage = "The same name already exists.";
             return false;
@@ -479,7 +458,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @return <code>boolean</code> indicating validity of the resource name
      */
     private boolean validateResourceName() {
-        String resourceName = getResourceNameWithExtension();
+        var resourceName = getResourceNameWithExtension();
 
         if (resourceName.equals("")) {
             _problemType = PROBLEM_RESOURCE_EMPTY;
@@ -499,19 +478,17 @@ public final class ResourceAndContainerGroup implements Listener {
      * Refreshes the displayed full path of the resource.
      */
     private void refreshFullPath() {
-        StringBuffer buffer = new StringBuffer();
+        var buffer = new StringBuffer();
         if (_containerGroup.getFullPath() != null) {
-            buffer.append(ResourcesPlugin.getWorkspace().getRoot()
-                    .getLocation());
+            buffer.append(ResourcesPlugin.getWorkspace().getRoot().getLocation());
             buffer.append(_containerGroup.getFullPath());
             buffer.append("/");
-            if (_resourceNameField.getText() != null
-                    && _resourceNameField.getText().trim().length() > 0) {
+            if (_resourceNameField.getText() != null && _resourceNameField.getText().trim().length() > 0) {
                 buffer.append(this.getResourceNameWithExtension());
             }
         }
         _fullPathLabel.setText(buffer.toString());
-        Composite comp = _fullPathLabel.getParent().getParent();
+        var comp = _fullPathLabel.getParent().getParent();
         if (comp != null) {
             comp.layout();
         }
@@ -523,7 +500,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @return The resource name including its eventually set file extension.
      */
     private String getResourceNameWithExtension() {
-        String result = _resourceNameField.getText();
+        var result = _resourceNameField.getText();
 
         if ((_fileExtension != null) && (_fileExtension.length() > 0)) {
             result = result + "." + _fileExtension;
@@ -547,7 +524,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param fileExtension
      *            The file extension to set
      */
-    public void setFileExtension(final String fileExtension) {
+    public void setFileExtension(String fileExtension) {
         _fileExtension = fileExtension;
     }
 

@@ -43,11 +43,9 @@ public class BoolSwitchModel extends AbstractBoolControlModel {
     protected void configureProperties() {
         super.configureProperties();
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
         removeProperty(PROP_ACTIONS);
-        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
         // setPropertyDescription(PROP_PVNAME, "Readback PV");
 
     }

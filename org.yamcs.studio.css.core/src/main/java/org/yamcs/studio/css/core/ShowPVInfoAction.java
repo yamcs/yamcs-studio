@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -67,7 +66,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
             @Override
             public void run() {
-                CountDownLatch latch = new CountDownLatch(yamcsPvs.size());
+                var latch = new CountDownLatch(yamcsPvs.size());
 
                 // Another reason why we should have futures
                 for (PVInfo pvInfo : pvInfos) {
@@ -76,7 +75,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    MissionDatabaseClient mdbClient = YamcsPlugin.getMissionDatabaseClient();
+                    var mdbClient = YamcsPlugin.getMissionDatabaseClient();
                     mdbClient.getParameter(pvInfo.getYamcsQualifiedName()).whenComplete((response, exc) -> {
                         if (exc == null) {
                             pvInfo.setParameterInfo(response);
@@ -103,7 +102,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
     }
 
     private void showDialog(List<PVInfo> pvInfos) {
-        PVInfoDialog dialog = new PVInfoDialog(targetPart.getSite().getShell(), pvInfos);
+        var dialog = new PVInfoDialog(targetPart.getSite().getShell(), pvInfos);
         dialog.open();
     }
 

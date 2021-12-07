@@ -11,9 +11,9 @@ package org.csstudio.opibuilder.util;
 
 import org.csstudio.opibuilder.visualparts.BorderFactory;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
-import org.yamcs.studio.data.vtype.AlarmSeverity;
 import org.eclipse.draw2d.Border;
 import org.eclipse.swt.graphics.RGB;
+import org.yamcs.studio.data.vtype.AlarmSeverity;
 
 /**
  * The scheme for alarm color which provide unified colors and borders for alarms.
@@ -64,12 +64,12 @@ public class AlarmRepresentationScheme {
     }
 
     public static Border getMajorBorder(BorderStyle borderStyle) {
-        BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
+        var newBorderStyle = getNewBorderStyle(borderStyle);
         return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMajorColor(), "");
     }
 
     private static BorderStyle getNewBorderStyle(BorderStyle borderStyle) {
-        BorderStyle newBorderStyle = BorderStyle.LINE;
+        var newBorderStyle = BorderStyle.LINE;
         switch (borderStyle) {
         case DASH_DOT:
         case DASH_DOT_DOT:
@@ -84,17 +84,16 @@ public class AlarmRepresentationScheme {
     }
 
     public static Border getMinorBorder(BorderStyle borderStyle) {
-        BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
+        var newBorderStyle = getNewBorderStyle(borderStyle);
         return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMinorColor(), "");
     }
 
     public static Border getInvalidBorder(BorderStyle borderStyle) {
-        BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
+        var newBorderStyle = getNewBorderStyle(borderStyle);
         return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getInvalidColor(), "");
     }
 
     public static Border getDisconnectedBorder() {
-        return BorderFactory.createBorder(BorderStyle.TITLE_BAR, 1, getDisconnectedColor(),
-                "Disconnected");
+        return BorderFactory.createBorder(BorderStyle.TITLE_BAR, 1, getDisconnectedColor(), "Disconnected");
     }
 }

@@ -22,10 +22,12 @@ public class ExprExpression extends Expr {
         return child;
     }
 
+    @Override
     public String toString() {
         return "(" + child + ")";
     }
 
+    @Override
     public void validate() throws ExprException {
         child.validate();
     }

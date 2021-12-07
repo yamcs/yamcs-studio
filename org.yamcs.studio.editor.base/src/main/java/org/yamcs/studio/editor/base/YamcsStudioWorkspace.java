@@ -5,7 +5,6 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.service.datalocation.Location;
 
 public class YamcsStudioWorkspace {
 
@@ -28,7 +27,7 @@ public class YamcsStudioWorkspace {
     }
 
     private static boolean selectWorkspace(URL workspaceUrl, boolean forcePrompt) throws IOException {
-        Location dataLocation = Platform.getInstanceLocation();
+        var dataLocation = Platform.getInstanceLocation();
         if (dataLocation == null) { // -data @none
             MessageDialog.openError(null, "No workspace", Platform.getProduct().getName() + " requires a workspace");
             return false;
@@ -45,17 +44,16 @@ public class YamcsStudioWorkspace {
         return selectAndLockWorkspace(workspaceUrl, forcePrompt);
     }
 
-    private static boolean selectAndLockWorkspace(URL workspaceSuggestion, boolean promptUser)
-            throws IOException {
+    private static boolean selectAndLockWorkspace(URL workspaceSuggestion, boolean promptUser) throws IOException {
 
-        URL workspaceUrl = workspaceSuggestion;
+        var workspaceUrl = workspaceSuggestion;
         while (true) {
             if (promptUser) {
-                SelectWorkspaceDialog dialog = new SelectWorkspaceDialog();
+                var dialog = new SelectWorkspaceDialog();
                 if (dialog.open() == SelectWorkspaceDialog.CANCEL) {
                     return false;
                 } else {
-                    String selectedWorkspace = dialog.getSelectedWorkspace();
+                    var selectedWorkspace = dialog.getSelectedWorkspace();
 
                     UserPreferences.updateWorkspaceHistory(selectedWorkspace);
                     workspaceUrl = new URL("file:" + selectedWorkspace);
@@ -67,9 +65,9 @@ public class YamcsStudioWorkspace {
                 UserPreferences.updateWorkspaceHistory(workspaceUrl.getFile());
                 return true;
             } else {
-                MessageDialog.openError(null, "Workspace Error", String.format(
-                        "Workspace %s is in use or cannot be accessed. Select a different workspace.",
-                        workspaceUrl.getPath()));
+                MessageDialog.openError(null, "Workspace Error",
+                        String.format("Workspace %s is in use or cannot be accessed. Select a different workspace.",
+                                workspaceUrl.getPath()));
                 promptUser = true;
             }
         }

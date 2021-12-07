@@ -1,6 +1,5 @@
 package org.yamcs.studio.commanding.cmdhist;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,11 +7,9 @@ import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -28,17 +25,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
-import org.yamcs.client.YamcsClient;
-import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsAware;
@@ -100,7 +91,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     @Override
     public void createPartControl(Composite parent) {
-        CommandingPlugin plugin = CommandingPlugin.getDefault();
+        var plugin = CommandingPlugin.getDefault();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         greenBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/ok.png"));
         redBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/nok.png"));
@@ -131,8 +122,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         getViewSite().setSelectionProvider(tableViewer);
 
         // Register context menu. Commands are added in plugin.xml
-        MenuManager menuManager = new MenuManager();
-        Menu menu = menuManager.createContextMenu(tableViewer.getTable());
+        var menuManager = new MenuManager();
+        var menu = menuManager.createContextMenu(tableViewer.getTable());
         tableViewer.getTable().setMenu(menu);
         getSite().registerContextMenu(menuManager, tableViewer);
 
@@ -157,20 +148,18 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             Display.getDefault().asyncExec(this::fetchLatestCommands);
         }
         if (processor != null) {
-            YamcsClient client = YamcsPlugin.getYamcsClient();
+            var client = YamcsPlugin.getYamcsClient();
             subscription = client.createCommandSubscription();
             subscription.addListener(command -> {
                 Display.getDefault().asyncExec(() -> processCommand(command, true));
             });
-            subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
-                    .setInstance(instance)
-                    .setProcessor(processor)
-                    .build());
+            subscription.sendMessage(
+                    SubscribeCommandsRequest.newBuilder().setInstance(instance).setProcessor(processor).build());
         }
     }
 
     public ColumnData createDefaultColumnData() {
-        ColumnData data = new ColumnData();
+        var data = new ColumnData();
         data.addColumn(COL_COMPLETION, 90);
         data.addColumn(COL_T, 160);
         data.addColumn(COL_COMMAND, 500);
@@ -186,7 +175,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             if (dynamicColumn.equals("Acknowledge_Released")) {
                 continue;
             }
-            ColumnDef def = columnData.getColumn(dynamicColumn);
+            var def = columnData.getColumn(dynamicColumn);
             data.addColumn(def.name, DYNAMIC_COLUMN_WIDTH);
         }
         return data;
@@ -206,9 +195,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     public CommandHistoryRecord getPreviousRecord(CommandHistoryRecord rec) {
         if (tableViewer.getTable().getSelectionCount() > 0) {
-            int[] indices = tableViewer.getTable().getSelectionIndices();
+            var indices = tableViewer.getTable().getSelectionIndices();
             if (indices[0] > 0) {
-                int prevIndex = indices[0] - 1;
+                var prevIndex = indices[0] - 1;
                 return (CommandHistoryRecord) tableViewer.getElementAt(prevIndex);
             }
         }
@@ -217,9 +206,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     public CommandHistoryRecord getNextRecord(CommandHistoryRecord rec) {
         if (tableViewer.getTable().getSelectionCount() > 0) {
-            int[] indices = tableViewer.getTable().getSelectionIndices();
+            var indices = tableViewer.getTable().getSelectionIndices();
             if (indices[0] < tableViewer.getTable().getItemCount() - 1) {
-                int nextIndex = indices[0] + 1;
+                var nextIndex = indices[0] + 1;
                 return (CommandHistoryRecord) tableViewer.getElementAt(nextIndex);
             }
         }
@@ -227,8 +216,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     private void createActions(Shell shell) {
-        IActionBars bars = getViewSite().getActionBars();
-        IMenuManager mgr = bars.getMenuManager();
+        var bars = getViewSite().getActionBars();
+        var mgr = bars.getMenuManager();
 
         Action showRelativeTimeAction = new Action("Show Relative Time", IAction.AS_CHECK_BOX) {
             @Override
@@ -273,7 +262,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     private void syncCurrentWidthsToModel() {
         for (TableColumn column : tableViewer.getTable().getColumns()) {
-            ColumnDef def = columnData.getColumn(column.getText());
+            var def = columnData.getColumn(column.getText());
             if (def != null) {
                 def.width = column.getWidth();
             }
@@ -281,17 +270,17 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     private void createColumns() {
-        Table table = tableViewer.getTable();
-        TableLayout layout = new TableLayout();
+        var table = tableViewer.getTable();
+        var layout = new TableLayout();
 
-        TableColumn[] currentColumns = tableViewer.getTable().getColumns();
+        var currentColumns = tableViewer.getTable().getColumns();
         for (TableColumn currentColumn : currentColumns) {
             currentColumn.dispose();
         }
 
         for (ColumnDef def : columnData.getVisibleColumns()) {
             if (def.name.equals(COL_COMPLETION)) {
-                TableViewerColumn completionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                var completionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 completionColumn.getColumn().addControlListener(columnResizeListener);
                 completionColumn.getColumn().addSelectionListener(getSelectionAdapter(completionColumn.getColumn()));
                 completionColumn.getColumn().setImage(headerCompleteImage);
@@ -299,7 +288,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 completionColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public Image getImage(Object element) {
-                        Command command = ((CommandHistoryRecord) element).getCommand();
+                        var command = ((CommandHistoryRecord) element).getCommand();
                         if (command.isSuccess()) {
                             return checkmarkImage;
                         } else if (command.isFailure()) {
@@ -311,7 +300,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getText(Object element) {
-                        Command command = ((CommandHistoryRecord) element).getCommand();
+                        var command = ((CommandHistoryRecord) element).getCommand();
                         if (command.isSuccess()) {
                             return "Completed";
                         } else if (command.isFailure()) {
@@ -323,7 +312,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_T)) {
-                TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                var gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 gentimeColumn.getColumn().addControlListener(columnResizeListener);
                 gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
                 gentimeColumn.getColumn().setText(COL_T);
@@ -331,7 +320,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Instant generationTime = ((CommandHistoryRecord) element).getCommand().getGenerationTime();
+                        var generationTime = ((CommandHistoryRecord) element).getCommand().getGenerationTime();
                         return YamcsPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
@@ -341,7 +330,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 table.setSortColumn(gentimeColumn.getColumn());
                 table.setSortDirection(SWT.UP);
             } else if (def.name.equals(COL_COMMAND)) {
-                TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                var nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
                 nameColumn.getColumn().setText(COL_COMMAND);
                 nameColumn.getColumn().setToolTipText("Command String");
@@ -351,13 +340,13 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        var rec = (CommandHistoryRecord) element;
                         return rec.getCommand().getSource();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_USER)) {
-                TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                var userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 userColumn.getColumn().addSelectionListener(getSelectionAdapter(userColumn.getColumn()));
                 userColumn.getColumn().setText(COL_USER);
                 userColumn.getColumn().setToolTipText("User that issued the command");
@@ -366,13 +355,13 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 userColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        var rec = (CommandHistoryRecord) element;
                         return rec.getCommand().getUsername();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_ORIGIN)) {
-                TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                var originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
                 originColumn.getColumn().setText(COL_ORIGIN);
                 originColumn.getColumn().setToolTipText("Origin");
@@ -381,13 +370,13 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 originColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        var rec = (CommandHistoryRecord) element;
                         return rec.getCommand().getOrigin();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_ORIGIN_ID)) {
-                TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                var seqIdColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
                 seqIdColumn.getColumn().setText(COL_ORIGIN_ID);
                 seqIdColumn.getColumn().addControlListener(columnResizeListener);
@@ -396,13 +385,13 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        var rec = (CommandHistoryRecord) element;
                         return String.valueOf(rec.getCommand().getSequenceNumber());
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_PTV)) {
-                TableViewerColumn ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                var ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 ptvColumn.getColumn().setText(COL_PTV);
                 ptvColumn.getColumn().addControlListener(columnResizeListener);
                 ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
@@ -411,8 +400,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public Image getImage(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Command command = rec.getCommand();
+                        var rec = (CommandHistoryRecord) element;
+                        var command = rec.getCommand();
                         if (command.isSuccess()) {
                             return greenBubble;
                         } else if (command.isFailure()) {
@@ -424,8 +413,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Command command = rec.getCommand();
+                        var rec = (CommandHistoryRecord) element;
+                        var command = rec.getCommand();
                         if (command.getError() != null) {
                             return command.getError();
                         } else {
@@ -435,7 +424,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_QUEUED)) {
-                TableViewerColumn queuedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                var queuedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 queuedColumn.getColumn().setText(COL_QUEUED);
                 queuedColumn.getColumn().addControlListener(columnResizeListener);
                 queuedColumn.getColumn().addSelectionListener(getSelectionAdapter(queuedColumn.getColumn()));
@@ -444,8 +433,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public Image getImage(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getQueuedAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getQueuedAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -467,14 +456,14 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getQueuedAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getQueuedAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_RELEASED)) {
-                TableViewerColumn releasedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                var releasedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 releasedColumn.getColumn().setText(COL_RELEASED);
                 releasedColumn.getColumn().addControlListener(columnResizeListener);
                 releasedColumn.getColumn().addSelectionListener(getSelectionAdapter(releasedColumn.getColumn()));
@@ -483,8 +472,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public Image getImage(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getReleasedAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getReleasedAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -506,14 +495,14 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getReleasedAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getReleasedAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_SENT)) {
-                TableViewerColumn sentColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                var sentColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 sentColumn.getColumn().setText(COL_SENT);
                 sentColumn.getColumn().addControlListener(columnResizeListener);
                 sentColumn.getColumn().addSelectionListener(getSelectionAdapter(sentColumn.getColumn()));
@@ -522,8 +511,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public Image getImage(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getSentAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -545,14 +534,14 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
+                        var rec = (CommandHistoryRecord) element;
+                        var ack = rec.getCommand().getSentAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (dynamicColumns.contains(def.name)) {
-                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
+                var column = new TableViewerColumn(tableViewer, SWT.LEFT);
                 column.getColumn().setText(def.name);
                 column.getColumn().addControlListener(columnResizeListener);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
@@ -562,8 +551,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                         @Override
                         public Image getImage(Object element) {
-                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                            Command command = rec.getCommand();
+                            var rec = (CommandHistoryRecord) element;
+                            var command = rec.getCommand();
                             if (command.isSuccess()) {
                                 return greenBubble;
                             } else if (command.isFailure()) {
@@ -575,8 +564,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                         @Override
                         public String getToolTipText(Object element) {
-                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                            Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
+                            var rec = (CommandHistoryRecord) element;
+                            var ack = rec.getCommand().getAcknowledgment(def.name);
                             return (ack != null) ? ack.getMessage() : null;
                         }
                     });
@@ -585,9 +574,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     column.setLabelProvider(new ColumnLabelProvider() {
                         @Override
                         public String getText(Object element) {
-                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                            var rec = (CommandHistoryRecord) element;
 
-                            Object value = rec.getCommand().getAttribute(def.name);
+                            var value = rec.getCommand().getAttribute(def.name);
                             if (value == null) {
                                 return null;
                             } else if (value instanceof byte[]) {
@@ -612,45 +601,45 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     private void saveColumnState() {
-        IDialogSettings settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
+        var settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
 
-        List<ColumnDef> visibleColumns = columnData.getVisibleColumns();
-        String[] visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
-        Integer[] visibleWidths = visibleColumns.stream().map(c -> c.width).toArray(Integer[]::new);
+        var visibleColumns = columnData.getVisibleColumns();
+        var visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
+        var visibleWidths = visibleColumns.stream().map(c -> c.width).toArray(Integer[]::new);
 
         settings.put("visible-cols", visibleNames);
-        for (int i = 0; i < visibleNames.length; i++) {
+        for (var i = 0; i < visibleNames.length; i++) {
             settings.put("visible-width-" + i, visibleWidths[i]);
         }
 
-        List<ColumnDef> hiddenColumns = columnData.getHiddenColumns();
-        String[] hiddenNames = hiddenColumns.stream().map(c -> c.name).toArray(String[]::new);
+        var hiddenColumns = columnData.getHiddenColumns();
+        var hiddenNames = hiddenColumns.stream().map(c -> c.name).toArray(String[]::new);
         settings.put("hidden-cols", hiddenNames);
 
-        String[] dynamicColumns = this.dynamicColumns.toArray(new String[0]);
+        var dynamicColumns = this.dynamicColumns.toArray(new String[0]);
         settings.put("dynamic-cols", dynamicColumns);
     }
 
     private void restoreColumnState() {
-        IDialogSettings settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
+        var settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
 
-        String[] oldVisibleNames = settings.getArray("visible-cols");
+        var oldVisibleNames = settings.getArray("visible-cols");
         if (oldVisibleNames != null) {
-            int[] oldVisibleWidths = new int[oldVisibleNames.length];
-            for (int i = 0; i < oldVisibleNames.length; i++) {
+            var oldVisibleWidths = new int[oldVisibleNames.length];
+            for (var i = 0; i < oldVisibleNames.length; i++) {
                 oldVisibleWidths[i] = settings.getInt("visible-width-" + i);
             }
-            String[] oldHiddenNames = settings.getArray("hidden-cols");
+            var oldHiddenNames = settings.getArray("hidden-cols");
             List<String> oldDynamicColumns = Arrays.asList(settings.getArray("dynamic-cols"));
 
-            ColumnData restoredData = new ColumnData();
+            var restoredData = new ColumnData();
 
             // Add visible columns we still remember from a previous session
-            for (int i = 0; i < oldVisibleNames.length; i++) {
+            for (var i = 0; i < oldVisibleNames.length; i++) {
                 if (oldVisibleNames[i].endsWith("_Status")) { // TEMP to work around a client bug
                     continue;
                 }
-                ColumnDef def = columnData.getColumn(oldVisibleNames[i]);
+                var def = columnData.getColumn(oldVisibleNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, oldVisibleWidths[i], true, def.resizable, def.moveable);
                 } else if (oldDynamicColumns.contains(oldVisibleNames[i])) {
@@ -662,11 +651,11 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             }
 
             // Add hidden columns we still remember from a previous session
-            for (int i = 0; i < oldHiddenNames.length; i++) {
+            for (var i = 0; i < oldHiddenNames.length; i++) {
                 if (oldHiddenNames[i].endsWith("_Status")) { // TEMP to work around a bug
                     continue;
                 }
-                ColumnDef def = columnData.getColumn(oldHiddenNames[i]);
+                var def = columnData.getColumn(oldHiddenNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, def.width, false, def.resizable, def.moveable);
                 } else if (oldDynamicColumns.contains(oldHiddenNames[i])) {
@@ -689,7 +678,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     private void fetchLatestCommands() {
-        ArchiveClient archiveClient = YamcsPlugin.getArchiveClient();
+        var archiveClient = YamcsPlugin.getArchiveClient();
         if (archiveClient != null) {
             archiveClient.listCommands().whenComplete((page, exc) -> {
                 List<Command> commands = new ArrayList<>();
@@ -752,7 +741,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 tableViewerComparator.setColumn(column);
-                int dir = tableViewerComparator.getDirection();
+                var dir = tableViewerComparator.getDirection();
                 tableViewer.getTable().setSortDirection(dir);
                 tableViewer.getTable().setSortColumn(column);
                 tableViewer.refresh();

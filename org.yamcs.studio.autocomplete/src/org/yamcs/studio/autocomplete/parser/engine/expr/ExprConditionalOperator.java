@@ -15,8 +15,7 @@ public class ExprConditionalOperator extends Expr {
     protected Expr valueIfTrue;
     protected Expr valueIfFalse;
 
-    public ExprConditionalOperator(Expr condition, Expr valueIfTrue,
-            Expr valueIfFalse) {
+    public ExprConditionalOperator(Expr condition, Expr valueIfTrue, Expr valueIfFalse) {
         super(ExprType.ConditionalOperation);
         this.condition = condition;
         this.valueIfTrue = valueIfTrue;

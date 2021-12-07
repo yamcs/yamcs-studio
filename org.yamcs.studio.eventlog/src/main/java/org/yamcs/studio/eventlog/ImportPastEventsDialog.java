@@ -2,7 +2,6 @@ package org.yamcs.studio.eventlog;
 
 import java.time.Instant;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -39,8 +38,8 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Date start = startDate.getSelection();
-        Date stop = stopDate.getSelection();
+        var start = startDate.getSelection();
+        var stop = stopDate.getSelection();
         if (start != null && stop != null && start.after(stop)) {
             errorMessage = "Stop has to be greater than start";
         }
@@ -51,17 +50,17 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
-        Composite container = new Composite(area, SWT.NONE);
+        var area = (Composite) super.createDialogArea(parent);
+        var container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout layout = new GridLayout(2, false);
+        var layout = new GridLayout(2, false);
         layout.marginHeight = 20;
         layout.marginWidth = 20;
         layout.verticalSpacing = 2;
         container.setLayout(layout);
 
-        Label lbl = new Label(container, SWT.NONE);
+        var lbl = new Label(container, SWT.NONE);
         lbl.setText("Start:");
         startDate = new CDateTime(container,
                 CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TIME_MEDIUM | CDT.CLOCK_24_HOUR);

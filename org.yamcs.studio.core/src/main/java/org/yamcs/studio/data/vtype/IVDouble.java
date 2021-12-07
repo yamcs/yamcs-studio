@@ -5,7 +5,7 @@ package org.yamcs.studio.data.vtype;
  */
 public class IVDouble extends IVNumeric implements VDouble {
 
-    private final Double value;
+    private double value;
 
     public IVDouble(Double value) {
         this(value, ValueFactory.alarmNone(), ValueFactory.timeNow(), ValueFactory.displayNone());

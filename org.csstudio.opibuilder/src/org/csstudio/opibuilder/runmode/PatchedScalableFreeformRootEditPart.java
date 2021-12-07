@@ -18,26 +18,25 @@ import org.eclipse.gef.editparts.ZoomManager;
  * Patch {@link ScalableFreeformRootEditPart} to change the zoom combo items sort to have predefined zoom contributions
  * on top.
  */
-public class PatchedScalableFreeformRootEditPart extends
-        ScalableFreeformRootEditPart {
+public class PatchedScalableFreeformRootEditPart extends ScalableFreeformRootEditPart {
 
     private ZoomManager zoomManager;
 
     public PatchedScalableFreeformRootEditPart() {
-        zoomManager = new ZoomManager((ScalableFigure) getScaledLayers(),
-                ((Viewport) getFigure())) {
+        zoomManager = new ZoomManager((ScalableFigure) getScaledLayers(), ((Viewport) getFigure())) {
             @Override
             public String[] getZoomLevelsAsText() {
-                String[] originItems = super.getZoomLevelsAsText();
+                var originItems = super.getZoomLevelsAsText();
                 if (getZoomLevelContributions() != null) {
-                    String[] result = new String[originItems.length];
-                    int contriSize = getZoomLevelContributions().size();
-                    for (int i = 0; i < originItems.length; i++) {
+                    var result = new String[originItems.length];
+                    var contriSize = getZoomLevelContributions().size();
+                    for (var i = 0; i < originItems.length; i++) {
                         result[i] = originItems[(originItems.length - contriSize + i) % originItems.length];
                     }
                     return result;
-                } else
+                } else {
                     return super.getZoomLevelsAsText();
+                }
             }
 
         };

@@ -79,46 +79,44 @@ public class LEDModel extends AbstractBoolWidgetModel {
     protected void configureProperties() {
         super.configureProperties();
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SQUARE_LED, "Square LED",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_SQUARE_LED, "Square LED", WidgetPropertyCategory.Display, false));
         setPropertyVisible(PROP_BOOL_LABEL_POS, false);
 
-        addProperty(new IntegerProperty(PROP_NSTATES, "State Count",
-                WidgetPropertyCategory.Behavior, 2, 2, LEDFigure.MAX_NSTATES));
+        addProperty(new IntegerProperty(PROP_NSTATES, "State Count", WidgetPropertyCategory.Behavior, 2, 2,
+                LEDFigure.MAX_NSTATES));
         setPropertyVisibleAndSavable(PROP_NSTATES, true, false);
 
         WidgetPropertyCategory category = new NameDefinedCategory("State Fallback");
 
-        addProperty(new StringProperty(PROP_STATE_FALLBACK_LABEL,
-                "Label", category, LEDFigure.DEFAULT_STATE_FALLBACK_LABAL));
+        addProperty(new StringProperty(PROP_STATE_FALLBACK_LABEL, "Label", category,
+                LEDFigure.DEFAULT_STATE_FALLBACK_LABAL));
         setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_LABEL, false, false);
 
-        addProperty(new ColorProperty(PROP_STATE_FALLBACK_COLOR,
-                "Color", category, LEDFigure.DEFAULT_STATE_FALLBACK_COLOR.getRGB()));
+        addProperty(new ColorProperty(PROP_STATE_FALLBACK_COLOR, "Color", category,
+                LEDFigure.DEFAULT_STATE_FALLBACK_COLOR.getRGB()));
         setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_COLOR, false, false);
 
-        addProperty(new IntegerProperty(PROP_BULB_BORDER, "Bulb border",
-                WidgetPropertyCategory.Display, LEDFigure.DEFAULT_BULB_BORDER_WIDTH));
-        addProperty(new ColorProperty(PROP_BULB_BORDER_COLOR, "Bulb border color",
-                WidgetPropertyCategory.Display, LEDFigure.DEFAULT_BULB_BORDER_COLOR.getRGB()));
+        addProperty(new IntegerProperty(PROP_BULB_BORDER, "Bulb border", WidgetPropertyCategory.Display,
+                LEDFigure.DEFAULT_BULB_BORDER_WIDTH));
+        addProperty(new ColorProperty(PROP_BULB_BORDER_COLOR, "Bulb border color", WidgetPropertyCategory.Display,
+                LEDFigure.DEFAULT_BULB_BORDER_COLOR.getRGB()));
 
-        for (int state = 0; state < LEDFigure.MAX_NSTATES; state++) {
+        for (var state = 0; state < LEDFigure.MAX_NSTATES; state++) {
 
             category = new NameDefinedCategory(String.format("State %02d", state + 1));
 
-            addProperty(new StringProperty(String.format(PROP_STATE_LABEL, state),
-                    "Label", category, LEDFigure.DEFAULT_STATE_LABELS[state]));
+            addProperty(new StringProperty(String.format(PROP_STATE_LABEL, state), "Label", category,
+                    LEDFigure.DEFAULT_STATE_LABELS[state]));
             setPropertyVisibleAndSavable(String.format(PROP_STATE_LABEL, state), false, false);
 
-            addProperty(new ColorProperty(String.format(PROP_STATE_COLOR, state),
-                    "Color", category, LEDFigure.DEFAULT_STATE_COLORS[state].getRGB()));
+            addProperty(new ColorProperty(String.format(PROP_STATE_COLOR, state), "Color", category,
+                    LEDFigure.DEFAULT_STATE_COLORS[state].getRGB()));
             setPropertyVisibleAndSavable(String.format(PROP_STATE_COLOR, state), false, false);
 
-            addProperty(new DoubleProperty(String.format(PROP_STATE_VALUE, state),
-                    "Value", category, LEDFigure.DEFAULT_STATE_VALUES[state]));
+            addProperty(new DoubleProperty(String.format(PROP_STATE_VALUE, state), "Value", category,
+                    LEDFigure.DEFAULT_STATE_VALUES[state]));
             setPropertyVisibleAndSavable(String.format(PROP_STATE_VALUE, state), false, false);
         }
     }

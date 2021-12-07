@@ -52,19 +52,19 @@ public class InsertRowAction implements IObjectActionDelegate {
         @Override
         protected Control createDialogArea(Composite parent) {
             getShell().setText("Insert Row");
-            Composite container = (Composite) super.createDialogArea(parent);
+            var container = (Composite) super.createDialogArea(parent);
 
-            Group grpPosition = new Group(container, SWT.NONE);
+            var grpPosition = new Group(container, SWT.NONE);
             grpPosition.setText("Insert");
-            GridData gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
+            var gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
             grpPosition.setLayoutData(gd_grpPosition);
-            FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+            var fillLayout = new FillLayout(SWT.VERTICAL);
             fillLayout.marginHeight = 5;
             fillLayout.marginWidth = 5;
             fillLayout.spacing = 5;
             grpPosition.setLayout(fillLayout);
 
-            final Button beforeRadio = new Button(grpPosition, SWT.RADIO);
+            var beforeRadio = new Button(grpPosition, SWT.RADIO);
             beforeRadio.setText("Before this row");
             beforeRadio.setSelection(true);
             isBefore = true;
@@ -76,7 +76,7 @@ public class InsertRowAction implements IObjectActionDelegate {
                 }
             });
 
-            Button afterRadio = new Button(grpPosition, SWT.RADIO);
+            var afterRadio = new Button(grpPosition, SWT.RADIO);
             afterRadio.setText("After this row");
 
             return container;
@@ -100,17 +100,18 @@ public class InsertRowAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        TableEditPart tableEditPart = getSelectedWidget();
+        var tableEditPart = getSelectedWidget();
         if (tableEditPart.getTable().isEmpty()) {
-            if (tableEditPart.getTable().getColumnCount() == 0)
+            if (tableEditPart.getTable().getColumnCount() == 0) {
                 tableEditPart.getTable().insertColumn(0);
+            }
             tableEditPart.getTable().insertRow(0);
             return;
         }
 
-        InsertRowDialog dialog = new InsertRowDialog(targetPart.getSite().getShell());
+        var dialog = new InsertRowDialog(targetPart.getSite().getShell());
         if (dialog.open() == Dialog.OK) {
-            boolean before = dialog.isBefore();
+            var before = dialog.isBefore();
             tableEditPart.getTable().insertRow(tableEditPart.getMenuTriggeredCell().x + (before ? 0 : 1));
         }
 
@@ -126,8 +127,9 @@ public class InsertRowAction implements IObjectActionDelegate {
     private TableEditPart getSelectedWidget() {
         if (selection.getFirstElement() instanceof TableEditPart) {
             return (TableEditPart) selection.getFirstElement();
-        } else
+        } else {
             return null;
+        }
     }
 
 }

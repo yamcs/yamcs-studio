@@ -52,9 +52,8 @@ public class Ramp extends SimFunction<VDouble> {
         }
         this.step = step;
         range = max - min;
-        lastValue = newVDouble(currentValue, alarmNone(), timeNow(),
-                newDisplay(min, min + range * 0.1, min + range * 0.2, "x", DOUBLE_FORMAT,
-                        min + range * 0.8, min + range * 0.9, max, min, max));
+        lastValue = newVDouble(currentValue, alarmNone(), timeNow(), newDisplay(min, min + range * 0.1,
+                min + range * 0.2, "x", DOUBLE_FORMAT, min + range * 0.8, min + range * 0.9, max, min, max));
     }
 
     /**

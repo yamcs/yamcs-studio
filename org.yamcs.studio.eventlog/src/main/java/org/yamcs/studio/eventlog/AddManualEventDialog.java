@@ -1,7 +1,6 @@
 package org.yamcs.studio.eventlog;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -11,7 +10,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,7 +21,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -44,7 +41,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
     protected AddManualEventDialog(Shell shell, Instant generationTime) {
         super(shell);
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(generationTime, YamcsPlugin.getZoneId());
+        var zdt = ZonedDateTime.ofInstant(generationTime, YamcsPlugin.getZoneId());
         generationTimeValue = GregorianCalendar.from(zdt);
     }
 
@@ -56,20 +53,20 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
-        Composite container = new Composite(area, SWT.NONE);
+        var area = (Composite) super.createDialogArea(parent);
+        var container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout layout = new GridLayout(2, false);
+        var layout = new GridLayout(2, false);
         layout.marginHeight = 20;
         layout.marginWidth = 20;
 
         layout.verticalSpacing = 5;
         container.setLayout(layout);
 
-        Label lbl = new Label(container, SWT.NONE);
+        var lbl = new Label(container, SWT.NONE);
         lbl.setText("Message");
-        GridData gd = new GridData(GridData.FILL_VERTICAL);
+        var gd = new GridData(GridData.FILL_VERTICAL);
         lbl.setLayoutData(gd);
         gd.verticalAlignment = SWT.TOP;
         messageText = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
@@ -78,10 +75,10 @@ public class AddManualEventDialog extends TitleAreaDialog {
         gd.grabExcessHorizontalSpace = true;
         gd.grabExcessVerticalSpace = true;
         messageText.setLayoutData(gd);
-        GC gc = new GC(messageText);
+        var gc = new GC(messageText);
         try {
             gc.setFont(messageText.getFont());
-            FontMetrics fm = gc.getFontMetrics();
+            var fm = gc.getFontMetrics();
             gd.heightHint = 5 * fm.getHeight();
         } finally {
             gc.dispose();
@@ -112,23 +109,23 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        String message = messageText.getText();
+        var message = messageText.getText();
         Instant time = null;
         if (generationDatePicker.hasSelection()) {
             time = generationDatePicker.getSelection().toInstant();
         }
-        String severityString = severityCombo.getItem(severityCombo.getSelectionIndex());
-        EventSeverity severity = EventSeverity.valueOf(severityString);
+        var severityString = severityCombo.getItem(severityCombo.getSelectionIndex());
+        var severity = EventSeverity.valueOf(severityString);
 
-        YamcsClient client = YamcsPlugin.getYamcsClient();
+        var client = YamcsPlugin.getYamcsClient();
 
-        CreateEventRequest.Builder requestb = CreateEventRequest.newBuilder();
+        var requestb = CreateEventRequest.newBuilder();
         requestb.setInstance(YamcsPlugin.getInstance());
         requestb.setMessage(message);
         requestb.setSeverity(severity.toString());
 
         if (time != null) {
-            OffsetDateTime t = time.atOffset(ZoneOffset.UTC);
+            var t = time.atOffset(ZoneOffset.UTC);
             requestb.setTime(Timestamp.newBuilder().setSeconds(t.toEpochSecond()).setNanos(t.getNano()));
         }
 
@@ -137,8 +134,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
                 Display.getDefault().asyncExec(() -> close());
             } else {
                 Display.getDefault().asyncExec(() -> {
-                    MessageBox m = new MessageBox(getShell(),
-                            SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
+                    var m = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
                     m.setText("Error");
                     m.setMessage(exc.getMessage());
                     m.open();

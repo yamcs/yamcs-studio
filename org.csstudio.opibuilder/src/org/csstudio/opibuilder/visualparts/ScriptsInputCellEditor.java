@@ -24,15 +24,14 @@ public class ScriptsInputCellEditor extends AbstractDialogCellEditor {
 
     private AbstractWidgetModel widgetModel;
 
-    public ScriptsInputCellEditor(Composite parent, final AbstractWidgetModel widgetModel, String title) {
+    public ScriptsInputCellEditor(Composite parent, AbstractWidgetModel widgetModel, String title) {
         super(parent, title);
         this.widgetModel = widgetModel;
     }
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        ScriptsInputDialog dialog = new ScriptsInputDialog(parentShell, scriptsInput,
-                dialogTitle, widgetModel);
+        var dialog = new ScriptsInputDialog(parentShell, scriptsInput, dialogTitle, widgetModel);
         if (dialog.open() == Window.OK) {
             scriptsInput = new ScriptsInput(dialog.getScriptDataList());
         }

@@ -62,7 +62,7 @@ public final class GuideUtil {
      * @param guide
      *            The guide (may not be null)
      */
-    public void setGuide(final AbstractWidgetModel model, final GuideModel guide) {
+    public void setGuide(AbstractWidgetModel model, GuideModel guide) {
         assert guide != null;
         if (guide.isHorizontal()) {
             // if the is already attached to another guide, cancel this connection
@@ -91,7 +91,7 @@ public final class GuideUtil {
      * @param horizontal
      *            The orientation of the guide, which should be removed
      */
-    public void removeGuide(final AbstractWidgetModel model, final boolean horizontal) {
+    public void removeGuide(AbstractWidgetModel model, boolean horizontal) {
         if (horizontal) {
             _horizontalGuides.remove(model);
         } else {
@@ -109,7 +109,7 @@ public final class GuideUtil {
      * @return GuideModel The guide to which the given {@link AbstractWidgetModel} is attached in the given orientation
      *         or null.
      */
-    public GuideModel getGuide(final AbstractWidgetModel model, final boolean horizontal) {
+    public GuideModel getGuide(AbstractWidgetModel model, boolean horizontal) {
         if (horizontal) {
             return _horizontalGuides.get(model);
         }

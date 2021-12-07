@@ -53,21 +53,16 @@ public class BoolButtonModel extends AbstractBoolControlModel {
     protected void configureProperties() {
         super.configureProperties();
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SQUARE_BUTTON, "Square Button",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_SQUARE_BUTTON, "Square Button", WidgetPropertyCategory.Display, false));
 
-        addProperty(new BooleanProperty(PROP_SHOW_LED, "Show LED",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_LED, "Show LED", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_LABELS_FROM_PV, "Labels From PV",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_LABELS_FROM_PV, "Labels From PV", WidgetPropertyCategory.Display, false));
 
         removeProperty(PROP_ACTIONS);
-        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
 
         setPropertyVisible(PROP_BOOL_LABEL_POS, false);
     }

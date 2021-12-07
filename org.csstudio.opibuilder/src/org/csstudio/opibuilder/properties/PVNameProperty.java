@@ -31,8 +31,7 @@ public class PVNameProperty extends StringProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public PVNameProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue) {
+    public PVNameProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue) {
         super(prop_id, description, category, defaultValue, false, false);
         setDetailedDescription(description);
     }

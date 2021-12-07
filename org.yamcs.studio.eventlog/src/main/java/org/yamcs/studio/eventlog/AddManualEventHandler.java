@@ -6,11 +6,8 @@ import java.util.Iterator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Yamcs.Event;
 
 public class AddManualEventHandler extends AbstractHandler {
 
@@ -19,26 +16,25 @@ public class AddManualEventHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
+        var part = HandlerUtil.getActivePartChecked(event);
 
-        String action = event.getParameter(EVENT_ADD_ACTION);
+        var action = event.getParameter(EVENT_ADD_ACTION);
 
         if (action.equals(EVENT_ADD)) {
-            AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell());
+            var addManualEventDialog = new AddManualEventDialog(part.getSite().getShell());
             addManualEventDialog.open();
         } else { // action.equals(EVENT_INSERT)
-            ISelection sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+            var sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
             // get selected event and open a manual event dialog using the selected generation time.
             if (sel != null && sel instanceof IStructuredSelection) {
-                IStructuredSelection selection = (IStructuredSelection) sel;
+                var selection = (IStructuredSelection) sel;
                 Iterator<?> it = selection.iterator();
-                Event rec = ((EventLogItem) it.next()).event;
-                Instant generationTime = Instant.ofEpochSecond(
-                        rec.getGenerationTime().getSeconds(), rec.getGenerationTime().getNanos());
+                var rec = ((EventLogItem) it.next()).event;
+                var generationTime = Instant.ofEpochSecond(rec.getGenerationTime().getSeconds(),
+                        rec.getGenerationTime().getNanos());
 
-                AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell(),
-                        generationTime);
+                var addManualEventDialog = new AddManualEventDialog(part.getSite().getShell(), generationTime);
                 addManualEventDialog.open();
             }
         }

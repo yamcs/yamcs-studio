@@ -65,11 +65,11 @@ class TableOfFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         List<Object> argsNoNull = new ArrayList<>(args);
 
         // Remove null columns if there are any
-        boolean removedNull = false;
+        var removedNull = false;
         while (argsNoNull.remove(null)) {
             removedNull = true;
         }
@@ -83,9 +83,9 @@ class TableOfFormulaFunction implements FormulaFunction {
         // problem, so we don't want the warning that at least
         // one column must be fixed size.
         if (removedNull) {
-            boolean allGenerated = true;
+            var allGenerated = true;
             for (Object object : argsNoNull) {
-                Column column = (Column) object;
+                var column = (Column) object;
                 if (!column.isGenerated()) {
                     allGenerated = false;
                 }
@@ -95,7 +95,7 @@ class TableOfFormulaFunction implements FormulaFunction {
             }
         }
 
-        Column[] columns = argsNoNull.toArray(new Column[argsNoNull.size()]);
+        var columns = argsNoNull.toArray(new Column[argsNoNull.size()]);
 
         return VTableFactory.newVTable(columns);
     }

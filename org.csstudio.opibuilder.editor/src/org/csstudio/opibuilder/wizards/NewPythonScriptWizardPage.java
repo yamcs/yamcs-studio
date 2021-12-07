@@ -29,7 +29,7 @@ public class NewPythonScriptWizardPage extends WizardNewFileCreationPage {
 
     @Override
     protected InputStream getInitialContents() {
-        String s = ScriptService.DEFAULT_PYTHONSCRIPT_HEADER;
+        var s = ScriptService.DEFAULT_PYTHONSCRIPT_HEADER;
         InputStream result = new ByteArrayInputStream(s.getBytes());
         return result;
     }

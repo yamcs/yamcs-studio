@@ -12,8 +12,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 public class EventHandler implements MouseListener, MouseMoveListener {
 
     private static enum Tool {
-        HAND,
-        RANGE_SELECT,
+        HAND, RANGE_SELECT,
     }
 
     private Timeline timeline;
@@ -68,7 +67,7 @@ public class EventHandler implements MouseListener, MouseMoveListener {
     }
 
     private void updateCursor(MouseEvent e) {
-        int cursor = SWT.CURSOR_ARROW;
+        var cursor = SWT.CURSOR_ARROW;
         if (grabTime == null && e.y < TimeRuler.LINE_HEIGHT) {
             cursor = SWT.CURSOR_SIZEWE;
         } else if (grabTime != null && tool == Tool.RANGE_SELECT) {

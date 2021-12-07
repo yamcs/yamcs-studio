@@ -13,7 +13,7 @@ public class IVTable implements VTable {
         this.types = types;
         this.names = names;
         this.values = values;
-        int maxCount = 0;
+        var maxCount = 0;
         for (Object array : values) {
             maxCount = Math.max(maxCount, getDataSize(array));
         }

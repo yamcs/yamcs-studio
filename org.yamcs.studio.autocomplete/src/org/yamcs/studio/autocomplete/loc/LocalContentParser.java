@@ -10,7 +10,6 @@
 package org.yamcs.studio.autocomplete.loc;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.studio.autocomplete.AutoCompleteConstants;
@@ -35,19 +34,21 @@ public class LocalContentParser implements IContentParser {
     private String contentToParse;
 
     @Override
-    public boolean accept(final ContentDescriptor desc) {
-        if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX))
+    public boolean accept(ContentDescriptor desc) {
+        if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
+        }
         if (desc.getValue().startsWith(LOCAL_SOURCE)
                 || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && LOCAL_SOURCE.equals(desc.getDefaultDataSource())))
+                        && LOCAL_SOURCE.equals(desc.getDefaultDataSource()))) {
             return true;
+        }
         return false;
     }
 
     @Override
-    public ContentDescriptor parse(final ContentDescriptor desc) {
-        int startIndex = 0;
+    public ContentDescriptor parse(ContentDescriptor desc) {
+        var startIndex = 0;
         contentToParse = desc.getValue();
         if (contentToParse.startsWith(LOCAL_SOURCE)) {
             contentToParse = contentToParse.substring(LOCAL_SOURCE.length());
@@ -66,8 +67,8 @@ public class LocalContentParser implements IContentParser {
         String vType = null;
 
         // handle VType
-        int ltIndex = locContent.indexOf(VTYPE_START);
-        int gtIndex = locContent.indexOf(VTYPE_END);
+        var ltIndex = locContent.indexOf(VTYPE_START);
+        var gtIndex = locContent.indexOf(VTYPE_END);
         if (ltIndex > 0) { // pvname<
             pvName = locContent.substring(0, ltIndex);
             if (gtIndex > 0 && gtIndex > ltIndex) {
@@ -81,12 +82,13 @@ public class LocalContentParser implements IContentParser {
         currentDescriptor.setvType(vType == null ? null : vType.trim());
 
         // handle initialValue (ignore macros)
-        Pattern pattern = Pattern.compile("[^\\$]\\(");
-        Matcher matcher = pattern.matcher(locContent);
+        var pattern = Pattern.compile("[^\\$]\\(");
+        var matcher = pattern.matcher(locContent);
         if (matcher.find()) {
             currentDescriptor.setCompletingInitialValue(true);
-            if (pvName == null) // no VType found
+            if (pvName == null) {
                 pvName = locContent.substring(0, matcher.start() + 1);
+            }
             try {
                 parseInitialValues(locContent.substring(matcher.start() + 1));
             } catch (IOException ex) {
@@ -98,10 +100,11 @@ public class LocalContentParser implements IContentParser {
 
     private void parseInitialValues(String content) throws IOException {
         ExprToken e = null;
-        ExprLexer lexer = new ExprLexer(content);
+        var lexer = new ExprLexer(content);
         while ((e = lexer.next()) != null) {
-            if (e.type == ExprTokenType.Comma)
+            if (e.type == ExprTokenType.Comma) {
                 continue;
+            }
             if (e.type == ExprTokenType.CloseBracket) {
                 currentDescriptor.setComplete(true);
                 break;

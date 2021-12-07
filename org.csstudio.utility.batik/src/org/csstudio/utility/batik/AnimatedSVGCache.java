@@ -27,7 +27,6 @@ import org.apache.batik.anim.timing.TimedElement;
 import org.apache.commons.lang3.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -75,8 +74,8 @@ public class AnimatedSVGCache {
 
     private final Display swtDisplay;
 
-    public AnimatedSVGCache(final Display swtDisplay, final TimedDocumentRoot timedDocumentRoot,
-            final AnimatedSVGCacheListener listener, final int maxSize) {
+    public AnimatedSVGCache(Display swtDisplay, TimedDocumentRoot timedDocumentRoot,
+            AnimatedSVGCacheListener listener, int maxSize) {
         this.timedDocumentRoot = timedDocumentRoot;
         this.listener = listener;
         this.swtDisplay = swtDisplay;
@@ -103,7 +102,7 @@ public class AnimatedSVGCache {
     public void flush() {
         stopProcessing();
         // Asynchronously dispose all cached images
-        final List<Entry> entriesCopy = new ArrayList<>(entries);
+        List<Entry> entriesCopy = new ArrayList<>(entries);
         timeHandlers.clear();
         entries.clear();
         filled = false;
@@ -130,7 +129,7 @@ public class AnimatedSVGCache {
             flush();
         }
         Image image = null;
-        long currentWaitTime = Long.MAX_VALUE;
+        var currentWaitTime = Long.MAX_VALUE;
         if (!initialized) { // Initialize
             for (TimedElement te : timedDocumentRoot.getChildren()) {
                 timeHandlers.put(te, new TimedElementHandler(te));
@@ -165,7 +164,7 @@ public class AnimatedSVGCache {
             entries.get(0).setWaitTime(currentWaitTime);
             return entries.get(0).getImage();
         }
-        ImageData imageData = SVGUtils.toSWT(swtDisplay, awtImage);
+        var imageData = SVGUtils.toSWT(swtDisplay, awtImage);
         image = new Image(swtDisplay, imageData);
         // Avoid first repeat
         if (repeatCount == 0) {
@@ -221,8 +220,8 @@ public class AnimatedSVGCache {
 
             @Override
             public void run() {
-                long currentTime = System.currentTimeMillis();
-                Entry currentEntry = entries.get(currentIndex);
+                var currentTime = System.currentTimeMillis();
+                var currentEntry = entries.get(currentIndex);
                 // use Math.abs() to ensure that the system
                 // time adjust won't cause problem
                 if (Math.abs(currentTime - lastUpdateTime) >= currentEntry.getWaitTime()) {
@@ -242,17 +241,17 @@ public class AnimatedSVGCache {
             scheduledMain = null;
         }
         running = false;
-        long initialDelay = 100;
+        var initialDelay = 100L;
         if (alignedToNearestSecond) {
-            Date now = new Date();
-            Date nearestSecond = DateUtils.round(now, Calendar.SECOND);
+            var now = new Date();
+            var nearestSecond = DateUtils.round(now, Calendar.SECOND);
             initialDelay = nearestSecond.getTime() - now.getTime();
             if (initialDelay < 0) {
                 initialDelay += 1000; // number of milliseconds in 1 seconds
             }
         }
-        scheduledMain = ExecutionService.getInstance().getScheduledExecutorService()
-                .scheduleAtFixedRate(animationTask, initialDelay, 10, TimeUnit.MILLISECONDS);
+        scheduledMain = ExecutionService.getInstance().getScheduledExecutorService().scheduleAtFixedRate(animationTask,
+                initialDelay, 10, TimeUnit.MILLISECONDS);
         running = true;
     }
 
@@ -327,7 +326,7 @@ public class AnimatedSVGCache {
         }
 
         public boolean update(TimedElement te) {
-            float newTime = te.getSimpleTime();
+            var newTime = te.getSimpleTime();
             if (repeated || newTime == lastTime) {
                 return false; // not updated
             }

@@ -17,14 +17,14 @@ import org.eclipse.swt.widgets.Composite;
  */
 public final class DoubleCellEditor extends TextCellEditor {
 
-    public DoubleCellEditor(final Composite parent) {
+    public DoubleCellEditor(Composite parent) {
         super(parent);
     }
 
     @Override
-    protected void doSetValue(final Object value) {
+    protected void doSetValue(Object value) {
         if (value == null) {
-            super.doSetValue(String.valueOf(new Double(0)));
+            super.doSetValue(String.valueOf(Double.valueOf(0)));
         } else {
             super.doSetValue(String.valueOf(value.toString()));
         }

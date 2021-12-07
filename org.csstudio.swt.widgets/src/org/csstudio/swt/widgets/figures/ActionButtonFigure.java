@@ -42,16 +42,13 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -76,8 +73,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * Default label font.
      */
-    public static final Font FONT = CustomMediaFactory.getInstance().getFont(
-            CustomMediaFactory.FONT_ARIAL);
+    public static final Font FONT = CustomMediaFactory.getInstance().getFont(CustomMediaFactory.FONT_ARIAL);
 
     /**
      * The Label for the Button.
@@ -131,11 +127,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             protected void paintBorder(Graphics graphics) {
                 super.paintBorder(graphics);
                 if (ActionButtonFigure.this.hasFocus()) {
-                    Color selection = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION);
+                    var selection = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION);
                     graphics.setForegroundColor(selection);
                     graphics.setBackgroundColor(ColorConstants.white);
 
-                    Rectangle area = getClientArea();
+                    var area = getClientArea();
                     graphics.drawFocus(area.x, area.y, area.width - 1, area.height - 1);
 
                 }
@@ -359,8 +355,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             this.imagePath = path;
             ResourceUtil.pathToInputStreamInJob(path, uiTask, "Load Action Button Icon...", exception -> {
                 image = null;
-                Activator.getLogger().log(Level.WARNING,
-                        "Failed to load image from path" + path, exception);
+                Activator.getLogger().log(Level.WARNING, "Failed to load image from path" + path, exception);
             });
         }
 
@@ -401,7 +396,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * @param s
      *            The text for the button
      */
-    public void setText(final String s) {
+    public void setText(String s) {
         label.setText(s);
     }
 
@@ -420,7 +415,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * @param alignment
      *            The alignment for the text
      */
-    public void setTextAlignment(final int alignment) {
+    public void setTextAlignment(int alignment) {
         this.textAlignment = alignment;
         if (alignment >= 0 && alignment < alignments.length) {
             if (alignments[alignment] == PositionConstants.LEFT || alignments[alignment] == PositionConstants.RIGHT) {
@@ -438,10 +433,10 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     public void calculateTextPosition(int width, int height) {
         if (image != null) {
-            Dimension textDimension = Draw2dSingletonUtil.getTextUtilities().getTextExtents(getText(), getFont());
+            var textDimension = Draw2dSingletonUtil.getTextUtilities().getTextExtents(getText(), getFont());
             // Calculate available space in height and width
-            double hratio = ((double) height - image.getBounds().height) / textDimension.height;
-            double wratio = ((double) width - image.getBounds().width) / textDimension.width;
+            var hratio = ((double) height - image.getBounds().height) / textDimension.height;
+            var wratio = ((double) width - image.getBounds().width) / textDimension.width;
             // Put the label where we have the most space (highest ratio)
             if (wratio > hratio) {
                 // Space for text on the right of the icon
@@ -469,7 +464,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * @param style
      *            false = Push, true=Toggle.
      */
-    public void setToggleStyle(final boolean style) {
+    public void setToggleStyle(boolean style) {
         toggleStyle = style;
 
     }
@@ -494,17 +489,14 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * The border for a button which has different paint based on the button pressed status.
      */
-    class ButtonBorder
-            extends SchemeBorder {
+    class ButtonBorder extends SchemeBorder {
 
         /**
          * Provides for a scheme to represent the borders of clickable figures like buttons. Though similar to the
          * {@link SchemeBorder.Scheme Scheme} it supports an extra set of borders for the pressed states.
          */
-        class ButtonScheme
-                extends Scheme {
-            private Color highlightPressed[] = null,
-                    shadowPressed[] = null;
+        class ButtonScheme extends Scheme {
+            private Color highlightPressed[] = null, shadowPressed[] = null;
 
             /**
              * Constructs a new button scheme where the input colors are the colors for the top-left and bottom-right
@@ -555,8 +547,8 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              */
             @Override
             protected Insets calculateInsets() {
-                int br = 1 + Math.max(getShadow().length, getHighlightPressed().length);
-                int tl = Math.max(getHighlight().length, getShadowPressed().length);
+                var br = 1 + Math.max(getShadow().length, getHighlightPressed().length);
+                var tl = Math.max(getHighlight().length, getShadowPressed().length);
                 return new Insets(tl, tl, br, br);
             }
 
@@ -586,14 +578,14 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                 if (getShadow().length != getHighlightPressed().length) {
                     return false;
                 }
-                Color[] colors = getHighlightPressed();
-                for (int i = 0; i < colors.length; i++) {
+                var colors = getHighlightPressed();
+                for (var i = 0; i < colors.length; i++) {
                     if (colors[i] == null) {
                         return false;
                     }
                 }
                 colors = getShadowPressed();
-                for (int i = 0; i < colors.length; i++) {
+                for (var i = 0; i < colors.length; i++) {
                     if (colors[i] == null) {
                         return false;
                     }
@@ -645,8 +637,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         /**
          * Regular button scheme
          */
-        ButtonScheme BUTTON = new ButtonScheme(
-                new Color[] { ColorConstants.buttonLightest },
+        ButtonScheme BUTTON = new ButtonScheme(new Color[] { ColorConstants.buttonLightest },
                 new Color[] { ColorConstants.black, ColorConstants.buttonDarker });
 
         /**
@@ -672,7 +663,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         @Override
         public void paint(IFigure figure, Graphics graphics, Insets insets) {
 
-            ButtonScheme colorScheme = (ButtonScheme) getScheme();
+            var colorScheme = (ButtonScheme) getScheme();
 
             Color tl[], br[];
             if (isSelected()) {
@@ -688,11 +679,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     }
 
-    class ButtonEventHandler extends MouseMotionListener.Stub
-            implements
-            MouseListener,
-            KeyListener,
-            FocusListener {
+    class ButtonEventHandler extends MouseMotionListener.Stub implements MouseListener, KeyListener, FocusListener {
 
         private int mouseState;
 
@@ -768,11 +755,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             }
             mouseState = me.getState();
 
-            Display display = Display.getCurrent();
+            var display = Display.getCurrent();
             if (display != null) {
-                Control control = display.getFocusControl();
+                var control = display.getFocusControl();
                 if (control != null) {
-                    Runnable beforeAction = (Runnable) control.getData(SWT_KEY_BEFORE_ACTION_RUNNABLE);
+                    var beforeAction = (Runnable) control.getData(SWT_KEY_BEFORE_ACTION_RUNNABLE);
                     if (beforeAction != null) {
                         beforeAction.run();
                     }
@@ -815,11 +802,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
         @Override
         public void mouseEntered(MouseEvent me) {
-            Color backColor = getBackgroundColor();
-            RGB darkColor = GraphicsUtil.mixColors(backColor.getRGB(),
-                    new RGB(255, 255, 255), 0.5);
-            label.setBackgroundColor(CustomMediaFactory.getInstance()
-                    .getColor(darkColor));
+            var backColor = getBackgroundColor();
+            var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(255, 255, 255), 0.5);
+            label.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
         }
 
         @Override

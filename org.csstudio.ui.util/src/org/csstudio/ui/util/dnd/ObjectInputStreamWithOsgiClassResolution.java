@@ -19,8 +19,7 @@ import org.osgi.framework.Bundle;
  */
 public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream {
 
-    public ObjectInputStreamWithOsgiClassResolution(InputStream in)
-            throws IOException {
+    public ObjectInputStreamWithOsgiClassResolution(InputStream in) throws IOException {
         super(in);
     }
 
@@ -51,12 +50,13 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
 
         // Look inside bundle that have the same name as one of the packages
         // of the class
-        String currentBundleName = className;
+        var currentBundleName = className;
         while (currentBundleName.lastIndexOf(".") != -1) {
             currentBundleName = currentBundleName.substring(0, currentBundleName.lastIndexOf('.'));
             Class<?> clazz = findClass(className, currentBundleName);
-            if (clazz != null)
+            if (clazz != null) {
                 return clazz;
+            }
         }
 
         // Can't find it
@@ -68,7 +68,7 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
         Class<?> clazz = resolvedClasses.get(className);
         if (clazz == null) {
             // If it's an array, resolve the class
-            String classNameToResolve = className;
+            var classNameToResolve = className;
             if (ReflectUtil.isArray(className)) {
                 classNameToResolve = ReflectUtil.getComponentType(className);
             }
@@ -77,8 +77,9 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
             clazz = findClass(classNameToResolve);
 
             // If found, cache it
-            if (clazz == null)
+            if (clazz == null) {
                 return null;
+            }
 
             resolvedClasses.put(classNameToResolve, clazz);
 
@@ -91,9 +92,8 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
     }
 
     @Override
-    protected Class<?> resolveClass(final ObjectStreamClass desc)
-            throws IOException, ClassNotFoundException {
-        String name = desc.getName();
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+        var name = desc.getName();
         Class<?> clazz = getClass(name);
         if (clazz == null) {
             throw new ClassNotFoundException(name);

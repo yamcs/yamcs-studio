@@ -68,9 +68,8 @@ public class RulesInputDialog extends TrayDialog {
                 hasTrigger |= pvTuple.trigger;
             }
             if (!hasTrigger) {
-                MessageDialog.openWarning(getShell(), "Warning",
-                        NLS.bind("At least one trigger PV must be selected for the rule:\n{0}",
-                                ruleData.getName().toString()));
+                MessageDialog.openWarning(getShell(), "Warning", NLS.bind(
+                        "At least one trigger PV must be selected for the rule:\n{0}", ruleData.getName().toString()));
                 return;
             }
         }
@@ -82,7 +81,7 @@ public class RulesInputDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
@@ -146,7 +145,7 @@ public class RulesInputDialog extends TrayDialog {
     }
 
     private void refreshToolbarOnSelection() {
-        boolean enabled = !rulesViewer.getSelection().isEmpty();
+        var enabled = !rulesViewer.getSelection().isEmpty();
         removeAction.setEnabled(enabled);
         editAction.setEnabled(enabled);
         copyAction.setEnabled(enabled);
@@ -159,7 +158,7 @@ public class RulesInputDialog extends TrayDialog {
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
             @Override
-            public Object[] getElements(final Object element) {
+            public Object[] getElements(Object element) {
                 return (((List<RuleData>) element).toArray());
             }
         });
@@ -253,8 +252,8 @@ public class RulesInputDialog extends TrayDialog {
             public void run() {
                 var selection = (IStructuredSelection) rulesViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
-                    RuleData ruleData = (RuleData) selection.getFirstElement();
-                    int i = ruleDataList.indexOf(ruleData);
+                    var ruleData = (RuleData) selection.getFirstElement();
+                    var i = ruleDataList.indexOf(ruleData);
                     if (i < ruleDataList.size() - 1) {
                         ruleDataList.remove(ruleData);
                         ruleDataList.add(i + 1, ruleData);

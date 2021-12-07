@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -14,14 +13,12 @@ import org.csstudio.opibuilder.editpolicies.WidgetComponentEditPolicy;
 import org.csstudio.opibuilder.editpolicies.WidgetNodeEditPolicy;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.properties.WidgetPropertyChangeListener;
 import org.csstudio.opibuilder.script.PVTuple;
 import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService;
-import org.csstudio.opibuilder.script.ScriptsInput;
 import org.csstudio.opibuilder.util.BOYPVFactory;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.opibuilder.util.OPIColor;
@@ -29,7 +26,6 @@ import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.visualparts.BorderFactory;
 import org.csstudio.opibuilder.visualparts.TooltipLabel;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
-import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
@@ -63,20 +59,16 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
     public class BaseEditPartActionFilter implements IActionFilter {
         @Override
-        public boolean testAttribute(Object target, String name,
-                String value) {
-            if (name.equals("executionMode") &&
-                    value.equals("EDIT_MODE") &&
-                    getExecutionMode() == ExecutionMode.EDIT_MODE) {
+        public boolean testAttribute(Object target, String name, String value) {
+            if (name.equals("executionMode") && value.equals("EDIT_MODE")
+                    && getExecutionMode() == ExecutionMode.EDIT_MODE) {
                 return true;
             }
-            if (name.equals("executionMode") &&
-                    value.equals("RUN_MODE") &&
-                    getExecutionMode() == ExecutionMode.RUN_MODE) {
+            if (name.equals("executionMode") && value.equals("RUN_MODE")
+                    && getExecutionMode() == ExecutionMode.RUN_MODE) {
                 return true;
             }
-            if (name.equals("hasPVs") &&
-                    value.equals("true")) {
+            if (name.equals("hasPVs") && value.equals("true")) {
                 return (getAllPVs() != null && getAllPVs().size() > 0);
             }
             return false;
@@ -120,11 +112,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             // add listener to all properties.
             for (String id : getWidgetModel().getAllPropertyIDs()) {
 
-                AbstractWidgetProperty property = getWidgetModel().getProperty(
-                        id);
+                var property = getWidgetModel().getProperty(id);
                 if (property != null) {
-                    WidgetPropertyChangeListener listener = new WidgetPropertyChangeListener(
-                            this, property);
+                    var listener = new WidgetPropertyChangeListener(this, property);
                     property.addPropertyChangeListener(listener);
                     propertyListenerMap.put(id, listener);
 
@@ -138,39 +128,34 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
             if (executionMode == ExecutionMode.RUN_MODE) {
                 // hook open display action
-                Set<String> allPropIds = getWidgetModel().getAllPropertyIDs();
+                var allPropIds = getWidgetModel().getAllPropertyIDs();
                 if (allPropIds.contains(AbstractWidgetModel.PROP_ACTIONS)
-                        && allPropIds
-                                .contains(AbstractWidgetModel.PROP_ENABLED)) {
+                        && allPropIds.contains(AbstractWidgetModel.PROP_ENABLED)) {
                     hookMouseClickAction();
                 }
 
                 // script and rules execution
-                ScriptsInput scriptsInput = getWidgetModel().getScriptsInput();
-                scriptDataList = new ArrayList<>(
-                        scriptsInput.getScriptList());
-                for (RuleData rd : getWidgetModel().getRulesInput()
-                        .getRuleDataList()) {
+                var scriptsInput = getWidgetModel().getScriptsInput();
+                scriptDataList = new ArrayList<>(scriptsInput.getScriptList());
+                for (RuleData rd : getWidgetModel().getRulesInput().getRuleDataList()) {
                     scriptDataList.add(rd.convertToScriptData());
                 }
-                for (final ScriptData scriptData : scriptDataList) {
-                    final IPV[] pvArray = new IPV[scriptData.getPVList().size()];
-                    int i = 0;
+                for (ScriptData scriptData : scriptDataList) {
+                    var pvArray = new IPV[scriptData.getPVList().size()];
+                    var i = 0;
                     for (PVTuple pvTuple : scriptData.getPVList()) {
-                        String pvName = pvTuple.pvName;
+                        var pvName = pvTuple.pvName;
                         if (pvMap.containsKey(pvName)) {
                             pvArray[i] = pvMap.get(pvName);
                         } else {
                             try {
-                                IPV pv = BOYPVFactory.createPV(pvName, 2);
+                                var pv = BOYPVFactory.createPV(pvName, 2);
                                 pvMap.put(pvName, pv);
                                 addToConnectionHandler(pvName, pv);
                                 pvArray[i] = pv;
                             } catch (Exception e) {
-                                String message = NLS
-                                        .bind("Unable to connect to PV: {0}! \n"
-                                                + "This may cause error when executing the script.",
-                                                pvName);
+                                var message = NLS.bind("Unable to connect to PV: {0}! \n"
+                                        + "This may cause error when executing the script.", pvName);
                                 OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                                 pvArray[i] = null;
                             }
@@ -178,8 +163,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                         i++;
                     }
 
-                    ScriptService.getInstance().registerScript(scriptData,
-                            AbstractBaseEditPart.this, pvArray);
+                    ScriptService.getInstance().registerScript(scriptData, AbstractBaseEditPart.this, pvArray);
 
                     UIBundlingThread.getInstance().addRunnable(() -> {
                         if (!isActive()) {
@@ -192,10 +176,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                                 try {
                                     pv.start();
                                 } catch (Exception e) {
-                                    OPIBuilderPlugin
-                                            .getLogger()
-                                            .log(Level.WARNING,
-                                                    "Unable to start PV " + pv.getName(), e);
+                                    OPIBuilderPlugin.getLogger().log(Level.WARNING,
+                                            "Unable to start PV " + pv.getName(), e);
                                 }
                             }
                         }
@@ -236,9 +218,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return the border.
      */
     public Border calculateBorder() {
-        return BorderFactory.createBorder(getWidgetModel().getBorderStyle(),
-                getWidgetModel().getBorderWidth(), getWidgetModel().getBorderColor(),
-                getWidgetModel().getName());
+        return BorderFactory.createBorder(getWidgetModel().getBorderStyle(), getWidgetModel().getBorderWidth(),
+                getWidgetModel().getBorderColor(), getWidgetModel().getName());
     }
 
     protected ConnectionHandler createConnectionHandler() {
@@ -247,14 +228,13 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
     @Override
     protected void createEditPolicies() {
-        installEditPolicy(EditPolicy.COMPONENT_ROLE,
-                new WidgetComponentEditPolicy());
+        installEditPolicy(EditPolicy.COMPONENT_ROLE, new WidgetComponentEditPolicy());
         installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new WidgetNodeEditPolicy());
     }
 
     @Override
     protected IFigure createFigure() {
-        IFigure figure = doCreateFigure();
+        var figure = doCreateFigure();
         return figure;
     }
 
@@ -262,15 +242,14 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     public void deactivate() {
         if (isActive()) {
             doDeActivate();
-            ActionsInput input = getWidgetModel().getActionsInput();
+            var input = getWidgetModel().getActionsInput();
             for (AbstractWidgetAction a : input.getActionsList()) {
                 a.dispose();
             }
             super.deactivate();
             // remove listener from all properties.
             for (String id : getWidgetModel().getAllPropertyIDs()) {
-                getWidgetModel().getProperty(id)
-                        .removeAllPropertyChangeListeners();// removePropertyChangeListener(propertyListenerMap.get(id));
+                getWidgetModel().getProperty(id).removeAllPropertyChangeListeners();// removePropertyChangeListener(propertyListenerMap.get(id));
             }
             if (executionMode == ExecutionMode.RUN_MODE) {
                 // remove script listeners before stopping PV.
@@ -305,13 +284,12 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param refreshableFigure
      *            the figure
      */
-    protected synchronized void doRefreshVisuals(final IFigure refreshableFigure) {
+    protected synchronized void doRefreshVisuals(IFigure refreshableFigure) {
         super.refreshVisuals();
-        AbstractWidgetModel model = getWidgetModel();
-        GraphicalEditPart parent = (GraphicalEditPart) getParent();
+        var model = getWidgetModel();
+        var parent = (GraphicalEditPart) getParent();
         if (parent != null) {
-            parent.setLayoutConstraint(this, refreshableFigure, new Rectangle(
-                    model.getLocation(), model.getSize()));
+            parent.setLayoutConstraint(this, refreshableFigure, new Rectangle(model.getLocation(), model.getSize()));
         }
     }
 
@@ -324,16 +302,15 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     public void executeAction(int index) {
         AbstractWidgetAction action;
         try {
-            action = getWidgetModel().getActionsInput().getActionsList()
-                    .get(index);
+            action = getWidgetModel().getActionsInput().getActionsList().get(index);
             if (action != null) {
                 action.run();
             } else {
                 throw new IndexOutOfBoundsException();
             }
         } catch (IndexOutOfBoundsException e) {
-            OPIBuilderPlugin.getLogger().log(Level.SEVERE, NLS.bind("No action at index {0} is configured for {1}",
-                    index, getWidgetModel().getName()));
+            OPIBuilderPlugin.getLogger().log(Level.SEVERE,
+                    NLS.bind("No action at index {0} is configured for {1}", index, getWidgetModel().getName()));
         }
     }
 
@@ -420,16 +397,13 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return the default {@link AbstractWidgetAction} when mouse click this widget.
      */
     public List<AbstractWidgetAction> getHookedActions() {
-        ActionsInput actionsInput = getWidgetModel().getActionsInput();
-        if (actionsInput != null
-                && actionsInput.getActionsList().size() > 0
-                && (actionsInput.isFirstActionHookedUpToWidget() || actionsInput
-                        .isHookUpAllActionsToWidget())) {
+        var actionsInput = getWidgetModel().getActionsInput();
+        if (actionsInput != null && actionsInput.getActionsList().size() > 0
+                && (actionsInput.isFirstActionHookedUpToWidget() || actionsInput.isHookUpAllActionsToWidget())) {
             if (actionsInput.isHookUpAllActionsToWidget()) {
                 return getWidgetModel().getActionsInput().getActionsList();
             } else {
-                return getWidgetModel().getActionsInput().getActionsList()
-                        .subList(0, 1);
+                return getWidgetModel().getActionsInput().getActionsList().subList(0, 1);
             }
 
         }
@@ -467,7 +441,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * Hook the default {@link AbstractOpenOPIAction} with mouse click.
      */
     protected void hookMouseClickAction() {
-        final List<AbstractWidgetAction> actions = getHookedActions();
+        var actions = getHookedActions();
         if (getWidgetModel().isEnabled() && actions != null) {
             figure.setCursor(Cursors.HAND);
             figure.addMouseListener(new MouseListener.Stub() {
@@ -494,20 +468,17 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      *
      * @param figure
      */
-    protected void initFigure(final IFigure figure) {
+    protected void initFigure(IFigure figure) {
         if (figure == null) {
-            throw new IllegalArgumentException(
-                    "Editpart does not provide a figure!");
+            throw new IllegalArgumentException("Editpart does not provide a figure!");
         }
-        Set<String> allPropIds = getWidgetModel().getAllPropertyIDs();
+        var allPropIds = getWidgetModel().getAllPropertyIDs();
         if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_BACKGROUND)) {
-            figure.setBackgroundColor(CustomMediaFactory.getInstance()
-                    .getColor(getWidgetModel().getBackgroundColor()));
+            figure.setBackgroundColor(CustomMediaFactory.getInstance().getColor(getWidgetModel().getBackgroundColor()));
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_FOREGROUND)) {
-            figure.setForegroundColor(CustomMediaFactory.getInstance()
-                    .getColor(getWidgetModel().getForegroundColor()));
+            figure.setForegroundColor(CustomMediaFactory.getInstance().getColor(getWidgetModel().getForegroundColor()));
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_FONT)) {
@@ -515,8 +486,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_VISIBLE)) {
-            figure.setVisible(getExecutionMode() == ExecutionMode.RUN_MODE ? getWidgetModel()
-                    .isVisible() : true);
+            figure.setVisible(getExecutionMode() == ExecutionMode.RUN_MODE ? getWidgetModel().isVisible() : true);
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_ENABLED)) {
@@ -531,10 +501,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         if (allPropIds.contains(AbstractWidgetModel.PROP_BORDER_COLOR)
                 && allPropIds.contains(AbstractWidgetModel.PROP_BORDER_STYLE)
                 && allPropIds.contains(AbstractWidgetModel.PROP_BORDER_WIDTH)) {
-            figure.setBorder(BorderFactory.createBorder(getWidgetModel()
-                    .getBorderStyle(), getWidgetModel().getBorderWidth(),
-                    getWidgetModel().getBorderColor(), getWidgetModel()
-                            .getName()));
+            figure.setBorder(BorderFactory.createBorder(getWidgetModel().getBorderStyle(),
+                    getWidgetModel().getBorderWidth(), getWidgetModel().getBorderColor(), getWidgetModel().getName()));
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_TOOLTIP)) {
@@ -554,7 +522,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     @Override
-    protected final void refreshVisuals() {
+    protected void refreshVisuals() {
         doRefreshVisuals(getFigure());
     }
 
@@ -563,14 +531,10 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             refreshVisuals();
             return false;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_XPOS,
-                refreshVisualHandler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_YPOS,
-                refreshVisualHandler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_WIDTH,
-                refreshVisualHandler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_HEIGHT,
-                refreshVisualHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_XPOS, refreshVisualHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_YPOS, refreshVisualHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_WIDTH, refreshVisualHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_HEIGHT, refreshVisualHandler);
 
         // add connection should not be ignored by widget listener.
         getWidgetModel().getProperty(AbstractWidgetModel.PROP_SRC_CONNECTIONS)
@@ -580,20 +544,16 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                 .addPropertyChangeListener(evt -> refreshTargetConnections());
 
         IWidgetPropertyChangeHandler backColorHandler = (oldValue, newValue, figure) -> {
-            figure.setBackgroundColor(CustomMediaFactory.getInstance()
-                    .getColor(((OPIColor) newValue).getRGBValue()));
+            figure.setBackgroundColor(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
-                backColorHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_BACKGROUND, backColorHandler);
 
         IWidgetPropertyChangeHandler foreColorHandler = (oldValue, newValue, figure) -> {
-            figure.setForegroundColor(CustomMediaFactory.getInstance()
-                    .getColor(((OPIColor) newValue).getRGBValue()));
+            figure.setForegroundColor(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_FOREGROUND,
-                foreColorHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_FOREGROUND, foreColorHandler);
 
         IWidgetPropertyChangeHandler fontHandler = (oldValue, newValue, figure) -> {
             figure.setFont(((OPIFont) newValue).getSWTFont());
@@ -612,12 +572,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
         IWidgetPropertyChangeHandler labelBorderHandler = (oldValue, newValue, figure) -> {
             if (figure.getBorder() instanceof LabeledBorder) {
-                figure.setBorder(BorderFactory.createBorder(
-                        getWidgetModel().getBorderStyle(), getWidgetModel()
-                                .getBorderWidth(),
-                        getWidgetModel()
-                                .getBorderColor(),
-                        getWidgetModel().getName()));
+                figure.setBorder(
+                        BorderFactory.createBorder(getWidgetModel().getBorderStyle(), getWidgetModel().getBorderWidth(),
+                                getWidgetModel().getBorderColor(), getWidgetModel().getName()));
             }
             return true;
         };
@@ -630,8 +587,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             figure.repaint();
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED,
-                enableHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED, enableHandler);
 
         IWidgetPropertyChangeHandler tooltipHandler = (oldValue, newValue, figure) -> {
             if (newValue.toString().equals("")) {
@@ -644,12 +600,11 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             }
             return false;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_TOOLTIP,
-                tooltipHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_TOOLTIP, tooltipHandler);
 
         IWidgetPropertyChangeHandler visibilityHandler = (oldValue, newValue, refreshableFigure) -> {
             boolean visible = (Boolean) newValue;
-            final IFigure figure = getFigure();
+            var figure = getFigure();
             if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                 figure.setVisible(visible);
             } else {
@@ -658,8 +613,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
                     UIJob job = new UIJob("reset") {
                         @Override
-                        public IStatus runInUIThread(
-                                final IProgressMonitor monitor) {
+                        public IStatus runInUIThread(IProgressMonitor monitor) {
                             figure.setVisible(true);
                             return Status.OK_STATUS;
                         }
@@ -669,8 +623,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             }
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_VISIBLE,
-                visibilityHandler);
+        setPropertyChangeHandler(AbstractWidgetModel.PROP_VISIBLE, visibilityHandler);
 
     }
 
@@ -685,8 +638,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param propID
      *            the property id
      */
-    public final void removeAllPropertyChangeHandlers(final String propID) {
-        WidgetPropertyChangeListener listener = propertyListenerMap.get(propID);
+    public void removeAllPropertyChangeHandlers(String propID) {
+        var listener = propertyListenerMap.get(propID);
         if (listener != null) {
             listener.removeAllHandlers();
         }
@@ -761,8 +714,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param border
      */
     protected void setFigureBorder(Border border) {
-        if (getConnectionHandler() != null && (!getConnectionHandler().isConnected() ||
-                getConnectionHandler().isHasNullValue())) {
+        if (getConnectionHandler() != null
+                && (!getConnectionHandler().isConnected() || getConnectionHandler().isHasNullValue())) {
             return;
         }
         getFigure().setBorder(border);
@@ -776,10 +729,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param handler
      *            the property change handler
      */
-    public final void setPropertyChangeHandler(final String propertyId,
-            final IWidgetPropertyChangeHandler handler) {
-        WidgetPropertyChangeListener listener = propertyListenerMap
-                .get(propertyId);
+    public void setPropertyChangeHandler(String propertyId, IWidgetPropertyChangeHandler handler) {
+        var listener = propertyListenerMap.get(propertyId);
         if (listener != null) {
             listener.addHandler(handler);
         }
@@ -891,34 +842,32 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     @Override
-    public ConnectionAnchor getSourceConnectionAnchor(
-            ConnectionEditPart connection) {
+    public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
         if (anchorMap == null) {
             fillAnchorMap();
         }
-        ConnectionModel conn = (ConnectionModel) connection.getModel();
+        var conn = (ConnectionModel) connection.getModel();
         return anchorMap.get(conn.getSourceTerminal());
     }
 
     @Override
     public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-        Point p = new Point(((DropRequest) request).getLocation());
+        var p = new Point(((DropRequest) request).getLocation());
         return getClosestAnchorAt(p);
     }
 
     @Override
-    public ConnectionAnchor getTargetConnectionAnchor(
-            ConnectionEditPart connection) {
+    public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
         if (anchorMap == null) {
             fillAnchorMap();
         }
-        ConnectionModel conn = (ConnectionModel) connection.getModel();
+        var conn = (ConnectionModel) connection.getModel();
         return anchorMap.get(conn.getTargetTerminal());
     }
 
     @Override
     public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-        Point p = new Point(((DropRequest) request).getLocation());
+        var p = new Point(((DropRequest) request).getLocation());
         return getClosestAnchorAt(p);
     }
 
@@ -977,8 +926,8 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         ConnectionAnchor closest = null;
         double min = Long.MAX_VALUE;
         for (ConnectionAnchor anchor : anchorMap.values()) {
-            Point p2 = anchor.getLocation(null);
-            double d = p.getDistance(p2);
+            var p2 = anchor.getLocation(null);
+            var d = p.getDistance(p2);
             if (d < min) {
                 min = d;
                 closest = anchor;
@@ -1024,8 +973,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param value
      * @since 3.1.3
      */
-    public final void setValueInUIThread(final Object value) {
-        UIBundlingThread.getInstance().addRunnable(
-                getViewer().getControl().getDisplay(), () -> setValue(value));
+    public void setValueInUIThread(Object value) {
+        UIBundlingThread.getInstance().addRunnable(getViewer().getControl().getDisplay(), () -> setValue(value));
     }
 }

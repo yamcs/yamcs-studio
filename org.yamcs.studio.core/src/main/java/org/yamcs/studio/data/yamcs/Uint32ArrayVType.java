@@ -22,12 +22,12 @@ public class Uint32ArrayVType extends YamcsVType implements VLongArray {
     public Uint32ArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
-        long[] longValues = new long[size];
-        for (int i = 0; i < longValues.length; i++) {
+        var longValues = new long[size];
+        for (var i = 0; i < longValues.length; i++) {
             longValues[i] = value.getArrayValue(i).getUint32Value() & 0xFFFFFFFFL;
         }
         data = new ArrayLong(longValues);

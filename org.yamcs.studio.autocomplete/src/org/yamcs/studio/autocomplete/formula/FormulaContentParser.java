@@ -36,21 +36,22 @@ public class FormulaContentParser implements IContentParser {
     private String contentToParse;
 
     @Override
-    public boolean accept(final ContentDescriptor desc) {
-        String content = desc.getValue();
-        AutoCompleteType type = desc.getAutoCompleteType();
-        if (type.equals(AutoCompleteType.Formula) && content.startsWith("="))
+    public boolean accept(ContentDescriptor desc) {
+        var content = desc.getValue();
+        var type = desc.getAutoCompleteType();
+        if (type.equals(AutoCompleteType.Formula) && content.startsWith("=")) {
             return true;
+        }
         return false;
     }
 
     @Override
-    public ContentDescriptor parse(final ContentDescriptor desc) {
+    public ContentDescriptor parse(ContentDescriptor desc) {
         currentToken = null;
         // remove first '='
         contentToParse = new String(desc.getValue()).substring(1);
         try {
-            Expr e = ExprParser.parse(contentToParse);
+            var e = ExprParser.parse(contentToParse);
             handleExpr(e);
         } catch (IOException | ExprException e) {
             AutoCompletePlugin.getLogger().log(Level.WARNING, e.getMessage());
@@ -59,8 +60,9 @@ public class FormulaContentParser implements IContentParser {
     }
 
     private void handleExpr(Expr e) {
-        if (e == null)
+        if (e == null) {
             return;
+        }
         switch (e.type) {
         case Variable: // no variables, only functions
             handleVariable((ExprVariable) e);
@@ -88,8 +90,9 @@ public class FormulaContentParser implements IContentParser {
     }
 
     private void handleFunction(ExprFunction f) {
-        if (f.isComplete())
+        if (f.isComplete()) {
             return;
+        }
         currentToken = new FunctionDescriptor();
         currentToken.setValue(f.toString());
         currentToken.setFunctionName(f.getName());
@@ -100,33 +103,37 @@ public class FormulaContentParser implements IContentParser {
             return;
         }
         currentToken.setCurrentArgIndex(f.size() - 1);
-        Expr lastArg = f.getArg(f.size() - 1);
-        if (lastArg == null)
+        var lastArg = f.getArg(f.size() - 1);
+        if (lastArg == null) {
             return;
+        }
         handleExpr(lastArg);
     }
 
     private void handleBinaryOperation(ExprBinaryOperator bo) {
-        Expr rhs = bo.getRHS();
-        if (rhs == null)
+        var rhs = bo.getRHS();
+        if (rhs == null) {
             return;
+        }
         handleExpr(rhs);
     }
 
     private void handleConditionalOperation(ExprConditionalOperator co) {
-        Expr value = co.getValueIfFalse();
-        if (value == null)
+        var value = co.getValueIfFalse();
+        if (value == null) {
             value = co.getValueIfTrue();
-        if (value == null)
+        }
+        if (value == null) {
             return;
+        }
         handleExpr(value);
     }
 
     private void handlePV(ExprPV pv) {
-        String name = pv.getName();
+        var name = pv.getName();
         if (!name.endsWith("'")) {
-            String value = name.substring(1);
-            int startIndex = contentToParse.length() - value.length() + 1;
+            var value = name.substring(1);
+            var startIndex = contentToParse.length() - value.length() + 1;
             currentToken = new FunctionDescriptor();
             currentToken.setValue(value);
             currentToken.setStartIndex(startIndex);
@@ -137,8 +144,8 @@ public class FormulaContentParser implements IContentParser {
 
     private void handleVariable(ExprVariable v) {
         // No variables, only functions
-        String value = v.getName();
-        int startIndex = contentToParse.length() - value.length() + 1;
+        var value = v.getName();
+        var startIndex = contentToParse.length() - value.length() + 1;
         currentToken = new FunctionDescriptor();
         currentToken.setValue(value);
         currentToken.setStartIndex(startIndex);

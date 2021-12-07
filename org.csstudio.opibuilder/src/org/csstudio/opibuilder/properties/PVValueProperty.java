@@ -1,9 +1,9 @@
 package org.csstudio.opibuilder.properties;
 
-import org.yamcs.studio.data.vtype.VType;
-import org.yamcs.studio.data.vtype.ValueFactory;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
+import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.vtype.ValueFactory;
 
 /**
  * The property which contains a {@link IValue}. This property won't be shown in property view.
@@ -32,16 +32,13 @@ public class PVValueProperty extends AbstractWidgetProperty {
         if (value instanceof VType) {
             acceptableValue = (VType) value;
         } else if (value instanceof Double || value instanceof Float || value instanceof Long) {
-            acceptableValue = ValueFactory.newVDouble(
-                    (value instanceof Double ? (Double) value
-                            : (value instanceof Float ? (Float) value : (Long) value)));
+            acceptableValue = ValueFactory.newVDouble((value instanceof Double ? (Double) value
+                    : (value instanceof Float ? (Float) value : (Long) value)));
         } else if (value instanceof String) {
-            acceptableValue = ValueFactory.newVString(
-                    (String) value, ValueFactory.alarmNone(), ValueFactory.timeNow());
-        } else if (value instanceof Integer || value instanceof Short
-                || value instanceof Boolean
+            acceptableValue = ValueFactory.newVString((String) value, ValueFactory.alarmNone(), ValueFactory.timeNow());
+        } else if (value instanceof Integer || value instanceof Short || value instanceof Boolean
                 || value instanceof Byte || value instanceof Character) {
-            int r = 0;
+            var r = 0;
             // TODO: change it to VLong when VLong is added to VType.
             // if(value instanceof Long)
             // r = (Long)value;
@@ -57,8 +54,8 @@ public class PVValueProperty extends AbstractWidgetProperty {
                 r = (Character) value;
             }
 
-            acceptableValue = ValueFactory.newVInt(
-                    r, ValueFactory.alarmNone(), ValueFactory.timeNow(), ValueFactory.displayNone());
+            acceptableValue = ValueFactory.newVInt(r, ValueFactory.alarmNone(), ValueFactory.timeNow(),
+                    ValueFactory.displayNone());
 
         }
 

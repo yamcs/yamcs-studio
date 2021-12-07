@@ -32,19 +32,19 @@ public class VTableFactory {
 
         // Find columns to join
         Map<String, int[]> commonColumnsIndexes = null;
-        for (int nTable = 0; nTable < tables.length; nTable++) {
-            VTable vTable = tables[nTable];
+        for (var nTable = 0; nTable < tables.length; nTable++) {
+            var vTable = tables[nTable];
             if (commonColumnsIndexes == null) {
                 commonColumnsIndexes = new HashMap<>();
-                for (int i = 0; i < vTable.getColumnCount(); i++) {
-                    int[] indexes = new int[tables.length];
+                for (var i = 0; i < vTable.getColumnCount(); i++) {
+                    var indexes = new int[tables.length];
                     indexes[0] = i;
                     commonColumnsIndexes.put(vTable.getColumnName(i), indexes);
 
                 }
             } else {
                 commonColumnsIndexes.keySet().retainAll(columnNames(vTable));
-                for (int i = 0; i < vTable.getColumnCount(); i++) {
+                for (var i = 0; i < vTable.getColumnCount(); i++) {
                     if (commonColumnsIndexes.keySet().contains(vTable.getColumnName(i))) {
                         commonColumnsIndexes.get(vTable.getColumnName(i))[nTable] = i;
                     }
@@ -58,32 +58,32 @@ public class VTableFactory {
 
         List<EqualValueFilter> filters = new ArrayList<>();
         for (Map.Entry<String, int[]> entry : commonColumnsIndexes.entrySet()) {
-            int[] indexes = entry.getValue();
+            var indexes = entry.getValue();
             filters.add(new EqualValueFilter(Arrays.asList(tables), indexes));
         }
 
         // Find rows
-        boolean done = false;
+        var done = false;
         List<BufferInt> rowIndexes = new ArrayList<>();
-        for (int i = 0; i < tables.length; i++) {
+        for (var i = 0; i < tables.length; i++) {
             rowIndexes.add(new BufferInt());
             if (tables[i].getRowCount() == 0) {
                 done = true;
             }
         }
-        int[] currentIndexes = new int[tables.length];
+        var currentIndexes = new int[tables.length];
         while (!done) {
-            boolean match = true;
+            var match = true;
             for (EqualValueFilter filter : filters) {
                 match = match && filter.filterRow(currentIndexes);
             }
             if (match) {
-                for (int i = 0; i < currentIndexes.length; i++) {
+                for (var i = 0; i < currentIndexes.length; i++) {
                     rowIndexes.get(i).addInt(currentIndexes[i]);
                 }
             }
-            boolean needsIncrement = true;
-            int offset = currentIndexes.length - 1;
+            var needsIncrement = true;
+            var offset = currentIndexes.length - 1;
             while (needsIncrement) {
                 currentIndexes[offset]++;
                 if (currentIndexes[offset] == tables[offset].getRowCount()) {
@@ -102,7 +102,7 @@ public class VTableFactory {
         List<String> columnNames = new ArrayList<>();
         List<Class<?>> columnTypes = new ArrayList<>();
         List<Object> columnData = new ArrayList<>();
-        for (int nColumn = 0; nColumn < tables[0].getColumnCount(); nColumn++) {
+        for (var nColumn = 0; nColumn < tables[0].getColumnCount(); nColumn++) {
             columnNames.add(tables[0].getColumnName(nColumn));
             Class<?> type = tables[0].getColumnType(nColumn);
             if (type.isPrimitive()) {
@@ -113,9 +113,9 @@ public class VTableFactory {
                 columnData.add(createView((List<?>) tables[0].getColumnData(nColumn), rowIndexes.get(0)));
             }
         }
-        for (int i = 1; i < tables.length; i++) {
-            VTable vTable = tables[i];
-            for (int nColumn = 0; nColumn < vTable.getColumnCount(); nColumn++) {
+        for (var i = 1; i < tables.length; i++) {
+            var vTable = tables[i];
+            for (var nColumn = 0; nColumn < vTable.getColumnCount(); nColumn++) {
                 if (!commonColumnsIndexes.containsKey(vTable.getColumnName(nColumn))) {
                     columnNames.add(vTable.getColumnName(nColumn));
                     Class<?> type = vTable.getColumnType(nColumn);
@@ -134,13 +134,13 @@ public class VTableFactory {
         return ValueFactory.newVTable(columnTypes, columnNames, columnData);
     }
 
-    public static VTable union(VString extraColumnName, final VStringArray extraColumnData, final VTable... tables) {
+    public static VTable union(VString extraColumnName, VStringArray extraColumnData, VTable... tables) {
         // Prune nulls
-        final List<String> extraColumnDataPruned = new ArrayList<>();
-        final List<VTable> tablesPruned = new ArrayList<>();
+        List<String> extraColumnDataPruned = new ArrayList<>();
+        List<VTable> tablesPruned = new ArrayList<>();
 
-        for (int i = 0; i < tables.length; i++) {
-            VTable table = tables[i];
+        for (var i = 0; i < tables.length; i++) {
+            var table = tables[i];
             if (table != null) {
                 extraColumnDataPruned.add(extraColumnData.getData().get(i));
                 tablesPruned.add(table);
@@ -158,26 +158,26 @@ public class VTableFactory {
             columnNames.add(extraColumnName.getValue());
             columnTypes.add(String.class);
         }
-        int[] tableOffsets = new int[tablesPruned.size()];
-        int currentOffset = 0;
-        for (int k = 0; k < tablesPruned.size(); k++) {
-            VTable table = tablesPruned.get(k);
+        var tableOffsets = new int[tablesPruned.size()];
+        var currentOffset = 0;
+        for (var k = 0; k < tablesPruned.size(); k++) {
+            var table = tablesPruned.get(k);
             if (table == null) {
                 continue;
             }
             tableOffsets[k] = currentOffset;
             currentOffset += table.getRowCount();
             tableColumns.add(VColumn.columnMap(table));
-            for (int i = 0; i < table.getColumnCount(); i++) {
-                String name = table.getColumnName(i);
+            for (var i = 0; i < table.getColumnCount(); i++) {
+                var name = table.getColumnName(i);
                 if (!columnNames.contains(name)) {
                     columnNames.add(name);
                     columnTypes.add(table.getColumnType(i));
                 }
             }
         }
-        final int rowCount = currentOffset;
-        final ListInt offsets = new ArrayInt(tableOffsets);
+        var rowCount = currentOffset;
+        ListInt offsets = new ArrayInt(tableOffsets);
 
         List<Object> columnData = new ArrayList<>();
         if (extraColumnName != null) {
@@ -185,7 +185,7 @@ public class VTableFactory {
 
                 @Override
                 public String get(int index) {
-                    int nTable = ListNumbers.binarySearchValueOrLower(offsets, index);
+                    var nTable = ListNumbers.binarySearchValueOrLower(offsets, index);
                     return extraColumnDataPruned.get(nTable);
                 }
 
@@ -196,10 +196,10 @@ public class VTableFactory {
             });
         }
 
-        for (int i = 1; i < columnNames.size(); i++) {
-            String columnName = columnNames.get(i);
+        for (var i = 1; i < columnNames.size(); i++) {
+            var columnName = columnNames.get(i);
             List<VColumn> columns = new ArrayList<>();
-            for (int j = 0; j < tableColumns.size(); j++) {
+            for (var j = 0; j < tableColumns.size(); j++) {
                 columns.add(tableColumns.get(j).get(columnName));
             }
             columnData.add(VColumn.combineData(columnTypes.get(i), rowCount, offsets, columns));
@@ -217,7 +217,7 @@ public class VTableFactory {
         }
     }
 
-    private static <T> List<T> createView(final List<T> list, final ListInt indexes) {
+    private static <T> List<T> createView(List<T> list, ListInt indexes) {
         return new AbstractList<T>() {
 
             @Override
@@ -232,7 +232,7 @@ public class VTableFactory {
         };
     }
 
-    private static Object createView(final Object columnData, final ListInt indexes) {
+    private static Object createView(Object columnData, ListInt indexes) {
         if (columnData instanceof List) {
             List<?> data = (List<?>) columnData;
             return createView(data, indexes);
@@ -243,9 +243,9 @@ public class VTableFactory {
         }
     }
 
-    public static VTable select(final VTable table, final ListInt indexes) {
-        List<String> names = columnNames(table);
-        List<Class<?>> types = columnTypes(table);
+    public static VTable select(VTable table, ListInt indexes) {
+        var names = columnNames(table);
+        var types = columnTypes(table);
         List<Object> data = new AbstractList<Object>() {
 
             @Override
@@ -269,12 +269,12 @@ public class VTableFactory {
         List<Object> columnData = new ArrayList<>();
         columnData.addAll(Collections.nCopies(columns.length, null));
 
-        int size = -1;
+        var size = -1;
         // First add all the static columns
-        for (int i = 0; i < columns.length; i++) {
-            Column column = columns[i];
+        for (var i = 0; i < columns.length; i++) {
+            var column = columns[i];
             if (!column.isGenerated()) {
-                Object data = column.getData(size);
+                var data = column.getData(size);
                 size = sizeOf(data);
                 columnNames.set(i, column.getName());
                 columnTypes.set(i, column.getType());
@@ -287,10 +287,10 @@ public class VTableFactory {
         }
 
         // Then add all the generated columns
-        for (int i = 0; i < columns.length; i++) {
-            Column column = columns[i];
+        for (var i = 0; i < columns.length; i++) {
+            var column = columns[i];
             if (column.isGenerated()) {
-                Object data = column.getData(size);
+                var data = column.getData(size);
                 columnNames.set(i, column.getName());
                 columnTypes.set(i, column.getType());
                 columnData.set(i, data);
@@ -308,11 +308,11 @@ public class VTableFactory {
         }
     }
 
-    public static Column column(String name, final VNumberArray numericArray) {
+    public static Column column(String name, VNumberArray numericArray) {
         // TODO: for now rewrapping in VDouble. Will need to make table work with
         // all primitive types so that this is not an issue
 
-        final ListDouble data;
+        ListDouble data;
         if (numericArray.getData() instanceof ListDouble) {
             data = (ListDouble) numericArray.getData();
         } else {
@@ -344,8 +344,8 @@ public class VTableFactory {
         };
     }
 
-    public static Column column(String name, final VStringArray stringArray) {
-        final List<String> data = stringArray.getData();
+    public static Column column(String name, VStringArray stringArray) {
+        var data = stringArray.getData();
 
         return new Column(name, String.class, false) {
             @Override
@@ -361,7 +361,7 @@ public class VTableFactory {
         };
     }
 
-    public static Column column(final String name, final ListNumberProvider dataProvider) {
+    public static Column column(String name, ListNumberProvider dataProvider) {
         return new Column(name, dataProvider.getType(), true) {
             @Override
             public Object getData(int size) {
@@ -370,14 +370,14 @@ public class VTableFactory {
         };
     }
 
-    public static ListNumberProvider range(final double min, final double max) {
+    public static ListNumberProvider range(double min, double max) {
         return new Range(min, max);
     }
 
     private static class Range extends ListNumberProvider {
 
-        private final double min;
-        private final double max;
+        private double min;
+        private double max;
 
         public Range(double min, double max) {
             super(double.class);
@@ -391,14 +391,14 @@ public class VTableFactory {
         }
     };
 
-    public static ListNumberProvider step(final double initialValue, final double increment) {
+    public static ListNumberProvider step(double initialValue, double increment) {
         return new Step(initialValue, increment);
     }
 
     private static class Step extends ListNumberProvider {
 
-        private final double initialValue;
-        private final double increment;
+        private double initialValue;
+        private double increment;
 
         public Step(double initialValue, double increment) {
             super(double.class);
@@ -419,7 +419,7 @@ public class VTableFactory {
         List<String> columnNames = new ArrayList<>(vTable.getColumnCount());
         List<Class<?>> columnTypes = new ArrayList<>(vTable.getColumnCount());
         List<Object> columnData = new ArrayList<>(vTable.getColumnCount());
-        for (int nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
+        for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
             columnData.add(extractColumnData(vTable.getColumnData(nCol), row));
@@ -434,7 +434,7 @@ public class VTableFactory {
         List<String> columnNames = new ArrayList<>(vTable.getColumnCount());
         List<Class<?>> columnTypes = new ArrayList<>(vTable.getColumnCount());
         List<Object> columnData = new ArrayList<>(vTable.getColumnCount());
-        for (int nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
+        for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
             columnData.add(createView(vTable.getColumnData(nCol), indexes));
@@ -445,15 +445,15 @@ public class VTableFactory {
     private static Object extractColumnData(Object columnData, int... rows) {
         if (columnData instanceof List) {
             List<Object> data = new ArrayList<>(rows.length);
-            for (int i = 0; i < rows.length; i++) {
-                int j = rows[i];
+            for (var i = 0; i < rows.length; i++) {
+                var j = rows[i];
                 data.add(((List<?>) columnData).get(j));
             }
             return data;
         } else if (columnData instanceof ListNumber) {
-            double[] data = new double[rows.length];
-            for (int i = 0; i < rows.length; i++) {
-                int j = rows[i];
+            var data = new double[rows.length];
+            for (var i = 0; i < rows.length; i++) {
+                var j = rows[i];
                 data[i] = ((ListNumber) columnData).getDouble(j);
             }
             return new ArrayDouble(data);
@@ -461,7 +461,7 @@ public class VTableFactory {
         return null;
     }
 
-    public static List<String> columnNames(final VTable vTable) {
+    public static List<String> columnNames(VTable vTable) {
         return new AbstractList<String>() {
             @Override
             public String get(int index) {
@@ -475,7 +475,7 @@ public class VTableFactory {
         };
     }
 
-    public static List<Class<?>> columnTypes(final VTable vTable) {
+    public static List<Class<?>> columnTypes(VTable vTable) {
         return new AbstractList<Class<?>>() {
             @Override
             public Class<?> get(int index) {
@@ -494,13 +494,13 @@ public class VTableFactory {
     }
 
     public static VTable valueTable(List<String> names, List<? extends VType> values) {
-        int nullValue = values.indexOf(null);
+        var nullValue = values.indexOf(null);
         if (nullValue != -1) {
             values = new ArrayList<>(values);
             if (names != null) {
                 names = new ArrayList<>(names);
             }
-            for (int i = values.size() - 1; i >= 0; i--) {
+            for (var i = values.size() - 1; i >= 0; i--) {
                 if (values.get(i) == null) {
                     values.remove(i);
                     if (names != null) {
@@ -529,12 +529,12 @@ public class VTableFactory {
     }
 
     private static VTable valueNumberTable(List<String> names, List<? extends VType> values) {
-        double[] data = new double[values.size()];
+        var data = new double[values.size()];
         List<String> severity = new ArrayList<>();
         List<String> status = new ArrayList<>();
 
-        for (int i = 0; i < values.size(); i++) {
-            VNumber vNumber = (VNumber) values.get(i);
+        for (var i = 0; i < values.size(); i++) {
+            var vNumber = (VNumber) values.get(i);
             data[i] = vNumber.getValue().doubleValue();
             severity.add(vNumber.getAlarmSeverity().name());
             status.add(vNumber.getAlarmName());
@@ -554,9 +554,9 @@ public class VTableFactory {
     }
 
     public static VTable tableValueFilter(VTable table, String columnName, Object value) {
-        ValueFilter valueFilter = new ValueFilter(table, columnName, value);
-        BufferInt indexes = new BufferInt();
-        for (int i = 0; i < table.getRowCount(); i++) {
+        var valueFilter = new ValueFilter(table, columnName, value);
+        var indexes = new BufferInt();
+        for (var i = 0; i < table.getRowCount(); i++) {
             if (valueFilter.filterRow(i)) {
                 indexes.addInt(i);
             }
@@ -566,9 +566,9 @@ public class VTableFactory {
     }
 
     public static VTable tableStringMatchFilter(VTable table, String columnName, String substring) {
-        StringMatchFilter filter = new StringMatchFilter(table, columnName, substring);
-        BufferInt indexes = new BufferInt();
-        for (int i = 0; i < table.getRowCount(); i++) {
+        var filter = new StringMatchFilter(table, columnName, substring);
+        var indexes = new BufferInt();
+        for (var i = 0; i < table.getRowCount(); i++) {
             if (filter.filterRow(i)) {
                 indexes.addInt(i);
             }
@@ -578,9 +578,9 @@ public class VTableFactory {
     }
 
     public static VTable tableRangeFilter(VTable table, String columnName, Object min, Object max) {
-        RangeFilter valueFilter = new RangeFilter(table, columnName, min, max);
-        BufferInt indexes = new BufferInt();
-        for (int i = 0; i < table.getRowCount(); i++) {
+        var valueFilter = new RangeFilter(table, columnName, min, max);
+        var indexes = new BufferInt();
+        for (var i = 0; i < table.getRowCount(); i++) {
             if (valueFilter.filterRow(i)) {
                 indexes.addInt(i);
             }
@@ -590,7 +590,7 @@ public class VTableFactory {
     }
 
     public static void validateTable(VTable vTable) {
-        for (int i = 0; i < vTable.getColumnCount(); i++) {
+        for (var i = 0; i < vTable.getColumnCount(); i++) {
             Class<?> type = null;
             String name = null;
             Object data = null;
@@ -618,8 +618,8 @@ public class VTableFactory {
                     throw new IllegalArgumentException(
                             "Data for column " + i + " (" + name + ") is not a List<String> (" + data + ")");
                 }
-            } else if (type.equals(double.class) || type.equals(float.class) || type.equals(long.class) ||
-                    type.equals(int.class) || type.equals(short.class) || type.equals(byte.class)) {
+            } else if (type.equals(double.class) || type.equals(float.class) || type.equals(long.class)
+                    || type.equals(int.class) || type.equals(short.class) || type.equals(byte.class)) {
                 if (!(data instanceof ListNumber)) {
                     throw new IllegalArgumentException(
                             "Data for column " + i + " (" + name + ") is not a ListNumber (" + data + ")");

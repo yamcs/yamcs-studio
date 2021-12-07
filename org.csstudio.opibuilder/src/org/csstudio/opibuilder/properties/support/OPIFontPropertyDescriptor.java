@@ -26,12 +26,12 @@ public final class OPIFontPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public OPIFontPropertyDescriptor(final Object id, final String displayName) {
+    public OPIFontPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new OPIFontCellEditor(parent, "Choose Font");
         if (getValidator() != null) {
             editor.setValidator(getValidator());

@@ -6,14 +6,12 @@ import java.util.Iterator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Yamcs.Event;
 
 public class CopyEventDetailsHandler extends AbstractHandler {
 
@@ -27,16 +25,16 @@ public class CopyEventDetailsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+        var sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
         if (sel != null && sel instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) sel;
+            var selection = (IStructuredSelection) sel;
 
-            String property = event.getParameter(EventLog.CMDPARAM_EVENT_PROPERTY);
+            var property = event.getParameter(EventLog.CMDPARAM_EVENT_PROPERTY);
 
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
-                Event rec = ((EventLogItem) it.next()).event;
+                var rec = ((EventLogItem) it.next()).event;
                 switch (property) {
                 case PARAM_MESSAGE:
                     text.append(rec.getMessage());
@@ -48,12 +46,12 @@ public class CopyEventDetailsHandler extends AbstractHandler {
                     text.append(rec.getSource());
                     break;
                 case PARAM_GENTIME:
-                    Instant generationTime = Instant.ofEpochSecond(rec.getGenerationTime().getSeconds(),
+                    var generationTime = Instant.ofEpochSecond(rec.getGenerationTime().getSeconds(),
                             rec.getGenerationTime().getNanos());
                     text.append(generationTime.toString());
                     break;
                 case PARAM_RECTIME:
-                    Instant receptionTime = Instant.ofEpochSecond(rec.getReceptionTime().getSeconds(),
+                    var receptionTime = Instant.ofEpochSecond(rec.getReceptionTime().getSeconds(),
                             rec.getReceptionTime().getNanos());
                     text.append(receptionTime.toString());
                     break;
@@ -72,9 +70,9 @@ public class CopyEventDetailsHandler extends AbstractHandler {
                 }
             }
 
-            Display display = Display.getCurrent();
-            Clipboard clipboard = new Clipboard(display);
-            Transfer[] transfers = new Transfer[] { TextTransfer.getInstance() };
+            var display = Display.getCurrent();
+            var clipboard = new Clipboard(display);
+            var transfers = new Transfer[] { TextTransfer.getInstance() };
 
             clipboard.setContents(new Object[] { text.toString() }, transfers);
             clipboard.dispose();

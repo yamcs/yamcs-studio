@@ -28,13 +28,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 
 public class PredefinedColorsFieldEditor extends FieldEditor {
 
@@ -73,9 +70,9 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private void createTableControl(Composite parent) {
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
+        var tableWrapper = new Composite(parent, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
 
         tableViewer = new TableViewer(tableWrapper, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -84,17 +81,17 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         tableViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-                NamedColor c1 = (NamedColor) e1;
-                NamedColor c2 = (NamedColor) e2;
+                var c1 = (NamedColor) e1;
+                var c2 = (NamedColor) e2;
                 return c1.name.compareToIgnoreCase(c2.name);
             }
         });
 
-        TableViewerColumn colorColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        var colorColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         colorColumn.setLabelProvider(new ColorLabelProvider() {
             @Override
             public Color getColor(Object element) {
-                NamedColor color = (NamedColor) element;
+                var color = (NamedColor) element;
                 return colorCache.computeIfAbsent(color.rgb, resourceManager::createColor);
             }
 
@@ -105,11 +102,11 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         });
         tcl.setColumnData(colorColumn.getColumn(), new ColumnWeightData(50, 50, false));
 
-        TableViewerColumn textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        var textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         textColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                NamedColor color = (NamedColor) element;
+                var color = (NamedColor) element;
                 return color.name;
             }
         });
@@ -118,25 +115,25 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         tableViewer.getTable().addListener(SWT.Selection, evt -> updateButtonStatus());
 
         tableViewer.getTable().addListener(SWT.MouseDoubleClick, e -> {
-            TableItem item = tableViewer.getTable().getItem(new Point(e.x, e.y));
+            var item = tableViewer.getTable().getItem(new Point(e.x, e.y));
             if (item == null) {
                 return;
             }
 
-            Rectangle bounds = item.getBounds();
-            boolean isClickOnCheckbox = e.x < bounds.x;
+            var bounds = item.getBounds();
+            var isClickOnCheckbox = e.x < bounds.x;
             if (isClickOnCheckbox) {
                 return;
             }
 
-            NamedColor selectedRule = getSelectedColor();
+            var selectedRule = getSelectedColor();
             editColor(selectedRule);
             updateButtonStatus();
         });
     }
 
     private Composite getButtonControl(Composite parent) {
-        Composite box = new Composite(parent, SWT.NONE);
+        var box = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().applyTo(box);
 
         addButton = createButton(box, "Add...");
@@ -174,12 +171,12 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private NamedColor getSelectedColor() {
-        List<NamedColor> tableInput = getTableViewerInput();
+        var tableInput = getTableViewerInput();
         if (tableInput == null) {
             return null;
         }
 
-        int index = tableViewer.getTable().getSelectionIndex();
+        var index = tableViewer.getTable().getSelectionIndex();
         if (index < 0) {
             return null;
         }
@@ -192,7 +189,7 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private void updateButtonStatus() {
-        NamedColor selectedRule = getSelectedColor();
+        var selectedRule = getSelectedColor();
         if (selectedRule == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
@@ -203,37 +200,33 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private void removeRule(NamedColor selectedRule) {
-        List<NamedColor> list = getTableViewerInput();
+        var list = getTableViewerInput();
         list.remove(selectedRule);
         tableViewer.refresh();
     }
 
     private void addNewColor() {
-        List<String> existingNames = getTableViewerInput().stream()
-                .map(c -> c.name)
-                .collect(Collectors.toList());
+        List<String> existingNames = getTableViewerInput().stream().map(c -> c.name).collect(Collectors.toList());
 
-        Shell shell = tableViewer.getTable().getShell();
-        NamedColorDialog dialog = new NamedColorDialog(shell, null, existingNames);
+        var shell = tableViewer.getTable().getShell();
+        var dialog = new NamedColorDialog(shell, null, existingNames);
         if (dialog.open() == Window.OK) {
-            NamedColor newColor = dialog.getColor();
-            List<NamedColor> list = getTableViewerInput();
+            var newColor = dialog.getColor();
+            var list = getTableViewerInput();
             list.add(newColor);
             tableViewer.refresh();
         }
     }
 
     private void editColor(NamedColor selectedColor) {
-        List<String> existingNames = getTableViewerInput().stream()
-                .map(c -> c.name)
-                .collect(Collectors.toList());
+        List<String> existingNames = getTableViewerInput().stream().map(c -> c.name).collect(Collectors.toList());
 
-        Shell shell = tableViewer.getTable().getShell();
-        NamedColorDialog dialog = new NamedColorDialog(shell, selectedColor, existingNames);
+        var shell = tableViewer.getTable().getShell();
+        var dialog = new NamedColorDialog(shell, selectedColor, existingNames);
         if (dialog.open() == Window.OK) {
-            NamedColor updatedColor = dialog.getColor();
-            List<NamedColor> list = getTableViewerInput();
-            int indexOfOriginalColor = list.indexOf(selectedColor);
+            var updatedColor = dialog.getColor();
+            var list = getTableViewerInput();
+            var indexOfOriginalColor = list.indexOf(selectedColor);
             list.remove(indexOfOriginalColor);
             list.add(indexOfOriginalColor, updatedColor);
             tableViewer.refresh();
@@ -241,10 +234,10 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private Button createButton(Composite box, String text) {
-        Button button = new Button(box, SWT.PUSH);
+        var button = new Button(box, SWT.PUSH);
         button.setText(text);
 
-        int widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
+        var widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
                 button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
         GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(button);
 
@@ -253,19 +246,19 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
 
     @Override
     protected void doLoad() {
-        List<NamedColor> rules = OPIBuilderPlugin.getDefault().loadColors();
+        var rules = OPIBuilderPlugin.getDefault().loadColors();
         tableViewer.setInput(rules);
     }
 
     @Override
     protected void doLoadDefault() {
-        List<NamedColor> rules = OPIBuilderPlugin.getDefault().loadDefaultColors();
+        var rules = OPIBuilderPlugin.getDefault().loadDefaultColors();
         tableViewer.setInput(rules);
     }
 
     @Override
     protected void doStore() {
-        List<NamedColor> rules = getTableViewerInput();
+        var rules = getTableViewerInput();
         OPIBuilderPlugin.getDefault().storeColors(rules);
     }
 

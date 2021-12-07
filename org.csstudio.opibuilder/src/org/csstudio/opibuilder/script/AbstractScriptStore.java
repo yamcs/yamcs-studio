@@ -20,7 +20,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
 import org.csstudio.opibuilder.model.AbstractLinkingContainerModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.thread.UIBundlingThread;
@@ -28,7 +27,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 
@@ -55,8 +53,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
     private AbstractBaseEditPart editPart;
     private IPV[] pvArray;
 
-    public AbstractScriptStore(final ScriptData scriptData, final AbstractBaseEditPart editpart,
-            final IPV[] pvArray) throws Exception {
+    public AbstractScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
 
         this.scriptData = scriptData;
         this.editPart = editpart;
@@ -107,8 +104,8 @@ public abstract class AbstractScriptStore implements IScriptStore {
                 //
                 // TODO Understand & redo the whole widget model and its quirks for linking containers,
                 // so all the recently added (.. instanceof ..Linking..) can be removed.
-                final AbstractWidgetModel model = editPart.getWidgetModel();
-                final DisplayModel root;
+                var model = editPart.getWidgetModel();
+                DisplayModel root;
                 if (model instanceof AbstractLinkingContainerModel) {
                     root = ((AbstractLinkingContainerModel) model).getDisplayModel();
                 } else {
@@ -126,9 +123,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
         errorInScript = false;
         errorSource = (scriptData instanceof RuleScriptData ? ((RuleScriptData) scriptData).getRuleData().getName()
-                : scriptData.getPath().toString())
-                + " on " +
-                editPart.getWidgetModel().getName();
+                : scriptData.getPath().toString()) + " on " + editPart.getWidgetModel().getName();
 
         if (scriptData instanceof RuleScriptData) {
             compileString(((RuleScriptData) scriptData).getScriptString());
@@ -136,7 +131,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
             compileString(scriptData.getScriptText());
         } else {
             // read file
-            InputStream inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath);
+            var inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath);
 
             // compile
             compileInputStream(inputStream);
@@ -175,7 +170,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
         };
         // register pv listener
-        int i = 0;
+        var i = 0;
         for (IPV pv : pvArray) {
             if (pv == null) {
                 continue;
@@ -209,7 +204,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
     protected abstract void execScript(IPV triggerPV) throws Exception;
 
     private void executeScriptInUIThread(IPV triggerPV) {
-        Display display = editPart.getRoot().getViewer().getControl().getDisplay();
+        var display = editPart.getRoot().getViewer().getControl().getDisplay();
         UIBundlingThread.getInstance().addRunnable(display, () -> {
             // Avoid running a execution that was pending just before a Yamcs disconnect was done.
             // It can still go wrong later on, but with much reduced likelihood.
@@ -222,13 +217,10 @@ public abstract class AbstractScriptStore implements IScriptStore {
                     execScript(triggerPV);
                 } catch (Exception e) {
                     errorInScript = true;
-                    final String notExecuteWarning = "\nThe script or rule will not be executed afterwards. " +
-                            "You can change this setting in script dialog.";
-                    String message = NLS.bind("Error in {0}.{1}\n{2}", new String[] {
-                            errorSource,
-                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning,
-                            e.toString()
-                    });
+                    var notExecuteWarning = "\nThe script or rule will not be executed afterwards. "
+                            + "You can change this setting in script dialog.";
+                    var message = NLS.bind("Error in {0}.{1}\n{2}", new String[] { errorSource,
+                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning, e.toString() });
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             }

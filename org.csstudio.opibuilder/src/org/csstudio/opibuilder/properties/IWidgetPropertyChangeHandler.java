@@ -28,6 +28,5 @@ public interface IWidgetPropertyChangeHandler {
      *            The figure to apply graphical operations to.
      * @return Not used. Reserved for future use.
      */
-    boolean handleChange(Object oldValue, Object newValue,
-            IFigure figure);
+    boolean handleChange(Object oldValue, Object newValue, IFigure figure);
 }

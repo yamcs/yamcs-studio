@@ -46,23 +46,21 @@ public class ArrayFigure extends Figure implements Introspectable {
         @Override
         public void layout(IFigure parent) {
             List<?> children = parent.getChildren();
-            int numChildren = children.size();
-            if (numChildren == 0)
+            var numChildren = children.size();
+            if (numChildren == 0) {
                 return;
-            Rectangle clientArea = parent.getClientArea();
-            Dimension eSize = ((Rectangle) getConstraint((IFigure) children
-                    .get(0))).getSize();
+            }
+            var clientArea = parent.getClientArea();
+            var eSize = ((Rectangle) getConstraint((IFigure) children.get(0))).getSize();
             IFigure child;
-            for (int i = 0; i < numChildren; i++) {
+            for (var i = 0; i < numChildren; i++) {
                 child = (IFigure) children.get(i);
 
                 if (horizontal) {
-                    child.setBounds(new Rectangle(clientArea.x, clientArea.y,
-                            eSize.width, eSize.height));
+                    child.setBounds(new Rectangle(clientArea.x, clientArea.y, eSize.width, eSize.height));
                     clientArea.x += eSize.width;
                 } else {
-                    child.setBounds(new Rectangle(clientArea.x, clientArea.y,
-                            eSize.width, eSize.height));
+                    child.setBounds(new Rectangle(clientArea.x, clientArea.y, eSize.width, eSize.height));
                     clientArea.y += eSize.height;
                 }
             }
@@ -73,31 +71,27 @@ public class ArrayFigure extends Figure implements Introspectable {
         @Override
         protected void paintClientArea(Graphics graphics) {
             super.paintClientArea(graphics);
-            int elementsCount = getChildren().size();
-            if (elementsCount <= 0)
+            var elementsCount = getChildren().size();
+            if (elementsCount <= 0) {
                 return;
-            int grayElementsCount = getIndex() + elementsCount
-                    - getArrayLength();
+            }
+            var grayElementsCount = getIndex() + elementsCount - getArrayLength();
             if (grayElementsCount > 0) {
-                Rectangle clientArea = getClientArea();
+                var clientArea = getClientArea();
                 graphics.pushState();
-                if (useLocalCoordinates())
-                    graphics.translate(getBounds().x + getInsets().left, getBounds().y
-                            + getInsets().top);
+                if (useLocalCoordinates()) {
+                    graphics.translate(getBounds().x + getInsets().left, getBounds().y + getInsets().top);
+                }
                 graphics.setAlpha(40);
                 graphics.setBackgroundColor(ColorConstants.darkGray);
-                IFigure child = (IFigure) getChildren().get(0);
+                var child = (IFigure) getChildren().get(0);
                 if (horizontal) {
-                    int visibleWidth = (elementsCount - grayElementsCount)
-                            * child.getSize().width;
-                    graphics.fillRectangle(clientArea.x + visibleWidth,
-                            clientArea.y, clientArea.width - visibleWidth,
+                    var visibleWidth = (elementsCount - grayElementsCount) * child.getSize().width;
+                    graphics.fillRectangle(clientArea.x + visibleWidth, clientArea.y, clientArea.width - visibleWidth,
                             clientArea.height);
                 } else {
-                    int visibleHeight = (elementsCount - grayElementsCount)
-                            * child.getSize().height;
-                    graphics.fillRectangle(clientArea.x, clientArea.y
-                            + visibleHeight, clientArea.width,
+                    var visibleHeight = (elementsCount - grayElementsCount) * child.getSize().height;
+                    graphics.fillRectangle(clientArea.x, clientArea.y + visibleHeight, clientArea.width,
                             clientArea.height - visibleHeight);
                 }
                 graphics.popState();
@@ -111,8 +105,9 @@ public class ArrayFigure extends Figure implements Introspectable {
             scrollbar.setExtent(getVisibleElementsCount());
             scrollbar.setPageIncrement(getVisibleElementsCount());
             enabilityDirty = true;
-            if (!isEnabled())
+            if (!isEnabled()) {
                 figure.setEnabled(false);
+            }
         }
 
         @Override
@@ -190,20 +185,19 @@ public class ArrayFigure extends Figure implements Introspectable {
             }
         });
 
-        scrollbar
-                .addManualValueChangeListener(new IManualValueChangeListener() {
+        scrollbar.addManualValueChangeListener(new IManualValueChangeListener() {
 
-                    @Override
-                    public void manualValueChanged(double newValue) {
-                        setIndex((int) newValue);
+            @Override
+            public void manualValueChanged(double newValue) {
+                setIndex((int) newValue);
 
-                        // spinner.setValue((int) newValue);
-                    }
-                });
+                // spinner.setValue((int) newValue);
+            }
+        });
 
     }
 
-    public void addIndexChangeListener(final IManualValueChangeListener listener) {
+    public void addIndexChangeListener(IManualValueChangeListener listener) {
         listeners.add(listener);
     }
 
@@ -251,7 +245,7 @@ public class ArrayFigure extends Figure implements Introspectable {
      * @return
      */
     public int calcVisibleElementsCount(Dimension elementSize) {
-        Rectangle clientArea = pane.getClientArea();
+        var clientArea = pane.getClientArea();
         int r;
         if (horizontal) {
             r = Math.round(clientArea.width / elementSize.width);
@@ -259,8 +253,9 @@ public class ArrayFigure extends Figure implements Introspectable {
         } else {
             r = Math.round(clientArea.height / elementSize.height);
         }
-        if (r < 1)
+        if (r < 1) {
             r = 1;
+        }
         return r;
     }
 
@@ -273,21 +268,18 @@ public class ArrayFigure extends Figure implements Introspectable {
      *            size of element.
      * @return
      */
-    public Dimension calcWidgetSizeForElements(int visibleElementsCount,
-            Dimension elementSize) {
+    public Dimension calcWidgetSizeForElements(int visibleElementsCount, Dimension elementSize) {
         int delta1 = 0, delta2 = 0;
-        Rectangle clientArea = pane.getClientArea();
-        Dimension r = getSize();
+        var clientArea = pane.getClientArea();
+        var r = getSize();
         if (horizontal) {
-            delta1 = elementSize.width * visibleElementsCount
-                    - clientArea.width;
+            delta1 = elementSize.width * visibleElementsCount - clientArea.width;
             r.width += delta1;
             delta2 = elementSize.height - clientArea.height;
             r.height += delta2;
 
         } else {
-            delta1 = elementSize.height * visibleElementsCount
-                    - clientArea.height;
+            delta1 = elementSize.height * visibleElementsCount - clientArea.height;
             r.height += delta1;
             delta2 = elementSize.width - clientArea.width;
             r.width += delta2;
@@ -299,8 +291,9 @@ public class ArrayFigure extends Figure implements Introspectable {
      * @return each element widget's size. If no children, return null.
      */
     public Dimension getElementSize() {
-        if (pane.getChildren().isEmpty())
+        if (pane.getChildren().isEmpty()) {
             return null;
+        }
         return ((IFigure) pane.getChildren().get(0)).getSize();
     }
 
@@ -326,25 +319,23 @@ public class ArrayFigure extends Figure implements Introspectable {
      * @see org.eclipse.draw2d.XYLayout#calculatePreferredSize(org.eclipse.draw2d.IFigure, int, int)
      */
     protected Dimension calculatePreferredSize() {
-        Dimension result = new Dimension();
-        Dimension elementSize = getElementSize();
-        if (elementSize == null)
+        var result = new Dimension();
+        var elementSize = getElementSize();
+        if (elementSize == null) {
             return getSize();
+        }
         if (horizontal) {
-            result.height = elementSize.height
-                    + (scrollbar.isVisible() ? SCROLLBAR_WIDTH : 0)
+            result.height = elementSize.height + (scrollbar.isVisible() ? SCROLLBAR_WIDTH : 0)
                     + pane.getInsets().getHeight();
-            if (spinner.isVisible() && result.height < SPINNER_HEIGHT)
+            if (spinner.isVisible() && result.height < SPINNER_HEIGHT) {
                 result.height = SPINNER_HEIGHT;
-            result.width = elementSize.width * getVisibleElementsCount()
-                    + pane.getInsets().getWidth()
+            }
+            result.width = elementSize.width * getVisibleElementsCount() + pane.getInsets().getWidth()
                     + (spinner.isVisible() ? spinnerWidth : 0);
         } else {
             result.width = elementSize.width + pane.getInsets().getWidth()
-                    + (scrollbar.isVisible() ? SCROLLBAR_WIDTH : 0)
-                    + (spinner.isVisible() ? spinnerWidth : 0);
-            result.height = elementSize.height * getVisibleElementsCount()
-                    + pane.getInsets().getHeight();
+                    + (scrollbar.isVisible() ? SCROLLBAR_WIDTH : 0) + (spinner.isVisible() ? spinnerWidth : 0);
+            result.height = elementSize.height * getVisibleElementsCount() + pane.getInsets().getHeight();
         }
 
         result.width += getInsets().getWidth();
@@ -362,24 +353,21 @@ public class ArrayFigure extends Figure implements Introspectable {
     @Override
     protected void layout() {
         super.layout();
-        Rectangle clientArea = getClientArea();
+        var clientArea = getClientArea();
         if (spinner.isVisible()) {
-            spinner.setBounds(new Rectangle(clientArea.x, clientArea.y,
-                    spinnerWidth - 1, SPINNER_HEIGHT));
+            spinner.setBounds(new Rectangle(clientArea.x, clientArea.y, spinnerWidth - 1, SPINNER_HEIGHT));
             clientArea.x += spinnerWidth;
             clientArea.width -= spinnerWidth;
         }
         if (horizontal) {
             if (scrollbar.isVisible()) {
-                scrollbar.setBounds(new Rectangle(clientArea.x, clientArea.y
-                        + clientArea.height - SCROLLBAR_WIDTH,
+                scrollbar.setBounds(new Rectangle(clientArea.x, clientArea.y + clientArea.height - SCROLLBAR_WIDTH,
                         clientArea.width, SCROLLBAR_WIDTH));
                 clientArea.height -= SCROLLBAR_WIDTH;
             }
         } else {
             if (scrollbar.isVisible()) {
-                scrollbar.setBounds(new Rectangle(clientArea.x
-                        + clientArea.width - SCROLLBAR_WIDTH, clientArea.y,
+                scrollbar.setBounds(new Rectangle(clientArea.x + clientArea.width - SCROLLBAR_WIDTH, clientArea.y,
                         SCROLLBAR_WIDTH, clientArea.height));
                 clientArea.width -= SCROLLBAR_WIDTH;
             }
@@ -391,8 +379,9 @@ public class ArrayFigure extends Figure implements Introspectable {
         this.arrayLength = arrayLength;
         scrollbar.setMaximum(arrayLength - 1);
         spinner.setMax(arrayLength - 1);
-        if (arrayLength > 0 && getIndex() >= arrayLength)
+        if (arrayLength > 0 && getIndex() >= arrayLength) {
             setIndex(0);
+        }
         enabilityDirty = true;
         updateElementsEnability();
     }
@@ -417,8 +406,9 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     public void setIndex(int index) {
-        if (index > getArrayLength() - 1 || index < 0)
+        if (index > getArrayLength() - 1 || index < 0) {
             throw new IndexOutOfBoundsException();
+        }
         this.index = index;
         spinner.setValue(index);
         scrollbar.setValue(index);
@@ -429,22 +419,25 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     protected void updateElementsEnability() {
-        if (!enabilityDirty)
+        if (!enabilityDirty) {
             return;
+        }
         enabilityDirty = false;
         if (!pane.isEnabled()) {
-            for (Object child : pane.getChildren())
+            for (Object child : pane.getChildren()) {
                 ((IFigure) child).setEnabled(false);
+            }
             return;
         }
 
-        int elementsCount = pane.getChildren().size();
-        if (elementsCount <= 0)
+        var elementsCount = pane.getChildren().size();
+        if (elementsCount <= 0) {
             return;
-        int grayElementsCount = this.index + elementsCount - getArrayLength();
+        }
+        var grayElementsCount = this.index + elementsCount - getArrayLength();
 
-        for (int i = 0; i < elementsCount; i++) {
-            IFigure child = (IFigure) pane.getChildren().get(i);
+        for (var i = 0; i < elementsCount; i++) {
+            var child = (IFigure) pane.getChildren().get(i);
             child.setEnabled(i < elementsCount - grayElementsCount);
         }
     }

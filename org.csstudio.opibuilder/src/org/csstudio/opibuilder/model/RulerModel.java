@@ -49,7 +49,7 @@ public final class RulerModel implements Serializable {
      * @param isHorizontal
      *            The orientation of this ruler
      */
-    public RulerModel(final boolean isHorizontal) {
+    public RulerModel(boolean isHorizontal) {
         _isHorizontal = isHorizontal;
     }
 
@@ -59,7 +59,7 @@ public final class RulerModel implements Serializable {
      * @param guide
      *            The guide to add
      */
-    public void addGuide(final GuideModel guide) {
+    public void addGuide(GuideModel guide) {
         if (!_guides.contains(guide)) {
             guide.setOrientation(!_isHorizontal);
             _guides.add(guide);
@@ -73,7 +73,7 @@ public final class RulerModel implements Serializable {
      * @param guide
      *            The guide to remove
      */
-    public void removeGuide(final GuideModel guide) {
+    public void removeGuide(GuideModel guide) {
         if (_guides.remove(guide)) {
             _listeners.firePropertyChange(PROPERTY_CHILDREN_CHANGED, null, guide);
         }
@@ -85,7 +85,7 @@ public final class RulerModel implements Serializable {
      * @param listener
      *            The listener to add
      */
-    public void addPropertyChangeListener(final PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         _listeners.addPropertyChangeListener(listener);
     }
 
@@ -95,7 +95,7 @@ public final class RulerModel implements Serializable {
      * @param listener
      *            The listener to remove
      */
-    public void removePropertyChangeListener(final PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         _listeners.removePropertyChangeListener(listener);
     }
 

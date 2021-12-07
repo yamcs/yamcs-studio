@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.YamcsClient;
@@ -110,18 +109,18 @@ public class ConnectionsDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         parent.getShell().setText("Yamcs Server Connections");
 
-        Composite contentArea = (Composite) super.createDialogArea(parent);
-        GridLayout gl = new GridLayout();
+        var contentArea = (Composite) super.createDialogArea(parent);
+        var gl = new GridLayout();
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
         contentArea.setLayout(gl);
 
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), contentArea);
 
-        ToolBar editBar = new ToolBar(contentArea, SWT.NO_FOCUS);
+        var editBar = new ToolBar(contentArea, SWT.NO_FOCUS);
         addServerButton = new ToolItem(editBar, SWT.NONE);
-        addServerButton.setImage(resourceManager
-                .createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_add.png")));
+        addServerButton.setImage(
+                resourceManager.createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_add.png")));
         addServerButton.setToolTipText("Add Connection");
         addServerButton.addListener(SWT.Selection, evt -> {
             addServer();
@@ -140,20 +139,20 @@ public class ConnectionsDialog extends Dialog {
         });
         editBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        SashForm sash = new SashForm(contentArea, SWT.HORIZONTAL);
+        var sash = new SashForm(contentArea, SWT.HORIZONTAL);
         sash.setLayoutData(new GridData(GridData.FILL_BOTH));
         sash.setLayout(new FillLayout());
         createServerPanel(sash, resourceManager);
 
         // Create right side, but wrap it in another composite to force
         // dimensions even when invisible
-        Composite detailPanelWrapper = new Composite(sash, SWT.NONE);
+        var detailPanelWrapper = new Composite(sash, SWT.NONE);
         gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         detailPanelWrapper.setLayout(gl);
         createDetailPanel(detailPanelWrapper, resourceManager);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var gd = new GridData(GridData.FILL_BOTH);
         gd.widthHint = 200;
         detailPanel.setLayoutData(gd);
 
@@ -162,7 +161,7 @@ public class ConnectionsDialog extends Dialog {
         connections.addAll(ConnectionPreferences.getConnections());
         updateState();
 
-        String lastId = ConnectionPreferences.getLastUsedConnection();
+        var lastId = ConnectionPreferences.getLastUsedConnection();
         if (lastId != null) {
             selectConnection(lastId);
         } else {
@@ -174,7 +173,7 @@ public class ConnectionsDialog extends Dialog {
 
     private void updateState() {
         connViewer.refresh();
-        IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
+        var sel = (IStructuredSelection) connViewer.getSelection();
         if (sel.isEmpty()) {
             selectedConfiguration = null;
             detailPanel.setVisible(false);
@@ -214,10 +213,10 @@ public class ConnectionsDialog extends Dialog {
     protected void createButtonsForButtonBar(Composite parent) {
         parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Label filler = new Label(parent, SWT.NONE);
+        var filler = new Label(parent, SWT.NONE);
         filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        GridLayout layout = (GridLayout) parent.getLayout();
+        var layout = (GridLayout) parent.getLayout();
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
 
@@ -231,11 +230,11 @@ public class ConnectionsDialog extends Dialog {
 
         super.createButtonsForButtonBar(parent);
 
-        Button ok = getButton(IDialogConstants.OK_ID);
+        var ok = getButton(IDialogConstants.OK_ID);
         ok.setText("Connect");
         setButtonLayoutData(ok);
 
-        Button cancel = getButton(IDialogConstants.CANCEL_ID);
+        var cancel = getButton(IDialogConstants.CANCEL_ID);
         cancel.setText("Close"); // Because of autosave, 'Close' is more appropriate than 'Cancel'
         setButtonLayoutData(cancel);
     }
@@ -243,9 +242,7 @@ public class ConnectionsDialog extends Dialog {
     private void testConnection(YamcsConfiguration conf) {
         YamcsClient yamcsClient = null;
         try {
-            YamcsClient.Builder clientBuilder = YamcsClient
-                    .newBuilder(conf.getURL())
-                    .withVerifyTls(false);
+            var clientBuilder = YamcsClient.newBuilder(conf.getURL()).withVerifyTls(false);
 
             if (conf.getCaCertFile() != null) {
                 clientBuilder.withCaCertFile(Paths.get(conf.getCaCertFile()));
@@ -261,7 +258,7 @@ public class ConnectionsDialog extends Dialog {
                 String password = null;
                 if (conf.isSecureHint()) { // Avoid unnecessary prompts
                     try {
-                        ISecurePreferences node = getSecureNode();
+                        var node = getSecureNode();
                         password = node.get(conf.getId(), null);
                     } catch (StorageException e) {
                         log.log(Level.SEVERE, "Cannot read password from secure storage", e);
@@ -271,9 +268,9 @@ public class ConnectionsDialog extends Dialog {
                     yamcsClient.login(conf.getUser(), password.toCharArray());
                     yamcsClient.connectWebSocket();
                 } else {
-                    LoginDialog loginDialog = new LoginDialog(getShell(), conf.getURL(), conf.getUser());
+                    var loginDialog = new LoginDialog(getShell(), conf.getURL(), conf.getUser());
                     if (loginDialog.open() == Window.OK) {
-                        String username = loginDialog.getUser();
+                        var username = loginDialog.getUser();
                         password = loginDialog.getPassword();
                         yamcsClient.login(username, password.toCharArray());
                         yamcsClient.connectWebSocket();
@@ -307,7 +304,7 @@ public class ConnectionsDialog extends Dialog {
         // Use Eclipse default location, then it also shows in preference dialog:
         // ~/.eclipse/org.eclipse.equinox.security/secure_storage
         try {
-            ISecurePreferences preferences = SecurePreferencesFactory.open(null, options);
+            var preferences = SecurePreferencesFactory.open(null, options);
             return preferences.node("org.yamcs.connect/passwords");
         } catch (IOException e) {
             log.log(Level.SEVERE, "Cannot access keyring", e);
@@ -316,8 +313,8 @@ public class ConnectionsDialog extends Dialog {
     }
 
     private void selectConnection(String id) {
-        for (int i = 0; i < connViewer.getTable().getItemCount(); i++) {
-            YamcsConfiguration configuration = (YamcsConfiguration) connViewer.getElementAt(i);
+        for (var i = 0; i < connViewer.getTable().getItemCount(); i++) {
+            var configuration = (YamcsConfiguration) connViewer.getElementAt(i);
             if (configuration.getId().equals(id)) {
                 connViewer.setSelection(new StructuredSelection(configuration), true);
                 return;
@@ -332,7 +329,7 @@ public class ConnectionsDialog extends Dialog {
     }
 
     private void addServer() {
-        YamcsConfiguration conf = new YamcsConfiguration();
+        var conf = new YamcsConfiguration();
         conf.setURL("http://localhost:8090");
         conf.setAuthType(AuthType.STANDARD);
         connections.add(conf);
@@ -342,9 +339,9 @@ public class ConnectionsDialog extends Dialog {
     }
 
     private void removeSelectedServer() {
-        IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-        YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
-        boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
+        var sel = (IStructuredSelection) connViewer.getSelection();
+        var conf = (YamcsConfiguration) sel.getFirstElement();
+        var confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
                 "Do you really want to remove the server configuration '" + conf + "'?");
         if (confirmed) {
             connections.remove(conf);
@@ -354,20 +351,20 @@ public class ConnectionsDialog extends Dialog {
     }
 
     private Composite createServerPanel(Composite parent, ResourceManager resourceManager) {
-        Composite serverPanel = new Composite(parent, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var serverPanel = new Composite(parent, SWT.NONE);
+        var gd = new GridData(GridData.FILL_BOTH);
         serverPanel.setLayoutData(gd);
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         serverPanel.setLayout(tcl);
 
-        Image serverImage = resourceManager
+        var serverImage = resourceManager
                 .createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server.gif"));
 
         connViewer = new TableViewer(serverPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         connViewer.getTable().setHeaderVisible(true);
         connViewer.getTable().setLinesVisible(true);
 
-        TableViewerColumn urlColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        var urlColumn = new TableViewerColumn(connViewer, SWT.NONE);
         urlColumn.getColumn().setText("Server URL");
         urlColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -377,29 +374,29 @@ public class ConnectionsDialog extends Dialog {
 
             @Override
             public String getText(Object element) {
-                YamcsConfiguration conf = (YamcsConfiguration) element;
+                var conf = (YamcsConfiguration) element;
                 return conf.getURL();
             }
         });
         tcl.setColumnData(urlColumn.getColumn(), new ColumnPixelData(200));
 
-        TableViewerColumn instanceColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        var instanceColumn = new TableViewerColumn(connViewer, SWT.NONE);
         instanceColumn.getColumn().setText("Instance");
         instanceColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                YamcsConfiguration conf = (YamcsConfiguration) element;
+                var conf = (YamcsConfiguration) element;
                 return conf.getInstance();
             }
         });
         tcl.setColumnData(instanceColumn.getColumn(), new ColumnPixelData(90));
 
-        TableViewerColumn userColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        var userColumn = new TableViewerColumn(connViewer, SWT.NONE);
         userColumn.getColumn().setText("User");
         userColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                YamcsConfiguration conf = (YamcsConfiguration) element;
+                var conf = (YamcsConfiguration) element;
                 if (conf.getAuthType() != AuthType.KERBEROS) {
                     return conf.getUser();
                 } else {
@@ -409,12 +406,12 @@ public class ConnectionsDialog extends Dialog {
         });
         tcl.setColumnData(userColumn.getColumn(), new ColumnPixelData(90));
 
-        TableViewerColumn nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        var nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
         nameColumn.getColumn().setText("Comment");
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                YamcsConfiguration conf = (YamcsConfiguration) element;
+                var conf = (YamcsConfiguration) element;
                 return conf.getComment();
             }
         });
@@ -424,16 +421,16 @@ public class ConnectionsDialog extends Dialog {
         connViewer.setContentProvider(contentProvider);
         connViewer.setInput(contentProvider);
         connViewer.addSelectionChangedListener(evt -> {
-            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            var sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
-                YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
+                var conf = (YamcsConfiguration) sel.getFirstElement();
 
                 yamcsInstanceText.setText(forceString(conf.getInstance()));
                 yamcsURLText.setText(forceString(conf.getURL()));
                 /// caCertFileText.setText(forceString(conf.getCaCertFile()));
                 commentText.setText(forceString(conf.getComment()));
 
-                AuthType authType = (conf.getAuthType() == null) ? AuthType.STANDARD : conf.getAuthType();
+                var authType = (conf.getAuthType() == null) ? AuthType.STANDARD : conf.getAuthType();
                 if (authType == AuthType.STANDARD) {
                     authTypeCombo.select(0);
                     yamcsUserText.setText(forceString(conf.getUser()));
@@ -451,8 +448,8 @@ public class ConnectionsDialog extends Dialog {
         connViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
-                YamcsConfiguration c1 = (YamcsConfiguration) o1;
-                YamcsConfiguration c2 = (YamcsConfiguration) o2;
+                var c1 = (YamcsConfiguration) o1;
+                var c2 = (YamcsConfiguration) o2;
                 if (c1.getURL() != null && c2.getURL() != null) {
                     return c1.getURL().compareTo(c2.getURL());
                 } else {
@@ -466,13 +463,13 @@ public class ConnectionsDialog extends Dialog {
 
     private Composite createDetailPanel(Composite parent, ResourceManager resourceManager) {
         detailPanel = new Composite(parent, SWT.NONE);
-        GridLayout gl = new GridLayout(2, false);
+        var gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         detailPanel.setLayout(gl);
 
-        Label lbl = new Label(detailPanel, SWT.NONE);
+        var lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Server URL:");
-        GridData gd = new GridData();
+        var gd = new GridData();
         gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
         yamcsURLText = new Text(detailPanel, SWT.BORDER);
@@ -608,11 +605,11 @@ public class ConnectionsDialog extends Dialog {
             if (isBlank(yamcsUserText.getText())) {
                 MessageDialog.openError(getShell(), "Cannot set password", "Please fill the user first");
             } else {
-                StorePasswordDialog dialog = new StorePasswordDialog(getShell(), selectedConfiguration);
+                var dialog = new StorePasswordDialog(getShell(), selectedConfiguration);
                 if (dialog.open() == Window.OK) {
-                    String password = dialog.getPassword();
+                    var password = dialog.getPassword();
                     try {
-                        ISecurePreferences node = getSecureNode();
+                        var node = getSecureNode();
                         node.put(selectedConfiguration.getId(), password, true);
                         node.flush();
                         selectedConfiguration.setSecureHint(true);
@@ -632,7 +629,7 @@ public class ConnectionsDialog extends Dialog {
         clearPasswordButton.setLayoutData(gd);
         clearPasswordButton.addListener(SWT.Selection, evt -> {
             try {
-                ISecurePreferences node = getSecureNode();
+                var node = getSecureNode();
                 node.remove(selectedConfiguration.getId());
                 node.flush();
                 selectedConfiguration.setSecureHint(false);
@@ -644,7 +641,7 @@ public class ConnectionsDialog extends Dialog {
             }
         });
 
-        Label stretch = new Label(passwordButtons, SWT.NONE);
+        var stretch = new Label(passwordButtons, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         stretch.setLayoutData(gd);
 
@@ -657,7 +654,7 @@ public class ConnectionsDialog extends Dialog {
             String password = null;
             if (selectedConfiguration.isSecureHint()) { // Avoid unnecessary prompts
                 try {
-                    ISecurePreferences node = getSecureNode();
+                    var node = getSecureNode();
                     password = node.get(selectedConfiguration.getId(), null);
                 } catch (StorageException e) {
                     log.log(Level.SEVERE, "Cannot read password from secure storage", e);
@@ -666,7 +663,7 @@ public class ConnectionsDialog extends Dialog {
             if (password != null && !password.isEmpty()) {
                 selectedConfiguration.setTransientPassword(password);
             } else {
-                LoginDialog loginDialog = new LoginDialog(getShell(), selectedConfiguration.getURL(),
+                var loginDialog = new LoginDialog(getShell(), selectedConfiguration.getURL(),
                         selectedConfiguration.getUser());
                 if (loginDialog.open() == Window.OK) {
                     yamcsUserText.setText(loginDialog.getUser());
@@ -687,7 +684,7 @@ public class ConnectionsDialog extends Dialog {
     }
 
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {
-        Bundle bundle = FrameworkUtil.getBundle(classFromBundle);
+        var bundle = FrameworkUtil.getBundle(classFromBundle);
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
     }
 

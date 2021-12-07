@@ -54,8 +54,7 @@ class SubArrayFormulaFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>> asList(VNumberArray.class, VNumber.class,
-                VNumber.class);
+        return Arrays.<Class<?>> asList(VNumberArray.class, VNumber.class, VNumber.class);
     }
 
     @Override
@@ -74,15 +73,12 @@ class SubArrayFormulaFunction implements FormulaFunction {
             return null;
         }
 
-        VNumberArray numberArray = (VNumberArray) args.get(0);
-        int fromIndex = ((VNumber) args.get(1)).getValue().intValue();
-        int toIndex = ((VNumber) args.get(2)).getValue().intValue();
+        var numberArray = (VNumberArray) args.get(0);
+        var fromIndex = ((VNumber) args.get(1)).getValue().intValue();
+        var toIndex = ((VNumber) args.get(2)).getValue().intValue();
 
-        return newVNumberArray(
-                ListMath.limit(numberArray.getData(), fromIndex, toIndex),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+        return newVNumberArray(ListMath.limit(numberArray.getData(), fromIndex, toIndex),
+                highestSeverityOf(args, false), latestValidTimeOrNowOf(args), displayNone());
     }
 
     private static boolean containsNull(Collection<Object> args) {

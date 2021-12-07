@@ -43,7 +43,7 @@ public final class WorkbenchWindowService {
         return fullScreenRegistry.get(window);
     }
 
-    public static void setToolbarVisibility(final WorkbenchWindow window, final boolean visible) {
+    public static void setToolbarVisibility(WorkbenchWindow window, boolean visible) {
         window.setCoolBarVisible(visible);
         window.setPerspectiveBarVisible(visible);
 

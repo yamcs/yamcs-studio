@@ -21,9 +21,9 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final BoolSwitchModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        BoolSwitchFigure boolSwitch = new BoolSwitchFigure();
+        var boolSwitch = new BoolSwitchFigure();
 
         initializeCommonFigureProperties(boolSwitch, model);
         boolSwitch.setEffect3D(model.isEffect3D());
@@ -43,10 +43,8 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
         // effect 3D
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                BoolSwitchFigure boolSwitch = (BoolSwitchFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var boolSwitch = (BoolSwitchFigure) refreshableFigure;
                 boolSwitch.setEffect3D((Boolean) newValue);
                 return true;
             }

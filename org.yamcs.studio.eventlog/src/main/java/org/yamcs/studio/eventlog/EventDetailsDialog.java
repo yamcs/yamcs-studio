@@ -12,7 +12,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,7 +57,7 @@ public class EventDetailsDialog extends TrayDialog {
         this.eventLog = eventLog;
         updateRecord(rec);
         resourceManager = new LocalResourceManager(JFaceResources.getResources());
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
         infoIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level0s.png"));
         watchIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level1s.png"));
         warningIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level2s.png"));
@@ -124,11 +123,11 @@ public class EventDetailsDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var container = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.numColumns = 1;
         container.setLayout(layout);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var gd = new GridData(GridData.FILL_BOTH);
         container.setLayoutData(gd);
 
         createDetailsSection(container);
@@ -141,12 +140,12 @@ public class EventDetailsDialog extends TrayDialog {
     }
 
     private void createDetailsSection(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var container = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = layout.marginHeight = 0;
         layout.numColumns = 2;
         container.setLayout(layout);
-        GridData data = new GridData(GridData.FILL_BOTH);
+        var data = new GridData(GridData.FILL_BOTH);
         container.setLayoutData(data);
 
         createTextSection(container);
@@ -154,17 +153,17 @@ public class EventDetailsDialog extends TrayDialog {
     }
 
     private void createTextSection(Composite parent) {
-        Composite textContainer = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var textContainer = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.numColumns = 3;
         layout.marginHeight = layout.marginWidth = 0;
         textContainer.setLayout(layout);
         textContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label label = new Label(textContainer, SWT.NONE);
+        var label = new Label(textContainer, SWT.NONE);
         label.setText("Type:");
         typeLabel = new Label(textContainer, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         typeLabel.setLayoutData(gd);
 
@@ -203,7 +202,7 @@ public class EventDetailsDialog extends TrayDialog {
         gd.horizontalSpan = 2;
         sequenceNumberLabel.setLayoutData(gd);
 
-        Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
+        var terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Message:");
@@ -222,25 +221,25 @@ public class EventDetailsDialog extends TrayDialog {
     }
 
     private void createToolbarButtonBar(Composite parent) {
-        Composite comp = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var comp = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = layout.marginHeight = 0;
         // layout.numColumns = 1;
         comp.setLayout(layout);
         comp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
         ((GridData) comp.getLayoutData()).verticalAlignment = SWT.BOTTOM;
 
-        Composite container = new Composite(comp, SWT.NONE);
+        var container = new Composite(comp, SWT.NONE);
         layout = new GridLayout();
         layout.marginWidth = 0;
         layout.marginHeight = 0;
         container.setLayout(layout);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
 
         prevButton = createButton(container, IDialogConstants.BACK_ID, "", false);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         prevButton.setLayoutData(gd);
         prevButton.setToolTipText("Previous Entry");
         prevButton.setImage(resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_prev.png")));
@@ -310,11 +309,11 @@ public class EventDetailsDialog extends TrayDialog {
             }
         }
 
-        YamcsPlugin uiPlugin = YamcsPlugin.getDefault();
-        Instant generationTime = Instant.ofEpochSecond(rec.event.getGenerationTime().getSeconds(),
+        var uiPlugin = YamcsPlugin.getDefault();
+        var generationTime = Instant.ofEpochSecond(rec.event.getGenerationTime().getSeconds(),
                 rec.event.getGenerationTime().getNanos());
         generationTimeLabel.setText(uiPlugin.formatInstant(generationTime));
-        Instant receptionTime = Instant.ofEpochSecond(rec.event.getReceptionTime().getSeconds(),
+        var receptionTime = Instant.ofEpochSecond(rec.event.getReceptionTime().getSeconds(),
                 rec.event.getReceptionTime().getNanos());
         receptionTimeLabel.setText(uiPlugin.formatInstant(receptionTime));
     }

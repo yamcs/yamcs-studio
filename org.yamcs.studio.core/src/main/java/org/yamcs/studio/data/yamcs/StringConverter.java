@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.yamcs.protobuf.Yamcs.AggregateValue;
 import org.yamcs.protobuf.Yamcs.Value;
 
 public class StringConverter {
@@ -41,14 +40,13 @@ public class StringConverter {
         case ENUMERATED:
             return rv.getStringValue();
         case ARRAY:
-            return "[" + rv.getArrayValueList().stream()
-                    .map(value -> toString(value))
-                    .collect(Collectors.joining(", ")) + "]";
+            return "[" + rv.getArrayValueList().stream().map(value -> toString(value)).collect(Collectors.joining(", "))
+                    + "]";
         case AGGREGATE:
-            AggregateValue agg = rv.getAggregateValue();
+            var agg = rv.getAggregateValue();
             return "{" + IntStream.range(0, agg.getNameCount())
-                    .mapToObj(i -> agg.getName(i) + ": " + toString(agg.getValue(i)))
-                    .collect(Collectors.joining(", ")) + "}";
+                    .mapToObj(i -> agg.getName(i) + ": " + toString(agg.getValue(i))).collect(Collectors.joining(", "))
+                    + "}";
         }
         return null;
     }
@@ -58,8 +56,8 @@ public class StringConverter {
     }
 
     public static String arrayToHexString(byte[] b, int offset, int length, boolean beautify) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = offset; i < offset + length; i++) {
+        var sb = new StringBuilder();
+        for (var i = offset; i < offset + length; i++) {
             if (beautify && (i - offset) % 32 == 0) {
                 sb.append(String.format("\n0x%04X: ", (i - offset)));
             }
@@ -86,13 +84,13 @@ public class StringConverter {
 
     public static String byteBufferToHexString(ByteBuffer bb) {
         bb.mark();
-        StringBuilder sb = new StringBuilder();
-        int offset = 0;
+        var sb = new StringBuilder();
+        var offset = 0;
         while (bb.hasRemaining()) {
             if (offset % 33 == 0) {
                 sb.append("\n");
             }
-            String s = Integer.toString(bb.get() & 0xFF, 16);
+            var s = Integer.toString(bb.get() & 0xFF, 16);
             offset++;
             if (s.length() == 1) {
                 sb.append("0");
@@ -116,8 +114,8 @@ public class StringConverter {
             s = "0" + s;
         }
         ;
-        byte[] b = new byte[s.length() >> 1];
-        for (int i = 0; i < b.length; i++) {
+        var b = new byte[s.length() >> 1];
+        for (var i = 0; i < b.length; i++) {
             b[i] = (byte) (Integer.parseInt(s.substring(2 * i, 2 * i + 2), 16) & 0xFF);
         }
         return b;

@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.editor;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
-import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -17,7 +16,7 @@ public class Activator extends AbstractUIPlugin {
 
         OPIBuilderPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
             if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
-                IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
+                var decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
                 decoratorManager.update(SchemaDecorator.ID);
             }
         });

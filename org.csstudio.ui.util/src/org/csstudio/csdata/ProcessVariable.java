@@ -32,9 +32,10 @@ public class ProcessVariable implements Serializable {
      * @param name
      *            Process Variable name
      */
-    public ProcessVariable(final String name) {
-        if (name == null)
+    public ProcessVariable(String name) {
+        if (name == null) {
             throw new IllegalArgumentException("Empty name");
+        }
         this.name = name;
     }
 
@@ -48,8 +49,8 @@ public class ProcessVariable implements Serializable {
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -58,12 +59,14 @@ public class ProcessVariable implements Serializable {
      * Check equality by name
      */
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
-        if (!(obj instanceof ProcessVariable))
+        }
+        if (!(obj instanceof ProcessVariable)) {
             return false;
-        final ProcessVariable other = (ProcessVariable) obj;
+        }
+        var other = (ProcessVariable) obj;
         return name.equals(other.getName());
     }
 

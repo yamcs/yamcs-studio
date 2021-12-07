@@ -13,9 +13,9 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        TankModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        TankFigure tank = new TankFigure();
+        var tank = new TankFigure();
 
         initializeCommonFigureProperties(tank, model);
         tank.setFillColor(model.getFillColor());
@@ -36,7 +36,7 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillColor
         IWidgetPropertyChangeHandler fillColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            TankFigure tank = (TankFigure) refreshableFigure;
+            var tank = (TankFigure) refreshableFigure;
             tank.setFillColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -44,7 +44,7 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillBackgroundColor
         IWidgetPropertyChangeHandler fillBackColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            TankFigure tank = (TankFigure) refreshableFigure;
+            var tank = (TankFigure) refreshableFigure;
             tank.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -52,7 +52,7 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
 
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
-            TankFigure tank = (TankFigure) refreshableFigure;
+            var tank = (TankFigure) refreshableFigure;
             tank.setEffect3D((Boolean) newValue);
             return false;
         };
@@ -60,11 +60,9 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
 
         // Change fill color when "FillColor Alarm Sensitive" property changes.
         IWidgetPropertyChangeHandler fillColorAlarmSensitiveHandler = (oldValue, newValue, refreshableFigure) -> {
-            TankFigure figure = (TankFigure) refreshableFigure;
+            var figure = (TankFigure) refreshableFigure;
             boolean sensitive = (Boolean) newValue;
-            figure.setFillColor(
-                    delegate.calculateAlarmColor(sensitive,
-                            getWidgetModel().getFillColor()));
+            figure.setFillColor(delegate.calculateAlarmColor(sensitive, getWidgetModel().getFillColor()));
             return true;
         };
         setPropertyChangeHandler(TankModel.PROP_FILLCOLOR_ALARM_SENSITIVE, fillColorAlarmSensitiveHandler);
@@ -74,10 +72,9 @@ public final class TankEditPart extends AbstractMarkedWidgetEditPart {
             if (!getWidgetModel().isFillColorAlarmSensitive()) {
                 return false;
             }
-            TankFigure tank = (TankFigure) figure;
-            tank.setFillColor(
-                    delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
-                            getWidgetModel().getFillColor()));
+            var tank = (TankFigure) figure;
+            tank.setFillColor(delegate.calculateAlarmColor(getWidgetModel().isFillColorAlarmSensitive(),
+                    getWidgetModel().getFillColor()));
             return true;
         });
     }

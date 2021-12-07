@@ -45,7 +45,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
     // ************************************************************
 
     @Override
-    public void paintFigure(final Graphics gfx) {
+    public void paintFigure(Graphics gfx) {
         if (disposed || loadingImage || originalImageData == null) {
             return;
         }
@@ -68,8 +68,8 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         if (bounds == null || imgDimension == null) {
             return;
         }
-        Rectangle srcArea = new Rectangle(leftCrop, topCrop, imgDimension.width, imgDimension.height);
-        Rectangle destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
+        var srcArea = new Rectangle(leftCrop, topCrop, imgDimension.width, imgDimension.height);
+        var destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
         if (backgroundColor != null) {
             gfx.setBackgroundColor(backgroundColor);
             gfx.fillRectangle(destArea);
@@ -96,11 +96,10 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         }
         imageData = ImageUtils.applyMatrix(imageData, permutationMatrix);
         if (stretch && bounds != null) {
-            imageData = imageData.scaledTo(bounds.width + leftCrop + rightCrop,
-                    bounds.height + topCrop + bottomCrop);
+            imageData = imageData.scaledTo(bounds.width + leftCrop + rightCrop, bounds.height + topCrop + bottomCrop);
         }
-        int imgWidth = imageData.width;
-        int imgHeight = imageData.height;
+        var imgWidth = imageData.width;
+        var imgHeight = imageData.height;
 
         // Avoid negative number
         topCrop = topCrop > imgHeight ? 0 : topCrop;
@@ -109,9 +108,9 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         rightCrop = (imgWidth - leftCrop - rightCrop) < 0 ? 0 : rightCrop;
 
         // Calculate areas
-        int cropedWidth = imageData.width - leftCrop - rightCrop;
-        int cropedHeight = imageData.height - bottomCrop - topCrop;
-        Dimension newImgDimension = new Dimension(cropedWidth, cropedHeight);
+        var cropedWidth = imageData.width - leftCrop - rightCrop;
+        var cropedHeight = imageData.height - bottomCrop - topCrop;
+        var newImgDimension = new Dimension(cropedWidth, cropedHeight);
         if (imgDimension == null || newImgDimension.width != imgDimension.width
                 || newImgDimension.height != imgDimension.height) {
             fireSizeChanged();
@@ -144,11 +143,10 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         try {
             stream = ResourceUtil.pathToInputStream(imagePath);
             tempImage = new Image(Display.getDefault(), stream);
-            ImageData imgData = tempImage.getImageData();
+            var imgData = tempImage.getImageData();
             setOriginalImageData(imgData);
         } catch (Exception e) {
-            Activator.getLogger().log(Level.WARNING,
-                    "ERROR in loading PNG image " + imagePath, e);
+            Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
         } finally {
             try {
                 if (stream != null) {
@@ -158,8 +156,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                     tempImage.dispose();
                 }
             } catch (IOException e) {
-                Activator.getLogger().log(Level.WARNING,
-                        "ERROR in closing PNG image stream ", e);
+                Activator.getLogger().log(Level.WARNING, "ERROR in closing PNG image stream ", e);
             }
         }
     }
@@ -185,8 +182,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                 }
                 loadingImage = false;
                 // fireSymbolImageLoaded();
-                Activator.getLogger().log(Level.WARNING,
-                        "ERROR in loading PNG image " + imagePath, exception);
+                Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, exception);
             }
         });
     }
@@ -199,7 +195,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                     Image tempImage = null;
                     try {
                         tempImage = new Image(Display.getDefault(), stream);
-                        ImageData imgData = tempImage.getImageData();
+                        var imgData = tempImage.getImageData();
                         setOriginalImageData(imgData);
                     } finally {
                         try {
@@ -208,8 +204,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                                 tempImage.dispose();
                             }
                         } catch (IOException e) {
-                            Activator.getLogger().log(Level.WARNING,
-                                    "ERROR in closing PNG image stream ", e);
+                            Activator.getLogger().log(Level.WARNING, "ERROR in closing PNG image stream ", e);
                         }
                     }
                     loadingImage = false;
@@ -217,8 +212,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                 }
             }
         };
-        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask,
-                "Loading PNG Image...", errorHandler);
+        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading PNG Image...", errorHandler);
     }
 
 }

@@ -49,8 +49,7 @@ public class DSFunctionRegistry {
      * @return the names of the registered function sets
      */
     public Set<String> listFunctionSets() {
-        return Collections
-                .unmodifiableSet(new HashSet<>(functionSets.keySet()));
+        return Collections.unmodifiableSet(new HashSet<>(functionSets.keySet()));
     }
 
     /**

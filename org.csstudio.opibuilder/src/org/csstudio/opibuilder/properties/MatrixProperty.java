@@ -17,8 +17,8 @@ public class MatrixProperty extends AbstractWidgetProperty {
      */
     public static final String XML_ELEMENT_COLUMN = "col";
 
-    public MatrixProperty(String prop_id, String description,
-            WidgetPropertyCategory category, double[][] defaultValue) {
+    public MatrixProperty(String prop_id, String description, WidgetPropertyCategory category,
+            double[][] defaultValue) {
         super(prop_id, description, category, defaultValue);
     }
 
@@ -41,11 +41,11 @@ public class MatrixProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        double[][] data = (double[][]) propertyValue;
+        var data = (double[][]) propertyValue;
         for (double row[] : data) {
-            Element rowElement = new Element(XML_ELEMENT_ROW);
+            var rowElement = new Element(XML_ELEMENT_ROW);
             for (double e : row) {
-                Element colElement = new Element(XML_ELEMENT_COLUMN);
+                var colElement = new Element(XML_ELEMENT_COLUMN);
                 colElement.setText(Double.toString(e));
                 rowElement.addContent(colElement);
             }
@@ -59,16 +59,14 @@ public class MatrixProperty extends AbstractWidgetProperty {
         if (rowChildren.size() == 0) {
             return null;
         }
-        double[][] result = new double[rowChildren.size()][((Element) rowChildren
-                .get(0)).getChildren().size()];
+        var result = new double[rowChildren.size()][((Element) rowChildren.get(0)).getChildren().size()];
         int i = 0, j = 0;
         for (Object oe : rowChildren) {
-            Element re = (Element) oe;
+            var re = (Element) oe;
             if (re.getName().equals(XML_ELEMENT_ROW)) {
                 j = 0;
                 for (Object oc : re.getChildren()) {
-                    result[i][j++] = Double.parseDouble(((Element) oc)
-                            .getText());
+                    result[i][j++] = Double.parseDouble(((Element) oc).getText());
                 }
                 i++;
             }

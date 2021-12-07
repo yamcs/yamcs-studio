@@ -119,14 +119,13 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+        var composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new GridLayout(1, false));
         if (message != null) {
-            Label label = new Label(composite, SWT.WRAP);
+            var label = new Label(composite, SWT.WRAP);
             label.setText(message);
-            GridData data = new GridData(GridData.GRAB_HORIZONTAL
-                    | GridData.HORIZONTAL_ALIGN_FILL
-                    | GridData.VERTICAL_ALIGN_CENTER);
+            var data = new GridData(
+                    GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
             data.horizontalSpan = 2;
             data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
             label.setLayoutData(data);
@@ -134,9 +133,8 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
 
         // The New Project and New Folder actions will be shown if there are
         // no file extensions, i.e. if the dialog is opened to select a folder.
-        boolean showNewContainerActions = (filters == null || filters.length == 0);
-        resourceSelectionGroup = new ResourceSelectionGroup(composite, this,
-                filters, showNewContainerActions);
+        var showNewContainerActions = (filters == null || filters.length == 0);
+        resourceSelectionGroup = new ResourceSelectionGroup(composite, this, filters, showNewContainerActions);
 
         var wrapper = new Group(composite, SWT.NONE);
         wrapper.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -178,8 +176,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
             public void widgetSelected(SelectionEvent e) {
                 relative = checkBox.getSelection();
                 if (relative && path != null) {
-                    resourcePathText.setText(ResourceUtil.buildRelativePath(
-                            refPath, path).toString());
+                    resourcePathText.setText(ResourceUtil.buildRelativePath(refPath, path).toString());
                 } else {
                     resourcePathText.setText(path.toString());
                 }
@@ -224,8 +221,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
             return;
         }
         if (relative) {
-            resourcePathText.setText(ResourceUtil.buildRelativePath(refPath,
-                    path).toString());
+            resourcePathText.setText(ResourceUtil.buildRelativePath(refPath, path).toString());
         } else {
             resourcePathText.setText(path.toString());
         }
@@ -241,19 +237,15 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
             if (GIF_EXT.equalsIgnoreCase(imgPath.getFileExtension())
                     || PNG_EXT.equalsIgnoreCase(imgPath.getFileExtension())) {
                 var inputStream = ResourceUtil.pathToInputStream(imgPath);
-                ImageData tmpData = new ImageData(inputStream);
+                var tmpData = new ImageData(inputStream);
 
-                float ratio = (float) tmpData.width / tmpData.height;
+                var ratio = (float) tmpData.width / tmpData.height;
                 if (ratio >= 1 && tmpData.width > MAX_ICON_WIDTH) {
-                    float ratio2 = (float) MAX_ICON_WIDTH / tmpData.width;
-                    data = tmpData.scaledTo(
-                            MAX_ICON_WIDTH,
-                            Math.round((float) tmpData.height * ratio2));
+                    var ratio2 = (float) MAX_ICON_WIDTH / tmpData.width;
+                    data = tmpData.scaledTo(MAX_ICON_WIDTH, Math.round((float) tmpData.height * ratio2));
                 } else if (ratio < 1 && tmpData.height > MAX_ICON_HEIGHT) {
-                    float ratio2 = (float) MAX_ICON_HEIGHT / tmpData.height;
-                    data = tmpData.scaledTo(
-                            Math.round((float) tmpData.width * ratio2),
-                            MAX_ICON_HEIGHT);
+                    var ratio2 = (float) MAX_ICON_HEIGHT / tmpData.height;
+                    data = tmpData.scaledTo(Math.round((float) tmpData.width * ratio2), MAX_ICON_HEIGHT);
                 } else {
                     data = tmpData;
                 }
@@ -261,14 +253,12 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
                 var inputStream = ResourceUtil.pathToInputStream(imgPath);
                 data = SVGUtils.loadSVG(imgPath, inputStream, MAX_ICON_WIDTH, MAX_ICON_HEIGHT);
             }
-            if (data != null && data.width <= MAX_ICON_WIDTH
-                    && data.height <= MAX_ICON_HEIGHT && imgOverview != null) {
+            if (data != null && data.width <= MAX_ICON_WIDTH && data.height <= MAX_ICON_HEIGHT && imgOverview != null) {
                 var img = new Image(Display.getCurrent(), data);
                 imgOverview.setImage(img);
             }
         } catch (Exception e) {
-            OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                    "Error loading file overview: " + imgPath, e);
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Error loading file overview: " + imgPath, e);
         }
     }
 }

@@ -13,8 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -79,9 +77,9 @@ public final class ResourceUtil {
      *            The name of the folder
      * @return int The result-status
      */
-    public int createFolder(final IContainer parentContainer, final String folderName) {
+    public int createFolder(IContainer parentContainer, String folderName) {
         if (folderName != null && folderName.trim().length() > 0) {
-            IFolder folder = parentContainer.getFolder(new Path(folderName));
+            var folder = parentContainer.getFolder(new Path(folderName));
             if (folder.exists()) {
                 return FOLDEREXISTS;
             } else {
@@ -104,9 +102,9 @@ public final class ResourceUtil {
      *            The name of the project
      * @return int The result-status
      */
-    public int createProject(final String projectName) {
+    public int createProject(String projectName) {
         if (projectName != null && projectName.trim().length() > 0) {
-            IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+            var project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
             if (project.exists()) {
                 return PROJECTEXISTS;
             } else {

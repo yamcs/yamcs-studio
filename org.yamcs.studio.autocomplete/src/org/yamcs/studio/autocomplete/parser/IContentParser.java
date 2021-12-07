@@ -21,12 +21,12 @@ public interface IContentParser {
     /**
      * @return <code>true</code> if this parser handles the described content.
      */
-    public boolean accept(final ContentDescriptor desc);
+    public boolean accept(ContentDescriptor desc);
 
     /**
      * @return {@link ContentDescriptor} to be submitted to providers or parsers if the replay attribute is set to
      *         <code>true</code>.
      */
-    public ContentDescriptor parse(final ContentDescriptor desc);
+    public ContentDescriptor parse(ContentDescriptor desc);
 
 }

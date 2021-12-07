@@ -49,8 +49,8 @@ public class SpinnerFigure extends Figure implements Introspectable {
         private String description;
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (NumericFormatType f : values()) {
                 result[i++] = f.toString();
             }
@@ -95,14 +95,15 @@ public class SpinnerFigure extends Figure implements Introspectable {
         addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent ke) {
-                if (ke.keycode == SWT.ARROW_DOWN)
+                if (ke.keycode == SWT.ARROW_DOWN) {
                     stepDown();
-                else if (ke.keycode == SWT.ARROW_UP)
+                } else if (ke.keycode == SWT.ARROW_UP) {
                     stepUp();
-                else if (ke.keycode == SWT.PAGE_UP)
+                } else if (ke.keycode == SWT.PAGE_UP) {
                     pageUp();
-                else if (ke.keycode == SWT.PAGE_DOWN)
+                } else if (ke.keycode == SWT.PAGE_DOWN) {
                     pageDown();
+                }
             }
 
             @Override
@@ -136,7 +137,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
                     graphics.setForegroundColor(ColorConstants.black);
                     graphics.setBackgroundColor(ColorConstants.white);
 
-                    Rectangle area = getClientArea();
+                    var area = getClientArea();
                     graphics.drawFocus(area.x, area.y, area.width - 1, area.height - 1);
                 }
             }
@@ -146,13 +147,14 @@ public class SpinnerFigure extends Figure implements Introspectable {
         labelFigure.addMouseListener(new MouseListener.Stub() {
             @Override
             public void mousePressed(MouseEvent me) {
-                if (!hasFocus())
+                if (!hasFocus()) {
                     requestFocus();
+                }
             }
         });
         add(labelFigure);
 
-        ButtonBorder buttonBorder = new ButtonBorder(new ButtonScheme(new Color[] { ColorConstants.buttonLightest },
+        var buttonBorder = new ButtonBorder(new ButtonScheme(new Color[] { ColorConstants.buttonLightest },
                 new Color[] { ColorConstants.buttonDarkest }));
 
         buttonUp = new ArrowButton();
@@ -163,8 +165,9 @@ public class SpinnerFigure extends Figure implements Introspectable {
             @Override
             public void actionPerformed(ActionEvent event) {
                 stepUp();
-                if (!hasFocus())
+                if (!hasFocus()) {
                     requestFocus();
+                }
             }
         });
         add(buttonUp);
@@ -177,16 +180,18 @@ public class SpinnerFigure extends Figure implements Introspectable {
             @Override
             public void actionPerformed(ActionEvent event) {
                 stepDown();
-                if (!hasFocus())
+                if (!hasFocus()) {
                     requestFocus();
+                }
             }
         });
         add(buttonDown);
     }
 
     public void addManualValueChangeListener(IManualValueChangeListener listener) {
-        if (listener != null)
+        if (listener != null) {
             spinnerListeners.add(listener);
+        }
     }
 
     /**
@@ -195,7 +200,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param newManualValue
      *            the new manual value
      */
-    private void fireManualValueChange(final double newManualValue) {
+    private void fireManualValueChange(double newManualValue) {
 
         for (IManualValueChangeListener l : spinnerListeners) {
             l.manualValueChanged(newManualValue);
@@ -207,10 +212,11 @@ public class SpinnerFigure extends Figure implements Introspectable {
         switch (formatType) {
 
         case EXP:
-            StringBuffer pattern = new StringBuffer(10);
+            var pattern = new StringBuffer(10);
             pattern.append("0.");
-            for (int i = 0; i < precision; ++i)
+            for (var i = 0; i < precision; ++i) {
                 pattern.append('#');
+            }
             pattern.append("E0");
             format = new DecimalFormat(pattern.toString());
             return format.format(value);
@@ -254,14 +260,14 @@ public class SpinnerFigure extends Figure implements Introspectable {
     /**
      * @return the max
      */
-    public final double getMax() {
+    public double getMax() {
         return max;
     }
 
     /**
      * @return the min
      */
-    public final double getMin() {
+    public double getMin() {
         return min;
     }
 
@@ -279,14 +285,14 @@ public class SpinnerFigure extends Figure implements Introspectable {
     /**
      * @return the stepIncrement
      */
-    public final double getStepIncrement() {
+    public double getStepIncrement() {
         return stepIncrement;
     }
 
     /**
      * @return the value
      */
-    public final double getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -306,7 +312,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
 
     @Override
     protected void layout() {
-        Rectangle clientArea = getClientArea();
+        var clientArea = getClientArea();
 
         if (labelFigure.isVisible()) {
 
@@ -314,31 +320,29 @@ public class SpinnerFigure extends Figure implements Introspectable {
                 if (arrowButtonsHorizontal) {
                     labelFigure.setBounds(new Rectangle(clientArea.x + 1 + 2 * buttonWidth, clientArea.y,
                             clientArea.width - 2 * buttonWidth - 1, clientArea.height));
-                    buttonUp.setBounds(new Rectangle(clientArea.x,
-                            clientArea.y, buttonWidth, clientArea.height));
-                    buttonDown.setBounds(new Rectangle(clientArea.x + buttonWidth,
-                            clientArea.y, buttonWidth, clientArea.height));
+                    buttonUp.setBounds(new Rectangle(clientArea.x, clientArea.y, buttonWidth, clientArea.height));
+                    buttonDown.setBounds(
+                            new Rectangle(clientArea.x + buttonWidth, clientArea.y, buttonWidth, clientArea.height));
                 } else {
                     labelFigure.setBounds(new Rectangle(clientArea.x + 1 + buttonWidth, clientArea.y,
                             clientArea.width - buttonWidth - 1, clientArea.height));
-                    buttonUp.setBounds(new Rectangle(clientArea.x,
-                            clientArea.y, buttonWidth, clientArea.height / 2));
-                    buttonDown.setBounds(new Rectangle(clientArea.x,
-                            clientArea.y + clientArea.height / 2, buttonWidth, clientArea.height / 2));
+                    buttonUp.setBounds(new Rectangle(clientArea.x, clientArea.y, buttonWidth, clientArea.height / 2));
+                    buttonDown.setBounds(new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2, buttonWidth,
+                            clientArea.height / 2));
                 }
             } else {
                 if (arrowButtonsHorizontal) {
-                    labelFigure.setBounds(new Rectangle(clientArea.x, clientArea.y,
-                            clientArea.width - 2 * buttonWidth, clientArea.height));
-                    buttonUp.setBounds(new Rectangle(clientArea.x + clientArea.width - 2 * buttonWidth,
-                            clientArea.y, buttonWidth, clientArea.height));
-                    buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width - buttonWidth,
-                            clientArea.y, buttonWidth, clientArea.height));
+                    labelFigure.setBounds(new Rectangle(clientArea.x, clientArea.y, clientArea.width - 2 * buttonWidth,
+                            clientArea.height));
+                    buttonUp.setBounds(new Rectangle(clientArea.x + clientArea.width - 2 * buttonWidth, clientArea.y,
+                            buttonWidth, clientArea.height));
+                    buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width - buttonWidth, clientArea.y,
+                            buttonWidth, clientArea.height));
                 } else {
-                    labelFigure.setBounds(new Rectangle(clientArea.x, clientArea.y,
-                            clientArea.width - buttonWidth, clientArea.height));
-                    buttonUp.setBounds(new Rectangle(clientArea.x + clientArea.width - buttonWidth,
-                            clientArea.y, buttonWidth, clientArea.height / 2));
+                    labelFigure.setBounds(new Rectangle(clientArea.x, clientArea.y, clientArea.width - buttonWidth,
+                            clientArea.height));
+                    buttonUp.setBounds(new Rectangle(clientArea.x + clientArea.width - buttonWidth, clientArea.y,
+                            buttonWidth, clientArea.height / 2));
                     buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width - buttonWidth,
                             clientArea.y + clientArea.height / 2, buttonWidth, clientArea.height / 2));
                 }
@@ -346,15 +350,13 @@ public class SpinnerFigure extends Figure implements Introspectable {
         } else {
 
             if (arrowButtonsHorizontal) {
-                buttonUp.setBounds(new Rectangle(clientArea.x,
-                        clientArea.y, clientArea.width / 2, clientArea.height));
-                buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width / 2,
-                        clientArea.y, clientArea.width / 2, clientArea.height));
+                buttonUp.setBounds(new Rectangle(clientArea.x, clientArea.y, clientArea.width / 2, clientArea.height));
+                buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width / 2, clientArea.y,
+                        clientArea.width / 2, clientArea.height));
             } else {
-                buttonUp.setBounds(new Rectangle(clientArea.x,
-                        clientArea.y, clientArea.width, clientArea.height / 2));
-                buttonDown.setBounds(new Rectangle(clientArea.x,
-                        clientArea.y + clientArea.height / 2, clientArea.width, clientArea.height / 2));
+                buttonUp.setBounds(new Rectangle(clientArea.x, clientArea.y, clientArea.width, clientArea.height / 2));
+                buttonDown.setBounds(new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2, clientArea.width,
+                        clientArea.height / 2));
             }
         }
 
@@ -367,9 +369,8 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param value
      */
     public boolean manualSetValue(double value) {
-        double oldValue = getValue();
-        setValue(
-                value < min ? min : (value > max ? max : value));
+        var oldValue = getValue();
+        setValue(value < min ? min : (value > max ? max : value));
         return oldValue != getValue();
     }
 
@@ -377,21 +378,24 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * Cause the spinner to decrease its value by its step increment;
      */
     protected void pageDown() {
-        if (manualSetValue(getValue() - getPageIncrement()))
+        if (manualSetValue(getValue() - getPageIncrement())) {
             fireManualValueChange(getValue());
+        }
     }
 
     /**
      * Cause the spinner to increase its value by its step increment;
      */
     protected void pageUp() {
-        if (manualSetValue(getValue() + getPageIncrement()))
+        if (manualSetValue(getValue() + getPageIncrement())) {
             fireManualValueChange(getValue());
+        }
     }
 
     public void removeManualValueChangeListener(IManualValueChangeListener listener) {
-        if (listener != null && spinnerListeners.contains(listener))
+        if (listener != null && spinnerListeners.contains(listener)) {
             spinnerListeners.remove(listener);
+        }
     }
 
     /**
@@ -422,9 +426,10 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param value
      *            the value to be displayed
      */
-    public final void setDisplayValue(double value) {
-        if (this.value == value)
+    public void setDisplayValue(double value) {
+        if (this.value == value) {
             return;
+        }
         this.value = value;
         labelFigure.setText(format(value));
     }
@@ -447,9 +452,10 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param max
      *            the max to set
      */
-    public final void setMax(double max) {
-        if (this.max == max || Double.isNaN(max))
+    public void setMax(double max) {
+        if (this.max == max || Double.isNaN(max)) {
             return;
+        }
         this.max = max;
         repaint();
     }
@@ -458,9 +464,10 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param min
      *            the min to set
      */
-    public final void setMin(double min) {
-        if (this.min == min || Double.isNaN(min))
+    public void setMin(double min) {
+        if (this.min == min || Double.isNaN(min)) {
             return;
+        }
         this.min = min;
         repaint();
     }
@@ -474,8 +481,9 @@ public class SpinnerFigure extends Figure implements Introspectable {
      *            the precision to set
      */
     public void setPrecision(int precision) {
-        if (this.precision == precision)
+        if (this.precision == precision) {
             return;
+        }
         this.precision = precision;
         labelFigure.setText(format(value));
     }
@@ -484,7 +492,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @param stepIncrement
      *            the stepIncrement to set
      */
-    public final void setStepIncrement(double stepIncrement) {
+    public void setStepIncrement(double stepIncrement) {
         this.stepIncrement = stepIncrement;
     }
 
@@ -497,8 +505,9 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * @return true if value changed. false otherwise.
      */
     public void setValue(double value) {
-        if (this.value == value)
+        if (this.value == value) {
             return;
+        }
         this.value = value;
         labelFigure.setText(format(value));
     }
@@ -507,16 +516,18 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * Cause the spinner to decrease its value by its step increment;
      */
     protected void stepDown() {
-        if (manualSetValue(getValue() - getStepIncrement()))
+        if (manualSetValue(getValue() - getStepIncrement())) {
             fireManualValueChange(getValue());
+        }
     }
 
     /**
      * Cause the spinner to increase its value by its step increment;
      */
     protected void stepUp() {
-        if (manualSetValue(getValue() + getStepIncrement()))
+        if (manualSetValue(getValue() + getStepIncrement())) {
             fireManualValueChange(getValue());
+        }
     }
 
     @Override

@@ -23,7 +23,6 @@ import org.yamcs.studio.autocomplete.proposals.Proposal;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 import org.yamcs.studio.data.formula.FormulaFunction;
-import org.yamcs.studio.data.formula.FormulaFunctionSet;
 import org.yamcs.studio.data.formula.FormulaRegistry;
 
 /**
@@ -37,9 +36,9 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
     public FormulaFunctionProvider() {
         functions = new TreeMap<String, List<FormulaFunction>>();
         for (String setName : FormulaRegistry.getDefault().listFunctionSets()) {
-            FormulaFunctionSet set = FormulaRegistry.getDefault().findFunctionSet(setName);
+            var set = FormulaRegistry.getDefault().findFunctionSet(setName);
             for (FormulaFunction function : set.getFunctions()) {
-                List<FormulaFunction> functionList = functions.get(function.getName());
+                var functionList = functions.get(function.getName());
                 if (functionList == null) {
                     functionList = new ArrayList<FormulaFunction>();
                     functions.put(function.getName(), functionList);
@@ -50,7 +49,7 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
     }
 
     @Override
-    public boolean accept(final ContentType type) {
+    public boolean accept(ContentType type) {
         if (type == ContentType.FormulaFunction) {
             return true;
         }
@@ -58,8 +57,8 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
     }
 
     @Override
-    public AutoCompleteResult listResult(final ContentDescriptor desc, final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
+    public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
+        var result = new AutoCompleteResult();
 
         FunctionDescriptor functionDesc = null;
         if (desc instanceof FunctionDescriptor) {
@@ -67,22 +66,22 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
         } else {
             return result; // empty result
         }
-        String nameToFind = functionDesc.getFunctionName();
+        var nameToFind = functionDesc.getFunctionName();
 
         // handle proposals
-        int count = 0;
+        var count = 0;
         // insertionPos is not yet provided for formula
         // TODO: improve parser
-        String originalContent = desc.getOriginalContent();
-        int insertionPos = originalContent.lastIndexOf(nameToFind);
+        var originalContent = desc.getOriginalContent();
+        var insertionPos = originalContent.lastIndexOf(nameToFind);
         if (!functionDesc.hasOpenBracket()) {
             Proposal topProposal = null;
             String closestMatchingFunction = null;
             for (String functionName : functions.keySet()) {
                 if (functionName.startsWith(nameToFind)) {
-                    Proposal proposal = new Proposal(functionName + "(", false);
+                    var proposal = new Proposal(functionName + "(", false);
 
-                    String description = functions.get(functionName).get(0).getDescription() + "\n\n";
+                    var description = functions.get(functionName).get(0).getDescription() + "\n\n";
                     for (FormulaFunction ff : functions.get(functionName)) {
                         description += generateSignature(ff);
                     }
@@ -96,8 +95,7 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
                     proposal.setFunction(true); // display function icon
                     result.addProposal(proposal);
                     count++;
-                    if (closestMatchingFunction == null
-                            || closestMatchingFunction.compareTo(functionName) > 0) {
+                    if (closestMatchingFunction == null || closestMatchingFunction.compareTo(functionName) > 0) {
                         closestMatchingFunction = functionName;
                         topProposal = proposal;
                     }
@@ -113,14 +111,12 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
         // handle tooltip
         if (functionDesc.hasOpenBracket() && !functionDesc.isComplete()) {
             for (String setName : FormulaRegistry.getDefault().listFunctionSets()) {
-                FormulaFunctionSet set = FormulaRegistry.getDefault()
-                        .findFunctionSet(setName);
+                var set = FormulaRegistry.getDefault().findFunctionSet(setName);
                 for (FormulaFunction function : set.findFunctions(nameToFind)) {
                     if (function.getName().equals(nameToFind)) {
-                        if (function.getArgumentNames().size() >= functionDesc
-                                .getArgs().size() || function.isVarArgs()) {
-                            result.addTooltipData(generateTooltipData(function,
-                                    functionDesc.getCurrentArgIndex()));
+                        if (function.getArgumentNames().size() >= functionDesc.getArgs().size()
+                                || function.isVarArgs()) {
+                            result.addTooltipData(generateTooltipData(function, functionDesc.getCurrentArgIndex()));
                         }
                     }
                 }
@@ -134,15 +130,15 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
     }
 
     private String generateSignature(FormulaFunction function) {
-        StringBuffer sb = new StringBuffer();
+        var sb = new StringBuffer();
         if (function.getReturnType() != null) {
             sb.append("<");
             sb.append(function.getReturnType().getSimpleName());
             sb.append("> ");
         }
         sb.append(function.getName() + "(");
-        int nbArgs = function.getArgumentNames().size();
-        for (int i = 0; i < nbArgs; i++) {
+        var nbArgs = function.getArgumentNames().size();
+        for (var i = 0; i < nbArgs; i++) {
             sb.append("<");
             sb.append(function.getArgumentTypes().get(i).getSimpleName());
             sb.append(">");
@@ -158,14 +154,13 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
         return sb.toString();
     }
 
-    private TooltipData generateTooltipData(FormulaFunction function,
-            int currentArgIndex) {
-        TooltipData td = new TooltipData();
-        StringBuilder sb = new StringBuilder();
+    private TooltipData generateTooltipData(FormulaFunction function, int currentArgIndex) {
+        var td = new TooltipData();
+        var sb = new StringBuilder();
         sb.append(function.getName() + "(");
-        int nbArgs = function.getArgumentNames().size();
+        var nbArgs = function.getArgumentNames().size();
         int from = 0, to = 0;
-        for (int i = 0; i < nbArgs; i++) {
+        for (var i = 0; i < nbArgs; i++) {
             if (i == currentArgIndex) {
                 from = sb.length();
             }

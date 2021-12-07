@@ -9,8 +9,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.TableViewer;
@@ -24,16 +22,13 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.yamcs.client.EventSubscription;
-import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.SubscribeEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
@@ -64,40 +59,40 @@ public class EventLog extends Composite implements YamcsAware {
 
     public EventLog(Composite parent, int style) {
         super(parent, style);
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         gl.horizontalSpacing = 0;
         gl.verticalSpacing = 0;
         setLayout(gl);
 
-        Composite filterBar = new Composite(this, SWT.NONE);
+        var filterBar = new Composite(this, SWT.NONE);
         filterBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         gl = new GridLayout(6, false);
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
         filterBar.setLayout(gl);
 
-        Label filterLabel = new Label(filterBar, SWT.NONE);
+        var filterLabel = new Label(filterBar, SWT.NONE);
         filterLabel.setText("Filter:");
 
-        Text searchbox = new Text(filterBar, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        var searchbox = new Text(filterBar, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
         searchbox.setMessage("type filter text");
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Label severityLabel = new Label(filterBar, SWT.NONE);
+        var severityLabel = new Label(filterBar, SWT.NONE);
         severityLabel.setText("Level:");
         severityLabel.setToolTipText("Severity Level");
 
-        Combo severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
+        var severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
         severityCombo.setItems("INFO", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE");
         severityCombo.select(0);
 
-        Label sourceLabel = new Label(filterBar, SWT.NONE);
+        var sourceLabel = new Label(filterBar, SWT.NONE);
         sourceLabel.setText("Source:");
-        Combo sourceCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
+        var sourceCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
 
-        Composite tableViewerWrapper = new Composite(this, SWT.NONE);
+        var tableViewerWrapper = new Composite(this, SWT.NONE);
         tableViewerWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableViewerWrapper.setLayout(new FillLayout());
 
@@ -107,7 +102,7 @@ public class EventLog extends Composite implements YamcsAware {
 
         // Register context menu. Commands are added in plugin.xml
         menuManager = new MenuManager();
-        Menu menu = menuManager.createContextMenu(tableViewer.getTable());
+        var menu = menuManager.createContextMenu(tableViewer.getTable());
         tableViewer.getTable().setMenu(menu);
 
         // Default action is to open Event properties
@@ -118,8 +113,8 @@ public class EventLog extends Composite implements YamcsAware {
         // Listen to v_scroll to autotoggle scroll lock
         tableViewer.getTable().getVerticalBar().addListener(SWT.Selection, evt -> {
 
-            String sortColumn = tableViewer.getTable().getSortColumn().getText();
-            boolean up = (tableViewer.getTable().getSortDirection() == SWT.UP);
+            var sortColumn = tableViewer.getTable().getSortColumn().getText();
+            var up = (tableViewer.getTable().getSortDirection() == SWT.UP);
 
             if (!EventLogTableViewer.COL_GENERATION.equals(sortColumn)) {
                 return;
@@ -128,16 +123,16 @@ public class EventLog extends Composite implements YamcsAware {
             // User controls sort direction, so events may be inserted anywhere really.
             // Probably the most intuitive, is to autolock if the user is either at the very top or the very bottom of
             // the scrollbar.
-            int sel = tableViewer.getTable().getVerticalBar().getSelection();
-            int thumb = tableViewer.getTable().getVerticalBar().getThumb();
-            int min = tableViewer.getTable().getVerticalBar().getMinimum();
-            int max = tableViewer.getTable().getVerticalBar().getMaximum();
+            var sel = tableViewer.getTable().getVerticalBar().getSelection();
+            var thumb = tableViewer.getTable().getVerticalBar().getThumb();
+            var min = tableViewer.getTable().getVerticalBar().getMinimum();
+            var max = tableViewer.getTable().getVerticalBar().getMaximum();
 
-            ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-            Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
-            State lockState = command.getState(RegistryToggleState.STATE_ID);
-            boolean locked = ((Boolean) lockState.getValue()).booleanValue();
-            boolean onEdge = (sel <= min && !up) || (sel + thumb >= max && up);
+            var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+            var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
+            var lockState = command.getState(RegistryToggleState.STATE_ID);
+            var locked = ((Boolean) lockState.getValue()).booleanValue();
+            var onEdge = (sel <= min && !up) || (sel + thumb >= max && up);
 
             if (locked && onEdge) {
                 lockState.setValue(false);
@@ -148,20 +143,20 @@ public class EventLog extends Composite implements YamcsAware {
             }
         });
 
-        EventLogSearchBoxFilter searchBoxFilter = new EventLogSearchBoxFilter();
+        var searchBoxFilter = new EventLogSearchBoxFilter();
         tableViewer.addFilter(searchBoxFilter);
-        Debouncer debouncer = new Debouncer(tableUpdater);
+        var debouncer = new Debouncer(tableUpdater);
         searchbox.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.keyCode == SWT.ARROW_DOWN) {
-                    TableItem[] items = tableViewer.getTable().getItems();
+                    var items = tableViewer.getTable().getItems();
                     if (items.length > 0) {
                         tableViewer.getTable().setSelection(items[0]);
                         tableViewer.getTable().setFocus();
                     }
                 } else {
-                    String searchString = searchbox.getText();
+                    var searchString = searchbox.getText();
                     debouncer.debounce(() -> {
                         searchBoxFilter.setSearchTerm(searchString);
                         getDisplay().syncExec(() -> tableViewer.refresh());
@@ -170,10 +165,10 @@ public class EventLog extends Composite implements YamcsAware {
             }
         });
 
-        EventLogSeverityFilter severityFilter = new EventLogSeverityFilter();
+        var severityFilter = new EventLogSeverityFilter();
         tableViewer.addFilter(severityFilter);
         severityCombo.addListener(SWT.Selection, evt -> {
-            EventSeverity severity = EventSeverity.valueOf(severityCombo.getText());
+            var severity = EventSeverity.valueOf(severityCombo.getText());
             severityFilter.setMinimumSeverity(severity);
             tableViewer.refresh();
         });
@@ -197,10 +192,10 @@ public class EventLog extends Composite implements YamcsAware {
             }
         }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
 
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
         prefListener = evt -> {
             if (evt.getProperty().equals(PreferencePage.PREF_RULES)) {
-                List<ColoringRule> rules = plugin.composeColoringRules((String) evt.getNewValue());
+                var rules = plugin.composeColoringRules((String) evt.getNewValue());
                 for (EventLogItem item : tableContentProvider.getElements(null)) {
                     item.colorize(rules);
                 }
@@ -213,9 +208,9 @@ public class EventLog extends Composite implements YamcsAware {
     }
 
     private void updateState() {
-        ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
-        State state = command.getState(EventLog.STATE_SCROLL_LOCK);
+        var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
+        var state = command.getState(EventLog.STATE_SCROLL_LOCK);
         enableScrollLock((Boolean) state.getValue());
     }
 
@@ -244,17 +239,15 @@ public class EventLog extends Composite implements YamcsAware {
             subscription.addMessageListener(event -> {
                 Display.getDefault().asyncExec(() -> processEvent(event));
             });
-            subscription.sendMessage(SubscribeEventsRequest.newBuilder()
-                    .setInstance(instance)
-                    .build());
+            subscription.sendMessage(SubscribeEventsRequest.newBuilder().setInstance(instance).build());
         }
     }
 
     public EventLogItem getPreviousRecord(EventLogItem rec) {
         if (tableViewer.getTable().getSelectionCount() > 0) {
-            int[] indices = tableViewer.getTable().getSelectionIndices();
+            var indices = tableViewer.getTable().getSelectionIndices();
             if (indices[0] > 0) {
-                int prevIndex = indices[0] - 1;
+                var prevIndex = indices[0] - 1;
                 return (EventLogItem) tableViewer.getElementAt(prevIndex);
             }
         }
@@ -263,9 +256,9 @@ public class EventLog extends Composite implements YamcsAware {
 
     public EventLogItem getNextRecord(EventLogItem rec) {
         if (tableViewer.getTable().getSelectionCount() > 0) {
-            int[] indices = tableViewer.getTable().getSelectionIndices();
+            var indices = tableViewer.getTable().getSelectionIndices();
             if (indices[0] < tableViewer.getTable().getItemCount() - 1) {
-                int nextIndex = indices[0] + 1;
+                var nextIndex = indices[0] + 1;
                 return (EventLogItem) tableViewer.getElementAt(nextIndex);
             }
         }
@@ -273,7 +266,7 @@ public class EventLog extends Composite implements YamcsAware {
     }
 
     private void fetchLatestEvents() {
-        ArchiveClient archiveClient = YamcsPlugin.getArchiveClient();
+        var archiveClient = YamcsPlugin.getArchiveClient();
         if (archiveClient != null) {
             archiveClient.listEvents().whenComplete((page, exc) -> {
                 List<Event> eventList = new ArrayList<>();
@@ -315,9 +308,9 @@ public class EventLog extends Composite implements YamcsAware {
      * Returns the collection of currently visible events (sorted as is visible)
      */
     public List<Event> getSortedEvents() {
-        EventLogSorter comparator = tableViewer.getComparator();
+        var comparator = tableViewer.getComparator();
 
-        EventLogItem[] allItems = tableContentProvider.getElements(null);
+        var allItems = tableContentProvider.getElements(null);
         Arrays.sort(allItems, (o1, o2) -> {
             return comparator.compare(tableViewer, o1, o2);
         });

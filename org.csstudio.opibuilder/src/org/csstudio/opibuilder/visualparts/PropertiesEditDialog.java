@@ -32,15 +32,13 @@ public class PropertiesEditDialog extends Dialog {
     private PropertyData[] propertyDataArray;
     private String dialogTitle;
 
-    public PropertiesEditDialog(Shell parentShell,
-            AbstractWidgetProperty[] properties, String dialogTitle) {
+    public PropertiesEditDialog(Shell parentShell, AbstractWidgetProperty[] properties, String dialogTitle) {
         super(parentShell);
         this.dialogTitle = dialogTitle;
         propertyDataArray = new PropertyData[properties.length];
-        int i = 0;
+        var i = 0;
         for (AbstractWidgetProperty prop : properties) {
-            propertyDataArray[i++] = new PropertyData(prop,
-                    prop.getPropertyValue());
+            propertyDataArray[i++] = new PropertyData(prop, prop.getPropertyValue());
         }
 
         // Allow resize
@@ -59,10 +57,10 @@ public class PropertiesEditDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
-        Composite rightComposite = new Composite(parent_Composite, SWT.NONE);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
+        var rightComposite = new Composite(parent_Composite, SWT.NONE);
         rightComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 320;
         rightComposite.setLayoutData(gd);
 
@@ -75,11 +73,10 @@ public class PropertiesEditDialog extends Dialog {
     }
 
     private TableViewer createPropertiesViewer(Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
-        TableViewerColumn tvColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var tvColumn = new TableViewerColumn(viewer, SWT.NONE);
         tvColumn.getColumn().setText("Property");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(150);
@@ -87,14 +84,12 @@ public class PropertiesEditDialog extends Dialog {
         tvColumn.getColumn().setText("Value");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(150);
-        EditingSupport editingSupport = new PropertyDataEditingSupport(viewer,
-                viewer.getTable());
+        EditingSupport editingSupport = new PropertyDataEditingSupport(viewer, viewer.getTable());
         tvColumn.setEditingSupport(editingSupport);
 
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new PropertyDataLabelProvider());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
 
@@ -122,19 +117,19 @@ public class PropertiesEditDialog extends Dialog {
 // * @param table
 // * The {@link Table}
 // */
-// public PropertyDataEditingSupport(final ColumnViewer viewer,
+// public PropertyDataEditingSupport(ColumnViewer viewer,
 // final Table table) {
 // super(viewer);
 // this.table = table;
 // }
 //
 // @Override
-// protected boolean canEdit(final Object element) {
+// protected boolean canEdit(Object element) {
 // return true;
 // }
 //
 // @Override
-// protected CellEditor getCellEditor(final Object element) {
+// protected CellEditor getCellEditor(Object element) {
 // PropertyData propertyData;
 // if((propertyData = getSelectedProperty()) != null){
 // return propertyData.property.getPropertyDescriptor().createPropertyEditor(table);
@@ -155,7 +150,7 @@ public class PropertiesEditDialog extends Dialog {
 //
 //
 // @Override
-// protected Object getValue(final Object element) {
+// protected Object getValue(Object element) {
 // if (element instanceof PropertyData) {
 // return ((PropertyData)element).tmpValue;
 // }
@@ -164,7 +159,7 @@ public class PropertiesEditDialog extends Dialog {
 // }
 //
 // @Override
-// protected void setValue(final Object element, final Object value) {
+// protected void setValue(Object element, Object value) {
 // if (element instanceof PropertyData) {
 // PropertyData prop = (PropertyData) element;
 // if (prop != null) {
@@ -182,7 +177,7 @@ public class PropertiesEditDialog extends Dialog {
 // class PropertyDataLabelProvider extends LabelProvider implements
 // ITableLabelProvider {
 //
-// public Image getColumnImage(final Object element,
+// public Image getColumnImage(Object element,
 // final int columnIndex) {
 // if (columnIndex == 1 && element instanceof PropertyData) {
 // PropertyData propertyData = (PropertyData) element;
@@ -196,7 +191,7 @@ public class PropertiesEditDialog extends Dialog {
 // return null;
 // }
 //
-// public String getColumnText(final Object element,
+// public String getColumnText(Object element,
 // final int columnIndex) {
 // if (element instanceof PropertyData) {
 // PropertyData propertyData = (PropertyData) element;

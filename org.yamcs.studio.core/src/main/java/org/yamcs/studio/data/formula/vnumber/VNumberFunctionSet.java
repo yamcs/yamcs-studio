@@ -39,15 +39,13 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
     public VNumberFunctionSet() {
         // Use abstact classes for most of the functions as the signature
         // is the same
-        super(new FormulaFunctionSetDescription("vnumber", "Operators for numeric scalars")
-                .addFormulaFunction(
-                        new AbstractVNumberVNumberToVNumberFormulaFunction("+", "Numeric addition", "arg1", "arg2") {
-                            @Override
-                            public double calculate(double arg1, double arg2) {
-                                return arg1 + arg2;
-                            }
-                        })
-                .addFormulaFunction(
+        super(new FormulaFunctionSetDescription("vnumber", "Operators for numeric scalars").addFormulaFunction(
+                new AbstractVNumberVNumberToVNumberFormulaFunction("+", "Numeric addition", "arg1", "arg2") {
+                    @Override
+                    public double calculate(double arg1, double arg2) {
+                        return arg1 + arg2;
+                    }
+                }).addFormulaFunction(
                         new AbstractVNumberVNumberToVNumberFormulaFunction("-", "Numeric subtraction", "arg1", "arg2") {
                             @Override
                             public double calculate(double arg1, double arg2) {
@@ -60,8 +58,7 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                     public double calculate(double arg1, double arg2) {
                         return arg1 * arg2;
                     }
-                })
-                .addFormulaFunction(
+                }).addFormulaFunction(
                         new AbstractVNumberVNumberToVNumberFormulaFunction("/", "Numeric division", "arg1", "arg2") {
                             @Override
                             public double calculate(double arg1, double arg2) {
@@ -87,22 +84,19 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                     public double calculate(double arg1) {
                         return -arg1;
                     }
-                })
-                .addFormulaFunction(new AbstractVNumberVNumberToVBooleanFormulaFunction("<=", "Less than or equal",
+                }).addFormulaFunction(new AbstractVNumberVNumberToVBooleanFormulaFunction("<=", "Less than or equal",
                         "arg1", "arg2") {
                     @Override
                     public boolean calculate(double arg1, double arg2) {
                         return arg1 <= arg2;
                     }
-                })
-                .addFormulaFunction(new AbstractVNumberVNumberToVBooleanFormulaFunction(">=", "Greater than or equal",
+                }).addFormulaFunction(new AbstractVNumberVNumberToVBooleanFormulaFunction(">=", "Greater than or equal",
                         "arg1", "arg2") {
                     @Override
                     public boolean calculate(double arg1, double arg2) {
                         return arg1 >= arg2;
                     }
-                })
-                .addFormulaFunction(
+                }).addFormulaFunction(
                         new AbstractVNumberVNumberToVBooleanFormulaFunction("<", "Less than", "arg1", "arg2") {
                             @Override
                             public boolean calculate(double arg1, double arg2) {
@@ -121,8 +115,7 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                     public boolean calculate(double arg1, double arg2) {
                         return arg1 == arg2;
                     }
-                })
-                .addFormulaFunction(
+                }).addFormulaFunction(
                         new AbstractVNumberVNumberToVBooleanFormulaFunction("!=", "Not equal", "arg1", "arg2") {
                             @Override
                             public boolean calculate(double arg1, double arg2) {
@@ -149,8 +142,7 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                     public int calculate(int arg1, int arg2) {
                         return arg1 ^ arg2;
                     }
-                })
-                .addFormulaFunction(
+                }).addFormulaFunction(
                         new AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction("|", "Bitwise OR", "arg1", "arg2") {
                             @Override
                             public int calculate(int arg1, int arg2) {
@@ -163,22 +155,19 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                     public int calculate(int arg1, int arg2) {
                         return arg1 | arg2;
                     }
-                })
-                .addFormulaFunction(new AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction("&", "Bitwise AND",
+                }).addFormulaFunction(new AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction("&", "Bitwise AND",
                         "arg1", "arg2") {
                     @Override
                     public int calculate(int arg1, int arg2) {
                         return arg1 & arg2;
                     }
-                })
-                .addFormulaFunction(new AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction("and", "Bitwise AND",
+                }).addFormulaFunction(new AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction("and", "Bitwise AND",
                         "arg1", "arg2") {
                     @Override
                     public int calculate(int arg1, int arg2) {
                         return arg1 & arg2;
                     }
-                })
-                .addFormulaFunction(new ConditionalOperatorFormulaFunction())
+                }).addFormulaFunction(new ConditionalOperatorFormulaFunction())
                 .addFormulaFunction(new LogicalNotFormulaFunction()));
     }
 

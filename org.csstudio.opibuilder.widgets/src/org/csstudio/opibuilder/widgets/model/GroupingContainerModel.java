@@ -45,14 +45,11 @@ public class GroupingContainerModel extends AbstractContainerModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent Background",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children",
-                WidgetPropertyCategory.Behavior, false));
-        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar",
-                WidgetPropertyCategory.Behavior, true));
-        addProperty(new BooleanProperty(PROP_FORWARD_COLORS, "Forward Colors",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(
+                new BooleanProperty(PROP_TRANSPARENT, "Transparent Background", WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar", WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_FORWARD_COLORS, "Forward Colors", WidgetPropertyCategory.Behavior, false));
 
     }
 
@@ -90,7 +87,7 @@ public class GroupingContainerModel extends AbstractContainerModel {
 
     @Override
     public void flipVertically() {
-        int centerY = getHeight() / 2;
+        var centerY = getHeight() / 2;
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipVertically(centerY);
         }
@@ -98,7 +95,7 @@ public class GroupingContainerModel extends AbstractContainerModel {
 
     @Override
     public void flipHorizontally() {
-        int centerX = getWidth() / 2;
+        var centerX = getWidth() / 2;
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipHorizontally(centerX);
         }
@@ -106,22 +103,21 @@ public class GroupingContainerModel extends AbstractContainerModel {
 
     @Override
     public void rotate90(boolean clockwise) {
-        boolean oldLock = isLocked();
+        var oldLock = isLocked();
         setPropertyValue(PROP_LOCK_CHILDREN, false);
-        Point center = new Point(getWidth() / 2, getHeight() / 2);
+        var center = new Point(getWidth() / 2, getHeight() / 2);
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.rotate90(clockwise, center);
         }
-        Point oldLoc = getLocation();
+        var oldLoc = getLocation();
         super.rotate90(clockwise);
-        Point newLoc = getLocation();
+        var newLoc = getLocation();
 
-        int dx = newLoc.x - oldLoc.x;
-        int dy = newLoc.y - oldLoc.y;
+        var dx = newLoc.x - oldLoc.x;
+        var dy = newLoc.y - oldLoc.y;
         // move back
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
-            abstractWidgetModel.setLocation(
-                    abstractWidgetModel.getLocation().translate(-dx, -dy));
+            abstractWidgetModel.setLocation(abstractWidgetModel.getLocation().translate(-dx, -dy));
         }
         setPropertyValue(PROP_LOCK_CHILDREN, oldLock);
     }

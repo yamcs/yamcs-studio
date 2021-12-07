@@ -35,16 +35,16 @@ public class RangeFilter {
 
     public boolean filterRow(int rowIndex) {
         if (min instanceof VNumber) {
-            double columnValue = ((ListNumber) table.getColumnData(columnIndex)).getDouble(rowIndex);
-            double minValue = ((VNumber) min).getValue().doubleValue();
-            double maxValue = ((VNumber) max).getValue().doubleValue();
+            var columnValue = ((ListNumber) table.getColumnData(columnIndex)).getDouble(rowIndex);
+            var minValue = ((VNumber) min).getValue().doubleValue();
+            var maxValue = ((VNumber) max).getValue().doubleValue();
             return columnValue >= minValue && columnValue < maxValue;
         } else if (min instanceof VString) {
             @SuppressWarnings("unchecked")
-            List<String> columnData = (List<String>) table.getColumnData(columnIndex);
-            String columnValue = columnData.get(rowIndex);
-            String minValue = ((VString) min).getValue();
-            String maxValue = ((VString) max).getValue();
+            var columnData = (List<String>) table.getColumnData(columnIndex);
+            var columnValue = columnData.get(rowIndex);
+            var minValue = ((VString) min).getValue();
+            var maxValue = ((VString) max).getValue();
             return minValue.compareTo(columnValue) <= 0 && maxValue.compareTo(columnValue) > 0;
         }
         throw new IllegalStateException("Unexpected error");

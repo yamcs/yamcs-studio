@@ -1,6 +1,5 @@
 package org.yamcs.studio.commanding.cmdhist;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,12 +45,12 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
     public void processCommand(Command command) {
         if (recordsByCommandId.containsKey(command.getId())) {
-            CommandHistoryRecord rec = recordsByCommandId.get(command.getId());
+            var rec = recordsByCommandId.get(command.getId());
             rec.merge(command);
             tableViewer.update(rec, null); // Null, means all properties
             maybeSelectAndReveal(rec);
         } else {
-            CommandHistoryRecord rec = new CommandHistoryRecord(command);
+            var rec = new CommandHistoryRecord(command);
             recordsByCommandId.put(command.getId(), rec);
 
             tableViewer.add(rec);
@@ -96,7 +95,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<CommandHistoryRecord> recs = recordsByCommandId.values();
+            var recs = recordsByCommandId.values();
             tableViewer.remove(recs.toArray());
             recordsByCommandId.clear();
             tableViewer.getTable().setRedraw(true);

@@ -89,27 +89,27 @@ public class TabModel extends AbstractContainerModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_TAB_COUNT, "Tab Count",
-                WidgetPropertyCategory.Behavior, 1, 1, MAX_TABS_AMOUNT));
-        addProperty(new BooleanProperty(PROP_HORIZONTAL_TABS, "Horizontal Tabs",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new IntegerProperty(PROP_ACTIVE_TAB, "Active Tab",
-                WidgetPropertyCategory.Display, 0, 0, MAX_TABS_AMOUNT - 1));
-        addProperty(new IntegerProperty(PROP_MINIMUM_TAB_HEIGHT, "Minimum Tab Height",
-                WidgetPropertyCategory.Display, 10, 10, 1000));
+        addProperty(new IntegerProperty(PROP_TAB_COUNT, "Tab Count", WidgetPropertyCategory.Behavior, 1, 1,
+                MAX_TABS_AMOUNT));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL_TABS, "Horizontal Tabs", WidgetPropertyCategory.Display, true));
+        addProperty(new IntegerProperty(PROP_ACTIVE_TAB, "Active Tab", WidgetPropertyCategory.Display, 0, 0,
+                MAX_TABS_AMOUNT - 1));
+        addProperty(new IntegerProperty(PROP_MINIMUM_TAB_HEIGHT, "Minimum Tab Height", WidgetPropertyCategory.Display,
+                10, 10, 1000));
         setPropertyVisible(PROP_FONT, false);
         addTabsProperties();
     }
 
     private void addTabsProperties() {
-        for (int i = 0; i < MAX_TABS_AMOUNT; i++) {
-            for (TabProperty tabProperty : TabProperty.values())
+        for (var i = 0; i < MAX_TABS_AMOUNT; i++) {
+            for (TabProperty tabProperty : TabProperty.values()) {
                 addTabProperty(tabProperty, i);
+            }
         }
     }
 
-    private void addTabProperty(TabProperty tabProperty, final int tabIndex) {
-        String propID = makeTabPropID(tabProperty.propIDPre, tabIndex);
+    private void addTabProperty(TabProperty tabProperty, int tabIndex) {
+        var propID = makeTabPropID(tabProperty.propIDPre, tabIndex);
 
         WidgetPropertyCategory category;
         category = new WidgetPropertyCategory() {
@@ -133,12 +133,10 @@ public class TabModel extends AbstractContainerModel {
             addProperty(new ColorProperty(propID, tabProperty.toString(), category, DEFAULT_TAB_BACKCOLOR));
             break;
         case ICON_PATH:
-            addProperty(new FilePathProperty(propID, tabProperty.toString(),
-                    category, null, FILE_EXTENSIONS));
+            addProperty(new FilePathProperty(propID, tabProperty.toString(), category, null, FILE_EXTENSIONS));
             break;
         case ENABLED:
-            addProperty(new BooleanProperty(propID, tabProperty.toString(),
-                    category, true));
+            addProperty(new BooleanProperty(propID, tabProperty.toString(), category, true));
             break;
         default:
             break;
@@ -193,9 +191,10 @@ public class TabModel extends AbstractContainerModel {
     }
 
     public IPath toAbsolutePath(IPath path) {
-        IPath absolutePath = path;
-        if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute())
+        var absolutePath = path;
+        if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(this, absolutePath);
+        }
         return absolutePath;
     }
 

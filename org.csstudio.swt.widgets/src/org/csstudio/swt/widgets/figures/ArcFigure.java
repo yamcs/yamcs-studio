@@ -43,28 +43,29 @@ public class ArcFigure extends Shape implements Introspectable {
 
     @Override
     protected void fillShape(Graphics graphics) {
-        graphics.fillArc(getClientArea().getCopy().shrink(
-                (int) (getLineWidth() * 1.5), (int) (getLineWidth() * 1.5)), startAngle, totalAngle);
+        graphics.fillArc(getClientArea().getCopy().shrink((int) (getLineWidth() * 1.5), (int) (getLineWidth() * 1.5)),
+                startAngle, totalAngle);
 
     }
 
     @Override
     protected void outlineShape(Graphics graphics) {
-        graphics.drawArc(getClientArea().getCopy().shrink(
-                getLineWidth(), getLineWidth()), startAngle, totalAngle);
+        graphics.drawArc(getClientArea().getCopy().shrink(getLineWidth(), getLineWidth()), startAngle, totalAngle);
 
     }
 
     public void setStartAngle(int start_angle) {
-        if (this.startAngle == start_angle)
+        if (this.startAngle == start_angle) {
             return;
+        }
         this.startAngle = start_angle;
         repaint();
     }
 
     public void setTotalAngle(int total_angle) {
-        if (this.totalAngle == total_angle)
+        if (this.totalAngle == total_angle) {
             return;
+        }
         this.totalAngle = total_angle;
         repaint();
     }
@@ -79,6 +80,7 @@ public class ArcFigure extends Shape implements Introspectable {
         super.setFill(b);
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new ShapeWidgetIntrospector().getBeanInfo(this.getClass());
     }

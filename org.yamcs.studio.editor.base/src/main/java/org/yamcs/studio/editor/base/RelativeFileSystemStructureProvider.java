@@ -34,12 +34,12 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
 
     @Override
     public List<File> getChildren(Object element) {
-        File folder = (File) element;
-        String[] children = folder.list();
-        int childrenLength = children == null ? 0 : children.length;
+        var folder = (File) element;
+        var children = folder.list();
+        var childrenLength = children == null ? 0 : children.length;
         List<File> result = new ArrayList<>(childrenLength);
 
-        for (int i = 0; i < childrenLength; i++) {
+        for (var i = 0; i < childrenLength; i++) {
             result.add(new File(folder, children[i]));
         }
 
@@ -49,7 +49,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
     public List<File> collectFiles(Object element) {
         List<File> result = new ArrayList<>();
 
-        File root = (File) element;
+        var root = (File) element;
         if (root.isDirectory()) {
             collectFiles(root, result);
         } else {
@@ -60,7 +60,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
     }
 
     private void collectFiles(File parent, List<File> result) {
-        File[] children = parent.listFiles();
+        var children = parent.listFiles();
         for (File child : children) {
             if (child.isDirectory()) {
                 collectFiles(child, result);
@@ -81,7 +81,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
     }
 
     private String stripPath(String path) {
-        int index = path.indexOf(root.getName());
+        var index = path.indexOf(root.getName());
         path = path.substring(index + root.getName().length());
         return path;
     }
@@ -93,8 +93,8 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
 
     @Override
     public String getLabel(Object element) {
-        File file = (File) element;
-        String name = file.getName();
+        var file = (File) element;
+        var name = file.getName();
         if (name.length() == 0) {
             return file.getPath();
         }

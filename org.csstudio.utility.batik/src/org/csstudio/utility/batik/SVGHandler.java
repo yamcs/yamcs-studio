@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -39,7 +38,6 @@ import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.css.engine.CSSStyleSheetNode;
 import org.apache.batik.css.engine.SVGCSSEngine;
-import org.apache.batik.css.engine.StyleSheet;
 import org.apache.batik.dom.util.DOMUtilities;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.CompositeGraphicsNode;
@@ -56,16 +54,11 @@ import org.csstudio.utility.batik.util.SVGStylableElementCSSHandler;
 import org.csstudio.utility.batik.util.StyleSheetCSSHandler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGAnimateElement;
 import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGSVGElement;
 
 /**
  * {@link SVGDocument} handler. Handles render and animation of SVG files.
@@ -171,7 +164,7 @@ public class SVGHandler {
     private List<Image> imageBuffer;
     private int maxBufferSize;
 
-    public SVGHandler(final SVGDocument doc, final Display display) {
+    public SVGHandler(SVGDocument doc, Display display) {
         swtDisplay = display;
         imageBuffer = Collections.synchronizedList(new ArrayList<Image>());
         maxBufferSize = cacheMaxSize;
@@ -180,7 +173,7 @@ public class SVGHandler {
         userAgent = createUserAgent();
         renderingHints = new RenderingHints(null);
 
-        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+        var impl = SVGDOMImplementation.getDOMImplementation();
         originalSVGDocument = (SVGDocument) DOMUtilities.deepCloneDocument(doc, impl);
         bridgeContext = createBridgeContext((SVGOMDocument) originalSVGDocument);
         isDynamicDocument = bridgeContext.isDynamicDocument(originalSVGDocument);
@@ -331,9 +324,9 @@ public class SVGHandler {
      * @return document size after applying matrix.
      */
     public Dimension getDocumentSize() {
-        Shape aoi = calculateShape();
-        double docWidth = aoi.getBounds().getWidth();
-        double docHeight = aoi.getBounds().getHeight();
+        var aoi = calculateShape();
+        var docWidth = aoi.getBounds().getWidth();
+        var docHeight = aoi.getBounds().getHeight();
         return new Dimension((int) Math.round(docWidth), (int) Math.round(docHeight));
     }
 
@@ -357,9 +350,9 @@ public class SVGHandler {
                 if (disposed) {
                     return;
                 }
-                Date now = new Date();
-                Date nearestSecond = DateUtils.round(now, Calendar.SECOND);
-                long initialDelay = nearestSecond.getTime() - now.getTime();
+                var now = new Date();
+                var nearestSecond = DateUtils.round(now, Calendar.SECOND);
+                var initialDelay = nearestSecond.getTime() - now.getTime();
                 if (initialDelay < 0) {
                     initialDelay = MILLISEC_IN_SEC + initialDelay;
                 }
@@ -448,10 +441,10 @@ public class SVGHandler {
                     if (useCache) {
                         resetCache();
                     }
-                    long initialDelay = 0;
+                    var initialDelay = 0L;
                     if (alignedToNearestSecond) {
-                        Date now = new Date();
-                        Date nearestSecond = DateUtils.round(now, Calendar.SECOND);
+                        var now = new Date();
+                        var nearestSecond = DateUtils.round(now, Calendar.SECOND);
                         initialDelay = nearestSecond.getTime() - now.getTime();
                         if (initialDelay < 0) {
                             initialDelay = MILLISEC_IN_SEC + initialDelay;
@@ -561,7 +554,7 @@ public class SVGHandler {
 
     protected void render() {
         if (isDynamicDocument) {
-            boolean isRunning = started && !suspended;
+            var isRunning = started && !suspended;
             if (isRunning) {
                 suspendProcessing();
             }
@@ -588,8 +581,8 @@ public class SVGHandler {
 
         // get the 'width' and 'height' attributes of the SVG document
         float width = 400, height = 400;
-        float docWidth = (float) bridgeContext.getDocumentSize().getWidth();
-        float docHeight = (float) bridgeContext.getDocumentSize().getHeight();
+        var docWidth = (float) bridgeContext.getDocumentSize().getWidth();
+        var docHeight = (float) bridgeContext.getDocumentSize().getHeight();
         if (canvasWidth > 0 && canvasHeight > 0) {
             width = canvasWidth;
             height = canvasHeight;
@@ -607,20 +600,20 @@ public class SVGHandler {
         // compute the preserveAspectRatio matrix
         AffineTransform renderingTransform = null;
         AffineTransform Px = null;
-        SVGSVGElement root = svgDocument.getRootElement();
-        String viewBox = root.getAttributeNS(null, SVGConstants.SVG_VIEW_BOX_ATTRIBUTE);
+        var root = svgDocument.getRootElement();
+        var viewBox = root.getAttributeNS(null, SVGConstants.SVG_VIEW_BOX_ATTRIBUTE);
         if (viewBox != null && viewBox.length() != 0) {
-            String aspectRatio = root.getAttributeNS(null, SVGConstants.SVG_PRESERVE_ASPECT_RATIO_ATTRIBUTE);
+            var aspectRatio = root.getAttributeNS(null, SVGConstants.SVG_PRESERVE_ASPECT_RATIO_ATTRIBUTE);
             Px = ViewBox.getPreserveAspectRatioTransform(root, viewBox, aspectRatio, width, height, bridgeContext);
         } else {
             // no viewBox has been specified, create a scale transform
-            float xscale = width / docWidth;
-            float yscale = height / docHeight;
-            float scale = Math.min(xscale, yscale);
+            var xscale = width / docWidth;
+            var yscale = height / docHeight;
+            var scale = Math.min(xscale, yscale);
             Px = AffineTransform.getScaleInstance(scale, scale);
         }
         Shape curAOI = new Rectangle2D.Float(0, 0, width, height);
-        CanvasGraphicsNode cgn = getCanvasGraphicsNode(gvtRoot);
+        var cgn = getCanvasGraphicsNode(gvtRoot);
         if (cgn != null) {
             cgn.setViewingTransform(Px);
             renderingTransform = new AffineTransform();
@@ -634,8 +627,8 @@ public class SVGHandler {
         }
         renderer = createImageRenderer();
 
-        int w = (int) (curAOI.getBounds().width + 0.5);
-        int h = (int) (curAOI.getBounds().height + 0.5);
+        var w = (int) (curAOI.getBounds().width + 0.5);
+        var h = (int) (curAOI.getBounds().height + 0.5);
         renderer.updateOffScreen(w, h);
         renderer.setTree(gvtRoot);
         renderer.setTransform(renderingTransform);
@@ -653,7 +646,7 @@ public class SVGHandler {
         if (!(gn instanceof CompositeGraphicsNode)) {
             return null;
         }
-        CompositeGraphicsNode cgn = (CompositeGraphicsNode) gn;
+        var cgn = (CompositeGraphicsNode) gn;
         List<?> children = cgn.getChildren();
         if (children.size() == 0) {
             return null;
@@ -696,7 +689,7 @@ public class SVGHandler {
                 return;
             }
             if (useCache && cache != null) {
-                Image newImage = cache.addImage(e.getImage());
+                var newImage = cache.addImage(e.getImage());
                 if (cache.isFilled()) {
                     Activator.getLogger().log(Level.FINE, "SVG cache FILLED with " + cache.getSize() + " images");
                     svgAnimationEngine.pause();
@@ -709,8 +702,8 @@ public class SVGHandler {
                     notifyNewImage(newImage);
                 }
             } else if (!suspended) {
-                ImageData imageData = SVGUtils.toSWT(swtDisplay, e.getImage());
-                Image newImage = new Image(swtDisplay, imageData);
+                var imageData = SVGUtils.toSWT(swtDisplay, e.getImage());
+                var newImage = new Image(swtDisplay, imageData);
                 notifyNewImage(newImage);
             }
         }
@@ -722,7 +715,7 @@ public class SVGHandler {
     }
 
     protected void resetCache() {
-        final AnimatedSVGCache copy;
+        AnimatedSVGCache copy;
         synchronized (this) {
             copy = cache;
             cache = new AnimatedSVGCache(swtDisplay, timedDocumentRoot,
@@ -740,7 +733,7 @@ public class SVGHandler {
 
     protected void addToBuffer(Image image) {
         if (imageBuffer.size() == maxBufferSize) {
-            final List<Image> entriesCopy = new ArrayList<>(imageBuffer);
+            List<Image> entriesCopy = new ArrayList<>(imageBuffer);
             imageBuffer.clear();
             Runnable flushTask = new Runnable() {
                 @Override
@@ -761,7 +754,7 @@ public class SVGHandler {
         imageBuffer.add(image);
     }
 
-    protected void notifyNewImage(final Image newImage) {
+    protected void notifyNewImage(Image newImage) {
         if (handlerListener != null && newImage != null && !suspended) {
             swtDisplay.asyncExec(new Runnable() {
                 @Override
@@ -785,7 +778,7 @@ public class SVGHandler {
     private List<ICSSHandler> elementsToUpdate = new ArrayList<>();
 
     private void changeColor(Color colorToChange, Color newColor) {
-        Iterator<ICSSHandler> it = elementsToUpdate.iterator();
+        var it = elementsToUpdate.iterator();
         while (it.hasNext()) {
             it.next().updateCSSColor(colorToChange, newColor);
         }
@@ -797,15 +790,15 @@ public class SVGHandler {
             return;
         }
         elementsToUpdate.clear();
-        SVGCSSEngine cssEngine = (SVGCSSEngine) ctx.getCSSEngineForElement(doc.getDocumentElement());
+        var cssEngine = (SVGCSSEngine) ctx.getCSSEngineForElement(doc.getDocumentElement());
         if (cssEngine == null) {
             return;
         }
         List<?> styleSheetsList = cssEngine.getStyleSheetNodes();
         for (Object node : styleSheetsList) {
             if (node instanceof CSSStyleSheetNode) {
-                CSSStyleSheetNode cssNode = (CSSStyleSheetNode) node;
-                StyleSheet styleSheet = cssNode.getCSSStyleSheet();
+                var cssNode = (CSSStyleSheetNode) node;
+                var styleSheet = cssNode.getCSSStyleSheet();
                 elementsToUpdate.add(new StyleSheetCSSHandler(cssEngine, styleSheet));
             }
         }
@@ -816,39 +809,37 @@ public class SVGHandler {
         if (elmt == null) {
             return;
         }
-        NodeList styleList = elmt.getChildNodes();
+        var styleList = elmt.getChildNodes();
         if (styleList != null) {
-            for (int i = 0; i < styleList.getLength(); i++) {
-                Node child = styleList.item(i);
+            for (var i = 0; i < styleList.getLength(); i++) {
+                var child = styleList.item(i);
                 if (child instanceof Element) {
                     rBuidElementsList(cssEngine, (Element) child);
                 }
             }
         }
         if (elmt instanceof SVGStylableElement) {
-            elementsToUpdate.add(new SVGStylableElementCSSHandler(cssEngine,
-                    (SVGStylableElement) elmt));
+            elementsToUpdate.add(new SVGStylableElementCSSHandler(cssEngine, (SVGStylableElement) elmt));
         } else if (elmt instanceof SVGAnimateElement) {
-            elementsToUpdate.add(new SVGAnimateElementValuesHandler(cssEngine,
-                    (SVGAnimateElement) elmt));
+            elementsToUpdate.add(new SVGAnimateElementValuesHandler(cssEngine, (SVGAnimateElement) elmt));
         }
     }
 
     private Element mainGraphicNode;
     private Element svgRootNode;
 
-    private Document createWrapper(final SVGDocument doc) {
+    private Document createWrapper(SVGDocument doc) {
         // creation of the SVG document
-        String svgNamespace = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-        final Document newDocument = impl.createDocument(svgNamespace, "svg", null);
+        var svgNamespace = SVGDOMImplementation.SVG_NAMESPACE_URI;
+        var impl = SVGDOMImplementation.getDOMImplementation();
+        var newDocument = impl.createDocument(svgNamespace, "svg", null);
 
         // get the root element
         svgRootNode = newDocument.getDocumentElement();
         mainGraphicNode = newDocument.createElementNS(svgNamespace, "g");
 
         // attach the root of original doc to transform to the root
-        Node copiedRoot = newDocument.importNode(doc.getDocumentElement(), true);
+        var copiedRoot = newDocument.importNode(doc.getDocumentElement(), true);
         mainGraphicNode.appendChild(copiedRoot);
         svgRootNode.appendChild(mainGraphicNode);
         updateMatrix();
@@ -856,17 +847,17 @@ public class SVGHandler {
     }
 
     private Shape calculateShape() {
-        double width = originalDimension.getWidth();
-        double height = originalDimension.getHeight();
+        var width = originalDimension.getWidth();
+        var height = originalDimension.getHeight();
 
-        double[] flatmatrix = new double[] { matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1] };
-        AffineTransform at = new AffineTransform(flatmatrix);
+        var flatmatrix = new double[] { matrix[0][0], matrix[1][0], matrix[0][1], matrix[1][1] };
+        var at = new AffineTransform(flatmatrix);
         Shape curAOI = new Rectangle2D.Double(0, 0, width, height);
         return at.createTransformedShape(curAOI);
     }
 
     private void updateMatrix() {
-        Shape newAOI = calculateShape();
+        var newAOI = calculateShape();
         double newX = newAOI.getBounds().x;
         double newY = newAOI.getBounds().y;
         double newWidth = newAOI.getBounds().width;
@@ -875,14 +866,14 @@ public class SVGHandler {
         // set the width and height attributes on the root element
         svgRootNode.setAttributeNS(null, "width", String.valueOf(newWidth));
         svgRootNode.setAttributeNS(null, "height", String.valueOf(newHeight));
-        String vbs = newX + " " + newY + " " + newWidth + " " + newHeight;
+        var vbs = newX + " " + newY + " " + newWidth + " " + newHeight;
         svgRootNode.setAttributeNS(null, "viewBox", vbs);
         svgRootNode.setAttributeNS(null, "preserveAspectRatio", "none");
 
         // current Transformation Matrix
         double[][] CTM = { { matrix[0][0], matrix[0][1], 0 }, { matrix[1][0], matrix[1][1], 0 }, { 0, 0, 1 } };
         // create the transform matrix
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("matrix(");
         sb.append(CTM[0][0] + ",");
         sb.append(CTM[1][0] + ",");

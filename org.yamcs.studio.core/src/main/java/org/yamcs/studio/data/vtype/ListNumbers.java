@@ -16,15 +16,15 @@ public class ListNumbers {
      * @return the sorted view
      */
     public static SortedListView sortedView(ListNumber values) {
-        SortedListView view = new SortedListView(values);
+        var view = new SortedListView(values);
         if (values.size() <= 1) {
             // Nothing to sort
             return view;
         }
 
-        double value = values.getDouble(0);
-        for (int i = 1; i < values.size(); i++) {
-            double newValue = values.getDouble(i);
+        var value = values.getDouble(0);
+        for (var i = 1; i < values.size(); i++) {
+            var newValue = values.getDouble(i);
             if (value > newValue) {
                 SortedListView.quicksort(view);
                 return view;
@@ -49,7 +49,7 @@ public class ListNumbers {
      * @return the sorted view
      */
     public static SortedListView sortedView(ListNumber values, ListInt indexes) {
-        SortedListView view = new SortedListView(values, indexes);
+        var view = new SortedListView(values, indexes);
         return view;
     }
 
@@ -70,7 +70,7 @@ public class ListNumbers {
             return values.size() - 1;
         }
 
-        int index = binarySearch(0, values.size() - 1, values, value);
+        var index = binarySearch(0, values.size() - 1, values, value);
 
         while (index != 0 && value == values.getDouble(index - 1)) {
             index--;
@@ -96,7 +96,7 @@ public class ListNumbers {
             return values.size() - 1;
         }
 
-        int index = binarySearch(0, values.size() - 1, values, value);
+        var index = binarySearch(0, values.size() - 1, values, value);
 
         while (index != values.size() - 1 && value > values.getDouble(index)) {
             index++;
@@ -112,16 +112,16 @@ public class ListNumbers {
     private static int binarySearch(int low, int high, ListNumber values, double value) {
         // Taken from JDK
         while (low <= high) {
-            int mid = (low + high) >>> 1;
-            double midVal = values.getDouble(mid);
+            var mid = (low + high) >>> 1;
+            var midVal = values.getDouble(mid);
 
             if (midVal < value) {
                 low = mid + 1; // Neither val is NaN, thisVal is smaller
             } else if (midVal > value) {
                 high = mid - 1; // Neither val is NaN, thisVal is larger
             } else {
-                long midBits = Double.doubleToLongBits(midVal);
-                long keyBits = Double.doubleToLongBits(value);
+                var midBits = Double.doubleToLongBits(midVal);
+                var keyBits = Double.doubleToLongBits(value);
                 if (midBits == keyBits) {
                     return mid; // Key found
                 } else if (midBits < keyBits) {
@@ -149,7 +149,7 @@ public class ListNumbers {
      *            the size of the list
      * @return a new list
      */
-    public static ListNumber linearListFromRange(final double minValue, final double maxValue, final int size) {
+    public static ListNumber linearListFromRange(double minValue, double maxValue, int size) {
         if (size <= 0) {
             throw new IllegalArgumentException("Size must be positive (was " + size + " )");
         }
@@ -167,7 +167,7 @@ public class ListNumbers {
      *            the size of the list
      * @return a new list
      */
-    public static ListNumber linearList(final double initialValue, final double increment, final int size) {
+    public static ListNumber linearList(double initialValue, double increment, int size) {
         if (size <= 0) {
             throw new IllegalArgumentException("Size must be positive (was " + size + " )");
         }
@@ -190,9 +190,9 @@ public class ListNumbers {
         if (listNumber instanceof LinearListDouble || listNumber instanceof LinearListDoubleFromRange) {
             return true;
         }
-        ListDouble diff = ListMath.subtract(listNumber, linearListFromRange(listNumber.getDouble(0),
+        var diff = ListMath.subtract(listNumber, linearListFromRange(listNumber.getDouble(0),
                 listNumber.getDouble(listNumber.size() - 1), listNumber.size()));
-        for (int i = 0; i < diff.size(); i++) {
+        for (var i = 0; i < diff.size(); i++) {
             if (Math.abs(diff.getDouble(i)) > Math.ulp(listNumber.getDouble(i))) {
                 return false;
             }
@@ -228,8 +228,8 @@ public class ListNumbers {
     private static class LinearListDoubleFromRange extends ListDouble {
 
         private final int size;
-        private final double minValue;
-        private final double maxValue;
+        private double minValue;
+        private double maxValue;
 
         public LinearListDoubleFromRange(int size, double minValue, double maxValue) {
             this.size = size;
@@ -254,8 +254,8 @@ public class ListNumbers {
     private static class LinearListDouble extends ListDouble {
 
         private final int size;
-        private final double initialValue;
-        private final double increment;
+        private double initialValue;
+        private double increment;
 
         public LinearListDouble(int size, double initialValue, double increment) {
             this.size = size;

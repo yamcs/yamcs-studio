@@ -58,19 +58,19 @@ public class InsertColumnAction implements IObjectActionDelegate {
         @Override
         protected Control createDialogArea(Composite parent) {
             getShell().setText("Insert Column");
-            Composite container = (Composite) super.createDialogArea(parent);
+            var container = (Composite) super.createDialogArea(parent);
 
-            Group grpPosition = new Group(container, SWT.NONE);
+            var grpPosition = new Group(container, SWT.NONE);
             grpPosition.setText("Insert");
-            GridData gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
+            var gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
             grpPosition.setLayoutData(gd_grpPosition);
-            FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+            var fillLayout = new FillLayout(SWT.VERTICAL);
             fillLayout.marginHeight = 5;
             fillLayout.marginWidth = 5;
             fillLayout.spacing = 5;
             grpPosition.setLayout(fillLayout);
 
-            final Button beforeRadio = new Button(grpPosition, SWT.RADIO);
+            var beforeRadio = new Button(grpPosition, SWT.RADIO);
             beforeRadio.setText("Before this column");
             beforeRadio.setSelection(true);
             isBefore = true;
@@ -82,13 +82,13 @@ public class InsertColumnAction implements IObjectActionDelegate {
                 }
             });
 
-            Button afterRadio = new Button(grpPosition, SWT.RADIO);
+            var afterRadio = new Button(grpPosition, SWT.RADIO);
             afterRadio.setText("After this column");
 
-            Label title = new Label(grpPosition, SWT.None);
+            var title = new Label(grpPosition, SWT.None);
             title.setText("Header");
             if (allowedHeaders == null) {
-                final Text text = new Text(grpPosition, SWT.SINGLE | SWT.BORDER);
+                var text = new Text(grpPosition, SWT.SINGLE | SWT.BORDER);
                 text.addModifyListener(new ModifyListener() {
 
                     @Override
@@ -97,7 +97,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
                     }
                 });
             } else {
-                final Combo combo = new Combo(grpPosition, SWT.READ_ONLY);
+                var combo = new Combo(grpPosition, SWT.READ_ONLY);
                 combo.setItems(allowedHeaders);
                 combo.addSelectionListener(new SelectionAdapter() {
                     @Override
@@ -133,14 +133,15 @@ public class InsertColumnAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        TableEditPart tableEditPart = getSelectedWidget();
+        var tableEditPart = getSelectedWidget();
         allowedHeaders = tableEditPart.getAllowedHeaders();
-        InsertColumnDialog dialog = new InsertColumnDialog(targetPart.getSite().getShell());
+        var dialog = new InsertColumnDialog(targetPart.getSite().getShell());
         if (dialog.open() == Dialog.OK) {
-            boolean before = dialog.isBefore();
-            int index = 0;
-            if (!tableEditPart.getTable().isEmpty())
+            var before = dialog.isBefore();
+            var index = 0;
+            if (!tableEditPart.getTable().isEmpty()) {
                 index = tableEditPart.getMenuTriggeredCell().y + (before ? 0 : 1);
+            }
             tableEditPart.getTable().insertColumn(index);
             if (dialog.getColumnTitle() != null && !dialog.getColumnTitle().isEmpty()) {
                 tableEditPart.getTable().setColumnHeader(index, dialog.getColumnTitle());
@@ -159,8 +160,9 @@ public class InsertColumnAction implements IObjectActionDelegate {
     private TableEditPart getSelectedWidget() {
         if (selection.getFirstElement() instanceof TableEditPart) {
             return (TableEditPart) selection.getFirstElement();
-        } else
+        } else {
             return null;
+        }
     }
 
 }

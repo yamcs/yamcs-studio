@@ -49,8 +49,7 @@ public class TabItem {
         setPropertyValue(TabProperty.TITLE, NLS.bind("Tab {0}", tabIndex));
     }
 
-    private TabItem(GroupingContainerModel groupingContainerModel,
-            Map<TabProperty, Object> propertyMap) {
+    private TabItem(GroupingContainerModel groupingContainerModel, Map<TabProperty, Object> propertyMap) {
         this.groupingContainerModel = groupingContainerModel;
         this.propertyMap = propertyMap;
 
@@ -76,8 +75,7 @@ public class TabItem {
      */
     public void injectPropertiesValue(TabModel tabModel, int index) {
         for (TabProperty tabProperty : TabProperty.values()) {
-            propertyMap.put(tabProperty,
-                    tabModel.getTabPropertyValue(index, tabProperty));
+            propertyMap.put(tabProperty, tabModel.getTabPropertyValue(index, tabProperty));
         }
     }
 
@@ -88,10 +86,9 @@ public class TabItem {
      *            the index of the tab item.
      */
     public void injectDefaultPropertiesValue(int index) {
-        TabModel tempModel = new TabModel();
+        var tempModel = new TabModel();
         for (TabProperty tabProperty : TabProperty.values()) {
-            String propID = TabModel.makeTabPropID(
-                    tabProperty.propIDPre, index);
+            var propID = TabModel.makeTabPropID(tabProperty.propIDPre, index);
             propertyMap.put(tabProperty, tempModel.getProperty(propID).getDefaultValue());
         }
     }
@@ -100,8 +97,7 @@ public class TabItem {
         return groupingContainerModel;
     }
 
-    public void setGroupingContainerModel(
-            GroupingContainerModel groupingContainerModel) {
+    public void setGroupingContainerModel(GroupingContainerModel groupingContainerModel) {
         this.groupingContainerModel = groupingContainerModel;
     }
 
@@ -110,10 +106,9 @@ public class TabItem {
      * @throws Exception
      */
     public TabItem getCopy() throws Exception {
-        String xmlString = XMLUtil.widgetToXMLString(groupingContainerModel, false);
+        var xmlString = XMLUtil.widgetToXMLString(groupingContainerModel, false);
 
-        GroupingContainerModel newGroupingContainerModel = (GroupingContainerModel) XMLUtil
-                .XMLStringToWidget(xmlString);
+        var newGroupingContainerModel = (GroupingContainerModel) XMLUtil.XMLStringToWidget(xmlString);
 
         Map<TabProperty, Object> newPropertyMap = new HashMap<TabProperty, Object>();
 

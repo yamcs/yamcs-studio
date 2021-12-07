@@ -31,10 +31,7 @@ import org.eclipse.swt.widgets.MessageBox;
 public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
     public enum ShowConfirmDialog {
-        NO("No"),
-        Both("Both"),
-        PUSH("Push"),
-        RELEASE("Release");
+        NO("No"), Both("Both"), PUSH("Push"), RELEASE("Release");
 
         String description;
 
@@ -43,10 +40,11 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (ShowConfirmDialog p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (ShowConfirmDialog p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
 
@@ -61,13 +59,13 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
         @Override
         public void mousePressed(MouseEvent me) {
-            final Figure figure = (Figure) me.getSource();
+            var figure = (Figure) me.getSource();
             // Check location to ignore bogus mouse clicks,
             // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-            if (me.button != 1 ||
-                    !figure.containsPoint(me.getLocation()))
+            if (me.button != 1 || !figure.containsPoint(me.getLocation())) {
                 return;
-            boolean isOpen = false;
+            }
+            var isOpen = false;
             if (runMode) {
                 if (toggle) {
                     switch (showConfirmDialog) {
@@ -86,8 +84,9 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
                     default:
                         break;
                     }
-                    if (!isOpen || (isOpen && openConfirmDialog()))
+                    if (!isOpen || (isOpen && openConfirmDialog())) {
                         fireManualValueChange(!booleanValue);
+                    }
                 } else {
                     switch (showConfirmDialog) {
                     case Both:
@@ -104,15 +103,17 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
                     if (!isOpen || (isOpen && openConfirmDialog())) {
                         canceled = false;
                         fireManualValueChange(true);
-                        if (isOpen)
+                        if (isOpen) {
                             Display.getCurrent().timerExec(100, new Runnable() {
                                 @Override
                                 public void run() {
                                     fireManualValueChange(false);
                                 }
                             });
-                    } else
+                        }
+                    } else {
                         canceled = true;
+                    }
                 }
                 me.consume();
                 repaint();
@@ -121,8 +122,9 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
         @Override
         public void mouseReleased(MouseEvent me) {
-            if (me.button != 1)
+            if (me.button != 1) {
                 return;
+            }
             if (!toggle && runMode && !canceled) {
                 fireManualValueChange(false);
                 me.consume();
@@ -142,8 +144,8 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     protected boolean runMode = false;
 
     protected ButtonPresser buttonPresser;
-    protected final static Color DISABLE_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GRAY);
+    protected final static Color DISABLE_COLOR = CustomMediaFactory.getInstance()
+            .getColor(CustomMediaFactory.COLOR_GRAY);
 
     /** The alpha (0 is transparency and 255 is opaque) for disabled paint */
     protected static final int DISABLED_ALPHA = 100;
@@ -164,13 +166,14 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
      * @param listener
      *            the listener to add
      */
-    public void addManualValueChangeListener(final IManualValueChangeListener listener) {
+    public void addManualValueChangeListener(IManualValueChangeListener listener) {
         boolControlListeners.add(listener);
     }
 
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
-        if (boolControlListeners.contains(listener))
+    public void removeManualValueChangeListener(IManualValueChangeListener listener) {
+        if (boolControlListeners.contains(listener)) {
             boolControlListeners.remove(listener);
+        }
     }
 
     /**
@@ -179,7 +182,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
      * @param newManualValue
      *            the new manual value
      */
-    protected void fireManualValueChange(final boolean newManualValue) {
+    protected void fireManualValueChange(boolean newManualValue) {
 
         booleanValue = newManualValue;
         updateValue();
@@ -243,23 +246,23 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     private boolean openConfirmDialog() {
         // confirm & password input dialog
         if (password == null || password.equals("")) {
-            MessageBox mb = new MessageBox(Display.getCurrent()
-                    .getActiveShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+            var mb = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
             mb.setMessage(confirmTip);
             mb.setText("Confirm Dialog");
-            int val = mb.open();
-            if (val == SWT.YES)
+            var val = mb.open();
+            if (val == SWT.YES) {
                 return true;
+            }
         } else {
-            InputDialog dlg = new InputDialog(Display.getCurrent()
-                    .getActiveShell(), "Password Input Dialog",
+            InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Password Input Dialog",
                     "Please input the password", "", new IInputValidator() {
                         @Override
                         public String isValid(String newText) {
-                            if (newText.equals(password))
+                            if (newText.equals(password)) {
                                 return null;
-                            else
+                            } else {
                                 return "Password error!";
+                            }
                         }
                     }) {
                 @Override
@@ -268,9 +271,10 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
                 }
             };
             dlg.setBlockOnOpen(true);
-            int val = dlg.open();
-            if (val == Window.OK)
+            var val = dlg.open();
+            if (val == Window.OK) {
                 return true;
+            }
         }
         return false;
     }

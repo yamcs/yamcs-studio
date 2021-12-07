@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.widgetActions;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -22,8 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The action executing javascript with the default javascript engine embedded in JDK.
@@ -61,9 +58,9 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                 return;
             }
 
-            GraphicalViewer viewer = getWidgetModel().getRootDisplayModel().getViewer();
+            var viewer = getWidgetModel().getRootDisplayModel().getViewer();
             if (viewer != null) {
-                Object obj = viewer.getEditPartRegistry().get(getWidgetModel());
+                var obj = viewer.getEditPartRegistry().get(getWidgetModel());
                 if (obj != null && obj instanceof AbstractBaseEditPart) {
                     scriptScope.put(ScriptService.DISPLAY, viewer.getContents());
                     scriptScope.put(ScriptService.WIDGET, obj);
@@ -74,7 +71,7 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                String taskName = isEmbedded() ? "Execute JavaScript" : "Connecting to " + getAbsolutePath();
+                var taskName = isEmbedded() ? "Execute JavaScript" : "Connecting to " + getAbsolutePath();
                 monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
                 runTask();
                 monitor.done();
@@ -86,7 +83,7 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
     }
 
     private void runTask() {
-        Display display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
+        var display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
 
         try {
             if (script == null) {
@@ -95,8 +92,8 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                         if (isEmbedded()) {
                             script = ((Compilable) scriptEngine).compile(getScriptText());
                         } else {
-                            BufferedReader reader = getReader();
-                            StringBuilder buf = new StringBuilder();
+                            var reader = getReader();
+                            var buf = new StringBuilder();
                             try {
                                 String line;
                                 while ((line = reader.readLine()) != null) {
@@ -108,7 +105,7 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                             script = ((Compilable) scriptEngine).compile(buf.toString());
                         }
                     } catch (Exception e) {
-                        final String message = "Failed to compile JavaScript: " + getAbsolutePath();
+                        var message = "Failed to compile JavaScript: " + getAbsolutePath();
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                     }
                 });
@@ -118,12 +115,12 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                 try {
                     script.eval(scriptScope);
                 } catch (Exception e) {
-                    final String message = "Error in script " + getAbsolutePath();
+                    var message = "Error in script " + getAbsolutePath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             });
         } catch (Exception e) {
-            final String message = "Failed to execute JavaScript: " + getAbsolutePath();
+            var message = "Failed to execute JavaScript: " + getAbsolutePath();
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
         }
     }

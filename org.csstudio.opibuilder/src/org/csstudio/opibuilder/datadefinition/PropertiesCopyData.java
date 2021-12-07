@@ -22,8 +22,7 @@ public class PropertiesCopyData {
 
     private List<String> propIDList;
 
-    public PropertiesCopyData(AbstractWidgetModel widgetModel,
-            List<String> propIDList) {
+    public PropertiesCopyData(AbstractWidgetModel widgetModel, List<String> propIDList) {
         this.widgetModel = widgetModel;
         this.propIDList = propIDList;
     }
@@ -39,7 +38,7 @@ public class PropertiesCopyData {
      * @param widgetModel
      *            the widgetModel to set
      */
-    public final void setWidgetModel(AbstractWidgetModel widgetModel) {
+    public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
     }
 
@@ -54,7 +53,7 @@ public class PropertiesCopyData {
      * @param propIDList
      *            the propIDList to set
      */
-    public final void setPropIDList(List<String> propIDList) {
+    public void setPropIDList(List<String> propIDList) {
         this.propIDList = propIDList;
     }
 

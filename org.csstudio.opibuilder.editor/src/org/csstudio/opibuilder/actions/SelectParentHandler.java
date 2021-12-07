@@ -17,7 +17,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -31,22 +30,18 @@ public class SelectParentHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        GraphicalViewer viewer = HandlerUtil.getActivePart(event).getAdapter(
-                GraphicalViewer.class);
+        var viewer = HandlerUtil.getActivePart(event).getAdapter(GraphicalViewer.class);
         if (viewer == null) {
             return null;
         }
 
-        ISelection currentSelection = viewer.getSelection();
+        var currentSelection = viewer.getSelection();
 
         if (currentSelection instanceof IStructuredSelection) {
-            Object element = ((IStructuredSelection) currentSelection)
-                    .getFirstElement();
-            if (element instanceof AbstractBaseEditPart
-                    && !(element instanceof DisplayEditpart)) {
+            var element = ((IStructuredSelection) currentSelection).getFirstElement();
+            if (element instanceof AbstractBaseEditPart && !(element instanceof DisplayEditpart)) {
                 if (((AbstractBaseEditPart) element).getParent().isSelectable()) {
-                    ((AbstractBaseEditPart) element).getViewer().select(
-                            ((AbstractBaseEditPart) element).getParent());
+                    ((AbstractBaseEditPart) element).getViewer().select(((AbstractBaseEditPart) element).getParent());
                 } else {
                     log.warning("Parent of the selected widget is unselectable. Its grandparent may be locked.");
                 }

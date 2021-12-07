@@ -34,10 +34,7 @@ public class YearScale implements Scale {
 
     @Override
     public void drawContent(GC gc, Rectangle coords) {
-        var t = timeline.getStart()
-                .withMonth(1)
-                .withDayOfMonth(1)
-                .truncatedTo(DAYS);
+        var t = timeline.getStart().withMonth(1).withDayOfMonth(1).truncatedTo(DAYS);
 
         var halfHeight = (int) Math.round(coords.height * 0.5);
 

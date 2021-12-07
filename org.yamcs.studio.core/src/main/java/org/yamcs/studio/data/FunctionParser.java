@@ -3,7 +3,6 @@ package org.yamcs.studio.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.studio.data.vtype.ArrayDouble;
@@ -58,7 +57,7 @@ public class FunctionParser {
     public static List<Object> parseFunctionWithScalarOrArrayArguments(String nameRegex, String string,
             String errorMessage) {
         // Parse the channel name
-        List<Object> parsedTokens = FunctionParser.parseFunctionAnyParameter(nameRegex, string);
+        var parsedTokens = FunctionParser.parseFunctionAnyParameter(nameRegex, string);
 
         // Parsing failed
         if (parsedTokens == null) {
@@ -71,7 +70,7 @@ public class FunctionParser {
         }
 
         // Multiple arguments, collect in array if possible
-        Object data = asScalarOrList(parsedTokens.subList(1, parsedTokens.size()));
+        var data = asScalarOrList(parsedTokens.subList(1, parsedTokens.size()));
         if (data == null) {
             throw new IllegalArgumentException(errorMessage);
         }
@@ -107,9 +106,9 @@ public class FunctionParser {
      * @return the converted list or null
      */
     public static ListDouble asListDouble(List<Object> objects) {
-        double[] data = new double[objects.size()];
-        for (int i = 0; i < objects.size(); i++) {
-            Object value = objects.get(i);
+        var data = new double[objects.size()];
+        for (var i = 0; i < objects.size(); i++) {
+            var value = objects.get(i);
             if (value instanceof Double) {
                 data[i] = (Double) value;
             } else {
@@ -128,8 +127,8 @@ public class FunctionParser {
      */
     public static List<String> asListString(List<Object> objects) {
         List<String> data = new ArrayList<>();
-        for (int i = 0; i < objects.size(); i++) {
-            Object value = objects.get(i);
+        for (var i = 0; i < objects.size(); i++) {
+            var value = objects.get(i);
             if (value instanceof String) {
                 data.add((String) value);
             } else {
@@ -170,8 +169,8 @@ public class FunctionParser {
             }
         }
 
-        String name = string.substring(0, string.indexOf('('));
-        String arguments = string.substring(string.indexOf('(') + 1, string.lastIndexOf(')'));
+        var name = string.substring(0, string.indexOf('('));
+        var arguments = string.substring(string.indexOf('(') + 1, string.lastIndexOf(')'));
 
         if (!name.matches(nameRegex)) {
             return null;
@@ -180,7 +179,7 @@ public class FunctionParser {
         List<Object> result = new ArrayList<>();
         result.add(name);
         try {
-            List<Object> parsedArguments = parseCSVLine(arguments.trim(), "\\s*,\\s*");
+            var parsedArguments = parseCSVLine(arguments.trim(), "\\s*,\\s*");
             if (parsedArguments == null) {
                 return null;
             }
@@ -202,14 +201,14 @@ public class FunctionParser {
      */
     private static List<Object> parseCSVLine(String line, String separatorRegex) {
         List<Object> matches = new ArrayList<>();
-        int currentPosition = 0;
-        Matcher separatorMatcher = Pattern.compile("^" + separatorRegex).matcher(line);
-        Matcher stringMatcher = Pattern.compile("^" + QUOTED_STRING_REGEX).matcher(line);
-        Matcher doubleMatcher = Pattern.compile("^" + DOUBLE_REGEX).matcher(line);
+        var currentPosition = 0;
+        var separatorMatcher = Pattern.compile("^" + separatorRegex).matcher(line);
+        var stringMatcher = Pattern.compile("^" + QUOTED_STRING_REGEX).matcher(line);
+        var doubleMatcher = Pattern.compile("^" + DOUBLE_REGEX).matcher(line);
         while (currentPosition < line.length()) {
             if (stringMatcher.region(currentPosition, line.length()).useAnchoringBounds(true).find()) {
                 // Found String match
-                String token = line.substring(currentPosition + 1, stringMatcher.end() - 1);
+                var token = line.substring(currentPosition + 1, stringMatcher.end() - 1);
                 matches.add(unescapeString(token));
                 currentPosition = stringMatcher.end();
             } else if (doubleMatcher.region(currentPosition, line.length()).useAnchoringBounds(true).find()) {
@@ -234,8 +233,8 @@ public class FunctionParser {
     }
 
     private static String unescapeString(String escapedString) {
-        Matcher match = escapeSequence.matcher(escapedString);
-        StringBuffer output = new StringBuffer();
+        var match = escapeSequence.matcher(escapedString);
+        var output = new StringBuffer();
         while (match.find()) {
             match.appendReplacement(output, substitution(match.group()));
         }

@@ -33,8 +33,8 @@ class StringMultiColumnsEditor extends EditingSupport {
     private CellEditorType cellEditorType;
     private Object cellEditorData;
 
-    public StringMultiColumnsEditor(final TableViewer viewer,
-            final int numOfColumns, final int columnNo, final CellEditorType cellEditorType, final Object cellData) {
+    public StringMultiColumnsEditor(TableViewer viewer, int numOfColumns, int columnNo,
+            CellEditorType cellEditorType, Object cellData) {
         super(viewer);
         this.table_viewer = viewer;
         this.columnNo = columnNo;
@@ -43,8 +43,9 @@ class StringMultiColumnsEditor extends EditingSupport {
         this.cellEditorData = cellData;
         if (cellEditorType == CellEditorType.CHECKBOX) {
             if (cellEditorData == null || !(cellEditorData instanceof String[])
-                    || ((String[]) cellEditorData).length < 2)
+                    || ((String[]) cellEditorData).length < 2) {
                 cellEditorData = new String[] { "Yes", "No" };
+            }
         }
     }
 
@@ -55,10 +56,11 @@ class StringMultiColumnsEditor extends EditingSupport {
 
     @Override
     protected CellEditor getCellEditor(Object element) {
-        final Table parent = (Table) getViewer().getControl();
+        var parent = (Table) getViewer().getControl();
         switch (cellEditorType) {
         case CHECKBOX:
             return new CheckboxCellEditor(parent) {
+                @Override
                 protected Object doGetValue() {
                     return (Boolean) super.doGetValue() ? ((String[]) cellEditorData)[1]
                             : ((String[]) cellEditorData)[0];
@@ -66,15 +68,15 @@ class StringMultiColumnsEditor extends EditingSupport {
 
                 @Override
                 protected void doSetValue(Object value) {
-                    if (value.toString().toLowerCase().equals(((String[]) cellEditorData)[1].toLowerCase()))
+                    if (value.toString().toLowerCase().equals(((String[]) cellEditorData)[1].toLowerCase())) {
                         super.doSetValue(true);
-                    else
+                    } else {
                         super.doSetValue(false);
+                    }
                 }
             };
         case DROPDOWN:
-            return new ComboBoxCellEditor(parent,
-                    (String[]) cellEditorData, SWT.NONE) {
+            return new ComboBoxCellEditor(parent, (String[]) cellEditorData, SWT.NONE) {
                 @Override
                 protected Object doGetValue() {
                     return ((CCombo) getControl()).getText();
@@ -96,20 +98,22 @@ class StringMultiColumnsEditor extends EditingSupport {
     @Override
     protected Object getValue(Object element) {
 
-        if (element == StringTableContentProvider.ADD_ELEMENT)
+        if (element == StringTableContentProvider.ADD_ELEMENT) {
             return "";
-        final int index = ((Integer) element).intValue();
-        final List<String[]> items = (List<String[]>) table_viewer.getInput();
-        if (columnNo < items.get(index).length)
+        }
+        var index = ((Integer) element).intValue();
+        var items = (List<String[]>) table_viewer.getInput();
+        if (columnNo < items.get(index).length) {
             return items.get(index)[columnNo];
-        else
+        } else {
             return "";
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void setValue(Object element, Object value) {
-        final List<String[]> items = (List<String[]>) table_viewer.getInput();
+        var items = (List<String[]>) table_viewer.getInput();
         String[] rowData;
         if (element == StringTableContentProvider.ADD_ELEMENT) {
             rowData = new String[numOfColumns];
@@ -120,11 +124,11 @@ class StringMultiColumnsEditor extends EditingSupport {
             return;
         }
         // else
-        final int index = ((Integer) element).intValue();
+        var index = ((Integer) element).intValue();
         rowData = items.get(index);
         if (columnNo >= rowData.length) {
-            String[] newRowData = new String[columnNo + 1];
-            int i = 0;
+            var newRowData = new String[columnNo + 1];
+            var i = 0;
             for (; i < rowData.length; i++) {
                 newRowData[i] = rowData[i];
             }

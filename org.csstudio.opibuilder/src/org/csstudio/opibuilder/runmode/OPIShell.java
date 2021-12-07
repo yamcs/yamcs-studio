@@ -19,13 +19,11 @@ import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.gef.DragTracker;
@@ -206,7 +204,7 @@ public final class OPIShell implements IOPIRuntime {
         this.view = view;
         actionRegistry.registerAction(new RefreshOPIAction(this));
         actionRegistry.registerAction(new PrintDisplayAction(this));
-        OPIRunnerContextMenuProvider contextMenuProvider = new OPIRunnerContextMenuProvider(viewer, this);
+        var contextMenuProvider = new OPIRunnerContextMenuProvider(viewer, this);
         getSite().registerContextMenu(contextMenuProvider, viewer);
         viewer.setContextMenu(contextMenuProvider);
     }
@@ -228,9 +226,9 @@ public final class OPIShell implements IOPIRuntime {
 
     @Override
     public boolean equals(Object o) {
-        boolean equal = false;
+        var equal = false;
         if (o instanceof OPIShell) {
-            OPIShell opiShell = (OPIShell) o;
+            var opiShell = (OPIShell) o;
             equal = opiShell.getMacrosInput().equals(this.getMacrosInput());
             equal &= opiShell.getPath().equals(this.path);
         }
@@ -265,8 +263,8 @@ public final class OPIShell implements IOPIRuntime {
     }
 
     private void resizeToContents() {
-        int frameX = shell.getSize().x - shell.getClientArea().width;
-        int frameY = shell.getSize().y - shell.getClientArea().height;
+        var frameX = shell.getSize().x - shell.getClientArea().width;
+        var frameY = shell.getSize().y - shell.getClientArea().height;
         shell.setSize(displayModel.getSize().width + frameX, displayModel.getSize().height + frameY);
     }
 
@@ -281,7 +279,7 @@ public final class OPIShell implements IOPIRuntime {
         if (macrosInput == null) {
             macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
         }
-        boolean alreadyOpen = false;
+        var alreadyOpen = false;
         for (OPIShell opiShell : openShells) {
             if (opiShell.getPath().equals(path) && opiShell.getMacrosInput().equals(macrosInput)) {
                 opiShell.raiseToTop();
@@ -327,7 +325,7 @@ public final class OPIShell implements IOPIRuntime {
      *
      * Return associated OPIShell or Null if none found
      */
-    public static OPIShell getOPIShellForShell(final Shell target) {
+    public static OPIShell getOPIShellForShell(Shell target) {
         OPIShell foundShell = null;
         if (target != null) {
             for (OPIShell os : openShells) {
@@ -363,9 +361,9 @@ public final class OPIShell implements IOPIRuntime {
      */
     private static void sendUpdateCommand() {
         IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-        ICommandService commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+        var commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
         try {
-            Command command = commandService.getCommand(OPI_SHELLS_CHANGED_ID);
+            var command = commandService.getCommand(OPI_SHELLS_CHANGED_ID);
             command.executeWithChecks(new ExecutionEvent());
         } catch (ExecutionException | NotHandledException | NotEnabledException | NotDefinedException e) {
             log.log(Level.WARNING, "Failed to send OPI shells changed command", e);
@@ -427,12 +425,15 @@ public final class OPIShell implements IOPIRuntime {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (adapter == ActionRegistry.class)
+        if (adapter == ActionRegistry.class) {
             return adapter.cast(this.actionRegistry);
-        if (adapter == GraphicalViewer.class)
+        }
+        if (adapter == GraphicalViewer.class) {
             return adapter.cast(this.viewer);
-        if (adapter == CommandStack.class)
+        }
+        if (adapter == CommandStack.class) {
             return adapter.cast(this.viewer.getEditDomain().getCommandStack());
+        }
         return null;
     }
 
@@ -467,7 +468,7 @@ public final class OPIShell implements IOPIRuntime {
 
     @Override
     public IEditorInput getOPIInput() {
-        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(displayModel.getOpiFilePath());
+        var file = ResourcesPlugin.getWorkspace().getRoot().getFile(displayModel.getOpiFilePath());
         return new FileEditorInput(file);
     }
 

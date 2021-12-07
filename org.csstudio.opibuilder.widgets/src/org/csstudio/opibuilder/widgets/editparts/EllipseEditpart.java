@@ -24,8 +24,8 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        EllipseFigure figure = new EllipseFigure();
-        EllipseModel model = getWidgetModel();
+        var figure = new EllipseFigure();
+        var model = getWidgetModel();
         figure.setFill(model.getFillLevel());
         figure.setHorizontalFill(model.isHorizontalFill());
         figure.setTransparent(model.isTransparent());
@@ -46,10 +46,9 @@ public class EllipseEditpart extends AbstractShapeEditPart {
         super.registerPropertyChangeHandlers();
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                EllipseFigure ellipseFigure = (EllipseFigure) refreshableFigure;
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var ellipseFigure = (EllipseFigure) refreshableFigure;
                 ellipseFigure.setFill((Double) newValue);
                 return true;
             }
@@ -58,10 +57,9 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
         // fill orientaion
         IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                EllipseFigure ellipseFigure = (EllipseFigure) refreshableFigure;
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var ellipseFigure = (EllipseFigure) refreshableFigure;
                 ellipseFigure.setHorizontalFill((Boolean) newValue);
                 return true;
             }
@@ -70,10 +68,9 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
         // transparent
         IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                EllipseFigure ellipseFigure = (EllipseFigure) refreshableFigure;
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var ellipseFigure = (EllipseFigure) refreshableFigure;
                 ellipseFigure.setTransparent((Boolean) newValue);
                 return true;
             }
@@ -82,16 +79,13 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ((EllipseFigure) refreshableFigure).setLineColor(
-                        ((OPIColor) newValue).getSWTColor());
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                ((EllipseFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
-                lineColorHandler);
+        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
 
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
 
@@ -128,8 +122,9 @@ public class EllipseEditpart extends AbstractShapeEditPart {
     public void setValue(Object value) {
         if (value instanceof Number) {
             ((EllipseFigure) getFigure()).setFill(((Number) value).doubleValue());
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override

@@ -23,15 +23,10 @@ import org.csstudio.opibuilder.runmode.RunnerInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
@@ -50,8 +45,8 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
     public static String ACTION_DEFINITION_ID = "org.csstudio.opibuilder.runopi";
 
     public RunOPIAction() {
-        super("Display Runner", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/run_exc.png"));
+        super("Display Runner", CustomMediaFactory.getInstance()
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/run_exc.png"));
         setId(ID);
         setActionDefinitionId(ACTION_DEFINITION_ID);
     }
@@ -78,9 +73,9 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
 
     @Override
     public void run() {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        var page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try {
-            IEditorPart activeEditor = page.getActiveEditor();
+            var activeEditor = page.getActiveEditor();
             if (activeEditor != null) {
                 // TODO: Should perform the 'save' in background, then return to UI thread when done..
                 if (PreferencesHelper.isAutoSaveBeforeRunning() && activeEditor.isDirty()) {
@@ -96,7 +91,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
             }
 
             if (targetWindow == null) {
-                IWorkbenchPage runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
+                var runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
                 targetWindow = runnerPage.getWorkbenchWindow();
             }
 
@@ -106,17 +101,17 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
                 // DisplayModel displayModel = ((OPIEditor) activeEditor).getDisplayModel();
                 // Rectangle bounds = new Rectangle(displayModel.getLocation(), displayModel.getSize());
 
-                IEditorInput input = activeEditor.getEditorInput();
-                IPath path = ResourceUtil.getPathInEditor(input);
-                RunnerInput new_input = new RunnerInput(path, null);
+                var input = activeEditor.getEditorInput();
+                var path = ResourceUtil.getPathInEditor(input);
+                var new_input = new RunnerInput(path, null);
 
                 // If this display is already executing, update it to the new content,
                 // because RunModeService would only pop old content back to the front.
                 for (IViewReference view_ref : targetWindow.getActivePage().getViewReferences()) {
                     if (view_ref.getId().startsWith(OPIView.ID)) {
-                        IViewPart view = view_ref.getView(true);
+                        var view = view_ref.getView(true);
                         if (view instanceof OPIView) {
-                            OPIView opi_view = (OPIView) view;
+                            var opi_view = (OPIView) view;
                             if (new_input.equals(opi_view.getOPIInput())) {
                                 try {
                                     opi_view.setOPIInput(new_input);
@@ -133,8 +128,8 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
                 RunModeService.openDisplayInView(targetWindow.getActivePage(), new_input, DisplayMode.NEW_TAB);
             }
         } catch (Exception ex) {
-            ExceptionDetailsErrorDialog.openError(page.getWorkbenchWindow().getShell(),
-                    "Cannot launch display runtime", ex);
+            ExceptionDetailsErrorDialog.openError(page.getWorkbenchWindow().getShell(), "Cannot launch display runtime",
+                    ex);
         }
     }
 

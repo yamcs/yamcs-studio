@@ -34,8 +34,8 @@ public class PlayWavFileAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new FilePathProperty(PROP_PATH, "WAV File Path",
-                WidgetPropertyCategory.Basic, "", new String[] { "wav" }));
+        addProperty(new FilePathProperty(PROP_PATH, "WAV File Path", WidgetPropertyCategory.Basic, "",
+                new String[] { "wav" }));
 
     }
 
@@ -50,7 +50,7 @@ public class PlayWavFileAction extends AbstractWidgetAction {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                IPath path = getAbsolutePath();
+                var path = getAbsolutePath();
                 monitor.beginTask("Connecting to " + path, IProgressMonitor.UNKNOWN);
                 try {
                     // a better way to play wav.
@@ -111,7 +111,7 @@ public class PlayWavFileAction extends AbstractWidgetAction {
                     // };
                     // playWavJob.schedule();
                 } catch (Exception e) {
-                    String message = "Failed to connect to wave file " + getPath();
+                    var message = "Failed to connect to wave file " + getPath();
                     OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);
                 } finally {
                     monitor.done();
@@ -130,10 +130,9 @@ public class PlayWavFileAction extends AbstractWidgetAction {
 
     private IPath getAbsolutePath() {
         // read file
-        IPath absolutePath = getPath();
+        var absolutePath = getPath();
         if (!getPath().isAbsolute()) {
-            absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(),
-                    getPath());
+            absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
         }
         return absolutePath;
     }

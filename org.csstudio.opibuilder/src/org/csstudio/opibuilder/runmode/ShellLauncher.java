@@ -21,9 +21,9 @@ import org.eclipse.ui.IEditorLauncher;
  */
 public class ShellLauncher implements IEditorLauncher {
     @Override
-    public void open(final IPath path) {
+    public void open(IPath path) {
         // The path is an absolute system path, which needs to be transformed to workspace path
-        IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
+        var workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
         OPIShell.openOPIShell(workspacePath, null);
 
     }

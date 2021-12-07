@@ -11,7 +11,6 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.ComboFigure;
 import org.csstudio.opibuilder.widgets.model.ComboModel;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -31,12 +30,12 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final ComboModel model = getWidgetModel();
+        var model = getWidgetModel();
         updatePropSheet(model.isItemsFromPV());
-        ComboFigure comboFigure = new ComboFigure(this);
+        var comboFigure = new ComboFigure(this);
         combo = comboFigure.getSWTWidget();
 
-        List<String> items = getWidgetModel().getItems();
+        var items = getWidgetModel().getItems();
 
         updateCombo(items);
 
@@ -84,15 +83,15 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         // load items from PV
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             if (getWidgetModel().isItemsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadItemsFromPVListener == null) {
                         loadItemsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
+                                var value = pv.getValue();
                                 if (value != null && value instanceof VEnum) {
-                                    List<String> items = ((VEnum) value).getLabels();
+                                    var items = ((VEnum) value).getLabels();
                                     getWidgetModel().setPropertyValue(ComboModel.PROP_ITEMS, items);
                                 }
                             }
@@ -108,7 +107,7 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isItemsFromPV()) {
-            IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
             if (pv != null && loadItemsFromPVListener != null) {
                 pv.removeListener(loadItemsFromPVListener);
             }
@@ -128,7 +127,7 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         // PV_Value
         IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
             if (newValue != null) {
-                String stringValue = VTypeHelper.getString((VType) newValue);
+                var stringValue = VTypeHelper.getString((VType) newValue);
                 if (Arrays.asList(combo.getItems()).contains(stringValue)) {
                     combo.setText(stringValue);
                 } else {
@@ -163,9 +162,8 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
             updatePropSheet((Boolean) newValue);
             return false;
         };
-        getWidgetModel().getProperty(ComboModel.PROP_ITEMS_FROM_PV)
-                .addPropertyChangeListener(
-                        evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
+        getWidgetModel().getProperty(ComboModel.PROP_ITEMS_FROM_PV).addPropertyChangeListener(
+                evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
 
         // size change handlers--always apply the default height
         IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
@@ -179,12 +177,12 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(ComboModel.PROP_FONT, handle);
     }
 
-    private void updatePropSheet(final boolean itemsFromPV) {
+    private void updatePropSheet(boolean itemsFromPV) {
         getWidgetModel().setPropertyVisible(ComboModel.PROP_ITEMS, !itemsFromPV);
     }
 
     private void autoSizeWidget(ComboFigure comboFigure) {
-        Dimension d = comboFigure.getAutoSizeDimension();
+        var d = comboFigure.getAutoSizeDimension();
         getWidgetModel().setSize(getWidgetModel().getWidth(), d.height);
     }
 

@@ -15,7 +15,7 @@ public class CommandHistoryViewerColumnsDialog extends ViewerColumnsDialog {
 
     @Override
     protected void performDefaults() {
-        ColumnData defaultData = view.createDefaultColumnData();
+        var defaultData = view.createDefaultColumnData();
 
         getVisible().clear();
         getVisible().addAll(defaultData.getVisibleColumns());

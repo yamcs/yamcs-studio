@@ -9,7 +9,6 @@ import java.util.Set;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Combo;
-import org.yamcs.protobuf.Yamcs.Event;
 
 /**
  * Allows the user to select the source for the events managed by EventLogTableViewer from a dropdown Combo box.
@@ -41,12 +40,12 @@ public class EventLogSourceFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof EventLogItem) {
-            Event event = ((EventLogItem) element).event;
+            var event = ((EventLogItem) element).event;
             if (!eventSources.contains(event.getSource())) {
                 eventSources.add(event.getSource());
 
                 // Keep choices sorted, while preserving an existing selection
-                int selectionIndex = sourceCombo.getSelectionIndex();
+                var selectionIndex = sourceCombo.getSelectionIndex();
                 Object selectedItem = null;
                 if (selectionIndex != -1) {
                     selectedItem = sourceCombo.getItem(selectionIndex);
@@ -68,7 +67,7 @@ public class EventLogSourceFilter extends ViewerFilter {
                 }
             }
 
-            String filterText = sourceCombo.getText();
+            var filterText = sourceCombo.getText();
             return filterText.equals(ANY_SOURCE) || filterText.equals(event.getSource());
         }
         return false;

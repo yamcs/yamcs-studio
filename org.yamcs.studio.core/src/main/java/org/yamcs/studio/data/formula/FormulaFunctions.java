@@ -59,14 +59,14 @@ public class FormulaFunctions {
      * @return true if the function can accept the given arguments
      */
     public static boolean matchArgumentTypes(List<Object> arguments, FormulaFunction function, boolean allowNull) {
-        List<Class<?>> types = function.getArgumentTypes();
+        var types = function.getArgumentTypes();
 
         if (!matchArgumentCount(arguments.size(), function)) {
             return false;
         }
 
-        for (int i = 0; i < arguments.size(); i++) {
-            int j = Math.min(i, types.size() - 1);
+        for (var i = 0; i < arguments.size(); i++) {
+            var j = Math.min(i, types.size() - 1);
             if (!types.get(j).isInstance(arguments.get(i))) {
                 if (allowNull && arguments.get(i) == null) {
                 } else {
@@ -151,11 +151,11 @@ public class FormulaFunctions {
     public static String formatSignature(FormulaFunction function) {
         // Prepare arguments
         List<String> arguments = new ArrayList<>();
-        for (int i = 0; i < function.getArgumentTypes().size() - 1; i++) {
-            arguments.add(function.getArgumentTypes().get(i).getSimpleName() + " "
-                    + function.getArgumentNames().get(i));
+        for (var i = 0; i < function.getArgumentTypes().size() - 1; i++) {
+            arguments
+                    .add(function.getArgumentTypes().get(i).getSimpleName() + " " + function.getArgumentNames().get(i));
         }
-        StringBuilder lastArgument = new StringBuilder();
+        var lastArgument = new StringBuilder();
         lastArgument.append(function.getArgumentTypes().get(function.getArgumentTypes().size() - 1).getSimpleName());
         if (function.isVarArgs()) {
             lastArgument.append("...");
@@ -164,7 +164,7 @@ public class FormulaFunctions {
         arguments.add(lastArgument.toString());
 
         // Format strings
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(format(function.getName(), arguments));
         sb.append(": ");
         sb.append(function.getReturnType().getSimpleName());
@@ -199,40 +199,28 @@ public class FormulaFunctions {
     }
 
     private static String conditionalOperator(String function, List<String> args) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("(")
-                .append(args.get(0))
-                .append(" ? ")
-                .append(args.get(1))
-                .append(" : ")
-                .append(args.get(2))
+        var sb = new StringBuilder();
+        sb.append("(").append(args.get(0)).append(" ? ").append(args.get(1)).append(" : ").append(args.get(2))
                 .append(")");
         return sb.toString();
     }
 
     private static String formatPostfixTwoArgs(String function, List<String> args) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("(")
-                .append(args.get(0))
-                .append(" ")
-                .append(function)
-                .append(" ")
-                .append(args.get(1))
-                .append(")");
+        var sb = new StringBuilder();
+        sb.append("(").append(args.get(0)).append(" ").append(function).append(" ").append(args.get(1)).append(")");
         return sb.toString();
     }
 
     private static String formatPrefixOneArg(String function, List<String> args) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(function)
-                .append(args.get(0));
+        var sb = new StringBuilder();
+        sb.append(function).append(args.get(0));
         return sb.toString();
     }
 
     private static String formatFunction(String function, List<String> args) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(function).append('(');
-        boolean first = true;
+        var first = true;
         for (String arg : args) {
             if (!first) {
                 sb.append(", ");

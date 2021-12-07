@@ -11,10 +11,6 @@ package org.yamcs.studio.autocomplete.ui.content;
 
 import java.util.List;
 
-import org.yamcs.studio.autocomplete.proposals.Proposal;
-import org.yamcs.studio.autocomplete.tooltips.TooltipData;
-import org.yamcs.studio.autocomplete.ui.IAutoCompleteProposalProvider;
-import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -29,6 +25,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.yamcs.studio.autocomplete.proposals.Proposal;
+import org.yamcs.studio.autocomplete.tooltips.TooltipData;
+import org.yamcs.studio.autocomplete.ui.IAutoCompleteProposalProvider;
+import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 
 /**
  * ContentProposalAdapter can be used to attach content proposal behavior to a control. This behavior includes obtaining
@@ -163,10 +163,8 @@ public class ContentProposalAdapter {
      *            keyStroke will invoke content proposal. If this parameter is <code>null</code> and the keyStroke
      *            parameter is <code>null</code>, then all alphanumeric characters will auto-activate content proposal.
      */
-    public ContentProposalAdapter(Control control,
-            IControlContentAdapter controlContentAdapter,
-            IAutoCompleteProposalProvider proposalProvider,
-            KeyStroke keyStroke, char[] autoActivationCharacters) {
+    public ContentProposalAdapter(Control control, IControlContentAdapter controlContentAdapter,
+            IAutoCompleteProposalProvider proposalProvider, KeyStroke keyStroke, char[] autoActivationCharacters) {
         super();
         // We always assume the control and content adapter are valid.
         Assert.isNotNull(control);
@@ -192,8 +190,7 @@ public class ContentProposalAdapter {
      */
     private void addControlListener(Control control) {
         if (DEBUG) {
-            System.out
-                    .println("ContentProposalListener#installControlListener()");
+            System.out.println("ContentProposalListener#installControlListener()");
         }
         if (controlListener != null) {
             return;
@@ -247,9 +244,8 @@ public class ContentProposalAdapter {
                     }
 
                     if (e.keyCode == SWT.ARROW_RIGHT) {
-                        int pos = getControlContentAdapter().getCursorPosition(getControl());
-                        String contents = getControlContentAdapter()
-                                .getControlContents(getControl());
+                        var pos = getControlContentAdapter().getCursorPosition(getControl());
+                        var contents = getControlContentAdapter().getControlContents(getControl());
                         if (pos == contents.length()) {
                             e.doit = false;
                             openProposalPopup(false);
@@ -262,12 +258,12 @@ public class ContentProposalAdapter {
                     if (triggerKeyStroke != null) {
                         // Either there are no modifiers for the trigger and we
                         // check the character field...
-                        if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke
-                                .getNaturalKey() == e.character) ||
+                        if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY
+                                && triggerKeyStroke.getNaturalKey() == e.character) ||
                         // ...or there are modifiers, in which case the keycode
                         // and state must match
-                                (triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke
-                                        .getModifierKeys() & e.stateMask) == triggerKeyStroke
+                                (triggerKeyStroke.getNaturalKey() == e.keyCode
+                                        && ((triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
                                                 .getModifierKeys()))) {
                             // We never propagate the keystroke for an explicit
                             // keystroke invocation of the popup
@@ -363,8 +359,7 @@ public class ContentProposalAdapter {
              * Dump the given events to "standard" output.
              */
             private void dump(String who, Event e) {
-                StringBuffer sb = new StringBuffer(
-                        "--- [ContentProposalAdapter]\n");
+                var sb = new StringBuffer("--- [ContentProposalAdapter]\n");
                 sb.append(who);
                 sb.append(" - e: keyCode=" + e.keyCode + hex(e.keyCode));
                 sb.append("; character=" + e.character + hex(e.character));
@@ -384,8 +379,7 @@ public class ContentProposalAdapter {
         control.addListener(SWT.Modify, controlListener);
 
         if (DEBUG) {
-            System.out
-                    .println("ContentProposalAdapter#installControlListener() - installed");
+            System.out.println("ContentProposalAdapter#installControlListener() - installed");
         }
     }
 
@@ -417,7 +411,7 @@ public class ContentProposalAdapter {
                 }
                 getControl().getDisplay().syncExec(() -> openProposalPopup(true));
             };
-            Thread t = new Thread(runnable);
+            var t = new Thread(runnable);
             t.start();
         } else {
             // Since we do not sleep, we must open the popup
@@ -476,15 +470,14 @@ public class ContentProposalAdapter {
      *            a boolean indicating whether the popup was autoactivated. If false, a beep will sound when no
      *            proposals can be shown.
      */
-    private void openProposalPopup(final boolean autoActivated) {
+    private void openProposalPopup(boolean autoActivated) {
         if (isValid()) {
             if (popup == null) {
                 // Check whether there are any proposals to be shown.
                 getProposals(new IContentProposalSearchHandler() {
 
                     @Override
-                    public void handleResult(
-                            final ContentProposalList proposalList) {
+                    public void handleResult(ContentProposalList proposalList) {
                         if (isValid()) {
                             getControl().getDisplay().syncExec(() -> {
                                 if (popup == null) {
@@ -511,8 +504,7 @@ public class ContentProposalAdapter {
     /*
      * Init & open the popup on asynchronous call.
      */
-    private void initPopup(ContentProposalList proposalList,
-            boolean autoActivated) {
+    private void initPopup(ContentProposalList proposalList, boolean autoActivated) {
         if (proposalList.fullLength() > 0) {
             if (DEBUG) {
                 System.out.println("POPUP OPENED BY PRECEDING EVENT");
@@ -532,12 +524,11 @@ public class ContentProposalAdapter {
      */
     private void recordCursorPosition() {
         if (isValid()) {
-            IControlContentAdapter adapter = getControlContentAdapter();
+            var adapter = getControlContentAdapter();
             cursorPos = adapter.getCursorPosition(control);
             // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=139063
             if (adapter instanceof IControlContentAdapter2) {
-                selectionRange = ((IControlContentAdapter2) adapter)
-                        .getSelection(control);
+                selectionRange = ((IControlContentAdapter2) adapter).getSelection(control);
             }
 
         }
@@ -546,7 +537,7 @@ public class ContentProposalAdapter {
     /**
      * Get the proposals from the proposal provider.
      */
-    public void getProposals(final IContentProposalSearchHandler listener) {
+    public void getProposals(IContentProposalSearchHandler listener) {
         if (proposalProvider == null || !isValid()) {
             return;
         }
@@ -554,8 +545,8 @@ public class ContentProposalAdapter {
             System.out.println(">>> obtaining proposals from provider");
         }
         recordCursorPosition();
-        final String contents = getControlContentAdapter().getControlContents(getControl());
-        final String contentToParse = contents.substring(0, cursorPos);
+        var contents = getControlContentAdapter().getControlContents(getControl());
+        var contentToParse = contents.substring(0, cursorPos);
         this.insertionRange = new Point(cursorPos, cursorPos);
         hasSelectedTopProposal = false;
 
@@ -573,8 +564,8 @@ public class ContentProposalAdapter {
      * @param proposalList
      *            the list of proposals.
      */
-    public void handleTopProposals(final ContentProposalList proposalList) {
-        List<Proposal> topProposals = proposalList.getTopProposalList();
+    public void handleTopProposals(ContentProposalList proposalList) {
+        var topProposals = proposalList.getTopProposalList();
         if (topProposals.size() == 2) {
             selectedTopProposal = topProposals.get(0);
             hasSelectedTopProposal = true;
@@ -609,8 +600,7 @@ public class ContentProposalAdapter {
      * @param proposal
      *            the accepted proposal
      */
-    public void proposalAccepted(final Proposal proposal,
-            final boolean addToHistory) {
+    public void proposalAccepted(Proposal proposal, boolean addToHistory) {
         hasSelectedTopProposal = false;
         setControlContent(proposal, true);
 
@@ -655,7 +645,7 @@ public class ContentProposalAdapter {
      * @param proposal
      *            the selected proposal
      */
-    public void proposalSelected(final Proposal proposal) {
+    public void proposalSelected(Proposal proposal) {
         hasSelectedTopProposal = false;
         setControlContent(proposal, false);
     }
@@ -664,37 +654,34 @@ public class ContentProposalAdapter {
      * Set the text content of the control to the specified text, setting the
      * cursorPosition at the desired location within the new contents.
      */
-    private void setControlContent(final Proposal proposal, final boolean accepted) {
+    private void setControlContent(Proposal proposal, boolean accepted) {
         if (isValid()) {
             // Should already be false, but just in case.
             watchModify = false;
-            String content = getControlContentAdapter().getControlContents(getControl());
-            int insertionPos = proposal.getInsertionPos();
-            String before = proposal.getOriginalValue();
+            var content = getControlContentAdapter().getControlContents(getControl());
+            var insertionPos = proposal.getInsertionPos();
+            var before = proposal.getOriginalValue();
             if (insertionPos < before.length()) {
                 before = before.substring(0, insertionPos);
             }
-            String value = proposal.getValue();
-            String after = "";
+            var value = proposal.getValue();
+            var after = "";
             if (insertionRange.y < content.length()) {
                 after = content.substring(insertionRange.y);
             }
-            int insertionLength = value.length();
+            var insertionLength = value.length();
             this.insertionRange.y = insertionPos + insertionLength;
 
             if ((!after.isEmpty() && !accepted) || hasSelectedTopProposal) {
-                this.selectionRange = new Point(this.insertionRange.x,
-                        this.insertionRange.y);
+                this.selectionRange = new Point(this.insertionRange.x, this.insertionRange.y);
             } else {
                 this.selectionRange = new Point(-1, -1);
             }
 
-            String text = before + value + after;
+            var text = before + value + after;
             controlContentAdapter.setControlContents(control, text, insertionRange.y);
-            if (controlContentAdapter instanceof IControlContentAdapter2
-                    && selectionRange.x != -1) {
-                ((IControlContentAdapter2) controlContentAdapter).setSelection(
-                        control, selectionRange);
+            if (controlContentAdapter instanceof IControlContentAdapter2 && selectionRange.x != -1) {
+                ((IControlContentAdapter2) controlContentAdapter).setSelection(control, selectionRange);
             }
             control.forceFocus();
         }
@@ -707,10 +694,9 @@ public class ContentProposalAdapter {
         if (DEBUG) {
             System.out.println("Notify listeners - proposal accepted.");
         }
-        final Object[] listenerArray = proposalListeners.getListeners();
-        for (int i = 0; i < listenerArray.length; i++) {
-            ((IContentProposalListener) listenerArray[i])
-                    .proposalAccepted(proposal);
+        var listenerArray = proposalListeners.getListeners();
+        for (var i = 0; i < listenerArray.length; i++) {
+            ((IContentProposalListener) listenerArray[i]).proposalAccepted(proposal);
         }
     }
 
@@ -721,10 +707,9 @@ public class ContentProposalAdapter {
         if (DEBUG) {
             System.out.println("Notify listeners - popup opened.");
         }
-        final Object[] listenerArray = proposalListeners2.getListeners();
-        for (int i = 0; i < listenerArray.length; i++) {
-            ((IContentProposalListener2) listenerArray[i])
-                    .proposalPopupOpened(this);
+        var listenerArray = proposalListeners2.getListeners();
+        for (var i = 0; i < listenerArray.length; i++) {
+            ((IContentProposalListener2) listenerArray[i]).proposalPopupOpened(this);
         }
     }
 
@@ -735,10 +720,9 @@ public class ContentProposalAdapter {
         if (DEBUG) {
             System.out.println("Notify listeners - popup closed.");
         }
-        final Object[] listenerArray = proposalListeners2.getListeners();
-        for (int i = 0; i < listenerArray.length; i++) {
-            ((IContentProposalListener2) listenerArray[i])
-                    .proposalPopupClosed(this);
+        var listenerArray = proposalListeners2.getListeners();
+        for (var i = 0; i < listenerArray.length; i++) {
+            ((IContentProposalListener2) listenerArray[i]).proposalPopupClosed(this);
         }
     }
 
@@ -746,16 +730,14 @@ public class ContentProposalAdapter {
      * Check that the control and content adapter are valid.
      */
     private boolean isValid() {
-        return control != null && !control.isDisposed()
-                && controlContentAdapter != null;
+        return control != null && !control.isDisposed() && controlContentAdapter != null;
     }
 
     /*
      * Return whether the control content is empty.
      */
     private boolean isControlContentEmpty() {
-        return getControlContentAdapter().getControlContents(getControl())
-                .length() == 0;
+        return getControlContentAdapter().getControlContents(getControl()).length() == 0;
     }
 
     /*
@@ -781,9 +763,8 @@ public class ContentProposalAdapter {
         if (autoActivateString == null || autoActivateString.length() == 0) {
             return true;
         }
-        String content = getControlContentAdapter().getControlContents(
-                getControl());
-        for (int i = 0; i < autoActivateString.length(); i++) {
+        var content = getControlContentAdapter().getControlContents(getControl());
+        for (var i = 0; i < autoActivateString.length(); i++) {
             if (content.indexOf(autoActivateString.charAt(i)) >= 0) {
                 return true;
             }

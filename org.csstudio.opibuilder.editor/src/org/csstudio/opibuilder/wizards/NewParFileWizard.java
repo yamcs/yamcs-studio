@@ -3,7 +3,6 @@ package org.csstudio.opibuilder.wizards;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -28,15 +27,15 @@ public class NewParFileWizard extends Wizard implements INewWizard {
 
     @Override
     public boolean performFinish() {
-        IFile file = parFilePage.createNewFile();
+        var file = parFilePage.createNewFile();
 
         if (file == null) {
             return false;
         }
 
         try {
-            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.yamcs.studio.displays.ParamterTableEditor");
+            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
+                    "org.yamcs.studio.displays.ParamterTableEditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open Par File error",
                     "Failed to open the newly created Parameter Table. \n" + e.getMessage());

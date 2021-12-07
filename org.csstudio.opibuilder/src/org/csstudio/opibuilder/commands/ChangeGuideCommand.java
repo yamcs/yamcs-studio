@@ -53,7 +53,7 @@ public final class ChangeGuideCommand extends Command {
      * @param horizontalGuide
      *            The horizontal guide
      */
-    public ChangeGuideCommand(final AbstractWidgetModel model, final boolean horizontalGuide) {
+    public ChangeGuideCommand(AbstractWidgetModel model, boolean horizontalGuide) {
         super();
         _model = model;
         _horizontal = horizontalGuide;
@@ -67,7 +67,7 @@ public final class ChangeGuideCommand extends Command {
      * @param newAlignment
      *            The new alignment
      */
-    protected void changeGuide(final GuideModel newGuide, final int newAlignment) {
+    protected void changeGuide(GuideModel newGuide, int newAlignment) {
         // You need to re-attach the part even if the oldGuide and the newGuide are the same
         // because the alignment could have changed
         if (newGuide != null) {
@@ -98,7 +98,7 @@ public final class ChangeGuideCommand extends Command {
      * @param alignment
      *            The new alignment
      */
-    public void setNewGuide(final GuideModel guide, final int alignment) {
+    public void setNewGuide(GuideModel guide, int alignment) {
         _newGuide = guide;
         _newAlign = alignment;
     }

@@ -50,14 +50,14 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
     public static final String PROP_SHOW_VALUE_TIP = "show_value_tip";
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = 0;
+    private static double DEFAULT_MIN = 0;
 
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = 100;
+    private static double DEFAULT_MAX = 100;
 
-    private static final double DEFAULT_PAGE_INCREMENT = 10;
-    private static final double DEFAULT_STEP_INCREMENT = 1;
-    private static final double DEFAULT_BAR_LENGTH = 10;
+    private static double DEFAULT_PAGE_INCREMENT = 10;
+    private static double DEFAULT_STEP_INCREMENT = 1;
+    private static double DEFAULT_BAR_LENGTH = 10;
 
     public ScrollBarModel() {
         setSize(120, 20);
@@ -67,29 +67,24 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
     @Override
     protected void configureProperties() {
 
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN));
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
 
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX));
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
 
-        addProperty(new DoubleProperty(PROP_STEP_INCREMENT, "Step Increment",
-                WidgetPropertyCategory.Behavior, DEFAULT_STEP_INCREMENT), true);
+        addProperty(new DoubleProperty(PROP_STEP_INCREMENT, "Step Increment", WidgetPropertyCategory.Behavior,
+                DEFAULT_STEP_INCREMENT), true);
 
-        addProperty(new DoubleProperty(PROP_PAGE_INCREMENT, "Page Increment",
-                WidgetPropertyCategory.Behavior, DEFAULT_PAGE_INCREMENT), true);
+        addProperty(new DoubleProperty(PROP_PAGE_INCREMENT, "Page Increment", WidgetPropertyCategory.Behavior,
+                DEFAULT_PAGE_INCREMENT), true);
 
-        addProperty(new DoubleProperty(PROP_BAR_LENGTH, "Bar Length",
-                WidgetPropertyCategory.Behavior, DEFAULT_BAR_LENGTH));
+        addProperty(
+                new DoubleProperty(PROP_BAR_LENGTH, "Bar Length", WidgetPropertyCategory.Behavior, DEFAULT_BAR_LENGTH));
 
-        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV",
-                WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_VALUE_TIP, "Show Value Tip",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_VALUE_TIP, "Show Value Tip", WidgetPropertyCategory.Display, true));
 
     }
 

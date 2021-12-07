@@ -23,15 +23,16 @@ import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 public class LocalContentProvider implements IAutoCompleteProvider {
 
     @Override
-    public boolean accept(final ContentType type) {
-        if (type == LocalContentType.LocalPV)
+    public boolean accept(ContentType type) {
+        if (type == LocalContentType.LocalPV) {
             return true;
+        }
         return false;
     }
 
     @Override
-    public AutoCompleteResult listResult(final ContentDescriptor desc, final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
+    public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
+        var result = new AutoCompleteResult();
 
         LocalContentDescriptor locDesc = null;
         if (desc instanceof LocalContentDescriptor) {
@@ -40,37 +41,39 @@ public class LocalContentProvider implements IAutoCompleteProvider {
             return result; // empty result
         }
 
-        if (locDesc.isComplete())
+        if (locDesc.isComplete()) {
             return result; // empty result
+        }
 
         // handle proposals
-        int count = 0;
+        var count = 0;
         if (locDesc.isCompletingVType() && locDesc.getvType() != null) {
-            String type = locDesc.getvType();
+            var type = locDesc.getvType();
             Proposal topProposal = null;
             String closestMatchingType = null;
             for (String vType : LocalContentDescriptor.listVTypes()) {
                 if (vType.startsWith(type)) {
-                    String prefix = locDesc.getPvName() + LocalContentParser.VTYPE_START;
-                    if (desc.getDefaultDataSource() != LocalContentParser.LOCAL_SOURCE)
+                    var prefix = locDesc.getPvName() + LocalContentParser.VTYPE_START;
+                    if (desc.getDefaultDataSource() != LocalContentParser.LOCAL_SOURCE) {
                         prefix = LocalContentParser.LOCAL_SOURCE + prefix;
-                    int offset = prefix.length();
-                    Proposal proposal = new Proposal(prefix + vType + LocalContentParser.VTYPE_END, false);
+                    }
+                    var offset = prefix.length();
+                    var proposal = new Proposal(prefix + vType + LocalContentParser.VTYPE_END, false);
                     proposal.setDescription(LocalContentDescriptor.getVTypeDescription(vType));
                     proposal.addStyle(ProposalStyle.getDefault(0, offset + type.length() - 1));
                     proposal.setInsertionPos(desc.getStartIndex());
                     result.addProposal(proposal);
                     count++;
-                    if (closestMatchingType == null
-                            || closestMatchingType.compareTo(vType) > 0) {
+                    if (closestMatchingType == null || closestMatchingType.compareTo(vType) > 0) {
                         closestMatchingType = vType;
                         topProposal = proposal;
                     }
                 }
             }
             // handle top proposals
-            if (closestMatchingType != null && !type.isEmpty())
+            if (closestMatchingType != null && !type.isEmpty()) {
                 result.addTopProposal(topProposal);
+            }
         }
         result.setCount(count);
 
@@ -79,21 +82,21 @@ public class LocalContentProvider implements IAutoCompleteProvider {
         if (locDesc.isCompletingInitialValue()) {
             td = new TooltipData();
             td.value = "pvname";
-            String vType = locDesc.getvType();
+            var vType = locDesc.getvType();
             if (vType != null) {
-                td.value += LocalContentParser.VTYPE_START + locDesc.getvType()
-                        + LocalContentParser.VTYPE_END;
+                td.value += LocalContentParser.VTYPE_START + locDesc.getvType() + LocalContentParser.VTYPE_END;
             }
             td.value += LocalContentParser.INITIAL_VALUE_START;
-            int start = td.value.length();
+            var start = td.value.length();
             td.value += locDesc.getInitialValueTooltip();
-            int end = td.value.length();
+            var end = td.value.length();
             td.value += LocalContentParser.INITIAL_VALUE_END;
             td.styles = new ProposalStyle[1];
-            if (locDesc.checkParameters())
+            if (locDesc.checkParameters()) {
                 td.styles[0] = ProposalStyle.getDefault(start, end);
-            else
+            } else {
                 td.styles[0] = ProposalStyle.getError(start, end);
+            }
             result.addTooltipData(td);
 
         } else if (locDesc.isCompletingVType()) {

@@ -26,9 +26,9 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final ScaledSliderModel model = getWidgetModel();
+        var model = getWidgetModel();
 
-        ScaledSliderFigure slider = new ScaledSliderFigure();
+        var slider = new ScaledSliderFigure();
 
         initializeCommonFigureProperties(slider, model);
         slider.setFillColor(model.getFillColor());
@@ -40,9 +40,11 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         slider.setPageIncrement(model.getPageIncrement());
         slider.addManualValueChangeListener(new IManualValueChangeListener() {
 
+            @Override
             public void manualValueChanged(double newValue) {
-                if (getExecutionMode() == ExecutionMode.RUN_MODE)
+                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                     setPVValue(ScaledSliderModel.PROP_PVNAME, newValue);
+                }
             }
         });
 
@@ -62,10 +64,9 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
         // fillColor
         IWidgetPropertyChangeHandler fillColorHandler = new IWidgetPropertyChangeHandler() {
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            @Override
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setFillColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -75,10 +76,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         // fillBackgroundColor
         IWidgetPropertyChangeHandler fillBackColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -88,10 +87,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         // thumbColor
         IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setThumbColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -101,10 +98,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setEffect3D((Boolean) newValue);
                 return false;
             }
@@ -114,19 +109,18 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         // horizontal
         IWidgetPropertyChangeHandler horizontalHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setHorizontal((Boolean) newValue);
-                ScaledSliderModel model = (ScaledSliderModel) getModel();
+                var model = (ScaledSliderModel) getModel();
 
-                if ((Boolean) newValue) // from vertical to horizontal
+                if ((Boolean) newValue) {
                     model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
                             model.getLocation().y + model.getSize().height / 2 - model.getSize().width / 2);
-                else // from horizontal to vertical
+                } else {
                     model.setLocation(model.getLocation().x + model.getSize().width / 2 - model.getSize().height / 2,
                             model.getLocation().y - model.getSize().width / 2 + model.getSize().height / 2);
+                }
 
                 model.setSize(model.getSize().height, model.getSize().width);
 
@@ -139,10 +133,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         // which is not the case for the scaled slider
         IWidgetPropertyChangeHandler enableHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setEnabled((Boolean) newValue);
                 return false;
             }
@@ -151,10 +143,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
         IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setStepIncrement((Double) newValue);
                 return false;
             }
@@ -163,10 +153,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
         IWidgetPropertyChangeHandler pageIncrementHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setPageIncrement((Double) newValue);
                 return false;
             }

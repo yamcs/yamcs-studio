@@ -33,7 +33,7 @@ public class Expression {
      * @param booleanExpression
      *            the booleanExpression to set
      */
-    public final void setBooleanExpression(String booleanExpression) {
+    public void setBooleanExpression(String booleanExpression) {
         this.booleanExpression = booleanExpression;
     }
 
@@ -48,7 +48,7 @@ public class Expression {
      * @param value
      *            the value to set
      */
-    public final void setValue(Object value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

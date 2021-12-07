@@ -63,9 +63,9 @@ public class CalendarWidget extends Composite {
      * @param flags
      *            SWT widget flags.
      */
-    public CalendarWidget(final Composite parent, int flags, Calendar calendar) {
+    public CalendarWidget(Composite parent, int flags, Calendar calendar) {
         super(parent, flags);
-        GridLayout layout = new GridLayout();
+        var layout = new GridLayout();
         setLayout(layout);
         GridData gd;
 
@@ -85,14 +85,14 @@ public class CalendarWidget extends Composite {
         date.setLayoutData(gd);
 
         // New row
-        Composite box = new Composite(this, 0);
+        var box = new Composite(this, 0);
         box.setLayout(new RowLayout());
         gd = new GridData();
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalAlignment = SWT.CENTER;
         box.setLayoutData(gd);
 
-        Label l = new Label(box, SWT.NONE);
+        var l = new Label(box, SWT.NONE);
         l.setText("Time:");
         // SWT.MEDIUM to include seconds as needed by BOY
         time = new DateTime(box, SWT.TIME | SWT.MEDIUM);
@@ -106,15 +106,15 @@ public class CalendarWidget extends Composite {
         gd.horizontalAlignment = SWT.CENTER;
         box.setLayoutData(gd);
 
-        Button now = new Button(box, SWT.PUSH);
+        var now = new Button(box, SWT.PUSH);
         now.setText("Now");
         now.setToolTipText("Set to current time");
 
-        Button midnight = new Button(box, SWT.PUSH);
+        var midnight = new Button(box, SWT.PUSH);
         midnight.setText("00:00");
         midnight.setToolTipText("Set time to midnight");
 
-        Button noon = new Button(box, SWT.PUSH);
+        var noon = new Button(box, SWT.PUSH);
         noon.setText("12:00");
         noon.setToolTipText("Set time to noon");
 
@@ -152,11 +152,12 @@ public class CalendarWidget extends Composite {
                 }
             }
         });
-        final SelectionAdapter update = new SelectionAdapter() {
+        SelectionAdapter update = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (!in_GUI_update)
+                if (!in_GUI_update) {
                     updateDataFromGUI();
+                }
             }
         };
         date.addSelectionListener(update);
@@ -165,8 +166,9 @@ public class CalendarWidget extends Composite {
 
     /** Add given listener. */
     public void addListener(CalendarWidgetListener listener) {
-        if (!listeners.contains(listener))
+        if (!listeners.contains(listener)) {
             listeners.add(listener);
+        }
     }
 
     /** Remove given listener. */
@@ -179,7 +181,7 @@ public class CalendarWidget extends Composite {
      * 
      * @see #setNow()
      */
-    public void setCalendar(final Calendar calendar) {
+    public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
         this.calendar.set(Calendar.SECOND, 0);
         this.calendar.set(Calendar.MILLISECOND, 0);
@@ -216,7 +218,8 @@ public class CalendarWidget extends Composite {
         in_GUI_update = false;
 
         // fireUpdatedTimestamp
-        for (CalendarWidgetListener l : listeners)
+        for (CalendarWidgetListener l : listeners) {
             l.updatedCalendar(this, calendar);
+        }
     }
 }

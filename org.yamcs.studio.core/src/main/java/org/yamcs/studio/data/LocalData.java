@@ -56,8 +56,8 @@ public class LocalData {
     @SuppressWarnings("unchecked")
     synchronized void setInitialValue(Object value) {
         if (initialArguments != null && !initialArguments.equals(value)) {
-            String message = String.format("Different initialization for local channel %s: %s but was %s",
-                    name, value, initialArguments);
+            var message = String.format("Different initialization for local channel %s: %s but was %s", name, value,
+                    initialArguments);
             log.log(Level.WARNING, message);
             throw new RuntimeException(message);
         }
@@ -66,8 +66,8 @@ public class LocalData {
             if (VEnum.class.equals(type)) {
                 List<?> args = (List<?>) initialArguments;
                 // TODO error message if not Number
-                int index = ((Number) args.get(0)).intValue();
-                List<String> labels = (List<String>) args.get(1);
+                var index = ((Number) args.get(0)).intValue();
+                var labels = (List<String>) args.get(1);
                 initialValue = ValueFactory.newVEnum(index, labels, alarmNone(), timeNow());
             } else {
                 initialValue = checkValue(ValueFactory.toVTypeChecked(value));
@@ -84,9 +84,9 @@ public class LocalData {
         try {
             if (VEnum.class.equals(type)) {
                 // Handle enum writes
-                int newIndex = -1;
-                VEnum firstEnum = (VEnum) initialValue;
-                List<String> labels = firstEnum.getLabels();
+                var newIndex = -1;
+                var firstEnum = (VEnum) initialValue;
+                var labels = firstEnum.getLabels();
                 if (newValue instanceof Number) {
                     newIndex = ((Number) newValue).intValue();
                 } else if (newValue instanceof String) {
@@ -94,7 +94,7 @@ public class LocalData {
                     // Only if the String is not in the labels, try and
                     // parse a number.
                     if (newIndex == -1) {
-                        String value = (String) newValue;
+                        var value = (String) newValue;
                         try {
                             newIndex = Double.valueOf(value).intValue();
                         } catch (NumberFormatException ex) {
@@ -109,7 +109,7 @@ public class LocalData {
             } else {
                 // If the string can be parsed to a number, do it
                 if (newValue instanceof String) {
-                    String value = (String) newValue;
+                    var value = (String) newValue;
                     try {
                         newValue = Double.valueOf(value);
                     } catch (NumberFormatException ex) {
@@ -165,12 +165,12 @@ public class LocalData {
             newType = VEnum.class;
         }
         if (newType == null) {
-            throw new IllegalArgumentException(String.format(
-                    "Type %s for channel %s is not supported by local datasource.", typeName, name));
+            throw new IllegalArgumentException(
+                    String.format("Type %s for channel %s is not supported by local datasource.", typeName, name));
         }
         if (type != null && !type.equals(newType)) {
-            throw new IllegalArgumentException(String.format("Type mismatch for channel %s: %s but was %s",
-                    name, typeName, type.getSimpleName()));
+            throw new IllegalArgumentException(
+                    String.format("Type mismatch for channel %s: %s but was %s", name, typeName, type.getSimpleName()));
         }
         type = newType;
     }

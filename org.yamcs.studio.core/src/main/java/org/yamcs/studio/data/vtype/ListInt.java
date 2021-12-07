@@ -85,13 +85,13 @@ public abstract class ListInt implements ListNumber, CollectionInt {
         }
 
         if (obj instanceof ListInt) {
-            ListInt other = (ListInt) obj;
+            var other = (ListInt) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (getInt(i) != other.getInt(i)) {
                     return false;
                 }
@@ -105,8 +105,8 @@ public abstract class ListInt implements ListNumber, CollectionInt {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
             result = 31 * result + getInt(i);
         }
         return result;
@@ -114,9 +114,9 @@ public abstract class ListInt implements ListNumber, CollectionInt {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("[");
-        int i = 0;
+        var i = 0;
         for (; i < size() - 1; i++) {
             builder.append(getInt(i)).append(", ");
         }

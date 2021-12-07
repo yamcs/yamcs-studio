@@ -33,7 +33,7 @@ public class ExprParser {
     private Expr current;
 
     public static Expr parse(String text) throws IOException, ExprException {
-        ExprParser p = new ExprParser();
+        var p = new ExprParser();
         p.parse(new ExprLexer(text));
         return p.get();
     }
@@ -45,8 +45,7 @@ public class ExprParser {
         }
     }
 
-    private void parseToken(ExprLexer lexer, ExprToken token)
-            throws ExprException, IOException {
+    private void parseToken(ExprLexer lexer, ExprToken token) throws ExprException, IOException {
         switch (token.type) {
         case Plus:
         case Minus:
@@ -93,13 +92,12 @@ public class ExprParser {
         }
     }
 
-    private void parseFunction(ExprToken token, ExprLexer lexer)
-            throws ExprException, IOException {
-        Expr c = current;
+    private void parseFunction(ExprToken token, ExprLexer lexer) throws ExprException, IOException {
+        var c = current;
         current = null;
         ExprToken e = null;
-        ArrayList<Expr> args = new ArrayList<Expr>();
-        boolean complete = false;
+        var args = new ArrayList<Expr>();
+        var complete = false;
         while ((e = lexer.next()) != null) {
             if (e.type.equals(ExprTokenType.Comma)) {
                 if ((e = lexer.next()) != null) {
@@ -118,21 +116,19 @@ public class ExprParser {
                 args.add(current == null ? new ExprMissing() : current);
             }
         }
-        ExprFunction f = new ExprFunction(token.val,
-                (Expr[]) args.toArray(new Expr[0]));
+        var f = new ExprFunction(token.val, (Expr[]) args.toArray(new Expr[0]));
         f.setComplete(complete);
 
         setValue(f);
     }
 
-    private void parseExpression(ExprLexer lexer) throws IOException,
-            ExprException {
-        Expr c = current;
+    private void parseExpression(ExprLexer lexer) throws IOException, ExprException {
+        var c = current;
         current = null;
         ExprToken e = null;
         while ((e = lexer.next()) != null) {
             if (e.type.equals(ExprTokenType.CloseBracket)) {
-                Expr t = current;
+                var t = current;
                 current = c;
                 setValue(new ExprExpression(t));
                 break;
@@ -143,12 +139,12 @@ public class ExprParser {
     }
 
     private void parseArray(ExprLexer lexer) throws ExprException, IOException {
-        Expr c = current;
+        var c = current;
         current = null;
         ExprToken e = null;
-        int cols = -1;
-        int count = 0;
-        ArrayList<Expr> args = new ArrayList<Expr>();
+        var cols = -1;
+        var count = 0;
+        var args = new ArrayList<Expr>();
         while ((e = lexer.next()) != null) {
             if (e.type.equals(ExprTokenType.Comma)) {
                 // if (current == null)
@@ -173,13 +169,14 @@ public class ExprParser {
             } else if (e.type.equals(ExprTokenType.CloseBrace)) {
                 args.add(current == null ? new ExprMissing() : current);
                 current = c;
-                int rows = 1;
-                if (cols == -1)
+                var rows = 1;
+                if (cols == -1) {
                     cols = args.size();
-                else
+                } else {
                     rows = args.size() / cols;
-                ExprArray a = new ExprArray(rows, cols);
-                for (int i = 0; i < args.size(); i++) {
+                }
+                var a = new ExprArray(rows, cols);
+                for (var i = 0; i < args.size(); i++) {
                     a.set(0, i, (Expr) args.get(i));
                 }
                 setValue(a);
@@ -215,7 +212,7 @@ public class ExprParser {
     }
 
     private void setValue(Expr value) throws ExprException {
-        Expr c = current;
+        var c = current;
         if (c instanceof IBinaryOperator) {
             ((IBinaryOperator) c).setRHS(value);
         } else {
@@ -223,19 +220,17 @@ public class ExprParser {
         }
     }
 
-    private void parseOperator(ExprToken e, ExprLexer lexer)
-            throws ExprException, IOException {
+    private void parseOperator(ExprToken e, ExprLexer lexer) throws ExprException, IOException {
         // handle negative numbers
-        if ((e.type == ExprTokenType.Minus || e.type == ExprTokenType.Plus)
-                && current == null) {
-            ExprToken nextToken = lexer.next();
-            if (nextToken == null)
+        if ((e.type == ExprTokenType.Minus || e.type == ExprTokenType.Plus) && current == null) {
+            var nextToken = lexer.next();
+            if (nextToken == null) {
                 return;
+            }
             Expr value = null;
             switch (nextToken.type) {
             case Decimal:
-                value = new ExprDouble(
-                        e.type == ExprTokenType.Minus ? -nextToken.doubleValue : nextToken.doubleValue);
+                value = new ExprDouble(e.type == ExprTokenType.Minus ? -nextToken.doubleValue : nextToken.doubleValue);
                 setValue(value);
                 return;
             case Integer:
@@ -250,16 +245,14 @@ public class ExprParser {
             parseToken(lexer, nextToken);
             return;
         }
-        current = new ExprBinaryOperator(ExprType.BinaryOperation, current,
-                null);
+        current = new ExprBinaryOperator(ExprType.BinaryOperation, current, null);
     }
 
-    private void parseConditionalOperator(ExprToken token, ExprLexer lexer)
-            throws ExprException, IOException {
-        Expr c = current;
+    private void parseConditionalOperator(ExprToken token, ExprLexer lexer) throws ExprException, IOException {
+        var c = current;
         current = null;
         ExprToken e = null;
-        ExprConditionalOperator co = new ExprConditionalOperator(c, null, null);
+        var co = new ExprConditionalOperator(c, null, null);
         while ((e = lexer.next()) != null) {
             if (e.type.equals(ExprTokenType.Colon)) {
                 if ((e = lexer.next()) != null) {

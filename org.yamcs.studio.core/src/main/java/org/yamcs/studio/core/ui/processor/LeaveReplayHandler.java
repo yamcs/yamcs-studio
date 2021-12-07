@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.yamcs.client.YamcsClient;
-import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.RemoteEntityHolder;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -16,15 +14,13 @@ public class LeaveReplayHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        var yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.listProcessors(YamcsPlugin.getInstance()).whenComplete((processors, err) -> {
             if (err == null) {
-                ProcessorInfo defaultProcessor = processors.stream()
-                        .filter(processor -> processor.getPersistent() && !processor.getReplay())
-                        .findFirst()
-                        .get();
+                var defaultProcessor = processors.stream()
+                        .filter(processor -> processor.getPersistent() && !processor.getReplay()).findFirst().get();
 
-                RemoteEntityHolder holder = new RemoteEntityHolder();
+                var holder = new RemoteEntityHolder();
                 holder.yamcsClient = YamcsPlugin.getYamcsClient();
                 holder.serverInfo = YamcsPlugin.getServerInfo();
                 holder.userInfo = YamcsPlugin.getUser();

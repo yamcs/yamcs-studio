@@ -14,8 +14,6 @@ import org.csstudio.opibuilder.commands.SetBoundsCommand;
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractContainerEditpart;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.util.GeometryUtil;
 import org.csstudio.opibuilder.widgets.editparts.GroupingContainerEditPart;
 import org.csstudio.opibuilder.widgets.model.GroupingContainerModel;
@@ -36,41 +34,40 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction {
         if (getContainerEditpart().getChildren().size() <= 0) {
             return;
         }
-        CompoundCommand compoundCommand = new CompoundCommand("Perform AutoSize");
+        var compoundCommand = new CompoundCommand("Perform AutoSize");
 
-        AbstractContainerEditpart containerEditpart = getContainerEditpart();
-        AbstractContainerModel containerModel = containerEditpart.getWidgetModel();
+        var containerEditpart = getContainerEditpart();
+        var containerModel = containerEditpart.getWidgetModel();
 
         // temporary unlock children so children will not be resized.
         if (containerEditpart instanceof GroupingContainerEditPart) {
-            compoundCommand.add(new SetWidgetPropertyCommand(containerModel,
-                    GroupingContainerModel.PROP_LOCK_CHILDREN, false));
+            compoundCommand.add(
+                    new SetWidgetPropertyCommand(containerModel, GroupingContainerModel.PROP_LOCK_CHILDREN, false));
         }
 
-        IFigure figure = getContainerFigure();
+        var figure = getContainerFigure();
 
-        Rectangle childrenRange = GeometryUtil.getChildrenRange(containerEditpart);
+        var childrenRange = GeometryUtil.getChildrenRange(containerEditpart);
 
-        Point tranlateSize = new Point(childrenRange.x, childrenRange.y);
+        var tranlateSize = new Point(childrenRange.x, childrenRange.y);
 
         compoundCommand.add(new SetBoundsCommand(containerModel,
-                new Rectangle(containerModel.getLocation().translate(tranlateSize), new Dimension(
-                        childrenRange.width + figure.getInsets().left + figure.getInsets().right,
-                        childrenRange.height + figure.getInsets().top + figure.getInsets().bottom))));
+                new Rectangle(containerModel.getLocation().translate(tranlateSize),
+                        new Dimension(childrenRange.width + figure.getInsets().left + figure.getInsets().right,
+                                childrenRange.height + figure.getInsets().top + figure.getInsets().bottom))));
 
         for (Object editpart : containerEditpart.getChildren()) {
-            AbstractWidgetModel widget = ((AbstractBaseEditPart) editpart).getWidgetModel();
-            compoundCommand.add(new SetBoundsCommand(widget, new Rectangle(
-                    widget.getLocation().translate(tranlateSize.getNegated()),
-                    widget.getSize())));
+            var widget = ((AbstractBaseEditPart) editpart).getWidgetModel();
+            compoundCommand.add(new SetBoundsCommand(widget,
+                    new Rectangle(widget.getLocation().translate(tranlateSize.getNegated()), widget.getSize())));
         }
 
         // recover lock
         if (containerEditpart instanceof GroupingContainerEditPart) {
-            Object oldvalue = containerEditpart.getWidgetModel()
+            var oldvalue = containerEditpart.getWidgetModel()
                     .getPropertyValue(GroupingContainerModel.PROP_LOCK_CHILDREN);
-            compoundCommand.add(new SetWidgetPropertyCommand(containerModel,
-                    GroupingContainerModel.PROP_LOCK_CHILDREN, oldvalue));
+            compoundCommand.add(
+                    new SetWidgetPropertyCommand(containerModel, GroupingContainerModel.PROP_LOCK_CHILDREN, oldvalue));
         }
 
         execute(compoundCommand);

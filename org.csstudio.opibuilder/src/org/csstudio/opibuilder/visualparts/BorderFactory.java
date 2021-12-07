@@ -30,9 +30,8 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class BorderFactory {
 
-    public static AbstractBorder createBorder(BorderStyle style, int width, RGB rgbColor,
-            String text) {
-        Color color = CustomMediaFactory.getInstance().getColor(rgbColor);
+    public static AbstractBorder createBorder(BorderStyle style, int width, RGB rgbColor, String text) {
+        var color = CustomMediaFactory.getInstance().getColor(rgbColor);
 
         switch (style) {
         case LINE:
@@ -78,7 +77,7 @@ public class BorderFactory {
      *            width of the border.
      * @return AbstractBorder The requested Border
      */
-    private static AbstractBorder createEmptyBorder(final int width) {
+    private static AbstractBorder createEmptyBorder(int width) {
         if (width > 0) {
             return new AbstractBorder() {
 
@@ -115,8 +114,8 @@ public class BorderFactory {
      *            the scheme for the {@link SchemeBorder}
      * @return AbstractBorder The requested Border
      */
-    private static AbstractBorder createSchemeBorder(final Scheme scheme) {
-        SchemeBorder border = new SchemeBorder(scheme);
+    private static AbstractBorder createSchemeBorder(Scheme scheme) {
+        var border = new SchemeBorder(scheme);
         return border;
     }
 
@@ -127,13 +126,13 @@ public class BorderFactory {
     }
 
     private static AbstractBorder createTitleBarBorder(String text, Color color) {
-        WidgetFrameBorder border = new WidgetFrameBorder(text);
+        var border = new WidgetFrameBorder(text);
         ((TitleBarBorder) border.getInnerBorder()).setBackgroundColor(color);
         return border;
     }
 
     private static AbstractBorder createRoundRectangleBorder(int width, Color color) {
-        RoundRectangleBackgroundBorder border = new RoundRectangleBackgroundBorder(color, width);
+        var border = new RoundRectangleBackgroundBorder(color, width);
         return border;
     }
 

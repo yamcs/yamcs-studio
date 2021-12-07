@@ -35,11 +35,7 @@ public class DecadeScale implements Scale {
     @Override
     public void drawContent(GC gc, Rectangle coords) {
         var year = timeline.getStart().getYear();
-        var t = timeline.getStart()
-                .withYear(year - (year % 10))
-                .withMonth(1)
-                .withDayOfMonth(1)
-                .truncatedTo(DAYS);
+        var t = timeline.getStart().withYear(year - (year % 10)).withMonth(1).withDayOfMonth(1).truncatedTo(DAYS);
 
         var halfHeight = (int) Math.round(coords.height * 0.5);
 

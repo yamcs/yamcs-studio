@@ -22,7 +22,6 @@ import org.csstudio.opibuilder.feedback.IGraphicalFeedbackFactory;
 import org.csstudio.opibuilder.palette.MajorCategories;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -49,8 +48,9 @@ public final class WidgetsService {
      * @return the instance
      */
     public synchronized static final WidgetsService getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new WidgetsService();
+        }
         return instance;
     }
 
@@ -58,8 +58,9 @@ public final class WidgetsService {
         feedbackFactoriesMap = new HashMap<String, IGraphicalFeedbackFactory>();
         allWidgetDescriptorsMap = new LinkedHashMap<String, WidgetDescriptor>();
         allCategoriesMap = new LinkedHashMap<String, List<String>>();
-        for (MajorCategories mc : MajorCategories.values())
+        for (MajorCategories mc : MajorCategories.values()) {
             allCategoriesMap.put(mc.toString(), new ArrayList<String>());
+        }
         loadAllWidgets();
         loadAllFeedbackFactories();
     }
@@ -68,45 +69,46 @@ public final class WidgetsService {
      * Load all widgets information from extensions.
      */
     private void loadAllWidgets() {
-        IExtensionRegistry extReg = Platform.getExtensionRegistry();
-        IConfigurationElement[] confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_WIDGET);
+        var extReg = Platform.getExtensionRegistry();
+        var confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_WIDGET);
         List<IConfigurationElement> boyElements = new LinkedList<IConfigurationElement>();
         List<IConfigurationElement> otherElements = new LinkedList<IConfigurationElement>();
         // Sort elements. opibuilder.widgets should always appear first.
         for (IConfigurationElement element : confElements) {
-            if (element.getContributor().getName().equals(BOY_WIDGETS_PLUGIN_NAME))
+            if (element.getContributor().getName().equals(BOY_WIDGETS_PLUGIN_NAME)) {
                 boyElements.add(element);
-            else
+            } else {
                 otherElements.add(element);
+            }
         }
         boyElements.addAll(otherElements);
         for (IConfigurationElement element : boyElements) {
-            String typeId = element.getAttribute("typeId");
-            String name = element.getAttribute("name");
-            String icon = element.getAttribute("icon");
-            String onlineHelpHtml = element.getAttribute("onlineHelpHtml"); //
-            String pluginId = element.getDeclaringExtension()
-                    .getNamespaceIdentifier();
-            String description = element.getAttribute("description");
+            var typeId = element.getAttribute("typeId");
+            var name = element.getAttribute("name");
+            var icon = element.getAttribute("icon");
+            var onlineHelpHtml = element.getAttribute("onlineHelpHtml"); //
+            var pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
+            var description = element.getAttribute("description");
             if (description == null || description.trim().length() == 0) {
                 description = "";
             }
-            String category = element.getAttribute("category");
+            var category = element.getAttribute("category");
             if (category == null || category.trim().length() == 0) {
                 category = DEFAULT_CATEGORY;
             }
 
             if (typeId != null) {
-                List<String> list = allCategoriesMap.get(category);
+                var list = allCategoriesMap.get(category);
                 if (list == null) {
                     list = new ArrayList<String>();
                     allCategoriesMap.put(category, list);
                 }
                 // ensure no duplicates in the widgets palette
-                if (!list.contains(typeId))
+                if (!list.contains(typeId)) {
                     list.add(typeId);
-                allWidgetDescriptorsMap.put(typeId, new WidgetDescriptor(
-                        element, typeId, name, description, icon, category, pluginId, onlineHelpHtml));
+                }
+                allWidgetDescriptorsMap.put(typeId, new WidgetDescriptor(element, typeId, name, description, icon,
+                        category, pluginId, onlineHelpHtml));
             }
         }
 
@@ -116,11 +118,10 @@ public final class WidgetsService {
     }
 
     private void loadAllFeedbackFactories() {
-        IExtensionRegistry extReg = Platform.getExtensionRegistry();
-        IConfigurationElement[] confElements = extReg
-                .getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_FEEDBACK_FACTORY);
+        var extReg = Platform.getExtensionRegistry();
+        var confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_FEEDBACK_FACTORY);
         for (IConfigurationElement element : confElements) {
-            String typeId = element.getAttribute("typeId");
+            var typeId = element.getAttribute("typeId");
             if (typeId != null) {
                 try {
                     feedbackFactoriesMap.put(typeId,

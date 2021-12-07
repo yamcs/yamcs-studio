@@ -27,8 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.yamcs.studio.data.formula.FormulaFunction;
-import org.yamcs.studio.data.vtype.Alarm;
-import org.yamcs.studio.data.vtype.Time;
 import org.yamcs.studio.data.vtype.VType;
 import org.yamcs.studio.data.vtype.ValueFactory;
 import org.yamcs.studio.data.vtype.ValueUtil;
@@ -67,19 +65,17 @@ class ToStringFunction implements FormulaFunction {
 
     @Override
     public Object calculate(List<Object> args) {
-        VType value = (VType) args.get(0);
-        Alarm alarm = ValueUtil.alarmOf(value);
+        var value = (VType) args.get(0);
+        var alarm = ValueUtil.alarmOf(value);
         if (alarm == null) {
             alarm = ValueFactory.alarmNone();
         }
-        Time time = ValueUtil.timeOf(value);
+        var time = ValueUtil.timeOf(value);
         if (time == null) {
             time = ValueFactory.timeNow();
         }
 
-        return ValueFactory.newVString(ValueUtil.getDefaultValueFormat().format(value),
-                alarm,
-                time);
+        return ValueFactory.newVString(ValueUtil.getDefaultValueFormat().format(value), alarm, time);
 
     }
 

@@ -91,11 +91,11 @@ public class OpenWithMenu extends ContributionItem {
      * @return the image or null
      */
     private Image getImage(IEditorDescriptor editorDesc) {
-        ImageDescriptor imageDesc = getImageDescriptor(editorDesc);
+        var imageDesc = getImageDescriptor(editorDesc);
         if (imageDesc == null) {
             return null;
         }
-        Image image = imageCache.get(imageDesc);
+        var image = imageCache.get(imageDesc);
         if (image == null) {
             image = imageDesc.createImage();
             imageCache.put(imageDesc, image);
@@ -133,9 +133,9 @@ public class OpenWithMenu extends ContributionItem {
      *            the descriptor of the preferred editor, or <code>null
      */
     private void createMenuItem(Menu menu, IEditorDescriptor descriptor, IEditorDescriptor preferredEditor) {
-        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+        var menuItem = new MenuItem(menu, SWT.PUSH);
         menuItem.setText(descriptor.getLabel());
-        Image image = getImage(descriptor);
+        var image = getImage(descriptor);
         if (image != null) {
             menuItem.setImage(image);
         }
@@ -150,19 +150,19 @@ public class OpenWithMenu extends ContributionItem {
      * @param menu
      *            the menu to add the item to
      */
-    private void createOtherMenuItem(final Menu menu) {
-        IFile fileResource = getFileResource();
+    private void createOtherMenuItem(Menu menu) {
+        var fileResource = getFileResource();
         if (fileResource == null) {
             return;
         }
         new MenuItem(menu, SWT.SEPARATOR);
-        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+        var menuItem = new MenuItem(menu, SWT.PUSH);
         menuItem.setText("Other...");
         menuItem.addListener(SWT.Selection, evt -> {
-            EditorSelectionDialog dialog = new EditorSelectionDialog(menu.getShell());
+            var dialog = new EditorSelectionDialog(menu.getShell());
             dialog.setMessage("Choose the editor for opening " + fileResource.getName());
             if (dialog.open() == Window.OK) {
-                IEditorDescriptor editor = dialog.getSelectedEditor();
+                var editor = dialog.getSelectedEditor();
                 if (editor != null) {
                     openEditor(editor, editor.isOpenExternal());
                 }
@@ -175,25 +175,25 @@ public class OpenWithMenu extends ContributionItem {
      */
     @Override
     public void fill(Menu menu, int index) {
-        IFile file = getFileResource();
+        var file = getFileResource();
         if (file == null) {
             return;
         }
 
-        IEditorDescriptor defaultEditor = registry.findEditor(IDEWorkbenchPlugin.DEFAULT_TEXT_EDITOR_ID); // may be null
-        IEditorDescriptor preferredEditor = IDE.getDefaultEditor(file); // may be null
+        var defaultEditor = registry.findEditor(IDEWorkbenchPlugin.DEFAULT_TEXT_EDITOR_ID); // may be null
+        var preferredEditor = IDE.getDefaultEditor(file); // may be null
 
-        IEditorDescriptor[] editors = registry.getEditors(file.getName(), IDE.getContentType(file));
+        var editors = registry.getEditors(file.getName(), IDE.getContentType(file));
         Collections.sort(Arrays.asList(editors), comparer);
 
-        boolean defaultFound = false;
+        var defaultFound = false;
 
         // Check that we don't add it twice. This is possible
         // if the same editor goes to two mappings.
-        ArrayList<IEditorDescriptor> alreadyMapped = new ArrayList<>();
+        var alreadyMapped = new ArrayList<IEditorDescriptor>();
 
-        for (int i = 0; i < editors.length; i++) {
-            IEditorDescriptor editor = editors[i];
+        for (var i = 0; i < editors.length; i++) {
+            var editor = editors[i];
             if (!alreadyMapped.contains(editor)) {
                 createMenuItem(menu, editor, preferredEditor);
                 if (defaultEditor != null && editor.getId().equals(defaultEditor.getId())) {
@@ -224,7 +224,7 @@ public class OpenWithMenu extends ContributionItem {
         if (this.file instanceof IFile) {
             return (IFile) this.file;
         }
-        IResource resource = (IResource) this.file.getAdapter(IResource.class);
+        var resource = (IResource) this.file.getAdapter(IResource.class);
         if (resource instanceof IFile) {
             return (IFile) resource;
         }
@@ -247,7 +247,7 @@ public class OpenWithMenu extends ContributionItem {
      *            true (needed to fix bug 178235).
      */
     private void openEditor(IEditorDescriptor editor, boolean openUsingDescriptor) {
-        IFile file = getFileResource();
+        var file = getFileResource();
         if (file == null) {
             return;
         }
@@ -255,8 +255,7 @@ public class OpenWithMenu extends ContributionItem {
             if (openUsingDescriptor) {
                 ((WorkbenchPage) page).openEditorFromDescriptor(new FileEditorInput(file), editor, true, null);
             } else {
-                String editorId = editor == null ? IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID
-                        : editor.getId();
+                var editorId = editor == null ? IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID : editor.getId();
 
                 ((WorkbenchPage) page).openEditor(new FileEditorInput(file), editorId, true, MATCH_BOTH);
                 // only remember the default editor if the open succeeds

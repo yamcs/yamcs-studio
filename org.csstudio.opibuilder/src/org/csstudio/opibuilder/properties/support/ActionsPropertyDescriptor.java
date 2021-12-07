@@ -29,14 +29,13 @@ public class ActionsPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public ActionsPropertyDescriptor(final Object id,
-            final String displayName, final boolean showHookOption) {
+    public ActionsPropertyDescriptor(Object id, String displayName, boolean showHookOption) {
         super(id, displayName);
         this.showHookOption = showHookOption;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new ActionsCellEditor(parent, "Set Actions", showHookOption);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

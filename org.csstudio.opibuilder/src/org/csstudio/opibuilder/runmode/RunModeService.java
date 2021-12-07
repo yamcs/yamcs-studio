@@ -23,12 +23,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -66,8 +62,8 @@ public class RunModeService {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (DisplayMode p : values()) {
                 sv[i++] = p.description;
             }
@@ -89,13 +85,13 @@ public class RunModeService {
      */
     public static void openDisplay(IPath path, Optional<MacrosInput> macros, DisplayMode mode,
             Optional<IOPIRuntime> runtime) {
-        RunnerInput input = new RunnerInput(path, null, macros.orElse(null));
+        var input = new RunnerInput(path, null, macros.orElse(null));
         try {
             if (mode == DisplayMode.REPLACE) { // Anything to replace?
                 if (!runtime.isPresent()) {
                     mode = DisplayMode.NEW_TAB;
                 } else { // Replace display in current runtime
-                    final DisplayOpenManager manager = runtime.get().getAdapter(DisplayOpenManager.class);
+                    var manager = runtime.get().getAdapter(DisplayOpenManager.class);
                     if (manager != null) {
                         manager.openNewDisplay();
                     }
@@ -111,15 +107,15 @@ public class RunModeService {
             case NEW_TAB_TOP:
             case NEW_TAB_BOTTOM:
             case NEW_TAB_DETACHED: {
-                final IWorkbench workbench = PlatformUI.getWorkbench();
-                final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-                final IWorkbenchPage page = window.getActivePage();
+                var workbench = PlatformUI.getWorkbench();
+                var window = workbench.getActiveWorkbenchWindow();
+                var page = window.getActivePage();
                 openDisplayInView(page, input, mode);
                 break;
             }
             case NEW_WINDOW:
-                final IWorkbenchPage page = createNewWorkbenchPage(Optional.empty());
-                final Shell shell = page.getWorkbenchWindow().getShell();
+                var page = createNewWorkbenchPage(Optional.empty());
+                var shell = page.getWorkbenchWindow().getShell();
                 if (shell.getMinimized()) {
                     shell.setMinimized(false);
                 }
@@ -148,9 +144,8 @@ public class RunModeService {
      * @throws Exception
      *             on error
      */
-    public static IWorkbenchPage createNewWorkbenchPage(final Optional<Rectangle> bounds) throws Exception {
-        final IWorkbenchWindow window = PlatformUI.getWorkbench().openWorkbenchWindow(
-                OPIRunnerPerspective.ID, null);
+    public static IWorkbenchPage createNewWorkbenchPage(Optional<Rectangle> bounds) throws Exception {
+        var window = PlatformUI.getWorkbench().openWorkbenchWindow(OPIRunnerPerspective.ID, null);
         if (bounds.isPresent()) {
             if (bounds.get().x >= 0 && bounds.get().y > 1) {
                 window.getShell().setLocation(bounds.get().x, bounds.get().y);
@@ -176,9 +171,9 @@ public class RunModeService {
                 // Check for existing view with same input.
                 for (IViewReference viewReference : page.getViewReferences()) {
                     if (viewReference.getId().startsWith(OPIView.ID)) {
-                        final IViewPart view = viewReference.getView(true);
+                        var view = viewReference.getView(true);
                         if (view instanceof OPIView) {
-                            final OPIView opi_view = (OPIView) view;
+                            var opi_view = (OPIView) view;
                             if (input.equals(opi_view.getOPIInput())) {
                                 page.showView(viewReference.getId(), viewReference.getSecondaryId(),
                                         IWorkbenchPage.VIEW_ACTIVATE);
@@ -194,8 +189,8 @@ public class RunModeService {
                 // Open new View
                 // Create view ID that - when used with OPIRunnerPerspective -
                 // causes view to appear in desired location
-                final String secondID = OPIView.createSecondaryID();
-                final Position position;
+                var secondID = OPIView.createSecondaryID();
+                Position position;
                 switch (mode) {
                 case NEW_TAB_LEFT:
                     position = Position.LEFT;
@@ -215,11 +210,11 @@ public class RunModeService {
                 default:
                     position = Position.DEFAULT_VIEW;
                 }
-                final IViewPart view = page.showView(position.getOPIViewID(), secondID, IWorkbenchPage.VIEW_ACTIVATE);
+                var view = page.showView(position.getOPIViewID(), secondID, IWorkbenchPage.VIEW_ACTIVATE);
                 if (!(view instanceof OPIView)) {
                     throw new PartInitException("Expected OPIView, got " + view);
                 }
-                final OPIView opiView = (OPIView) view;
+                var opiView = (OPIView) view;
 
                 // Set content of view
                 opiView.setOPIInput(input);
@@ -230,7 +225,7 @@ public class RunModeService {
                     // Pre-E4 code:
                     // ((WorkbenchPage)page).detachView(page.findViewReference(OPIView.ID, secondID));
                     // See http://tomsondev.bestsolution.at/2012/07/13/so-you-used-internal-api/
-                    final EModelService model = opiView.getSite().getService(EModelService.class);
+                    var model = opiView.getSite().getService(EModelService.class);
                     MPartSashContainerElement p = opiView.getSite().getService(MPart.class);
                     // Part may be shared by several perspectives, get the shared instance
                     if (p.getCurSharedRef() != null) {

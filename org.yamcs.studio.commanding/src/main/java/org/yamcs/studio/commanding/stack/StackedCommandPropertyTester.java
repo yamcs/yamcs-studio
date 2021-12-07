@@ -7,10 +7,9 @@ public class StackedCommandPropertyTester extends PropertyTester {
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-        StackedCommand cmd = (StackedCommand) receiver;
+        var cmd = (StackedCommand) receiver;
         if ("canBeSkipped".equals(property)) {
-            return cmd == CommandStack.getInstance().getActiveCommand()
-                    && cmd.getStackedState() != StackedState.ISSUED
+            return cmd == CommandStack.getInstance().getActiveCommand() && cmd.getStackedState() != StackedState.ISSUED
                     && cmd.getStackedState() != StackedState.SKIPPED;
         }
         return false;

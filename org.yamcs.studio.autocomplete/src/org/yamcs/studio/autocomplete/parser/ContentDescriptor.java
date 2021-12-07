@@ -99,12 +99,9 @@ public class ContentDescriptor {
 
     @Override
     public String toString() {
-        return "ContentDescriptor [value=" + value + ", autoCompleteType="
-                + autoCompleteType + ", contentType=" + contentType
-                + ", originalContent=" + originalContent
-                + ", defaultDataSource=" + defaultDataSource + ", startIndex="
-                + startIndex + ", endIndex=" + endIndex + ", replay=" + replay
-                + "]";
+        return "ContentDescriptor [value=" + value + ", autoCompleteType=" + autoCompleteType + ", contentType="
+                + contentType + ", originalContent=" + originalContent + ", defaultDataSource=" + defaultDataSource
+                + ", startIndex=" + startIndex + ", endIndex=" + endIndex + ", replay=" + replay + "]";
     }
 
 }

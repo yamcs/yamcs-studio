@@ -20,12 +20,12 @@ public class Sint32ArrayVType extends YamcsVType implements VIntArray {
     public Sint32ArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
-        int[] intValues = new int[size];
-        for (int i = 0; i < intValues.length; i++) {
+        var intValues = new int[size];
+        for (var i = 0; i < intValues.length; i++) {
             intValues[i] = value.getArrayValue(i).getSint32Value();
         }
         data = new ArrayInt(intValues);

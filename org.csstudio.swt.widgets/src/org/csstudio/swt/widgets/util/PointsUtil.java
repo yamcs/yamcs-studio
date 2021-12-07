@@ -9,11 +9,9 @@
  ********************************************************************************/
 package org.csstudio.swt.widgets.util;
 
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * This class can be used to manimuplate points.
@@ -38,9 +36,9 @@ public final class PointsUtil {
      *            The rotation point
      * @return The rotated Point
      */
-    public static PrecisionPoint rotate(final Point point, final double angle, final Point rotationPoint) {
-        PrecisionPoint pPoint = point instanceof PrecisionPoint ? (PrecisionPoint) point : new PrecisionPoint(point);
-        PrecisionPoint pRotationPoint = rotationPoint instanceof PrecisionPoint ? (PrecisionPoint) rotationPoint
+    public static PrecisionPoint rotate(Point point, double angle, Point rotationPoint) {
+        var pPoint = point instanceof PrecisionPoint ? (PrecisionPoint) point : new PrecisionPoint(point);
+        var pRotationPoint = rotationPoint instanceof PrecisionPoint ? (PrecisionPoint) rotationPoint
                 : new PrecisionPoint(rotationPoint);
 
         return doRotate(pPoint, angle, pRotationPoint);
@@ -57,22 +55,21 @@ public final class PointsUtil {
      *            The rotation point
      * @return The rotated Point
      */
-    public static PrecisionPoint doRotate(final PrecisionPoint point, final double angle,
-            final PrecisionPoint rotationPoint) {
+    public static PrecisionPoint doRotate(PrecisionPoint point, double angle, PrecisionPoint rotationPoint) {
         assert point != null : "Precondition violated: point!=null";
         assert rotationPoint != null : "Precondition violated: rotationPoint!=null";
-        double trueAngle = Math.toRadians(angle);
-        double sin = Math.sin(trueAngle);
-        double cos = Math.cos(trueAngle);
+        var trueAngle = Math.toRadians(angle);
+        var sin = Math.sin(trueAngle);
+        var cos = Math.cos(trueAngle);
 
         // Relative coordinates to the rotation point
-        double relX = point.preciseX - rotationPoint.preciseX;
-        double relY = point.preciseY - rotationPoint.preciseY;
+        var relX = point.preciseX - rotationPoint.preciseX;
+        var relY = point.preciseY - rotationPoint.preciseY;
 
-        double temp = relX * cos - relY * sin;
+        var temp = relX * cos - relY * sin;
 
-        double y = relX * sin + relY * cos;
-        double x = temp;
+        var y = relX * sin + relY * cos;
+        var x = temp;
 
         return new PrecisionPoint(x + rotationPoint.x, y + rotationPoint.y);
     }
@@ -86,14 +83,13 @@ public final class PointsUtil {
      *            The angle to rotate
      * @return The rotated PointList
      */
-    public static final PointList rotatePoints(final PointList points, final double angle) {
-        Rectangle pointBounds = points.getBounds();
-        Point rotationPoint = pointBounds.getCenter();
-        PointList newPoints = rotatePoints(points, angle, rotationPoint);
-        Rectangle newPointBounds = newPoints.getBounds();
+    public static final PointList rotatePoints(PointList points, double angle) {
+        var pointBounds = points.getBounds();
+        var rotationPoint = pointBounds.getCenter();
+        var newPoints = rotatePoints(points, angle, rotationPoint);
+        var newPointBounds = newPoints.getBounds();
         if (!rotationPoint.equals(newPointBounds.getCenter())) {
-            Dimension difference = rotationPoint.getCopy().getDifference(
-                    newPointBounds.getCenter());
+            var difference = rotationPoint.getCopy().getDifference(newPointBounds.getCenter());
             newPoints.translate(difference.width, difference.height);
         }
         return newPoints;
@@ -108,12 +104,11 @@ public final class PointsUtil {
      *            The angle to rotate
      * @return The rotated PointList
      */
-    public static final PointList rotatePoints(final PointList points, final double angle, final Point center) {
-        PointList newPoints = new PointList();
+    public static final PointList rotatePoints(PointList points, double angle, Point center) {
+        var newPoints = new PointList();
 
-        for (int i = 0; i < points.size(); i++) {
-            newPoints.addPoint(PointsUtil.rotate(points.getPoint(i), angle,
-                    center));
+        for (var i = 0; i < points.size(); i++) {
+            newPoints.addPoint(PointsUtil.rotate(points.getPoint(i), angle, center));
         }
 
         return newPoints;
@@ -128,8 +123,8 @@ public final class PointsUtil {
      *            the center point.
      * @return the point after flipping.
      */
-    public static final Point flipPointHorizontally(final Point point, final int center) {
-        int newX = 2 * center - point.x;
+    public static final Point flipPointHorizontally(Point point, int center) {
+        var newX = 2 * center - point.x;
         return new Point(newX, point.y);
     }
 
@@ -142,8 +137,8 @@ public final class PointsUtil {
      *            the center point.
      * @return the point after flipping.
      */
-    public static final Point flipPointVertically(final Point point, final int center) {
-        int newY = 2 * center - point.y;
+    public static final Point flipPointVertically(Point point, int center) {
+        var newY = 2 * center - point.y;
         return new Point(point.x, newY);
     }
 
@@ -156,7 +151,7 @@ public final class PointsUtil {
      */
     public static final PointList flipPointsHorizontally(PointList points) {
 
-        int centerX = points.getBounds().x + points.getBounds().width / 2;
+        var centerX = points.getBounds().x + points.getBounds().width / 2;
 
         return flipPointsHorizontally(points, centerX);
 
@@ -173,9 +168,9 @@ public final class PointsUtil {
      */
     public static final PointList flipPointsHorizontally(PointList points, int centerX) {
 
-        PointList newPointList = new PointList();
+        var newPointList = new PointList();
 
-        for (int i = 0; i < points.size(); i++) {
+        for (var i = 0; i < points.size(); i++) {
             newPointList.addPoint(flipPointHorizontally(points.getPoint(i), centerX));
         }
 
@@ -192,7 +187,7 @@ public final class PointsUtil {
      */
     public static final PointList flipPointsVertically(PointList points) {
 
-        int centerY = points.getBounds().y + points.getBounds().height / 2;
+        var centerY = points.getBounds().y + points.getBounds().height / 2;
 
         return flipPointsVertically(points, centerY);
 
@@ -209,9 +204,9 @@ public final class PointsUtil {
      */
     public static final PointList flipPointsVertically(PointList points, int centerY) {
 
-        PointList newPointList = new PointList();
+        var newPointList = new PointList();
 
-        for (int i = 0; i < points.size(); i++) {
+        for (var i = 0; i < points.size(); i++) {
             newPointList.addPoint(flipPointVertically(points.getPoint(i), centerY));
         }
 
@@ -229,11 +224,10 @@ public final class PointsUtil {
      * @param heightRatio
      *            height scale ratio.
      */
-    public static final void scalePoints(PointList points,
-            double widthRatio, double heightRatio) {
-        Point p0 = points.getBounds().getLocation();
-        for (int i = 0; i < points.size(); i++) {
-            Point p = points.getPoint(i);
+    public static void scalePoints(PointList points, double widthRatio, double heightRatio) {
+        var p0 = points.getBounds().getLocation();
+        for (var i = 0; i < points.size(); i++) {
+            var p = points.getPoint(i);
             p.x = (int) ((p.x - p0.x) * widthRatio) + p0.x;
             p.y = (int) ((p.y - p0.y) * heightRatio) + p0.y;
             points.setPoint(p, i);
@@ -251,29 +245,29 @@ public final class PointsUtil {
      *            the new height
      * @return the points after scaled. If no scale is needed, return the input points.
      */
-    public static PointList scalePointsBySize(final PointList points, final int width, final int height) {
-        int targetW = Math.max(1, width);
-        int targetH = Math.max(1, height);
+    public static PointList scalePointsBySize(PointList points, int width, int height) {
+        var targetW = Math.max(1, width);
+        var targetH = Math.max(1, height);
         double oldW = points.getBounds().width;
         double oldH = points.getBounds().height;
         double topLeftX = points.getBounds().x;
         double topLeftY = points.getBounds().y;
 
         if (oldW != targetW || oldH != targetH) {
-            PointList newPoints = new PointList();
-            for (int i = 0; i < points.size(); i++) {
-                int x = points.getPoint(i).x;
-                int y = points.getPoint(i).y;
+            var newPoints = new PointList();
+            for (var i = 0; i < points.size(); i++) {
+                var x = points.getPoint(i).x;
+                var y = points.getPoint(i).y;
 
-                Point newPoint = new Point(x, y);
+                var newPoint = new Point(x, y);
                 if (oldW > 0 && oldH > 0) {
-                    double oldRelX = (x - topLeftX) / oldW;
-                    double oldRelY = (y - topLeftY) / oldH;
+                    var oldRelX = (x - topLeftX) / oldW;
+                    var oldRelY = (y - topLeftY) / oldH;
 
-                    double newX = topLeftX + (oldRelX * targetW);
-                    double newY = topLeftY + (oldRelY * targetH);
-                    int roundedX = (int) Math.round(newX);
-                    int roundedY = (int) Math.round(newY);
+                    var newX = topLeftX + (oldRelX * targetW);
+                    var newY = topLeftY + (oldRelY * targetH);
+                    var roundedX = (int) Math.round(newX);
+                    var roundedY = (int) Math.round(newY);
                     newPoint = new Point(roundedX, roundedY);
                 }
 

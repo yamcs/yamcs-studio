@@ -68,16 +68,16 @@ class TableValueFilterFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VTable table = (VTable) args.get(0);
-        VString columnName = (VString) args.get(1);
-        VType value = (VType) args.get(2);
+    public Object calculate(List<Object> args) {
+        var table = (VTable) args.get(0);
+        var columnName = (VString) args.get(1);
+        var value = (VType) args.get(2);
 
         if (columnName == null || columnName.getValue() == null || table == null || value == null) {
             return null;
         }
 
-        VTable result = VTableFactory.tableValueFilter(table, columnName.getValue(), value);
+        var result = VTableFactory.tableValueFilter(table, columnName.getValue(), value);
 
         return result;
     }

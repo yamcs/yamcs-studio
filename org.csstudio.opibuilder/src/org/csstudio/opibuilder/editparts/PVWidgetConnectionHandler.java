@@ -9,8 +9,8 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import org.yamcs.studio.data.IPV;
 import org.csstudio.ui.util.thread.UIBundlingThread;
+import org.yamcs.studio.data.IPV;
 
 /**
  * The connection handler for PV widget. It will set the enable state of the widget based on control PV's connectivity.
@@ -28,11 +28,10 @@ public class PVWidgetConnectionHandler extends ConnectionHandler {
     @Override
     protected void markWidgetAsDisconnected(IPV pv) {
         super.markWidgetAsDisconnected(pv);
-        IPVWidgetEditpart pvWidgetEditpart = (IPVWidgetEditpart) editPart;
-        final IPV controlPV = pvWidgetEditpart.getControlPV();
+        var pvWidgetEditpart = (IPVWidgetEditpart) editPart;
+        var controlPV = pvWidgetEditpart.getControlPV();
         if (controlPV != null && controlPV == pv) {
-            UIBundlingThread.getInstance().addRunnable(
-                    editPart.getRoot().getViewer().getControl().getDisplay(),
+            UIBundlingThread.getInstance().addRunnable(editPart.getRoot().getViewer().getControl().getDisplay(),
                     new Runnable() {
                         @Override
                         public void run() {

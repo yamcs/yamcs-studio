@@ -72,15 +72,12 @@ class ArrayRangeOfFormulaFunction implements FormulaFunction {
             return null;
         }
 
-        VNumberArray numberArray = (VNumberArray) args.get(0);
-        double min = numberArray.getDimensionDisplay().get(0).getCellBoundaries().getDouble(0);
-        double max = numberArray.getDimensionDisplay().get(0).getCellBoundaries()
+        var numberArray = (VNumberArray) args.get(0);
+        var min = numberArray.getDimensionDisplay().get(0).getCellBoundaries().getDouble(0);
+        var max = numberArray.getDimensionDisplay().get(0).getCellBoundaries()
                 .getDouble(numberArray.getSizes().getInt(0));
 
-        return newVNumberArray(
-                new ArrayDouble(min, max),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
+        return newVNumberArray(new ArrayDouble(min, max), highestSeverityOf(args, false), latestValidTimeOrNowOf(args),
                 displayNone());
     }
 

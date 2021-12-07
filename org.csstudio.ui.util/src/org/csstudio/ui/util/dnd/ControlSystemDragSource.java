@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.ui.util.dnd;
 
+import static org.csstudio.ui.util.ReflectUtil.isArray;
+
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -27,8 +29,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Control;
 
-import static org.csstudio.ui.util.ReflectUtil.*;
-
 /**
  * General purpose utility to allowing Drag-and-Drop "Drag" of any adaptable or {@link Serializable} object.
  *
@@ -42,7 +42,7 @@ import static org.csstudio.ui.util.ReflectUtil.*;
  * {
  *     public Object getSelection()
  *     {
- *         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+ *         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
  *         return selection.getFirstElement();
  *      }
  * };
@@ -54,8 +54,8 @@ import static org.csstudio.ui.util.ReflectUtil.*;
  * <pre>
  * new ControlSystemDragSource(viewer.getControl()) {
  *     public Object getSelection() {
- *         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
- *         final Object[] objs = selection.toArray();
+ *         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+ *         Object[] objs = selection.toArray();
  *         return objs;
  *     }
  * };
@@ -67,9 +67,9 @@ import static org.csstudio.ui.util.ReflectUtil.*;
  * <pre>
  * new ControlSystemDragSource(viewer.getControl()) {
  *     public Object getSelection() {
- *         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
- *         final Object[] objs = selection.toArray();
- *         final ProcessVariable[] pvs = Arrays.copyOf(objs, objs.length, ProcessVariable[].class);
+ *         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+ *         Object[] objs = selection.toArray();
+ *         ProcessVariable[] pvs = Arrays.copyOf(objs, objs.length, ProcessVariable[].class);
  *         return pvs;
  *     }
  * };
@@ -85,13 +85,13 @@ abstract public class ControlSystemDragSource {
      * @param control
      *            Control from which the selection may be dragged
      */
-    public ControlSystemDragSource(final Control control) {
+    public ControlSystemDragSource(Control control) {
         source = new DragSource(control, DND.DROP_COPY);
 
         source.addDragListener(new DragSourceAdapter() {
             @Override
             public void dragStart(DragSourceEvent event) {
-                Object selection = getSelection();
+                var selection = getSelection();
 
                 // No selection, don't start the drag
                 if (selection == null) {
@@ -104,20 +104,21 @@ abstract public class ControlSystemDragSource {
             }
 
             @Override
-            public void dragSetData(final DragSourceEvent event) { // Drag has been performed, provide data
-                Object selection = getSelection();
+            public void dragSetData(DragSourceEvent event) { // Drag has been performed, provide data
+                var selection = getSelection();
                 for (Transfer transfer : supportedTransfers(selection)) {
                     if (transfer.isSupportedType(event.dataType)) {
                         if (transfer instanceof SerializableItemTransfer) {
-                            SerializableItemTransfer objectTransfer = (SerializableItemTransfer) transfer;
+                            var objectTransfer = (SerializableItemTransfer) transfer;
                             event.data = AdapterUtil.convert(selection, objectTransfer.getClassName());
                             return;
                         } else if (transfer instanceof TextTransfer) {
                             // TextTransfer needs String
-                            if (selection.getClass().isArray())
+                            if (selection.getClass().isArray()) {
                                 event.data = Arrays.toString((Object[]) selection);
-                            else
+                            } else {
                                 event.data = selection.toString();
+                            }
                             return;
                         }
                     }
@@ -159,9 +160,10 @@ abstract public class ControlSystemDragSource {
     }
 
     private static List<Transfer> supportedSingleTransfers(Class<?> clazz) {
-        if (clazz.isArray())
+        if (clazz.isArray()) {
             throw new RuntimeException("Something wrong: you are asking for single transfers for an array");
-        String[] types = AdapterUtil.getAdaptableTypes(clazz);
+        }
+        var types = AdapterUtil.getAdaptableTypes(clazz);
         List<Transfer> supportedTransfers = new ArrayList<Transfer>();
         if (Serializable.class.isAssignableFrom(clazz)) {
             @SuppressWarnings("unchecked")
@@ -174,9 +176,10 @@ abstract public class ControlSystemDragSource {
     }
 
     private static List<Transfer> supportedArrayTransfers(Class<?> arrayClass) {
-        if (!arrayClass.isArray())
+        if (!arrayClass.isArray()) {
             throw new RuntimeException("Something wrong: you are asking for array transfers for an single object");
-        String[] types = AdapterUtil.getAdaptableTypes(arrayClass.getComponentType());
+        }
+        var types = AdapterUtil.getAdaptableTypes(arrayClass.getComponentType());
         List<Transfer> supportedTransfers = new ArrayList<Transfer>();
         if (Serializable.class.isAssignableFrom(arrayClass.getComponentType())) {
             supportedTransfers.add(SerializableItemTransfer.getTransfer(arrayClass.getName()));

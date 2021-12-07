@@ -58,23 +58,27 @@ public class ExprFunction extends Expr {
         this.isComplete = isComplete;
     }
 
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(name);
         sb.append("(");
-        for (int i = 0; i < args.length; i++) {
-            if (i > 0)
+        for (var i = 0; i < args.length; i++) {
+            if (i > 0) {
                 sb.append(",");
+            }
             sb.append(args[i]);
         }
         sb.append(")");
         return sb.toString();
     }
 
+    @Override
     public void validate() throws ExprException {
-        if (name == null)
+        if (name == null) {
             throw new ExprException("Function name cannot be empty");
-        for (int i = 0; i < args.length; i++) {
+        }
+        for (var i = 0; i < args.length; i++) {
             args[i].validate();
         }
     }

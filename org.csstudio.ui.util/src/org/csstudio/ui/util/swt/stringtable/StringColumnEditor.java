@@ -23,44 +23,45 @@ import org.eclipse.swt.widgets.Table;
 class StringColumnEditor extends EditingSupport {
     final private TableViewer table_viewer;
 
-    public StringColumnEditor(final TableViewer viewer) {
+    public StringColumnEditor(TableViewer viewer) {
         super(viewer);
         this.table_viewer = viewer;
     }
 
     @Override
-    protected boolean canEdit(final Object element) {
+    protected boolean canEdit(Object element) {
         return true;
     }
 
     @Override
-    protected CellEditor getCellEditor(final Object element) {
-        final Table parent = (Table) getViewer().getControl();
+    protected CellEditor getCellEditor(Object element) {
+        var parent = (Table) getViewer().getControl();
         return new TextCellEditor(parent);
     }
 
     @Override
     protected Object getValue(Object element) {
-        if (element == StringTableContentProvider.ADD_ELEMENT)
+        if (element == StringTableContentProvider.ADD_ELEMENT) {
             return "";
-        final int index = ((Integer) element).intValue();
+        }
+        var index = ((Integer) element).intValue();
 
         @SuppressWarnings("unchecked")
-        final List<String> items = (List<String>) table_viewer.getInput();
+        var items = (List<String>) table_viewer.getInput();
         return items.get(index);
     }
 
     @Override
     protected void setValue(Object element, Object value) {
         @SuppressWarnings("unchecked")
-        final List<String> items = (List<String>) table_viewer.getInput();
+        var items = (List<String>) table_viewer.getInput();
         if (element == StringTableContentProvider.ADD_ELEMENT) {
             items.add(value.toString());
             getViewer().refresh();
             return;
         }
         // else
-        final int index = ((Integer) element).intValue();
+        var index = ((Integer) element).intValue();
         items.set(index, value.toString());
         getViewer().refresh(element);
     }

@@ -16,15 +16,10 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.widgetActions.ExecuteCommandAction;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -49,12 +44,11 @@ public class ScriptUtil {
      * @param macrosInput
      *            the macrosInput. null if no macros needed.
      */
-    public static void openOPI(AbstractBaseEditPart widget,
-            String opiPath, int target, MacrosInput macrosInput) {
-        OpenDisplayAction action = new OpenDisplayAction();
+    public static void openOPI(AbstractBaseEditPart widget, String opiPath, int target, MacrosInput macrosInput) {
+        var action = new OpenDisplayAction();
 
         // Map target IDs of this API to DisplayMode
-        final DisplayMode mode;
+        DisplayMode mode;
         switch (target) {
         case 0:
             mode = DisplayMode.NEW_TAB;
@@ -95,8 +89,8 @@ public class ScriptUtil {
      */
     public static void closeCurrentOPI() {
         try {
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            IWorkbenchPart activePart = activePage.getActivePart();
+            var activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            var activePart = activePage.getActivePart();
 
             if (activePart instanceof IEditorPart) {
                 activePage.closeEditor((IEditorPart) activePart, false);
@@ -112,7 +106,7 @@ public class ScriptUtil {
      * Close OPI associated with the provided widget.
      */
     public static void closeAssociatedOPI(AbstractBaseEditPart widget) {
-        Shell widgetShell = widget.getWidgetModel().getRootDisplayModel().getViewer().getControl().getShell();
+        var widgetShell = widget.getWidgetModel().getRootDisplayModel().getViewer().getControl().getShell();
         // Is the shell part of a workbench window, or its own OPIShell?
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell() != widgetShell) {
             widgetShell.close();
@@ -132,35 +126,33 @@ public class ScriptUtil {
      *            "pvalue"])
      */
     public final static void executeEclipseCommand(String commandId, String[] parameters) {
-        IHandlerService handlerService = (IHandlerService) PlatformUI
-                .getWorkbench().getActiveWorkbenchWindow()
+        var handlerService = (IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                 .getService(IHandlerService.class);
         try {
             if (parameters.length % 2 != 0) {
-                throw new IllegalArgumentException("Parameterized commands must have "
-                        + "an equal number of keys and values");
+                throw new IllegalArgumentException(
+                        "Parameterized commands must have " + "an equal number of keys and values");
             }
 
             if (parameters.length == 0) {
                 handlerService.executeCommand(commandId, null);
             } else {
-                ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                var commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getService(ICommandService.class);
-                Parameterization[] params = new Parameterization[parameters.length / 2];
-                Command c = commandService.getCommand(commandId);
-                for (int i = 0; i < parameters.length / 2; i++) {
-                    String key = parameters[2 * i];
-                    String value = parameters[2 * i + 1];
-                    IParameter p = c.getParameter(key);
-                    Parameterization pp = new Parameterization(p, value);
+                var params = new Parameterization[parameters.length / 2];
+                var c = commandService.getCommand(commandId);
+                for (var i = 0; i < parameters.length / 2; i++) {
+                    var key = parameters[2 * i];
+                    var value = parameters[2 * i + 1];
+                    var p = c.getParameter(key);
+                    var pp = new Parameterization(p, value);
                     params[i] = pp;
                 }
-                ParameterizedCommand pc = new ParameterizedCommand(c, params);
+                var pc = new ParameterizedCommand(c, params);
                 handlerService.executeCommand(pc, null);
             }
         } catch (Exception e) {
-            ErrorHandlerUtil.handleError("Failed to execute eclipse command: "
-                    + commandId, e);
+            ErrorHandlerUtil.handleError("Failed to execute eclipse command: " + commandId, e);
         }
     }
 
@@ -192,7 +184,7 @@ public class ScriptUtil {
      *            Time to wait for completion in seconds
      */
     public final static void executeSystemCommand(String command, int wait) {
-        ExecuteCommandAction action = new ExecuteCommandAction();
+        var action = new ExecuteCommandAction();
         action.setPropertyValue(ExecuteCommandAction.PROP_COMMAND, command);
         action.setPropertyValue(ExecuteCommandAction.PROP_WAIT_TIME, wait);
         action.run();
@@ -206,8 +198,7 @@ public class ScriptUtil {
      * @param widget
      *            any widget. It is referred to get the UI thread.
      */
-    public final static void execInUI(Runnable runnable,
-            AbstractBaseEditPart widget) {
+    public final static void execInUI(Runnable runnable, AbstractBaseEditPart widget) {
         widget.getViewer().getControl().getDisplay().asyncExec(runnable);
     }
 

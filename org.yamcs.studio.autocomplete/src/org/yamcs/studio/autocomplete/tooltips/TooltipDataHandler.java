@@ -12,6 +12,7 @@ package org.yamcs.studio.autocomplete.tooltips;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 
 /**
@@ -22,8 +23,7 @@ public class TooltipDataHandler {
     private List<TooltipData> tooltipDataList;
 
     public TooltipDataHandler() {
-        this.tooltipDataList = Collections
-                .synchronizedList(new ArrayList<TooltipData>());
+        this.tooltipDataList = Collections.synchronizedList(new ArrayList<TooltipData>());
     }
 
     public void addData(TooltipData data) {
@@ -35,22 +35,22 @@ public class TooltipDataHandler {
     }
 
     public TooltipContent generateTooltipContent(String fieldContent) {
-        if (tooltipDataList.isEmpty() || fieldContent == null
-                || fieldContent.trim().isEmpty())
+        if (tooltipDataList.isEmpty() || fieldContent == null || fieldContent.trim().isEmpty()) {
             return null; // no content
+        }
 
         // build content
         int offset = 0, maxLineLength = 0, numberOfLines = 0;
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         List<ProposalStyle> styleList = new ArrayList<ProposalStyle>();
         synchronized (tooltipDataList) {
             for (TooltipData data : tooltipDataList) {
-                int startLength = sb.length();
+                var startLength = sb.length();
                 sb.append(data.value);
                 sb.append("\n");
                 if (data.styles != null) {
                     for (ProposalStyle style : data.styles) {
-                        ProposalStyle ps = new ProposalStyle(style);
+                        var ps = new ProposalStyle(style);
                         ps.from += offset;
                         ps.to += offset;
                         styleList.add(ps);
@@ -69,7 +69,7 @@ public class TooltipDataHandler {
         // delete last \n
         sb.deleteCharAt(sb.length() - 1);
 
-        TooltipContent tc = new TooltipContent();
+        var tc = new TooltipContent();
         tc.value = sb.toString();
         tc.styles = styleList.toArray(new ProposalStyle[styleList.size()]);
         tc.numberOfLines = numberOfLines;

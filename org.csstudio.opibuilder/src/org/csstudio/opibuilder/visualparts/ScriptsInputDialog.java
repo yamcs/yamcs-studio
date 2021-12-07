@@ -72,8 +72,8 @@ public class ScriptsInputDialog extends TrayDialog {
 
     private AbstractWidgetModel widgetModel;
 
-    public ScriptsInputDialog(Shell parentShell, ScriptsInput scriptsInput,
-            String dialogTitle, AbstractWidgetModel widgetModel) {
+    public ScriptsInputDialog(Shell parentShell, ScriptsInput scriptsInput, String dialogTitle,
+            AbstractWidgetModel widgetModel) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.scriptDataList = scriptsInput.getCopy().getScriptList();
@@ -86,7 +86,7 @@ public class ScriptsInputDialog extends TrayDialog {
     protected void okPressed() {
         pvsEditor.forceFocus();
         for (var scriptData : scriptDataList) {
-            boolean hasTrigger = false;
+            var hasTrigger = false;
             for (PVTuple pvTuple : scriptData.getPVList()) {
                 hasTrigger |= pvTuple.trigger;
             }
@@ -190,22 +190,21 @@ public class ScriptsInputDialog extends TrayDialog {
         checkConnectivityButton = new Button(optionTabComposite, SWT.CHECK);
         checkConnectivityButton.setSelection(false);
         checkConnectivityButton.setText("Run even if some PVs\nare disconnected");
-        checkConnectivityButton.setToolTipText(
-                "Useful when you want to handle PV disconnection inside the script");
+        checkConnectivityButton.setToolTipText("Useful when you want to handle PV disconnection inside the script");
         checkConnectivityButton.setEnabled(false);
         checkConnectivityButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 var selection = (IStructuredSelection) scriptsViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    ((ScriptData) selection.getFirstElement()).setCheckConnectivity(
-                            !checkConnectivityButton.getSelection());
+                    ((ScriptData) selection.getFirstElement())
+                            .setCheckConnectivity(!checkConnectivityButton.getSelection());
                 }
                 if (checkConnectivityButton.getSelection()) {
                     MessageDialog.openWarning(getShell(), "Warning",
-                            "If this option is checked, " +
-                                    "the script is responsible for checking PV connectivity. For example using:\n" +
-                                    "pvs[#].isConnected()");
+                            "If this option is checked, "
+                                    + "the script is responsible for checking PV connectivity. For example using:\n"
+                                    + "pvs[#].isConnected()");
                 }
             }
         });
@@ -221,8 +220,8 @@ public class ScriptsInputDialog extends TrayDialog {
             public void widgetSelected(SelectionEvent e) {
                 var selection = (IStructuredSelection) scriptsViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    ((ScriptData) selection.getFirstElement()).setStopExecuteOnError(
-                            stopExecuteOnErrorButton.getSelection());
+                    ((ScriptData) selection.getFirstElement())
+                            .setStopExecuteOnError(stopExecuteOnErrorButton.getSelection());
                 }
             }
         });
@@ -249,18 +248,14 @@ public class ScriptsInputDialog extends TrayDialog {
             removeAction.setEnabled(true);
             moveUpAction.setEnabled(true);
             moveDownAction.setEnabled(true);
-            convertToEmbedAction.setEnabled(
-                    !((ScriptData) selection.getFirstElement()).isEmbedded());
+            convertToEmbedAction.setEnabled(!((ScriptData) selection.getFirstElement()).isEmbedded());
 
             editAction.setEnabled(true);
-            pvsEditor.updateInput(((ScriptData) selection
-                    .getFirstElement()).getPVList());
+            pvsEditor.updateInput(((ScriptData) selection.getFirstElement()).getPVList());
             pvsEditor.setEnabled(true);
-            checkConnectivityButton.setSelection(!((ScriptData) selection
-                    .getFirstElement()).isCheckConnectivity());
+            checkConnectivityButton.setSelection(!((ScriptData) selection.getFirstElement()).isCheckConnectivity());
             checkConnectivityButton.setEnabled(true);
-            stopExecuteOnErrorButton.setSelection(((ScriptData) selection
-                    .getFirstElement()).isStopExecuteOnError());
+            stopExecuteOnErrorButton.setSelection(((ScriptData) selection.getFirstElement()).isStopExecuteOnError());
             stopExecuteOnErrorButton.setEnabled(true);
         } else {
             removeAction.setEnabled(false);
@@ -283,19 +278,18 @@ public class ScriptsInputDialog extends TrayDialog {
         }
     }
 
-    private TableViewer createScriptsTableViewer(final Composite parent) {
+    private TableViewer createScriptsTableViewer(Composite parent) {
         var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
             @Override
-            public Object[] getElements(final Object element) {
+            public Object[] getElements(Object element) {
                 return (((List<ScriptData>) element).toArray());
             }
         });
         viewer.setLabelProvider(new WorkbenchLabelProvider());
         viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
 
@@ -460,8 +454,7 @@ public class ScriptsInputDialog extends TrayDialog {
                             sd.setScriptName(absoluteScriptPath.removeFileExtension().lastSegment());
                             setScriptsViewerSelection(sd);
                         } catch (Exception e) {
-                            MessageDialog.openError(getShell(),
-                                    "Failed", "Failed to read script file");
+                            MessageDialog.openError(getShell(), "Failed", "Failed to read script file");
                         }
 
                     }

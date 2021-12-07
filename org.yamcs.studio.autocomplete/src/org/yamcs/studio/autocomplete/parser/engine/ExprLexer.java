@@ -32,8 +32,9 @@ public class ExprLexer {
     }
 
     public ExprToken next() throws IOException {
-        if (lastChar == 0 || Character.isWhitespace(lastChar))
+        if (lastChar == 0 || Character.isWhitespace(lastChar)) {
             lastChar = reader.ignoreWhitespace();
+        }
 
         return readToken();
     }
@@ -110,15 +111,16 @@ public class ExprLexer {
     }
 
     private ExprToken readNumber() throws IOException {
-        StringBuilder sb = new StringBuilder(); // Todo, more efficient number
+        var sb = new StringBuilder(); // Todo, more efficient number
         // builder (ie. shift bits)
         sb.append((char) lastChar);
         lastChar = reader.read();
-        boolean decimal = false;
+        var decimal = false;
         while (Character.isDigit(lastChar) || '.' == lastChar) {
             sb.append((char) lastChar);
-            if (lastChar == '.')
+            if (lastChar == '.') {
                 decimal = true;
+            }
             lastChar = reader.read();
         }
 
@@ -135,7 +137,7 @@ public class ExprLexer {
             }
         }
 
-        String val = sb.toString();
+        var val = sb.toString();
         if (decimal) {
             return new ExprToken(val, Double.parseDouble(val));
         } else {
@@ -149,9 +151,9 @@ public class ExprLexer {
     }
 
     private ExprToken readQuotedVariable() throws IOException {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-        boolean isComplete = false;
+        var isComplete = false;
         sb.append('\'');
         while (lastChar != -1 && Character.isDefined((char) lastChar)) {
             lastChar = reader.read();
@@ -164,12 +166,14 @@ public class ExprLexer {
                     break;
                 }
             } else {
-                if (Character.isDefined((char) lastChar))
+                if (Character.isDefined((char) lastChar)) {
                     sb.append((char) lastChar);
+                }
             }
         }
-        if (isComplete)
+        if (isComplete) {
             sb.append('\'');
+        }
 
         // Now read the rest of the variable
         // while (isVariablePart(lastChar)) {
@@ -181,7 +185,7 @@ public class ExprLexer {
     }
 
     private ExprToken readVariableOrFunction() throws IOException {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         while (isVariablePart(lastChar)) {
             sb.append((char) lastChar);
@@ -201,21 +205,20 @@ public class ExprLexer {
     }
 
     private boolean isVariablePart(int lastChar) {
-        return Character.isJavaIdentifierPart(lastChar) || lastChar == '!'
-                || lastChar == ':';
+        return Character.isJavaIdentifierPart(lastChar) || lastChar == '!' || lastChar == ':';
     }
 
     private ExprToken readString() throws IOException {
-        String str = unescapeString(reader);
+        var str = unescapeString(reader);
         lastChar = 0;
         return new ExprToken(ExprTokenType.String, str);
     }
 
     public static String escapeString(String str) {
-        StringBuilder sb = new StringBuilder();
-        int len = str.length();
-        for (int i = 0; i < len; i++) {
-            char c = str.charAt(i);
+        var sb = new StringBuilder();
+        var len = str.length();
+        for (var i = 0; i < len; i++) {
+            var c = str.charAt(i);
             switch (c) {
             case '\"':
                 sb.append("\"\"");
@@ -229,13 +232,13 @@ public class ExprLexer {
     }
 
     public static String unescapeString(TokenReader r) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         char c = 0;
         while (c != '\"' && Character.isDefined(c)) {
             c = (char) r.read();
             switch (c) {
             case '\"':
-                int v = r.peek();
+                var v = r.peek();
                 if (v == '\"') {
                     r.read();
                     sb.append('\"');
@@ -243,8 +246,9 @@ public class ExprLexer {
                 }
                 break;
             default:
-                if (Character.isDefined(c))
+                if (Character.isDefined(c)) {
                     sb.append(c);
+                }
                 break;
             }
         }
@@ -252,8 +256,8 @@ public class ExprLexer {
     }
 
     private ExprToken readComparisonOperator() throws IOException {
-        int current = lastChar;
-        int peek = reader.peek();
+        var current = lastChar;
+        var peek = reader.peek();
         lastChar = 0;
         if (current == '<') {
             if (peek == '=') {

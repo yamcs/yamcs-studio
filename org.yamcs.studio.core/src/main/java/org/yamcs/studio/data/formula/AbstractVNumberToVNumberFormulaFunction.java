@@ -108,12 +108,11 @@ public abstract class AbstractVNumberToVNumberFormulaFunction implements Formula
 
     @Override
     public final Object calculate(List<Object> args) {
-        VNumber arg = (VNumber) args.get(0);
+        var arg = (VNumber) args.get(0);
         if (arg == null) {
             return null;
         }
-        return ValueFactory.newVDouble(calculate(arg.getValue().doubleValue()),
-                arg, arg, ValueFactory.displayNone());
+        return ValueFactory.newVDouble(calculate(arg.getValue().doubleValue()), arg, arg, ValueFactory.displayNone());
     }
 
     /**

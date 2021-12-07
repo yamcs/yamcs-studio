@@ -53,8 +53,8 @@ public class PVDescriptor extends ContentDescriptor {
 
     @Override
     public String toString() {
-        return "PVDescriptor [name=" + name + ", field=" + field + ", params="
-                + params + ", toString()=" + super.toString() + "]";
+        return "PVDescriptor [name=" + name + ", field=" + field + ", params=" + params + ", toString()="
+                + super.toString() + "]";
     }
 
 }

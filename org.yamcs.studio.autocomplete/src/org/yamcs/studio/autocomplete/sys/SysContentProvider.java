@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.studio.autocomplete.AutoCompleteResult;
@@ -34,16 +32,16 @@ public class SysContentProvider implements IAutoCompleteProvider {
     public static final String SYSTEM_SEPARATOR = ".";
 
     @Override
-    public boolean accept(final ContentType type) {
-        if (type == SysContentType.SysFunction)
+    public boolean accept(ContentType type) {
+        if (type == SysContentType.SysFunction) {
             return true;
+        }
         return false;
     }
 
     @Override
-    public AutoCompleteResult listResult(final ContentDescriptor desc,
-            final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
+    public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
+        var result = new AutoCompleteResult();
 
         SysContentDescriptor sysDesc = null;
         if (desc instanceof SysContentDescriptor) {
@@ -52,11 +50,10 @@ public class SysContentProvider implements IAutoCompleteProvider {
             return result; // empty result
         }
 
-        int dotIndex = desc.getValue().indexOf(SYSTEM_SEPARATOR);
+        var dotIndex = desc.getValue().indexOf(SYSTEM_SEPARATOR);
         if (dotIndex == -1) {
             result = provideFunctions(sysDesc, limit);
-        } else if (desc.getValue().substring(0, dotIndex)
-                .equals(SYSTEM_FUNCTION)) {
+        } else if (desc.getValue().substring(0, dotIndex).equals(SYSTEM_FUNCTION)) {
             result = provideSystemProperties(sysDesc, limit);
         }
         Collections.sort(result.getProposals());
@@ -64,12 +61,11 @@ public class SysContentProvider implements IAutoCompleteProvider {
         return result;
     }
 
-    private AutoCompleteResult provideFunctions(
-            final SysContentDescriptor sysDesc, final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
-        int count = 0;
+    private AutoCompleteResult provideFunctions(SysContentDescriptor sysDesc, int limit) {
+        var result = new AutoCompleteResult();
+        var count = 0;
 
-        String regex = sysDesc.getValue();
+        var regex = sysDesc.getValue();
         regex = regex.replaceAll("\\*", ".*");
         regex = regex.replaceAll("\\?", ".");
         Pattern valuePattern = null;
@@ -81,44 +77,47 @@ public class SysContentProvider implements IAutoCompleteProvider {
 
         Proposal topProposal = null;
         String closestMatchingFunction = null;
-        int offset = SysContentParser.SYS_SOURCE.length();
+        var offset = SysContentParser.SYS_SOURCE.length();
         for (String function : SysContentDescriptor.listFunctions()) {
-            Matcher m = valuePattern.matcher(function);
+            var m = valuePattern.matcher(function);
             if (m.find()) {
-                String fctDisplay = function;
-                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE)
+                var fctDisplay = function;
+                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
                     fctDisplay = SysContentParser.SYS_SOURCE + function;
-                if (function.equals(SYSTEM_FUNCTION))
+                }
+                if (function.equals(SYSTEM_FUNCTION)) {
                     fctDisplay += SYSTEM_SEPARATOR;
-                Proposal proposal = new Proposal(fctDisplay, false);
+                }
+                var proposal = new Proposal(fctDisplay, false);
                 proposal.setDescription(SysContentDescriptor.getDescription(function));
                 proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));
                 proposal.setInsertionPos(sysDesc.getStartIndex());
-                if (count <= limit)
+                if (count <= limit) {
                     result.addProposal(proposal);
+                }
                 count++;
-                if (closestMatchingFunction == null
-                        || closestMatchingFunction.compareTo(function) > 0) {
+                if (closestMatchingFunction == null || closestMatchingFunction.compareTo(function) > 0) {
                     closestMatchingFunction = function;
                     topProposal = proposal;
                 }
             }
         }
         // handle top proposals
-        if (closestMatchingFunction != null)
+        if (closestMatchingFunction != null) {
             result.addTopProposal(topProposal);
+        }
 
         result.setCount(count);
         return result;
     }
 
-    private AutoCompleteResult provideSystemProperties(final SysContentDescriptor sysDesc, final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
-        int count = 0;
+    private AutoCompleteResult provideSystemProperties(SysContentDescriptor sysDesc, int limit) {
+        var result = new AutoCompleteResult();
+        var count = 0;
 
-        int dotIndex = sysDesc.getValue().indexOf(SYSTEM_SEPARATOR);
-        String propValue = sysDesc.getValue().substring(dotIndex + 1);
-        String regex = propValue.replaceAll("\\.", "\\\\.");
+        var dotIndex = sysDesc.getValue().indexOf(SYSTEM_SEPARATOR);
+        var propValue = sysDesc.getValue().substring(dotIndex + 1);
+        var regex = propValue.replaceAll("\\.", "\\\\.");
         ;
         regex = regex.replaceAll("\\*", ".*");
         regex = regex.replaceAll("\\?", ".");
@@ -130,37 +129,40 @@ public class SysContentProvider implements IAutoCompleteProvider {
         }
 
         List<String> matchingProperties = new ArrayList<String>();
-        Properties systemProperties = System.getProperties();
+        var systemProperties = System.getProperties();
         Enumeration<?> enuProp = systemProperties.propertyNames();
-        int offset = SysContentParser.SYS_SOURCE.length() + 7;
+        var offset = SysContentParser.SYS_SOURCE.length() + 7;
         while (enuProp.hasMoreElements()) {
-            String propertyName = (String) enuProp.nextElement();
-            String propertyValue = systemProperties.getProperty(propertyName);
-            Matcher m = valuePattern.matcher(propertyName);
+            var propertyName = (String) enuProp.nextElement();
+            var propertyValue = systemProperties.getProperty(propertyName);
+            var m = valuePattern.matcher(propertyName);
             if (m.find()) {
-                String propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + propertyName;
-                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE)
+                var propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + propertyName;
+                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
                     propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
-                Proposal proposal = new Proposal(propDisplay, false);
+                }
+                var proposal = new Proposal(propDisplay, false);
                 proposal.setDescription(propertyValue);
                 proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));
                 proposal.setInsertionPos(sysDesc.getStartIndex());
-                if (count <= limit)
+                if (count <= limit) {
                     result.addProposal(proposal);
+                }
                 matchingProperties.add(propertyName);
                 count++;
             }
         }
         // handle top proposals
-        TopProposalFinder tpf = new TopProposalFinder(SYSTEM_SEPARATOR);
+        var tpf = new TopProposalFinder(SYSTEM_SEPARATOR);
         for (Proposal tp : tpf.getTopProposals(propValue, matchingProperties)) {
-            String propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + tp.getValue();
-            if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE)
+            var propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + tp.getValue();
+            if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
                 propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
-            Proposal proposal = new Proposal(propDisplay, tp.isPartial());
-            String propertyValue = systemProperties.getProperty(tp.getValue());
+            }
+            var proposal = new Proposal(propDisplay, tp.isPartial());
+            var propertyValue = systemProperties.getProperty(tp.getValue());
             proposal.setDescription(propertyValue);
-            ProposalStyle tpStyle = tp.getStyles().get(0);
+            var tpStyle = tp.getStyles().get(0);
             proposal.addStyle(ProposalStyle.getDefault(tpStyle.from, (offset + tpStyle.to)));
             proposal.setInsertionPos(sysDesc.getStartIndex());
             result.addTopProposal(proposal);

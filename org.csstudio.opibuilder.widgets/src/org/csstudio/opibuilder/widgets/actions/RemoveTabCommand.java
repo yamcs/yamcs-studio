@@ -38,16 +38,18 @@ public class RemoveTabCommand extends Command {
         if (tabModel.getChildren().size() > 1) {
             tabModel.removeTab(tabIndex);
             executed = true;
-        } else
+        } else {
             MessageDialog.openInformation(null, "Failed to Remove Tab",
                     "There must be at least one tab in the tab folder.");
+        }
 
     }
 
     @Override
     public void undo() {
-        if (executed)
+        if (executed) {
             tabModel.addTab(tabIndex, tabItem);
+        }
         executed = false;
     }
 

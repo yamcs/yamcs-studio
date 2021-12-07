@@ -74,7 +74,7 @@ public final class CloneCommand extends Command {
      * @param parent
      *            The parent {@link DisplayModel} for the widgets
      */
-    public CloneCommand(final AbstractContainerModel parent) {
+    public CloneCommand(AbstractContainerModel parent) {
         super("Clone Widgets");
         _models = new LinkedList<AbstractWidgetModel>();
         _parent = parent;
@@ -88,7 +88,7 @@ public final class CloneCommand extends Command {
      * @param newBounds
      *            The new bounds for the AbstractWidgetModel
      */
-    public void addPart(final AbstractWidgetModel model, final Rectangle newBounds) {
+    public void addPart(AbstractWidgetModel model, Rectangle newBounds) {
         _models.add(model);
         _difference = this.calculateDifference(model, newBounds);
     }
@@ -102,8 +102,8 @@ public final class CloneCommand extends Command {
      *            The new bounds for the widget
      * @return Dimension The difference between the original location of the widget and the new location
      */
-    private Dimension calculateDifference(final AbstractWidgetModel model, final Rectangle newBounds) {
-        Dimension dim = newBounds.getLocation().getDifference(model.getLocation());
+    private Dimension calculateDifference(AbstractWidgetModel model, Rectangle newBounds) {
+        var dim = newBounds.getLocation().getDifference(model.getLocation());
         return dim;
     }
 
@@ -117,7 +117,7 @@ public final class CloneCommand extends Command {
      * @param isHorizontal
      *            The orientation of the guide
      */
-    public void setGuide(final GuideModel guide, final int alignment, final boolean isHorizontal) {
+    public void setGuide(GuideModel guide, int alignment, boolean isHorizontal) {
         if (isHorizontal) {
             _hGuide = guide;
             _hAlignment = alignment;
@@ -134,47 +134,44 @@ public final class CloneCommand extends Command {
      */
     @SuppressWarnings("unchecked")
     private List<AbstractWidgetModel> getWidgetsFromClipboard() {
-        Clipboard clipboard = new Clipboard(Display.getCurrent());
-        List<AbstractWidgetModel> result = (List<AbstractWidgetModel>) clipboard
-                .getContents(OPIWidgetsTransfer.getInstance());
+        var clipboard = new Clipboard(Display.getCurrent());
+        var result = (List<AbstractWidgetModel>) clipboard.getContents(OPIWidgetsTransfer.getInstance());
         return result;
     }
 
     @Override
     public void execute() {
-        Clipboard clipboard = new Clipboard(Display.getCurrent());
-        DisplayModel tempModel = new DisplayModel();
+        var clipboard = new Clipboard(Display.getCurrent());
+        var tempModel = new DisplayModel();
 
         for (AbstractWidgetModel widget : _models) {
             tempModel.addChild(widget, false);
         }
 
-        String xml = XMLUtil.widgetToXMLString(tempModel, false);
-        clipboard.setContents(new Object[] { xml },
-                new Transfer[] { OPIWidgetsTransfer.getInstance() });
+        var xml = XMLUtil.widgetToXMLString(tempModel, false);
+        clipboard.setContents(new Object[] { xml }, new Transfer[] { OPIWidgetsTransfer.getInstance() });
 
         _clonedWidgets = getWidgetsFromClipboard();
 
         _compoundCommand = new CompoundCommand();
-        int i = 0;
+        var i = 0;
         for (AbstractWidgetModel widgetModel : _clonedWidgets) {
             if (_difference != null) {
                 widgetModel.setLocation((widgetModel.getLocation().x + _difference.width),
                         (widgetModel.getLocation().y + _difference.height));
             } else {
-                widgetModel.setLocation((widgetModel.getLocation().x + 10),
-                        (widgetModel.getLocation().y + 10));
+                widgetModel.setLocation((widgetModel.getLocation().x + 10), (widgetModel.getLocation().y + 10));
             }
             _compoundCommand.add(new WidgetCreateCommand(widgetModel, _parent,
                     new Rectangle(widgetModel.getLocation(), widgetModel.getSize()), (i++ == 0 ? false : true)));
 
             if (_hGuide != null) {
-                ChangeGuideCommand hGuideCommand = new ChangeGuideCommand(widgetModel, true);
+                var hGuideCommand = new ChangeGuideCommand(widgetModel, true);
                 hGuideCommand.setNewGuide(_hGuide, _hAlignment);
                 _compoundCommand.add(hGuideCommand);
             }
             if (_vGuide != null) {
-                ChangeGuideCommand vGuideCommand = new ChangeGuideCommand(widgetModel, false);
+                var vGuideCommand = new ChangeGuideCommand(widgetModel, false);
                 vGuideCommand.setNewGuide(_vGuide, _vAlignment);
                 _compoundCommand.add(vGuideCommand);
             }

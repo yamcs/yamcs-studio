@@ -19,8 +19,7 @@ public class DisplayService implements YamcsAware, PluginService {
     @Override
     public void changeProcessor(String instance, String processor) {
         // Reduce the number of events
-        boolean realChange = !Objects.equals(instance, previousInstance)
-                || !Objects.equals(processor, previousProcessor);
+        var realChange = !Objects.equals(instance, previousInstance) || !Objects.equals(processor, previousProcessor);
 
         previousInstance = instance;
         previousProcessor = processor;
@@ -33,7 +32,7 @@ public class DisplayService implements YamcsAware, PluginService {
             // is to reset the displays. (widgets ignore "null" value updates)
             // and only show a 'disconnected' frame.
 
-            Display display = Display.getDefault();
+            var display = Display.getDefault();
             if (display != null && !display.isDisposed()) {
                 display.asyncExec(() -> {
                     log.fine("No processor: resetting display state");

@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.yamcs.client.Command;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -41,7 +40,7 @@ public class AckTableViewer extends TableViewer {
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
 
-        TableLayout tl = new TableLayout();
+        var tl = new TableLayout();
         getTable().setLayout(tl);
 
         addFixedColumns(tl);
@@ -50,25 +49,25 @@ public class AckTableViewer extends TableViewer {
     }
 
     private void addFixedColumns(TableLayout tl) {
-        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
+        var nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_NAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
             public String getText(Object element) {
-                AckTableRecord rec = (AckTableRecord) element;
+                var rec = (AckTableRecord) element;
                 return rec.acknowledgment.getName();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
 
-        TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.NONE);
+        var statusColumn = new TableViewerColumn(this, SWT.NONE);
         statusColumn.getColumn().setText(COL_STATUS);
         statusColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
             public Image getImage(Object element) {
-                AckTableRecord rec = (AckTableRecord) element;
+                var rec = (AckTableRecord) element;
                 if (rec.acknowledgment.getStatus().equals("OK")) {
                     return commandHistoryView.greenBubble;
                 } else if (!rec.acknowledgment.getStatus().equals("PENDING")) {
@@ -80,21 +79,21 @@ public class AckTableViewer extends TableViewer {
 
             @Override
             public String getText(Object element) {
-                AckTableRecord rec = (AckTableRecord) element;
+                var rec = (AckTableRecord) element;
                 return rec.acknowledgment.getStatus();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
 
-        TableViewerColumn deltaColumn = new TableViewerColumn(this, SWT.NONE);
+        var deltaColumn = new TableViewerColumn(this, SWT.NONE);
         deltaColumn.getColumn().setText(COL_DELTA);
         deltaColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                AckTableRecord rec = (AckTableRecord) element;
+                var rec = (AckTableRecord) element;
                 if (!rec.acknowledgment.getStatus().equals("PENDING")) {
-                    Instant time = rec.acknowledgment.getTime();
-                    Command command = rec.rec.getCommand();
+                    var time = rec.acknowledgment.getTime();
+                    var command = rec.rec.getCommand();
                     return time != null ? toHumanTimeDiff(command.getGenerationTime(), time) : null;
                 } else {
                     return null;
@@ -103,13 +102,13 @@ public class AckTableViewer extends TableViewer {
         });
         tl.addColumnData(new ColumnWeightData(200));
 
-        TableViewerColumn dateColumn = new TableViewerColumn(this, SWT.NONE);
+        var dateColumn = new TableViewerColumn(this, SWT.NONE);
         dateColumn.getColumn().setText(COL_DATE);
         dateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                AckTableRecord rec = (AckTableRecord) element;
-                Instant time = rec.acknowledgment.getTime();
+                var rec = (AckTableRecord) element;
+                var time = rec.acknowledgment.getTime();
                 return time != null ? YamcsPlugin.getDefault().formatInstant(time) : null;
             }
         });
@@ -117,17 +116,15 @@ public class AckTableViewer extends TableViewer {
     }
 
     private String toHumanTimeDiff(Instant refTime, Instant time) {
-        long millis = time.toEpochMilli() - refTime.toEpochMilli();
-        String sign = (millis >= 0) ? "+" : "-";
+        var millis = time.toEpochMilli() - refTime.toEpochMilli();
+        var sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
             return YamcsPlugin.getDefault().formatInstant(time);
         } else if (millis >= ONE_HOUR) {
-            return sign + String.format("%d h, %d m",
-                    MILLISECONDS.toHours(millis),
+            return sign + String.format("%d h, %d m", MILLISECONDS.toHours(millis),
                     MILLISECONDS.toMinutes(millis) - HOURS.toMinutes(MILLISECONDS.toHours(millis)));
         } else if (millis >= ONE_MINUTE) {
-            return sign + String.format("%d m, %d s",
-                    MILLISECONDS.toMinutes(millis),
+            return sign + String.format("%d m, %d s", MILLISECONDS.toMinutes(millis),
                     MILLISECONDS.toSeconds(millis) - MINUTES.toSeconds(MILLISECONDS.toMinutes(millis)));
         } else {
             return String.format(Locale.US, "%+,d ms", millis);

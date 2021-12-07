@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.editor;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
@@ -21,12 +20,12 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
 
     @Override
     public void createInitialLayout(IPageLayout layout) {
-        String editor = layout.getEditorArea();
+        var editor = layout.getEditorArea();
 
-        IFolderLayout left = layout.createFolder(ID_LEFT, IPageLayout.LEFT, 0.2f, editor);
-        IFolderLayout right = layout.createFolder(ID_RIGHT, IPageLayout.RIGHT, 0.75f, editor);
-        IFolderLayout bottom = layout.createFolder(ID_BOTTOM, IPageLayout.BOTTOM, 0.75f, editor);
-        IFolderLayout leftBottom = layout.createFolder(ID_LEFT_BOTTOM, IPageLayout.BOTTOM, 0.7f, ID_LEFT);
+        var left = layout.createFolder(ID_LEFT, IPageLayout.LEFT, 0.2f, editor);
+        var right = layout.createFolder(ID_RIGHT, IPageLayout.RIGHT, 0.75f, editor);
+        var bottom = layout.createFolder(ID_BOTTOM, IPageLayout.BOTTOM, 0.75f, editor);
+        var leftBottom = layout.createFolder(ID_LEFT_BOTTOM, IPageLayout.BOTTOM, 0.7f, ID_LEFT);
 
         left.addView(ID_EXPLORER);
         leftBottom.addView(IPageLayout.ID_OUTLINE);

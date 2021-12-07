@@ -11,15 +11,12 @@ package org.csstudio.opibuilder.widgets.feedback;
 
 import org.csstudio.opibuilder.widgets.model.AbstractPolyModel;
 import org.eclipse.draw2d.Cursors;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -78,8 +75,7 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
      * @param pointIndex
      *            the index of the poly point, which should be dragged
      */
-    public PolyPointDragTracker(final GraphicalEditPart owner,
-            final int pointIndex) {
+    public PolyPointDragTracker(GraphicalEditPart owner, int pointIndex) {
         super();
         setDisabledCursor(Cursors.NO);
         assert owner != null;
@@ -117,10 +113,9 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     protected PrecisionRectangle getSourceBounds() {
         PrecisionRectangle sourceRect;
 
-        IFigure figure = _owner.getFigure();
+        var figure = _owner.getFigure();
         if (figure instanceof HandleBounds) {
-            sourceRect = new PrecisionRectangle(((HandleBounds) figure)
-                    .getHandleBounds());
+            sourceRect = new PrecisionRectangle(((HandleBounds) figure).getHandleBounds());
         } else {
             sourceRect = new PrecisionRectangle(figure.getBounds());
         }
@@ -136,15 +131,13 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     @SuppressWarnings("unchecked")
     @Override
     protected Request createSourceRequest() {
-        ChangeBoundsRequest request = new ChangeBoundsRequest();
+        var request = new ChangeBoundsRequest();
         // TODO: swende: ugly
 
         request.setEditParts(getTargetEditPart());
-        PointList points = ((AbstractPolyModel) _owner.getModel())
-                .getPoints();
+        var points = ((AbstractPolyModel) _owner.getModel()).getPoints();
 
-        request.getExtendedData().put(AbstractPolyFeedbackFactory.PROP_POINTS,
-                points.getCopy());
+        request.getExtendedData().put(AbstractPolyFeedbackFactory.PROP_POINTS, points.getCopy());
         request.setType(RequestConstants.REQ_RESIZE);
 
         _oldPoints = points.getCopy();
@@ -156,38 +149,32 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     @SuppressWarnings("unchecked")
     protected void updateSourceRequest() {
         super.updateSourceRequest();
-        ChangeBoundsRequest request = (ChangeBoundsRequest) getSourceRequest();
+        var request = (ChangeBoundsRequest) getSourceRequest();
 
-        PrecisionPoint location = new PrecisionPoint(getLocation().x,
-                getLocation().y);
+        var location = new PrecisionPoint(getLocation().x, getLocation().y);
 
         if (_snapToHelper != null) {
             _snapToHelper.snapPoint(request, PositionConstants.NORTH_WEST,
-                    new PrecisionPoint(getLocation().x, getLocation().y),
-                    location);
+                    new PrecisionPoint(getLocation().x, getLocation().y), location);
         }
 
         _owner.getFigure().translateToRelative(location);
 
-        PointList oldPoints = ((PointList) request.getExtendedData().get(
-                EXT_DATA_POINTS)).getCopy();
-        PointList newPoints = oldPoints.getCopy();
+        var oldPoints = ((PointList) request.getExtendedData().get(EXT_DATA_POINTS)).getCopy();
+        var newPoints = oldPoints.getCopy();
         newPoints.setPoint(location.getCopy(), _pointIndex);
         // calculate difference
-        Rectangle oldBounds = _oldPoints.getBounds();
-        Rectangle newBounds = newPoints.getBounds();
+        var oldBounds = _oldPoints.getBounds();
+        var newBounds = newPoints.getBounds();
 
         request.setLocation(getLocation());
 
-        Dimension locationDiff = newBounds.getLocation().getDifference(
-                oldBounds.getLocation());
+        var locationDiff = newBounds.getLocation().getDifference(oldBounds.getLocation());
         _owner.getFigure().translateToAbsolute(locationDiff);
-        Dimension sizeDiff = newBounds.getSize().getDifference(
-                oldBounds.getSize());
+        var sizeDiff = newBounds.getSize().getDifference(oldBounds.getSize());
         _owner.getFigure().translateToAbsolute(sizeDiff);
 
-        request
-                .setMoveDelta(new Point(locationDiff.width, locationDiff.height));
+        request.setMoveDelta(new Point(locationDiff.width, locationDiff.height));
         request.setSizeDelta(sizeDiff);
 
         request.getExtendedData().put(EXT_DATA_POINTS, newPoints);

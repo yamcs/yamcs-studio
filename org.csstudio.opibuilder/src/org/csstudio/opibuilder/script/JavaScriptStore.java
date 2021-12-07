@@ -44,7 +44,7 @@ public class JavaScriptStore extends AbstractScriptStore {
 
     public static void bootstrapScriptEngine(ScriptEngine engine, Bindings bindings)
             throws IOException, ScriptException {
-        String nashornBootstrap = "/org/csstudio/opibuilder/script/nashorn_bootstrap.js";
+        var nashornBootstrap = "/org/csstudio/opibuilder/script/nashorn_bootstrap.js";
         try (Reader in = new InputStreamReader(JavaScriptStore.class.getResourceAsStream(nashornBootstrap))) {
             engine.eval(in, bindings);
         }
@@ -59,9 +59,9 @@ public class JavaScriptStore extends AbstractScriptStore {
 
     @Override
     protected void compileInputStream(InputStream in) throws Exception {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        var bout = new ByteArrayOutputStream();
         try {
-            byte[] buffer = new byte[1024];
+            var buffer = new byte[1024];
             int length;
             while ((length = in.read(buffer)) != -1) {
                 bout.write(buffer, 0, length);
@@ -70,7 +70,7 @@ public class JavaScriptStore extends AbstractScriptStore {
             in.close();
         }
 
-        String content = bout.toString(StandardCharsets.UTF_8.name());
+        var content = bout.toString(StandardCharsets.UTF_8.name());
         script = ((Compilable) engine).compile(content);
     }
 

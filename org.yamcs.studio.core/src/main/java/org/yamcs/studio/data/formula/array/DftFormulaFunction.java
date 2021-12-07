@@ -68,8 +68,8 @@ class DftFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VNumberArray array = (VNumberArray) args.get(0);
+    public Object calculate(List<Object> args) {
+        var array = (VNumberArray) args.get(0);
         if (array == null) {
             return null;
         }
@@ -78,15 +78,15 @@ class DftFormulaFunction implements FormulaFunction {
         }
 
         // TODO: no need to allocate empty array
-        List<ListNumber> fft = ListMath.dft(array.getData(), new ArrayDouble(new double[array.getData().size()]));
-        final ListNumber real = fft.get(0);
-        final ListNumber imaginary = fft.get(1);
+        var fft = ListMath.dft(array.getData(), new ArrayDouble(new double[array.getData().size()]));
+        var real = fft.get(0);
+        var imaginary = fft.get(1);
         ListNumber modulus = new ListDouble() {
 
             @Override
             public double getDouble(int index) {
-                double x = real.getDouble(index);
-                double y = imaginary.getDouble(index);
+                var x = real.getDouble(index);
+                var y = imaginary.getDouble(index);
                 if (x != 0 || y != 0) {
                     return Math.sqrt(x * x + y * y);
                 } else {
@@ -103,8 +103,8 @@ class DftFormulaFunction implements FormulaFunction {
 
             @Override
             public double getDouble(int index) {
-                double x = real.getDouble(index);
-                double y = imaginary.getDouble(index);
+                var x = real.getDouble(index);
+                var y = imaginary.getDouble(index);
                 return Math.atan2(y, x);
             }
 
@@ -114,7 +114,6 @@ class DftFormulaFunction implements FormulaFunction {
             }
         };
         return ValueFactory.newVTable(Arrays.<Class<?>> asList(double.class, double.class, double.class, double.class),
-                Arrays.asList("x", "y", "mod", "phase"),
-                Arrays.<Object> asList(real, imaginary, modulus, phase));
+                Arrays.asList("x", "y", "mod", "phase"), Arrays.<Object> asList(real, imaginary, modulus, phase));
     }
 }

@@ -51,7 +51,7 @@ public class ActionsInput {
      * @return a total contents copy of this ScriptsInput.
      */
     public ActionsInput getCopy() {
-        ActionsInput copy = new ActionsInput();
+        var copy = new ActionsInput();
         for (AbstractWidgetAction data : actionsList) {
             copy.getActionsList().add(data.getCopy());
         }
@@ -94,8 +94,9 @@ public class ActionsInput {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetAction action : actionsList)
+        for (AbstractWidgetAction action : actionsList) {
             action.setWidgetModel(widgetModel);
+        }
     }
 
     /**

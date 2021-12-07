@@ -60,8 +60,7 @@ public class ColorProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public ColorProperty(String prop_id, String description,
-            WidgetPropertyCategory category, RGB defaultValue) {
+    public ColorProperty(String prop_id, String description, WidgetPropertyCategory category, RGB defaultValue) {
         super(prop_id, description, category, new OPIColor(defaultValue));
     }
 
@@ -77,10 +76,8 @@ public class ColorProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. It must be a color macro name in color file.
      */
-    public ColorProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue) {
-        super(prop_id, description, category,
-                MediaService.getInstance().getOPIColor(defaultValue));
+    public ColorProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue) {
+        super(prop_id, description, category, MediaService.getInstance().getOPIColor(defaultValue));
     }
 
     @Override
@@ -89,7 +86,7 @@ public class ColorProperty extends AbstractWidgetProperty {
             return null;
         }
 
-        Object acceptedValue = value;
+        var acceptedValue = value;
 
         if (value instanceof OPIColor) {
             if (((OPIColor) value).getRGBValue() == null) {
@@ -113,13 +110,13 @@ public class ColorProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        OPIColor opiColor = (OPIColor) getPropertyValue();
+        var opiColor = (OPIColor) getPropertyValue();
         Element colorElement;
         colorElement = new Element(XML_ELEMENT_COLOR);
         if (opiColor.isPreDefined()) {
             colorElement.setAttribute(XML_ATTRIBUTE_NAME, opiColor.getColorName());
         }
-        RGB color = opiColor.getRGBValue();
+        var color = opiColor.getRGBValue();
         colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red);
         colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green);
         colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue);
@@ -128,17 +125,17 @@ public class ColorProperty extends AbstractWidgetProperty {
 
     @Override
     public Object readValueFromXML(Element propElement) {
-        Element colorElement = propElement.getChild(XML_ELEMENT_COLOR);
-        String name = colorElement.getAttributeValue(XML_ATTRIBUTE_NAME);
+        var colorElement = propElement.getChild(XML_ELEMENT_COLOR);
+        var name = colorElement.getAttributeValue(XML_ATTRIBUTE_NAME);
         if (name == null) {
-            RGB result = new RGB(Integer.parseInt(colorElement.getAttributeValue(XML_ATTRIBUTE_RED)),
+            var result = new RGB(Integer.parseInt(colorElement.getAttributeValue(XML_ATTRIBUTE_RED)),
                     Integer.parseInt(colorElement.getAttributeValue(XML_ATTRIBUTE_GREEN)),
                     Integer.parseInt(colorElement.getAttributeValue(XML_ATTRIBUTE_BLUE)));
             return new OPIColor(result);
         } else {
-            String red = colorElement.getAttributeValue(XML_ATTRIBUTE_RED);
-            String green = colorElement.getAttributeValue(XML_ATTRIBUTE_GREEN);
-            String blue = colorElement.getAttributeValue(XML_ATTRIBUTE_BLUE);
+            var red = colorElement.getAttributeValue(XML_ATTRIBUTE_RED);
+            var green = colorElement.getAttributeValue(XML_ATTRIBUTE_GREEN);
+            var blue = colorElement.getAttributeValue(XML_ATTRIBUTE_BLUE);
             RGB rgb;
             if (red != null && green != null && blue != null) {
                 rgb = new RGB(Integer.parseInt(red), Integer.parseInt(green), Integer.parseInt(blue));
@@ -156,17 +153,15 @@ public class ColorProperty extends AbstractWidgetProperty {
 
     @Override
     public String toStringInRuleScript(Object propValue) {
-        OPIColor opiColor = (OPIColor) propValue;
+        var opiColor = (OPIColor) propValue;
         if (opiColor.isPreDefined()) {
-            if (MediaService.getInstance().isColorNameDefined(
-                    opiColor.getColorName())) {
+            if (MediaService.getInstance().isColorNameDefined(opiColor.getColorName())) {
                 return QUOTE + opiColor.getColorName() + QUOTE;
             }
         }
 
-        RGB rgb = opiColor.getRGBValue();
-        return "ColorFontUtil.getColorFromRGB(" +
-                rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+        var rgb = opiColor.getRGBValue();
+        return "ColorFontUtil.getColorFromRGB(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
 
     }
 }

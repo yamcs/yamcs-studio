@@ -50,43 +50,42 @@ public class CopyPropertiesAction extends SelectionAction {
         super(part);
         setText("Copy Properties...");
         setId(ID);
-        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/copy_properties.png"));
+        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                "icons/copy_properties.png"));
     }
 
     @Override
     protected boolean calculateEnabled() {
-        if (getSelectedWidgetModels().size() == 1 &&
-                !(getSelectedWidgetModels().get(0) instanceof DisplayModel))
+        if (getSelectedWidgetModels().size() == 1 && !(getSelectedWidgetModels().get(0) instanceof DisplayModel)) {
             return true;
+        }
         return false;
     }
 
     @Override
     public void run() {
-        PropertiesSelectDialog dialog = new PropertiesSelectDialog(null, getSelectedWidgetModels().get(0));
+        var dialog = new PropertiesSelectDialog(null, getSelectedWidgetModels().get(0));
         if (dialog.open() == Window.OK) {
-            List<String> propList = dialog.getOutput();
+            var propList = dialog.getOutput();
             if (!propList.isEmpty()) {
-                AbstractWidgetModel widget = getSelectedWidgetModels().get(0);
-                Element widgetElement = XMLUtil.widgetToXMLElement(widget);
+                var widget = getSelectedWidgetModels().get(0);
+                var widgetElement = XMLUtil.widgetToXMLElement(widget);
 
-                Element propertisElement = new Element(PROPID_ELEMENT);
+                var propertisElement = new Element(PROPID_ELEMENT);
 
                 for (String propID : propList) {
                     propertisElement.addContent(new Element(propID));
                 }
-                Element rootElement = new Element(ROOT_ELEMENT);
+                var rootElement = new Element(ROOT_ELEMENT);
 
                 rootElement.addContent(widgetElement);
                 rootElement.addContent(propertisElement);
 
-                XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
-                String xmlString = xmlOutputter.outputString(rootElement);
+                var xmlOutputter = new XMLOutputter(Format.getRawFormat());
+                var xmlString = xmlOutputter.outputString(rootElement);
 
-                ((OPIEditor) getWorkbenchPart()).getClipboard()
-                        .setContents(new Object[] { xmlString },
-                                new Transfer[] { PropertiesCopyDataTransfer.getInstance() });
+                ((OPIEditor) getWorkbenchPart()).getClipboard().setContents(new Object[] { xmlString },
+                        new Transfer[] { PropertiesCopyDataTransfer.getInstance() });
             }
         }
 
@@ -104,8 +103,7 @@ public class CopyPropertiesAction extends SelectionAction {
 
         for (Object o : selection) {
             if (o instanceof EditPart) {
-                selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o)
-                        .getModel());
+                selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }
         }
         return selectedWidgetModels;

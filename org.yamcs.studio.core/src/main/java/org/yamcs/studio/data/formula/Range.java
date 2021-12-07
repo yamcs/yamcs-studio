@@ -12,8 +12,8 @@ public final class Range {
 
     private static final Range UNDEFINED = new Range(Double.NaN, Double.NaN, false);
 
-    private final double min;
-    private final double max;
+    private double min;
+    private double max;
     private final boolean reversed;
 
     Range(double min, double max, boolean reversed) {
@@ -55,8 +55,8 @@ public final class Range {
      * @return true if range is finite and non-zero
      */
     public boolean isFinite() {
-        return min != max && !Double.isNaN(min) && !Double.isInfinite(min) &&
-                !Double.isNaN(max) && !Double.isInfinite(max);
+        return min != max && !Double.isNaN(min) && !Double.isInfinite(min) && !Double.isNaN(max)
+                && !Double.isInfinite(max);
     }
 
     /**
@@ -90,8 +90,7 @@ public final class Range {
      * @return true if the range is a subrange of this
      */
     public boolean contains(Range range) {
-        return getMinimum() <= range.getMinimum()
-                && getMaximum() >= range.getMaximum();
+        return getMinimum() <= range.getMinimum() && getMaximum() >= range.getMaximum();
 
     }
 
@@ -152,10 +151,9 @@ public final class Range {
         }
 
         if (obj instanceof Range) {
-            Range other = (Range) obj;
-            return getMinimum() == other.getMinimum() &&
-                    getMaximum() == other.getMaximum() &&
-                    isReversed() == other.isReversed();
+            var other = (Range) obj;
+            return getMinimum() == other.getMinimum() && getMaximum() == other.getMaximum()
+                    && isReversed() == other.isReversed();
         }
 
         return false;
@@ -163,7 +161,7 @@ public final class Range {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        var hash = 7;
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.min) ^ (Double.doubleToLongBits(this.min) >>> 32));
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.max) ^ (Double.doubleToLongBits(this.max) >>> 32));
         hash = 97 * hash + (this.reversed ? 1 : 0);
@@ -179,7 +177,7 @@ public final class Range {
      *            maximum value
      * @return the range
      */
-    public static Range create(final double minValue, final double maxValue) {
+    public static Range create(double minValue, double maxValue) {
         if (Double.isNaN(minValue) || Double.isNaN(maxValue)) {
             return Range.UNDEFINED;
         }

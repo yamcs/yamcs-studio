@@ -122,18 +122,14 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
             return null;
         }
 
-        Number arg1 = ((VNumber) args.get(0)).getValue();
-        Number arg2 = ((VNumber) args.get(1)).getValue();
-        if (arg1 instanceof Float || arg2 instanceof Float ||
-                arg1 instanceof Double || arg2 instanceof Double) {
+        var arg1 = ((VNumber) args.get(0)).getValue();
+        var arg2 = ((VNumber) args.get(1)).getValue();
+        if (arg1 instanceof Float || arg2 instanceof Float || arg1 instanceof Double || arg2 instanceof Double) {
             throw new IllegalArgumentException("Operator '" + getName() + "' only works with integers");
         }
 
-        return newVInt(
-                calculate(arg1.intValue(), arg2.intValue()),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+        return newVInt(calculate(arg1.intValue(), arg2.intValue()), highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args), displayNone());
     }
 
     /**

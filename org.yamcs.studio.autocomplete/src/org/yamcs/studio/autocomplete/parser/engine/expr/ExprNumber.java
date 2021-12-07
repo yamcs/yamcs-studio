@@ -15,6 +15,7 @@ public abstract class ExprNumber extends Expr {
         super(type);
     }
 
+    @Override
     public void validate() throws ExprException {
     }
 

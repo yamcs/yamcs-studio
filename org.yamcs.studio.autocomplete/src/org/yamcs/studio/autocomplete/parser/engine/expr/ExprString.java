@@ -22,14 +22,17 @@ public class ExprString extends Expr {
         this.str = str;
     }
 
+    @Override
     public String toString() {
         return ExprLexer.escapeString(str);
     }
 
+    @Override
     public int hashCode() {
         return str.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof ExprString && str.equals(((ExprString) obj).str);
     }

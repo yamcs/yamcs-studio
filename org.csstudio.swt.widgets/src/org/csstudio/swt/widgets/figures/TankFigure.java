@@ -16,14 +16,12 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale;
 import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale.Orientation;
 import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScaledMarker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -32,13 +30,10 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TankFigure extends AbstractLinearMarkedFigure {
 
-    private final static Color WHITE_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_WHITE);
-    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GRAY);
+    private final static Color WHITE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_WHITE);
+    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
 
-    private final static Color BLUE_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_BLUE);
+    private final static Color BLUE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_BLUE);
 
     private boolean effect3D = true;
     private Tank tank;
@@ -91,8 +86,9 @@ public class TankFigure extends AbstractLinearMarkedFigure {
      *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
-        if (this.effect3D == effect3D)
+        if (this.effect3D == effect3D) {
             return;
+        }
         this.effect3D = effect3D;
         repaint();
     }
@@ -102,8 +98,9 @@ public class TankFigure extends AbstractLinearMarkedFigure {
      *            the fillBackgroundColor to set
      */
     public void setFillBackgroundColor(Color fillBackgroundColor) {
-        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor))
+        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor)) {
             return;
+        }
         this.fillBackgroundColor = fillBackgroundColor;
         repaint();
     }
@@ -113,8 +110,9 @@ public class TankFigure extends AbstractLinearMarkedFigure {
      *            the fillColor to set
      */
     public void setFillColor(Color fillColor) {
-        if (this.fillColor != null && this.fillColor.equals(fillColor))
+        if (this.fillColor != null && this.fillColor.equals(fillColor)) {
             return;
+        }
         this.fillColor = fillColor;
         repaint();
     }
@@ -125,8 +123,7 @@ public class TankFigure extends AbstractLinearMarkedFigure {
     }
 
     class Tank extends RoundedRectangle {
-        private final Color EFFECT3D_OUTLINE_COLOR = CustomMediaFactory.getInstance().getColor(
-                new RGB(160, 160, 160));
+        private final Color EFFECT3D_OUTLINE_COLOR = CustomMediaFactory.getInstance().getColor(new RGB(160, 160, 160));
         private static final int DEFAULT_CORNER = 15;
         private Boolean support3d;
 
@@ -138,40 +135,40 @@ public class TankFigure extends AbstractLinearMarkedFigure {
         @Override
         protected void fillShape(Graphics graphics) {
 
-            int fill_corner = DEFAULT_CORNER;
+            var fill_corner = DEFAULT_CORNER;
             // If this is more close to 1/2, more light the tank will be.
-            double intersectFactor = 11d / 20d;
-            if (bounds.width < 2 * DEFAULT_CORNER)
+            var intersectFactor = 11d / 20d;
+            if (bounds.width < 2 * DEFAULT_CORNER) {
                 intersectFactor = 12d / 20d;
-            int rectWidth = (int) (bounds.width * intersectFactor);
-            if (fill_corner > (2 * rectWidth - (bounds.width - 2 * getLineWidth())))
+            }
+            var rectWidth = (int) (bounds.width * intersectFactor);
+            if (fill_corner > (2 * rectWidth - (bounds.width - 2 * getLineWidth()))) {
                 fill_corner = 2 * rectWidth - bounds.width;
+            }
 
             corner.height = fill_corner;
             corner.width = fill_corner;
             graphics.setAntialias(SWT.ON);
-            int valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
-            if (support3d == null)
+            var valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
+            if (support3d == null) {
                 support3d = GraphicsUtil.testPatternSupported(graphics);
+            }
 
             if (effect3D && support3d) {
                 graphics.setBackgroundColor(WHITE_COLOR);
                 super.fillShape(graphics);
                 // fill background
-                Rectangle leftRectangle = new Rectangle(
-                        bounds.x, bounds.y, rectWidth, bounds.height);
-                Pattern leftGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                        leftRectangle.x, leftRectangle.y,
-                        leftRectangle.x + leftRectangle.width + 2, leftRectangle.y,
+                var leftRectangle = new Rectangle(bounds.x, bounds.y, rectWidth, bounds.height);
+                var leftGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
+                        leftRectangle.x, leftRectangle.y, leftRectangle.x + leftRectangle.width + 2, leftRectangle.y,
                         fillBackgroundColor, 255, WHITE_COLOR, 0);
                 graphics.setBackgroundPattern(leftGradientPattern);
                 graphics.fillRoundRectangle(leftRectangle, corner.width, corner.height);
-                Rectangle rightRectangle = new Rectangle(
-                        bounds.x + bounds.width - rectWidth, bounds.y, rectWidth, bounds.height);
-                Pattern rightGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                        rightRectangle.x - 2, rightRectangle.y,
-                        rightRectangle.x + rightRectangle.width, rightRectangle.y,
-                        WHITE_COLOR, 0, fillBackgroundColor, 255);
+                var rightRectangle = new Rectangle(bounds.x + bounds.width - rectWidth, bounds.y, rectWidth,
+                        bounds.height);
+                var rightGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
+                        rightRectangle.x - 2, rightRectangle.y, rightRectangle.x + rightRectangle.width,
+                        rightRectangle.y, WHITE_COLOR, 0, fillBackgroundColor, 255);
                 graphics.setBackgroundPattern(rightGradientPattern);
                 graphics.fillRoundRectangle(rightRectangle, corner.width, corner.height);
                 leftGradientPattern.dispose();
@@ -179,34 +176,24 @@ public class TankFigure extends AbstractLinearMarkedFigure {
 
                 // fill value
                 graphics.setBackgroundColor(WHITE_COLOR);
-                int fillHeight = bounds.height - (valuePosition - bounds.y) - getLineWidth();
+                var fillHeight = bounds.height - (valuePosition - bounds.y) - getLineWidth();
                 if (fillHeight > 0) {
-                    graphics.fillRoundRectangle(new Rectangle(bounds.x,
-                            valuePosition, bounds.width, fillHeight),
+                    graphics.fillRoundRectangle(new Rectangle(bounds.x, valuePosition, bounds.width, fillHeight),
                             fill_corner, fill_corner);
-                    leftRectangle = new Rectangle(bounds.x, valuePosition,
-                            rectWidth, fillHeight);
-                    leftGradientPattern = GraphicsUtil.createScaledPattern(
-                            graphics, Display.getCurrent(), leftRectangle.x,
-                            leftRectangle.y, leftRectangle.x
-                                    + leftRectangle.width + 2,
-                            leftRectangle.y,
-                            fillColor, 255, WHITE_COLOR, 0);
+                    leftRectangle = new Rectangle(bounds.x, valuePosition, rectWidth, fillHeight);
+                    leftGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
+                            leftRectangle.x, leftRectangle.y, leftRectangle.x + leftRectangle.width + 2,
+                            leftRectangle.y, fillColor, 255, WHITE_COLOR, 0);
                     graphics.setBackgroundPattern(leftGradientPattern);
-                    graphics.fillRoundRectangle(leftRectangle, fill_corner,
-                            fill_corner);
+                    graphics.fillRoundRectangle(leftRectangle, fill_corner, fill_corner);
 
-                    rightRectangle = new Rectangle(bounds.x + bounds.width
-                            - rectWidth, valuePosition, rectWidth, fillHeight);
-                    rightGradientPattern = GraphicsUtil.createScaledPattern(
-                            graphics, Display.getCurrent(), rightRectangle.x - 2,
-                            rightRectangle.y, rightRectangle.x
-                                    + rightRectangle.width,
-                            rightRectangle.y,
-                            WHITE_COLOR, 0, fillColor, 255);
+                    rightRectangle = new Rectangle(bounds.x + bounds.width - rectWidth, valuePosition, rectWidth,
+                            fillHeight);
+                    rightGradientPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
+                            rightRectangle.x - 2, rightRectangle.y, rightRectangle.x + rightRectangle.width,
+                            rightRectangle.y, WHITE_COLOR, 0, fillColor, 255);
                     graphics.setBackgroundPattern(rightGradientPattern);
-                    graphics.fillRoundRectangle(rightRectangle, fill_corner,
-                            fill_corner);
+                    graphics.fillRoundRectangle(rightRectangle, fill_corner, fill_corner);
 
                     leftGradientPattern.dispose();
                     rightGradientPattern.dispose();
@@ -217,11 +204,9 @@ public class TankFigure extends AbstractLinearMarkedFigure {
                 graphics.setBackgroundColor(fillBackgroundColor);
                 super.fillShape(graphics);
                 graphics.setBackgroundColor(fillColor);
-                graphics.fillRoundRectangle(new Rectangle(bounds.x + lineWidth,
-                        valuePosition,
-                        bounds.width - 2 * lineWidth,
-                        bounds.height - (valuePosition - bounds.y)),
-                        fill_corner, fill_corner);
+                graphics.fillRoundRectangle(new Rectangle(bounds.x + lineWidth, valuePosition,
+                        bounds.width - 2 * lineWidth, bounds.height - (valuePosition - bounds.y)), fill_corner,
+                        fill_corner);
                 // graphics.setForegroundColor(outlineColor);
             }
         }
@@ -240,30 +225,28 @@ public class TankFigure extends AbstractLinearMarkedFigure {
         private Tank tank;
 
         @Override
-        protected Dimension calculatePreferredSize(IFigure container, int w,
-                int h) {
-            Insets insets = container.getInsets();
-            Dimension d = new Dimension(64, 4 * 64);
+        protected Dimension calculatePreferredSize(IFigure container, int w, int h) {
+            var insets = container.getInsets();
+            var d = new Dimension(64, 4 * 64);
             d.expand(insets.getWidth(), insets.getHeight());
             return d;
         }
 
         @Override
         public void layout(IFigure container) {
-            Rectangle area = container.getClientArea();
+            var area = container.getClientArea();
             area.height -= 1;
-            Dimension scaleSize = new Dimension(0, 0);
-            Dimension markerSize = new Dimension(0, 0);
+            var scaleSize = new Dimension(0, 0);
+            var markerSize = new Dimension(0, 0);
 
             if (scale != null) {
                 if (scale.isVisible()) {
                     scaleSize = scale.getPreferredSize(-1, area.height);
-                    scale.setBounds(new Rectangle(area.x, area.y,
-                            scaleSize.width, scaleSize.height));
+                    scale.setBounds(new Rectangle(area.x, area.y, scaleSize.width, scaleSize.height));
                 } else {
                     scaleSize = scale.getPreferredSize(-1, area.height + 2 * scale.getMargin());
-                    scale.setBounds(new Rectangle(area.x, area.y - scale.getMargin(),
-                            scaleSize.width, scaleSize.height));
+                    scale.setBounds(
+                            new Rectangle(area.x, area.y - scale.getMargin(), scaleSize.width, scaleSize.height));
                     scaleSize.height = 0;
                     scaleSize.width = 0;
                 }
@@ -272,27 +255,26 @@ public class TankFigure extends AbstractLinearMarkedFigure {
 
             if (marker != null && marker.isVisible()) {
                 markerSize = marker.getPreferredSize();
-                marker.setBounds(new Rectangle(area.x + area.width - markerSize.width,
-                        marker.getScale().getBounds().y, markerSize.width, markerSize.height));
+                marker.setBounds(new Rectangle(area.x + area.width - markerSize.width, marker.getScale().getBounds().y,
+                        markerSize.width, markerSize.height));
             }
 
             if (tank != null) {
-                tank.setBounds(new Rectangle(
-                        area.x + scaleSize.width,
+                tank.setBounds(new Rectangle(area.x + scaleSize.width,
                         scale.getValuePosition(scale.getRange().getUpper(), false),
-                        area.width - scaleSize.width - markerSize.width,
-                        scale.getTickLength() + tank.getLineWidth()));
+                        area.width - scaleSize.width - markerSize.width, scale.getTickLength() + tank.getLineWidth()));
             }
         }
 
         @Override
         public void setConstraint(IFigure child, Object constraint) {
-            if (constraint.equals(SCALE))
+            if (constraint.equals(SCALE)) {
                 scale = (LinearScale) child;
-            else if (constraint.equals(MARKERS))
+            } else if (constraint.equals(MARKERS)) {
                 marker = (LinearScaledMarker) child;
-            else if (constraint.equals(TANK))
+            } else if (constraint.equals(TANK)) {
                 tank = (Tank) child;
+            }
         }
 
     }

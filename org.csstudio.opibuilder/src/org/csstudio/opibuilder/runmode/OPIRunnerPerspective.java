@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
@@ -53,8 +52,8 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
         }
 
         public static String[] stringValues() {
-            final String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (Position p : values()) {
                 sv[i++] = p.toString();
             }
@@ -77,18 +76,18 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
 
     @Override
     public void createInitialLayout(IPageLayout layout) {
-        String editor = layout.getEditorArea();
+        var editor = layout.getEditorArea();
 
-        IFolderLayout left = layout.createFolder(Position.LEFT.name(), IPageLayout.LEFT, 0.2f, editor);
+        var left = layout.createFolder(Position.LEFT.name(), IPageLayout.LEFT, 0.2f, editor);
         left.addPlaceholder(Position.LEFT.getOPIViewID() + SECOND_ID);
 
-        IFolderLayout right = layout.createFolder(Position.RIGHT.name(), IPageLayout.RIGHT, 0.75f, editor);
+        var right = layout.createFolder(Position.RIGHT.name(), IPageLayout.RIGHT, 0.75f, editor);
         right.addPlaceholder(Position.RIGHT.getOPIViewID() + SECOND_ID);
 
-        IFolderLayout top = layout.createFolder(Position.TOP.name(), IPageLayout.TOP, 0.25f, editor);
+        var top = layout.createFolder(Position.TOP.name(), IPageLayout.TOP, 0.25f, editor);
         top.addPlaceholder(Position.TOP.getOPIViewID() + SECOND_ID);
 
-        IFolderLayout bottom = layout.createFolder(Position.BOTTOM.name(), IPageLayout.BOTTOM, 0.75f, editor);
+        var bottom = layout.createFolder(Position.BOTTOM.name(), IPageLayout.BOTTOM, 0.75f, editor);
         bottom.addPlaceholder(Position.BOTTOM.getOPIViewID() + SECOND_ID);
 
         // Create ordinary view stack for 'DEFAULT_VIEW' close to editor area
@@ -102,7 +101,7 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
         // .. but such OPIViews are then in the IPageLayout.ID_EDITOR_AREA="org.eclipse.ui.editorss"(!) part,
         // which is linked to Shared Elements/Area, ignored by the perspective,
         // since it's meant for "Editors".
-        IFolderLayout center = layout.createFolder(Position.DEFAULT_VIEW.name(), IPageLayout.RIGHT, 0.5f, editor);
+        var center = layout.createFolder(Position.DEFAULT_VIEW.name(), IPageLayout.RIGHT, 0.5f, editor);
         center.addPlaceholder(OPIView.ID + SECOND_ID);
 
         layout.setEditorAreaVisible(false);

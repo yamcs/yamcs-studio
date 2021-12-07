@@ -10,7 +10,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
-import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 
 public class EventLogSorter extends ViewerComparator {
@@ -80,8 +79,8 @@ public class EventLogSorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
-        Event r1 = ((EventLogItem) o1).event;
-        Event r2 = ((EventLogItem) o2).event;
+        var r1 = ((EventLogItem) o1).event;
+        var r2 = ((EventLogItem) o2).event;
         int rc;
         switch (currentColumn) {
         case EventLogTableViewer.COL_SEVERITY:

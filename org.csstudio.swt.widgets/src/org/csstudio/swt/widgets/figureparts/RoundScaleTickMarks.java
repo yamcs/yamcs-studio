@@ -63,8 +63,7 @@ public class RoundScaleTickMarks extends Figure {
     protected void paintClientArea(Graphics graphics) {
         graphics.translate(bounds.x, bounds.y);
         graphics.setAntialias(SWT.ON);
-        ArrayList<Double> tickLabelPositions = scale
-                .getScaleTickLabels().getTickLabelPositions();
+        var tickLabelPositions = scale.getScaleTickLabels().getTickLabelPositions();
         drawTickMarks(graphics, tickLabelPositions);
 
     }
@@ -115,14 +114,14 @@ public class RoundScaleTickMarks extends Figure {
 
         updateMinorTickParas();
         // add gap to avoid overlap
-        double minRadians = scale.convertPixelToRadians(2);
+        var minRadians = scale.convertPixelToRadians(2);
         // draw tick marks
         graphics.setLineStyle(SWT.LINE_SOLID);
-        int r = scale.getRadius();
+        var r = scale.getRadius();
 
         if (scale.isLogScaleEnabled()) {
-            ArrayList<Boolean> tickLabelVisibilities = scale.getScaleTickLabels().getTickVisibilities();
-            for (int i = 0; i < tickLabelPositions.size(); i++) {
+            var tickLabelVisibilities = scale.getScaleTickLabels().getTickVisibilities();
+            for (var i = 0; i < tickLabelPositions.size(); i++) {
                 int tickLength;
                 int lineWidth;
                 if (tickLabelVisibilities.get(i)) {
@@ -134,28 +133,26 @@ public class RoundScaleTickMarks extends Figure {
                 }
 
                 double theta = tickLabelPositions.get(i);
-                Point startP = new PolarPoint(r, theta).toRelativePoint(scale.getBounds());
+                var startP = new PolarPoint(r, theta).toRelativePoint(scale.getBounds());
                 Point endP;
-                if (scale.getTickLablesSide() == LabelSide.Primary)
-                    endP = new PolarPoint(
-                            r + tickLength, theta).toRelativePoint(scale.getBounds());
-                else
-                    endP = new PolarPoint(
-                            r - tickLength, theta).toRelativePoint(scale.getBounds());
+                if (scale.getTickLablesSide() == LabelSide.Primary) {
+                    endP = new PolarPoint(r + tickLength, theta).toRelativePoint(scale.getBounds());
+                } else {
+                    endP = new PolarPoint(r - tickLength, theta).toRelativePoint(scale.getBounds());
+                }
                 graphics.setLineWidth(lineWidth);
                 graphics.drawLine(startP, endP);
             }
         } else {
-            for (int i = 0; i < tickLabelPositions.size(); i++) {
+            for (var i = 0; i < tickLabelPositions.size(); i++) {
                 double theta = tickLabelPositions.get(i);
-                Point startP = new PolarPoint(r, theta).toRelativePoint(scale.getBounds());
+                var startP = new PolarPoint(r, theta).toRelativePoint(scale.getBounds());
                 Point endP;
-                if (scale.getTickLablesSide() == LabelSide.Primary)
-                    endP = new PolarPoint(
-                            r + MAJOR_TICK_LENGTH, theta).toRelativePoint(scale.getBounds());
-                else
-                    endP = new PolarPoint(
-                            r - MAJOR_TICK_LENGTH, theta).toRelativePoint(scale.getBounds());
+                if (scale.getTickLablesSide() == LabelSide.Primary) {
+                    endP = new PolarPoint(r + MAJOR_TICK_LENGTH, theta).toRelativePoint(scale.getBounds());
+                } else {
+                    endP = new PolarPoint(r - MAJOR_TICK_LENGTH, theta).toRelativePoint(scale.getBounds());
+                }
                 graphics.setLineWidth(MAJOR_LINE_WIDTH);
                 graphics.drawLine(startP, endP);
 
@@ -174,18 +171,18 @@ public class RoundScaleTickMarks extends Figure {
                                 drawMinorTick(graphics, r, t);
                             }
                         } // draw the last grid step which is end to max value
-                        else if (i == tickLabelPositions.size() - 1 &&
-                                (tickLabelPositions.get(i - 1) - tickLabelPositions.get(i)) < scale.getScaleTickLabels()
-                                        .getGridStepInRadians()) {
+                        else if (i == tickLabelPositions.size() - 1
+                                && (tickLabelPositions.get(i - 1) - tickLabelPositions.get(i)) < scale
+                                        .getScaleTickLabels().getGridStepInRadians()) {
                             double t = tickLabelPositions.get(i - 1);
                             while ((t - tickLabelPositions.get(i)) > minorGridStepInRadians + minRadians) {
                                 t = t - minorGridStepInRadians;
                                 drawMinorTick(graphics, r, t);
                             }
                         } else { // draw regular steps
-                            for (int j = 1; j < minorTicksNumber; j++) {
-                                double t = tickLabelPositions.get(i - 1) +
-                                        (tickLabelPositions.get(i) - tickLabelPositions.get(i - 1)) * j
+                            for (var j = 1; j < minorTicksNumber; j++) {
+                                var t = tickLabelPositions.get(i - 1)
+                                        + (tickLabelPositions.get(i) - tickLabelPositions.get(i - 1)) * j
                                                 / minorTicksNumber;
                                 drawMinorTick(graphics, r, t);
                             }
@@ -198,23 +195,20 @@ public class RoundScaleTickMarks extends Figure {
         // draw scale line
         if (scale.isScaleLineVisible()) {
             graphics.drawArc(new Rectangle(bounds.x + bounds.width / 2 - scale.getRadius(),
-                    bounds.y + bounds.height / 2 - scale.getRadius(),
-                    scale.getRadius() * 2, scale.getRadius() * 2), (int) scale.getEndAngle(),
-                    (int) scale.getLengthInDegrees());
+                    bounds.y + bounds.height / 2 - scale.getRadius(), scale.getRadius() * 2, scale.getRadius() * 2),
+                    (int) scale.getEndAngle(), (int) scale.getLengthInDegrees());
         }
 
     }
 
     private void drawMinorTick(Graphics graphics, int r, double t) {
-        Point minorStartP = new PolarPoint(
-                r, t).toRelativePoint(scale.getBounds());
+        var minorStartP = new PolarPoint(r, t).toRelativePoint(scale.getBounds());
         Point minorEndP;
-        if (scale.getTickLablesSide() == LabelSide.Primary)
-            minorEndP = new PolarPoint(
-                    r + MINOR_TICK_LENGTH, t).toRelativePoint(scale.getBounds());
-        else
-            minorEndP = new PolarPoint(
-                    r - MINOR_TICK_LENGTH, t).toRelativePoint(scale.getBounds());
+        if (scale.getTickLablesSide() == LabelSide.Primary) {
+            minorEndP = new PolarPoint(r + MINOR_TICK_LENGTH, t).toRelativePoint(scale.getBounds());
+        } else {
+            minorEndP = new PolarPoint(r - MINOR_TICK_LENGTH, t).toRelativePoint(scale.getBounds());
+        }
         graphics.drawLine(minorStartP, minorEndP);
     }
 

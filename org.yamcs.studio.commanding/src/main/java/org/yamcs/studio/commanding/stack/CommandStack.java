@@ -135,10 +135,10 @@ public class CommandStack {
 
     public boolean areAllCommandsArmed() {
         // Check all commands are armed, starting from the active command
-        StackedCommand activeCommand = getActiveCommand();
-        boolean foundActive = false;
-        boolean allArmed = true;
-        for (int i = 0; i < commands.size(); i++) {
+        var activeCommand = getActiveCommand();
+        var foundActive = false;
+        var allArmed = true;
+        for (var i = 0; i < commands.size(); i++) {
             if (!foundActive && commands.get(i) == activeCommand) {
                 foundActive = true;
             }

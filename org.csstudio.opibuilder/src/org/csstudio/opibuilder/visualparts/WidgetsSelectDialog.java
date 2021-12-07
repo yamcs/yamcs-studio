@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.dialogs.Dialog;
@@ -81,10 +80,10 @@ public class WidgetsSelectDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
-        Composite rightComposite = new Composite(parent_Composite, SWT.NONE);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
+        var rightComposite = new Composite(parent_Composite, SWT.NONE);
         rightComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 320;
         gd.heightHint = 500;
         rightComposite.setLayoutData(gd);
@@ -93,8 +92,9 @@ public class WidgetsSelectDialog extends Dialog {
         List<String> widgetsList = new ArrayList<String>();
         for (String typeID : WidgetsService.getInstance().getAllWidgetTypeIDs()) {
             if (onlyPVWidgets && WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel()
-                    .getProperty(AbstractPVWidgetModel.PROP_PVNAME) == null)
+                    .getProperty(AbstractPVWidgetModel.PROP_PVNAME) == null) {
                 continue;
+            }
             widgetsList.add(typeID);
         }
 
@@ -110,22 +110,22 @@ public class WidgetsSelectDialog extends Dialog {
         // });
 
         widgetsViewer.setInput(widgetsList);
-        widgetsViewer.setSelection(
-                new StructuredSelection(defaultSelectedWidgetID));
+        widgetsViewer.setSelection(new StructuredSelection(defaultSelectedWidgetID));
 
         if (widgetCount > 1) {
-            Composite bottomComposite = new Composite(parent_Composite, SWT.NONE);
+            var bottomComposite = new Composite(parent_Composite, SWT.NONE);
             bottomComposite.setLayout(new GridLayout(2, false));
             gd = new GridData(SWT.FILL, SWT.FILL, true, true);
             bottomComposite.setLayoutData(gd);
 
-            Label imageLabel = new Label(bottomComposite, SWT.None);
-            if (widgetCount > 30)
+            var imageLabel = new Label(bottomComposite, SWT.None);
+            if (widgetCount > 30) {
                 imageLabel.setImage(Display.getDefault().getSystemImage(SWT.ICON_WARNING));
+            }
 
-            Label messageLabel = new Label(bottomComposite, SWT.WRAP);
-            messageLabel.setText(widgetCount + " widgets will be created." +
-                    (widgetCount > 20 ? " It may take a while to create them." : ""));
+            var messageLabel = new Label(bottomComposite, SWT.WRAP);
+            messageLabel.setText(widgetCount + " widgets will be created."
+                    + (widgetCount > 20 ? " It may take a while to create them." : ""));
         }
 
         return parent_Composite;
@@ -133,15 +133,14 @@ public class WidgetsSelectDialog extends Dialog {
     }
 
     private TableViewer createWidgetsViewer(Composite parent) {
-        final TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new WidgetsListLableProvider());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 selectedWidget = (String) ((StructuredSelection) viewer.getSelection()).getFirstElement();
             }
@@ -149,6 +148,7 @@ public class WidgetsSelectDialog extends Dialog {
 
         viewer.addDoubleClickListener(new IDoubleClickListener() {
 
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 okPressed();
             }
@@ -160,16 +160,16 @@ public class WidgetsSelectDialog extends Dialog {
     static class WidgetsListLableProvider extends LabelProvider {
         @Override
         public String getText(Object element) {
-            String typeID = (String) element;
+            var typeID = (String) element;
             return WidgetsService.getInstance().getWidgetDescriptor(typeID).getName();
         }
 
         @Override
         public Image getImage(Object element) {
-            String typeID = (String) element;
-            WidgetDescriptor widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(typeID);
-            Image image = CustomMediaFactory.getInstance().getImageFromPlugin(
-                    widgetDescriptor.getPluginId(), widgetDescriptor.getIconPath());
+            var typeID = (String) element;
+            var widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(typeID);
+            var image = CustomMediaFactory.getInstance().getImageFromPlugin(widgetDescriptor.getPluginId(),
+                    widgetDescriptor.getIconPath());
             return image;
         }
     }

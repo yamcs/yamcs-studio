@@ -30,13 +30,12 @@ public final class BooleanProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public BooleanProperty(String propId, String description,
-            WidgetPropertyCategory category, boolean defaultValue) {
+    public BooleanProperty(String propId, String description, WidgetPropertyCategory category, boolean defaultValue) {
         super(propId, description, category, Boolean.valueOf(defaultValue));
     }
 
     @Override
-    public Object checkValue(final Object value) {
+    public Object checkValue(Object value) {
         if (value == null) {
             return null;
         }

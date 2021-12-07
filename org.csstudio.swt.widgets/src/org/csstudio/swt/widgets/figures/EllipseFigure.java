@@ -45,8 +45,7 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      */
     private boolean transparent = false;
 
-    private Color lineColor = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_PURPLE);
+    private Color lineColor = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_PURPLE);
 
     private Color backGradientStartColor = ColorConstants.white;
     private Color foreGradientStartColor = ColorConstants.white;
@@ -54,72 +53,71 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
     private Boolean support3D = null;
 
     @Override
-    protected void fillShape(final Graphics graphics) {
-        if (support3D == null)
+    protected void fillShape(Graphics graphics) {
+        if (support3D == null) {
             support3D = GraphicsUtil.testPatternSupported(graphics);
-        Rectangle figureBounds = getClientArea();
+        }
+        var figureBounds = getClientArea();
         if (!transparent) {
             graphics.pushState();
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getBackgroundColor());
+            }
             Pattern pattern = null;
             if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, backGradientStartColor, getBackgroundColor());
             }
             graphics.fillOval(figureBounds);
-            if (pattern != null)
+            if (pattern != null) {
                 pattern.dispose();
+            }
             graphics.popState();
         }
         if (getFill() > 0) {
             Rectangle fillRectangle;
             if (horizontalFill) {
-                int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
-                fillRectangle = new Rectangle(figureBounds.x, figureBounds.y, newW,
-                        figureBounds.height);
+                var newW = (int) Math.round(figureBounds.width * (getFill() / 100));
+                fillRectangle = new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height);
             } else {
-                int newH = (int) Math
-                        .round(figureBounds.height * (getFill() / 100));
-                fillRectangle = new Rectangle(figureBounds.x, figureBounds.y
-                        + figureBounds.height - newH, figureBounds.width, newH);
+                var newH = (int) Math.round(figureBounds.height * (getFill() / 100));
+                fillRectangle = new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
+                        figureBounds.width, newH);
             }
 
             graphics.pushState();
 
             graphics.setClip(fillRectangle);
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getForegroundColor());
+            }
 
             Pattern pattern = null;
             if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, foreGradientStartColor, getForegroundColor());
             }
             graphics.fillOval(figureBounds);
-            if (pattern != null)
+            if (pattern != null) {
                 pattern.dispose();
+            }
             graphics.popState();
         }
     }
 
-    protected Pattern setGradientPattern(final Graphics graphics,
-            Rectangle figureBounds, Color gradientStartColor, Color fillColor) {
+    protected Pattern setGradientPattern(Graphics graphics, Rectangle figureBounds, Color gradientStartColor,
+            Color fillColor) {
         Pattern pattern;
-        int tx = figureBounds.x;
-        int ty = figureBounds.y + figureBounds.height;
+        var tx = figureBounds.x;
+        var ty = figureBounds.y + figureBounds.height;
         if (!horizontalFill) {
             tx = figureBounds.x + figureBounds.width;
             ty = figureBounds.y;
         }
-        int alpha = getAlpha() == null ? 255 : getAlpha();
+        var alpha = getAlpha() == null ? 255 : getAlpha();
         // Workaround for the pattern zoom bug on ScaledGraphics:
         // The coordinates need to be scaled for ScaledGraphics.
-        double scale = graphics.getAbsoluteScale();
-        pattern = new Pattern(Display.getCurrent(),
-                (int) (figureBounds.x * scale),
-                (int) (figureBounds.y * scale),
-                (int) (tx * scale),
-                (int) (ty * scale),
-                gradientStartColor, alpha, fillColor, alpha);
+        var scale = graphics.getAbsoluteScale();
+        pattern = new Pattern(Display.getCurrent(), (int) (figureBounds.x * scale), (int) (figureBounds.y * scale),
+                (int) (tx * scale), (int) (ty * scale), gradientStartColor, alpha, fillColor, alpha);
         graphics.setBackgroundPattern(pattern);
         return pattern;
     }
@@ -188,18 +186,19 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      */
     @Override
     protected void outlineShape(Graphics graphics) {
-        float lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
-        int inset1 = (int) Math.floor(lineInset);
-        int inset2 = (int) Math.ceil(lineInset);
+        var lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
+        var inset1 = (int) Math.floor(lineInset);
+        var inset2 = (int) Math.ceil(lineInset);
 
-        Rectangle r = Draw2dSingletonUtil.getRectangle().setBounds(getClientArea());
+        var r = Draw2dSingletonUtil.getRectangle().setBounds(getClientArea());
         r.x += inset1;
         r.y += inset1;
         r.width -= inset1 + inset2;
         r.height -= inset1 + inset2;
         graphics.pushState();
-        if (isEnabled())
+        if (isEnabled()) {
             graphics.setForegroundColor(lineColor);
+        }
         graphics.drawOval(r);
         graphics.popState();
     }
@@ -210,9 +209,10 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      * @param fill
      *            the fill grade.
      */
-    public void setFill(final double fill) {
-        if (this.fill == fill)
+    public void setFill(double fill) {
+        if (this.fill == fill) {
             return;
+        }
         this.fill = fill;
         repaint();
     }
@@ -238,16 +238,18 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      * @param horizontal
      *            The orientation.
      */
-    public void setHorizontalFill(final boolean horizontal) {
-        if (this.horizontalFill == horizontal)
+    public void setHorizontalFill(boolean horizontal) {
+        if (this.horizontalFill == horizontal) {
             return;
+        }
         this.horizontalFill = horizontal;
         repaint();
     }
 
     public void setLineColor(Color lineColor) {
-        if (this.lineColor != null && this.lineColor.equals(lineColor))
+        if (this.lineColor != null && this.lineColor.equals(lineColor)) {
             return;
+        }
         this.lineColor = lineColor;
         repaint();
     }
@@ -258,9 +260,10 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      * @param transparent
      *            the transparent state.
      */
-    public void setTransparent(final boolean transparent) {
-        if (this.transparent == transparent)
+    public void setTransparent(boolean transparent) {
+        if (this.transparent == transparent) {
             return;
+        }
         this.transparent = transparent;
         repaint();
     }

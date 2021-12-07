@@ -1,7 +1,6 @@
 package org.csstudio.opibuilder.editor;
 
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorMatchingStrategy;
 import org.eclipse.ui.IEditorReference;
@@ -16,9 +15,9 @@ public class OPIEditorMatcher implements IEditorMatchingStrategy {
     @Override
     public boolean matches(IEditorReference editorRef, IEditorInput input) {
         try {
-            IEditorInput editorInput = editorRef.getEditorInput();
-            IPath editorInputPath = ResourceUtil.getPathInEditor(editorInput);
-            IPath inputPath = ResourceUtil.getPathInEditor(input);
+            var editorInput = editorRef.getEditorInput();
+            var editorInputPath = ResourceUtil.getPathInEditor(editorInput);
+            var inputPath = ResourceUtil.getPathInEditor(input);
             return editorInputPath.equals(inputPath);
         } catch (PartInitException e) {
             return false;

@@ -31,7 +31,7 @@ public class ColumnDef {
         if (!(obj instanceof ColumnDef)) {
             return false;
         }
-        ColumnDef other = (ColumnDef) obj;
+        var other = (ColumnDef) obj;
         return Objects.equals(name, other.name) && Objects.equals(keyIndex, other.keyIndex);
     }
 

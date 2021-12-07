@@ -12,20 +12,20 @@ public class LogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord r) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         d.setTime(r.getMillis());
         sb.append(sdf.format(d)).append(" ");
 
-        String name = r.getLoggerName();
+        var name = r.getLoggerName();
         sb.append(name).append(" [").append(r.getThreadID()).append("] ");
         sb.append("[").append(r.getLevel()).append("] ").append(r.getMessage());
 
-        Throwable t = r.getThrown();
+        var t = r.getThrown();
         if (t != null) {
             sb.append(": ").append(t.toString()).append("\n");
             addStack(sb, t);
-            Throwable cause = t.getCause();
+            var cause = t.getCause();
             while (cause != null && cause != t) {
                 sb.append("Caused by: ").append(cause.toString()).append("\n");
                 addStack(sb, cause);

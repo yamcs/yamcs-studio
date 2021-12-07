@@ -26,19 +26,23 @@ public class ExprPV extends Expr {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
+    @Override
     public int hashCode() {
         return name.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExprPV))
+        if (!(obj instanceof ExprPV)) {
             return false;
+        }
 
-        ExprPV pv = (ExprPV) obj;
+        var pv = (ExprPV) obj;
         return pv.name.equals(name);
     }
 

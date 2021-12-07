@@ -17,10 +17,8 @@ import org.csstudio.opibuilder.widgets.figures.ImageFigure;
 import org.csstudio.opibuilder.widgets.model.ImageModel;
 import org.csstudio.swt.widgets.symbol.SymbolImageProperties;
 import org.csstudio.swt.widgets.symbol.util.PermutationMatrix;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -38,18 +36,18 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ImageModel model = getWidgetModel();
+        var model = getWidgetModel();
         // create AND initialize the view properly
-        final ImageFigure figure = new ImageFigure();
+        var figure = new ImageFigure();
 
         // Resize when new image is loaded
         figure.setImageLoadedListener(figure1 -> {
-            ImageFigure imageFigure = (ImageFigure) figure1;
+            var imageFigure = (ImageFigure) figure1;
             autoSizeWidget(imageFigure);
         });
 
         // Image default parameters
-        SymbolImageProperties sip = new SymbolImageProperties();
+        var sip = new SymbolImageProperties();
         sip.setTopCrop(model.getTopCrop());
         sip.setBottomCrop(model.getBottomCrop());
         sip.setLeftCrop(model.getLeftCrop());
@@ -72,7 +70,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
     protected void registerCropPropertyHandlers() {
         // top
         IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setTopCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
@@ -81,7 +79,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // bottom
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setBottomCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
@@ -90,7 +88,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // left
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setLeftCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
@@ -99,7 +97,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // right
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setRightCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
@@ -111,10 +109,10 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         // changes to the filename property
         IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
-            String absolutePath = (String) newValue;
+            var imageFigure = (ImageFigure) figure;
+            var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
-                IPath path = Path.fromPortableString(absolutePath);
+                var path = Path.fromPortableString(absolutePath);
                 if (!path.isAbsolute()) {
                     path = ResourceUtil.buildAbsolutePath(getWidgetModel(), path);
                     absolutePath = path.toPortableString();
@@ -128,7 +126,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // changes to the stretch property
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setStretch((Boolean) newValue);
             autoSizeWidget(imageFigure);
             return false;
@@ -137,10 +135,10 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // changes to the autosize property
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setAutoSize((Boolean) newValue);
-            ImageModel model = (ImageModel) getModel();
-            Dimension d = imageFigure.getAutoSizedDimension();
+            var model = (ImageModel) getModel();
+            var d = imageFigure.getAutoSizedDimension();
             if ((Boolean) newValue && !model.getStretch() && d != null) {
                 model.setSize(d.width, d.height);
             }
@@ -150,7 +148,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // changes to the stop animation property
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setAnimationDisabled((Boolean) newValue);
             return false;
         };
@@ -158,7 +156,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // changes to the align to nearest second property
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.setAlignedToNearestSecond((Boolean) newValue);
             return false;
         };
@@ -166,7 +164,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // changes to the border width property
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.resizeImage();
             autoSizeWidget(imageFigure);
             return false;
@@ -176,7 +174,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
 
         // size change handlers - so we can stretch accordingly
         handle = (oldValue, newValue, figure) -> {
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             imageFigure.resizeImage();
             autoSizeWidget(imageFigure);
             return false;
@@ -196,7 +194,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
         ((ImageFigure) getFigure()).dispose();
     }
 
-    private void autoSizeWidget(final ImageFigure imageFigure) {
+    private void autoSizeWidget(ImageFigure imageFigure) {
         if (!getWidgetModel().isAutoSize()) {
             return;
         }
@@ -208,9 +206,9 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
                     Display.getDefault().timerExec(100, this);
                     return;
                 }
-                ImageModel model = (ImageModel) getModel();
+                var model = (ImageModel) getModel();
                 imageFigure.setAutoSize(model.isAutoSize());
-                Dimension d = imageFigure.getAutoSizedDimension();
+                var d = imageFigure.getAutoSizedDimension();
                 if (model.isAutoSize() && !model.getStretch() && d != null) {
                     model.setSize(d.width, d.height);
                 }
@@ -229,14 +227,13 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             if (oldValue == null || newValue == null) {
                 return false;
             }
-            ImageFigure imageFigure = (ImageFigure) figure;
-            int newDegree = getWidgetModel().getDegree((Integer) newValue);
-            int oldDegree = getWidgetModel().getDegree((Integer) oldValue);
+            var imageFigure = (ImageFigure) figure;
+            var newDegree = getWidgetModel().getDegree((Integer) newValue);
+            var oldDegree = getWidgetModel().getDegree((Integer) oldValue);
 
-            PermutationMatrix oldMatrix = new PermutationMatrix(
-                    (double[][]) getPropertyValue(ImageModel.PERMUTATION_MATRIX));
-            PermutationMatrix newMatrix = PermutationMatrix.generateRotationMatrix(newDegree - oldDegree);
-            PermutationMatrix result = newMatrix.multiply(oldMatrix);
+            var oldMatrix = new PermutationMatrix((double[][]) getPropertyValue(ImageModel.PERMUTATION_MATRIX));
+            var newMatrix = PermutationMatrix.generateRotationMatrix(newDegree - oldDegree);
+            var result = newMatrix.multiply(oldMatrix);
 
             // As we use only % Pi/2 angles, we can round to integer values
             // => equals work better
@@ -256,11 +253,11 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             if (oldValue == null || newValue == null) {
                 return false;
             }
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             // imageFigure.setFlipH((Boolean) newValue);
-            PermutationMatrix newMatrix = PermutationMatrix.generateFlipHMatrix();
-            PermutationMatrix oldMatrix = imageFigure.getPermutationMatrix();
-            PermutationMatrix result = newMatrix.multiply(oldMatrix);
+            var newMatrix = PermutationMatrix.generateFlipHMatrix();
+            var oldMatrix = imageFigure.getPermutationMatrix();
+            var result = newMatrix.multiply(oldMatrix);
 
             // As we use only % Pi/2 angles, we can round to integer values
             // => equals work better
@@ -279,11 +276,11 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             if (oldValue == null || newValue == null) {
                 return false;
             }
-            ImageFigure imageFigure = (ImageFigure) figure;
+            var imageFigure = (ImageFigure) figure;
             // imageFigure.setFlipV((Boolean) newValue);
-            PermutationMatrix newMatrix = PermutationMatrix.generateFlipVMatrix();
-            PermutationMatrix oldMatrix = imageFigure.getPermutationMatrix();
-            PermutationMatrix result = newMatrix.multiply(oldMatrix);
+            var newMatrix = PermutationMatrix.generateFlipVMatrix();
+            var oldMatrix = imageFigure.getPermutationMatrix();
+            var result = newMatrix.multiply(oldMatrix);
 
             // As we use only % Pi/2 angles, we can round to integer values
             // => equals work better

@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editpolicies;
 
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -23,15 +22,16 @@ public class WidgetTreeEditPolicy extends AbstractEditPolicy {
 
     @Override
     public Command getCommand(Request req) {
-        if (REQ_MOVE.equals(req.getType()))
+        if (REQ_MOVE.equals(req.getType())) {
             return getMoveCommand((ChangeBoundsRequest) req);
+        }
         return null;
     }
 
     protected Command getMoveCommand(ChangeBoundsRequest req) {
-        EditPart parent = getHost().getParent();
+        var parent = getHost().getParent();
         if (parent != null) {
-            ChangeBoundsRequest request = new ChangeBoundsRequest(REQ_MOVE_CHILDREN);
+            var request = new ChangeBoundsRequest(REQ_MOVE_CHILDREN);
             // request.setEditParts(getHost());
             request.setEditParts(req.getEditParts());
             request.setLocation(req.getLocation());

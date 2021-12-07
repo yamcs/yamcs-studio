@@ -12,8 +12,6 @@ package org.csstudio.opibuilder.runmode;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -48,28 +46,25 @@ public class RuntimePatchedSelectionTool extends SelectionTool {
     @Override
     protected boolean handleButtonDown(int button) {
         if (button == 2) {
-            EditPart editPart = getTargetEditPart();
+            var editPart = getTargetEditPart();
             if (editPart instanceof AbstractPVWidgetEditPart) {
-                AbstractPVWidgetEditPart apvwep = (AbstractPVWidgetEditPart) editPart;
-                String pvName = ((AbstractPVWidgetModel) editPart.getModel())
-                        .getPVName();
+                var apvwep = (AbstractPVWidgetEditPart) editPart;
+                var pvName = ((AbstractPVWidgetModel) editPart.getModel()).getPVName();
                 if (pvName != "" && pvName != null) {
-                    Display display = Display.getCurrent();
-                    Clipboard clipboard = new Clipboard(display);
+                    var display = Display.getCurrent();
+                    var clipboard = new Clipboard(display);
 
                     // Copies to middle button paste buffer,
                     // to be pasted via another middle-button click
-                    clipboard.setContents(new Object[] { pvName },
-                            new Transfer[] { TextTransfer.getInstance() },
+                    clipboard.setContents(new Object[] { pvName }, new Transfer[] { TextTransfer.getInstance() },
                             DND.SELECTION_CLIPBOARD);
 
                     // Copies to normal clipboard,
                     // to be pasted via Ctrl-V or Edit/Paste
-                    clipboard.setContents(new String[] { pvName },
-                            new Transfer[] { TextTransfer.getInstance() });
+                    clipboard.setContents(new String[] { pvName }, new Transfer[] { TextTransfer.getInstance() });
 
                     clipboard.dispose();
-                    IFigure figure = apvwep.getFigure();
+                    var figure = apvwep.getFigure();
                     oldCursor = figure.getCursor();
                     figure.setCursor(ResourceUtil.getCopyPvCursor());
                     cursorChanged = true;
@@ -87,10 +82,10 @@ public class RuntimePatchedSelectionTool extends SelectionTool {
     @Override
     protected boolean handleButtonUp(int button) {
         if (button == 2) {
-            EditPart editPart = getTargetEditPart();
+            var editPart = getTargetEditPart();
             if (editPart instanceof AbstractPVWidgetEditPart) {
-                AbstractPVWidgetEditPart apvwep = (AbstractPVWidgetEditPart) editPart;
-                IFigure figure = apvwep.getFigure();
+                var apvwep = (AbstractPVWidgetEditPart) editPart;
+                var figure = apvwep.getFigure();
                 if (cursorChanged) {
                     figure.setCursor(oldCursor);
                     oldCursor = null;

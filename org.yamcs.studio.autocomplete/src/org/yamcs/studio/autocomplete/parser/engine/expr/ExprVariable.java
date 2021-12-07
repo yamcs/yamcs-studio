@@ -47,19 +47,23 @@ public class ExprVariable extends Expr {
         return this.constantValue;
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
+    @Override
     public int hashCode() {
         return name.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExprVariable))
+        if (!(obj instanceof ExprVariable)) {
             return false;
+        }
 
-        ExprVariable ev = (ExprVariable) obj;
+        var ev = (ExprVariable) obj;
         return ev.name.equals(name);
     }
 
@@ -71,14 +75,14 @@ public class ExprVariable extends Expr {
 
     public static void findVariables(Expr expr, List<ExprVariable> vars) {
         if (expr instanceof ExprFunction) {
-            ExprFunction f = (ExprFunction) expr;
-            for (int i = 0; i < f.size(); i++) {
+            var f = (ExprFunction) expr;
+            for (var i = 0; i < f.size(); i++) {
                 findVariables(f.getArg(i), vars);
             }
         } else if (expr instanceof ExprExpression) {
             findVariables(((ExprExpression) expr).getChild(), vars);
         } else if (expr instanceof IBinaryOperator) {
-            IBinaryOperator bo = (IBinaryOperator) expr;
+            var bo = (IBinaryOperator) expr;
             findVariables(bo.getLHS(), vars);
             findVariables(bo.getRHS(), vars);
         } else if (expr instanceof ExprVariable) {
@@ -86,8 +90,10 @@ public class ExprVariable extends Expr {
         }
     }
 
+    @Override
     public void validate() throws ExprException {
-        if (name == null)
+        if (name == null) {
             throw new ExprException("Variable name is empty");
+        }
     }
 }

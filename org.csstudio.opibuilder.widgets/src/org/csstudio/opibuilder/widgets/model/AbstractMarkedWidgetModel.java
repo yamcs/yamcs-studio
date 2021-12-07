@@ -82,37 +82,27 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
     protected void configureProperties() {
 
         super.configureProperties();
-        addProperty(new BooleanProperty(PROP_SHOW_MARKERS, "Show Markers",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_MARKERS, "Show Markers", WidgetPropertyCategory.Display, true));
 
-        addProperty(new DoubleProperty(PROP_LOLO_LEVEL, "Level LOLO",
-                WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[0]));
-        addProperty(new DoubleProperty(PROP_LO_LEVEL, "Level LO",
-                WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[1]));
-        addProperty(new DoubleProperty(PROP_HI_LEVEL, "Level HI",
-                WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[2]));
-        addProperty(new DoubleProperty(PROP_HIHI_LEVEL, "Level HIHI",
-                WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[3]));
+        addProperty(
+                new DoubleProperty(PROP_LOLO_LEVEL, "Level LOLO", WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[0]));
+        addProperty(new DoubleProperty(PROP_LO_LEVEL, "Level LO", WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[1]));
+        addProperty(new DoubleProperty(PROP_HI_LEVEL, "Level HI", WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[2]));
+        addProperty(
+                new DoubleProperty(PROP_HIHI_LEVEL, "Level HIHI", WidgetPropertyCategory.Behavior, DEFAULT_LEVELS[3]));
 
-        addProperty(new BooleanProperty(PROP_SHOW_LOLO, "Show LOLO",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_LO, "Show LO",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_HI, "Show HI",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_SHOW_HIHI, "Show HIHI",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_LOLO, "Show LOLO", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_LO, "Show LO", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_HI, "Show HI", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_HIHI, "Show HIHI", WidgetPropertyCategory.Display, true));
 
-        addProperty(new ColorProperty(PROP_LOLO_COLOR, "Color LOLO ",
-                WidgetPropertyCategory.Display, DEFAULT_LOLO_COLOR));
-        addProperty(new ColorProperty(PROP_LO_COLOR, "Color LO",
-                WidgetPropertyCategory.Display, DEFAULT_LO_COLOR));
-        addProperty(new ColorProperty(PROP_HI_COLOR, "Color HI",
-                WidgetPropertyCategory.Display, DEFAULT_HI_COLOR));
-        addProperty(new ColorProperty(PROP_HIHI_COLOR, "Color HIHI",
-                WidgetPropertyCategory.Display, DEFAULT_HIHI_COLOR));
-        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV",
-                WidgetPropertyCategory.Behavior, true));
+        addProperty(
+                new ColorProperty(PROP_LOLO_COLOR, "Color LOLO ", WidgetPropertyCategory.Display, DEFAULT_LOLO_COLOR));
+        addProperty(new ColorProperty(PROP_LO_COLOR, "Color LO", WidgetPropertyCategory.Display, DEFAULT_LO_COLOR));
+        addProperty(new ColorProperty(PROP_HI_COLOR, "Color HI", WidgetPropertyCategory.Display, DEFAULT_HI_COLOR));
+        addProperty(
+                new ColorProperty(PROP_HIHI_COLOR, "Color HIHI", WidgetPropertyCategory.Display, DEFAULT_HIHI_COLOR));
+        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, true));
 
     }
 

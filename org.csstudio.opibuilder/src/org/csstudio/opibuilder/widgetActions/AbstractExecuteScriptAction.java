@@ -35,19 +35,14 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new FilePathProperty(
-                PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
+        addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { getFileExtension() }, false));
-        addProperty(new StringProperty(
-                PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic,
-                getScriptHeader(), true, true));
-        BooleanProperty embeddedProperty = new BooleanProperty(
-                PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
+        addProperty(new StringProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, getScriptHeader(),
+                true, true));
+        var embeddedProperty = new BooleanProperty(PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
         embeddedProperty.addPropertyChangeListener(evt -> {
-            getProperty(PROP_PATH).setVisibleInPropSheet(
-                    !((Boolean) evt.getNewValue()));
-            getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(
-                    ((Boolean) evt.getNewValue()));
+            getProperty(PROP_PATH).setVisibleInPropSheet(!((Boolean) evt.getNewValue()));
+            getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(((Boolean) evt.getNewValue()));
         });
         addProperty(embeddedProperty);
         getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(false);
@@ -60,7 +55,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
 
     protected IPath getAbsolutePath() {
         // read file
-        IPath absolutePath = getPath();
+        var absolutePath = getPath();
         if (!absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
         }
@@ -77,7 +72,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
 
     @Override
     public String getDefaultDescription() {
-        String desc = super.getDefaultDescription();
+        var desc = super.getDefaultDescription();
         if (isEmbedded()) {
             return desc;
         }

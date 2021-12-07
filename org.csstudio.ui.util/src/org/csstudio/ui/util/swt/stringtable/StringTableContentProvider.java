@@ -30,16 +30,17 @@ class StringTableContentProvider<T> implements IStructuredContentProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void inputChanged(final Viewer viewer, final Object old, final Object new_input) {
+    public void inputChanged(Viewer viewer, Object old, Object new_input) {
         items = (List<T>) new_input;
     }
 
     @Override
     public Object[] getElements(Object arg0) {
-        int N = items.size();
-        final Integer result[] = new Integer[N + 1];
-        for (int i = 0; i < N; ++i)
+        var N = items.size();
+        Integer result[] = new Integer[N + 1];
+        for (var i = 0; i < N; ++i) {
             result[i] = i;
+        }
         result[N] = ADD_ELEMENT;
         return result;
     }

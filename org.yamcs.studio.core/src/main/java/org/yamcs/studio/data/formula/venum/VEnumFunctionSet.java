@@ -32,9 +32,7 @@ import org.yamcs.studio.data.formula.FormulaFunctionSetDescription;
 public class VEnumFunctionSet extends FormulaFunctionSet {
 
     public VEnumFunctionSet() {
-        super(new FormulaFunctionSetDescription("venum",
-                "Functions for enum manipulation")
-                        .addFormulaFunction(new EnumIndexOfFunction())
-                        .addFormulaFunction(new EnumFromVNumberFunction()));
+        super(new FormulaFunctionSetDescription("venum", "Functions for enum manipulation")
+                .addFormulaFunction(new EnumIndexOfFunction()).addFormulaFunction(new EnumFromVNumberFunction()));
     }
 }

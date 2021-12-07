@@ -51,8 +51,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     private boolean squareLED = false;
     private boolean hasPackedLEDs = false;
     private int ledBorderWidth = 2;
-    private Color ledBorderColor = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_DARK_GRAY);
+    private Color ledBorderColor = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_DARK_GRAY);
 
     /** LEDs */
     private List<LEDFigure> ledFigures = new ArrayList<>();
@@ -66,7 +65,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     }
 
     private LEDFigure createLED() {
-        LEDFigure led = new LEDFigure();
+        var led = new LEDFigure();
         led.setShowBooleanLabel(false);
         led.setOnColor(getOnColor());
         led.setOffColor(getOffColor());
@@ -78,7 +77,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     }
 
     private TextFigure createText() {
-        TextFigure text = new TextFigure();
+        var text = new TextFigure();
         text.setText("");
         alignText(text);
         return text;
@@ -89,14 +88,14 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * They are colored offColor if the bit is 0.
      */
     public void drawValue() {
-        for (int ii = startBit; ii < startBit + numBits; ii++) {
-            int widgetIndex = 0;
+        for (var ii = startBit; ii < startBit + numBits; ii++) {
+            var widgetIndex = 0;
             if (reverseBits) {
                 widgetIndex = ii - startBit;
             } else {
                 widgetIndex = (numBits - 1) - (ii - startBit);
             }
-            LEDFigure led = ledFigures.get(widgetIndex);
+            var led = ledFigures.get(widgetIndex);
             if (((value >> ii) & 0x1) == 1) {
                 led.setBooleanValue(true);
             } else {
@@ -225,7 +224,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * @return
      */
     private int calculateLedSpacing(int ledSize, int borderSize) {
-        int spacing = ledSize;
+        var spacing = ledSize;
 
         if (hasPackedLEDs) {
             spacing -= borderSize;
@@ -239,13 +238,13 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
         super.layout();
 
         if (numBits > 0) {
-            Rectangle clientArea = getClientArea();
+            var clientArea = getClientArea();
             if (isHorizontal) {
-                int ledWidth = calculateLedSize(clientArea.width, ledBorderWidth);
-                int ledSpacing = calculateLedSpacing(ledWidth, ledBorderWidth);
-                int startX = clientArea.x;
+                var ledWidth = calculateLedSize(clientArea.width, ledBorderWidth);
+                var ledSpacing = calculateLedSpacing(ledWidth, ledBorderWidth);
+                var startX = clientArea.x;
 
-                int ledHeight = 0;
+                var ledHeight = 0;
                 if (ledWidth > clientArea.height || squareLED) {
                     ledHeight = clientArea.height;
                 } else {
@@ -261,20 +260,19 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
                 startX = clientArea.x;
                 for (TextFigure text : textFigures) {
                     if (squareLED) {
-                        text.setBounds(new Rectangle(
-                                startX, clientArea.y, ledWidth, ledHeight));
+                        text.setBounds(new Rectangle(startX, clientArea.y, ledWidth, ledHeight));
                     } else {
-                        text.setBounds(new Rectangle(
-                                startX, clientArea.y + ledHeight, ledWidth, clientArea.height - ledHeight));
+                        text.setBounds(new Rectangle(startX, clientArea.y + ledHeight, ledWidth,
+                                clientArea.height - ledHeight));
                     }
                     startX += ledSpacing;
                 }
             } else {
-                int ledHeight = calculateLedSize(clientArea.height, ledBorderWidth);
-                int ledSpacing = calculateLedSpacing(ledHeight, ledBorderWidth);
-                int startY = clientArea.y;
+                var ledHeight = calculateLedSize(clientArea.height, ledBorderWidth);
+                var ledSpacing = calculateLedSpacing(ledHeight, ledBorderWidth);
+                var startY = clientArea.y;
 
-                int ledWidth = 0;
+                var ledWidth = 0;
                 if (ledHeight > clientArea.width || squareLED) {
                     ledWidth = clientArea.width;
                 } else {
@@ -290,11 +288,10 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
                 startY = clientArea.y;
                 for (TextFigure text : textFigures) {
                     if (squareLED) {
-                        text.setBounds(new Rectangle(
-                                clientArea.x, startY, ledWidth, ledHeight));
+                        text.setBounds(new Rectangle(clientArea.x, startY, ledWidth, ledHeight));
                     } else {
-                        text.setBounds(new Rectangle(
-                                clientArea.x + ledWidth, startY, clientArea.width - ledWidth, ledHeight));
+                        text.setBounds(
+                                new Rectangle(clientArea.x + ledWidth, startY, clientArea.width - ledWidth, ledHeight));
                     }
                     startY += ledSpacing;
                 }
@@ -309,8 +306,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            boolean true if 3D, false if not
      */
     public void setEffect3D(boolean newValue) {
-        if (this.effect3D == newValue)
+        if (this.effect3D == newValue) {
             return;
+        }
         this.effect3D = newValue;
         for (LEDFigure bulb : ledFigures) {
             bulb.setEffect3D(this.effect3D);
@@ -326,8 +324,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the isHorizontal to set
      */
     public void setHorizontal(boolean isHorizontal) {
-        if (this.isHorizontal == isHorizontal)
+        if (this.isHorizontal == isHorizontal) {
             return;
+        }
         this.isHorizontal = isHorizontal;
 
         for (TextFigure text : textFigures) {
@@ -344,18 +343,19 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * @param numBits
      */
     public void setNumBits(int numBits) {
-        if (this.numBits == numBits || numBits <= 0 || numBits > MAX_BITS)
+        if (this.numBits == numBits || numBits <= 0 || numBits > MAX_BITS) {
             return;
+        }
         this.numBits = numBits;
         removeAll();
         ledFigures.clear();
         textFigures.clear();
-        for (int ii = 0; ii < numBits; ii++) {
-            LEDFigure led = createLED();
+        for (var ii = 0; ii < numBits; ii++) {
+            var led = createLED();
             add(led);
             ledFigures.add(led);
 
-            TextFigure text = createText();
+            var text = createText();
             add(text);
             textFigures.add(text);
         }
@@ -370,8 +370,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the offColor to set
      */
     public void setOffColor(Color rgb) {
-        if (this.offColor != null && this.offColor.equals(rgb))
+        if (this.offColor != null && this.offColor.equals(rgb)) {
             return;
+        }
         this.offColor = rgb;
         for (LEDFigure led : ledFigures) {
             led.setOffColor(rgb);
@@ -385,8 +386,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the onColor to set
      */
     public void setOnColor(Color rgb) {
-        if (this.onColor != null && this.onColor.equals(rgb))
+        if (this.onColor != null && this.onColor.equals(rgb)) {
             return;
+        }
         this.onColor = rgb;
         for (LEDFigure led : ledFigures) {
             led.setOnColor(rgb);
@@ -401,8 +403,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the reverseBits to set
      */
     public void setReverseBits(boolean reverseBits) {
-        if (this.reverseBits == reverseBits)
+        if (this.reverseBits == reverseBits) {
             return;
+        }
         this.reverseBits = reverseBits;
         updateLabels();
         repaint();
@@ -415,8 +418,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            boolean true if square, false if round
      */
     public void setSquareLED(boolean squareLED) {
-        if (this.squareLED == squareLED)
+        if (this.squareLED == squareLED) {
             return;
+        }
 
         this.squareLED = squareLED;
         for (LEDFigure bulb : ledFigures) {
@@ -435,8 +439,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * @param startBit
      */
     public void setStartBit(int startBit) {
-        if (this.startBit == startBit || startBit < 0 || startBit + numBits > MAX_BITS)
+        if (this.startBit == startBit || startBit < 0 || startBit + numBits > MAX_BITS) {
             return;
+        }
         this.startBit = startBit;
         repaint();
     }
@@ -457,8 +462,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * Set the LED border width, i.e. the spacing between the LEDs in the widget
      */
     public void setLedBorderWidth(int value) {
-        if (value == ledBorderWidth)
+        if (value == ledBorderWidth) {
             return;
+        }
 
         ledBorderWidth = value;
 
@@ -473,8 +479,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      * Set the LED border color
      */
     public void setLedBorderColor(Color value) {
-        if (ledBorderColor != null && value == ledBorderColor)
+        if (ledBorderColor != null && value == ledBorderColor) {
             return;
+        }
 
         ledBorderColor = value;
 
@@ -506,7 +513,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     }
 
     private void updateLabels() {
-        for (int i = 0; i < textFigures.size(); i++) {
+        for (var i = 0; i < textFigures.size(); i++) {
             TextFigure text;
             if (reverseBits) {
                 text = textFigures.get(i);
@@ -543,8 +550,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     }
 
     public void setPackedLEDs(boolean packLEDs) {
-        if (this.hasPackedLEDs == packLEDs)
+        if (this.hasPackedLEDs == packLEDs) {
             return;
+        }
 
         this.hasPackedLEDs = packLEDs;
         revalidate();

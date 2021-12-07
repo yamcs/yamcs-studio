@@ -12,7 +12,6 @@ import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
 import org.yamcs.studio.data.vtype.Display;
-import org.yamcs.studio.data.vtype.VType;
 
 /**
  * Base editPart controller for a widget based on {@link AbstractMarkedWidgetModel}.
@@ -32,8 +31,8 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
      * @param model
      *            the model.
      */
-    protected void initializeCommonFigureProperties(
-            final AbstractMarkedWidgetFigure figure, final AbstractMarkedWidgetModel model) {
+    protected void initializeCommonFigureProperties(AbstractMarkedWidgetFigure figure,
+            AbstractMarkedWidgetModel model) {
 
         super.initializeCommonFigureProperties(figure, model);
         figure.setShowMarkers(model.isShowMarkers());
@@ -66,17 +65,17 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
      */
     private void registerLoadLimitsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-            final AbstractMarkedWidgetModel model = (AbstractMarkedWidgetModel) getModel();
+            var model = (AbstractMarkedWidgetModel) getModel();
             if (model.isLimitsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
+                                var value = pv.getValue();
                                 if (value != null && VTypeHelper.getDisplayInfo(value) != null) {
-                                    Display new_meta = VTypeHelper.getDisplayInfo(value);
+                                    var new_meta = VTypeHelper.getDisplayInfo(value);
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
 
@@ -102,32 +101,28 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HI, false);
                                         } else {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HI, true);
-                                            model.setPropertyValue(
-                                                    AbstractMarkedWidgetModel.PROP_HI_LEVEL,
+                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_HI_LEVEL,
                                                     meta.getUpperWarningLimit());
                                         }
                                         if (Double.isNaN(meta.getUpperAlarmLimit())) {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HIHI, false);
                                         } else {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HIHI, true);
-                                            model.setPropertyValue(
-                                                    AbstractMarkedWidgetModel.PROP_HIHI_LEVEL,
+                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_HIHI_LEVEL,
                                                     meta.getUpperAlarmLimit());
                                         }
                                         if (Double.isNaN(meta.getLowerWarningLimit())) {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LO, false);
                                         } else {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LO, true);
-                                            model.setPropertyValue(
-                                                    AbstractMarkedWidgetModel.PROP_LO_LEVEL,
+                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_LO_LEVEL,
                                                     meta.getLowerWarningLimit());
                                         }
                                         if (Double.isNaN(meta.getLowerAlarmLimit())) {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LOLO, false);
                                         } else {
                                             model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LOLO, true);
-                                            model.setPropertyValue(
-                                                    AbstractMarkedWidgetModel.PROP_LOLO_LEVEL,
+                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_LOLO_LEVEL,
                                                     meta.getLowerAlarmLimit());
                                         }
                                     }
@@ -150,7 +145,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isLimitsFromPV()) {
-            IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
             if (pv != null && pvLoadLimitsListener != null) {
                 pv.removeListener(pvLoadLimitsListener);
             }
@@ -175,7 +170,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // showMarkers
         IWidgetPropertyChangeHandler showMarkersHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowMarkers((Boolean) newValue);
             return false;
         };
@@ -183,7 +178,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // LoLo Level
         IWidgetPropertyChangeHandler loloHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoloLevel((Double) newValue);
             return true;
         };
@@ -191,7 +186,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Lo Level
         IWidgetPropertyChangeHandler loHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoLevel((Double) newValue);
             return true;
         };
@@ -199,7 +194,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Hi Level
         IWidgetPropertyChangeHandler hiHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHiLevel((Double) newValue);
             return true;
         };
@@ -207,7 +202,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // HiHi Level
         IWidgetPropertyChangeHandler hihiHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHihiLevel((Double) newValue);
             return true;
         };
@@ -215,7 +210,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // show lolo
         IWidgetPropertyChangeHandler showLoloHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowLolo((Boolean) newValue);
             return true;
         };
@@ -223,7 +218,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // show lo
         IWidgetPropertyChangeHandler showLoHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowLo((Boolean) newValue);
             return true;
         };
@@ -231,7 +226,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // show Hi
         IWidgetPropertyChangeHandler showHiHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowHi((Boolean) newValue);
             return false;
         };
@@ -239,7 +234,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // show Hihi
         IWidgetPropertyChangeHandler showHihiHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowHihi((Boolean) newValue);
             return false;
         };
@@ -247,7 +242,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Lolo color
         IWidgetPropertyChangeHandler LoloColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoloColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -255,7 +250,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Lo color
         IWidgetPropertyChangeHandler LoColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -263,7 +258,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Hi color
         IWidgetPropertyChangeHandler HiColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHiColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
@@ -271,7 +266,7 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
 
         // Hihi color
         IWidgetPropertyChangeHandler HihiColorHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractMarkedWidgetFigure figure = (AbstractMarkedWidgetFigure) refreshableFigure;
+            var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHihiColor(((OPIColor) newValue).getSWTColor());
             return false;
         };

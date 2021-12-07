@@ -29,7 +29,7 @@ public class SimpleValueFormat extends ValueFormat {
         }
 
         if (scalar instanceof Display && nf(scalar) != null) {
-            NumberFormat f = nf(scalar);
+            var f = nf(scalar);
             return f.format(scalar.getValue(), toAppendTo, pos);
         }
 
@@ -68,17 +68,17 @@ public class SimpleValueFormat extends ValueFormat {
      * @return the string buffer
      */
     protected StringBuffer format(VNumberArray array, StringBuffer toAppendTo, FieldPosition pos) {
-        NumberFormat f = nf(array);
+        var f = nf(array);
 
         toAppendTo.append("[");
-        boolean hasMore = false;
+        var hasMore = false;
 
-        ListNumber data = array.getData();
+        var data = array.getData();
         if (data.size() > maxElements) {
             hasMore = true;
         }
 
-        for (int i = 0; i < Math.min(data.size(), maxElements); i++) {
+        for (var i = 0; i < Math.min(data.size(), maxElements); i++) {
             if (i != 0) {
                 toAppendTo.append(", ");
             }
@@ -110,13 +110,13 @@ public class SimpleValueFormat extends ValueFormat {
      */
     protected StringBuffer format(List<String> data, StringBuffer toAppendTo, FieldPosition pos) {
         toAppendTo.append("[");
-        boolean hasMore = false;
+        var hasMore = false;
 
         if (data.size() > maxElements) {
             hasMore = true;
         }
 
-        for (int i = 0; i < Math.min(data.size(), maxElements); i++) {
+        for (var i = 0; i < Math.min(data.size(), maxElements); i++) {
             if (i != 0) {
                 toAppendTo.append(", ");
             }
@@ -143,13 +143,13 @@ public class SimpleValueFormat extends ValueFormat {
      */
     protected StringBuffer format(ListBoolean data, StringBuffer toAppendTo, FieldPosition pos) {
         toAppendTo.append("[");
-        boolean hasMore = false;
+        var hasMore = false;
 
         if (data.size() > maxElements) {
             hasMore = true;
         }
 
-        for (int i = 0; i < Math.min(data.size(), maxElements); i++) {
+        for (var i = 0; i < Math.min(data.size(), maxElements); i++) {
             if (i != 0) {
                 toAppendTo.append(", ");
             }

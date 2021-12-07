@@ -138,8 +138,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the hiColor to set
      */
     public void setHiColor(Color hiColor) {
-        if (this.hiColor != null && this.hiColor.equals(hiColor))
+        if (this.hiColor != null && this.hiColor.equals(hiColor)) {
             return;
+        }
         this.hiColor = hiColor;
         repaint();
     }
@@ -149,8 +150,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the hihiColor to set
      */
     public void setHihiColor(Color hihiColor) {
-        if (this.hihiColor != null && this.hihiColor.equals(hihiColor))
+        if (this.hihiColor != null && this.hihiColor.equals(hihiColor)) {
             return;
+        }
         this.hihiColor = hihiColor;
         repaint();
     }
@@ -159,9 +161,10 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      * @param hihiLevel
      *            the hihiLevel to set
      */
-    public void setHihiLevel(final double hihiLevel) {
-        if (this.hihiLevel == hihiLevel)
+    public void setHihiLevel(double hihiLevel) {
+        if (this.hihiLevel == hihiLevel) {
             return;
+        }
         this.hihiLevel = hihiLevel;
         repaint();
     }
@@ -170,9 +173,10 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      * @param hiLevel
      *            the hiLevel to set
      */
-    public void setHiLevel(final double hiLevel) {
-        if (this.hiLevel == hiLevel)
+    public void setHiLevel(double hiLevel) {
+        if (this.hiLevel == hiLevel) {
             return;
+        }
         this.hiLevel = hiLevel;
         repaint();
     }
@@ -182,8 +186,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the loColor to set
      */
     public void setLoColor(Color loColor) {
-        if (this.loColor != null && this.loColor.equals(loColor))
+        if (this.loColor != null && this.loColor.equals(loColor)) {
             return;
+        }
         this.loColor = loColor;
         repaint();
     }
@@ -192,9 +197,10 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      * @param loLevel
      *            the loLevel to set
      */
-    public void setLoLevel(final double loLevel) {
-        if (this.loLevel == loLevel)
+    public void setLoLevel(double loLevel) {
+        if (this.loLevel == loLevel) {
             return;
+        }
         this.loLevel = loLevel;
         repaint();
     }
@@ -204,8 +210,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the loloColor to set
      */
     public void setLoloColor(Color loloColor) {
-        if (this.loloColor != null && this.loloColor.equals(loloColor))
+        if (this.loloColor != null && this.loloColor.equals(loloColor)) {
             return;
+        }
         this.loloColor = loloColor;
         repaint();
     }
@@ -214,9 +221,10 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      * @param loloLevel
      *            the loloLevel to set
      */
-    public void setLoloLevel(final double loloLevel) {
-        if (this.loloLevel == loloLevel)
+    public void setLoloLevel(double loloLevel) {
+        if (this.loloLevel == loloLevel) {
             return;
+        }
         this.loloLevel = loloLevel;
         repaint();
     }
@@ -226,8 +234,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the showHi to set
      */
     public void setShowHi(boolean showHi) {
-        if (this.showHi == showHi)
+        if (this.showHi == showHi) {
             return;
+        }
         this.showHi = showHi;
         repaint();
     }
@@ -237,8 +246,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the showHihi to set
      */
     public void setShowHihi(boolean showHihi) {
-        if (this.showHihi == showHihi)
+        if (this.showHihi == showHihi) {
             return;
+        }
         this.showHihi = showHihi;
         repaint();
     }
@@ -248,8 +258,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the showLo to set
      */
     public void setShowLo(boolean showLo) {
-        if (this.showLo == showLo)
+        if (this.showLo == showLo) {
             return;
+        }
         this.showLo = showLo;
         repaint();
     }
@@ -259,8 +270,9 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      *            the showLolo to set
      */
     public void setShowLolo(boolean showLolo) {
-        if (this.showLolo == showLolo)
+        if (this.showLolo == showLolo) {
             return;
+        }
         this.showLolo = showLolo;
         repaint();
     }
@@ -269,9 +281,10 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
      * @param showMarkers
      *            the showMarkers to set
      */
-    public void setShowMarkers(final boolean showMarkers) {
-        if (this.showMarkers == showMarkers)
+    public void setShowMarkers(boolean showMarkers) {
+        if (this.showMarkers == showMarkers) {
             return;
+        }
         this.showMarkers = showMarkers;
         repaint();
     }

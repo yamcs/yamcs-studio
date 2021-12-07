@@ -70,8 +70,7 @@ public class ComboHistoryHelper {
      * @param saveOnDispose
      *            whether current values should be saved at widget disposal
      */
-    public ComboHistoryHelper(IDialogSettings settings, String tag,
-            Combo combo, int max, boolean saveOnDispose) {
+    public ComboHistoryHelper(IDialogSettings settings, String tag, Combo combo, int max, boolean saveOnDispose) {
         this.settings = settings;
         this.tag = tag;
         this.combo = combo;
@@ -84,7 +83,7 @@ public class ComboHistoryHelper {
             // Called after <Return> was pressed
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
-                String new_entry = ComboHistoryHelper.this.combo.getText();
+                var new_entry = ComboHistoryHelper.this.combo.getText();
                 addEntry(new_entry);
                 ComboHistoryHelper.this.combo.select(0);
                 itemSelected(new_entry);
@@ -93,7 +92,7 @@ public class ComboHistoryHelper {
             // Called after existing entry was picked from list
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String name = ComboHistoryHelper.this.combo.getText();
+                var name = ComboHistoryHelper.this.combo.getText();
                 itemSelected(name);
             }
         });
@@ -111,8 +110,8 @@ public class ComboHistoryHelper {
 
     private boolean changing_combo = false;
 
-    public void changeSelection(final String entry) {
-        int index = combo.indexOf(entry);
+    public void changeSelection(String entry) {
+        var index = combo.indexOf(entry);
         if (index != -1) {
             combo.select(index);
         } else {
@@ -127,26 +126,30 @@ public class ComboHistoryHelper {
      * @param newEntry
      *            the new value
      */
-    public void addEntry(final String newEntry) {
+    public void addEntry(String newEntry) {
         // Possibly removing an entry below can trigger a selection change.
         // At least on Mac OS X that sometimes resulted in infinite recursion.
         // Avoid such recursion.
-        if (changing_combo)
+        if (changing_combo) {
             return;
+        }
         changing_combo = true;
         try {
             // Avoid empty entries
-            if (newEntry.trim().isEmpty())
+            if (newEntry.trim().isEmpty()) {
                 return;
+            }
 
             // Remove if present, so that is re-added on top
-            int entry = -1;
-            while ((entry = combo.indexOf(newEntry)) >= 0)
+            var entry = -1;
+            while ((entry = combo.indexOf(newEntry)) >= 0) {
                 combo.remove(entry);
+            }
 
             // Maybe remove oldest, i.e. bottom-most, entry
-            if (combo.getItemCount() >= max)
+            if (combo.getItemCount() >= max) {
                 combo.remove(combo.getItemCount() - 1);
+            }
 
             // Add at the top
             combo.add(newEntry, 0);
@@ -170,7 +173,7 @@ public class ComboHistoryHelper {
      * @param selection
      *            Selected item, may be <code>null</code>
      */
-    public void itemSelected(final String selection) {
+    public void itemSelected(String selection) {
         if (oldSelection == null) {
             if (selection == null) {
                 return;
@@ -193,28 +196,31 @@ public class ComboHistoryHelper {
      * @param selection
      *            Selected item, may be <code>null</code>
      */
-    public void newSelection(final String selection) {
+    public void newSelection(String selection) {
         // Default: NOP
     }
 
     /** Load persisted list values. */
     public void loadSettings() {
         if (settings != null) {
-            IDialogSettings pvs = settings.getSection(tag);
-            if (pvs == null)
+            var pvs = settings.getSection(tag);
+            if (pvs == null) {
                 return;
+            }
             String values[] = pvs.getArray(TAG);
-            if (values != null)
-                for (int i = values.length - 1; i >= 0; i--)
+            if (values != null) {
+                for (var i = values.length - 1; i >= 0; i--) {
                     // Load as if they were entered, i.e. skip duplicates
                     addEntry(values[i]);
+                }
+            }
         }
     }
 
     /** Save list values to persistent storage. */
     public void saveSettings() {
         if (settings != null) {
-            IDialogSettings values = settings.addNewSection(tag);
+            var values = settings.addNewSection(tag);
             values.put(TAG, combo.getItems());
         }
     }

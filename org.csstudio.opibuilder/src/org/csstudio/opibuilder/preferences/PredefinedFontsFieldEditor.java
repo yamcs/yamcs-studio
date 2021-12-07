@@ -23,7 +23,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -31,8 +30,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 
 public class PredefinedFontsFieldEditor extends FieldEditor {
 
@@ -64,12 +61,12 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
 
         buttonBox = getButtonControl(parent);
 
-        Group previewGroup = new Group(parent, SWT.NONE);
+        var previewGroup = new Group(parent, SWT.NONE);
         previewGroup.setText("Preview:");
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 70;
         previewGroup.setLayoutData(gd);
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         previewGroup.setLayout(gl);
         preview = new Label(previewGroup, SWT.NONE);
         preview.setText("The quick brown fox jumps over the lazy dog");
@@ -83,9 +80,9 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void createTableControl(Composite parent) {
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
+        var tableWrapper = new Composite(parent, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
 
         tableViewer = new TableViewer(tableWrapper, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -95,31 +92,31 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
         tableViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-                OPIFont f1 = (OPIFont) e1;
-                OPIFont f2 = (OPIFont) e2;
+                var f1 = (OPIFont) e1;
+                var f2 = (OPIFont) e2;
                 return f1.getFontMacroName().compareToIgnoreCase(f2.getFontMacroName());
             }
         });
 
-        TableViewerColumn textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        var textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         textColumn.getColumn().setText("Name");
         textColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
             public String getText(Object element) {
-                OPIFont font = (OPIFont) element;
+                var font = (OPIFont) element;
                 return font.getFontMacroName();
             }
         });
         tcl.setColumnData(textColumn.getColumn(), new ColumnWeightData(100, true));
 
-        TableViewerColumn descColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        var descColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         descColumn.getColumn().setText("Font");
         descColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
             public String getText(Object element) {
-                OPIFont font = (OPIFont) element;
+                var font = (OPIFont) element;
                 return StringConverter.asString(font.getRawFontData());
             }
         });
@@ -131,18 +128,18 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
         });
 
         tableViewer.getTable().addListener(SWT.MouseDoubleClick, e -> {
-            TableItem item = tableViewer.getTable().getItem(new Point(e.x, e.y));
+            var item = tableViewer.getTable().getItem(new Point(e.x, e.y));
             if (item == null) {
                 return;
             }
 
-            Rectangle bounds = item.getBounds();
-            boolean isClickOnCheckbox = e.x < bounds.x;
+            var bounds = item.getBounds();
+            var isClickOnCheckbox = e.x < bounds.x;
             if (isClickOnCheckbox) {
                 return;
             }
 
-            OPIFont selectedFont = getSelectedFont();
+            var selectedFont = getSelectedFont();
             editFont(selectedFont);
             updatePreviewFont();
             updateButtonStatus();
@@ -150,7 +147,7 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private Composite getButtonControl(Composite parent) {
-        Composite box = new Composite(parent, SWT.NONE);
+        var box = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().applyTo(box);
 
         addButton = createButton(box, "Add...");
@@ -188,12 +185,12 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private OPIFont getSelectedFont() {
-        List<OPIFont> tableInput = getTableViewerInput();
+        var tableInput = getTableViewerInput();
         if (tableInput == null) {
             return null;
         }
 
-        int index = tableViewer.getTable().getSelectionIndex();
+        var index = tableViewer.getTable().getSelectionIndex();
         if (index < 0) {
             return null;
         }
@@ -206,7 +203,7 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void updateButtonStatus() {
-        OPIFont selectedFont = getSelectedFont();
+        var selectedFont = getSelectedFont();
         if (selectedFont == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
@@ -217,21 +214,20 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void removeFont(OPIFont selectedFont) {
-        List<OPIFont> list = getTableViewerInput();
+        var list = getTableViewerInput();
         list.remove(selectedFont);
         tableViewer.refresh();
     }
 
     private void addNewFont() {
-        List<String> existingNames = getTableViewerInput().stream()
-                .map(c -> c.getFontName())
+        List<String> existingNames = getTableViewerInput().stream().map(c -> c.getFontName())
                 .collect(Collectors.toList());
 
-        Shell shell = tableViewer.getTable().getShell();
-        OPIFontDialog dialog = new OPIFontDialog(shell, null, existingNames);
+        var shell = tableViewer.getTable().getShell();
+        var dialog = new OPIFontDialog(shell, null, existingNames);
         if (dialog.open() == Window.OK) {
-            OPIFont newFont = dialog.getFont();
-            List<OPIFont> list = getTableViewerInput();
+            var newFont = dialog.getFont();
+            var list = getTableViewerInput();
             list.add(newFont);
             tableViewer.refresh();
             updatePreviewFont();
@@ -239,16 +235,15 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void editFont(OPIFont selectedFont) {
-        List<String> existingNames = getTableViewerInput().stream()
-                .map(c -> c.getFontName())
+        List<String> existingNames = getTableViewerInput().stream().map(c -> c.getFontName())
                 .collect(Collectors.toList());
 
-        Shell shell = tableViewer.getTable().getShell();
-        OPIFontDialog dialog = new OPIFontDialog(shell, selectedFont, existingNames);
+        var shell = tableViewer.getTable().getShell();
+        var dialog = new OPIFontDialog(shell, selectedFont, existingNames);
         if (dialog.open() == Window.OK) {
-            OPIFont updatedFont = dialog.getFont();
-            List<OPIFont> list = getTableViewerInput();
-            int indexOfOriginalFont = list.indexOf(selectedFont);
+            var updatedFont = dialog.getFont();
+            var list = getTableViewerInput();
+            var indexOfOriginalFont = list.indexOf(selectedFont);
             list.remove(indexOfOriginalFont);
             list.add(indexOfOriginalFont, updatedFont);
             tableViewer.refresh();
@@ -257,7 +252,7 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void updatePreviewFont() {
-        OPIFont selectedFont = getSelectedFont();
+        var selectedFont = getSelectedFont();
         if (preview != null && selectedFont != null) {
             preview.setFont(selectedFont.getSWTFont());
             preview.getParent().layout();
@@ -265,10 +260,10 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private Button createButton(Composite box, String text) {
-        Button button = new Button(box, SWT.PUSH);
+        var button = new Button(box, SWT.PUSH);
         button.setText(text);
 
-        int widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
+        var widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
                 button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
         GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(button);
 
@@ -277,19 +272,19 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
 
     @Override
     protected void doLoad() {
-        List<OPIFont> fonts = OPIBuilderPlugin.getDefault().loadFonts();
+        var fonts = OPIBuilderPlugin.getDefault().loadFonts();
         tableViewer.setInput(fonts);
     }
 
     @Override
     protected void doLoadDefault() {
-        List<OPIFont> fonts = OPIBuilderPlugin.getDefault().loadDefaultFonts();
+        var fonts = OPIBuilderPlugin.getDefault().loadDefaultFonts();
         tableViewer.setInput(fonts);
     }
 
     @Override
     protected void doStore() {
-        List<OPIFont> fonts = getTableViewerInput();
+        var fonts = getTableViewerInput();
         OPIBuilderPlugin.getDefault().storeFonts(fonts);
     }
 

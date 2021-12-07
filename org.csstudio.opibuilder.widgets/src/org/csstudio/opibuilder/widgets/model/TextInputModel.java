@@ -35,10 +35,7 @@ public class TextInputModel extends TextUpdateModel {
     private static final Version VERSION_BEFORE_STYLE = new Version(3, 1, 5);
 
     public enum FOCUS_TRAVERSE {
-        LOSE("Lose Focus"),
-        KEEP("Keep Focus"),
-        NEXT("Next Widget"),
-        PREVIOUS("Previous Widget");
+        LOSE("Lose Focus"), KEEP("Keep Focus"), NEXT("Next Widget"), PREVIOUS("Previous Widget");
 
         private String description;
 
@@ -52,8 +49,8 @@ public class TextInputModel extends TextUpdateModel {
         }
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (FOCUS_TRAVERSE f : values()) {
                 result[i++] = f.toString();
             }
@@ -86,10 +83,10 @@ public class TextInputModel extends TextUpdateModel {
     public static final String PROP_MULTILINE_INPUT = "multiline_input";
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = Double.NEGATIVE_INFINITY;
+    private static double DEFAULT_MIN = Double.NEGATIVE_INFINITY;
 
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = Double.POSITIVE_INFINITY;
+    private static double DEFAULT_MAX = Double.POSITIVE_INFINITY;
 
     /** The message which will be shown on confirm dialog. */
     public static final String PROP_CONFIRM_MESSAGE = "confirm_message";
@@ -123,45 +120,40 @@ public class TextInputModel extends TextUpdateModel {
     protected void configureProperties() {
         super.configureProperties();
 
-        addProperty(new ComboProperty(PROP_STYLE, "Style", WidgetPropertyCategory.Basic,
-                Style.stringValues(), Style.CLASSIC.ordinal()));
+        addProperty(new ComboProperty(PROP_STYLE, "Style", WidgetPropertyCategory.Basic, Style.stringValues(),
+                Style.CLASSIC.ordinal()));
 
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN));
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
 
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX));
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
 
-        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV",
-                WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, true));
 
-        addProperty(new BooleanProperty(PROP_MULTILINE_INPUT, "Multi-line Input",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(
+                new BooleanProperty(PROP_MULTILINE_INPUT, "Multi-line Input", WidgetPropertyCategory.Behavior, false));
 
-        addProperty(new StringProperty(PROP_DATETIME_FORMAT, "Datetime Format",
-                WidgetPropertyCategory.Display, "yyyy-MM-dd HH:mm:ss"));
-        addProperty(new ComboProperty(PROP_SELECTOR_TYPE, "Selector Type",
-                WidgetPropertyCategory.Display, SelectorType.stringValues(), SelectorType.NONE.ordinal()));
-        addProperty(new ComboProperty(PROP_FILE_SOURCE, "File Source",
-                WidgetPropertyCategory.Display, FileSource.stringValues(), FileSource.WORKSPACE.ordinal()));
-        addProperty(new ComboProperty(PROP_FILE_RETURN_PART, "File Return Part",
-                WidgetPropertyCategory.Display, FileReturnPart.stringValues(), FileReturnPart.FULL_PATH.ordinal()));
+        addProperty(new StringProperty(PROP_DATETIME_FORMAT, "Datetime Format", WidgetPropertyCategory.Display,
+                "yyyy-MM-dd HH:mm:ss"));
+        addProperty(new ComboProperty(PROP_SELECTOR_TYPE, "Selector Type", WidgetPropertyCategory.Display,
+                SelectorType.stringValues(), SelectorType.NONE.ordinal()));
+        addProperty(new ComboProperty(PROP_FILE_SOURCE, "File Source", WidgetPropertyCategory.Display,
+                FileSource.stringValues(), FileSource.WORKSPACE.ordinal()));
+        addProperty(new ComboProperty(PROP_FILE_RETURN_PART, "File Return Part", WidgetPropertyCategory.Display,
+                FileReturnPart.stringValues(), FileReturnPart.FULL_PATH.ordinal()));
 
-        addProperty(new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message",
-                WidgetPropertyCategory.Behavior, "", true));
+        addProperty(
+                new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message", WidgetPropertyCategory.Behavior, "", true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_NATIVE_BORDER, "Show Native Border",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_PASSWORD_INPUT, "Password Input",
-                WidgetPropertyCategory.Behavior, false));
-        addProperty(new BooleanProperty(PROP_READ_ONLY, "Read Only",
-                WidgetPropertyCategory.Behavior, false));
-        addProperty(new BooleanProperty(PROP_SHOW_H_SCROLL, "Show Horizontal Scrollbar",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_SHOW_V_SCROLL, "Show Vertical Scrollbar",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new ComboProperty(PROP_NEXT_FOCUS, "Next Focus",
-                WidgetPropertyCategory.Behavior, FOCUS_TRAVERSE.stringValues(), 0));
+        addProperty(new BooleanProperty(PROP_SHOW_NATIVE_BORDER, "Show Native Border", WidgetPropertyCategory.Display,
+                true));
+        addProperty(new BooleanProperty(PROP_PASSWORD_INPUT, "Password Input", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_READ_ONLY, "Read Only", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_SHOW_H_SCROLL, "Show Horizontal Scrollbar", WidgetPropertyCategory.Display,
+                false));
+        addProperty(new BooleanProperty(PROP_SHOW_V_SCROLL, "Show Vertical Scrollbar", WidgetPropertyCategory.Display,
+                false));
+        addProperty(new ComboProperty(PROP_NEXT_FOCUS, "Next Focus", WidgetPropertyCategory.Behavior,
+                FOCUS_TRAVERSE.stringValues(), 0));
 
         setPropertyVisible(PROP_DATETIME_FORMAT, false);
         setPropertyVisible(PROP_FILE_RETURN_PART, false);
@@ -183,8 +175,7 @@ public class TextInputModel extends TextUpdateModel {
     public void processVersionDifference(Version boyVersionOnFile) {
         super.processVersionDifference(boyVersionOnFile);
         if (boyVersionOnFile.compareTo(VERSION_BEFORE_STYLE) < 0) {
-            if (getWidgetType().equals("Text") ||
-                    getWidgetType().equals("Native Text")) {
+            if (getWidgetType().equals("Text") || getWidgetType().equals("Native Text")) {
                 setPropertyValue(PROP_WIDGET_TYPE, "Text Input");
                 setPropertyValue(PROP_STYLE, Style.NATIVE.ordinal());
             }

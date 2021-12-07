@@ -32,15 +32,16 @@ public class UnsavableListProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. Can be NULL.
      */
-    public UnsavableListProperty(String prop_id, String description,
-            WidgetPropertyCategory category, List<?> defaultValue) {
+    public UnsavableListProperty(String prop_id, String description, WidgetPropertyCategory category,
+            List<?> defaultValue) {
         super(prop_id, description, category, defaultValue);
     }
 
     @Override
     public Object checkValue(Object value) {
-        if (value instanceof List)
+        if (value instanceof List) {
             return value;
+        }
         return null;
     }
 

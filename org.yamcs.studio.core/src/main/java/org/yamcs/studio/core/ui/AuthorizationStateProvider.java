@@ -21,11 +21,8 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     public static final String STATE_KEY_MAY_COMMAND = "org.yamcs.studio.ui.authorization.mayCommand";
     public static final String STATE_KEY_MAY_READ_STACKS = "org.yamcs.studio.ui.authorization.mayReadStacks";
     public static final String STATE_KEY_MAY_WRITE_STACKS = "org.yamcs.studio.ui.authorization.mayWriteStacks";
-    private static final String[] SOURCE_NAMES = {
-            STATE_KEY_MAY_COMMAND,
-            STATE_KEY_MAY_READ_STACKS,
-            STATE_KEY_MAY_WRITE_STACKS,
-    };
+    private static final String[] SOURCE_NAMES = { STATE_KEY_MAY_COMMAND, STATE_KEY_MAY_READ_STACKS,
+            STATE_KEY_MAY_WRITE_STACKS, };
 
     public AuthorizationStateProvider() {
         YamcsPlugin.addListener(this);
@@ -49,7 +46,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     @Override
     public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> {
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new authz state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
@@ -58,7 +55,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     @Override
     public void onYamcsDisconnected() {
         Display.getDefault().asyncExec(() -> {
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new authz state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });

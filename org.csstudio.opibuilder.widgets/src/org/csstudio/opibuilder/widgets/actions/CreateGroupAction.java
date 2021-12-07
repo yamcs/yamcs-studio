@@ -38,9 +38,9 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
 
-        List<AbstractWidgetModel> originalSelectedWidgets = getSelectedWidgetModels();
+        var originalSelectedWidgets = getSelectedWidgetModels();
 
-        CompoundCommand compoundCommand = new CompoundCommand("Create Group");
+        var compoundCommand = new CompoundCommand("Create Group");
 
         List<AbstractWidgetModel> selectedWidgets = new ArrayList<AbstractWidgetModel>();
         selectedWidgets.addAll(originalSelectedWidgets);
@@ -53,33 +53,37 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
             }
             if (widget instanceof AbstractContainerModel) {
                 for (AbstractWidgetModel child : originalSelectedWidgets) {
-                    if (((AbstractContainerModel) widget).getChildren().contains(child))
+                    if (((AbstractContainerModel) widget).getChildren().contains(child)) {
                         selectedWidgets.remove(child);
+                    }
                 }
             }
 
         }
 
-        int minDepth = Integer.MAX_VALUE;
-        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE,
-                maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
-        AbstractWidgetModel minDepthWidget = selectedWidgets.get(0);
+        var minDepth = Integer.MAX_VALUE;
+        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
+        var minDepthWidget = selectedWidgets.get(0);
 
         for (AbstractWidgetModel widget : selectedWidgets) {
 
-            int leftX = widget.getLocation().x;
-            int upY = widget.getLocation().y;
-            int rightX = widget.getLocation().x + widget.getSize().width;
-            int bottomY = widget.getLocation().y + widget.getSize().height;
-            int depth = widget.getNestedDepth();
-            if (leftX < minX)
+            var leftX = widget.getLocation().x;
+            var upY = widget.getLocation().y;
+            var rightX = widget.getLocation().x + widget.getSize().width;
+            var bottomY = widget.getLocation().y + widget.getSize().height;
+            var depth = widget.getNestedDepth();
+            if (leftX < minX) {
                 minX = leftX;
-            if (upY < minY)
+            }
+            if (upY < minY) {
                 minY = upY;
-            if (rightX > maxX)
+            }
+            if (rightX > maxX) {
                 maxX = rightX;
-            if (bottomY > maxY)
+            }
+            if (bottomY > maxY) {
                 maxY = bottomY;
+            }
             if (minDepth > depth) {
                 minDepth = depth;
                 minDepthWidget = widget;
@@ -88,27 +92,27 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
         }
 
         // Orphan order should be reversed so that undo operation has the correct order.
-        AbstractWidgetModel[] widgetsArray = selectedWidgets.toArray(
-                new AbstractWidgetModel[selectedWidgets.size()]);
-        for (int i = widgetsArray.length - 1; i >= 0; i--) {
+        var widgetsArray = selectedWidgets.toArray(new AbstractWidgetModel[selectedWidgets.size()]);
+        for (var i = widgetsArray.length - 1; i >= 0; i--) {
             compoundCommand.add(new OrphanChildCommand(widgetsArray[i].getParent(), widgetsArray[i]));
         }
 
-        GroupingContainerModel groupingContainerModel = new GroupingContainerModel();
+        var groupingContainerModel = new GroupingContainerModel();
         SchemaService.getInstance().applySchema(groupingContainerModel);
         // the parent should be the widget with minimum nested depth
-        AbstractContainerModel parent = minDepthWidget.getParent();
+        var parent = minDepthWidget.getParent();
 
-        int borderWidth = 0;
+        var borderWidth = 0;
 
-        if (groupingContainerModel.getBorderStyle() == BorderStyle.GROUP_BOX)
+        if (groupingContainerModel.getBorderStyle() == BorderStyle.GROUP_BOX) {
             borderWidth = 30;
+        }
 
         groupingContainerModel.setPropertyValue(GroupingContainerModel.PROP_LOCK_CHILDREN, true);
         groupingContainerModel.setPropertyValue(GroupingContainerModel.PROP_SHOW_SCROLLBAR, false);
 
-        compoundCommand.add(new WidgetCreateCommand(groupingContainerModel,
-                parent, new Rectangle(minX, minY, maxX - minX + borderWidth, maxY - minY + borderWidth), false));
+        compoundCommand.add(new WidgetCreateCommand(groupingContainerModel, parent,
+                new Rectangle(minX, minY, maxX - minX + borderWidth, maxY - minY + borderWidth), false));
 
         for (AbstractWidgetModel widget : selectedWidgets) {
             compoundCommand.add(new AddWidgetCommand(groupingContainerModel, widget,
@@ -150,38 +154,42 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
         AbstractContainerModel parent = null;
         for (Object o : selection.toList()) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
-                AbstractWidgetModel widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
-                if (parent == null)
+                var widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
+                if (parent == null) {
                     parent = widgetModel.getParent();
-                if (widgetModel.getParent() == parent)
+                }
+                if (widgetModel.getParent() == parent) {
                     sameParentModels.add(widgetModel);
-                else
+                } else {
                     differentParentModels.add(widgetModel);
+                }
             }
         }
         // sort widgets to its original order
         if (sameParentModels.size() > 1) {
-            AbstractWidgetModel[] modelArray = sameParentModels.toArray(new AbstractWidgetModel[0]);
+            var modelArray = sameParentModels.toArray(new AbstractWidgetModel[0]);
 
             Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
 
                 @Override
-                public int compare(AbstractWidgetModel o1,
-                        AbstractWidgetModel o2) {
-                    if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2))
+                public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
+                    if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2)) {
                         return 1;
-                    else
+                    } else {
                         return -1;
+                    }
                 }
 
             });
             result.addAll(Arrays.asList(modelArray));
-            if (differentParentModels.size() > 0)
+            if (differentParentModels.size() > 0) {
                 result.addAll(differentParentModels);
+            }
             return result;
         }
-        if (differentParentModels.size() > 0)
+        if (differentParentModels.size() > 0) {
             sameParentModels.addAll(differentParentModels);
+        }
 
         return sameParentModels;
     }

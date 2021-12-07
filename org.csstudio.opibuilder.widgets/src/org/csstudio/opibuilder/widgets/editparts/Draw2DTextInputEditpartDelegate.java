@@ -35,8 +35,8 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
      * @param superFigure
      *            the figure created by super.doCreateFigure().
      */
-    public Draw2DTextInputEditpartDelegate(TextInputEditpart editpart,
-            TextInputModel model, TextInputFigure superFigure) {
+    public Draw2DTextInputEditpartDelegate(TextInputEditpart editpart, TextInputModel model,
+            TextInputFigure superFigure) {
         this.editpart = editpart;
         this.model = model;
         this.textInputFigure = superFigure;
@@ -49,15 +49,14 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         textInputFigure.setFileSource(model.getFileSource());
         textInputFigure.setFileReturnPart(model.getFileReturnPart());
 
-        textInputFigure
-                .addManualValueChangeListener(new IManualStringValueChangeListener() {
+        textInputFigure.addManualValueChangeListener(new IManualStringValueChangeListener() {
 
-                    @Override
-                    public void manualValueChanged(String newValue) {
-                        outputText(newValue);
-                    }
+            @Override
+            public void manualValueChanged(String newValue) {
+                outputText(newValue);
+            }
 
-                });
+        });
 
         return textInputFigure;
     }
@@ -70,22 +69,16 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
     protected void outputText(String newValue) {
         if (editpart.getExecutionMode() == ExecutionMode.RUN_MODE) {
             editpart.setPVValue(TextInputModel.PROP_PVNAME, newValue);
-            model.setPropertyValue(TextInputModel.PROP_TEXT,
-                    newValue, false);
+            model.setPropertyValue(TextInputModel.PROP_TEXT, newValue, false);
         } else {
-            editpart.getViewer()
-                    .getEditDomain()
-                    .getCommandStack()
-                    .execute(
-                            new SetWidgetPropertyCommand(model,
-                                    TextInputModel.PROP_TEXT, newValue));
+            editpart.getViewer().getEditDomain().getCommandStack()
+                    .execute(new SetWidgetPropertyCommand(model, TextInputModel.PROP_TEXT, newValue));
         }
     }
 
     @Override
     public void createEditPolicies() {
-        editpart.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,
-                new TextUpdateDirectEditPolicy());
+        editpart.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TextUpdateDirectEditPolicy());
     }
 
     @Override
@@ -105,40 +98,32 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         IWidgetPropertyChangeHandler dateTimeFormatHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 ((TextInputFigure) figure).setDateTimeFormat((String) newValue);
                 return false;
             }
         };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_DATETIME_FORMAT,
-                dateTimeFormatHandler);
+        editpart.setPropertyChangeHandler(TextInputModel.PROP_DATETIME_FORMAT, dateTimeFormatHandler);
 
         IWidgetPropertyChangeHandler fileSourceHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                ((TextInputFigure) figure)
-                        .setFileSource(FileSource.values()[(Integer) newValue]);
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+                ((TextInputFigure) figure).setFileSource(FileSource.values()[(Integer) newValue]);
                 return false;
             }
         };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_SOURCE,
-                fileSourceHandler);
+        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_SOURCE, fileSourceHandler);
 
         IWidgetPropertyChangeHandler fileReturnPartHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                ((TextInputFigure) figure).setFileReturnPart(FileReturnPart
-                        .values()[(Integer) newValue]);
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+                ((TextInputFigure) figure).setFileReturnPart(FileReturnPart.values()[(Integer) newValue]);
                 return false;
             }
         };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_RETURN_PART,
-                fileReturnPartHandler);
+        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_RETURN_PART, fileReturnPartHandler);
     }
 
     /**
@@ -154,8 +139,7 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
             break;
         case DATETIME:
             model.setPropertyVisible(TextInputModel.PROP_DATETIME_FORMAT, true);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_RETURN_PART,
-                    false);
+            model.setPropertyVisible(TextInputModel.PROP_FILE_RETURN_PART, false);
             model.setPropertyVisible(TextInputModel.PROP_FILE_SOURCE, false);
             break;
         case FILE:

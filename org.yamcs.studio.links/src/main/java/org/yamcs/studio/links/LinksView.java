@@ -23,9 +23,9 @@ public class LinksView extends ViewPart implements YamcsAware, MessageListener<L
 
     @Override
     public void createPartControl(Composite parent) {
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
+        var tableWrapper = new Composite(parent, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         tableViewer = new LinkTableViewer(tableWrapper, tcl);
         contentProvider = new LinkTableViewerContentProvider(tableViewer);
@@ -64,9 +64,7 @@ public class LinksView extends ViewPart implements YamcsAware, MessageListener<L
             if (instance != null) {
                 subscription = YamcsPlugin.getYamcsClient().createLinkSubscription();
                 subscription.addMessageListener(this);
-                subscription.sendMessage(SubscribeLinksRequest.newBuilder()
-                        .setInstance(instance)
-                        .build());
+                subscription.sendMessage(SubscribeLinksRequest.newBuilder().setInstance(instance).build());
             }
         });
     }
@@ -77,7 +75,7 @@ public class LinksView extends ViewPart implements YamcsAware, MessageListener<L
             return;
         }
 
-        Display display = tableViewer.getTable().getDisplay();
+        var display = tableViewer.getTable().getDisplay();
         display.asyncExec(() -> {
             if (display.isDisposed()) {
                 return;

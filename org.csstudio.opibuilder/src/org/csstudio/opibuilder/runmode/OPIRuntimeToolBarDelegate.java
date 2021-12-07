@@ -70,16 +70,15 @@ public class OPIRuntimeToolBarDelegate {
         partZoomInAction.setPart(opiRuntime);
         partZoomOutAction.setPart(opiRuntime);
         partZoomComboContributionItem.setPart(opiRuntime);
-        DisplayOpenManager manager = opiRuntime.getAdapter(DisplayOpenManager.class);
+        var manager = opiRuntime.getAdapter(DisplayOpenManager.class);
         backwardAction.setDisplayOpenManager(manager);
         forwardAction.setDisplayOpenManager(manager);
-        IActionBars bars = getActionBars();
+        var bars = getActionBars();
         bars.setGlobalActionHandler(backwardAction.getId(), backwardAction);
         bars.setGlobalActionHandler(forwardAction.getId(), forwardAction);
 
-        ActionRegistry actionRegistry = opiRuntime.getAdapter(ActionRegistry.class);
-        bars.setGlobalActionHandler(ActionFactory.PRINT.getId(),
-                actionRegistry.getAction(ActionFactory.PRINT.getId()));
+        var actionRegistry = opiRuntime.getAdapter(ActionRegistry.class);
+        bars.setGlobalActionHandler(ActionFactory.PRINT.getId(), actionRegistry.getAction(ActionFactory.PRINT.getId()));
         bars.setGlobalActionHandler(ActionFactory.REFRESH.getId(),
                 actionRegistry.getAction(ActionFactory.REFRESH.getId()));
         bars.setGlobalActionHandler(partZoomInAction.getId(), partZoomInAction);

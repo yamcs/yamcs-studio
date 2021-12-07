@@ -41,8 +41,9 @@ public class ChoiceButtonFigure extends AbstractChoiceFigure {
          */
         public ColorToggleButton(String text) {
             super(text, null);
-            if (runMode)
+            if (runMode) {
                 setCursor(Cursors.HAND);
+            }
         }
 
         /**

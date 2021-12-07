@@ -47,34 +47,33 @@ public final class CommandExecutor {
      * @param wait
      *            Time to wait for completion in seconds
      */
-    public CommandExecutor(final String command, final String dir_name,
-            final int wait) {
+    public CommandExecutor(String command, String dir_name, int wait) {
         this.command = command;
         this.dir_name = dir_name;
         this.wait = wait;
-        Thread t = new Thread((Runnable) () -> runAndCheckCommand(), "CommandExecutor");
+        var t = new Thread((Runnable) () -> runAndCheckCommand(), "CommandExecutor");
         t.start();
     }
 
     private void runAndCheckCommand() {
         // Execute command in a certain directory
-        final File dir = new File(dir_name);
-        final Process process;
+        var dir = new File(dir_name);
+        Process process;
         try {
-            final String[] cmd = StringSplitter.splitIgnoreInQuotes(command, ' ', true);
+            var cmd = StringSplitter.splitIgnoreInQuotes(command, ' ', true);
             process = Runtime.getRuntime().exec(cmd, null, dir);
         } catch (Throwable ex) {
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, ex.getMessage());
-            OPIBuilderPlugin.getLogger().log(Level.INFO, NLS.bind(
-                    "Command \"{0}\" finished with exit code: FAILED", command));
+            OPIBuilderPlugin.getLogger().log(Level.INFO,
+                    NLS.bind("Command \"{0}\" finished with exit code: FAILED", command));
 
             return;
         }
 
         // create a thread for listening on error output
-        Thread errorThread = new Thread(() -> {
+        var errorThread = new Thread(() -> {
             // .. with error; check error output
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            try (var br = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     OPIBuilderPlugin.getLogger().log(Level.SEVERE, command + " error: " + line);
@@ -87,8 +86,8 @@ public final class CommandExecutor {
         errorThread.start();
 
         // write output to console
-        Thread inputThread = new Thread(() -> {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        var inputThread = new Thread(() -> {
+            try (var br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     OPIBuilderPlugin.getLogger().log(Level.INFO, line);
@@ -102,7 +101,7 @@ public final class CommandExecutor {
 
         // Poll exit code during 'wait' time
         Integer exit_code = null;
-        for (int w = 0; w < wait; ++w) {
+        for (var w = 0; w < wait; ++w) {
 
             try {
                 exit_code = process.exitValue();
@@ -115,8 +114,7 @@ public final class CommandExecutor {
             }
         }
 
-        OPIBuilderPlugin.getLogger().log(Level.INFO, NLS.bind(
-                "Command \"{0}\" finished with exit code: ", command)
+        OPIBuilderPlugin.getLogger().log(Level.INFO, NLS.bind("Command \"{0}\" finished with exit code: ", command)
                 + (exit_code == null ? "NULL" : (exit_code == 0 ? "OK" : "FAILED")));
         // Process runs so long that we no longer care
         if (exit_code == null) {

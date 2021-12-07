@@ -27,9 +27,8 @@ public class CutWidgetsAction extends CopyWidgetsAction {
         setText("Cut");
         setActionDefinitionId("org.eclipse.ui.edit.cut");
         setId(ActionFactory.CUT.getId());
-        ISharedImages sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
-        setImageDescriptor(sharedImages
-                .getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+        var sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
     }
 
     @Override

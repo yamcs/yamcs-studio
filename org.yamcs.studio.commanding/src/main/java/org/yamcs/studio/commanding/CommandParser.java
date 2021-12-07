@@ -22,23 +22,23 @@ public class CommandParser {
 
         commandString = commandString.trim();
 
-        int lparen = commandString.indexOf('(');
-        ParseResult result = new ParseResult();
+        var lparen = commandString.indexOf('(');
+        var result = new ParseResult();
 
-        String commandName = commandString.substring(0, lparen).trim();
+        var commandName = commandString.substring(0, lparen).trim();
         result.qualifiedName = commandName.trim();
 
-        String argString = commandString.substring(lparen + 1, commandString.length() - 1);
-        String[] args = argString.split(",");
+        var argString = commandString.substring(lparen + 1, commandString.length() - 1);
+        var args = argString.split(",");
         for (String arg : args) {
             arg = arg.trim();
             if (!arg.isEmpty()) {
-                String[] kvp = arg.split(":");
-                String name = kvp[0].trim();
-                String value = kvp[1].trim();
+                var kvp = arg.split(":");
+                var name = kvp[0].trim();
+                var value = kvp[1].trim();
                 if (value.length() >= 2) {
-                    if ((value.startsWith("'") && value.endsWith("'")) ||
-                            value.startsWith("\"") && value.endsWith("\"")) {
+                    if ((value.startsWith("'") && value.endsWith("'"))
+                            || value.startsWith("\"") && value.endsWith("\"")) {
                         value = value.substring(1, value.length() - 1);
                         value = value.replace("\\\"", "\"").replace("\\'", "'");
                     }

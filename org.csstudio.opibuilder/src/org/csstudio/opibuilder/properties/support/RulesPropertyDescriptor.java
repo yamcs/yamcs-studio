@@ -31,13 +31,13 @@ public class RulesPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public RulesPropertyDescriptor(final Object id, final AbstractWidgetModel widgetModel, final String displayName) {
+    public RulesPropertyDescriptor(Object id, AbstractWidgetModel widgetModel, String displayName) {
         super(id, displayName);
         this.widgetModel = widgetModel;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new RulesInputCellEditor(parent, widgetModel, "Attach Rules");
         if (getValidator() != null) {
             editor.setValidator(getValidator());

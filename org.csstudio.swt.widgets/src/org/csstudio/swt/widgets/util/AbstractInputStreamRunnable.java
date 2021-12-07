@@ -29,8 +29,9 @@ public abstract class AbstractInputStreamRunnable implements Runnable {
      * @param inputStream
      *            the injected inputstream.
      */
-    public abstract void runWithInputStream(final InputStream inputStream);
+    public abstract void runWithInputStream(InputStream inputStream);
 
+    @Override
     public void run() {
         runWithInputStream(inputStream);
     }

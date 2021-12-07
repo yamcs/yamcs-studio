@@ -21,26 +21,32 @@ public class ExprBoolean extends ExprNumber {
         this.value = value;
     }
 
+    @Override
     public boolean booleanValue() {
         return value;
     }
 
+    @Override
     public double doubleValue() {
         return intValue();
     }
 
+    @Override
     public int intValue() {
         return value ? 1 : 0;
     }
 
+    @Override
     public int hashCode() {
         return value ? 1 : 0;
     }
 
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof ExprBoolean && value == ((ExprBoolean) obj).value;
     }
 
+    @Override
     public String toString() {
         return Boolean.toString(value).toUpperCase();
     }

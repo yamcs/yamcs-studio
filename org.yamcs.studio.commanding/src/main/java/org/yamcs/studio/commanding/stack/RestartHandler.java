@@ -3,7 +3,6 @@ package org.yamcs.studio.commanding.stack;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -15,8 +14,8 @@ public class RestartHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         CommandStack.getInstance().resetExecutionState();
 
-        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        CommandStackView commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
+        var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        var commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
         commandStackView.refreshState();
         commandStackView.selectFirst();
         return null;

@@ -27,12 +27,10 @@ import org.csstudio.opibuilder.widgets.model.TabModel.TabProperty;
 import org.csstudio.swt.widgets.figures.TabFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
@@ -51,8 +49,7 @@ public class TabEditPart extends AbstractContainerEditpart {
         }
 
         @Override
-        public boolean handleChange(Object oldValue, Object newValue,
-                IFigure refreshableFigure) {
+        public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
             setTabProperty(tabIndex, tabProperty, newValue);
 
             return true;
@@ -63,7 +60,7 @@ public class TabEditPart extends AbstractContainerEditpart {
      * @return
      */
     public static GroupingContainerModel createGroupingContainer() {
-        GroupingContainerModel groupingContainerModel = new GroupingContainerModel();
+        var groupingContainerModel = new GroupingContainerModel();
         groupingContainerModel.setName("Tab");
         groupingContainerModel.setLocation(1, 1);
         groupingContainerModel.setBorderStyle(BorderStyle.NONE);
@@ -92,7 +89,7 @@ public class TabEditPart extends AbstractContainerEditpart {
 
         UIBundlingThread.getInstance().addRunnable(() -> {
             // add initial tab
-            int j = getTabFigure().getTabAmount();
+            var j = getTabFigure().getTabAmount();
             while (j < getWidgetModel().getTabsAmount()) {
                 addTab();
                 j++;
@@ -100,7 +97,7 @@ public class TabEditPart extends AbstractContainerEditpart {
         });
 
         UIBundlingThread.getInstance().addRunnable(() -> {
-            int index = getWidgetModel().getActiveTab();
+            var index = getWidgetModel().getActiveTab();
             getTabFigure().setActiveTabIndex(index);
             getWidgetModel().getChildren().get(index).setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, true);
         });
@@ -108,7 +105,7 @@ public class TabEditPart extends AbstractContainerEditpart {
     }
 
     public synchronized void addTab() {
-        int tabIndex = getWidgetModel().getChildren().size();
+        var tabIndex = getWidgetModel().getChildren().size();
         addTab(tabIndex, new TabItem(getWidgetModel(), tabIndex));
     }
 
@@ -127,7 +124,7 @@ public class TabEditPart extends AbstractContainerEditpart {
         if (index >= TabModel.MAX_TABS_AMOUNT) {
             return;
         }
-        GroupingContainerModel groupingContainerModel = tabItem.getGroupingContainerModel();
+        var groupingContainerModel = tabItem.getGroupingContainerModel();
 
         getWidgetModel().addChild(index, groupingContainerModel);
 
@@ -140,19 +137,15 @@ public class TabEditPart extends AbstractContainerEditpart {
 
         // apply tab properties from TabItem to TabModel
         for (TabProperty tabProperty : TabProperty.values()) {
-            String propID = TabModel.makeTabPropID(
-                    tabProperty.propIDPre, index);
-            getWidgetModel().setPropertyValue(propID,
-                    tabItem.getPropertyValue(tabProperty));
+            var propID = TabModel.makeTabPropID(tabProperty.propIDPre, index);
+            getWidgetModel().setPropertyValue(propID, tabItem.getPropertyValue(tabProperty));
         }
 
         // update property sheet
-        getWidgetModel().setPropertyValue(
-                TabModel.PROP_TAB_COUNT, getWidgetModel().getChildren().size(), false);
+        getWidgetModel().setPropertyValue(TabModel.PROP_TAB_COUNT, getWidgetModel().getChildren().size(), false);
 
         for (TabProperty tabProperty : TabProperty.values()) {
-            String propID = TabModel.makeTabPropID(
-                    tabProperty.propIDPre, getWidgetModel().getChildren().size() - 1);
+            var propID = TabModel.makeTabPropID(tabProperty.propIDPre, getWidgetModel().getChildren().size() - 1);
             getWidgetModel().setPropertyVisible(propID, true);
         }
 
@@ -166,8 +159,8 @@ public class TabEditPart extends AbstractContainerEditpart {
      * Overidden, to set the selection behaviour of child EditParts.
      */
     @Override
-    protected final EditPart createChild(final Object model) {
-        EditPart result = super.createChild(model);
+    protected final EditPart createChild(Object model) {
+        var result = super.createChild(model);
 
         // setup selection behavior for the new child
         if (result instanceof AbstractBaseEditPart) {
@@ -193,15 +186,14 @@ public class TabEditPart extends AbstractContainerEditpart {
 
     @Override
     protected IFigure doCreateFigure() {
-        TabFigure tabFigure = new TabFigure();
+        var tabFigure = new TabFigure();
         tabFigure.setHorizontal(getWidgetModel().isHorizontal());
         tabFigure.setMinimumTabHeight(getWidgetModel().getMinimumTabHeight());
         tabFigure.addTabListener((oldIndex, newIndex) -> {
             for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
                 child.setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, false);
             }
-            getWidgetModel().getChildren().get(newIndex)
-                    .setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, true);
+            getWidgetModel().getChildren().get(newIndex).setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, true);
             // if (getExecutionMode() == ExecutionMode.RUN_MODE)
             // setPropertyValue(TabModel.PROP_ACTIVE_TAB, newIndex);
         });
@@ -228,17 +220,14 @@ public class TabEditPart extends AbstractContainerEditpart {
     }
 
     private Dimension getTabAreaSize() {
-        Insets insets = getTabFigure().getInsets();
+        var insets = getTabFigure().getInsets();
         if (getWidgetModel().isHorizontal()) {
-            return new Dimension(getWidgetModel().getWidth() - 2 -
-                    insets.left - insets.right,
-                    getWidgetModel().getHeight() - 2 - insets.top -
-                            getTabFigure().getTabLabelHeight() - insets.bottom);
+            return new Dimension(getWidgetModel().getWidth() - 2 - insets.left - insets.right,
+                    getWidgetModel().getHeight() - 2 - insets.top - getTabFigure().getTabLabelHeight() - insets.bottom);
         } else {
-            return new Dimension(getWidgetModel().getWidth() - 2 - insets.left -
-                    getTabFigure().getTabLabelWidth() - insets.right,
-                    getWidgetModel().getHeight() - 2 -
-                            insets.top - insets.bottom);
+            return new Dimension(
+                    getWidgetModel().getWidth() - 2 - insets.left - getTabFigure().getTabLabelWidth() - insets.right,
+                    getWidgetModel().getHeight() - 2 - insets.top - insets.bottom);
         }
     }
 
@@ -265,7 +254,7 @@ public class TabEditPart extends AbstractContainerEditpart {
 
     private void initTabLabel(int index, TabItem tabItem) {
         for (TabProperty tabProperty : TabProperty.values()) {
-            Object propValue = tabItem.getPropertyValue(tabProperty);
+            var propValue = tabItem.getPropertyValue(tabProperty);
             setTabFigureProperty(index, tabProperty, propValue);
         }
     }
@@ -273,17 +262,17 @@ public class TabEditPart extends AbstractContainerEditpart {
     @Override
     protected void registerPropertyChangeHandlers() {
         // init tabs
-        int i = 0;
+        var i = 0;
         for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
             if (child instanceof GroupingContainerModel) {
                 child.setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, true);
                 child.setPropertyValue(AbstractWidgetModel.PROP_VISIBLE, false);
-                getTabFigure().addTab((String) getWidgetModel().getPropertyValue(
-                        TabModel.makeTabPropID(TabProperty.TITLE.propIDPre, i)));
+                getTabFigure().addTab((String) getWidgetModel()
+                        .getPropertyValue(TabModel.makeTabPropID(TabProperty.TITLE.propIDPre, i)));
                 tabItemList.add(i, new TabItem(getWidgetModel(), i, (GroupingContainerModel) child));
                 for (TabProperty tabProperty : TabProperty.values()) {
-                    setTabProperty(i, tabProperty, getWidgetModel().getPropertyValue(
-                            TabModel.makeTabPropID(tabProperty.propIDPre, i)));
+                    setTabProperty(i, tabProperty,
+                            getWidgetModel().getPropertyValue(TabModel.makeTabPropID(tabProperty.propIDPre, i)));
                 }
 
                 i++;
@@ -332,46 +321,42 @@ public class TabEditPart extends AbstractContainerEditpart {
 
     private void registerTabPropertyChangeHandlers() {
         // set prop handlers and init all the potential tabs
-        for (int i = 0; i < TabModel.MAX_TABS_AMOUNT; i++) {
+        for (var i = 0; i < TabModel.MAX_TABS_AMOUNT; i++) {
 
             for (TabProperty tabProperty : TabProperty.values()) {
 
-                String propID = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, i);
+                var propID = TabModel.makeTabPropID(tabProperty.propIDPre, i);
                 IWidgetPropertyChangeHandler handler = new TabPropertyChangeHandler(i, tabProperty);
                 setPropertyChangeHandler(propID, handler);
             }
         }
 
-        for (int i = TabModel.MAX_TABS_AMOUNT - 1; i >= getWidgetModel().getTabsAmount(); i--) {
+        for (var i = TabModel.MAX_TABS_AMOUNT - 1; i >= getWidgetModel().getTabsAmount(); i--) {
             for (TabProperty tabProperty : TabProperty.values()) {
-                String propID = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, i);
+                var propID = TabModel.makeTabPropID(tabProperty.propIDPre, i);
                 getWidgetModel().setPropertyVisible(propID, false);
             }
         }
     }
 
     private void registerTabsAmountChangeHandler() {
-        final IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            TabModel model = getWidgetModel();
-            TabFigure figure = (TabFigure) refreshableFigure;
-            int currentTabAmount = figure.getTabAmount();
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            var model = getWidgetModel();
+            var figure = (TabFigure) refreshableFigure;
+            var currentTabAmount = figure.getTabAmount();
             // add tabs
             if ((Integer) newValue > currentTabAmount) {
-                for (int i1 = 0; i1 < (Integer) newValue - currentTabAmount; i1++) {
+                for (var i1 = 0; i1 < (Integer) newValue - currentTabAmount; i1++) {
                     for (TabProperty tabProperty1 : TabProperty.values()) {
-                        String propID1 = TabModel.makeTabPropID(
-                                tabProperty1.propIDPre, i1 + currentTabAmount);
+                        var propID1 = TabModel.makeTabPropID(tabProperty1.propIDPre, i1 + currentTabAmount);
                         model.setPropertyVisible(propID1, true);
                     }
                     addTab();
                 }
             } else if ((Integer) newValue < currentTabAmount) { // remove tabs
-                for (int i2 = currentTabAmount - 1; i2 >= (Integer) newValue; i2--) {
+                for (var i2 = currentTabAmount - 1; i2 >= (Integer) newValue; i2--) {
                     for (TabProperty tabProperty2 : TabProperty.values()) {
-                        String propID2 = TabModel.makeTabPropID(
-                                tabProperty2.propIDPre, i2);
+                        var propID2 = TabModel.makeTabPropID(tabProperty2.propIDPre, i2);
                         model.setPropertyVisible(propID2, false);
                     }
                     removeTab();
@@ -398,30 +383,25 @@ public class TabEditPart extends AbstractContainerEditpart {
         if (index < 0 || index >= getTabItemCount()) {
             throw new IllegalArgumentException();
         }
-        getWidgetModel().removeChild(
-                getWidgetModel().getChildren().get(index));
+        getWidgetModel().removeChild(getWidgetModel().getChildren().get(index));
         getTabFigure().removeTab(index);
         tabItemList.remove(index);
 
         // left shift tab's properties
-        for (int j = index; j < getWidgetModel().getChildren().size(); j++) {
+        for (var j = index; j < getWidgetModel().getChildren().size(); j++) {
             for (TabProperty tabProperty : TabProperty.values()) {
-                String propID1 = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, j);
-                String propID2 = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, j + 1);
+                var propID1 = TabModel.makeTabPropID(tabProperty.propIDPre, j);
+                var propID2 = TabModel.makeTabPropID(tabProperty.propIDPre, j + 1);
                 getWidgetModel().setPropertyValue(propID1, getWidgetModel().getPropertyValue(propID2));
             }
         }
         // updateTabItemsWithModel();
 
         // update property sheet
-        getWidgetModel().setPropertyValue(TabModel.PROP_TAB_COUNT,
-                getWidgetModel().getChildren().size(), false);
+        getWidgetModel().setPropertyValue(TabModel.PROP_TAB_COUNT, getWidgetModel().getChildren().size(), false);
 
         for (TabProperty tabProperty : TabProperty.values()) {
-            String propID = TabModel.makeTabPropID(
-                    tabProperty.propIDPre, getWidgetModel().getChildren().size());
+            var propID = TabModel.makeTabPropID(tabProperty.propIDPre, getWidgetModel().getChildren().size());
             getWidgetModel().setPropertyVisible(propID, false);
         }
 
@@ -433,12 +413,10 @@ public class TabEditPart extends AbstractContainerEditpart {
     }
 
     private void rightShiftTabProperties(int index) {
-        for (int j = getWidgetModel().getChildren().size() - 1; j > index; j--) {
+        for (var j = getWidgetModel().getChildren().size() - 1; j > index; j--) {
             for (TabProperty tabProperty : TabProperty.values()) {
-                String propID1 = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, j - 1);
-                String propID2 = TabModel.makeTabPropID(
-                        tabProperty.propIDPre, j);
+                var propID1 = TabModel.makeTabPropID(tabProperty.propIDPre, j - 1);
+                var propID2 = TabModel.makeTabPropID(tabProperty.propIDPre, j);
                 getWidgetModel().setPropertyValue(propID2, getWidgetModel().getPropertyValue(propID1));
             }
         }
@@ -454,9 +432,8 @@ public class TabEditPart extends AbstractContainerEditpart {
         getTabFigure().setActiveTabIndex(index);
     }
 
-    private void setTabFigureProperty(int index, TabProperty tabProperty,
-            final Object newValue) {
-        Label label = getTabFigure().getTabLabel(index);
+    private void setTabFigureProperty(int index, TabProperty tabProperty, Object newValue) {
+        var label = getTabFigure().getTabLabel(index);
         switch (tabProperty) {
         case TITLE:
             label.setText((String) newValue);
@@ -467,20 +444,18 @@ public class TabEditPart extends AbstractContainerEditpart {
             updateTabAreaSize();
             break;
         case BACKCOLOR:
-            getTabFigure().setTabColor(index,
-                    ((OPIColor) newValue).getSWTColor());
+            getTabFigure().setTabColor(index, ((OPIColor) newValue).getSWTColor());
             break;
         case FORECOLOR:
-            label.setForegroundColor(CustomMediaFactory.getInstance().getColor(
-                    ((OPIColor) newValue).getRGBValue()));
+            label.setForegroundColor(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
             break;
         case ENABLED:
             getTabFigure().setTabEnabled(index, (Boolean) newValue);
             break;
         case ICON_PATH:
-            IPath iconPath = Path.fromPortableString((String) newValue);
+            var iconPath = Path.fromPortableString((String) newValue);
             getTabFigure().setIconPath(index, getWidgetModel().toAbsolutePath(iconPath), e -> {
-                String message = "Failed to load image from " + newValue + "\n" + e;
+                var message = "Failed to load image from " + newValue + "\n" + e;
                 Activator.getLogger().log(Level.SEVERE, message, e);
             });
             break;
@@ -499,7 +474,7 @@ public class TabEditPart extends AbstractContainerEditpart {
      */
     private void updateTabAreaSize() {
         UIBundlingThread.getInstance().addRunnable(() -> {
-            Dimension tabAreaSize = getTabAreaSize();
+            var tabAreaSize = getTabAreaSize();
             for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
                 child.setSize(tabAreaSize);
             }

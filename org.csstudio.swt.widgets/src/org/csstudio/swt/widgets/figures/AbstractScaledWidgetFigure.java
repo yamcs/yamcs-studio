@@ -17,7 +17,6 @@ import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.ScaleWidgetIntrospector;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale;
 import org.eclipse.nebula.visualization.xygraph.linearscale.Range;
 
@@ -66,14 +65,15 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @return the coerced value
      */
     public double getCoercedValue(double v) {
-        Range range = scale.getRange();
-        if (range.inRange(v))
+        var range = scale.getRange();
+        if (range.inRange(v)) {
             return v;
-        else {
-            if (range.getUpper() >= range.getLower())
+        } else {
+            if (range.getUpper() >= range.getLower()) {
                 return v > range.getUpper() ? range.getUpper() : range.getLower();
-            else
+            } else {
                 return v > range.getLower() ? range.getLower() : range.getUpper();
+            }
         }
 
         // return Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
@@ -165,10 +165,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     }
 
     @Override
-    public void paintFigure(final Graphics graphics) {
+    public void paintFigure(Graphics graphics) {
         if (!transparent) {
             graphics.setBackgroundColor(this.getBackgroundColor());
-            Rectangle bounds = this.getBounds().getCopy();
+            var bounds = this.getBounds().getCopy();
             bounds.crop(this.getInsets());
             graphics.fillRectangle(bounds);
         }
@@ -179,9 +179,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param logScale
      *            the logScale to set
      */
-    public void setLogScale(final boolean logScale) {
-        if (this.logScale == logScale)
+    public void setLogScale(boolean logScale) {
+        if (this.logScale == logScale) {
             return;
+        }
         this.logScale = logScale;
         scale.setLogScale(logScale);
         scale.setRange(new Range(minimum, maximum));
@@ -193,8 +194,9 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      *            the majorTickMarkStepHint to set
      */
     public void setMajorTickMarkStepHint(int majorTickMarkStepHint) {
-        if (this.majorTickMarkStepHint == majorTickMarkStepHint || majorTickMarkStepHint <= 0)
+        if (this.majorTickMarkStepHint == majorTickMarkStepHint || majorTickMarkStepHint <= 0) {
             return;
+        }
         this.majorTickMarkStepHint = majorTickMarkStepHint;
         scale.setMajorTickMarkStepHint(majorTickMarkStepHint);
         repaint();
@@ -206,7 +208,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param min
      * @param max
      */
-    public void setRange(final double min, final double max) {
+    public void setRange(double min, double max) {
         scale.setRange(min, max);
         this.maximum = scale.getRange().getUpper();
         this.minimum = scale.getRange().getLower();
@@ -229,9 +231,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param showMinorTicks
      *            the showMinorTicks to set
      */
-    public void setShowMinorTicks(final boolean showMinorTicks) {
-        if (this.showMinorTicks == showMinorTicks)
+    public void setShowMinorTicks(boolean showMinorTicks) {
+        if (this.showMinorTicks == showMinorTicks) {
             return;
+        }
         this.showMinorTicks = showMinorTicks;
         scale.setMinorTicksVisible(showMinorTicks);
         repaint();
@@ -241,9 +244,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param showScale
      *            the showScale to set
      */
-    public void setShowScale(final boolean showScale) {
-        if (this.showScale == showScale)
+    public void setShowScale(boolean showScale) {
+        if (this.showScale == showScale) {
             return;
+        }
         this.showScale = showScale;
         scale.setVisible(showScale);
         repaint();
@@ -255,9 +259,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param transparent
      *            The new value for the transparent property
      */
-    public void setTransparent(final boolean transparent) {
-        if (this.transparent == transparent)
+    public void setTransparent(boolean transparent) {
+        if (this.transparent == transparent) {
             return;
+        }
         this.transparent = transparent;
         repaint();
     }
@@ -266,7 +271,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @param value
      *            the value to set
      */
-    public void setValue(final double value) {
+    public void setValue(double value) {
         this.value = value;
         // Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
         repaint();

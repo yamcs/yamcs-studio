@@ -82,7 +82,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
      * Return the current displayed image. If null, returns an empty image.
      */
     public SymbolImage getCurrentImage() {
-        SymbolImage image = booleanValue ? onImage : offImage;
+        var image = booleanValue ? onImage : offImage;
         if (image == null) {
             image = SymbolImageFactory.createEmptyImage(true);
         }
@@ -123,9 +123,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
     }
 
     public Dimension getAutoSizedDimension() {
-        SymbolImage temp = booleanValue ? onImage : offImage;
+        var temp = booleanValue ? onImage : offImage;
         if (temp != null) {
-            Dimension dim = temp.getAutoSizedDimension();
+            var dim = temp.getAutoSizedDimension();
             if (dim == null) {
                 return null;
             }
@@ -155,16 +155,13 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
 
     @Override
     protected void layout() {
-        Rectangle clientArea = getClientArea().getCopy();
+        var clientArea = getClientArea().getCopy();
         if (boolLabel.isVisible()) {
-            Dimension labelSize = boolLabel.getPreferredSize();
-            boolLabel.setBounds(new Rectangle(getLabelLocation(clientArea.x + clientArea.width
-                    / 2 - labelSize.width / 2, clientArea.y
-                            + clientArea.height
-                                    / 2
-                            - labelSize.height / 2),
-                    new Dimension(labelSize.width,
-                            labelSize.height)));
+            var labelSize = boolLabel.getPreferredSize();
+            boolLabel.setBounds(new Rectangle(
+                    getLabelLocation(clientArea.x + clientArea.width / 2 - labelSize.width / 2,
+                            clientArea.y + clientArea.height / 2 - labelSize.height / 2),
+                    new Dimension(labelSize.width, labelSize.height)));
         }
         super.layout();
     }
@@ -174,7 +171,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (isLoadingImage()) {
             return;
         }
-        Rectangle clientArea = getClientArea();
+        var clientArea = getClientArea();
         if (clientArea.width <= 0 || clientArea.height <= 0) {
             return;
         }
@@ -183,7 +180,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
             graphics.setBackgroundColor(DISABLE_COLOR);
             graphics.fillRectangle(bounds);
         }
-        SymbolImage symbolImage = getCurrentImage();
+        var symbolImage = getCurrentImage();
         symbolImage.setBounds(clientArea);
         symbolImage.setAbsoluteScale(graphics.getAbsoluteScale());
         if (!isEnabled() && !indicatorMode) {
@@ -212,8 +209,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (offImagePath != null && !offImagePath.isEmpty()) {
             incrementLoadingCounter();
         }
-        offImage = SymbolImageFactory.asynCreateSymbolImage(this.offImagePath,
-                true, symbolProperties, this);
+        offImage = SymbolImageFactory.asynCreateSymbolImage(this.offImagePath, true, symbolProperties, this);
     }
 
     public void setOnImagePath(String onImagePath) {
@@ -225,8 +221,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (onImagePath != null && !onImagePath.isEmpty()) {
             incrementLoadingCounter();
         }
-        onImage = SymbolImageFactory.asynCreateSymbolImage(this.onImagePath,
-                true, symbolProperties, this);
+        onImage = SymbolImageFactory.asynCreateSymbolImage(this.onImagePath, true, symbolProperties, this);
     }
 
     @Override
@@ -274,7 +269,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         return animationDisabled;
     }
 
-    public void setAnimationDisabled(final boolean stop) {
+    public void setAnimationDisabled(boolean stop) {
         if (animationDisabled == stop) {
             return;
         }
@@ -288,7 +283,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         repaint();
     }
 
-    public void setAlignedToNearestSecond(final boolean aligned) {
+    public void setAlignedToNearestSecond(boolean aligned) {
         if (symbolProperties != null) {
             symbolProperties.setAlignedToNearestSecond(aligned);
         }

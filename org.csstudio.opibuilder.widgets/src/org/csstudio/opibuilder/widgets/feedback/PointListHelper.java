@@ -38,8 +38,7 @@ public final class PointListHelper {
      *            the new height
      * @return a point list copy, which has been scaled to the new size
      */
-    public static PointList scaleToSize(final PointList points, final int width,
-            final int height) {
+    public static PointList scaleToSize(PointList points, int width, int height) {
         // assert points != null;
         if (width <= 0 || height <= 0) {
             return points;
@@ -52,19 +51,19 @@ public final class PointListHelper {
         double topLeftX = points.getBounds().x;
         double topLeftY = points.getBounds().y;
 
-        PointList newPoints = new PointList();
+        var newPoints = new PointList();
 
-        for (int i = 0; i < points.size(); i++) {
-            int x = points.getPoint(i).x;
-            int y = points.getPoint(i).y;
+        for (var i = 0; i < points.size(); i++) {
+            var x = points.getPoint(i).x;
+            var y = points.getPoint(i).y;
 
-            Point newPoint = new Point(x, y);
+            var newPoint = new Point(x, y);
             if (oldW != 0 && oldH != 0) {
-                double oldRelX = (x - topLeftX) / oldW;
-                double oldRelY = (y - topLeftY) / oldH;
+                var oldRelX = (x - topLeftX) / oldW;
+                var oldRelY = (y - topLeftY) / oldH;
 
-                double newX = topLeftX + (oldRelX * width);
-                double newY = topLeftY + (oldRelY * height);
+                var newX = topLeftX + (oldRelX * width);
+                var newY = topLeftY + (oldRelY * height);
                 newPoint = new Point((int) newX, (int) newY);
             }
 
@@ -85,12 +84,11 @@ public final class PointListHelper {
      *            the y coordinate
      * @return a point list copy, which has been scaled to the new location
      */
-    public static PointList scaleToLocation(final PointList points, final int x,
-            final int y) {
-        int oldX = points.getBounds().x;
-        int oldY = points.getBounds().y;
+    public static PointList scaleToLocation(PointList points, int x, int y) {
+        var oldX = points.getBounds().x;
+        var oldY = points.getBounds().y;
 
-        PointList result = points.getCopy();
+        var result = points.getCopy();
         result.translate(x - oldX, y - oldY);
         return result;
     }
@@ -104,9 +102,8 @@ public final class PointListHelper {
      *            the target bounds
      * @return a point list copy, which has been scaled to the new bounds
      */
-    public static PointList scaleTo(final PointList points, final Rectangle targetBounds) {
-        PointList result = scaleToLocation(points, targetBounds.x,
-                targetBounds.y);
+    public static PointList scaleTo(PointList points, Rectangle targetBounds) {
+        var result = scaleToLocation(points, targetBounds.x, targetBounds.y);
         result = scaleToSize(result, targetBounds.width, targetBounds.height);
 
         return result;

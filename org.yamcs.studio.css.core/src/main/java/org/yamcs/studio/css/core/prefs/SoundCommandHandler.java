@@ -1,18 +1,15 @@
 package org.yamcs.studio.css.core.prefs;
 
-import java.net.URL;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.menus.UIElement;
-import org.osgi.framework.Bundle;
 import org.yamcs.studio.css.core.Activator;
 
 public class SoundCommandHandler extends AbstractHandler implements IElementUpdater {
@@ -22,8 +19,8 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
     private static ImageDescriptor image_sound_on;
 
     public SoundCommandHandler() {
-        Bundle bundle = Platform.getBundle("org.yamcs.studio.css.core");
-        URL fullPathString = BundleUtility.find(bundle, "icons/sound_mute_16px.png");
+        var bundle = Platform.getBundle("org.yamcs.studio.css.core");
+        var fullPathString = BundleUtility.find(bundle, "icons/sound_mute_16px.png");
         image_sound_mute = ImageDescriptor.createFromURL(fullPathString);
 
         fullPathString = BundleUtility.find(bundle, "icons/sound_low_16px.png");
@@ -36,11 +33,11 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        String commandBeep = event.getParameter("org.yamcs.studio.css.core.prefs.beep");
+        var commandBeep = event.getParameter("org.yamcs.studio.css.core.prefs.beep");
 
-        IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-        String previousBeep = preferenceStore.getString("triggerBeep");
-        String newBeep = previousBeep;
+        var preferenceStore = Activator.getDefault().getPreferenceStore();
+        var previousBeep = preferenceStore.getString("triggerBeep");
+        var newBeep = previousBeep;
 
         if (commandBeep.equals("toogle")) {
             if (previousBeep.equals("NONE")) {
@@ -72,13 +69,13 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
     @Override
     public void updateElement(UIElement element, Map parameters) {
 
-        String param = (String) parameters.get("org.yamcs.studio.css.core.prefs.beep");
+        var param = (String) parameters.get("org.yamcs.studio.css.core.prefs.beep");
         if (!param.equals("toogle")) {
             return;
         }
 
         if (beep == null || beep.isEmpty()) {
-            IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+            var preferenceStore = Activator.getDefault().getPreferenceStore();
             beep = preferenceStore.getString("triggerBeep");
         }
 

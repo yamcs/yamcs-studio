@@ -18,7 +18,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 /**
@@ -47,13 +46,13 @@ public class ErrorBar extends Composite {
      */
     public ErrorBar(Composite parent, int style) {
         super(parent, style);
-        GridLayout gridLayout = new GridLayout(3, false);
+        var gridLayout = new GridLayout(3, false);
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         gridLayout.marginLeft = 1;
         setLayout(gridLayout);
 
-        Cursor handCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
+        var handCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
         MouseListener listener = new MouseAdapter() {
             @Override
             public void mouseUp(MouseEvent e) {
@@ -64,21 +63,21 @@ public class ErrorBar extends Composite {
         };
 
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        Bundle bundle = FrameworkUtil.getBundle(ErrorBar.class);
+        var bundle = FrameworkUtil.getBundle(ErrorBar.class);
 
-        ImageDescriptor errorImageDescriptor = ImageDescriptor
+        var errorImageDescriptor = ImageDescriptor
                 .createFromURL(FileLocator.find(bundle, new Path("icons/error-16.png"), null));
         errorImageResource = resourceManager.createImage(errorImageDescriptor);
 
         errorImage = new Label(this, SWT.NONE);
-        GridData gd_errorImage = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        var gd_errorImage = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         errorImage.setLayoutData(gd_errorImage);
         errorImage.setImage(errorImageResource);
         errorImage.setCursor(handCursor);
         errorImage.addMouseListener(listener);
 
         errorLabel = new CLabel(this, SWT.NONE);
-        GridData gd_errorLabel = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+        var gd_errorLabel = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
         errorLabel.setLayoutData(gd_errorLabel);
         errorLabel.setCursor(handCursor);
         errorLabel.addMouseListener(listener);
@@ -91,7 +90,7 @@ public class ErrorBar extends Composite {
             if (ex == null) {
                 errorLabel.setToolTipText("");
                 errorLabel.setText("");
-                GridData gd = (GridData) errorLabel.getLayoutData();
+                var gd = (GridData) errorLabel.getLayoutData();
                 gd.exclude = true;
                 errorLabel.setLayoutData(gd);
                 gd = (GridData) errorImage.getLayoutData();
@@ -104,7 +103,7 @@ public class ErrorBar extends Composite {
             } else {
                 errorLabel.setToolTipText(ex.getMessage());
                 errorLabel.setText(ex.getMessage());
-                GridData gd = (GridData) errorLabel.getLayoutData();
+                var gd = (GridData) errorLabel.getLayoutData();
                 gd.exclude = false;
                 gd.widthHint = getParent().getSize().x - 30;
                 errorLabel.setLayoutData(gd);

@@ -55,16 +55,15 @@ public class RoundedRectangleModel extends AbstractShapeModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new IntegerProperty(PROP_CORNER_WIDTH, "Corner Width",
-                WidgetPropertyCategory.Display, DEFAULT_CORNER_WIDTH));
-        addProperty(new IntegerProperty(PROP_CORNER_HEIGHT, "Corner Height",
-                WidgetPropertyCategory.Display, DEFAULT_CORNER_HEIGHT));
+        addProperty(new IntegerProperty(PROP_CORNER_WIDTH, "Corner Width", WidgetPropertyCategory.Display,
+                DEFAULT_CORNER_WIDTH));
+        addProperty(new IntegerProperty(PROP_CORNER_HEIGHT, "Corner Height", WidgetPropertyCategory.Display,
+                DEFAULT_CORNER_HEIGHT));
         addProperty(new ColorProperty(PROP_BACKGROUND_GRADIENT_START_COLOR, "Background Gradient Start Color",
                 WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new ColorProperty(PROP_FOREGROUND_GRADIENT_START_COLOR, "Foreground Gradient Start Color",
                 WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
-        addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient", WidgetPropertyCategory.Display, false));
     }
 
     /**

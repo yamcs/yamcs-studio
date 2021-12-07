@@ -70,20 +70,20 @@ class TableRangeArrayFilterFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         if (containsNull(args)) {
             return null;
         }
 
-        VTable table = (VTable) args.get(0);
-        VString columnName = (VString) args.get(1);
-        VNumberArray range = (VNumberArray) args.get(2);
+        var table = (VTable) args.get(0);
+        var columnName = (VString) args.get(1);
+        var range = (VNumberArray) args.get(2);
 
         if (range.getData().size() != 2) {
             throw new IllegalArgumentException("Range array must be of 2 elements");
         }
 
-        VTable result = VTableFactory.tableRangeFilter(table, columnName.getValue(),
+        var result = VTableFactory.tableRangeFilter(table, columnName.getValue(),
                 ValueFactory.newVDouble(range.getData().getDouble(0)),
                 ValueFactory.newVDouble(range.getData().getDouble(1)));
 

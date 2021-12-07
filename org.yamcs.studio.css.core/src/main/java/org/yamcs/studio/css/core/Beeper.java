@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
@@ -25,7 +24,7 @@ public class Beeper implements ParameterValueListener {
     }
 
     public void updatePreference() {
-        Activator plugin = Activator.getDefault();
+        var plugin = Activator.getDefault();
 
         triggerCondition = plugin.getPreferenceStore().getString("triggerBeep");
         if (plugin.getPreferenceStore().getBoolean("beepWarning")) {
@@ -38,8 +37,8 @@ public class Beeper implements ParameterValueListener {
         // update toolbar icon
         try {
             SoundCommandHandler.beep = triggerCondition;
-            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            ICommandService commandService = window.getService(ICommandService.class);
+            var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            var commandService = window.getService(ICommandService.class);
             if (commandService != null) {
                 commandService.refreshElements("dropdownSoundCommand", null);
             }
@@ -54,7 +53,7 @@ public class Beeper implements ParameterValueListener {
             return;
         }
 
-        boolean beep = false;
+        var beep = false;
         for (ParameterValue pval : values) {
             if (!pval.hasMonitoringResult()) {
                 continue;
@@ -63,7 +62,7 @@ public class Beeper implements ParameterValueListener {
             if (pval.getMonitoringResult().getNumber() >= beepLevel) {
                 // Beep only at the first occurrence of the parameter out-of-limit
                 if ("FIRST".equals(triggerCondition)) {
-                    MonitoringResult prevResult = pastResults.get(pval.getId());
+                    var prevResult = pastResults.get(pval.getId());
                     if (prevResult == null || (prevResult.getNumber() < pval.getMonitoringResult().getNumber())) {
                         beep = true;
                     }

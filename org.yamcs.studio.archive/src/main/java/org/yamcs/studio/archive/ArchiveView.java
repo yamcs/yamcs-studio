@@ -60,7 +60,7 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
 
         new MouseTracker(timeline);
         new TimeLocator(timeline, () -> YamcsPlugin.getMissionTime(true).atOffset(UTC));
-        TimeRuler timeRuler = new TimeRuler(timeline);
+        var timeRuler = new TimeRuler(timeline);
         timeRuler.setFrozen(true);
 
         replayOptions = new ReplayOptions(contentArea, this);
@@ -268,28 +268,27 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
                     timeline.clearLines();
                     new Header(timeline, "Completeness");
                     completenessGroups.forEach(group -> {
-                        Histogram histogram = new Histogram(timeline, HistogramKind.COMPLETENESS,
-                                group.getId().getName());
+                        var histogram = new Histogram(timeline, HistogramKind.COMPLETENESS, group.getId().getName());
                         histogram.setData(group.getEntryList());
                     });
                     new Header(timeline, "TM Histogram");
                     tmGroups.forEach(group -> {
-                        Histogram histogram = new Histogram(timeline, HistogramKind.TM, group.getId().getName());
+                        var histogram = new Histogram(timeline, HistogramKind.TM, group.getId().getName());
                         histogram.setData(group.getEntryList());
                     });
                     new Header(timeline, "PP Histogram");
                     ppGroups.forEach(group -> {
-                        Histogram histogram = new Histogram(timeline, HistogramKind.PP, group.getId().getName());
+                        var histogram = new Histogram(timeline, HistogramKind.PP, group.getId().getName());
                         histogram.setData(group.getEntryList());
                     });
                     new Header(timeline, "TC Histogram");
                     tcGroups.forEach(group -> {
-                        Histogram histogram = new Histogram(timeline, HistogramKind.CMDHIST, group.getId().getName());
+                        var histogram = new Histogram(timeline, HistogramKind.CMDHIST, group.getId().getName());
                         histogram.setData(group.getEntryList());
                     });
                     new Header(timeline, "EV Histogram");
                     evGroups.forEach(group -> {
-                        Histogram histogram = new Histogram(timeline, HistogramKind.EVENT, group.getId().getName());
+                        var histogram = new Histogram(timeline, HistogramKind.EVENT, group.getId().getName());
                         histogram.setData(group.getEntryList());
                     });
                 });

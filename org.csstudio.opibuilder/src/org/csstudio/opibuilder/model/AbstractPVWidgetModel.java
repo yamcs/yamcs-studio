@@ -22,8 +22,9 @@ public abstract class AbstractPVWidgetModel extends AbstractWidgetModel implemen
     }
 
     public PVWidgetModelDelegate getDelegate() {
-        if (delegate == null)
+        if (delegate == null) {
             delegate = new PVWidgetModelDelegate(this);
+        }
         return delegate;
     }
 
@@ -69,9 +70,8 @@ public abstract class AbstractPVWidgetModel extends AbstractWidgetModel implemen
      */
     @Override
     public String getTooltip() {
-        String rawTooltip = getRawTooltip();
-        if ((rawTooltip.contains(PROP_PVNAME) || rawTooltip.contains(PROP_PVVALUE))
-                && (getPVName().equals(""))) {
+        var rawTooltip = getRawTooltip();
+        if ((rawTooltip.contains(PROP_PVNAME) || rawTooltip.contains(PROP_PVVALUE)) && (getPVName().equals(""))) {
             return "";
         } else {
             return super.getTooltip();

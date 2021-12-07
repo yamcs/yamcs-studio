@@ -30,16 +30,18 @@ public class PermutationMatrix {
 
     public PermutationMatrix(double[][] matrix) {
         this.matrix = matrix;
-        for (int i = 0; i < matrix.length; i++)
-            for (int j = 0; j < matrix[i].length; j++)
+        for (var i = 0; i < matrix.length; i++) {
+            for (var j = 0; j < matrix[i].length; j++) {
                 matrix[i][j] = round(matrix[i][j]);
+            }
+        }
     }
 
     /**
      * Generate [2,2] identity matrix
      */
     public static PermutationMatrix generateIdentityMatrix() {
-        final double[][] matrix = new double[][] { { 1, 0 }, { 0, 1 } };
+        var matrix = new double[][] { { 1, 0 }, { 0, 1 } };
         return new PermutationMatrix(matrix);
     }
 
@@ -47,7 +49,7 @@ public class PermutationMatrix {
      * Generate horizontal flip [2,2] matrix
      */
     public static PermutationMatrix generateFlipVMatrix() {
-        final double[][] matrix = new double[][] { { 1, 0 }, { 0, -1 } };
+        var matrix = new double[][] { { 1, 0 }, { 0, -1 } };
         return new PermutationMatrix(matrix);
     }
 
@@ -55,7 +57,7 @@ public class PermutationMatrix {
      * Generate vertical flip [2,2] matrix
      */
     public static PermutationMatrix generateFlipHMatrix() {
-        final double[][] matrix = new double[][] { { -1, 0 }, { 0, 1 } };
+        var matrix = new double[][] { { -1, 0 }, { 0, 1 } };
         return new PermutationMatrix(matrix);
     }
 
@@ -63,10 +65,10 @@ public class PermutationMatrix {
      * Generate rotation [2,2] matrix
      */
     public static PermutationMatrix generateRotationMatrix(double angleInDegree) {
-        double angleInRadian = angleInDegree * Math.PI / 180.0;
-        double sin = Math.sin(angleInRadian);
-        double cos = Math.cos(angleInRadian);
-        double[][] matrix = new double[2][2];
+        var angleInRadian = angleInDegree * Math.PI / 180.0;
+        var sin = Math.sin(angleInRadian);
+        var cos = Math.cos(angleInRadian);
+        var matrix = new double[2][2];
 
         matrix[0][0] = cos;
         matrix[0][1] = -sin;
@@ -77,15 +79,18 @@ public class PermutationMatrix {
     }
 
     public PermutationMatrix multiply(PermutationMatrix pm) {
-        double[][] m1 = getMatrix();
-        double[][] m2 = pm.getMatrix();
+        var m1 = getMatrix();
+        var m2 = pm.getMatrix();
 
         int p1 = m1.length, p2 = m2.length, q2 = m2[0].length;
-        double[][] result = new double[p1][q2];
-        for (int i = 0; i < p1; i++)
-            for (int j = 0; j < q2; j++)
-                for (int k = 0; k < p2; k++)
+        var result = new double[p1][q2];
+        for (var i = 0; i < p1; i++) {
+            for (var j = 0; j < q2; j++) {
+                for (var k = 0; k < p2; k++) {
                     result[i][j] += m1[i][k] * m2[k][j];
+                }
+            }
+        }
         return new PermutationMatrix(result);
     }
 
@@ -101,30 +106,34 @@ public class PermutationMatrix {
     }
 
     private double round(double x) {
-        DecimalFormat df = new DecimalFormat("#.####");
+        var df = new DecimalFormat("#.####");
         df.setRoundingMode(RoundingMode.HALF_UP);
         return Double.valueOf(df.format(x)) + 0.0;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + Arrays.hashCode(matrix);
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        PermutationMatrix other = (PermutationMatrix) obj;
-        if (!Arrays.deepEquals(matrix, other.matrix))
+        }
+        var other = (PermutationMatrix) obj;
+        if (!Arrays.deepEquals(matrix, other.matrix)) {
             return false;
+        }
         return true;
     }
 

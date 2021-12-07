@@ -9,15 +9,12 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.opibuilder.widgets.figures.NativeButtonFigure;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.SWT;
@@ -40,11 +37,11 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
 
     @Override
     public IFigure doCreateFigure() {
-        ActionButtonModel model = editpart.getWidgetModel();
-        int style = SWT.None;
+        var model = editpart.getWidgetModel();
+        var style = SWT.None;
         style |= model.isToggleButton() ? SWT.TOGGLE : SWT.PUSH;
         style |= SWT.WRAP;
-        final NativeButtonFigure buttonFigure = new NativeButtonFigure(editpart, style);
+        var buttonFigure = new NativeButtonFigure(editpart, style);
         button = buttonFigure.getSWTWidget();
         button.setText(model.getText());
         button.addTraverseListener(e -> {
@@ -69,7 +66,7 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
         button.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                List<AbstractWidgetAction> actions = editpart.getHookedActions();
+                var actions = editpart.getHookedActions();
                 if (actions != null) {
                     for (AbstractWidgetAction action : actions) {
                         if (action instanceof OpenDisplayAction) {
@@ -97,10 +94,10 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
 
         // image
         IWidgetPropertyChangeHandler imageHandler = (oldValue, newValue, refreshableFigure) -> {
-            NativeButtonFigure figure = (NativeButtonFigure) refreshableFigure;
-            String absolutePath = (String) newValue;
+            var figure = (NativeButtonFigure) refreshableFigure;
+            var absolutePath = (String) newValue;
             if (absolutePath != null && !absolutePath.contains("://")) {
-                IPath path = Path.fromPortableString(absolutePath);
+                var path = Path.fromPortableString(absolutePath);
                 path = ResourceUtil.buildAbsolutePath(editpart.getWidgetModel(), path);
                 absolutePath = path.toPortableString();
             }

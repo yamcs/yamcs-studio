@@ -14,7 +14,6 @@ import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.editparts.AbstractWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
@@ -36,22 +35,24 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        TextFigure labelFigure = createTextFigure();
+        var labelFigure = createTextFigure();
         labelFigure.setOpaque(!getWidgetModel().isTransparent());
         labelFigure.setHorizontalAlignment(getWidgetModel().getHorizontalAlignment());
         labelFigure.setVerticalAlignment(getWidgetModel().getVerticalAlignment());
         labelFigure.setSelectable(determinSelectable());
         labelFigure.setText(getWidgetModel().getText());
         labelFigure.setFontPixels(getWidgetModel().getFont().isSizeInPixels());
-        if (labelFigure instanceof WrappableTextFigure)
+        if (labelFigure instanceof WrappableTextFigure) {
             ((WrappableTextFigure) labelFigure).setShowScrollbar(getWidgetModel().isShowScrollbar());
+        }
         updatePropertyVisibility();
         return labelFigure;
     }
 
     protected TextFigure createTextFigure() {
-        if (getWidgetModel().isWrapWords())
+        if (getWidgetModel().isWrapWords()) {
             return new WrappableTextFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
+        }
         return new TextFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
     }
 
@@ -67,8 +68,9 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE)
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TextDirectEditPolicy());
+        }
 
     }
 
@@ -76,14 +78,14 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 ((TextFigure) figure).setText((String) newValue);
                 Display.getCurrent().timerExec(10, new Runnable() {
                     @Override
                     public void run() {
-                        if (getWidgetModel().isAutoSize())
+                        if (getWidgetModel().isAutoSize()) {
                             getWidgetModel().setSize(((TextFigure) figure).getAutoSizeDimension());
+                        }
                     }
                 });
 
@@ -105,8 +107,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 Display.getCurrent().timerExec(10, new Runnable() {
                     @Override
                     public void run() {
@@ -126,8 +127,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 ((TextFigure) figure).setOpaque(!(Boolean) newValue);
                 return true;
             }
@@ -136,8 +136,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 if ((Boolean) newValue) {
                     getWidgetModel().setSize(((TextFigure) figure).getAutoSizeDimension());
                     figure.revalidate();
@@ -149,8 +148,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 ((TextFigure) figure).setHorizontalAlignment(H_ALIGN.values()[(Integer) newValue]);
                 return true;
             }
@@ -159,8 +157,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 ((TextFigure) figure).setVerticalAlignment(V_ALIGN.values()[(Integer) newValue]);
                 return true;
             }
@@ -172,7 +169,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 AbstractWidgetModel model = getWidgetModel();
-                AbstractContainerModel parent = model.getParent();
+                var parent = model.getParent();
                 parent.removeChild(model);
                 parent.addChild(model);
                 parent.selectWidget(model, true);
@@ -180,8 +177,8 @@ public class LabelEditPart extends AbstractWidgetEditPart {
             }
         };
         setPropertyChangeHandler(LabelModel.PROP_WRAP_WORDS, handler);
-        getWidgetModel().getProperty(LabelModel.PROP_WRAP_WORDS).addPropertyChangeListener(
-                new PropertyChangeListener() {
+        getWidgetModel().getProperty(LabelModel.PROP_WRAP_WORDS)
+                .addPropertyChangeListener(new PropertyChangeListener() {
 
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -192,8 +189,9 @@ public class LabelEditPart extends AbstractWidgetEditPart {
         handler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (figure instanceof WrappableTextFigure)
+                if (figure instanceof WrappableTextFigure) {
                     ((WrappableTextFigure) figure).setShowScrollbar((Boolean) newValue);
+                }
                 return false;
             }
         };
@@ -202,8 +200,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     }
 
     private void updatePropertyVisibility() {
-        getWidgetModel().setPropertyVisible(
-                LabelModel.PROP_SHOW_SCROLLBAR, getWidgetModel().isWrapWords());
+        getWidgetModel().setPropertyVisible(LabelModel.PROP_SHOW_SCROLLBAR, getWidgetModel().isWrapWords());
     }
 
     private void performDirectEdit() {
@@ -212,9 +209,10 @@ public class LabelEditPart extends AbstractWidgetEditPart {
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN))
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
+        }
     }
 
     @Override
@@ -225,15 +223,16 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class key) {
-        if (key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return ((TextFigure) getFigure());
+        }
 
         return super.getAdapter(key);
     }
 
     private boolean determinSelectable() {
-        return !getWidgetModel().getActionsInput().getActionsList().isEmpty() ||
-                getWidgetModel().getTooltip().trim().length() > 0;
+        return !getWidgetModel().getActionsInput().getActionsList().isEmpty()
+                || getWidgetModel().getTooltip().trim().length() > 0;
     }
 
 }

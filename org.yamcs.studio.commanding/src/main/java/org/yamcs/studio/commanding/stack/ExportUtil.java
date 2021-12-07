@@ -8,35 +8,31 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class ExportUtil {
 
     public static String toXML(CommandStack stack) throws IOException, TransformerException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        var factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             throw new Error(e);
         }
-        Document doc = builder.newDocument();
-        Element rootElement = doc.createElement("commandStack");
+        var doc = builder.newDocument();
+        var rootElement = doc.createElement("commandStack");
         doc.appendChild(rootElement);
 
         for (StackedCommand command : stack.getCommands()) {
-            Element commandElement = doc.createElement("command");
+            var commandElement = doc.createElement("command");
 
-            Attr attr = doc.createAttribute("qualifiedName");
+            var attr = doc.createAttribute("qualifiedName");
             attr.setValue(command.getMetaCommand().getQualifiedName());
             commandElement.setAttributeNode(attr);
 
@@ -47,17 +43,17 @@ public class ExportUtil {
             }
 
             if (!command.getExtra().isEmpty()) {
-                Element extraEl = doc.createElement("extraOptions");
+                var extraEl = doc.createElement("extraOptions");
                 commandElement.appendChild(extraEl);
 
                 command.getExtra().forEach((option, value) -> {
-                    Element optionEl = doc.createElement("extraOption");
+                    var optionEl = doc.createElement("extraOption");
                     extraEl.appendChild(optionEl);
-                    Attr idAttr = doc.createAttribute("id");
+                    var idAttr = doc.createAttribute("id");
                     idAttr.setValue(option);
                     optionEl.setAttributeNode(idAttr);
 
-                    Attr valueAttr = doc.createAttribute("value");
+                    var valueAttr = doc.createAttribute("value");
                     valueAttr.setValue(StringConverter.toString(value));
                     optionEl.setAttributeNode(valueAttr);
                 });
@@ -70,7 +66,7 @@ public class ExportUtil {
             }
 
             for (TelecommandArgument arg : command.getEffectiveAssignments()) {
-                String value = command.getAssignedStringValue(arg.getArgumentInfo());
+                var value = command.getAssignedStringValue(arg.getArgumentInfo());
 
                 if (value == null && arg.getArgumentInfo().hasInitialValue()) {
                     continue;
@@ -82,7 +78,7 @@ public class ExportUtil {
                     continue;
                 }
 
-                Element argumentElement = doc.createElement("commandArgument");
+                var argumentElement = doc.createElement("commandArgument");
 
                 attr = doc.createAttribute("argumentName");
                 attr.setValue(arg.getName());
@@ -99,12 +95,12 @@ public class ExportUtil {
         }
 
         try (Writer writer = new StringWriter()) {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
+            var transformerFactory = TransformerFactory.newInstance();
+            var transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(writer);
+            var source = new DOMSource(doc);
+            var result = new StreamResult(writer);
             transformer.transform(source, result);
             return writer.toString();
         }

@@ -11,13 +11,11 @@ package org.csstudio.opibuilder.visualparts;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.script.Expression;
 import org.csstudio.opibuilder.script.PVTuple;
 import org.csstudio.opibuilder.script.RuleData;
@@ -75,11 +73,8 @@ public class RuleDataEditDialog extends TrayDialog {
     private List<String> propIDList;
     private TableViewerColumn valueColumn;
 
-    private static String[] UNCHANGEABLE_PROPERTIES = new String[] {
-            AbstractWidgetModel.PROP_ACTIONS,
-            AbstractWidgetModel.PROP_WIDGET_TYPE,
-            AbstractWidgetModel.PROP_SCRIPTS,
-            AbstractWidgetModel.PROP_RULES,
+    private static String[] UNCHANGEABLE_PROPERTIES = new String[] { AbstractWidgetModel.PROP_ACTIONS,
+            AbstractWidgetModel.PROP_WIDGET_TYPE, AbstractWidgetModel.PROP_SCRIPTS, AbstractWidgetModel.PROP_RULES,
             AbstractContainerModel.PROP_MACROS };
 
     public RuleDataEditDialog(Shell parentShell, RuleData ruleData) {
@@ -88,20 +83,20 @@ public class RuleDataEditDialog extends TrayDialog {
         this.ruleData = ruleData.getCopy();
         this.expressionList = this.ruleData.getExpressionList();
 
-        Set<String> propIDSet = ruleData.getWidgetModel().getAllPropertyIDs();
+        var propIDSet = ruleData.getWidgetModel().getAllPropertyIDs();
 
         for (String p : UNCHANGEABLE_PROPERTIES) {
             propIDSet.remove(p);
         }
         for (String id : propIDSet.toArray(new String[0])) {
-            AbstractWidgetProperty prop = ruleData.getWidgetModel().getProperty(id);
+            var prop = ruleData.getWidgetModel().getProperty(id);
             if (prop.configurableByRule()) {
                 continue;
             } else {
                 propIDSet.remove(id);
             }
         }
-        String[] propArray = propIDSet.toArray(new String[0]);
+        var propArray = propIDSet.toArray(new String[0]);
         Arrays.sort(propArray);
         propIDList = Arrays.asList(propArray);
 
@@ -109,14 +104,13 @@ public class RuleDataEditDialog extends TrayDialog {
 
     @Override
     protected void okPressed() {
-        boolean hasTrigger = false;
+        var hasTrigger = false;
         for (PVTuple pvTuple : ruleData.getPVList()) {
             hasTrigger |= pvTuple.trigger;
         }
         if (!hasTrigger) {
             MessageDialog.openWarning(getShell(), "Warning",
-                    NLS.bind("At least one trigger PV must be selected for the rule:\n{0}",
-                            ruleData.getName()));
+                    NLS.bind("At least one trigger PV must be selected for the rule:\n{0}", ruleData.getName()));
             return;
         }
 
@@ -131,7 +125,7 @@ public class RuleDataEditDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
 
         shell.setText("Edit Rule");
@@ -146,8 +140,8 @@ public class RuleDataEditDialog extends TrayDialog {
      * @param text
      *            The text for the label
      */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
+    private void createLabel(Composite parent, String text) {
+        var label = new Label(parent, SWT.WRAP);
         label.setText(text);
         label.setLayoutData(new GridData(SWT.FILL, 0, false, false));
     }
@@ -180,25 +174,22 @@ public class RuleDataEditDialog extends TrayDialog {
         var comboItems = new String[propIDList.size()];
         var i = 0;
         for (String id : propIDList) {
-            comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() +
-                    " (" + id + ")";
+            comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() + " (" + id + ")";
         }
         propCombo.setItems(comboItems);
         propCombo.select(propIDList.indexOf(ruleData.getPropId()));
         propCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (propIDList.get(propCombo.getSelectionIndex()).equals(
-                        AbstractPVWidgetModel.PROP_PVVALUE)) {
+                if (propIDList.get(propCombo.getSelectionIndex()).equals(AbstractPVWidgetModel.PROP_PVVALUE)) {
                     MessageDialog.openWarning(propCombo.getShell(), "Warning",
-                            "Note: Changing pv_value property with rule or " +
-                                    "script will not write value to the PV. " +
-                                    "It only change the graphical value on the widget! " +
-                                    "If you need to write a PV, please call PV.setValue() from script.");
+                            "Note: Changing pv_value property with rule or " + "script will not write value to the PV. "
+                                    + "It only change the graphical value on the widget! "
+                                    + "If you need to write a PV, please call PV.setValue() from script.");
                 }
                 ruleData.setPropId(propIDList.get(propCombo.getSelectionIndex()));
-                if (ruleData.getProperty().getPropertyDescriptor() == null ||
-                        ruleData.getProperty().onlyAcceptExpressionInRule()) {
+                if (ruleData.getProperty().getPropertyDescriptor() == null
+                        || ruleData.getProperty().onlyAcceptExpressionInRule()) {
                     ruleData.setOutputExpValue(true);
                     outPutExpButton.setSelection(true);
                     outPutExpButton.setEnabled(false);
@@ -223,8 +214,8 @@ public class RuleDataEditDialog extends TrayDialog {
         gd.horizontalSpan = 2;
         outPutExpButton.setLayoutData(gd);
         outPutExpButton.setText("Output Expression");
-        if (ruleData.getProperty().getPropertyDescriptor() == null ||
-                ruleData.getProperty().onlyAcceptExpressionInRule()) {
+        if (ruleData.getProperty().getPropertyDescriptor() == null
+                || ruleData.getProperty().onlyAcceptExpressionInRule()) {
             ruleData.setOutputExpValue(true);
             outPutExpButton.setEnabled(false);
         }
@@ -236,8 +227,7 @@ public class RuleDataEditDialog extends TrayDialog {
                 for (Expression exp : expressionList) {
                     exp.setValue(ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
                 }
-                valueColumn.getColumn().setText(
-                        ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
+                valueColumn.getColumn().setText(ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
                 expressionViewer.refresh();
             }
         });
@@ -303,12 +293,12 @@ public class RuleDataEditDialog extends TrayDialog {
         gd.horizontalSpan = 2;
         bottomComposite.setLayoutData(gd);
 
-        Button generateScriptButton = new Button(bottomComposite, SWT.PUSH);
+        var generateScriptButton = new Button(bottomComposite, SWT.PUSH);
         generateScriptButton.setText("See Generated Script");
         gd = new GridData(SWT.LEFT, SWT.TOP, false, false);
         generateScriptButton.setLayoutData(gd);
 
-        final Text scriptText = new Text(bottomComposite,
+        var scriptText = new Text(bottomComposite,
                 SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         scriptText.setLayoutData(gd);
@@ -327,10 +317,8 @@ public class RuleDataEditDialog extends TrayDialog {
      */
     private void refreshActionBarOnSelection() {
 
-        IStructuredSelection selection = (IStructuredSelection) expressionViewer
-                .getSelection();
-        boolean enabled = !selection.isEmpty()
-                && selection.getFirstElement() instanceof Expression;
+        var selection = (IStructuredSelection) expressionViewer.getSelection();
+        var enabled = !selection.isEmpty() && selection.getFirstElement() instanceof Expression;
         copyAction.setEnabled(enabled);
         removeAction.setEnabled(enabled);
         moveUpAction.setEnabled(enabled);
@@ -354,12 +342,11 @@ public class RuleDataEditDialog extends TrayDialog {
      *            The parent for the table
      * @return The {@link TableViewer}
      */
-    private TableViewer createExpressionsTableViewer(final Composite parent) {
-        final TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+    private TableViewer createExpressionsTableViewer(Composite parent) {
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
-        TableViewerColumn expressionColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var expressionColumn = new TableViewerColumn(viewer, SWT.NONE);
         expressionColumn.getColumn().setText("Boolean Expression");
         expressionColumn.getColumn().setMoveable(false);
         expressionColumn.getColumn().setWidth(200);
@@ -393,8 +380,7 @@ public class RuleDataEditDialog extends TrayDialog {
         });
 
         valueColumn = new TableViewerColumn(viewer, SWT.NONE);
-        valueColumn.getColumn().setText(
-                ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
+        valueColumn.getColumn().setText(ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
         valueColumn.getColumn().setMoveable(false);
         valueColumn.getColumn().setWidth(200);
         EditingSupport editingSupport = new EditingSupport(viewer) {
@@ -439,7 +425,7 @@ public class RuleDataEditDialog extends TrayDialog {
 
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new ExpressionLabelProvider());
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         viewer.getTable().setLayoutData(gd);
         return viewer;
     }
@@ -451,7 +437,7 @@ public class RuleDataEditDialog extends TrayDialog {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                Expression expression = new Expression("",
+                var expression = new Expression("",
                         ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
                 expressionList.add(expression);
                 expressionViewer.refresh();
@@ -460,18 +446,14 @@ public class RuleDataEditDialog extends TrayDialog {
         };
         addAction.setToolTipText("Add an Expression");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         copyAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) expressionViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof Expression) {
-                    Expression expression = ((Expression) selection
-                            .getFirstElement()).getCopy();
+                var selection = (IStructuredSelection) expressionViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof Expression) {
+                    var expression = ((Expression) selection.getFirstElement()).getCopy();
                     expressionList.add(expression);
                     setExpressionViewerSelection(expression);
                 }
@@ -480,17 +462,14 @@ public class RuleDataEditDialog extends TrayDialog {
         copyAction.setText("Copy");
         copyAction.setToolTipText("Copy selected expression");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/copy.gif"));
         copyAction.setEnabled(false);
 
         removeAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) expressionViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof Expression) {
+                var selection = (IStructuredSelection) expressionViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof Expression) {
                     expressionList.remove((Expression) selection.getFirstElement());
                     setExpressionViewerSelection(null);
                     this.setEnabled(false);
@@ -498,23 +477,18 @@ public class RuleDataEditDialog extends TrayDialog {
             }
         };
         removeAction.setText("Remove Expression");
-        removeAction
-                .setToolTipText("Remove the selected expression from the list");
+        removeAction.setToolTipText("Remove the selected expression from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) expressionViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof Expression) {
-                    Expression expression = (Expression) selection
-                            .getFirstElement();
-                    int i = expressionList.indexOf(expression);
+                var selection = (IStructuredSelection) expressionViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof Expression) {
+                    var expression = (Expression) selection.getFirstElement();
+                    var i = expressionList.indexOf(expression);
                     if (i > 0) {
                         expressionList.remove(expression);
                         expressionList.add(i - 1, expression);
@@ -526,20 +500,16 @@ public class RuleDataEditDialog extends TrayDialog {
         moveUpAction.setText("Move Expression Up");
         moveUpAction.setToolTipText("Move selected expression up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) expressionViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof Expression) {
-                    Expression expression = (Expression) selection
-                            .getFirstElement();
-                    int i = expressionList.indexOf(expression);
+                var selection = (IStructuredSelection) expressionViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof Expression) {
+                    var expression = (Expression) selection.getFirstElement();
+                    var i = expressionList.indexOf(expression);
                     if (i < expressionList.size() - 1) {
                         expressionList.remove(expression);
                         expressionList.add(i + 1, expression);
@@ -551,19 +521,16 @@ public class RuleDataEditDialog extends TrayDialog {
         moveDownAction.setText("Move Expression Down");
         moveDownAction.setToolTipText("Move selected expression down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 
-    class ExpressionLabelProvider extends LabelProvider implements
-            ITableLabelProvider {
+    class ExpressionLabelProvider extends LabelProvider implements ITableLabelProvider {
 
         @Override
-        public Image getColumnImage(final Object element,
-                final int columnIndex) {
+        public Image getColumnImage(Object element, int columnIndex) {
             if (columnIndex == 1 && !ruleData.isOutputExpValue() && element instanceof Expression) {
-                Expression expression = (Expression) element;
+                var expression = (Expression) element;
 
                 if (ruleData.getProperty().getPropertyDescriptor() == null) {
                     return null;
@@ -577,19 +544,17 @@ public class RuleDataEditDialog extends TrayDialog {
         }
 
         @Override
-        public String getColumnText(final Object element,
-                final int columnIndex) {
+        public String getColumnText(Object element, int columnIndex) {
             if (element != null && element instanceof Expression) {
-                Expression expression = (Expression) element;
+                var expression = (Expression) element;
                 if (columnIndex == 0) {
                     return expression.getBooleanExpression();
                 }
 
-                if (ruleData.getProperty().getPropertyDescriptor() != null
-                        && !ruleData.isOutputExpValue()
+                if (ruleData.getProperty().getPropertyDescriptor() != null && !ruleData.isOutputExpValue()
                         && ruleData.getProperty().getPropertyDescriptor().getLabelProvider() != null) {
-                    return ruleData.getProperty().getPropertyDescriptor().getLabelProvider().getText(
-                            expression.getValue());
+                    return ruleData.getProperty().getPropertyDescriptor().getLabelProvider()
+                            .getText(expression.getValue());
                 } else if (expression.getValue() == null) {
                     return "";
                 } else {

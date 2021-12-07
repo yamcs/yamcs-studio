@@ -34,7 +34,7 @@ public class LabelFieldEditor extends FieldEditor {
     protected void doFillIntoGrid(Composite parent, int numColumns) {
         label = getLabelControl(parent);
 
-        GridData gridData = new GridData();
+        var gridData = new GridData();
         gridData.horizontalSpan = numColumns;
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = false;

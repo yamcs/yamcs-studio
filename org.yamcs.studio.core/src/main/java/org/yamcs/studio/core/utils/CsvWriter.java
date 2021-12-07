@@ -35,7 +35,7 @@ public class CsvWriter implements Closeable {
         writer.write('"');
         writer.write(escape(header[0]));
         writer.write('"');
-        for (int i = 1; i < header.length; i++) {
+        for (var i = 1; i < header.length; i++) {
             writer.write(',');
             writer.write('"');
             writer.write(escape(header[i]));
@@ -58,7 +58,7 @@ public class CsvWriter implements Closeable {
         writer.write('"');
         writer.write(escape(record[0]));
         writer.write('"');
-        for (int i = 1; i < record.length; i++) {
+        for (var i = 1; i < record.length; i++) {
             writer.write(',');
             writer.write('"');
             writer.write(escape(record[i]));

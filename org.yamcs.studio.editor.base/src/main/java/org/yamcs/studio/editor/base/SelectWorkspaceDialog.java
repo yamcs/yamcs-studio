@@ -41,15 +41,15 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite parentComposite = (Composite) super.createDialogArea(parent);
+        var parentComposite = (Composite) super.createDialogArea(parent);
 
         setTitle("Select Workspace");
         setMessage("The workspace directory is where " + Platform.getProduct().getName()
                 + " will store your files and preferences.");
 
         // Create the layout
-        Composite contents = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout(1, false);
+        var contents = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout(1, false);
         layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
         layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
         layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
@@ -64,10 +64,10 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
     }
 
     private void createWorkspaceSection(Composite parent) {
-        GridLayout layout = new GridLayout();
+        var layout = new GridLayout();
         layout.numColumns = 2;
         parent.setLayout(layout);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         parent.setLayoutData(gd);
 
         workspaces = new Combo(parent, SWT.DROP_DOWN);
@@ -79,16 +79,16 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
         workspaces.setItems(recentWorkspaces.toArray(new String[0]));
         workspaces.select(0);
 
-        Button browse = new Button(parent, SWT.PUSH);
+        var browse = new Button(parent, SWT.PUSH);
         browse.setText("Browse");
         browse.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(getShell());
+                var dialog = new DirectoryDialog(getShell());
                 dialog.setText("Select Workspace");
                 dialog.setMessage("Select existing workspace");
                 dialog.setFilterPath(getInitialBrowsePath());
-                String dir = dialog.open();
+                var dir = dialog.open();
                 if (dir != null) {
                     workspaces.setText(dir);
                 }
@@ -112,7 +112,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
      * @return Directory name close to the currently entered workspace
      */
     private String getInitialBrowsePath() {
-        File dir = new File(workspaces.getText());
+        var dir = new File(workspaces.getText());
         if (dir != null) { // Go one up
             dir = dir.getParentFile();
         }
@@ -132,7 +132,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
      * @return true if there is no error
      */
     protected boolean checkWorkspace() {
-        String workspace = workspaces.getText().trim();
+        var workspace = workspaces.getText().trim();
 
         // Must not be empty
         if (workspace.length() <= 0) {
@@ -141,11 +141,11 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
         }
 
         // Check if this workspace is inside another workspace...
-        final File ws_file = new File(workspace);
+        var ws_file = new File(workspace);
         try {
-            File parent = ws_file.getParentFile();
+            var parent = ws_file.getParentFile();
             while (parent != null) { // Is there a .metadata file?
-                File meta = new File(parent.getCanonicalPath() + File.separator + ".metadata");
+                var meta = new File(parent.getCanonicalPath() + File.separator + ".metadata");
                 if (meta.exists()) {
                     setErrorMessage(String.format(
                             "The selected directory is inside an existing workspace named \\\"%s\\\".\\nPick a directory that is neither inside an existing workspace, nor contains another workspace.",
@@ -161,7 +161,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
         }
 
         // Check if there are already workspaces within the selected directory.
-        String nested = checkForWorkspacesInSubdirs(ws_file);
+        var nested = checkForWorkspacesInSubdirs(ws_file);
         if (nested != null) {
             setErrorMessage(String.format(
                     "There is already a workspace named \\\"%s\\\" below the selected directory.\\nPick a directory that is neither inside an existing workspace, nor contains another workspace.",
@@ -192,7 +192,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
                 continue;
             }
             try { // Is there a .metadata file?
-                File meta = new File(subdir.getCanonicalPath() + File.separator + ".metadata");
+                var meta = new File(subdir.getCanonicalPath() + File.separator + ".metadata");
                 if (meta.exists()) {
                     return subdir.getName();
                 }

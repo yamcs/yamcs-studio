@@ -39,8 +39,7 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
      */
     private Integer index = -1;
 
-    public ProviderSettings(String name, IAutoCompleteProvider provider,
-            boolean highLevelProvider) {
+    public ProviderSettings(String name, IAutoCompleteProvider provider, boolean highLevelProvider) {
         this.name = name;
         this.provider = provider;
         this.highLevelProvider = highLevelProvider;
@@ -60,8 +59,7 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
         this.index = index;
     }
 
-    public ProviderSettings(ProviderSettings ps, Integer index,
-            Integer maxResults) {
+    public ProviderSettings(ProviderSettings ps, Integer index, Integer maxResults) {
         this(ps);
         this.maxResults = maxResults;
         this.index = index;
@@ -97,49 +95,58 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        ProviderSettings other = (ProviderSettings) obj;
+        }
+        var other = (ProviderSettings) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 
     @Override
     public int compareTo(ProviderSettings ps) {
-        if (ps == null)
+        if (ps == null) {
             return -1;
-        if (this.isHighLevelProvider() && ps.isHighLevelProvider())
+        }
+        if (this.isHighLevelProvider() && ps.isHighLevelProvider()) {
             return this.name.compareTo(ps.getName());
-        if (this.isHighLevelProvider() && !ps.isHighLevelProvider())
+        }
+        if (this.isHighLevelProvider() && !ps.isHighLevelProvider()) {
             return -1;
-        if (!this.isHighLevelProvider() && ps.isHighLevelProvider())
+        }
+        if (!this.isHighLevelProvider() && ps.isHighLevelProvider()) {
             return 1;
-        if (this.index == ps.getIndex())
+        }
+        if (this.index == ps.getIndex()) {
             return this.name.compareTo(ps.getName());
+        }
         return this.index.compareTo(ps.getIndex());
     }
 
     @Override
     public String toString() {
-        return "ProviderSettings [name=" + name + ", provider=" + provider
-                + ", highLevelProvider=" + highLevelProvider + ", maxResults="
-                + maxResults + ", index=" + index + "]";
+        return "ProviderSettings [name=" + name + ", provider=" + provider + ", highLevelProvider=" + highLevelProvider
+                + ", maxResults=" + maxResults + ", index=" + index + "]";
     }
 
 }

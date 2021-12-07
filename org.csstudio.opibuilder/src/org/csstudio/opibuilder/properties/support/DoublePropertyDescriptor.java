@@ -29,12 +29,12 @@ public final class DoublePropertyDescriptor extends TextPropertyDescriptor {
      * @param category
      *            the category
      */
-    public DoublePropertyDescriptor(final Object id, final String displayName) {
+    public DoublePropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new DoubleCellEditor(parent);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

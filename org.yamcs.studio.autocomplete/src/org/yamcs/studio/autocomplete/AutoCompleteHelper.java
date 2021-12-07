@@ -28,7 +28,7 @@ public class AutoCompleteHelper {
      * Quote the name and return a pattern which handles only wildcards.
      */
     public static Pattern convertToPattern(String name) {
-        String regex = Pattern.quote(name);
+        var regex = Pattern.quote(name);
         regex = regex.replaceAll(MULTI_REPLACE_CHAR, "\\\\E.*\\\\Q");
         regex = regex.replaceAll(SINGLE_REPLACE_CHAR, "\\\\E.\\\\Q");
         try {
@@ -39,7 +39,7 @@ public class AutoCompleteHelper {
     }
 
     public static String convertToSQL(String name) {
-        String sql = name.replaceAll(MULTI_REPLACE_CHAR, "%");
+        var sql = name.replaceAll(MULTI_REPLACE_CHAR, "%");
         sql = sql.replaceAll(SINGLE_REPLACE_CHAR, "_");
         sql = sql.replaceAll("'", "''"); // prevent SQL injection
         return sql;
@@ -49,7 +49,7 @@ public class AutoCompleteHelper {
      * Remove all begining/ending wildcards.
      */
     public static String trimWildcards(String name) {
-        String cleaned = name.replaceAll("^[\\*\\?]+", "");
+        var cleaned = name.replaceAll("^[\\*\\?]+", "");
         cleaned = cleaned.replaceAll("[\\*\\?]+$", "");
         return cleaned;
     }
@@ -59,8 +59,7 @@ public class AutoCompleteHelper {
         try {
             Class<?> clazz = Class.forName("org.csstudio.utility.pvmanager.ConfigurationHelper");
             @SuppressWarnings("unchecked")
-            Map<String, Object> parameters = (Map<String, Object>) clazz.getMethod("configuredDataSources")
-                    .invoke(null);
+            var parameters = (Map<String, Object>) clazz.getMethod("configuredDataSources").invoke(null);
             items.addAll(parameters.keySet());
             AutoCompletePlugin.getLogger().config("Loading PVManager supported types: " + items);
             return items;

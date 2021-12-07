@@ -17,17 +17,14 @@ import org.eclipse.swt.graphics.Image;
 /**
  * The {@link LabelProvider} for the properties table.
  */
-public class PropertiesLabelProvider extends LabelProvider implements
-        ITableLabelProvider {
+public class PropertiesLabelProvider extends LabelProvider implements ITableLabelProvider {
 
     @Override
-    public Image getColumnImage(final Object element,
-            final int columnIndex) {
+    public Image getColumnImage(Object element, int columnIndex) {
         if (columnIndex == 1 && element instanceof AbstractWidgetProperty) {
-            AbstractWidgetProperty property = (AbstractWidgetProperty) element;
+            var property = (AbstractWidgetProperty) element;
 
-            if (property.isVisibleInPropSheet()
-                    && property.getPropertyDescriptor().getLabelProvider() != null) {
+            if (property.isVisibleInPropSheet() && property.getPropertyDescriptor().getLabelProvider() != null) {
                 return property.getPropertyDescriptor().getLabelProvider().getImage(property.getPropertyValue());
             }
         }
@@ -35,17 +32,15 @@ public class PropertiesLabelProvider extends LabelProvider implements
     }
 
     @Override
-    public String getColumnText(final Object element, final int columnIndex) {
+    public String getColumnText(Object element, int columnIndex) {
         if (element instanceof AbstractWidgetProperty) {
-            AbstractWidgetProperty property = (AbstractWidgetProperty) element;
+            var property = (AbstractWidgetProperty) element;
             if (columnIndex == 0) {
                 return property.getDescription();
             }
 
-            if (property.isVisibleInPropSheet()
-                    && property.getPropertyDescriptor().getLabelProvider() != null) {
-                return property.getPropertyDescriptor().getLabelProvider().getText(
-                        property.getPropertyValue());
+            if (property.isVisibleInPropSheet() && property.getPropertyDescriptor().getLabelProvider() != null) {
+                return property.getPropertyDescriptor().getLabelProvider().getText(property.getPropertyValue());
             }
         }
         if (element != null) {

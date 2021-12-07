@@ -27,8 +27,7 @@ public class RunnerInput implements IRunnerInput {
     private MacrosInput macrosInput;
     private IPath path;
 
-    public RunnerInput(IPath path, DisplayOpenManager displayOpenManager,
-            MacrosInput macrosInput) {
+    public RunnerInput(IPath path, DisplayOpenManager displayOpenManager, MacrosInput macrosInput) {
         this.path = path;
         this.setDisplayOpenManager(displayOpenManager);
         this.macrosInput = macrosInput;
@@ -50,10 +49,9 @@ public class RunnerInput implements IRunnerInput {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((macrosInput == null) ? 0 : macrosInput.hashCode());
+        var prime = 31;
+        var result = 1;
+        result = prime * result + ((macrosInput == null) ? 0 : macrosInput.hashCode());
         result = prime * result + ((path == null) ? 0 : path.hashCode());
         return result;
     }
@@ -69,7 +67,7 @@ public class RunnerInput implements IRunnerInput {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        RunnerInput other = (RunnerInput) obj;
+        var other = (RunnerInput) obj;
         if (macrosInput == null) {
             if (other.macrosInput != null) {
                 return false;

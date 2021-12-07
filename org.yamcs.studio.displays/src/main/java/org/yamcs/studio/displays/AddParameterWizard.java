@@ -11,8 +11,9 @@ public class AddParameterWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
-        if (page.getParameter() != null && !page.getParameter().isEmpty())
+        if (page.getParameter() != null && !page.getParameter().isEmpty()) {
             return true;
+        }
         return false;
     }
 

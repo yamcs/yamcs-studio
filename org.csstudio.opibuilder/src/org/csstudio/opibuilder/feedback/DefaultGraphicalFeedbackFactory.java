@@ -14,7 +14,6 @@ import java.util.List;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Shape;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
@@ -29,19 +28,16 @@ import org.eclipse.gef.requests.CreateRequest;
  * A default implementation of {@link IGraphicalFeedbackFactory} which does nothing to changing default graphical
  * feedback behavior. Subclass can override this class to create customized feedback behavior.
  */
-public class DefaultGraphicalFeedbackFactory implements
-        IGraphicalFeedbackFactory {
+public class DefaultGraphicalFeedbackFactory implements IGraphicalFeedbackFactory {
 
     @Override
-    public IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model,
-            Rectangle initalBounds) {
+    public IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model, Rectangle initalBounds) {
         return null;
     }
 
     @Override
-    public void showChangeBoundsFeedback(AbstractWidgetModel widgetModel,
-            PrecisionRectangle bounds, IFigure feedbackFigure,
-            ChangeBoundsRequest request) {
+    public void showChangeBoundsFeedback(AbstractWidgetModel widgetModel, PrecisionRectangle bounds,
+            IFigure feedbackFigure, ChangeBoundsRequest request) {
 
         feedbackFigure.translateToRelative(bounds);
         feedbackFigure.setBounds(bounds);
@@ -54,14 +50,12 @@ public class DefaultGraphicalFeedbackFactory implements
     }
 
     @Override
-    public void showSizeOnDropFeedback(CreateRequest request,
-            IFigure feedback, Insets insets) {
-        Point p = new Point(request.getLocation().getCopy());
+    public void showSizeOnDropFeedback(CreateRequest request, IFigure feedback, Insets insets) {
+        var p = new Point(request.getLocation().getCopy());
         feedback.translateToRelative(p);
-        Dimension size = request.getSize().getCopy();
+        var size = request.getSize().getCopy();
         feedback.translateToRelative(size);
-        feedback.setBounds(new Rectangle(p, size)
-                .expand(insets));
+        feedback.setBounds(new Rectangle(p, size).expand(insets));
 
     }
 
@@ -71,14 +65,14 @@ public class DefaultGraphicalFeedbackFactory implements
     }
 
     @Override
-    public Command createChangeBoundsCommand(AbstractWidgetModel widgetModel,
-            ChangeBoundsRequest request, Rectangle targetBounds) {
+    public Command createChangeBoundsCommand(AbstractWidgetModel widgetModel, ChangeBoundsRequest request,
+            Rectangle targetBounds) {
         return null;
     }
 
     @Override
-    public Command createInitialBoundsCommand(AbstractWidgetModel widgetModel,
-            CreateRequest request, Rectangle targetBounds) {
+    public Command createInitialBoundsCommand(AbstractWidgetModel widgetModel, CreateRequest request,
+            Rectangle targetBounds) {
         return null;
     }
 

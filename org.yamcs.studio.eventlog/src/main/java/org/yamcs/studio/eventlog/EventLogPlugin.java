@@ -7,7 +7,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.StringConverter;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -38,8 +37,8 @@ public class EventLogPlugin extends AbstractUIPlugin {
     }
 
     public IDialogSettings getCommandHistoryTableSettings() {
-        IDialogSettings settings = getDialogSettings();
-        IDialogSettings section = settings.getSection("eventlog-table");
+        var settings = getDialogSettings();
+        var section = settings.getSection("eventlog-table");
         if (section == null) {
             section = settings.addNewSection("eventlog-table");
         }
@@ -51,10 +50,10 @@ public class EventLogPlugin extends AbstractUIPlugin {
     }
 
     public void storeColoringRules(List<ColoringRule> rules) {
-        IPreferenceStore store = getPreferenceStore();
+        var store = getPreferenceStore();
 
-        StringBuilder buf = new StringBuilder();
-        boolean first = true;
+        var buf = new StringBuilder();
+        var first = true;
         for (ColoringRule rule : rules) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter
@@ -69,14 +68,14 @@ public class EventLogPlugin extends AbstractUIPlugin {
     }
 
     public List<ColoringRule> loadColoringRules() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getString(PreferencePage.PREF_RULES);
+        var store = getPreferenceStore();
+        var joined = store.getString(PreferencePage.PREF_RULES);
         return composeColoringRules(joined);
     }
 
     public List<ColoringRule> loadDefaultColoringRules() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getDefaultString(PreferencePage.PREF_RULES);
+        var store = getPreferenceStore();
+        var joined = store.getDefaultString(PreferencePage.PREF_RULES);
         return composeColoringRules(joined);
     }
 
@@ -87,9 +86,9 @@ public class EventLogPlugin extends AbstractUIPlugin {
 
         List<ColoringRule> rules = new ArrayList<>();
         for (String ruleString : joined.split(";")) {
-            String[] parts = ruleString.split("@");
-            RGB bg = StringConverter.asRGB(parts[1]);
-            RGB fg = StringConverter.asRGB(parts[2]);
+            var parts = ruleString.split("@");
+            var bg = StringConverter.asRGB(parts[1]);
+            var fg = StringConverter.asRGB(parts[2]);
             rules.add(new ColoringRule(parts[0], bg, fg));
         }
         return rules;

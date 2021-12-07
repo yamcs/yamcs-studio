@@ -11,7 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -48,10 +47,10 @@ public class ColoringRuleDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
+        var fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
 
-        boolean noExpression = expression == null;
-        String title = noExpression ? "Add Coloring Rule" : "Edit Coloring Rule";
+        var noExpression = expression == null;
+        var title = noExpression ? "Add Coloring Rule" : "Edit Coloring Rule";
 
         getShell().setText(title);
         setTitle(title);
@@ -60,10 +59,10 @@ public class ColoringRuleDialog extends TitleAreaDialog {
 
         fieldArea.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout gl = new GridLayout(2, false);
+        var gl = new GridLayout(2, false);
         fieldArea.setLayout(gl);
 
-        Label label = new Label(fieldArea, SWT.NONE);
+        var label = new Label(fieldArea, SWT.NONE);
         label.setText("Expression");
         label.setLayoutData(new GridData());
         expressionText = new Text(fieldArea, SWT.BORDER);
@@ -75,7 +74,7 @@ public class ColoringRuleDialog extends TitleAreaDialog {
         expressionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         new Label(fieldArea, SWT.NONE);
-        Composite example = new Composite(fieldArea, SWT.NONE);
+        var example = new Composite(fieldArea, SWT.NONE);
         example.setLayoutData(new GridData(GridData.FILL_BOTH));
         gl = new GridLayout(2, false);
         example.setLayout(gl);
@@ -96,7 +95,7 @@ public class ColoringRuleDialog extends TitleAreaDialog {
         label.setLayoutData(new GridData());
         bgSelector = new ColorSelector(fieldArea);
         bgSelector.setColorValue(bg);
-        Button backgroundColorButton = bgSelector.getButton();
+        var backgroundColorButton = bgSelector.getButton();
         backgroundColorButton.setLayoutData(new GridData());
 
         label = new Label(fieldArea, SWT.NONE);
@@ -104,7 +103,7 @@ public class ColoringRuleDialog extends TitleAreaDialog {
         label.setLayoutData(new GridData());
         fgSelector = new ColorSelector(fieldArea);
         fgSelector.setColorValue(fg);
-        Button foregroundColorButton = fgSelector.getButton();
+        var foregroundColorButton = fgSelector.getButton();
         foregroundColorButton.setLayoutData(new GridData());
 
         Dialog.applyDialogFont(fieldArea);
@@ -114,18 +113,14 @@ public class ColoringRuleDialog extends TitleAreaDialog {
 
     private void updatePageComplete() {
         setErrorMessage(null);
-        boolean hasError = false;
+        var hasError = false;
 
         try {
-            Event anyEvent = Event.newBuilder().setMessage("a message")
-                    .setSource("a source")
+            var anyEvent = Event.newBuilder().setMessage("a message").setSource("a source")
                     .setGenerationTime(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()))
                     .setReceptionTime(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()))
-                    .setSeqNumber(123)
-                    .setSeverity(EventSeverity.WARNING)
-                    .setType("a type")
-                    .build();
-            ColoringRule rule = new ColoringRule(expressionText.getText(), bg, fg);
+                    .setSeqNumber(123).setSeverity(EventSeverity.WARNING).setType("a type").build();
+            var rule = new ColoringRule(expressionText.getText(), bg, fg);
             rule.matches(anyEvent);
         } catch (Exception e) {
             hasError = true;

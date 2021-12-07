@@ -33,9 +33,9 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
     @Override
     protected void updateTargetEditPart() {
         super.updateTargetEditPart();
-        if (getTargetEditPart() instanceof AbstractBaseEditPart)
-            ((DropPVRequest) getTargetRequest()).setTargetWidget(
-                    (AbstractBaseEditPart) getTargetEditPart());
+        if (getTargetEditPart() instanceof AbstractBaseEditPart) {
+            ((DropPVRequest) getTargetRequest()).setTargetWidget((AbstractBaseEditPart) getTargetEditPart());
+        }
 
     }
 
@@ -52,9 +52,10 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
 
     @Override
     protected void handleDrop() {
-        String[] pvNames = getPVNamesFromTransfer();
-        if (pvNames == null)
+        var pvNames = getPVNamesFromTransfer();
+        if (pvNames == null) {
             return;
+        }
         ((DropPVRequest) getTargetRequest()).setPvNames(pvNames);
         super.handleDrop();
     }

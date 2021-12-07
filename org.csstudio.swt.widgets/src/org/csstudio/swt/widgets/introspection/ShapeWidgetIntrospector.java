@@ -15,15 +15,8 @@ import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
  * The introspector for widget inherited from {@link AbstractScaledWidgetFigure}.
  */
 public class ShapeWidgetIntrospector extends DefaultWidgetIntrospector {
-    public static String[] SHAPE_WIDGET_NON_PROPERTIES = new String[] {
-            "antialias",
-            "lineAttributes",
-            "lineDash",
-            "lineDashOffset",
-            "lineJoin",
-            "lineMiterLimit",
-            "lineWidthFloat"
-    };
+    public static String[] SHAPE_WIDGET_NON_PROPERTIES = new String[] { "antialias", "lineAttributes", "lineDash",
+            "lineDashOffset", "lineJoin", "lineMiterLimit", "lineWidthFloat" };
 
     @Override
     public String[] getNonProperties() {

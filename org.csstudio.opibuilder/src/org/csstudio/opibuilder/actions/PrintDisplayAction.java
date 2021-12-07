@@ -18,11 +18,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
@@ -62,10 +59,8 @@ public class PrintDisplayAction extends WorkbenchPartAction {
         setToolTipText("Print Display");
         setId(ActionFactory.PRINT.getId());
         setActionDefinitionId("org.eclipse.ui.file.print");
-        ISharedImages sharedImages = getWorkbenchPart().getSite()
-                .getWorkbenchWindow().getWorkbench().getSharedImages();
-        setImageDescriptor(sharedImages
-                .getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
+        var sharedImages = getWorkbenchPart().getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
     }
 
     /**
@@ -73,52 +68,47 @@ public class PrintDisplayAction extends WorkbenchPartAction {
      */
     @Override
     public void run() {
-        final GraphicalViewer viewer = getWorkbenchPart().getAdapter(GraphicalViewer.class);
+        var viewer = getWorkbenchPart().getAdapter(GraphicalViewer.class);
 
         viewer.getControl().getDisplay().asyncExec(new Runnable() {
             @Override
             public void run() {
-                final ImageLoader loader = new ImageLoader();
+                var loader = new ImageLoader();
                 ImageData[] imageData;
                 try {
 
-                    imageData = loader.load(ResourceUtil
-                            .getScreenshotFile(viewer));
+                    imageData = loader.load(ResourceUtil.getScreenshotFile(viewer));
 
                     if (imageData.length > 0) {
-                        PrintDialog dialog = new PrintDialog(viewer.getControl()
-                                .getShell(), SWT.NULL);
-                        final PrinterData data = dialog.open();
+                        var dialog = new PrintDialog(viewer.getControl().getShell(), SWT.NULL);
+                        var data = dialog.open();
                         if (data != null) {
-                            Printer printer = new Printer(data);
+                            var printer = new Printer(data);
 
                             // Calculate the scale factor between the screen resolution
                             // and printer
                             // resolution in order to correctly size the image for the
                             // printer
-                            Point screenDPI = viewer.getControl().getDisplay().getDPI();
-                            Point printerDPI = printer.getDPI();
-                            int scaleFactor = printerDPI.x / screenDPI.x;
+                            var screenDPI = viewer.getControl().getDisplay().getDPI();
+                            var printerDPI = printer.getDPI();
+                            var scaleFactor = printerDPI.x / screenDPI.x;
 
                             // Determine the bounds of the entire area of the printer
-                            Rectangle trim = printer.computeTrim(0, 0, 0, 0);
-                            Image printerImage = new Image(printer, imageData[0]);
+                            var trim = printer.computeTrim(0, 0, 0, 0);
+                            var printerImage = new Image(printer, imageData[0]);
                             if (printer.startJob("Printing OPI")) {
                                 if (printer.startPage()) {
-                                    GC gc = new GC(printer);
-                                    Rectangle printArea = printer.getClientArea();
+                                    var gc = new GC(printer);
+                                    var printArea = printer.getClientArea();
 
                                     if (imageData[0].width * scaleFactor <= printArea.width) {
                                         printArea.width = imageData[0].width * scaleFactor;
-                                        printArea.height = imageData[0].height
-                                                * scaleFactor;
+                                        printArea.height = imageData[0].height * scaleFactor;
                                     } else {
-                                        printArea.height = printArea.width
-                                                * imageData[0].height / imageData[0].width;
+                                        printArea.height = printArea.width * imageData[0].height / imageData[0].width;
                                     }
-                                    gc.drawImage(printerImage, 0, 0, imageData[0].width,
-                                            imageData[0].height, -trim.x, -trim.y,
-                                            printArea.width, printArea.height);
+                                    gc.drawImage(printerImage, 0, 0, imageData[0].width, imageData[0].height, -trim.x,
+                                            -trim.y, printArea.width, printArea.height);
                                     gc.dispose();
                                     printer.endPage();
                                 }

@@ -18,8 +18,7 @@ public enum LineStyle {
     SOLID("Solid", SWT.LINE_SOLID),
     DASH("Dash", SWT.LINE_DASH),
     DOT("Dot", SWT.LINE_DOT),
-    DASH_DOT("DashDot",
-            SWT.LINE_DASHDOT),
+    DASH_DOT("DashDot", SWT.LINE_DASHDOT),
     Dash_DOTDOT("DashDotDot", SWT.LINE_DASHDOTDOT);
 
     String description;
@@ -43,10 +42,11 @@ public enum LineStyle {
     }
 
     public static String[] stringValues() {
-        String[] sv = new String[values().length];
-        int i = 0;
-        for (LineStyle p : values())
+        var sv = new String[values().length];
+        var i = 0;
+        for (LineStyle p : values()) {
             sv[i++] = p.toString();
+        }
         return sv;
     }
 }

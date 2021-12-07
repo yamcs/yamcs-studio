@@ -13,7 +13,7 @@ public class CacheStats {
      * @param misses
      * @param expirations
      */
-    CacheStats(final long hits, final long misses, final long expirations) {
+    CacheStats(long hits, long misses, long expirations) {
         this.hits = hits;
         this.misses = misses;
         this.expirations = expirations;
@@ -43,9 +43,10 @@ public class CacheStats {
     /** @return Info text suitable for display on web page */
     @Override
     public String toString() {
-        if (total <= 0)
+        if (total <= 0) {
             return "Never used";
-        final StringBuilder buf = new StringBuilder();
+        }
+        var buf = new StringBuilder();
         buf.append("Cache hits=").append(hits).append(" (").append(hits * 100 / total).append("%), ");
         buf.append("misses=").append(misses).append(" (").append(misses * 100 / total).append("%), ");
         buf.append("expirations=").append(expirations).append(" (").append(expirations * 100 / total).append("%)");

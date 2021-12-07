@@ -47,16 +47,13 @@ public class ExecutionService {
         _highPriorityQueue = new LinkedBlockingQueue<Runnable>();
 
         _lowPriorityExectorService = new ThreadPoolExecutor(LOW_PRIORITY_THREADS, LOW_PRIORITY_THREADS, 0L,
-                TimeUnit.MILLISECONDS,
-                _lowPriorityQueue, new CssThreadFactory(Thread.MIN_PRIORITY));
+                TimeUnit.MILLISECONDS, _lowPriorityQueue, new CssThreadFactory(Thread.MIN_PRIORITY));
 
         _normalPriorityExectorService = new ThreadPoolExecutor(NORMAL_PRIORITY_THREADS, NORMAL_PRIORITY_THREADS, 0L,
-                TimeUnit.MILLISECONDS,
-                _normalPriorityQueue, new CssThreadFactory(Thread.NORM_PRIORITY));
+                TimeUnit.MILLISECONDS, _normalPriorityQueue, new CssThreadFactory(Thread.NORM_PRIORITY));
 
         _highPriorityExecutorService = new ThreadPoolExecutor(HIGH_PRIORITY_THREADS, HIGH_PRIORITY_THREADS, 0L,
-                TimeUnit.MILLISECONDS,
-                _highPriorityQueue, new CssThreadFactory(Thread.MAX_PRIORITY));
+                TimeUnit.MILLISECONDS, _highPriorityQueue, new CssThreadFactory(Thread.MAX_PRIORITY));
 
         _scheduledExecutorService = Executors.newScheduledThreadPool(SCHEDULED_THREADS);
     }
@@ -80,7 +77,7 @@ public class ExecutionService {
      * @param runnable
      *            the runnable
      */
-    public void executeWithHighPriority(final Runnable runnable) {
+    public void executeWithHighPriority(Runnable runnable) {
         doRun(_highPriorityExecutorService, runnable);
     }
 
@@ -90,7 +87,7 @@ public class ExecutionService {
      * @param runnable
      *            the runnable
      */
-    public void executeWithNormalPriority(final Runnable runnable) {
+    public void executeWithNormalPriority(Runnable runnable) {
         doRun(_normalPriorityExectorService, runnable);
     }
 
@@ -121,12 +118,13 @@ public class ExecutionService {
      * @param runnable
      *            the runnable
      */
-    public void executeWithLowPriority(final Runnable runnable) {
+    public void executeWithLowPriority(Runnable runnable) {
         doRun(_lowPriorityExectorService, runnable);
     }
 
-    private void doRun(ExecutorService service, final Runnable runnable) {
+    private void doRun(ExecutorService service, Runnable runnable) {
         service.execute(new Runnable() {
+            @Override
             public void run() {
                 try {
                     runnable.run();
@@ -143,21 +141,22 @@ public class ExecutionService {
 
     private static class CssThreadFactory implements ThreadFactory {
         static final AtomicInteger poolNumber = new AtomicInteger(1);
-        final ThreadGroup group;
-        final AtomicInteger threadNumber = new AtomicInteger(1);
-        final String namePrefix;
+        ThreadGroup group;
+        AtomicInteger threadNumber = new AtomicInteger(1);
+        String namePrefix;
         private int priority = Thread.NORM_PRIORITY;
 
         CssThreadFactory(int priority) {
             this.priority = priority;
 
-            SecurityManager s = System.getSecurityManager();
+            var s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
             namePrefix = "css-threadpool-" + poolNumber.getAndIncrement() + "-thread-";
         }
 
+        @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            var t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
             t.setDaemon(false);
             t.setPriority(priority);
             return t;

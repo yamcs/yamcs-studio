@@ -22,19 +22,19 @@ public class ColoringRule {
     }
 
     public boolean matches(Event event) {
-        String trimmed = expression.trim();
+        var trimmed = expression.trim();
         if (trimmed.isEmpty()) {
             return true;
         }
-        boolean matches = false;
-        try (Scanner scanner = new Scanner(expression)) {
+        var matches = false;
+        try (var scanner = new Scanner(expression)) {
             String pendingLogicalOperation = null;
             while (scanner.hasNext()) {
                 scanner.useDelimiter(LOGICAL_OP);
                 if (scanner.findInLine(CONDITION) != null) {
-                    String property = scanner.match().group(1);
-                    String op = scanner.match().group(2);
-                    String value = scanner.match().group(3);
+                    var property = scanner.match().group(1);
+                    var op = scanner.match().group(2);
+                    var value = scanner.match().group(3);
                     boolean eq;
                     switch (property) {
                     case "severity":
@@ -50,7 +50,7 @@ public class ColoringRule {
                         throw new UnsupportedOperationException();
                     }
 
-                    boolean conditionTrue = ("==".equals(op) && eq) || ("!=".equals(op) && !eq);
+                    var conditionTrue = ("==".equals(op) && eq) || ("!=".equals(op) && !eq);
                     if (pendingLogicalOperation == null) {
                         matches = conditionTrue;
                     } else if ("&&".equals(pendingLogicalOperation)) {

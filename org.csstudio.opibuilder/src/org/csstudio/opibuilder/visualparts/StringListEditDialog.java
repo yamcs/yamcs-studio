@@ -43,7 +43,7 @@ public class StringListEditDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite container = (Composite) super.createDialogArea(parent);
+        var container = (Composite) super.createDialogArea(parent);
         // Table editor should stretch to fill the dialog space, but
         // at least on OS X, it has some minimum size below which it
         // doesn't properly shrink.
@@ -54,7 +54,7 @@ public class StringListEditDialog extends Dialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);

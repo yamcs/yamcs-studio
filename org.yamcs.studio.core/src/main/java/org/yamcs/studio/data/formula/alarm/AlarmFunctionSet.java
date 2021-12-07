@@ -32,9 +32,7 @@ import org.yamcs.studio.data.formula.FormulaFunctionSetDescription;
 public class AlarmFunctionSet extends FormulaFunctionSet {
 
     public AlarmFunctionSet() {
-        super(new FormulaFunctionSetDescription("alarm",
-                "Functions for alarm manipulation")
-                        .addFormulaFunction(new HighestSeverityFunction())
-                        .addFormulaFunction(new AlarmOfFunction()));
+        super(new FormulaFunctionSetDescription("alarm", "Functions for alarm manipulation")
+                .addFormulaFunction(new HighestSeverityFunction()).addFormulaFunction(new AlarmOfFunction()));
     }
 }

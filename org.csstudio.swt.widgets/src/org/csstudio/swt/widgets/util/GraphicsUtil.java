@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.RGB;
 public class GraphicsUtil {
 
     public static synchronized boolean testPatternSupported(Graphics graphics) {
-        boolean support3D = true;
+        var support3D = true;
         // just test if pattern is supported on the platform.
         try {
             graphics.setBackgroundPattern(null);
@@ -32,20 +32,18 @@ public class GraphicsUtil {
         return support3D;
     }
 
-    public static Pattern createScaledPattern(Graphics graphics, Device device,
-            float x1, float y1, float x2, float y2, Color color1, int alpha1,
-            Color color2, int alpha2) {
-        double scale = graphics.getAbsoluteScale();
-        return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale),
-                (float) (x2 * scale), (float) (y2 * scale), color1, alpha1, color2,
-                alpha2);
+    public static Pattern createScaledPattern(Graphics graphics, Device device, float x1, float y1, float x2, float y2,
+            Color color1, int alpha1, Color color2, int alpha2) {
+        var scale = graphics.getAbsoluteScale();
+        return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale), (float) (x2 * scale),
+                (float) (y2 * scale), color1, alpha1, color2, alpha2);
     }
 
-    public static Pattern createScaledPattern(Graphics graphics, Device device,
-            float x1, float y1, float x2, float y2, Color color1, Color color2) {
-        double scale = graphics.getAbsoluteScale();
-        return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale),
-                (float) (x2 * scale), (float) (y2 * scale), color1, color2);
+    public static Pattern createScaledPattern(Graphics graphics, Device device, float x1, float y1, float x2, float y2,
+            Color color1, Color color2) {
+        var scale = graphics.getAbsoluteScale();
+        return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale), (float) (x2 * scale),
+                (float) (y2 * scale), color1, color2);
     }
 
     /**
@@ -61,12 +59,8 @@ public class GraphicsUtil {
      * @since 2.0
      */
     public static RGB mixColors(RGB c1, RGB c2, double weight) {
-        return new RGB((int) (c1.red * weight + c2.red
-                * (1 - weight)), (int) (c1.green * weight
-                        + c2.green
-                                * (1 - weight)),
-                (int) (c1.blue * weight + c2.blue
-                        * (1 - weight)));
+        return new RGB((int) (c1.red * weight + c2.red * (1 - weight)),
+                (int) (c1.green * weight + c2.green * (1 - weight)), (int) (c1.blue * weight + c2.blue * (1 - weight)));
     }
 
 }

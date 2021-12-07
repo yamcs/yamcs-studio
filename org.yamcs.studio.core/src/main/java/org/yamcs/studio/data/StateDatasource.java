@@ -10,9 +10,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.yamcs.client.YamcsClient;
-import org.yamcs.protobuf.GetServerInfoResponse;
-import org.yamcs.protobuf.UserInfo;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.VType;
 
@@ -35,7 +32,7 @@ public class StateDatasource implements Datasource {
 
     @Override
     public boolean isConnected(IPV pv) {
-        StateData stateData = pv2data.get(pv);
+        var stateData = pv2data.get(pv);
         return stateData != null && stateData.isConnected();
     }
 
@@ -46,7 +43,7 @@ public class StateDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        StateData stateData = pv2data.get(pv);
+        var stateData = pv2data.get(pv);
         if (stateData != null) {
             return stateData.getValue();
         }
@@ -60,9 +57,9 @@ public class StateDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        String basename = pv.getName().substring(SCHEME.length());
+        var basename = pv.getName().substring(SCHEME.length());
 
-        StateData stateData = name2data.computeIfAbsent(basename, x -> {
+        var stateData = name2data.computeIfAbsent(basename, x -> {
             switch (basename) {
             case "yamcs.host":
                 return new YamcsHostState(exec);
@@ -87,7 +84,7 @@ public class StateDatasource implements Datasource {
 
     @Override
     public void onStopped(IPV pv) {
-        StateData stateData = pv2data.remove(pv);
+        var stateData = pv2data.remove(pv);
         if (stateData != null) {
             stateData.unregister(pv);
         }
@@ -103,7 +100,7 @@ public class StateDatasource implements Datasource {
         @Override
         VType createValue() {
             String value = null;
-            YamcsClient client = YamcsPlugin.getYamcsClient();
+            var client = YamcsPlugin.getYamcsClient();
             if (client != null) {
                 value = client.getHost();
             }
@@ -130,7 +127,7 @@ public class StateDatasource implements Datasource {
 
         @Override
         VType createValue() {
-            String value = YamcsPlugin.getInstance();
+            var value = YamcsPlugin.getInstance();
 
             if (value == null) {
                 value = "";
@@ -154,7 +151,7 @@ public class StateDatasource implements Datasource {
 
         @Override
         VType createValue() {
-            String value = YamcsPlugin.getProcessor();
+            var value = YamcsPlugin.getProcessor();
 
             if (value == null) {
                 value = "";
@@ -179,7 +176,7 @@ public class StateDatasource implements Datasource {
         @Override
         VType createValue() {
             String value = null;
-            GetServerInfoResponse serverInfo = YamcsPlugin.getServerInfo();
+            var serverInfo = YamcsPlugin.getServerInfo();
             if (serverInfo != null) {
                 value = serverInfo.getServerId();
             }
@@ -207,7 +204,7 @@ public class StateDatasource implements Datasource {
         @Override
         VType createValue() {
             String value = null;
-            UserInfo userInfo = YamcsPlugin.getUser();
+            var userInfo = YamcsPlugin.getUser();
             if (userInfo != null) {
                 value = userInfo.getName();
             }
@@ -235,7 +232,7 @@ public class StateDatasource implements Datasource {
         @Override
         VType createValue() {
             String value = null;
-            GetServerInfoResponse serverInfo = YamcsPlugin.getServerInfo();
+            var serverInfo = YamcsPlugin.getServerInfo();
             if (serverInfo != null) {
                 value = serverInfo.getYamcsVersion();
             }

@@ -23,19 +23,21 @@ public class ColorTuple implements Comparable<ColorTuple> {
         this.rgb = rgb;
     }
 
+    @Override
     public int compareTo(ColorTuple o) {
-        if (value < o.value)
+        if (value < o.value) {
             return -1;
-        else if (this.equals(o))
+        } else if (this.equals(o)) {
             return 0;
-        else
+        } else {
             return 1;
+        }
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((rgb == null) ? 0 : rgb.hashCode());
         long temp;
         temp = Double.doubleToLongBits(value);
@@ -45,21 +47,26 @@ public class ColorTuple implements Comparable<ColorTuple> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        ColorTuple other = (ColorTuple) obj;
+        }
+        var other = (ColorTuple) obj;
         if (rgb == null) {
-            if (other.rgb != null)
+            if (other.rgb != null) {
                 return false;
-        } else if (!rgb.equals(other.rgb))
+            }
+        } else if (!rgb.equals(other.rgb)) {
             return false;
-        if (Double.doubleToLongBits(value) != Double
-                .doubleToLongBits(other.value))
+        }
+        if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
             return false;
+        }
         return true;
     }
 

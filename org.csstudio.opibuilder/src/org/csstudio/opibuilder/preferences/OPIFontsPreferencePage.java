@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.preferences;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -15,9 +14,9 @@ public class OPIFontsPreferencePage extends FieldEditorPreferencePage implements
 
     @Override
     protected void createFieldEditors() {
-        Composite parent = getFieldEditorParent();
+        var parent = getFieldEditorParent();
 
-        PredefinedFontsFieldEditor fontEditor = new PredefinedFontsFieldEditor("fonts.list", parent);
+        var fontEditor = new PredefinedFontsFieldEditor("fonts.list", parent);
         addField(fontEditor);
     }
 

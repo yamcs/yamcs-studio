@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.properties;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -44,8 +43,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
      * @param dialogTitle
      *            title of the dialog for editing the complex data.
      */
-    public ComplexDataProperty(String prop_id, String description,
-            WidgetPropertyCategory category,
+    public ComplexDataProperty(String prop_id, String description, WidgetPropertyCategory category,
             AbstractComplexData defaultData, String dialogTitle) {
         super(prop_id, description, category, defaultData);
         this.dialogTitle = dialogTitle;
@@ -72,28 +70,21 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     public AbstractComplexData readValueFromXML(Element propElement) {
-        AbstractComplexData result = ((AbstractComplexData) getDefaultValue())
-                .createInstance();
+        var result = ((AbstractComplexData) getDefaultValue()).createInstance();
 
         List<?> children = propElement.getChildren();
         Iterator<?> iterator = children.iterator();
-        Set<String> propIdSet = result.getAllPropertyIDs();
+        var propIdSet = result.getAllPropertyIDs();
         while (iterator.hasNext()) {
-            Element subElement = (Element) iterator.next();
+            var subElement = (Element) iterator.next();
             // handle property
             if (propIdSet.contains(subElement.getName())) {
-                String propId = subElement.getName();
+                var propId = subElement.getName();
                 try {
-                    result.setPropertyValue(propId, result.getProperty(propId)
-                            .readValueFromXML(subElement));
+                    result.setPropertyValue(propId, result.getProperty(propId).readValueFromXML(subElement));
                 } catch (Exception e) {
-                    String errorMessage = "Failed to read the "
-                            + propId
-                            + " sub property for "
-                            + getPropertyID()
-                            + ". "
-                            + "The default property value will be set instead. \n"
-                            + e;
+                    var errorMessage = "Failed to read the " + propId + " sub property for " + getPropertyID() + ". "
+                            + "The default property value will be set instead. \n" + e;
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                 }
             }
@@ -104,9 +95,9 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        AbstractComplexData data = (AbstractComplexData) getPropertyValue();
+        var data = (AbstractComplexData) getPropertyValue();
         for (AbstractWidgetProperty property : data.getAllProperties()) {
-            Element propEle = new Element(property.getPropertyID());
+            var propEle = new Element(property.getPropertyID());
             property.writeToXML(propEle);
             propElement.addContent(propEle);
         }
@@ -116,8 +107,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
     @Override
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         super.setWidgetModel(widgetModel);
-        ((AbstractComplexData) getPropertyValue())
-                .setWidgetModel(widgetModel);
+        ((AbstractComplexData) getPropertyValue()).setWidgetModel(widgetModel);
     }
 
 }

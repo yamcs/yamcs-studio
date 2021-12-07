@@ -15,7 +15,6 @@ package org.yamcs.studio.autocomplete;
  */
 public interface IAutoCompleteResultListener {
 
-    public void handleResult(Long uniqueId, Integer index,
-            AutoCompleteResult result);
+    public void handleResult(Long uniqueId, Integer index, AutoCompleteResult result);
 
 }

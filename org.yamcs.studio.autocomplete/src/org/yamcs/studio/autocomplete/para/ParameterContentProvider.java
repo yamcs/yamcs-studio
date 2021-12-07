@@ -2,7 +2,6 @@ package org.yamcs.studio.autocomplete.para;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.protobuf.Mdb.MemberInfo;
@@ -15,7 +14,6 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 import org.yamcs.studio.autocomplete.parser.ContentType;
 import org.yamcs.studio.autocomplete.proposals.Proposal;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
-import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -43,7 +41,7 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
 
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
-        String content = desc.getValue();
+        var content = desc.getValue();
         if (content.startsWith(getPrefix())) {
             content = content.substring(getPrefix().length());
         } else if (requirePrefix()) {
@@ -52,12 +50,12 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
 
         content = AutoCompleteHelper.trimWildcards(content);
         content = content.replaceAll("\\[[0-9]+\\]", "[]"); // Ignore specific index into array
-        Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
+        var namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
 
-        AutoCompleteResult result = new AutoCompleteResult();
-        int matchCount = 0;
-        MissionDatabase mdb = YamcsPlugin.getMissionDatabase();
+        var result = new AutoCompleteResult();
+        var matchCount = 0;
+        var mdb = YamcsPlugin.getMissionDatabase();
         if (mdb != null) {
             for (ParameterInfo para : mdb.getParameters()) {
                 List<String> pvCandidates = new ArrayList<>();
@@ -67,10 +65,10 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
                 }
 
                 for (String pvCandidate : pvCandidates) {
-                    String proposalValue = requirePrefix() ? getPrefix() + pvCandidate : pvCandidate;
-                    Matcher m = namePattern.matcher(proposalValue);
+                    var proposalValue = requirePrefix() ? getPrefix() + pvCandidate : pvCandidate;
+                    var m = namePattern.matcher(proposalValue);
                     if (m.find()) {
-                        Proposal p = new Proposal(proposalValue, false);
+                        var p = new Proposal(proposalValue, false);
                         p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                         result.addProposal(p);
                         matchCount++;
@@ -92,15 +90,15 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
 
     private void scanTypeForPvCandidates(String basePvName, ParameterTypeInfo type, List<String> pvCandidates) {
         for (MemberInfo member : type.getMemberList()) {
-            String memberPvName = basePvName + "." + member.getName();
+            var memberPvName = basePvName + "." + member.getName();
             pvCandidates.add(memberPvName);
             if (member.hasType()) {
                 scanTypeForPvCandidates(memberPvName, member.getType(), pvCandidates);
             }
         }
         if (type.hasArrayInfo()) {
-            String entryPvName = basePvName + "[]";
-            ParameterTypeInfo entryType = type.getArrayInfo().getType();
+            var entryPvName = basePvName + "[]";
+            var entryType = type.getArrayInfo().getType();
             scanTypeForPvCandidates(entryPvName, entryType, pvCandidates);
         }
     }

@@ -20,7 +20,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -28,7 +27,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.client.storage.ObjectId;
-import org.yamcs.client.storage.StorageClient;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class SaveStackToYamcsHandler extends AbstractHandler {
@@ -37,8 +35,8 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = HandlerUtil.getActiveShell(event);
-        CommandStack stack = CommandStack.getInstance();
+        var shell = HandlerUtil.getActiveShell(event);
+        var stack = CommandStack.getInstance();
 
         Collection<StackedCommand> commands = stack.getCommands();
         if (commands == null || commands.isEmpty()) {
@@ -47,7 +45,7 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
             return null;
         }
 
-        SaveStackToYamcsDialog dialog = new SaveStackToYamcsDialog(shell);
+        var dialog = new SaveStackToYamcsDialog(shell);
         if (dialog.open() == Window.OK) {
 
             String xml;
@@ -67,8 +65,8 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
                 throw new ExecutionException("Unsupported encoding", e);
             }
 
-            StorageClient storage = YamcsPlugin.getStorageClient();
-            ObjectId id = ObjectId.of("stacks", objectName);
+            var storage = YamcsPlugin.getStorageClient();
+            var id = ObjectId.of("stacks", objectName);
             storage.uploadObject(id, xml.getBytes(StandardCharsets.UTF_8)).exceptionally(err -> {
                 MessageDialog.openError(shell, "Save Command Stack",
                         "Unable to save stack.\nDetails:" + err.getMessage());
@@ -108,9 +106,9 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
 
         @Override
         protected Control createDialogArea(Composite parent) {
-            Composite container = (Composite) super.createDialogArea(parent);
+            var container = (Composite) super.createDialogArea(parent);
 
-            Label label = new Label(container, SWT.NONE);
+            var label = new Label(container, SWT.NONE);
             label.setText("Stack name:");
             nameText = new Text(container, SWT.BORDER);
             nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -134,8 +132,8 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
 
         @Override
         protected void okPressed() {
-            String name = nameText.getText().trim() + ".xml";
-            String path = pathText.getText().trim();
+            var name = nameText.getText().trim() + ".xml";
+            var path = pathText.getText().trim();
 
             finalObjectName = path;
             if ("/".equals(path)) {
@@ -158,15 +156,15 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
         }
 
         private void updateState() {
-            Button okButton = getButton(IDialogConstants.OK_ID);
-            boolean isValid = true;
+            var okButton = getButton(IDialogConstants.OK_ID);
+            var isValid = true;
 
-            String name = nameText.getText();
+            var name = nameText.getText();
             if (name == null || name.trim().isEmpty() || name.contains("/")) {
                 isValid = false;
             }
 
-            String path = pathText.getText();
+            var path = pathText.getText();
             if (path == null || path.trim().isEmpty() || !path.trim().startsWith("/")) {
                 isValid = false;
             }

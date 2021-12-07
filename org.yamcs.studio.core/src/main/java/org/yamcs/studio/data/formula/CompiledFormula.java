@@ -1,7 +1,6 @@
 package org.yamcs.studio.data.formula;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class CompiledFormula {
     private Object executeExpression(FormulaAst node) {
         switch (node.getType()) {
         case OP:
-            String func = (String) node.getValue();
+            var func = (String) node.getValue();
             return executeOP(func, node.getChildren());
         case INTEGER:
             return new IVInt((Integer) node.getValue());
@@ -45,10 +44,10 @@ public class CompiledFormula {
         case STRING:
             return new IVString((String) node.getValue());
         case CHANNEL:
-            String channelName = (String) node.getValue();
+            var channelName = (String) node.getValue();
             return inputValues.get(channelName);
         case ID:
-            String id = (String) node.getValue();
+            var id = (String) node.getValue();
             return registry.findNamedConstant(id);
         default:
             throw new IllegalStateException("Unexpected node type " + node.getType());
@@ -56,15 +55,15 @@ public class CompiledFormula {
     }
 
     private Object executeOP(String func, List<FormulaAst> argNodes) {
-        int cardinality = argNodes.size();
-        Collection<FormulaFunction> functions = registry.findFunctions(func, cardinality);
+        var cardinality = argNodes.size();
+        var functions = registry.findFunctions(func, cardinality);
 
         List<Object> argumentValues = new ArrayList<>(cardinality);
         for (FormulaAst argNode : argNodes) {
             argumentValues.add(executeExpression(argNode));
         }
 
-        FormulaFunction func2 = FormulaFunctions.findFirstMatch(argumentValues, functions);
+        var func2 = FormulaFunctions.findFirstMatch(argumentValues, functions);
         return func2.calculate(argumentValues);
     }
 }

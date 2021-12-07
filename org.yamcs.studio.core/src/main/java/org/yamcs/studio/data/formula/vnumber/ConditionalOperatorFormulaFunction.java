@@ -67,7 +67,7 @@ class ConditionalOperatorFormulaFunction implements FormulaFunction {
     @Override
     public Object calculate(List<Object> args) {
         // Convert arguments to actual types
-        VBoolean condition = (VBoolean) args.get(0);
+        var condition = (VBoolean) args.get(0);
 
         // Handle null case
         if (condition == null) {

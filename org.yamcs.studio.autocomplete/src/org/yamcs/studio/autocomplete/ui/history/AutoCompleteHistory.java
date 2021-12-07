@@ -10,15 +10,10 @@
 package org.yamcs.studio.autocomplete.ui.history;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.yamcs.studio.autocomplete.AutoCompletePlugin;
-import org.yamcs.studio.autocomplete.ui.AutoCompleteTypes;
-import org.yamcs.studio.autocomplete.ui.preferences.Preferences;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,6 +21,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
+import org.yamcs.studio.autocomplete.AutoCompletePlugin;
+import org.yamcs.studio.autocomplete.ui.AutoCompleteTypes;
+import org.yamcs.studio.autocomplete.ui.preferences.Preferences;
 
 /**
  * Handles history of auto-completed fields.
@@ -47,21 +45,21 @@ public class AutoCompleteHistory {
      *
      * @param control
      */
-    public void installListener(final Control control) {
+    public void installListener(Control control) {
         if (control == null || control.isDisposed()) {
             return;
         }
         if (control instanceof Combo) {
             ((Combo) control).addSelectionListener(new SelectionAdapter() {
                 @Override
-                public void widgetSelected(final SelectionEvent e) {
+                public void widgetSelected(SelectionEvent e) {
                     handleSelection();
                 }
             });
         } else if (control instanceof Button) {
             ((Button) control).addSelectionListener(new SelectionAdapter() {
                 @Override
-                public void widgetSelected(final SelectionEvent e) {
+                public void widgetSelected(SelectionEvent e) {
                     handleSelection();
                 }
             });
@@ -72,7 +70,7 @@ public class AutoCompleteHistory {
 
     private void handleSelection() {
         if (!control.isDisposed()) {
-            String new_entry = controlContentAdapter.getControlContents(control);
+            var new_entry = controlContentAdapter.getControlContents(control);
             addEntry(new_entry);
         }
     }
@@ -83,7 +81,7 @@ public class AutoCompleteHistory {
      *
      * @param newEntry
      */
-    public synchronized void addEntry(final String newEntry) {
+    public synchronized void addEntry(String newEntry) {
         // Avoid empty entries
         if (newEntry == null || newEntry.trim().isEmpty()) {
             return;
@@ -92,8 +90,8 @@ public class AutoCompleteHistory {
         Map<String, String> entries = new HashMap<>();
         if (newEntry.startsWith("=")) {
             entries.put(newEntry, AutoCompleteTypes.Formula);
-            Pattern quotedVariable = Pattern.compile("'([^']+)'");
-            Matcher m = quotedVariable.matcher(newEntry);
+            var quotedVariable = Pattern.compile("'([^']+)'");
+            var m = quotedVariable.matcher(newEntry);
             while (m.find()) {
                 entries.put(m.group(1), AutoCompleteTypes.PV);
             }
@@ -109,7 +107,7 @@ public class AutoCompleteHistory {
         if (entryType == null || entryType.isEmpty()) {
             return;
         }
-        LinkedList<String> fifo = AutoCompletePlugin.getDefault().getHistory(entryType);
+        var fifo = AutoCompletePlugin.getDefault().getHistory(entryType);
         if (fifo == null) {
             return;
         }
@@ -118,7 +116,7 @@ public class AutoCompleteHistory {
             return;
         }
         // Remove if present, so that is re-added on top
-        int index = -1;
+        var index = -1;
         while ((index = fifo.indexOf(newEntry)) >= 0) {
             fifo.remove(index);
         }

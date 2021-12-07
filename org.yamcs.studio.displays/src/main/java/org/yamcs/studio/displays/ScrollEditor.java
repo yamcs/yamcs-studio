@@ -23,9 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
@@ -47,11 +44,11 @@ public class ScrollEditor extends EditorPart {
     private ParameterTable fileInput;
 
     public static ScrollEditor createPVTableEditor() {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-        final IWorkbenchPage page = window.getActivePage();
+        var workbench = PlatformUI.getWorkbench();
+        var window = workbench.getActiveWorkbenchWindow();
+        var page = window.getActivePage();
         try {
-            final EmptyEditorInput input = new EmptyEditorInput();
+            var input = new EmptyEditorInput();
             return (ScrollEditor) page.openEditor(input, ScrollEditor.ID);
         } catch (Exception e) {
             ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(),
@@ -66,7 +63,7 @@ public class ScrollEditor extends EditorPart {
     }
 
     @Override
-    public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         // "Site is incorrect" error results if the site is not set:
         this.input = (FileEditorInput) input;
         setSite(site);
@@ -82,8 +79,8 @@ public class ScrollEditor extends EditorPart {
         List<ParameterInfo> info = new ArrayList<>();
         try {
 
-            Gson gson = new Gson();
-            InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
+            var gson = new Gson();
+            var reader = new InputStreamReader(input.getFile().getContents());
             fileInput = gson.fromJson(reader, ParameterTable.class);
             if (fileInput == null) {
                 fileInput = new ParameterTable();
@@ -109,14 +106,14 @@ public class ScrollEditor extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        FillLayout fl = new FillLayout();
+        var fl = new FillLayout();
         fl.marginHeight = 0;
         fl.marginWidth = 0;
         parent.setLayout(fl);
 
-        SashForm sash = new SashForm(parent, SWT.VERTICAL);
+        var sash = new SashForm(parent, SWT.VERTICAL);
 
-        Composite tableWrapper = new Composite(sash, SWT.NONE);
+        var tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         parameterTable = new ScrollViewer(tableWrapper);
@@ -133,11 +130,11 @@ public class ScrollEditor extends EditorPart {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        final IEditorInput input = getEditorInput();
+        var input = getEditorInput();
         try {
             if (input.exists()) {
-                IFile file = (IFile) input.getAdapter(IFile.class);
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                var file = (IFile) input.getAdapter(IFile.class);
+                var out = new ByteArrayOutputStream();
                 saveToStream(monitor, parameterTable.getParameters(), out);
                 loadData();
                 file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);
@@ -158,11 +155,11 @@ public class ScrollEditor extends EditorPart {
         if (monitor != null) {
             monitor.beginTask("Save", IProgressMonitor.UNKNOWN);
         }
-        final PrintWriter out = new PrintWriter(stream);
+        var out = new PrintWriter(stream);
 
         try {
 
-            Gson gson = new Gson();
+            var gson = new Gson();
 
             fileInput.setParameters(parameters);
             gson.toJson(fileInput, out);

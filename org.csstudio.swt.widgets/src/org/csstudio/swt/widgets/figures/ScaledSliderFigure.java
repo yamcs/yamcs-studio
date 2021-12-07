@@ -36,7 +36,6 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -58,23 +57,17 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
     private Color fillColor = BLUE_COLOR;
 
     private Color fillBackgroundColor = GRAY_COLOR;
-    private Color thumbColor = CustomMediaFactory.getInstance().getColor(
-            new RGB(172, 172, 172));
+    private Color thumbColor = CustomMediaFactory.getInstance().getColor(new RGB(172, 172, 172));
     private boolean effect3D = true;
     private boolean horizontal = false;
-    private final static Color WHITE_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_WHITE);
+    private final static Color WHITE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_WHITE);
 
     // border color for track and thumb
-    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GRAY);
+    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
 
-    private final static Color GREEN_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_GREEN);
-    private final static Color BLUE_COLOR = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_BLUE);
-    private final static Color LABEL_COLOR = CustomMediaFactory.getInstance().getColor(
-            new RGB(255, 255, 150));
+    private final static Color GREEN_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GREEN);
+    private final static Color BLUE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_BLUE);
+    private final static Color LABEL_COLOR = CustomMediaFactory.getInstance().getColor(new RGB(255, 255, 150));
 
     /** The alpha (0 is transparency and 255 is opaque) for disabled paint */
     private static final int DISABLED_ALPHA = 100;
@@ -135,16 +128,16 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             @Override
             public void keyPressed(KeyEvent ke) {
-                if ((ke.keycode == SWT.ARROW_DOWN && !horizontal) ||
-                        (ke.keycode == SWT.ARROW_LEFT && horizontal))
+                if ((ke.keycode == SWT.ARROW_DOWN && !horizontal) || (ke.keycode == SWT.ARROW_LEFT && horizontal)) {
                     stepDown();
-                else if ((ke.keycode == SWT.ARROW_UP && !horizontal) ||
-                        (ke.keycode == SWT.ARROW_RIGHT && horizontal))
+                } else if ((ke.keycode == SWT.ARROW_UP && !horizontal)
+                        || (ke.keycode == SWT.ARROW_RIGHT && horizontal)) {
                     stepUp();
-                else if (ke.keycode == SWT.PAGE_UP)
+                } else if (ke.keycode == SWT.PAGE_UP) {
                     pageUp();
-                else if (ke.keycode == SWT.PAGE_DOWN)
+                } else if (ke.keycode == SWT.PAGE_DOWN) {
                     pageDown();
+                }
             }
 
             @Override
@@ -173,7 +166,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      * @param listener
      *            The slider listener to add.
      */
-    public void addManualValueChangeListener(final IManualValueChangeListener listener) {
+    public void addManualValueChangeListener(IManualValueChangeListener listener) {
         listeners.add(listener);
     }
 
@@ -183,9 +176,10 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      * @param listener
      *            the listner to be removed.
      */
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
-        if (listeners.contains(listener))
+    public void removeManualValueChangeListener(IManualValueChangeListener listener) {
+        if (listeners.contains(listener)) {
             listeners.remove(listener);
+        }
     }
 
     /**
@@ -201,19 +195,18 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         double change;
         double dragRange = ((LinearScale) scale).getTickLength();
         if (scale.isLogScaleEnabled()) {
-            double c = dragRange / (Math.log10(scale.getRange().getUpper()) -
-                    Math.log10(scale.getRange().getLower()));
-            if (horizontal)
+            var c = dragRange / (Math.log10(scale.getRange().getUpper()) - Math.log10(scale.getRange().getLower()));
+            if (horizontal) {
                 change = oldValue * (Math.pow(10, difference.width / c) - 1);
-            else
+            } else {
                 change = oldValue * (Math.pow(10, -difference.height / c) - 1);
+            }
         } else {
-            if (horizontal)
-                change = (scale.getRange().getUpper() - scale.getRange().getLower())
-                        * difference.width / dragRange;
-            else
-                change = -(scale.getRange().getUpper() - scale.getRange().getLower())
-                        * difference.height / dragRange;
+            if (horizontal) {
+                change = (scale.getRange().getUpper() - scale.getRange().getLower()) * difference.width / dragRange;
+            } else {
+                change = -(scale.getRange().getUpper() - scale.getRange().getLower()) * difference.height / dragRange;
+            }
         }
         return change;
     }
@@ -224,7 +217,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      * @param newManualValue
      *            the new manual value
      */
-    private void fireManualValueChange(final double newManualValue) {
+    private void fireManualValueChange(double newManualValue) {
 
         for (IManualValueChangeListener l : listeners) {
             l.manualValueChanged(newManualValue);
@@ -319,7 +312,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             graphics.setForegroundColor(ColorConstants.black);
             graphics.setBackgroundColor(ColorConstants.white);
 
-            Rectangle area = getClientArea();
+            var area = getClientArea();
             graphics.drawFocus(area.x, area.y, area.width - 1, area.height - 1);
         }
         if (!isEnabled()) {
@@ -334,8 +327,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
-        if (this.effect3D == effect3D)
+        if (this.effect3D == effect3D) {
             return;
+        }
         this.effect3D = effect3D;
         repaint();
     }
@@ -352,8 +346,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      *            the fillBackgroundColor to set
      */
     public void setFillBackgroundColor(Color fillBackgroundColor) {
-        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor))
+        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor)) {
             return;
+        }
         this.fillBackgroundColor = fillBackgroundColor;
         repaint();
     }
@@ -363,8 +358,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      *            the fillColor to set
      */
     public void setFillColor(Color fillColor) {
-        if (this.fillColor != null && this.fillColor.equals(fillColor))
+        if (this.fillColor != null && this.fillColor.equals(fillColor)) {
             return;
+        }
         this.fillColor = fillColor;
         repaint();
     }
@@ -374,8 +370,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      *            the horizontal to set
      */
     public void setHorizontal(boolean horizontal) {
-        if (this.horizontal == horizontal)
+        if (this.horizontal == horizontal) {
             return;
+        }
         this.horizontal = horizontal;
         if (horizontal) {
             ((LinearScale) scale).setOrientation(Orientation.HORIZONTAL);
@@ -406,8 +403,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      *            the thumbColor to set
      */
     public void setThumbColor(Color thumbColor) {
-        if (this.thumbColor != null && this.thumbColor.equals(thumbColor))
+        if (this.thumbColor != null && this.thumbColor.equals(thumbColor)) {
             return;
+        }
         this.thumbColor = thumbColor;
         repaint();
     }
@@ -429,9 +427,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
     }
 
     class Thumb extends Polygon {
-        class ThumbDragger
-                extends MouseMotionListener.Stub
-                implements MouseListener {
+        class ThumbDragger extends MouseMotionListener.Stub implements MouseListener {
             protected Point start;
 
             protected boolean armed;
@@ -445,16 +441,18 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             @Override
             public void mouseDragged(MouseEvent me) {
-                if (!armed)
+                if (!armed) {
                     return;
-                Dimension difference = me.getLocation().getDifference(start);
-                double valueChange = calcValueChange(difference, value);
-                double oldValue = value;
+                }
+                var difference = me.getLocation().getDifference(start);
+                var valueChange = calcValueChange(difference, value);
+                var oldValue = value;
                 if (stepIncrement <= 0 || Math.abs(valueChange) > stepIncrement / 2.0) {
-                    if (stepIncrement > 0)
+                    if (stepIncrement > 0) {
                         manualSetValue(value + stepIncrement * Math.round(valueChange / stepIncrement));
-                    else
+                    } else {
                         manualSetValue(value + valueChange);
+                    }
                     label.setVisible(true);
                     double valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
 
@@ -476,9 +474,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                             }, 100);
                         }
                     }
-                    start = new Point(
-                            horizontal ? valuePosition : 0,
-                            horizontal ? 0 : valuePosition);
+                    start = new Point(horizontal ? valuePosition : 0, horizontal ? 0 : valuePosition);
                 }
                 me.consume();
             }
@@ -499,13 +495,12 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             @Override
             public void mousePressed(MouseEvent me) {
-                if (me.button != 1)
+                if (me.button != 1) {
                     return;
+                }
                 armed = true;
                 double valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
-                start = new Point(
-                        horizontal ? valuePosition : 0,
-                        horizontal ? 0 : valuePosition);
+                start = new Point(horizontal ? valuePosition : 0, horizontal ? 0 : valuePosition);
                 label.setVisible(true);
                 if (!ScaledSliderFigure.this.hasFocus()) {
                     ScaledSliderFigure.this.requestFocus();
@@ -516,10 +511,12 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             @Override
             public void mouseReleased(MouseEvent me) {
-                if (me.button != 1)
+                if (me.button != 1) {
                     return;
-                if (!armed)
+                }
+                if (!armed) {
                     return;
+                }
                 armed = false;
                 me.consume();
             }
@@ -527,12 +524,10 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
         public static final int LENGTH = 20;
         public static final int BREADTH = 11;
-        public final PointList horizontalThumbPointList = new PointList(new int[] {
-                0, 0, 0, BREADTH, LENGTH * 4 / 5, BREADTH, LENGTH, BREADTH / 2,
-                LENGTH * 4 / 5, 0 });
-        public final PointList verticalThumbPointList = new PointList(new int[] {
-                0, 0, 0, LENGTH * 4 / 5, BREADTH / 2, LENGTH, BREADTH, LENGTH * 4 / 5, BREADTH,
-                0 });
+        public final PointList horizontalThumbPointList = new PointList(
+                new int[] { 0, 0, 0, BREADTH, LENGTH * 4 / 5, BREADTH, LENGTH, BREADTH / 2, LENGTH * 4 / 5, 0 });
+        public final PointList verticalThumbPointList = new PointList(
+                new int[] { 0, 0, 0, LENGTH * 4 / 5, BREADTH / 2, LENGTH, BREADTH, LENGTH * 4 / 5, BREADTH, 0 });
 
         private Color temp;
 
@@ -543,7 +538,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             setCursor(Cursors.HAND);
             setForegroundColor(GRAY_COLOR);
             setLineWidth(1);
-            ThumbDragger thumbDragger = new ThumbDragger();
+            var thumbDragger = new ThumbDragger();
             addMouseMotionListener(thumbDragger);
             addMouseListener(thumbDragger);
         }
@@ -554,26 +549,28 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             g.setClip(new Rectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height));
             g.setBackgroundColor(WHITE_COLOR);
             super.fillShape(g);
-            Point leftPoint = getPoints().getPoint(0);
+            var leftPoint = getPoints().getPoint(0);
             Point rightPoint;
-            if (horizontal)
+            if (horizontal) {
                 rightPoint = getPoints().getPoint(4);
-            else
+            } else {
                 rightPoint = getPoints().getPoint(1);// .translate(0, -BREADTH/2);
+            }
             Pattern thumbPattern = null;
-            boolean support3D = GraphicsUtil.testPatternSupported(g);
+            var support3D = GraphicsUtil.testPatternSupported(g);
             if (effect3D && support3D) {
-                thumbPattern = GraphicsUtil.createScaledPattern(g, Display.getCurrent(),
-                        leftPoint.x, leftPoint.y, rightPoint.x, rightPoint.y, WHITE_COLOR, 0,
-                        thumbColor, 255);
+                thumbPattern = GraphicsUtil.createScaledPattern(g, Display.getCurrent(), leftPoint.x, leftPoint.y,
+                        rightPoint.x, rightPoint.y, WHITE_COLOR, 0, thumbColor, 255);
                 g.setBackgroundPattern(thumbPattern);
-            } else
+            } else {
                 g.setBackgroundColor(thumbColor);
+            }
 
             g.fillPolygon(getPoints());
 
-            if (effect3D && support3D)
+            if (effect3D && support3D) {
                 thumbPattern.dispose();
+            }
 
         }
     }
@@ -596,16 +593,18 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 @Override
                 public void run() {
                     if (pageUp) {
-                        if (getValue() >= pressedValue)
+                        if (getValue() >= pressedValue) {
                             behavior.suspend();
-                        else
+                        } else {
                             pageUp();
+                        }
 
                     } else {
-                        if (getValue() <= pressedValue)
+                        if (getValue() <= pressedValue) {
                             behavior.suspend();
-                        else
+                        } else {
                             pageDown();
+                        }
                     }
                 }
             });
@@ -613,18 +612,21 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             addMouseListener(new MouseListener.Stub() {
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    if (me.button != 1)
+                    if (me.button != 1) {
                         return;
-                    Point start = me.getLocation();
-                    if (horizontal)
+                    }
+                    var start = me.getLocation();
+                    if (horizontal) {
                         start.x = start.x + thumb.getBounds().width / 2;
-                    else
+                    } else {
                         start.y = start.y + thumb.getBounds().height / 2;
+                    }
                     pressedValue = ((LinearScale) scale).getPositionValue(horizontal ? start.x : start.y, false);
-                    if (pressedValue > getValue())
+                    if (pressedValue > getValue()) {
                         pageUp = true;
-                    else
+                    } else {
                         pageUp = false;
+                    }
                     behavior.pressed();
                     if (!ScaledSliderFigure.this.hasFocus()) {
                         ScaledSliderFigure.this.requestFocus();
@@ -634,8 +636,9 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
                 @Override
                 public void mouseReleased(MouseEvent me) {
-                    if (me.button != 1)
+                    if (me.button != 1) {
                         return;
+                    }
                     behavior.released();
                 }
 
@@ -646,25 +649,20 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         protected void fillShape(Graphics graphics) {
 
             graphics.setAntialias(SWT.ON);
-            int valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
-            boolean support3D = GraphicsUtil.testPatternSupported(graphics);
+            var valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
+            var support3D = GraphicsUtil.testPatternSupported(graphics);
             if (effect3D && support3D) {
                 // fill background
                 graphics.setBackgroundColor(fillBackgroundColor);
                 super.fillShape(graphics);
                 Pattern backGroundPattern;
-                if (horizontal)
-                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            bounds.x, bounds.y,
-                            bounds.x, bounds.y + bounds.height,
-                            WHITE_COLOR, 255,
-                            fillBackgroundColor, 0);
-                else
-                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            bounds.x, bounds.y,
-                            bounds.x + bounds.width, bounds.y,
-                            WHITE_COLOR, 255,
-                            fillBackgroundColor, 0);
+                if (horizontal) {
+                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x,
+                            bounds.y, bounds.x, bounds.y + bounds.height, WHITE_COLOR, 255, fillBackgroundColor, 0);
+                } else {
+                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x,
+                            bounds.y, bounds.x + bounds.width, bounds.y, WHITE_COLOR, 255, fillBackgroundColor, 0);
+                }
                 graphics.setBackgroundPattern(backGroundPattern);
                 super.fillShape(graphics);
                 graphics.setForegroundColor(fillBackgroundColor);
@@ -672,46 +670,33 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 backGroundPattern.dispose();
 
                 // fill value
-                if (horizontal)
-                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            bounds.x, bounds.y,
-                            bounds.x, bounds.y + bounds.height,
-                            WHITE_COLOR, 255,
-                            fillColor, 0);
-                else
-                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            bounds.x, bounds.y,
-                            bounds.x + bounds.width, bounds.y,
-                            WHITE_COLOR, 255,
-                            fillColor, 0);
+                if (horizontal) {
+                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x,
+                            bounds.y, bounds.x, bounds.y + bounds.height, WHITE_COLOR, 255, fillColor, 0);
+                } else {
+                    backGroundPattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x,
+                            bounds.y, bounds.x + bounds.width, bounds.y, WHITE_COLOR, 255, fillColor, 0);
+                }
 
                 graphics.setBackgroundColor(fillColor);
                 graphics.setForegroundColor(fillColor);
                 if (horizontal) {
-                    int fillWidth = valuePosition - bounds.x;
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            bounds.y, fillWidth, bounds.height));
+                    var fillWidth = valuePosition - bounds.x;
+                    graphics.fillRectangle(new Rectangle(bounds.x, bounds.y, fillWidth, bounds.height));
                     graphics.setBackgroundPattern(backGroundPattern);
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            bounds.y, fillWidth, bounds.height));
+                    graphics.fillRectangle(new Rectangle(bounds.x, bounds.y, fillWidth, bounds.height));
 
-                    graphics.drawRectangle(new Rectangle(bounds.x + lineWidth / 2,
-                            bounds.y + lineWidth / 2,
-                            fillWidth - Math.max(1, lineWidth),
-                            bounds.height - Math.max(1, lineWidth)));
+                    graphics.drawRectangle(new Rectangle(bounds.x + lineWidth / 2, bounds.y + lineWidth / 2,
+                            fillWidth - Math.max(1, lineWidth), bounds.height - Math.max(1, lineWidth)));
 
                 } else {
-                    int fillHeight = bounds.height - (valuePosition - bounds.y);
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            valuePosition, bounds.width, fillHeight));
+                    var fillHeight = bounds.height - (valuePosition - bounds.y);
+                    graphics.fillRectangle(new Rectangle(bounds.x, valuePosition, bounds.width, fillHeight));
                     graphics.setBackgroundPattern(backGroundPattern);
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            valuePosition, bounds.width, fillHeight));
+                    graphics.fillRectangle(new Rectangle(bounds.x, valuePosition, bounds.width, fillHeight));
 
-                    graphics.drawRectangle(new Rectangle(bounds.x + lineWidth / 2,
-                            valuePosition + lineWidth / 2,
-                            bounds.width - Math.max(1, lineWidth),
-                            fillHeight - Math.max(1, lineWidth)));
+                    graphics.drawRectangle(new Rectangle(bounds.x + lineWidth / 2, valuePosition + lineWidth / 2,
+                            bounds.width - Math.max(1, lineWidth), fillHeight - Math.max(1, lineWidth)));
                 }
 
                 backGroundPattern.dispose();
@@ -720,17 +705,13 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 graphics.setBackgroundColor(fillBackgroundColor);
                 super.fillShape(graphics);
                 graphics.setBackgroundColor(fillColor);
-                if (horizontal)
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            bounds.y,
-                            valuePosition - bounds.x,
-                            bounds.height));
-                else
-                    graphics.fillRectangle(new Rectangle(bounds.x,
-                            valuePosition,
-                            bounds.width,
+                if (horizontal) {
+                    graphics.fillRectangle(new Rectangle(bounds.x, bounds.y, valuePosition - bounds.x, bounds.height));
+                } else {
+                    graphics.fillRectangle(new Rectangle(bounds.x, valuePosition, bounds.width,
                             bounds.height - (valuePosition - bounds.y)));
-                // graphics.setForegroundColor(outlineColor);
+                    // graphics.setForegroundColor(outlineColor);
+                }
             }
         }
     }
@@ -759,16 +740,15 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         private AlphaLabel label;
 
         @Override
-        protected Dimension calculatePreferredSize(IFigure container, int w,
-                int h) {
-            Insets insets = container.getInsets();
-            Dimension d = new Dimension(64, 4 * 64);
+        protected Dimension calculatePreferredSize(IFigure container, int w, int h) {
+            var insets = container.getInsets();
+            var d = new Dimension(64, 4 * 64);
             d.expand(insets.getWidth(), insets.getHeight());
             return d;
         }
 
         private void horizontalLayout(IFigure container) {
-            Rectangle area = container.getClientArea().getCopy();
+            var area = container.getClientArea().getCopy();
             area.x += ADDITIONAL_MARGIN;
             area.width -= 2 * ADDITIONAL_MARGIN;
             Dimension scaleSize;
@@ -776,10 +756,10 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             if (scale != null) {
                 scaleSize = new Dimension(area.width, 0);
-                if (scale.isVisible())
+                if (scale.isVisible()) {
                     scaleSize = scale.getPreferredSize(area.width, -1);
-                scale.setBounds(new Rectangle(area.x,
-                        area.y + area.height / 2 + Thumb.LENGTH / 2 + GAP_BTW_THUMB_SCALE,
+                }
+                scale.setBounds(new Rectangle(area.x, area.y + area.height / 2 + Thumb.LENGTH / 2 + GAP_BTW_THUMB_SCALE,
                         scaleSize.width, scaleSize.height));
             }
 
@@ -791,99 +771,99 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             }
 
             if (track != null) {
-                track.setBounds(new Rectangle(
-                        scale.getValuePosition(scale.getRange().getLower(), false) - track.getLineWidth(),
-                        area.y + area.height / 2 - Track.TRACK_BREADTH / 2,
-                        scale.getTickLength() + 2 * track.getLineWidth(),
-                        Track.TRACK_BREADTH));
+                track.setBounds(
+                        new Rectangle(scale.getValuePosition(scale.getRange().getLower(), false) - track.getLineWidth(),
+                                area.y + area.height / 2 - Track.TRACK_BREADTH / 2,
+                                scale.getTickLength() + 2 * track.getLineWidth(), Track.TRACK_BREADTH));
             }
 
             if (thumb != null) {
-                PointList newPointList = thumb.verticalThumbPointList.getCopy();
+                var newPointList = thumb.verticalThumbPointList.getCopy();
                 newPointList.translate(scale.getValuePosition(getCoercedValue(), false) - Thumb.BREADTH / 2,
                         area.y + area.height / 2 - Thumb.LENGTH / 2 + 1);
                 thumb.setPoints(newPointList);
             }
-            if (label != null && label.isVisible())
+            if (label != null && label.isVisible()) {
                 setLabel();
+            }
         }
 
         @Override
         public void layout(IFigure container) {
-            if (horizontal)
+            if (horizontal) {
                 horizontalLayout(container);
-            else
+            } else {
                 verticalLayout(container);
+            }
         }
 
         @Override
         public void setConstraint(IFigure child, Object constraint) {
-            if (constraint.equals(SCALE))
+            if (constraint.equals(SCALE)) {
                 scale = (LinearScale) child;
-            else if (constraint.equals(MARKERS))
+            } else if (constraint.equals(MARKERS)) {
                 marker = (LinearScaledMarker) child;
-            else if (constraint.equals(TRACK))
+            } else if (constraint.equals(TRACK)) {
                 track = (Track) child;
-            else if (constraint.equals(THUMB))
+            } else if (constraint.equals(THUMB)) {
                 thumb = (Thumb) child;
-            else if (constraint.equals(LABEL))
+            } else if (constraint.equals(LABEL)) {
                 label = (AlphaLabel) child;
+            }
         }
 
         private void setLabel() {
-            String text = getValueText();
-            Dimension textSize = FigureUtilities.getStringExtents(text, label.getFont());
+            var text = getValueText();
+            var textSize = FigureUtilities.getStringExtents(text, label.getFont());
             label.setText(text);
-            Rectangle thumbBounds = thumb.getBounds();
-            Rectangle clientArea = getClientArea();
+            var thumbBounds = thumb.getBounds();
+            var clientArea = getClientArea();
             if (horizontal) {
-                int topY = thumbBounds.y - textSize.height - 2 * LABEL_MARGIN;
+                var topY = thumbBounds.y - textSize.height - 2 * LABEL_MARGIN;
                 if (topY > clientArea.y) { // show on top of thumb
-                    label.setBounds(new Rectangle(thumbBounds.x + thumbBounds.width / 2
-                            - (textSize.width + 2 * LABEL_MARGIN) / 2, topY,
-                            textSize.width + 2
-                                    * LABEL_MARGIN,
-                            textSize.height + LABEL_MARGIN));
+                    label.setBounds(new Rectangle(
+                            thumbBounds.x + thumbBounds.width / 2 - (textSize.width + 2 * LABEL_MARGIN) / 2, topY,
+                            textSize.width + 2 * LABEL_MARGIN, textSize.height + LABEL_MARGIN));
                 } else { // show on right of thumb
-                    int rightX = thumbBounds.x + thumbBounds.width + LABEL_MARGIN;
-                    if ((rightX + textSize.width + 2 * LABEL_MARGIN) > clientArea.getRight().x)
+                    var rightX = thumbBounds.x + thumbBounds.width + LABEL_MARGIN;
+                    if ((rightX + textSize.width + 2 * LABEL_MARGIN) > clientArea.getRight().x) {
                         rightX = thumbBounds.x - textSize.width - 2 * LABEL_MARGIN;
+                    }
 
-                    label.setBounds(new Rectangle(rightX, thumbBounds.y, textSize.width + 2
-                            * LABEL_MARGIN, textSize.height + LABEL_MARGIN));
+                    label.setBounds(new Rectangle(rightX, thumbBounds.y, textSize.width + 2 * LABEL_MARGIN,
+                            textSize.height + LABEL_MARGIN));
                 }
             } else {
-                int leftX = thumbBounds.x - textSize.width - 2 * LABEL_MARGIN;
+                var leftX = thumbBounds.x - textSize.width - 2 * LABEL_MARGIN;
                 if (leftX > clientArea.x) { // show on left of thumb
-                    label.setBounds(new Rectangle(leftX, thumbBounds.y + thumbBounds.height / 2
-                            - (textSize.height + LABEL_MARGIN) / 2,
-                            textSize.width + 2
-                                    * LABEL_MARGIN,
-                            textSize.height + LABEL_MARGIN));
+                    label.setBounds(new Rectangle(leftX,
+                            thumbBounds.y + thumbBounds.height / 2 - (textSize.height + LABEL_MARGIN) / 2,
+                            textSize.width + 2 * LABEL_MARGIN, textSize.height + LABEL_MARGIN));
 
                 } else { // show on top of thumb
-                    int topY = thumbBounds.y - textSize.height - LABEL_MARGIN;
-                    if ((topY - textSize.height - LABEL_MARGIN) < clientArea.y)
+                    var topY = thumbBounds.y - textSize.height - LABEL_MARGIN;
+                    if ((topY - textSize.height - LABEL_MARGIN) < clientArea.y) {
                         topY = thumbBounds.y + thumbBounds.height;
-                    label.setBounds(new Rectangle(thumbBounds.x + thumbBounds.width / 2
-                            - (textSize.width + 2 * LABEL_MARGIN) / 2, topY, textSize.width + 2 * LABEL_MARGIN,
-                            textSize.height + LABEL_MARGIN));
+                    }
+                    label.setBounds(new Rectangle(
+                            thumbBounds.x + thumbBounds.width / 2 - (textSize.width + 2 * LABEL_MARGIN) / 2, topY,
+                            textSize.width + 2 * LABEL_MARGIN, textSize.height + LABEL_MARGIN));
                 }
             }
         }
 
         private void verticalLayout(IFigure container) {
-            Rectangle area = container.getClientArea();
+            var area = container.getClientArea();
 
             Dimension scaleSize;
             Dimension markerSize;
 
             if (scale != null) {
                 scaleSize = new Dimension(0, area.height);
-                if (scale.isVisible())
+                if (scale.isVisible()) {
                     scaleSize = scale.getPreferredSize(-1, area.height);
-                scale.setBounds(new Rectangle(area.x + area.width / 2 + Thumb.LENGTH / 2 + GAP_BTW_THUMB_SCALE,
-                        area.y,
+                }
+                scale.setBounds(new Rectangle(area.x + area.width / 2 + Thumb.LENGTH / 2 + GAP_BTW_THUMB_SCALE, area.y,
                         scaleSize.width, scaleSize.height));
             }
 
@@ -895,21 +875,20 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             }
 
             if (track != null) {
-                track.setBounds(new Rectangle(
-                        area.x + area.width / 2 - Track.TRACK_BREADTH / 2,
+                track.setBounds(new Rectangle(area.x + area.width / 2 - Track.TRACK_BREADTH / 2,
                         scale.getValuePosition(scale.getRange().getUpper(), false) - track.getLineWidth(),
-                        Track.TRACK_BREADTH,
-                        scale.getTickLength() + 2 * track.getLineWidth()));
+                        Track.TRACK_BREADTH, scale.getTickLength() + 2 * track.getLineWidth()));
             }
 
             if (thumb != null) {
-                PointList newPointList = thumb.horizontalThumbPointList.getCopy();
+                var newPointList = thumb.horizontalThumbPointList.getCopy();
                 newPointList.translate(area.x + area.width / 2 - Thumb.LENGTH / 2 + 1,
                         scale.getValuePosition(getCoercedValue(), false) - Thumb.BREADTH / 2);
                 thumb.setPoints(newPointList);
             }
-            if (label != null && label.isVisible())
+            if (label != null && label.isVisible()) {
                 setLabel();
+            }
         }
 
     }

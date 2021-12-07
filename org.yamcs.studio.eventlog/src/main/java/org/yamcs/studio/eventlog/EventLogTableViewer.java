@@ -2,11 +2,9 @@ package org.yamcs.studio.eventlog;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
@@ -26,9 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.ColumnData;
 import org.yamcs.studio.core.utils.ColumnDef;
@@ -75,7 +71,7 @@ public class EventLogTableViewer extends TableViewer {
 
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
         infoIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level0s.png"));
         watchIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level1s.png"));
         warningIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level2s.png"));
@@ -87,7 +83,7 @@ public class EventLogTableViewer extends TableViewer {
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
-        TableLayout tableLayout = new TableLayout();
+        var tableLayout = new TableLayout();
         getTable().setLayout(tableLayout);
 
         columnData = createDefaultColumnData();
@@ -99,7 +95,7 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     public ColumnData createDefaultColumnData() {
-        ColumnData data = new ColumnData();
+        var data = new ColumnData();
         data.addColumn(COL_SEVERITY, 40);
         data.addColumn(COL_GENERATION, 160);
         data.addColumn(COL_MESSAGE, 400);
@@ -121,7 +117,7 @@ public class EventLogTableViewer extends TableViewer {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 comparator.setColumn(column);
-                int dir = comparator.getDirection();
+                var dir = comparator.getDirection();
                 getTable().setSortDirection(dir);
                 getTable().setSortColumn(column);
                 refresh();
@@ -134,7 +130,7 @@ public class EventLogTableViewer extends TableViewer {
 
         @Override
         public Color getBackground(Object element) {
-            EventLogItem item = (EventLogItem) element;
+            var item = (EventLogItem) element;
             if (item.bg != null) {
                 return colorCache.computeIfAbsent(item.bg, rgb -> resourceManager.createColor(rgb));
             }
@@ -143,7 +139,7 @@ public class EventLogTableViewer extends TableViewer {
 
         @Override
         public Color getForeground(Object element) {
-            EventLogItem item = (EventLogItem) element;
+            var item = (EventLogItem) element;
             if (item.fg != null) {
                 return colorCache.computeIfAbsent(item.fg, rgb -> resourceManager.createColor(rgb));
             }
@@ -153,8 +149,7 @@ public class EventLogTableViewer extends TableViewer {
 
     public void openConfigureColumnsDialog(Shell shell) {
         syncCurrentWidthsToModel();
-        ViewerColumnsDialog dialog = new EventLogViewColumnsDialog(shell, EventLogTableViewer.this,
-                columnData);
+        ViewerColumnsDialog dialog = new EventLogViewColumnsDialog(shell, EventLogTableViewer.this, columnData);
         if (dialog.open() == Dialog.OK) {
             columnData.clear();
             dialog.getVisible().forEach(c -> {
@@ -169,7 +164,7 @@ public class EventLogTableViewer extends TableViewer {
 
     private void syncCurrentWidthsToModel() {
         for (TableColumn column : getTable().getColumns()) {
-            ColumnDef def = columnData.getColumn(column.getText());
+            var def = columnData.getColumn(column.getText());
             if (def != null) {
                 def.width = column.getWidth();
             }
@@ -177,17 +172,17 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     private void createColumns() {
-        Table table = getTable();
-        TableLayout layout = new TableLayout();
+        var table = getTable();
+        var layout = new TableLayout();
 
-        TableColumn[] currentColumns = getTable().getColumns();
+        var currentColumns = getTable().getColumns();
         for (TableColumn currentColumn : currentColumns) {
             currentColumn.dispose();
         }
 
         for (ColumnDef def : columnData.getVisibleColumns()) {
             if (def.name.equals(COL_SEVERITY)) {
-                TableViewerColumn severityColumn = new TableViewerColumn(this, SWT.CENTER);
+                var severityColumn = new TableViewerColumn(this, SWT.CENTER);
                 severityColumn.getColumn().setText(COL_SEVERITY);
                 severityColumn.getColumn().addControlListener(columnResizeListener);
                 severityColumn.getColumn().addSelectionListener(getSelectionAdapter(severityColumn.getColumn()));
@@ -196,7 +191,7 @@ public class EventLogTableViewer extends TableViewer {
 
                     @Override
                     public Image getImage(Object element) {
-                        Event event = ((EventLogItem) element).event;
+                        var event = ((EventLogItem) element).event;
                         if (event.hasSeverity()) {
                             switch (event.getSeverity()) {
                             case INFO:
@@ -224,7 +219,7 @@ public class EventLogTableViewer extends TableViewer {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        Event event = ((EventLogItem) element).event;
+                        var event = ((EventLogItem) element).event;
                         if (event.hasSeverity()) {
                             return "" + event.getSeverity();
                         } else {
@@ -234,15 +229,15 @@ public class EventLogTableViewer extends TableViewer {
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_GENERATION)) {
-                TableViewerColumn generationColumn = new TableViewerColumn(this, SWT.NONE);
+                var generationColumn = new TableViewerColumn(this, SWT.NONE);
                 generationColumn.getColumn().setText(COL_GENERATION);
                 generationColumn.getColumn().addControlListener(columnResizeListener);
                 generationColumn.getColumn().addSelectionListener(getSelectionAdapter(generationColumn.getColumn()));
                 generationColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
-                        Instant generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),
+                        var event = ((EventLogItem) element).event;
+                        var generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),
                                 event.getGenerationTime().getNanos());
                         return YamcsPlugin.getDefault().formatInstant(generationTime);
                     }
@@ -254,46 +249,46 @@ public class EventLogTableViewer extends TableViewer {
                 table.setSortColumn(generationColumn.getColumn());
                 table.setSortDirection(SWT.UP);
             } else if (def.name.equals(COL_TYPE)) {
-                TableViewerColumn typeColumn = new TableViewerColumn(this, SWT.NONE);
+                var typeColumn = new TableViewerColumn(this, SWT.NONE);
                 typeColumn.getColumn().setText(COL_TYPE);
                 typeColumn.getColumn().addControlListener(columnResizeListener);
                 typeColumn.getColumn().addSelectionListener(getSelectionAdapter(typeColumn.getColumn()));
                 typeColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
+                        var event = ((EventLogItem) element).event;
                         return event.hasType() ? event.getType() : "";
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_SOURCE)) {
-                TableViewerColumn sourceColumn = new TableViewerColumn(this, SWT.NONE);
+                var sourceColumn = new TableViewerColumn(this, SWT.NONE);
                 sourceColumn.getColumn().setText(COL_SOURCE);
                 sourceColumn.getColumn().addControlListener(columnResizeListener);
                 sourceColumn.getColumn().addSelectionListener(getSelectionAdapter(sourceColumn.getColumn()));
                 sourceColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
+                        var event = ((EventLogItem) element).event;
                         return event.hasSource() ? event.getSource() : "";
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_MESSAGE)) {
-                TableViewerColumn messageColumn = new TableViewerColumn(this, SWT.NONE);
+                var messageColumn = new TableViewerColumn(this, SWT.NONE);
                 messageColumn.getColumn().setText(COL_MESSAGE);
                 messageColumn.getColumn().addControlListener(columnResizeListener);
                 messageColumn.getColumn().addSelectionListener(getSelectionAdapter(messageColumn.getColumn()));
                 messageColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
-                        String message = event.getMessage();
+                        var event = ((EventLogItem) element).event;
+                        var message = event.getMessage();
                         if (messageLineCount > 0) {
-                            String lineSeparator = "\n";
-                            String[] messageLines = message.split(lineSeparator);
+                            var lineSeparator = "\n";
+                            var messageLines = message.split(lineSeparator);
                             message = "";
-                            int i = 0;
+                            var i = 0;
                             for (; i < messageLineCount && i < messageLines.length; i++) {
                                 if (!message.isEmpty()) {
                                     message += lineSeparator;
@@ -315,29 +310,29 @@ public class EventLogTableViewer extends TableViewer {
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_RECEPTION)) {
-                TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
+                var receptionColumn = new TableViewerColumn(this, SWT.NONE);
                 receptionColumn.getColumn().setText(COL_RECEPTION);
                 receptionColumn.getColumn().addControlListener(columnResizeListener);
                 receptionColumn.getColumn().addSelectionListener(getSelectionAdapter(receptionColumn.getColumn()));
                 receptionColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
-                        Instant receptionTime = Instant.ofEpochSecond(event.getReceptionTime().getSeconds(),
+                        var event = ((EventLogItem) element).event;
+                        var receptionTime = Instant.ofEpochSecond(event.getReceptionTime().getSeconds(),
                                 event.getReceptionTime().getNanos());
                         return YamcsPlugin.getDefault().formatInstant(receptionTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_SEQNUM)) {
-                TableViewerColumn seqNumColumn = new TableViewerColumn(this, SWT.RIGHT);
+                var seqNumColumn = new TableViewerColumn(this, SWT.RIGHT);
                 seqNumColumn.getColumn().setText(COL_SEQNUM);
                 seqNumColumn.getColumn().addControlListener(columnResizeListener);
                 seqNumColumn.getColumn().addSelectionListener(getSelectionAdapter(seqNumColumn.getColumn()));
                 seqNumColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = ((EventLogItem) element).event;
+                        var event = ((EventLogItem) element).event;
                         return "" + event.getSeqNumber();
                     }
                 });
@@ -355,38 +350,38 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     private void saveColumnState() {
-        IDialogSettings settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
+        var settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
 
-        List<ColumnDef> visibleColumns = columnData.getVisibleColumns();
-        String[] visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
-        Integer[] visibleWidths = visibleColumns.stream().map(c -> c.width).toArray(Integer[]::new);
+        var visibleColumns = columnData.getVisibleColumns();
+        var visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
+        var visibleWidths = visibleColumns.stream().map(c -> c.width).toArray(Integer[]::new);
 
         settings.put("visible-cols", visibleNames);
-        for (int i = 0; i < visibleNames.length; i++) {
+        for (var i = 0; i < visibleNames.length; i++) {
             settings.put("visible-width-" + i, visibleWidths[i]);
         }
 
-        List<ColumnDef> hiddenColumns = columnData.getHiddenColumns();
-        String[] hiddenNames = hiddenColumns.stream().map(c -> c.name).toArray(String[]::new);
+        var hiddenColumns = columnData.getHiddenColumns();
+        var hiddenNames = hiddenColumns.stream().map(c -> c.name).toArray(String[]::new);
         settings.put("hidden-cols", hiddenNames);
     }
 
     private void restoreColumnState() {
-        IDialogSettings settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
+        var settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
 
-        String[] oldVisibleNames = settings.getArray("visible-cols");
+        var oldVisibleNames = settings.getArray("visible-cols");
         if (oldVisibleNames != null) {
-            int[] oldVisibleWidths = new int[oldVisibleNames.length];
-            for (int i = 0; i < oldVisibleNames.length; i++) {
+            var oldVisibleWidths = new int[oldVisibleNames.length];
+            for (var i = 0; i < oldVisibleNames.length; i++) {
                 oldVisibleWidths[i] = settings.getInt("visible-width-" + i);
             }
-            String[] oldHiddenNames = settings.getArray("hidden-cols");
+            var oldHiddenNames = settings.getArray("hidden-cols");
 
-            ColumnData restoredData = new ColumnData();
+            var restoredData = new ColumnData();
 
             // Add visible columns we still remember from a previous session
-            for (int i = 0; i < oldVisibleNames.length; i++) {
-                ColumnDef def = columnData.getColumn(oldVisibleNames[i]);
+            for (var i = 0; i < oldVisibleNames.length; i++) {
+                var def = columnData.getColumn(oldVisibleNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, oldVisibleWidths[i], true, def.resizable, def.moveable);
                 } else {
@@ -395,8 +390,8 @@ public class EventLogTableViewer extends TableViewer {
             }
 
             // Add hidden columns we still remember from a previous session
-            for (int i = 0; i < oldHiddenNames.length; i++) {
-                ColumnDef def = columnData.getColumn(oldHiddenNames[i]);
+            for (var i = 0; i < oldHiddenNames.length; i++) {
+                var def = columnData.getColumn(oldHiddenNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, def.width, false, def.resizable, def.moveable);
                 } else {

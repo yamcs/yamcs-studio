@@ -29,12 +29,12 @@ public final class IntegerPropertyDescriptor extends TextPropertyDescriptor {
      * @param category
      *            the category
      */
-    public IntegerPropertyDescriptor(final Object id, final String displayName) {
+    public IntegerPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new IntegerCellEditor(parent);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

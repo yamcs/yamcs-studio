@@ -10,8 +10,8 @@ public class IVIntArray extends IVNumberArray implements VIntArray {
         this(data, sizes, null, alarm, time, display);
     }
 
-    public IVIntArray(ListInt data, ListInt sizes, List<ArrayDimensionDisplay> dimDisplay,
-            Alarm alarm, Time time, Display display) {
+    public IVIntArray(ListInt data, ListInt sizes, List<ArrayDimensionDisplay> dimDisplay, Alarm alarm, Time time,
+            Display display) {
         super(sizes, dimDisplay, alarm, time, display);
         this.data = data;
     }

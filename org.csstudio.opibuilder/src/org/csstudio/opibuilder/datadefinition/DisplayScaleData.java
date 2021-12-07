@@ -57,7 +57,6 @@ public class DisplayScaleData extends AbstractComplexData {
 
     @Override
     public String toString() {
-        return "" + isAutoScaleWidgets() + " " + getMinimumWidth() +
-                " " + getMinimumHeight();
+        return "" + isAutoScaleWidgets() + " " + getMinimumWidth() + " " + getMinimumHeight();
     }
 }

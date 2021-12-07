@@ -36,9 +36,7 @@ public class WeekScale implements Scale {
 
     @Override
     public void drawContent(GC gc, Rectangle coords) {
-        var t = timeline.getStart()
-                .withDayOfMonth(1)
-                .truncatedTo(DAYS);
+        var t = timeline.getStart().withDayOfMonth(1).truncatedTo(DAYS);
 
         var halfHeight = (int) Math.round(coords.height * 0.5);
 
@@ -62,10 +60,7 @@ public class WeekScale implements Scale {
             t = t.plusMonths(1);
         }
 
-        t = timeline.getStart()
-                .withDayOfMonth(1)
-                .with(ChronoField.DAY_OF_WEEK, 1)
-                .truncatedTo(DAYS);
+        t = timeline.getStart().withDayOfMonth(1).with(ChronoField.DAY_OF_WEEK, 1).truncatedTo(DAYS);
         while (t.isBefore(timeline.getStop())) {
             var x = timeline.positionTime(t);
 

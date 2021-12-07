@@ -40,8 +40,7 @@ public class OPIRunnerToolBarContributor extends EditorActionBarContributor {
 
     @Override
     public void setActiveEditor(IEditorPart targetEditor) {
-        opiRuntimeToolBarDelegate
-                .setActiveOPIRuntime((IOPIRuntime) targetEditor);
+        opiRuntimeToolBarDelegate.setActiveOPIRuntime((IOPIRuntime) targetEditor);
     }
 
     @Override

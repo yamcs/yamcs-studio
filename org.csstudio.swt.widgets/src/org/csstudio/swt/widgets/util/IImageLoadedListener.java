@@ -13,6 +13,6 @@ import org.eclipse.draw2d.IFigure;
 
 public interface IImageLoadedListener {
 
-    public void imageLoaded(final IFigure figure);
+    public void imageLoaded(IFigure figure);
 
 }

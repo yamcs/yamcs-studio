@@ -40,8 +40,7 @@ public final class ChangePolyPointsCommand extends Command {
      * @param newPoints
      *            the new point list
      */
-    public ChangePolyPointsCommand(final AbstractPolyModel polyModel,
-            final PointList newPoints) {
+    public ChangePolyPointsCommand(AbstractPolyModel polyModel, PointList newPoints) {
         assert polyModel != null;
         assert newPoints != null;
         _polyModel = polyModel;

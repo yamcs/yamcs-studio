@@ -25,7 +25,7 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        LayoutterFigure figure = new LayoutterFigure(getExecutionMode());
+        var figure = new LayoutterFigure(getExecutionMode());
         figure.setIcon(getIcon());
         return figure;
     }
@@ -41,8 +41,7 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
      *            the bounds of the container which contains the widget models.
      * @return
      */
-    public abstract List<Rectangle> getNewBounds(
-            List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds);
+    public abstract List<Rectangle> getNewBounds(List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds);
 
     /**
      * Layout widgets.
@@ -51,8 +50,8 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
      * @param containerBounds
      */
     public void layout(List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds) {
-        int i = 0;
-        List<Rectangle> newBounds = getNewBounds(widgetModelList, containerBounds);
+        var i = 0;
+        var newBounds = getNewBounds(widgetModelList, containerBounds);
         for (AbstractWidgetModel model : widgetModelList) {
             model.setBounds(newBounds.get(i));
             i++;

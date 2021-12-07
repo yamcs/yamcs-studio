@@ -17,7 +17,7 @@ public class FormulaDatasource implements Datasource {
 
     @Override
     public boolean isConnected(IPV pv) {
-        FormulaData formulaData = pv2data.get(pv);
+        var formulaData = pv2data.get(pv);
         return formulaData != null && formulaData.isConnected();
     }
 
@@ -28,7 +28,7 @@ public class FormulaDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        FormulaData formulaData = pv2data.get(pv);
+        var formulaData = pv2data.get(pv);
         if (formulaData != null) {
             return formulaData.getValue();
         }
@@ -42,15 +42,15 @@ public class FormulaDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        String formulaString = pv.getName();
-        FormulaData formulaData = name2data.computeIfAbsent(formulaString, FormulaData::new);
+        var formulaString = pv.getName();
+        var formulaData = name2data.computeIfAbsent(formulaString, FormulaData::new);
         pv2data.put(pv, formulaData);
         formulaData.register(pv);
     }
 
     @Override
     public void onStopped(IPV pv) {
-        FormulaData formulaData = pv2data.remove(pv);
+        var formulaData = pv2data.remove(pv);
         if (formulaData != null) {
             formulaData.unregister(pv);
         }

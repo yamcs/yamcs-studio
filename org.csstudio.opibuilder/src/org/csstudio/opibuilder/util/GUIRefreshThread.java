@@ -80,12 +80,14 @@ public final class GUIRefreshThread implements Runnable {
      */
     public static synchronized GUIRefreshThread getInstance(boolean isRuntime) {
         if (isRuntime) {
-            if (runTimeInstance == null)
+            if (runTimeInstance == null) {
                 runTimeInstance = new GUIRefreshThread(isRuntime);
+            }
             return runTimeInstance;
         } else {
-            if (editingInstance == null)
+            if (editingInstance == null) {
                 editingInstance = new GUIRefreshThread(isRuntime);
+            }
             return editingInstance;
         }
     }
@@ -94,8 +96,9 @@ public final class GUIRefreshThread implements Runnable {
      * Reschedule this task upon the new GUI refresh cycle.
      */
     public void reLoadGUIRefreshCycle() {
-        if (isRuntime)
+        if (isRuntime) {
             guiRefreshCycle = PreferencesHelper.getGUIRefreshCycle();
+        }
     }
 
     /**
@@ -124,18 +127,20 @@ public final class GUIRefreshThread implements Runnable {
                 rcpProcessQueue();
 
                 try {
-                    long current = System.currentTimeMillis();
-                    if (current - start < guiRefreshCycle)
+                    var current = System.currentTimeMillis();
+                    if (current - start < guiRefreshCycle) {
                         Thread.sleep(guiRefreshCycle - (current - start));
+                    }
                 } catch (InterruptedException e) {
                     // ignore
                 }
-            } else
+            } else {
                 try {
                     Thread.sleep(guiRefreshCycle);
                 } catch (InterruptedException e) {
                     // ignore
                 }
+            }
 
         }
     }
@@ -145,8 +150,9 @@ public final class GUIRefreshThread implements Runnable {
      */
     private void rcpProcessQueue() {
         // avoid add too many stuff to Display async queue.
-        if (!asyncEmpty)
+        if (!asyncEmpty) {
             return;
+        }
         asyncEmpty = false;
         Object[] tasksArray;
         // copy the tasks queue.
@@ -154,15 +160,14 @@ public final class GUIRefreshThread implements Runnable {
             tasksArray = tasksQueue.toArray();
             tasksQueue.clear();
         }
-        if (rcpDisplay == null || rcpDisplay.isDisposed())
+        if (rcpDisplay == null || rcpDisplay.isDisposed()) {
             return;
+        }
         for (Object o : tasksArray) {
             try {
-                rcpDisplay.asyncExec(((WidgetIgnorableUITask) o)
-                        .getRunnableTask());
+                rcpDisplay.asyncExec(((WidgetIgnorableUITask) o).getRunnableTask());
             } catch (Exception e) {
-                OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                        "Display has been disposed.", e);
+                OPIBuilderPlugin.getLogger().log(Level.WARNING, "Display has been disposed.", e);
             }
         }
         rcpDisplay.asyncExec(resetAsyncEmpty);
@@ -174,7 +179,7 @@ public final class GUIRefreshThread implements Runnable {
      * @param task
      *            the ignorable UI task.
      */
-    public synchronized void addIgnorableTask(final WidgetIgnorableUITask task) {
+    public synchronized void addIgnorableTask(WidgetIgnorableUITask task) {
         tasksQueue.remove(task);
         tasksQueue.add(task);
     }

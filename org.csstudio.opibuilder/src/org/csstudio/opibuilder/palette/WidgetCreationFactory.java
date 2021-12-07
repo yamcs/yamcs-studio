@@ -33,8 +33,9 @@ public class WidgetCreationFactory implements CreationFactory {
 
     @Override
     public Object getObjectType() {
-        if (widgetModel == null)
+        if (widgetModel == null) {
             widgetModel = widgetDescriptor.getWidgetModel();
+        }
         Object widgetClass = widgetModel.getClass();
         return widgetClass;
     }

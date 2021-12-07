@@ -3,7 +3,6 @@ package org.csstudio.opibuilder.preferences;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -18,16 +17,16 @@ public class ProbePreferencePage extends FieldEditorPreferencePage implements IW
 
     @Override
     protected void createFieldEditors() {
-        Composite parent = getFieldEditorParent();
+        var parent = getFieldEditorParent();
 
-        WorkspaceFileFieldEditor probeOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.PROBE_OPI,
-                "Probe OPI: ", new String[] { "opi" }, parent);
+        var probeOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.PROBE_OPI, "Probe OPI: ",
+                new String[] { "opi" }, parent);
         addField(probeOPIEditor);
 
         // Empty
         new Label(parent, SWT.NONE);
 
-        Text note = new Text(parent, SWT.MULTI | SWT.READ_ONLY);
+        var note = new Text(parent, SWT.MULTI | SWT.READ_ONLY);
         note.setBackground(parent.getBackground());
         note.setText("This is the display used by the Probe pop-up dialog available\n"
                 + "from a PV widget's context menu. This OPI can dynamically fetch the\n"

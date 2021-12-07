@@ -15,7 +15,6 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgets.FigureTransparencyHelper;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -60,16 +59,12 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new FilePathProperty(PROP_ON_IMAGE, "On Image",
-                WidgetPropertyCategory.Image, "", FILE_EXTENSIONS));
-        addProperty(new FilePathProperty(PROP_OFF_IMAGE, "Off Image",
-                WidgetPropertyCategory.Image, "", FILE_EXTENSIONS));
-        addProperty(new BooleanProperty(PROP_STRETCH, "Stretch to Fit",
-                WidgetPropertyCategory.Image, false));
-        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
-                WidgetPropertyCategory.Image, true));
-        addProperty(new BooleanProperty(PROP_NO_ANIMATION, "No Animation",
-                WidgetPropertyCategory.Image, false));
+        addProperty(new FilePathProperty(PROP_ON_IMAGE, "On Image", WidgetPropertyCategory.Image, "", FILE_EXTENSIONS));
+        addProperty(
+                new FilePathProperty(PROP_OFF_IMAGE, "Off Image", WidgetPropertyCategory.Image, "", FILE_EXTENSIONS));
+        addProperty(new BooleanProperty(PROP_STRETCH, "Stretch to Fit", WidgetPropertyCategory.Image, false));
+        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size", WidgetPropertyCategory.Image, true));
+        addProperty(new BooleanProperty(PROP_NO_ANIMATION, "No Animation", WidgetPropertyCategory.Image, false));
         addProperty(new BooleanProperty(PROP_ALIGN_TO_NEAREST_SECOND, "Animation aligned to the nearest second",
                 WidgetPropertyCategory.Image, false));
 
@@ -109,12 +104,12 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
      * @return the path of the on image.
      */
     public String getOnImagePath() {
-        String absolutePath = (String) getProperty(PROP_ON_IMAGE).getPropertyValue();
+        var absolutePath = (String) getProperty(PROP_ON_IMAGE).getPropertyValue();
         if (absolutePath == null || absolutePath.isEmpty()) {
             return absolutePath;
         }
         if (!absolutePath.contains("://")) {
-            IPath path = Path.fromPortableString(absolutePath);
+            var path = Path.fromPortableString(absolutePath);
             if (!path.isAbsolute()) {
                 path = ResourceUtil.buildAbsolutePath(this, path);
                 absolutePath = path.toPortableString();
@@ -128,12 +123,12 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
      * @return the path of the off image.
      */
     public String getOffImagePath() {
-        String absolutePath = (String) getProperty(PROP_OFF_IMAGE).getPropertyValue();
+        var absolutePath = (String) getProperty(PROP_OFF_IMAGE).getPropertyValue();
         if (absolutePath == null || absolutePath.isEmpty()) {
             return absolutePath;
         }
         if (!absolutePath.contains("://")) {
-            IPath path = Path.fromPortableString(absolutePath);
+            var path = Path.fromPortableString(absolutePath);
             if (!path.isAbsolute()) {
                 path = ResourceUtil.buildAbsolutePath(this, path);
                 absolutePath = path.toPortableString();
@@ -151,8 +146,7 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
     }
 
     public boolean isAlignedToNearestSecond() {
-        return (Boolean) getProperty(PROP_ALIGN_TO_NEAREST_SECOND)
-                .getPropertyValue();
+        return (Boolean) getProperty(PROP_ALIGN_TO_NEAREST_SECOND).getPropertyValue();
     }
 
 }

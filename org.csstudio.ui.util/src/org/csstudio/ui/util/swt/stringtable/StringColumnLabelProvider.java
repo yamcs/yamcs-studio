@@ -27,15 +27,15 @@ class StringColumnLabelProvider extends CellLabelProvider {
      * @param items
      *            It
      */
-    public StringColumnLabelProvider(final TableViewer viewer) {
+    public StringColumnLabelProvider(TableViewer viewer) {
         this.viewer = viewer;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void update(final ViewerCell cell) {
-        final List<String> items = (List<String>) viewer.getInput();
-        final int index = ((Integer) cell.getElement()).intValue();
+    public void update(ViewerCell cell) {
+        var items = (List<String>) viewer.getInput();
+        var index = ((Integer) cell.getElement()).intValue();
         if (index < 0) {
             cell.setText("<Add>");
         } else {

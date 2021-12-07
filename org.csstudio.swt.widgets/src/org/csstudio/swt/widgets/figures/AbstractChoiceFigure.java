@@ -69,13 +69,15 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     }
 
     public void addChoiceButtonListener(IChoiceButtonListener listener) {
-        if (listener != null)
+        if (listener != null) {
             listeners.add(listener);
+        }
     }
 
     public void removeChoiceButtonListener(IChoiceButtonListener listener) {
-        if (listeners.contains(listener))
+        if (listeners.contains(listener)) {
             listeners.remove(listener);
+        }
     }
 
     protected abstract Toggle createToggle(String text);
@@ -127,21 +129,19 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     protected void layout() {
         super.layout();
         if (states.size() > 0) {
-            Rectangle clientArea = getClientArea();
+            var clientArea = getClientArea();
             if (isHorizontal) {
-                int avgWidth = clientArea.width / states.size();
-                int startX = clientArea.x;
+                var avgWidth = clientArea.width / states.size();
+                var startX = clientArea.x;
                 for (Object child : getChildren()) {
-                    ((Figure) child).setBounds(new Rectangle(
-                            startX, clientArea.y, avgWidth, clientArea.height));
+                    ((Figure) child).setBounds(new Rectangle(startX, clientArea.y, avgWidth, clientArea.height));
                     startX += avgWidth;
                 }
             } else {
-                int avgHeight = clientArea.height / states.size();
-                int startY = clientArea.y;
+                var avgHeight = clientArea.height / states.size();
+                var startY = clientArea.y;
                 for (Object child : getChildren()) {
-                    ((Figure) child).setBounds(new Rectangle(
-                            clientArea.x, startY, clientArea.width, avgHeight));
+                    ((Figure) child).setBounds(new Rectangle(clientArea.x, startY, clientArea.width, avgHeight));
                     startY += avgHeight;
                 }
             }
@@ -157,15 +157,17 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     }
 
     public void setHorizontal(boolean newValue) {
-        if (this.isHorizontal == newValue)
+        if (this.isHorizontal == newValue) {
             return;
+        }
         isHorizontal = newValue;
         revalidate();
     }
 
     public void setSelectedColor(Color checkedColor) {
-        if (this.selectedColor != null && this.selectedColor.equals(checkedColor))
+        if (this.selectedColor != null && this.selectedColor.equals(checkedColor)) {
             return;
+        }
         this.selectedColor = checkedColor;
         repaint();
     }
@@ -182,10 +184,10 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     public synchronized void setState(String state) {
         fromSetState = true;
         if (states.contains(state)) {
-            buttonGroup.setSelected(models.get(
-                    states.indexOf(state)));
-        } else
+            buttonGroup.setSelected(models.get(states.indexOf(state)));
+        } else {
             buttonGroup.setSelected(null);
+        }
         fromSetState = false;
     }
 
@@ -203,23 +205,24 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
         }
         toggles.clear();
         models.clear();
-        int i = 0;
-        for (final String state : states) {
-            final int index = i++;
-            ToggleModel toggleModel = new ToggleModel();
-            final Toggle toggle = createToggle(state);
-            if (!runMode)
+        var i = 0;
+        for (String state : states) {
+            var index = i++;
+            var toggleModel = new ToggleModel();
+            var toggle = createToggle(state);
+            if (!runMode) {
                 toggle.setEventHandler(null);
+            }
             toggleModel.addChangeListener(new ChangeListener() {
 
                 @Override
                 public void handleStateChanged(ChangeEvent event) {
-                    if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) &&
-                            toggle.isSelected()) {
-                        if (fromSetState)
+                    if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) && toggle.isSelected()) {
+                        if (fromSetState) {
                             fromSetState = false;
-                        else
+                        } else {
                             fireButtonPressed(index, state);
+                        }
                     }
                 }
             });

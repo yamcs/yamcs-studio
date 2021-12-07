@@ -25,8 +25,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        PolylineFigure polyline = new PolylineFigure();
-        PolyLineModel model = getWidgetModel();
+        var polyline = new PolylineFigure();
+        var model = getWidgetModel();
         polyline.setPoints(model.getPoints());
         polyline.setFill(model.getFillLevel());
         polyline.setHorizontalFill(model.isHorizontalFill());
@@ -51,10 +51,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure polyline = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var polyline = (PolylineFigure) refreshableFigure;
                 polyline.setFill((Double) newValue);
                 return true;
             }
@@ -64,10 +62,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // fill orientaion
         IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure figure = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolylineFigure) refreshableFigure;
                 figure.setHorizontalFill((Boolean) newValue);
                 return true;
             }
@@ -77,10 +73,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // transparent
         IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure figure = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolylineFigure) refreshableFigure;
                 figure.setTransparent((Boolean) newValue);
                 return true;
             }
@@ -90,10 +84,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // arrow Type
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure figure = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolylineFigure) refreshableFigure;
                 figure.setArrowType(ArrowType.values()[(Integer) newValue]);
                 getWidgetModel().updateBounds();
                 return true;
@@ -104,10 +96,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // arrow length
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure figure = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolylineFigure) refreshableFigure;
                 figure.setArrowLineLength((Integer) newValue);
                 getWidgetModel().updateBounds();
                 return true;
@@ -118,10 +108,8 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         // Fill Arrow
         handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                PolylineFigure figure = (PolylineFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (PolylineFigure) refreshableFigure;
                 figure.setFillArrow((Boolean) newValue);
                 return true;
             }
@@ -134,8 +122,9 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
     public void setValue(Object value) {
         if (value instanceof Number) {
             ((PolylineFigure) getFigure()).setFill(((Number) value).doubleValue());
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override

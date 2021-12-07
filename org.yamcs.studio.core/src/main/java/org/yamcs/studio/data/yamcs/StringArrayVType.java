@@ -18,11 +18,11 @@ public class StringArrayVType extends YamcsVType implements VStringArray {
     public StringArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         data = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        for (var i = 0; i < size; i++) {
             data.add(value.getArrayValue(i).getStringValue());
         }
     }

@@ -73,22 +73,16 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_LINE_WIDTH, "Line Width",
-                WidgetPropertyCategory.Display, 0, 0, 100));
-        addProperty(new IntegerProperty(PROP_ALPHA, "Alpha",
-                WidgetPropertyCategory.Display, 255, 0, 255));
-        addProperty(new ComboProperty(PROP_LINE_STYLE, "Line Style",
-                WidgetPropertyCategory.Display, LineStyle.stringValues(), 0));
-        addProperty(new ColorProperty(PROP_LINE_COLOR, "Line Color",
-                WidgetPropertyCategory.Display, DEFAULT_LINE_COLOR));
-        addProperty(new DoubleProperty(PROP_FILL_LEVEL, "Fill Level",
-                WidgetPropertyCategory.Display, 0.0, 0.0, 100.0));
-        addProperty(new BooleanProperty(PROP_HORIZONTAL_FILL, "Horizontal Fill",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_ANTIALIAS, "Anti Alias",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new IntegerProperty(PROP_LINE_WIDTH, "Line Width", WidgetPropertyCategory.Display, 0, 0, 100));
+        addProperty(new IntegerProperty(PROP_ALPHA, "Alpha", WidgetPropertyCategory.Display, 255, 0, 255));
+        addProperty(new ComboProperty(PROP_LINE_STYLE, "Line Style", WidgetPropertyCategory.Display,
+                LineStyle.stringValues(), 0));
+        addProperty(
+                new ColorProperty(PROP_LINE_COLOR, "Line Color", WidgetPropertyCategory.Display, DEFAULT_LINE_COLOR));
+        addProperty(new DoubleProperty(PROP_FILL_LEVEL, "Fill Level", WidgetPropertyCategory.Display, 0.0, 0.0, 100.0));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL_FILL, "Horizontal Fill", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_ANTIALIAS, "Anti Alias", WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent", WidgetPropertyCategory.Display, false));
 
     }
 
@@ -108,7 +102,7 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
      *
      * @return the fill grade
      */
-    public final double getFillLevel() {
+    public double getFillLevel() {
         return (Double) getProperty(PROP_FILL_LEVEL).getPropertyValue();
     }
 
@@ -117,7 +111,7 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
      * 
      * @param value
      */
-    public final void setFillLevel(final double value) {
+    public void setFillLevel(double value) {
         setPropertyValue(PROP_FILL_LEVEL, value);
     }
 

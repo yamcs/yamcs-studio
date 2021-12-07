@@ -146,24 +146,24 @@ public class ReplayOptions extends Composite {
     }
 
     void updateState(boolean connected, String processing, boolean replay, float replaySpeed) {
-        boolean playEnabled = (Boolean.TRUE.equals(connected));
+        var playEnabled = (Boolean.TRUE.equals(connected));
         playEnabled &= ("PAUSED".equals(processing));
         playEnabled &= (Boolean.TRUE.equals(replay));
 
-        boolean pauseEnabled = (Boolean.TRUE.equals(connected));
+        var pauseEnabled = (Boolean.TRUE.equals(connected));
         pauseEnabled &= ("RUNNING".equals(processing));
         pauseEnabled &= (Boolean.TRUE.equals(replay));
 
-        boolean speedEnabled = (Boolean.TRUE.equals(connected));
+        var speedEnabled = (Boolean.TRUE.equals(connected));
         speedEnabled &= replaySpeed > 0;
 
-        boolean leaveReplayEnabled = (Boolean.TRUE.equals(connected));
+        var leaveReplayEnabled = (Boolean.TRUE.equals(connected));
 
         playButton.setEnabled(playEnabled || pauseEnabled);
         leaveReplayButton.setEnabled(leaveReplayEnabled);
         speedCombo.setEnabled(speedEnabled);
 
-        boolean playVisible = ("STOPPED".equals(processing));
+        var playVisible = ("STOPPED".equals(processing));
         playVisible |= ("ERROR".equals(processing));
         playVisible |= ("PAUSED".equals(processing));
         playVisible |= ("CLOSED".equals(processing));

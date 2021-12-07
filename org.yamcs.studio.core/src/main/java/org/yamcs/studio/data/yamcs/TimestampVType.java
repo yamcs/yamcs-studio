@@ -15,14 +15,14 @@ public class TimestampVType extends YamcsVType implements VTimestamp {
 
     @Override
     public Date getValue() {
-        String stringValue = value.getStringValue();
+        var stringValue = value.getStringValue();
         return Date.from(Instant.parse(stringValue));
     }
 
     @Override
     public String toString() {
-        String stringValue = value.getStringValue();
-        Instant instant = Instant.parse(stringValue);
+        var stringValue = value.getStringValue();
+        var instant = Instant.parse(stringValue);
         return YamcsPlugin.getDefault().formatInstant(instant);
     }
 }

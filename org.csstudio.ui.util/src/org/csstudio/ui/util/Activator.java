@@ -41,7 +41,7 @@ public class Activator extends Plugin implements BundleActivator {
     }
 
     /** Static setter to avoid FindBugs warning */
-    private static void setPlugin(final Activator the_plugin) {
+    private static void setPlugin(Activator the_plugin) {
         plugin = the_plugin;
     }
 
@@ -57,7 +57,7 @@ public class Activator extends Plugin implements BundleActivator {
      *            Path to image within plugin
      * @return {@link ImageDescriptor}
      */
-    public static ImageDescriptor getImageDescriptor(final String path) {
+    public static ImageDescriptor getImageDescriptor(String path) {
         return AbstractUIPlugin.imageDescriptorFromPlugin(ID, path);
     }
 }

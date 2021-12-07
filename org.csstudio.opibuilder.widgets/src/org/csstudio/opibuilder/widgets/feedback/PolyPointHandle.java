@@ -35,14 +35,13 @@ public final class PolyPointHandle extends SquareHandle {
      * @param pointIndex
      *            index of the polygon point, that should be moved
      */
-    public PolyPointHandle(final GraphicalEditPart owner, final int pointIndex) {
+    public PolyPointHandle(GraphicalEditPart owner, int pointIndex) {
         super();
 
         _pointIndex = pointIndex;
         setOwner(owner);
 
-        PolyPointLocator locator = new PolyPointLocator((Polyline) owner
-                .getFigure(), pointIndex);
+        var locator = new PolyPointLocator((Polyline) owner.getFigure(), pointIndex);
         setLocator(locator);
 
         setCursor(Cursors.CROSS);

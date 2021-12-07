@@ -37,8 +37,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
      * @param model
      *            the model.
      */
-    protected void initializeCommonFigureProperties(
-            final AbstractBoolFigure figure, final AbstractBoolWidgetModel model) {
+    protected void initializeCommonFigureProperties(AbstractBoolFigure figure, AbstractBoolWidgetModel model) {
         if (model.getDataType() == 0) {
             figure.setBit(model.getBit());
         } else {
@@ -50,8 +49,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
         figure.setOffLabel(model.getOffLabel());
         figure.setOnColor(model.getOnColor());
         figure.setOffColor(model.getOffColor());
-        figure.setFont(CustomMediaFactory.getInstance().getFont(
-                model.getFont().getFontData()));
+        figure.setFont(CustomMediaFactory.getInstance().getFont(model.getFont().getFontData()));
         figure.setBoolLabelPosition(model.getBoolLabelPosition());
 
     }
@@ -72,7 +70,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
             if (newValue == null || !(newValue instanceof VType)) {
                 return false;
             }
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
 
             switch (VTypeHelper.getBasicDataType((VType) newValue)) {
             case SHORT:
@@ -95,7 +93,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
             if (getWidgetModel().getDataType() != 0) {
                 return false;
             }
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setBit((Integer) newValue);
             updateFromValue(getPVValue(AbstractPVWidgetModel.PROP_PVNAME), figure);
             return true;
@@ -103,8 +101,8 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_BIT, handler);
 
         // data type
-        final IWidgetPropertyChangeHandler dataTypeHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+        IWidgetPropertyChangeHandler dataTypeHandler = (oldValue, newValue, refreshableFigure) -> {
+            var figure = (AbstractBoolFigure) refreshableFigure;
             if ((Integer) newValue == 0) {
                 figure.setBit(getWidgetModel().getBit());
             } else {
@@ -119,7 +117,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // on state
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             updateFromValue(getPVValue(AbstractPVWidgetModel.PROP_PVNAME), figure);
             return true;
         };
@@ -127,7 +125,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // show bool label
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setShowBooleanLabel((Boolean) newValue);
             return true;
         };
@@ -135,7 +133,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // bool label position
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setBoolLabelPosition(BoolLabelPosition.values()[(Integer) newValue]);
             return false;
         };
@@ -143,7 +141,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // on label
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOnLabel((String) newValue);
             return true;
         };
@@ -151,7 +149,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // off label
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOffLabel((String) newValue);
             return true;
         };
@@ -159,7 +157,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // on color
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOnColor(((OPIColor) newValue).getSWTColor());
             return true;
         };
@@ -167,7 +165,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
 
         // off color
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolFigure figure = (AbstractBoolFigure) refreshableFigure;
+            var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOffColor(((OPIColor) newValue).getSWTColor());
             return true;
         };
@@ -195,7 +193,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
             return;
         }
         if (getWidgetModel().getDataType() == 1 /* Enum */) {
-            String stringValue = VTypeHelper.getString(newValue);
+            var stringValue = VTypeHelper.getString(newValue);
             if (stringValue.equals(getWidgetModel().getOnState())) {
                 figure.setValue(1);
             } else {
@@ -206,13 +204,10 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
         }
     }
 
-    private void updatePropSheet(final int dataType) {
-        getWidgetModel().setPropertyVisible(
-                AbstractBoolWidgetModel.PROP_BIT, dataType == 0);
-        getWidgetModel().setPropertyVisible(
-                AbstractBoolWidgetModel.PROP_ON_STATE, dataType == 1);
-        getWidgetModel().setPropertyVisible(
-                AbstractBoolWidgetModel.PROP_OFF_STATE, dataType == 1);
+    private void updatePropSheet(int dataType) {
+        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_BIT, dataType == 0);
+        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_ON_STATE, dataType == 1);
+        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_OFF_STATE, dataType == 1);
 
     }
 }

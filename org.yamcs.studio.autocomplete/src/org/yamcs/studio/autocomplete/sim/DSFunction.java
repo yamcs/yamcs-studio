@@ -42,8 +42,7 @@ public class DSFunction implements Comparable<DSFunction> {
 
     private List<DSFunction> polymorphicFunctions;
 
-    public DSFunction(String name, Class<?> returnType, boolean isPure,
-            boolean isVarArgs) {
+    public DSFunction(String name, Class<?> returnType, boolean isPure, boolean isVarArgs) {
         super();
         this.name = name;
         this.returnType = returnType;
@@ -117,26 +116,31 @@ public class DSFunction implements Comparable<DSFunction> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        DSFunction other = (DSFunction) obj;
+        }
+        var other = (DSFunction) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 

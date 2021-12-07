@@ -69,7 +69,7 @@ class ArrayOfStringFormulaFunction implements FormulaFunction {
 
         List<String> data = new ArrayList<>();
         for (Object arg : args) {
-            VString str = (VString) arg;
+            var str = (VString) arg;
             if (str == null || str.getValue() == null) {
                 data.add(null);
             } else {
@@ -77,8 +77,6 @@ class ArrayOfStringFormulaFunction implements FormulaFunction {
             }
         }
 
-        return ValueFactory.newVStringArray(data,
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args));
+        return ValueFactory.newVStringArray(data, highestSeverityOf(args, false), latestValidTimeOrNowOf(args));
     }
 }

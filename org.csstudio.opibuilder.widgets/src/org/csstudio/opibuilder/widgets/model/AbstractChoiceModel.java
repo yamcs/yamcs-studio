@@ -55,14 +55,12 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new StringListProperty(
-                PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior, Arrays.asList(DEFAULT_ITEMS)));
-        addProperty(new BooleanProperty(
-                PROP_ITEMS_FROM_PV, "Items From PV", WidgetPropertyCategory.Behavior, true));
-        addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color",
-                WidgetPropertyCategory.Display, DEFAULT_SELECTED_COLOR));
-        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new StringListProperty(PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior,
+                Arrays.asList(DEFAULT_ITEMS)));
+        addProperty(new BooleanProperty(PROP_ITEMS_FROM_PV, "Items From PV", WidgetPropertyCategory.Behavior, true));
+        addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color", WidgetPropertyCategory.Display,
+                DEFAULT_SELECTED_COLOR));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal", WidgetPropertyCategory.Display, false));
     }
 
     @SuppressWarnings("unchecked")

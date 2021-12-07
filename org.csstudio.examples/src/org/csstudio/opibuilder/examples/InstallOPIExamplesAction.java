@@ -12,14 +12,9 @@ package org.csstudio.opibuilder.examples;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import org.csstudio.examples.Activator;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -55,11 +50,12 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
 
     @Override
     public void run(IAction action) {
-        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        var root = ResourcesPlugin.getWorkspace().getRoot();
         if (root.getProject(PROJECT_NAME).exists()) {
             MessageDialog.openError(null, "Failed",
-                    NLS.bind("There is already a project named \"{0}\"." +
-                            "Please make sure there is no project named {0} in the workspace.",
+                    NLS.bind(
+                            "There is already a project named \"{0}\"."
+                                    + "Please make sure there is no project named {0} in the workspace.",
                             PROJECT_NAME));
             return;
         }
@@ -70,17 +66,16 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
             protected IStatus run(IProgressMonitor monitor) {
                 try {
                     // copy the sample displays
-                    IProject project = root.getProject(PROJECT_NAME);
+                    var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    URL url = FileLocator.find(Activator.getDefault()
-                            .getBundle(), new Path("examples/BOY Examples"),
+                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/BOY Examples"),
                             null);
 
                     try {
-                        File directory = new File(FileLocator.toFileURL(url).getPath());
+                        var directory = new File(FileLocator.toFileURL(url).getPath());
                         if (directory.isDirectory()) {
-                            File[] files = directory.listFiles();
+                            var files = directory.listFiles();
                             monitor.beginTask("Copying Examples", count(files));
                             copy(files, project, monitor);
                         }
@@ -101,7 +96,7 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
     }
 
     private int count(File[] files) {
-        int result = 0;
+        var result = 0;
         for (File file : files) {
             if (file.isDirectory()) {
                 result += count(file.listFiles());
@@ -113,33 +108,29 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
         return result;
     }
 
-    private void copy(File[] files, IContainer container,
-            IProgressMonitor monitor) {
+    private void copy(File[] files, IContainer container, IProgressMonitor monitor) {
         try {
             for (File file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
                     if (!file.getName().equals("CVS")) {
-                        IFolder folder = container.getFolder(new Path(file
-                                .getName()));
+                        var folder = container.getFolder(new Path(file.getName()));
                         if (!folder.exists()) {
                             folder.create(true, true, null);
                             copy(file.listFiles(), folder, monitor);
                         }
                     }
                 } else {
-                    IFile pFile = container.getFile(new Path(file.getName()));
+                    var pFile = container.getFile(new Path(file.getName()));
                     if (!pFile.exists()) {
-                        pFile.create(new FileInputStream(file), true,
-                                new NullProgressMonitor());
+                        pFile.create(new FileInputStream(file), true, new NullProgressMonitor());
                     }
                     monitor.internalWorked(1);
                 }
 
             }
         } catch (Exception e) {
-            MessageDialog.openError(null, "Error",
-                    NLS.bind("Error happened during copy: \n{0}.", e));
+            MessageDialog.openError(null, "Error", NLS.bind("Error happened during copy: \n{0}.", e));
         }
     }
 

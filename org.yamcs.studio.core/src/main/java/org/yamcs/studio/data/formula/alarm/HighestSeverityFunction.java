@@ -27,9 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.yamcs.studio.data.formula.FormulaFunction;
-import org.yamcs.studio.data.vtype.Alarm;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
-import org.yamcs.studio.data.vtype.Time;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VType;
 import org.yamcs.studio.data.vtype.ValueFactory;
@@ -71,9 +69,9 @@ class HighestSeverityFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        Alarm alarm = highestSeverityOf(args, true);
-        Time time = ValueUtil.timeOf(alarm);
+    public Object calculate(List<Object> args) {
+        var alarm = highestSeverityOf(args, true);
+        var time = ValueUtil.timeOf(alarm);
         if (time == null) {
             time = ValueFactory.timeNow();
         }

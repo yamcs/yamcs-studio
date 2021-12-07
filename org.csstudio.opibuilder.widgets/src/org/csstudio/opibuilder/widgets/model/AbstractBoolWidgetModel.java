@@ -73,26 +73,19 @@ public abstract class AbstractBoolWidgetModel extends AbstractPVWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_BIT, "Bit",
-                WidgetPropertyCategory.Behavior, -1, -1, 63));
-        addProperty(new BooleanProperty(PROP_SHOW_BOOL_LABEL, "Show Boolean Label",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new StringProperty(PROP_ON_LABEL, "On Label",
-                WidgetPropertyCategory.Display, DEFAULT_ON_LABEL));
-        addProperty(new StringProperty(PROP_OFF_LABEL, "Off Label",
-                WidgetPropertyCategory.Display, DEFAULT_OFF_LABEL));
-        addProperty(new ColorProperty(PROP_ON_COLOR, "On Color",
-                WidgetPropertyCategory.Display, DEFAULT_ON_COLOR));
-        addProperty(new ColorProperty(PROP_OFF_COLOR, "Off Color",
-                WidgetPropertyCategory.Display, DEFAULT_OFF_COLOR));
-        addProperty(new ComboProperty(PROP_DATA_TYPE, "Data Type",
-                WidgetPropertyCategory.Behavior, new String[] { "Bit", "Enum" }, 0));
-        addProperty(new StringProperty(PROP_ON_STATE, "On State",
-                WidgetPropertyCategory.Behavior, ""));
-        addProperty(new StringProperty(PROP_OFF_STATE, "Off State",
-                WidgetPropertyCategory.Behavior, ""));
-        addProperty(new ComboProperty(PROP_BOOL_LABEL_POS, "Boolean Label Position",
-                WidgetPropertyCategory.Display, BoolLabelPosition.stringValues(), 0));
+        addProperty(new IntegerProperty(PROP_BIT, "Bit", WidgetPropertyCategory.Behavior, -1, -1, 63));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_BOOL_LABEL, "Show Boolean Label", WidgetPropertyCategory.Display, false));
+        addProperty(new StringProperty(PROP_ON_LABEL, "On Label", WidgetPropertyCategory.Display, DEFAULT_ON_LABEL));
+        addProperty(new StringProperty(PROP_OFF_LABEL, "Off Label", WidgetPropertyCategory.Display, DEFAULT_OFF_LABEL));
+        addProperty(new ColorProperty(PROP_ON_COLOR, "On Color", WidgetPropertyCategory.Display, DEFAULT_ON_COLOR));
+        addProperty(new ColorProperty(PROP_OFF_COLOR, "Off Color", WidgetPropertyCategory.Display, DEFAULT_OFF_COLOR));
+        addProperty(new ComboProperty(PROP_DATA_TYPE, "Data Type", WidgetPropertyCategory.Behavior,
+                new String[] { "Bit", "Enum" }, 0));
+        addProperty(new StringProperty(PROP_ON_STATE, "On State", WidgetPropertyCategory.Behavior, ""));
+        addProperty(new StringProperty(PROP_OFF_STATE, "Off State", WidgetPropertyCategory.Behavior, ""));
+        addProperty(new ComboProperty(PROP_BOOL_LABEL_POS, "Boolean Label Position", WidgetPropertyCategory.Display,
+                BoolLabelPosition.stringValues(), 0));
 
     }
 

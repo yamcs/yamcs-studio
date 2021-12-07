@@ -77,23 +77,20 @@ public class KnobModel extends AbstractMarkedWidgetModel {
         // addPVProperty(new StringProperty(PROP_CONTROL_PV, "Control PV", WidgetPropertyCategory.Basic,
         // ""), new PVValueProperty(PROP_CONTROL_PV_VALUE, null));
         //
-        addProperty(new ColorProperty(PROP_KNOB_COLOR, "Knob Color",
-                WidgetPropertyCategory.Display, DEFAULT_KNOB_COLOR));
+        addProperty(
+                new ColorProperty(PROP_KNOB_COLOR, "Knob Color", WidgetPropertyCategory.Display, DEFAULT_KNOB_COLOR));
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_VALUE_LABEL, "Show Value Label",
-                WidgetPropertyCategory.Display, true));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_VALUE_LABEL, "Show Value Label", WidgetPropertyCategory.Display, true));
 
-        addProperty(new ColorProperty(PROP_THUMB_COLOR, "Thumb Color",
-                WidgetPropertyCategory.Display, DEFAULT_THUMB_COLOR));
+        addProperty(new ColorProperty(PROP_THUMB_COLOR, "Thumb Color", WidgetPropertyCategory.Display,
+                DEFAULT_THUMB_COLOR));
 
-        addProperty(new BooleanProperty(PROP_RAMP_GRADIENT, "Ramp Gradient",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_RAMP_GRADIENT, "Ramp Gradient", WidgetPropertyCategory.Display, true));
 
-        addProperty(new DoubleProperty(PROP_INCREMENT, "Increment",
-                WidgetPropertyCategory.Behavior, 1.0));
+        addProperty(new DoubleProperty(PROP_INCREMENT, "Increment", WidgetPropertyCategory.Behavior, 1.0));
 
         setPropertyDescription(PROP_SHOW_MARKERS, "Show Ramp");
         // setPropertyDescription(PROP_PVNAME, "Readback PV");

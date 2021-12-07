@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.studio.data.IPV;
 
 /**
  * An actions writing value to a PV.
@@ -32,14 +31,10 @@ public class WritePVAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new PVNameProperty(PROP_PVNAME, "PV Name",
-                WidgetPropertyCategory.Basic, "$(pv_name)"));
-        addProperty(new StringProperty(PROP_VALUE, "Value",
-                WidgetPropertyCategory.Basic, ""));
-        addProperty(new IntegerProperty(PROP_TIMEOUT, "Timeout (second)",
-                WidgetPropertyCategory.Basic, 10, 1, 3600));
-        addProperty(new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message",
-                WidgetPropertyCategory.Basic, ""));
+        addProperty(new PVNameProperty(PROP_PVNAME, "PV Name", WidgetPropertyCategory.Basic, "$(pv_name)"));
+        addProperty(new StringProperty(PROP_VALUE, "Value", WidgetPropertyCategory.Basic, ""));
+        addProperty(new IntegerProperty(PROP_TIMEOUT, "Timeout (second)", WidgetPropertyCategory.Basic, 10, 1, 3600));
+        addProperty(new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message", WidgetPropertyCategory.Basic, ""));
     }
 
     @Override
@@ -67,29 +62,25 @@ public class WritePVAction extends AbstractWidgetAction {
     public void run() {
         display = null;
         if (getWidgetModel() != null) {
-            display = getWidgetModel().getRootDisplayModel().getViewer().getControl()
-                    .getDisplay();
+            display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
         } else {
             display = DisplayUtils.getDisplay();
         }
 
         if (!getConfirmMessage().isEmpty()) {
-            if (!GUIUtil.openConfirmDialog("PV Name: " + getPVName()
-                    + "\nNew Value: " + getValue() + "\n\n"
-                    + getConfirmMessage())) {
+            if (!GUIUtil.openConfirmDialog(
+                    "PV Name: " + getPVName() + "\nNew Value: " + getValue() + "\n\n" + getConfirmMessage())) {
                 return;
             }
         }
 
         // If it has the same nave as widget PV name, use it.
         if (getWidgetModel() instanceof IPVWidgetModel) {
-            String mainPVName = ((IPVWidgetModel) getWidgetModel()).getPVName();
+            var mainPVName = ((IPVWidgetModel) getWidgetModel()).getPVName();
             if (getPVName().equals(mainPVName)) {
-                Object o = getWidgetModel().getRootDisplayModel().getViewer()
-                        .getEditPartRegistry().get(getWidgetModel());
+                var o = getWidgetModel().getRootDisplayModel().getViewer().getEditPartRegistry().get(getWidgetModel());
                 if (o instanceof IPVWidgetEditpart) {
-                    ((IPVWidgetEditpart) o).setPVValue(
-                            IPVWidgetModel.PROP_PVNAME, getValue().trim());
+                    ((IPVWidgetEditpart) o).setPVValue(IPVWidgetModel.PROP_PVNAME, getValue().trim());
                     return;
                 }
             }
@@ -107,9 +98,9 @@ public class WritePVAction extends AbstractWidgetAction {
     }
 
     private IStatus writePVInSync() {
-        String text = getValue().trim();
+        var text = getValue().trim();
         try {
-            IPV pv = BOYPVFactory.createPV(getPVName());
+            var pv = BOYPVFactory.createPV(getPVName());
             pv.start();
             try {
                 if (!pv.setValue(text, getTimeout() * 1000)) {
@@ -128,9 +119,8 @@ public class WritePVAction extends AbstractWidgetAction {
 
     private void popErrorDialog(Exception e) {
         UIBundlingThread.getInstance().addRunnable(display, () -> {
-            String message = "Failed to write PV:" + getPVName()
-                    + "\n" +
-                    (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
+            var message = "Failed to write PV:" + getPVName() + "\n"
+                    + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
             ErrorHandlerUtil.handleError(message, e, true, true);
             // ConsoleService.getInstance().writeError(message);
         });

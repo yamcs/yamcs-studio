@@ -25,12 +25,12 @@ public class ColorMap {
         None("None", new double[0], new RGB[0]),
         GrayScale("GrayScale", new double[] { 0, 1 }, new RGB[] { new RGB(0, 0, 0), new RGB(255, 255, 255) }),
         JET("JET", new double[] { 0, 0.111, 0.365, 0.619, 0.873, 1 },
-                new RGB[] { new RGB(0, 0, 143), new RGB(0, 0, 255), new RGB(0, 255, 255),
-                        new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(128, 0, 0) }),
+                new RGB[] { new RGB(0, 0, 143), new RGB(0, 0, 255), new RGB(0, 255, 255), new RGB(255, 255, 0),
+                        new RGB(255, 0, 0), new RGB(128, 0, 0) }),
         ColorSpectrum("ColorSpectrum", new double[] { 0, 0.126, 0.251, 0.375, 0.5, 0.625, 0.749, 0.874, 1 },
-                new RGB[] { new RGB(0, 0, 0), new RGB(255, 0, 255), new RGB(0, 0, 255),
-                        new RGB(0, 255, 255), new RGB(0, 255, 0), new RGB(255, 255, 0),
-                        new RGB(255, 128, 0), new RGB(255, 0, 0), new RGB(255, 255, 255) }),
+                new RGB[] { new RGB(0, 0, 0), new RGB(255, 0, 255), new RGB(0, 0, 255), new RGB(0, 255, 255),
+                        new RGB(0, 255, 0), new RGB(255, 255, 0), new RGB(255, 128, 0), new RGB(255, 0, 0),
+                        new RGB(255, 255, 255) }),
         Hot("Hot", new double[] { 0, 0.365, 0.746, 1 },
                 new RGB[] { new RGB(11, 0, 0), new RGB(255, 0, 0), new RGB(255, 255, 0), new RGB(255, 255, 255) }),
         Cool("Cool", new double[] { 0, 1 }, new RGB[] { new RGB(0, 255, 255), new RGB(255, 0, 255) }),
@@ -48,18 +48,19 @@ public class ColorMap {
         }
 
         public LinkedHashMap<Double, RGB> getMap() {
-            LinkedHashMap<Double, RGB> map = new LinkedHashMap<Double, RGB>();
-            for (int i = 0; i < values.length; i++) {
+            var map = new LinkedHashMap<Double, RGB>();
+            for (var i = 0; i < values.length; i++) {
                 map.put(values[i], colors[i]);
             }
             return map;
         }
 
         public static String[] getStringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
-            for (PredefinedColorMap m : values())
+            var result = new String[values().length];
+            var i = 0;
+            for (PredefinedColorMap m : values()) {
                 result[i++] = m.name;
+            }
             return result;
         }
 
@@ -157,8 +158,9 @@ public class ColorMap {
      */
     public void setPredefinedColorMap(PredefinedColorMap predefinedColorMap) {
         this.predefinedColorMap = predefinedColorMap;
-        if (predefinedColorMap != PredefinedColorMap.None)
+        if (predefinedColorMap != PredefinedColorMap.None) {
             colorMap = predefinedColorMap.getMap();
+        }
         colorsLookupTable = null;
     }
 
@@ -171,10 +173,11 @@ public class ColorMap {
 
     @Override
     public String toString() {
-        if (predefinedColorMap != null && predefinedColorMap != PredefinedColorMap.None)
+        if (predefinedColorMap != null && predefinedColorMap != PredefinedColorMap.None) {
             return predefinedColorMap.toString();
-        else
+        } else {
             return "Customized";
+        }
     }
 
     /**
@@ -198,54 +201,59 @@ public class ColorMap {
      *            http://tech-algorithm.com/articles/nearest-neighbor-image-scaling/.
      * @return the image data. null if dataWidth or dataHeight is less than 1.
      */
-    public ImageData drawImage(IPrimaryArrayWrapper dataArray,
-            int dataWidth, int dataHeight, double max, double min, ImageData imageData, boolean shrink) {
+    public ImageData drawImage(IPrimaryArrayWrapper dataArray, int dataWidth, int dataHeight, double max, double min,
+            ImageData imageData, boolean shrink) {
         if (dataWidth < 1 || dataHeight < 1 || dataWidth * dataHeight > dataArray.getSize()
-                || dataWidth * dataHeight < 0)
+                || dataWidth * dataHeight < 0) {
             return null;
-        if (imageData == null)
+        }
+        if (imageData == null) {
             imageData = new ImageData(dataWidth, dataHeight, 24, palette);
-        if (colorsLookupTable == null)
+        }
+        if (colorsLookupTable == null) {
             getColorsLookupTable();
+        }
 
         if (!autoScale) {
             min = colorMapMin;
             max = colorMapMax;
         }
         if (shrink) {
-            int height = imageData.height;
-            int width = imageData.width;
+            var height = imageData.height;
+            var width = imageData.width;
             // EDIT: added +1 to account for an early rounding problem
-            int x_ratio = (int) ((dataWidth << 16) / width) + 1;
-            int y_ratio = (int) ((dataHeight << 16) / height) + 1;
+            var x_ratio = (int) ((dataWidth << 16) / width) + 1;
+            var y_ratio = (int) ((dataHeight << 16) / height) + 1;
             // int x_ratio = (int)((w1<<16)/w2) ;
             // int y_ratio = (int)((h1<<16)/h2) ;
             int x2, y2;
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
+            for (var i = 0; i < height; i++) {
+                for (var j = 0; j < width; j++) {
                     x2 = ((j * x_ratio) >> 16);
                     y2 = ((i * y_ratio) >> 16);
-                    int index = (int) ((dataArray.get(y2 * dataWidth + x2) - min) / (max - min) * 255);
-                    if (index < 0)
+                    var index = (int) ((dataArray.get(y2 * dataWidth + x2) - min) / (max - min) * 255);
+                    if (index < 0) {
                         index = 0;
-                    else if (index > 255)
+                    } else if (index > 255) {
                         index = 255;
-                    int pixel = pixelLookupTable[index];
+                    }
+                    var pixel = pixelLookupTable[index];
                     imageData.setPixel(j, i, pixel);
                     ;
                 }
             }
 
         } else {
-            for (int y = 0; y < dataHeight; y++) {
-                for (int x = 0; x < dataWidth; x++) {
+            for (var y = 0; y < dataHeight; y++) {
+                for (var x = 0; x < dataWidth; x++) {
                     // the index of the value in the color table array
-                    int index = (int) ((dataArray.get(y * dataWidth + x) - min) / (max - min) * 255);
-                    if (index < 0)
+                    var index = (int) ((dataArray.get(y * dataWidth + x) - min) / (max - min) * 255);
+                    if (index < 0) {
                         index = 0;
-                    else if (index > 255)
+                    } else if (index > 255) {
                         index = 255;
-                    int pixel = pixelLookupTable[index];
+                    }
+                    var pixel = pixelLookupTable[index];
                     imageData.setPixel(x, y, pixel);
                 }
             }
@@ -271,8 +279,7 @@ public class ColorMap {
      *            the imageData to be filled. null if a new instance should be created.
      * @return the image data. null if dataWidth or dataHeight is less than 1.
      */
-    public ImageData drawImage(double[] dataArray,
-            int dataWidth, int dataHeight, double max, double min) {
+    public ImageData drawImage(double[] dataArray, int dataWidth, int dataHeight, double max, double min) {
         return drawImage(new DoubleArrayWrapper(dataArray), dataWidth, dataHeight, max, min, null, false);
     }
 
@@ -287,28 +294,31 @@ public class ColorMap {
      */
     public RGB getValueRGB(ColorTuple[] colorTupleArray, double[] keyArray, double value) {
 
-        int insertPoint = Arrays.binarySearch(keyArray, value);
-        if (insertPoint >= 0)
+        var insertPoint = Arrays.binarySearch(keyArray, value);
+        if (insertPoint >= 0) {
             return colorTupleArray[insertPoint].rgb;
-        else {
+        } else {
             insertPoint = -insertPoint - 1;
-            if (insertPoint == 0)
+            if (insertPoint == 0) {
                 return colorTupleArray[0].rgb;
-            if (insertPoint == colorTupleArray.length)
+            }
+            if (insertPoint == colorTupleArray.length) {
                 return colorTupleArray[colorTupleArray.length - 1].rgb;
+            }
             return getInterpolateRGB(colorTupleArray[insertPoint - 1], colorTupleArray[insertPoint], value);
         }
     }
 
     private RGB getInterpolateRGB(ColorTuple start, ColorTuple end, double value) {
         if (interpolate) {
-            double f = (value - start.value) / (end.value - start.value);
-            int r = (int) ((end.rgb.red - start.rgb.red) * f + start.rgb.red);
-            int g = (int) ((end.rgb.green - start.rgb.green) * f + start.rgb.green);
-            int b = (int) ((end.rgb.blue - start.rgb.blue) * f + start.rgb.blue);
+            var f = (value - start.value) / (end.value - start.value);
+            var r = (int) ((end.rgb.red - start.rgb.red) * f + start.rgb.red);
+            var g = (int) ((end.rgb.green - start.rgb.green) * f + start.rgb.green);
+            var b = (int) ((end.rgb.blue - start.rgb.blue) * f + start.rgb.blue);
             return new RGB(r, g, b);
-        } else
+        } else {
             return start.rgb;
+        }
     }
 
     /**
@@ -319,9 +329,9 @@ public class ColorMap {
     public RGB[] getColorsLookupTable() {
         if (colorsLookupTable == null) {
             // convert map to array to simplify the calculation
-            ColorTuple[] colorTupleArray = new ColorTuple[colorMap.size()];
+            var colorTupleArray = new ColorTuple[colorMap.size()];
 
-            int i = 0;
+            var i = 0;
             for (Double k : colorMap.keySet()) {
                 colorTupleArray[i++] = new ColorTuple(k, colorMap.get(k));
             }
@@ -330,18 +340,20 @@ public class ColorMap {
             Arrays.sort(colorTupleArray);
             colorMapMin = colorTupleArray[0].value;
             colorMapMax = colorTupleArray[colorTupleArray.length - 1].value;
-            if (autoScale)
+            if (autoScale) {
                 for (ColorTuple t : colorTupleArray) {
                     t.value = (t.value - colorMapMin) / (colorMapMax - colorMapMin);
                 }
+            }
 
-            double[] keyArray = new double[colorTupleArray.length];
-            for (int j = 0; j < colorTupleArray.length; j++)
+            var keyArray = new double[colorTupleArray.length];
+            for (var j = 0; j < colorTupleArray.length; j++) {
                 keyArray[j] = colorTupleArray[j].value;
+            }
 
             colorsLookupTable = new RGB[256];
             pixelLookupTable = new int[256];
-            for (int k = 0; k < 256; k++) {
+            for (var k = 0; k < 256; k++) {
                 colorsLookupTable[k] = getValueRGB(colorTupleArray, keyArray,
                         autoScale ? k / 255.0 : colorMapMin + k * (colorMapMax - colorMapMin) / 255.0);
                 pixelLookupTable[k] = palette.getPixel(colorsLookupTable[k]);
@@ -357,8 +369,8 @@ public class ColorMap {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         if (predefinedColorMap != null && predefinedColorMap != PredefinedColorMap.None) {
             result = prime * result + predefinedColorMap.hashCode();
         } else {
@@ -371,26 +383,33 @@ public class ColorMap {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        ColorMap other = (ColorMap) obj;
+        }
+        var other = (ColorMap) obj;
         // if predefined, ignore everything else
         if (predefinedColorMap != null && predefinedColorMap != PredefinedColorMap.None) {
             return predefinedColorMap == other.getPredefinedColorMap();
         }
-        if (autoScale != other.autoScale)
+        if (autoScale != other.autoScale) {
             return false;
+        }
         if (colorMap == null) {
-            if (other.colorMap != null)
+            if (other.colorMap != null) {
                 return false;
-        } else if (!colorMap.equals(other.colorMap))
+            }
+        } else if (!colorMap.equals(other.colorMap)) {
             return false;
-        if (interpolate != other.interpolate)
+        }
+        if (interpolate != other.interpolate) {
             return false;
+        }
         return true;
     }
 }

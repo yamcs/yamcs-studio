@@ -10,7 +10,6 @@
 package org.yamcs.studio.autocomplete.ui.history;
 
 import java.util.LinkedList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.yamcs.studio.autocomplete.AutoCompleteHelper;
@@ -34,43 +33,42 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
     public static final String NAME = "History";
 
     @Override
-    public boolean accept(final ContentType type) {
+    public boolean accept(ContentType type) {
         return true;
     }
 
     @Override
-    public AutoCompleteResult listResult(final ContentDescriptor desc,
-            final int limit) {
-        String content = desc.getOriginalContent();
-        int startIndex = 0;
+    public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
+        var content = desc.getOriginalContent();
+        var startIndex = 0;
         if (desc.getContentType().equals(ContentType.PVName)) {
             content = desc.getValue();
             startIndex = desc.getStartIndex();
         }
-        AutoCompleteResult result = new AutoCompleteResult();
-        String cleanedName = AutoCompleteHelper.trimWildcards(content);
-        Pattern namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
+        var result = new AutoCompleteResult();
+        var cleanedName = AutoCompleteHelper.trimWildcards(content);
+        var namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
         if (namePattern == null) {
             return result;
         }
 
-        String entryType = AutoCompleteTypes.PV;
+        var entryType = AutoCompleteTypes.PV;
         if (content.startsWith("=")) {
             entryType = AutoCompleteTypes.Formula;
         }
 
-        LinkedList<String> fifo = new LinkedList<>();
+        var fifo = new LinkedList<String>();
         fifo.addAll(AutoCompletePlugin.getDefault().getHistory(entryType));
         if (fifo.isEmpty()) {
             return result; // Empty result
         }
 
-        int count = 0;
+        var count = 0;
         for (String entry : fifo) {
-            Matcher m = namePattern.matcher(entry);
+            var m = namePattern.matcher(entry);
             if (m.find()) {
                 if (count < limit) {
-                    Proposal proposal = new Proposal(entry, false);
+                    var proposal = new Proposal(entry, false);
                     proposal.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                     proposal.setInsertionPos(startIndex);
                     result.addProposal(proposal);
@@ -80,7 +78,7 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
         }
         result.setCount(count);
 
-        TopProposalFinder trf = new TopProposalFinder(Preferences.getSeparators());
+        var trf = new TopProposalFinder(Preferences.getSeparators());
         for (Proposal p : trf.getTopProposals(Pattern.quote(cleanedName), fifo)) {
             result.addTopProposal(p);
         }

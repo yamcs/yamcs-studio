@@ -40,12 +40,10 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
         // points
         IWidgetPropertyChangeHandler pointsHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                Polyline polyline = (Polyline) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var polyline = (Polyline) refreshableFigure;
 
-                PointList points = (PointList) newValue;
+                var points = (PointList) newValue;
                 if (points.size() != polyline.getPoints().size()) {
                     anchorMap = null;
                     // delete connections on deleted points
@@ -64,7 +62,7 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
                 }
                 // deselect the widget (this refreshes the polypoint drag
                 // handles)
-                int selectionState = getSelected();
+                var selectionState = getSelected();
                 setSelected(EditPart.SELECTED_NONE);
 
                 polyline.setPoints(points);
@@ -80,11 +78,9 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
 
         IWidgetPropertyChangeHandler rotationHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 getWidgetModel().setPoints(
-                        PointsUtil.rotatePoints(getWidgetModel().getOriginalPoints().getCopy(),
-                                (Double) newValue),
+                        PointsUtil.rotatePoints(getWidgetModel().getOriginalPoints().getCopy(), (Double) newValue),
                         false);
                 return false;
             }
@@ -102,7 +98,7 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
     @Override
     protected void fillAnchorMap() {
         anchorMap = new HashMap<String, ConnectionAnchor>(getFigure().getPoints().size());
-        for (int i = 0; i < getFigure().getPoints().size(); i++) {
+        for (var i = 0; i < getFigure().getPoints().size(); i++) {
             anchorMap.put(Integer.toString(i), new PolyGraphAnchor(getFigure(), i));
         }
     }

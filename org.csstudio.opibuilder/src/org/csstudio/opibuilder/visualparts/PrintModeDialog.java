@@ -42,7 +42,7 @@ public class PrintModeDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+        var composite = (Composite) super.createDialogArea(parent);
 
         tile = new Button(composite, SWT.RADIO);
         tile.setText("Tile");
@@ -62,15 +62,16 @@ public class PrintModeDialog extends Dialog {
 
     @Override
     protected void okPressed() {
-        int returnCode = -1;
-        if (tile.getSelection())
+        var returnCode = -1;
+        if (tile.getSelection()) {
             returnCode = PrintFigureOperation.TILE;
-        else if (fitPage.getSelection())
+        } else if (fitPage.getSelection()) {
             returnCode = PrintFigureOperation.FIT_PAGE;
-        else if (fitHeight.getSelection())
+        } else if (fitHeight.getSelection()) {
             returnCode = PrintFigureOperation.FIT_HEIGHT;
-        else if (fitWidth.getSelection())
+        } else if (fitWidth.getSelection()) {
             returnCode = PrintFigureOperation.FIT_WIDTH;
+        }
         setReturnCode(returnCode);
         close();
     }

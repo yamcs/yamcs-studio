@@ -62,23 +62,20 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
         addRetargetAction(new AlignmentRetargetAction(PositionConstants.CENTER));
         addRetargetAction(new AlignmentRetargetAction(PositionConstants.RIGHT));
 
-        RetargetAction a = new RetargetAction(
-                GEFActionConstants.TOGGLE_GRID_VISIBILITY,
-                "Toggle Grid Visibility", IAction.AS_CHECK_BOX);
-        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/grid.png"));
+        var a = new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY, "Toggle Grid Visibility",
+                IAction.AS_CHECK_BOX);
+        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/grid.png"));
         addRetargetAction(a);
 
-        a = new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY,
-                "Toggle Snap To Geometry", IAction.AS_CHECK_BOX);
-        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/snap2geometry.png"));
+        a = new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, "Toggle Snap To Geometry",
+                IAction.AS_CHECK_BOX);
+        a.setImageDescriptor(
+                AbstractUIPlugin.imageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/snap2geometry.png"));
         addRetargetAction(a);
 
-        a = new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY,
-                "Toggle Ruler Visibility", IAction.AS_CHECK_BOX);
-        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/ruler.png"));
+        a = new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, "Toggle Ruler Visibility",
+                IAction.AS_CHECK_BOX);
+        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/ruler.png"));
         addRetargetAction(a);
 
         for (DistributeType dt : DistributeType.values()) {
@@ -89,8 +86,8 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
             }
         }
         // This is only for action displaying in toolbar
-        a = new RetargetAction(DistributeType.HORIZONTAL_GAP.getActionID(),
-                DistributeType.HORIZONTAL_GAP.getLabel(), IAction.AS_DROP_DOWN_MENU);
+        a = new RetargetAction(DistributeType.HORIZONTAL_GAP.getActionID(), DistributeType.HORIZONTAL_GAP.getLabel(),
+                IAction.AS_DROP_DOWN_MENU);
         a.setImageDescriptor(DistributeType.HORIZONTAL_GAP.getImageDescriptor());
         a.setMenuCreator(new IMenuCreator() {
             Menu menu;
@@ -102,12 +99,14 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
 
             @Override
             public Menu getMenu(Control parent) {
-                if (menu != null)
+                if (menu != null) {
                     return menu;
-                MenuManager manager = new MenuManager();
+                }
+                var manager = new MenuManager();
                 for (DistributeType dt : DistributeType.values()) {
-                    if (dt != DistributeType.HORIZONTAL_GAP)
+                    if (dt != DistributeType.HORIZONTAL_GAP) {
                         manager.add(getAction(dt.getActionID()));
+                    }
                 }
                 menu = manager.createContextMenu(parent);
                 return menu;

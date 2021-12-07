@@ -32,10 +32,11 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        ColorMapEditDialog dialog = new ColorMapEditDialog(parentShell, colorMap, dialogTitle, widgetModel.getMinimum(),
+        var dialog = new ColorMapEditDialog(parentShell, colorMap, dialogTitle, widgetModel.getMinimum(),
                 widgetModel.getMaximum());
-        if (dialog.open() == Window.OK)
+        if (dialog.open() == Window.OK) {
             colorMap = dialog.getOutput();
+        }
     }
 
     @Override
@@ -50,10 +51,11 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof ColorMap))
+        if (value == null || !(value instanceof ColorMap)) {
             colorMap = new ColorMap(PredefinedColorMap.GrayScale, true, true);
-        else
+        } else {
             colorMap = (ColorMap) value;
+        }
     }
 
 }

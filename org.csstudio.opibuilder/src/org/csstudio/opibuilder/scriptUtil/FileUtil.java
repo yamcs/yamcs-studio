@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.scriptUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,11 +24,7 @@ import org.csstudio.opibuilder.widgetActions.OpenWebpageAction;
 import org.csstudio.opibuilder.widgetActions.PlayWavFileAction;
 import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -82,13 +77,13 @@ public class FileUtil {
      *             if the file does not exist or is not a correct XML file.
      */
     public static Element loadXMLFile(String filePath, AbstractBaseEditPart widget) throws Exception {
-        IPath path = buildAbsolutePath(filePath, widget);
-        SAXBuilder saxBuilder = new SAXBuilder();
+        var path = buildAbsolutePath(filePath, widget);
+        var saxBuilder = new SAXBuilder();
         saxBuilder.setEntityResolver(new CssEntityResolver());
-        File file = ResourceUtil.getFile(path);
+        var file = ResourceUtil.getFile(path);
         Document doc;
         if (file == null) {
-            InputStream inputStream = ResourceUtil.pathToInputStream(path);
+            var inputStream = ResourceUtil.pathToInputStream(path);
             doc = saxBuilder.build(inputStream);
             inputStream.close();
         } else {
@@ -115,7 +110,7 @@ public class FileUtil {
      *             if the file does not exist.
      */
     public static InputStream getInputStreamFromFile(String filePath, AbstractBaseEditPart widget) throws Exception {
-        IPath path = buildAbsolutePath(filePath, widget);
+        var path = buildAbsolutePath(filePath, widget);
         return ResourceUtil.pathToInputStream(path);
     }
 
@@ -156,9 +151,9 @@ public class FileUtil {
      *             if the file does not exist or is not a correct text file.
      */
     public static String readTextFile(String filePath, AbstractBaseEditPart widget) throws Exception {
-        InputStream inputStream = getInputStreamFromFile(filePath, widget);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        StringBuilder sb = new StringBuilder();
+        var inputStream = getInputStreamFromFile(filePath, widget);
+        var reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        var sb = new StringBuilder();
 
         try {
             String s;
@@ -190,8 +185,8 @@ public class FileUtil {
      * @throws Exception
      *             if error happens.
      */
-    public static void writeTextFile(String filePath, boolean inWorkspace,
-            String text, boolean append) throws Exception {
+    public static void writeTextFile(String filePath, boolean inWorkspace, String text, boolean append)
+            throws Exception {
         writeTextFile(filePath, inWorkspace, null, text, append);
     }
 
@@ -217,21 +212,20 @@ public class FileUtil {
      * @throws Exception
      *             if error happens.
      */
-    public static void writeTextFile(String filePath, boolean inWorkspace,
-            AbstractBaseEditPart widget, String text,
+    public static void writeTextFile(String filePath, boolean inWorkspace, AbstractBaseEditPart widget, String text,
             boolean append) throws Exception {
-        IPath path = FileUtil.buildAbsolutePath(filePath, widget);
+        var path = FileUtil.buildAbsolutePath(filePath, widget);
         if (inWorkspace) {
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            IWorkspaceRoot root = workspace.getRoot();
-            String projectName = path.segment(0);
-            IProject project = root.getProject(projectName);
+            var workspace = ResourcesPlugin.getWorkspace();
+            var root = workspace.getRoot();
+            var projectName = path.segment(0);
+            var project = root.getProject(projectName);
             if (!(project.exists())) {
                 project.create(new NullProgressMonitor());
             }
             project.open(new NullProgressMonitor());
             IFolder folder = null;
-            for (int i = 1; i < path.segmentCount() - 1; i++) {
+            for (var i = 1; i < path.segmentCount() - 1; i++) {
                 if (i == 1) {
                     folder = project.getFolder(path.segment(i));
                 } else {
@@ -247,25 +241,23 @@ public class FileUtil {
             } else {
                 container = folder;
             }
-            IFile file = container.getFile(ResourceUtil.getPathFromString(path.lastSegment()));
+            var file = container.getFile(ResourceUtil.getPathFromString(path.lastSegment()));
             if (file.exists()) {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 if (append) {
                     sb.append(FileUtil.readTextFile(filePath, widget));
                 }
                 sb.append(text);
-                file.setContents(
-                        new ByteArrayInputStream(sb.toString().getBytes("UTF-8")), true, false, null);
+                file.setContents(new ByteArrayInputStream(sb.toString().getBytes("UTF-8")), true, false, null);
             } else {
-                File sysFile = file.getLocation().toFile();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(new FileOutputStream(sysFile, append), "UTF-8"));
+                var sysFile = file.getLocation().toFile();
+                var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(sysFile, append), "UTF-8"));
                 writer.write(text);
                 writer.flush();
                 writer.close();
             }
         } else {
-            BufferedWriter writer = new BufferedWriter(
+            var writer = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(path.toString(), append), "UTF-8"));
             writer.write(text);
             writer.flush();
@@ -287,7 +279,7 @@ public class FileUtil {
      *            an absolute path.
      */
     public static void openFile(String filePath, AbstractBaseEditPart widget) {
-        OpenFileAction action = new OpenFileAction();
+        var action = new OpenFileAction();
         action.setWidgetModel(widget != null ? widget.getWidgetModel() : null);
         action.setPropertyValue(OpenFileAction.PROP_PATH, filePath);
         action.run();
@@ -304,7 +296,7 @@ public class FileUtil {
      *            link to the web page. It can be a link started with http://, https:// or file://.
      */
     public static void openWebPage(String link) {
-        OpenWebpageAction action = new OpenWebpageAction();
+        var action = new OpenWebpageAction();
         action.setPropertyValue(OpenWebpageAction.PROP_HYPERLINK, link);
         action.run();
     }
@@ -323,7 +315,7 @@ public class FileUtil {
      *            an absolute path.
      */
     public static void playWavFile(String filePath, AbstractBaseEditPart widget) {
-        PlayWavFileAction action = new PlayWavFileAction();
+        var action = new PlayWavFileAction();
         action.setWidgetModel(widget != null ? widget.getWidgetModel() : null);
         action.setPropertyValue(PlayWavFileAction.PROP_PATH, filePath);
         action.run();
@@ -334,12 +326,12 @@ public class FileUtil {
     }
 
     public static String openDirectoryDialog() {
-        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        var dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
         return dialog.open();
     }
 
     public static String openDirectoryDialog(String startingFolder) {
-        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        var dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
         dialog.setFilterPath(startingFolder);
         return dialog.open();
     }
@@ -353,15 +345,15 @@ public class FileUtil {
      */
     public static String openFileDialog(boolean inWorkspace) {
         if (inWorkspace) {
-            ResourceSelectionDialog rsd = new ResourceSelectionDialog(
-                    Display.getCurrent().getActiveShell(), "Select File", new String[] { "*" });
+            var rsd = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(), "Select File",
+                    new String[] { "*" });
             if (rsd.open() == Window.OK) {
                 if (rsd.getSelectedResource() != null) {
                     return rsd.getSelectedResource().toString();
                 }
             }
         } else {
-            FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
+            var dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
             return dialog.open();
         }
 
@@ -376,7 +368,7 @@ public class FileUtil {
      * @return the full file path. Or null if it is cancelled.
      */
     public static String openFileDialog(String startingFolder) {
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
+        var dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
         dialog.setFilterPath(startingFolder);
         return dialog.open();
     }
@@ -390,14 +382,14 @@ public class FileUtil {
      */
     public static String saveFileDialog(boolean inWorkspace) {
         if (inWorkspace) {
-            SaveAsDialog rsd = new SaveAsDialog(Display.getCurrent().getActiveShell());
+            var rsd = new SaveAsDialog(Display.getCurrent().getActiveShell());
             if (rsd.open() == Window.OK) {
                 if (rsd.getResult() != null) {
                     return rsd.getResult().toOSString();
                 }
             }
         } else {
-            FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+            var dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
             return dialog.open();
         }
 
@@ -412,13 +404,13 @@ public class FileUtil {
      * @return the full file path. Or null if it is cancelled.
      */
     public static String saveFileDialog(String startingFolder) {
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+        var dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterPath(startingFolder);
         return dialog.open();
     }
 
     protected static IPath buildAbsolutePath(String filePath, AbstractBaseEditPart widget) {
-        IPath path = ResourceUtil.getPathFromString(filePath);
+        var path = ResourceUtil.getPathFromString(filePath);
         if (!path.isAbsolute()) {
             path = ResourceUtil.buildAbsolutePath(widget.getWidgetModel(), path);
         }
@@ -434,7 +426,7 @@ public class FileUtil {
      * @return the system path on OS. Return an empty string if the path doesn't exist.
      */
     public static String workspacePathToSysPath(String workspacePath) {
-        IPath path = ResourceUtil.workspacePathToSysPath(new Path(workspacePath));
+        var path = ResourceUtil.workspacePathToSysPath(new Path(workspacePath));
         if (path == null) {
             return null;
         }

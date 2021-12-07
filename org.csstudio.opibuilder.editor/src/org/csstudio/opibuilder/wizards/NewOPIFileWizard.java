@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.wizards;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -40,15 +39,15 @@ public class NewOPIFileWizard extends Wizard implements INewWizard {
 
     @Override
     public boolean performFinish() {
-        IFile file = opiFilePage.createNewFile();
+        var file = opiFilePage.createNewFile();
 
         if (file == null) {
             return false;
         }
 
         try {
-            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.csstudio.opibuilder.OPIEditor");
+            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
+                    "org.csstudio.opibuilder.OPIEditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open OPI File error",
                     "Failed to open the newly created OPI File. \n" + e.getMessage());

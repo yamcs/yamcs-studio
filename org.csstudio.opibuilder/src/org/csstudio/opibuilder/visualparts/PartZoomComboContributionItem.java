@@ -25,8 +25,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * Tweak {@link ZoomComboContributionItem} to dedicate to a part. A ControlContribution that uses a
  * {@link org.eclipse.swt.widgets.Combo} as its control
  */
-public class PartZoomComboContributionItem extends ContributionItem implements
-        ZoomListener {
+public class PartZoomComboContributionItem extends ContributionItem implements ZoomListener {
 
     private boolean forceSetText;
     private Combo combo;
@@ -67,8 +66,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      * @param initStrings
      *            the initial string displayed in the combo
      */
-    public PartZoomComboContributionItem(IPartService partService,
-            String[] initStrings) {
+    public PartZoomComboContributionItem(IPartService partService, String[] initStrings) {
         super(GEFActionConstants.ZOOM_TOOLBAR_WIDGET);
         this.initStrings = initStrings;
         service = partService;
@@ -76,27 +74,31 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     private void refresh(boolean repopulateCombo) {
-        if (combo == null || combo.isDisposed())
+        if (combo == null || combo.isDisposed()) {
             return;
+        }
         // $TODO GTK workaround
         try {
             if (zoomManager == null) {
                 combo.setEnabled(false);
                 combo.setText("");
             } else {
-                if (repopulateCombo)
+                if (repopulateCombo) {
                     combo.setItems(getZoomManager().getZoomLevelsAsText());
-                String zoom = getZoomManager().getZoomAsText();
-                int index = combo.indexOf(zoom);
-                if (index == -1 || forceSetText)
+                }
+                var zoom = getZoomManager().getZoomAsText();
+                var index = combo.indexOf(zoom);
+                if (index == -1 || forceSetText) {
                     combo.setText(zoom);
-                else
+                } else {
                     combo.select(index);
+                }
                 combo.setEnabled(true);
             }
         } catch (SWTException exception) {
-            if (!SWT.getPlatform().equals("gtk"))
+            if (!SWT.getPlatform().equals("gtk")) {
                 throw exception;
+            }
         }
     }
 
@@ -173,7 +175,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      *            The parent of the control to fill
      */
     @Override
-    public final void fill(Composite parent) {
+    public void fill(Composite parent) {
         createControl(parent);
     }
 
@@ -187,7 +189,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      *            Menu index
      */
     @Override
-    public final void fill(Menu parent, int index) {
+    public void fill(Menu parent, int index) {
         Assert.isTrue(false, "Can't add a control to a menu");
     }
 
@@ -204,7 +206,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     @Override
     public void fill(ToolBar parent, int index) {
         toolitem = new ToolItem(parent, SWT.SEPARATOR, index);
-        Control control = createControl(parent);
+        var control = createControl(parent);
         toolitem.setControl(control);
     }
 
@@ -224,16 +226,19 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      *            The ZoomManager
      */
     public void setZoomManager(ZoomManager zm) {
-        if (zoomManager == zm)
+        if (zoomManager == zm) {
             return;
-        if (zoomManager != null)
+        }
+        if (zoomManager != null) {
             zoomManager.removeZoomListener(this);
+        }
 
         zoomManager = zm;
         refresh(true);
 
-        if (zoomManager != null)
+        if (zoomManager != null) {
             zoomManager.addZoomListener(this);
+        }
     }
 
     /**
@@ -241,11 +246,11 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      */
     private void handleWidgetDefaultSelected(SelectionEvent event) {
         if (zoomManager != null) {
-            if (combo.getSelectionIndex() >= 0)
-                zoomManager.setZoomAsText(combo.getItem(combo
-                        .getSelectionIndex()));
-            else
+            if (combo.getSelectionIndex() >= 0) {
+                zoomManager.setZoomAsText(combo.getItem(combo.getSelectionIndex()));
+            } else {
                 zoomManager.setZoomAsText(combo.getText());
+            }
         }
         /*
          * There are several cases where invoking setZoomAsText (above) will not
@@ -282,10 +287,11 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      *            a part which must have a ZoomManager Adapter.
      */
     public void setPart(IWorkbenchPart part) {
-        if (this.part == part)
+        if (this.part == part) {
             return;
+        }
         this.part = part;
-        ZoomManager newZoomManager = part.getAdapter(ZoomManager.class);
+        var newZoomManager = part.getAdapter(ZoomManager.class);
         if (newZoomManager != null) {
             setZoomManager(newZoomManager);
         }

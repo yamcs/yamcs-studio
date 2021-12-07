@@ -43,9 +43,7 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
                 var delay = command.getDelayMs() / 1000;
                 buf.append("WaitFor(").append(delay).append(" * SECOND)\n");
             }
-            buf.append("Send(command=\"")
-                    .append(command.getMetaCommand().getQualifiedName())
-                    .append("\"");
+            buf.append("Send(command=\"").append(command.getMetaCommand().getQualifiedName()).append("\"");
 
             // Reduce to only the non-default assignments
             var assignments = new LinkedHashMap<>(command.getAssignments());
@@ -60,12 +58,8 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
             if (!assignments.entrySet().isEmpty()) {
                 buf.append(", args=[\n");
                 for (var entry : assignments.entrySet()) {
-                    buf.append("    [\"")
-                            .append(entry.getKey().getName())
-                            .append("\", ")
-                            .append(entry.getValue())
-                            .append("]")
-                            .append(",\n");
+                    buf.append("    [\"").append(entry.getKey().getName()).append("\", ").append(entry.getValue())
+                            .append("]").append(",\n");
                 }
                 buf.append("]");
             }

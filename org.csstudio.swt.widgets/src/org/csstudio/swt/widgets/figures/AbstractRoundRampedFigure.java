@@ -114,8 +114,9 @@ public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
      *            the gradient to set
      */
     public void setGradient(boolean gradient) {
-        if (this.gradient == gradient)
+        if (this.gradient == gradient) {
             return;
+        }
         this.gradient = gradient;
         ramp.setGradient(gradient);
         repaint();

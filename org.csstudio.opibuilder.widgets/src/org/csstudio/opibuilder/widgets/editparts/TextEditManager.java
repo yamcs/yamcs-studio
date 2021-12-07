@@ -25,11 +25,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.CellEditorActionHandler;
@@ -63,8 +61,7 @@ public class TextEditManager extends DirectEditManager {
      */
     @Override
     protected void bringDown() {
-        ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
-                .getProperty(ZoomManager.class.toString());
+        var zoomMgr = (ZoomManager) getEditPart().getViewer().getProperty(ZoomManager.class.toString());
         if (zoomMgr != null) {
             zoomMgr.removeZoomListener(zoomListener);
         }
@@ -93,8 +90,7 @@ public class TextEditManager extends DirectEditManager {
             protected void focusLost() {
                 // in run mode, if the widget has a PV attached,
                 // lose focus should cancel the editing
-                if (editPart.getExecutionMode() == ExecutionMode.RUN_MODE
-                        && editPart instanceof IPVWidgetEditpart
+                if (editPart.getExecutionMode() == ExecutionMode.RUN_MODE && editPart instanceof IPVWidgetEditpart
                         && ((IPVWidgetEditpart) editPart).getPV() != null) {
                     if (isActivated()) {
                         fireCancelEditor();
@@ -118,10 +114,8 @@ public class TextEditManager extends DirectEditManager {
             @Override
             protected void keyReleaseOccured(KeyEvent keyEvent) {
                 // In run mode, CTRL+ENTER will always perform a write if it is multiline text input
-                if (keyEvent.character == '\r' &&
-                        editPart.getExecutionMode() == ExecutionMode.RUN_MODE) { // Return key
-                    if (text != null && !text.isDisposed()
-                            && (text.getStyle() & SWT.MULTI) != 0) {
+                if (keyEvent.character == '\r' && editPart.getExecutionMode() == ExecutionMode.RUN_MODE) { // Return key
+                    if (text != null && !text.isDisposed() && (text.getStyle() & SWT.MULTI) != 0) {
                         if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                             setDirty(true);
                         }
@@ -147,21 +141,18 @@ public class TextEditManager extends DirectEditManager {
     @Override
     protected void initCellEditor() {
         // update text
-        ITextFigure textFigure = getEditPart().getAdapter(ITextFigure.class);
+        var textFigure = getEditPart().getAdapter(ITextFigure.class);
 
         // AbstractWidgetModel labelModel = (AbstractWidgetModel) getEditPart().getModel();
         getCellEditor().setValue(textFigure.getText());
         if (textFigure.isOpaque() || textFigure.getBorder() instanceof AbstractBackground) {
-            getCellEditor().getControl().setBackground(
-                    textFigure.getBackgroundColor());
+            getCellEditor().getControl().setBackground(textFigure.getBackgroundColor());
         } else {
-            getCellEditor().getControl().setBackground(
-                    textFigure.getParent().getBackgroundColor());
+            getCellEditor().getControl().setBackground(textFigure.getParent().getBackgroundColor());
         }
         getCellEditor().getControl().setForeground(textFigure.getForegroundColor());
         // update font
-        ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
-                .getProperty(ZoomManager.class.toString());
+        var zoomMgr = (ZoomManager) getEditPart().getViewer().getProperty(ZoomManager.class.toString());
         if (zoomMgr != null) {
             // this will force the font to be set
             cachedZoom = -1.0;
@@ -173,8 +164,7 @@ public class TextEditManager extends DirectEditManager {
 
         // Hook the cell editor's copy/paste actions to the actionBars so that they can
         // be invoked via keyboard shortcuts.
-        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
+        var activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (activeEditor != null) {
             actionBars = activeEditor.getEditorSite().getActionBars();
             saveCurrentActions(actionBars);
@@ -211,15 +201,15 @@ public class TextEditManager extends DirectEditManager {
             return;
         }
 
-        Text text = (Text) getCellEditor().getControl();
-        Font font = getEditPart().getFigure().getFont();
+        var text = (Text) getCellEditor().getControl();
+        var font = getEditPart().getFigure().getFont();
 
         disposeScaledFont();
         cachedZoom = zoom;
         if (zoom == 1.0) {
             text.setFont(font);
         } else {
-            FontData fd = font.getFontData()[0];
+            var fd = font.getFontData()[0];
             fd.setHeight((int) (fd.getHeight() * zoom));
             text.setFont(scaledFont = new Font(null, fd));
         }

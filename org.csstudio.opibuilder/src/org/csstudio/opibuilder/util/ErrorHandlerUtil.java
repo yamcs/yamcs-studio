@@ -29,11 +29,9 @@ public class ErrorHandlerUtil {
         }
         if (popErrorDialog) {
             if (DisplayUtils.getDisplay() != null) {
-                IStatus status = new Status(IStatus.ERROR, OPIBuilderPlugin.PLUGIN_ID,
-                        exception.getLocalizedMessage(), exception);
-                ExceptionDetailsErrorDialog.openError(
-                        DisplayUtils.getDisplay().getActiveShell(),
-                        "Error", message,
+                IStatus status = new Status(IStatus.ERROR, OPIBuilderPlugin.PLUGIN_ID, exception.getLocalizedMessage(),
+                        exception);
+                ExceptionDetailsErrorDialog.openError(DisplayUtils.getDisplay().getActiveShell(), "Error", message,
                         status);
             }
         }

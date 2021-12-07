@@ -65,9 +65,9 @@ class ColumnFromListNumberGeneratorFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VString name = (VString) args.get(0);
-        ListNumberProvider data = (ListNumberProvider) args.get(1);
+    public Object calculate(List<Object> args) {
+        var name = (VString) args.get(0);
+        var data = (ListNumberProvider) args.get(1);
 
         if (name == null || data == null) {
             return null;

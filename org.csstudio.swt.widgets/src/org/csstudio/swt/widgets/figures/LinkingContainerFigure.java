@@ -47,14 +47,14 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
         pane.setLayoutManager(new FreeformLayout());
         setLayoutManager(new StackLayout());
         add(scrollPane);
-        FreeformViewport viewPort = new FreeformViewport();
+        var viewPort = new FreeformViewport();
         scrollPane.setViewport(viewPort);
         scrollPane.setContents(pane);
 
         zoomManager = new ZoomManager(pane, viewPort) {
             @Override
             protected double getFitPageZoomLevel() {
-                double fitPageZoomLevel = super.getFitPageZoomLevel();
+                var fitPageZoomLevel = super.getFitPageZoomLevel();
                 if (fitPageZoomLevel <= 0) {
                     fitPageZoomLevel = 0.1;
                 }
@@ -64,8 +64,10 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
         };
 
         addFigureListener(new FigureListener() {
+            @Override
             public void figureMoved(IFigure source) {
                 Display.getDefault().asyncExec(new Runnable() {
+                    @Override
                     public void run() {
                         updateZoom();
                     }
@@ -89,6 +91,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
     public void setBorder(Border border) {
         super.setBorder(border);
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 updateZoom();
             }
@@ -98,6 +101,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
     public void setZoomToFitAll(boolean zoomToFitAll) {
         this.zoomToFitAll = zoomToFitAll;
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 updateZoom();
             }
@@ -111,14 +115,16 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
 
         if (zoomToFitAll) {
             zoomManager.setZoomAsText(Draw2dSingletonUtil.ZoomManager_FIT_ALL);
-        } else
+        } else {
             zoomManager.setZoom(1.0);
+        }
     }
 
     public ZoomManager getZoomManager() {
         return zoomManager;
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }

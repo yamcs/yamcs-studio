@@ -1,7 +1,6 @@
 package org.csstudio.java.thread;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -32,7 +31,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * @param timeout_secs
      *            How long items are considered 'valid' in seconds
      */
-    public TimedCache(final long timeout_secs) {
+    public TimedCache(long timeout_secs) {
         this.timeout_secs = timeout_secs;
     }
 
@@ -48,7 +47,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * @return Cached entry or <code>null</code> when not found or timed out
      */
     public synchronized TimedCacheEntry<VALUETYPE> getEntry(KEYTYPE key) {
-        final TimedCacheEntry<VALUETYPE> entry = map.get(key);
+        var entry = map.get(key);
         // Is there a matching entry?
         if (entry == null) {
             ++misses;
@@ -72,9 +71,10 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * @return Cached value or <code>null</code> when not found or timed out
      */
     public VALUETYPE getValue(KEYTYPE key) {
-        final TimedCacheEntry<VALUETYPE> entry = getEntry(key);
-        if (entry == null)
+        var entry = getEntry(key);
+        if (entry == null) {
             return null;
+        }
         return entry.getValue();
     }
 
@@ -86,18 +86,19 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * @return Cache entry
      */
     public synchronized TimedCacheEntry<VALUETYPE> remember(KEYTYPE key, VALUETYPE value) {
-        final TimedCacheEntry<VALUETYPE> entry = new TimedCacheEntry<VALUETYPE>(value, timeout_secs);
+        var entry = new TimedCacheEntry<VALUETYPE>(value, timeout_secs);
         map.put(key, entry);
         return entry;
     }
 
     /** Use if need to get rid of all expired cache entries */
     public synchronized void cleanup() {
-        final Iterator<KEYTYPE> keys = map.keySet().iterator();
+        var keys = map.keySet().iterator();
         while (keys.hasNext()) {
-            final KEYTYPE key = keys.next();
-            if (!map.get(key).isStillValid())
+            var key = keys.next();
+            if (!map.get(key).isStillValid()) {
                 map.remove(key);
+            }
         }
     }
 }

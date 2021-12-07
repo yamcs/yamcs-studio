@@ -33,22 +33,22 @@ public class JumpToDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
-        Composite container = new Composite(area, SWT.NONE);
+        var area = (Composite) super.createDialogArea(parent);
+        var container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout layout = new GridLayout(2, false);
+        var layout = new GridLayout(2, false);
         layout.marginHeight = 20;
         layout.marginWidth = 20;
         layout.verticalSpacing = 2;
         container.setLayout(layout);
 
-        Label lbl = new Label(container, SWT.NONE);
+        var lbl = new Label(container, SWT.NONE);
         lbl.setText("Time:");
         date = new CDateTime(container,
                 SWT.BORDER | CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TIME_MEDIUM | CDT.CLOCK_24_HOUR);
 
-        Instant missionTime = YamcsPlugin.getMissionTime();
+        var missionTime = YamcsPlugin.getMissionTime();
         if (missionTime != null) {
             date.setSelection(Date.from(missionTime));
         }

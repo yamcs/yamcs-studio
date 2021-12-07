@@ -6,9 +6,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -43,12 +41,12 @@ public class ParameterDatasource implements Datasource {
     @Override
     public void writeValue(IPV pv, Object value, WriteCallback callback) {
         try {
-            NamedObjectId id = YamcsSubscriptionService.identityOf(pv.getName());
+            var id = YamcsSubscriptionService.identityOf(pv.getName());
 
-            ParameterTypeInfo ptype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
-            Value v = toValue(ptype, value);
-            ProcessorClient processor = YamcsPlugin.getProcessorClient();
-            String parameterName = id.getName();
+            var ptype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
+            var v = toValue(ptype, value);
+            var processor = YamcsPlugin.getProcessorClient();
+            var parameterName = id.getName();
             if (id.hasNamespace()) {
                 parameterName = id.getNamespace() + "/" + parameterName;
             }
@@ -94,11 +92,10 @@ public class ParameterDatasource implements Datasource {
                 return Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(value)).build();
             case "string[]":
             case "enumeration[]":
-                Value.Builder stringValueArray = Value.newBuilder().setType(Type.ARRAY);
+                var stringValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (Object objectValue : (Object[]) value) {
-                    stringValueArray.addArrayValue(Value.newBuilder()
-                            .setType(Type.STRING)
-                            .setStringValue(String.valueOf(objectValue)));
+                    stringValueArray.addArrayValue(
+                            Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(objectValue)));
                 }
                 return stringValueArray.build();
             case "integer":
@@ -109,14 +106,14 @@ public class ParameterDatasource implements Datasource {
                             .build();
                 }
             case "integer[]":
-                Value.Builder intValueArray = Value.newBuilder().setType(Type.ARRAY);
+                var intValueArray = Value.newBuilder().setType(Type.ARRAY);
                 if (value instanceof int[]) {
                     for (int intValue : (int[]) value) {
                         intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(intValue));
                     }
                 } else {
                     for (Object objectValue : (Object[]) value) {
-                        long longValue = Long.parseLong(String.valueOf(objectValue));
+                        var longValue = Long.parseLong(String.valueOf(objectValue));
                         intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(longValue));
                     }
                 }
@@ -125,19 +122,18 @@ public class ParameterDatasource implements Datasource {
                 return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(String.valueOf(value)))
                         .build();
             case "float[]":
-                Value.Builder floatValueArray = Value.newBuilder().setType(Type.ARRAY);
+                var floatValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (float floatValue : (float[]) value) {
                     floatValueArray.addArrayValue(Value.newBuilder().setType(Type.FLOAT).setFloatValue(floatValue));
                 }
                 return floatValueArray.build();
             case "boolean":
-                boolean booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
+                var booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
                 return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
             case "boolean[]":
-                Value.Builder booleanValueArray = Value.newBuilder().setType(Type.ARRAY);
+                var booleanValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (Object objectValue : (Object[]) value) {
-                    booleanValueArray.addArrayValue(Value.newBuilder()
-                            .setType(Type.BOOLEAN)
+                    booleanValueArray.addArrayValue(Value.newBuilder().setType(Type.BOOLEAN)
                             .setBooleanValue(TRUTHY.contains(String.valueOf(objectValue).toLowerCase())));
                 }
                 return booleanValueArray.build();

@@ -7,10 +7,6 @@ import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -41,20 +37,19 @@ public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
      *             if the view is of a different type
      */
     public static <T> T findView(Class<T> clazz, String viewId) throws PartInitException {
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-        IWorkbenchPage page = window.getActivePage();
+        var workbench = PlatformUI.getWorkbench();
+        var window = workbench.getActiveWorkbenchWindow();
+        var page = window.getActivePage();
         return clazz.cast(page.showView(viewId));
     }
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection selection = HandlerUtil.getActiveMenuSelection(event);
+        var selection = HandlerUtil.getActiveMenuSelection(event);
         try {
             execute(Arrays.asList(AdapterUtil.convert(selection, clazz)), event);
         } catch (Exception ex) {
-            ExceptionDetailsErrorDialog.openError(HandlerUtil.getActiveShell(event),
-                    "Error executing command...", ex);
+            ExceptionDetailsErrorDialog.openError(HandlerUtil.getActiveShell(event), "Error executing command...", ex);
         }
         return null;
     }
@@ -67,7 +62,6 @@ public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
      * @param event
      *            event of the command
      */
-    protected abstract void execute(List<T> data, ExecutionEvent event)
-            throws Exception;
+    protected abstract void execute(List<T> data, ExecutionEvent event) throws Exception;
 
 }

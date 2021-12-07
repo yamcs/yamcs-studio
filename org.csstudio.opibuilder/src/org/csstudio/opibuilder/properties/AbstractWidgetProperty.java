@@ -60,8 +60,8 @@ public abstract class AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. It cannot be null.
      */
-    public AbstractWidgetProperty(String prop_id, String description,
-            WidgetPropertyCategory category, Object defaultValue) {
+    public AbstractWidgetProperty(String prop_id, String description, WidgetPropertyCategory category,
+            Object defaultValue) {
         this.prop_id = prop_id;
         this.description = description;
         this.category = category;
@@ -79,7 +79,7 @@ public abstract class AbstractWidgetProperty {
      * @param listener
      *            the listener which will be notified when property value changed.
      */
-    public synchronized final void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (listener == null) {
             return;
         }
@@ -94,11 +94,12 @@ public abstract class AbstractWidgetProperty {
      * @return The value after being checked. It might be coerced if the requestValue is illegal. return null if it is
      *         not convertible or illegal.
      */
-    public abstract Object checkValue(final Object value);
+    public abstract Object checkValue(Object value);
 
-    public final void firePropertyChange(final Object oldValue, final Object newValue) {
-        if (pcsDelegate.hasListeners(prop_id))
+    public void firePropertyChange(Object oldValue, Object newValue) {
+        if (pcsDelegate.hasListeners(prop_id)) {
             pcsDelegate.firePropertyChange(prop_id, oldValue, newValue);
+        }
     }
 
     public final WidgetPropertyCategory getCategory() {
@@ -118,8 +119,9 @@ public abstract class AbstractWidgetProperty {
     }
 
     public final IPropertyDescriptor getPropertyDescriptor() {
-        if (propertyDescriptor == null)
+        if (propertyDescriptor == null) {
             createPropertyDescriptor(visibleInPropSheet);
+        }
         return propertyDescriptor;
     }
 
@@ -149,7 +151,7 @@ public abstract class AbstractWidgetProperty {
         return visibleInPropSheet;
     }
 
-    public final void removeAllPropertyChangeListeners() {
+    public void removeAllPropertyChangeListeners() {
         for (PropertyChangeListener l : pcsDelegate.getPropertyChangeListeners()) {
             // if(l instanceof WidgetPropertyChangeListener)
             // ((WidgetPropertyChangeListener) l).removeAllHandlers();
@@ -161,9 +163,10 @@ public abstract class AbstractWidgetProperty {
         return pcsDelegate.getPropertyChangeListeners();
     }
 
-    public final void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (listener instanceof WidgetPropertyChangeListener)
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (listener instanceof WidgetPropertyChangeListener) {
             ((WidgetPropertyChangeListener) listener).removeAllHandlers();
+        }
         pcsDelegate.removePropertyChangeListener(listener);
     }
 
@@ -186,11 +189,11 @@ public abstract class AbstractWidgetProperty {
         this.isSavable = isSavable;
     }
 
-    public final void setCategory(WidgetPropertyCategory category) {
+    public void setCategory(WidgetPropertyCategory category) {
         this.category = category;
     }
 
-    public final void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
         createPropertyDescriptor(visibleInPropSheet);
     }
@@ -210,10 +213,11 @@ public abstract class AbstractWidgetProperty {
      */
     public void setPropertyValue(Object value) {
         // do conversion and legally check
-        Object newValue = checkValue(value);
-        if (newValue == null || newValue.equals(propertyValue))
+        var newValue = checkValue(value);
+        if (newValue == null || newValue.equals(propertyValue)) {
             return;
-        Object oldValue = getPropertyValue();
+        }
+        var oldValue = getPropertyValue();
         propertyValue = newValue;
         firePropertyChange(oldValue, getPropertyValue());
     }
@@ -225,9 +229,10 @@ public abstract class AbstractWidgetProperty {
      */
     public void setPropertyValue_IgnoreOldValue(Object value) {
         // do conversion and legally check
-        Object newValue = checkValue(value);
-        if (newValue == null || newValue.equals(propertyValue))
+        var newValue = checkValue(value);
+        if (newValue == null || newValue.equals(propertyValue)) {
             return;
+        }
         propertyValue = newValue;
         firePropertyChange(null, getPropertyValue());
     }
@@ -244,16 +249,18 @@ public abstract class AbstractWidgetProperty {
     public void setPropertyValue(Object value, boolean fire) {
         if (fire) {
             // do conversion and legally check
-            Object newValue = checkValue(value);
-            if (newValue == null)
+            var newValue = checkValue(value);
+            if (newValue == null) {
                 return;
+            }
             propertyValue = newValue;
             firePropertyChange(null, getPropertyValue());
 
         } else {
-            Object newValue = checkValue(value);
-            if (newValue == null || newValue.equals(propertyValue))
+            var newValue = checkValue(value);
+            if (newValue == null || newValue.equals(propertyValue)) {
                 return;
+            }
             propertyValue = newValue;
         }
     }
@@ -263,20 +270,23 @@ public abstract class AbstractWidgetProperty {
      * @return true if visibility changed.
      */
     public final boolean setVisibleInPropSheet(boolean visibleInPropSheet) {
-        if (visibleInPropSheet == this.visibleInPropSheet)
+        if (visibleInPropSheet == this.visibleInPropSheet) {
             return false;
+        }
         createPropertyDescriptor(visibleInPropSheet);
         this.visibleInPropSheet = visibleInPropSheet;
         return true;
     }
 
-    private void createPropertyDescriptor(final boolean visibleInPropSheet) {
+    private void createPropertyDescriptor(boolean visibleInPropSheet) {
         if (visibleInPropSheet) {
             propertyDescriptor = createPropertyDescriptor();
-            if (propertyDescriptor != null)
+            if (propertyDescriptor != null) {
                 propertyDescriptor.setCategory(category == null ? null : category.toString());
-        } else
+            }
+        } else {
             propertyDescriptor = null;
+        }
     }
 
     /**
@@ -301,8 +311,9 @@ public abstract class AbstractWidgetProperty {
 
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        if (widgetModel != null)
+        if (widgetModel != null) {
             setExecutionMode(widgetModel.getExecutionMode());
+        }
     }
 
     public void setExecutionMode(ExecutionMode executionMode) {
@@ -340,10 +351,11 @@ public abstract class AbstractWidgetProperty {
      * @return the string.
      */
     public String toStringInRuleScript(Object propValue) {
-        if (propValue != null)
+        if (propValue != null) {
             return propValue.toString();
-        else
+        } else {
             return "";
+        }
     }
 
     @Override

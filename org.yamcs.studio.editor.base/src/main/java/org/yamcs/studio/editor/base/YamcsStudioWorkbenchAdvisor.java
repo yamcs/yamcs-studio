@@ -38,8 +38,6 @@ import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_
 import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_NEWPRJ_WIZ;
 import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_RESOURCEWORKINGSET_WIZ;
 
-import java.net.URL;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -47,9 +45,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -100,15 +96,15 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
      * in {@link org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages}).
      */
     private void declareWorkbenchImages() {
-        String ICONS = "$nl$/icons/full/";
-        String ELOCALTOOL = ICONS + "elcl16/";
-        String DLOCALTOOL = ICONS + "dlcl16/";
-        String ETOOL = ICONS + "etool16/";
-        String DTOOL = ICONS + "dtool16/";
-        String OBJECT = ICONS + "obj16/";
-        String WIZBAN = ICONS + "wizban/";
-        String EVIEW = ICONS + "eview16/";
-        Bundle ideBundle = Platform.getBundle(IDEWorkbenchPlugin.IDE_WORKBENCH);
+        var ICONS = "$nl$/icons/full/";
+        var ELOCALTOOL = ICONS + "elcl16/";
+        var DLOCALTOOL = ICONS + "dlcl16/";
+        var ETOOL = ICONS + "etool16/";
+        var DTOOL = ICONS + "dtool16/";
+        var OBJECT = ICONS + "obj16/";
+        var WIZBAN = ICONS + "wizban/";
+        var EVIEW = ICONS + "eview16/";
+        var ideBundle = Platform.getBundle(IDEWorkbenchPlugin.IDE_WORKBENCH);
 
         declareWorkbenchImage(ideBundle, IMG_ETOOL_BUILD_EXEC, ETOOL + "build_exec.png", false);
         declareWorkbenchImage(ideBundle, IMG_ETOOL_BUILD_EXEC_HOVER, ETOOL + "build_exec.png", false);
@@ -158,16 +154,16 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     }
 
     private void declareWorkbenchImage(Bundle ideBundle, String symbolicName, String path, boolean shared) {
-        URL url = FileLocator.find(ideBundle, new Path(path), null);
-        ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+        var url = FileLocator.find(ideBundle, new Path(path), null);
+        var desc = ImageDescriptor.createFromURL(url);
         getWorkbenchConfigurer().declareImage(symbolicName, desc, shared);
     }
 
     @Override
     public void postStartup() {
-        IWorkbench workbench = PlatformUI.getWorkbench();
+        var workbench = PlatformUI.getWorkbench();
 
-        PreferenceManager pm = workbench.getPreferenceManager();
+        var pm = workbench.getPreferenceManager();
         pm.remove("org.eclipse.help.ui.browsersPreferencePage");
         pm.remove("org.eclipse.team.ui.TeamPreferences");
     }

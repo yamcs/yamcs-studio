@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -48,7 +47,7 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
 
     @Override
     protected Point getInitialSize() {
-        Point size = super.getInitialSize();
+        var size = super.getInitialSize();
         size.y += convertHeightInCharsToPixels(3);
         return size;
     }
@@ -56,17 +55,15 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
 
-        Composite dialogArea = (Composite) super.createDialogArea(parent);
+        var dialogArea = (Composite) super.createDialogArea(parent);
 
         dialogArea.setLayout(new GridLayout(1, true));
 
         initializeDialogUnits(dialogArea);
 
-        createMessageArea(dialogArea).setLayoutData(
-                new GridData(SWT.FILL, SWT.NONE, true, false));
+        createMessageArea(dialogArea).setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-        createDialogContentArea(dialogArea).setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        createDialogContentArea(dialogArea).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         applyDialogFont(dialogArea);
 
@@ -88,17 +85,13 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
 
         imageLabel = new Label(msgParent, SWT.NONE);
         imageLabel.setBackground(msgParent.getBackground());
-        imageLabel.setImage(JFaceResources
-                .getImage(Dialog.DLG_IMG_MESSAGE_INFO));
-        imageLabel
-                .setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+        imageLabel.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO));
+        imageLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
-        messageArea = new Text(msgParent, SWT.READ_ONLY | SWT.NONE | SWT.WRAP
-                | SWT.MULTI | SWT.V_SCROLL);
+        messageArea = new Text(msgParent, SWT.READ_ONLY | SWT.NONE | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL);
         messageArea.setEditable(false);
         messageArea.setBackground(msgParent.getBackground());
-        messageArea
-                .setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        messageArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return msgParent;
     }
 
@@ -114,7 +107,7 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
      */
     protected void handleStatusUdpate(int severity, String messgage) {
         Image image = null;
-        Button okBttn = getButton(OK);
+        var okBttn = getButton(OK);
         switch (severity) {
         case IStatus.ERROR: {
             if (messgage == null) {
@@ -142,8 +135,7 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
             handleMessageAreaVisibility(true);
         }
         if (okBttn != null) {
-            okBttn.setEnabled(severity == IStatus.OK
-                    || severity == IStatus.INFO || severity == IStatus.WARNING);
+            okBttn.setEnabled(severity == IStatus.OK || severity == IStatus.INFO || severity == IStatus.WARNING);
         }
         if (msgParent != null) {
             setMessageImage(image);
@@ -182,7 +174,7 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
         if (msgParent == null || msgParent.isDisposed()) {
             return;
         }
-        GridData data = (GridData) msgParent.getLayoutData();
+        var data = (GridData) msgParent.getLayoutData();
         if (data.exclude == visible) {
             data.exclude = !visible;
             msgParent.setVisible(visible);
@@ -194,8 +186,7 @@ public abstract class ViewerSettingsAndStatusDialog extends ViewSettingsDialog {
      * Return the Color to display when dialog is opened.
      */
     protected Color getMessageBackground() {
-        return getShell().getDisplay()
-                .getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+        return getShell().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
     }
 
     /**

@@ -18,8 +18,6 @@ import org.csstudio.opibuilder.editpolicies.WidgetTreeEditPolicy;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.gef.EditPolicy;
@@ -50,11 +48,11 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
                 refreshVisuals();
             }
         };
-        AbstractWidgetProperty nameProperty = getWidgetModel().getProperty(AbstractWidgetModel.PROP_NAME);
+        var nameProperty = getWidgetModel().getProperty(AbstractWidgetModel.PROP_NAME);
         if (nameProperty != null) {
             nameProperty.addPropertyChangeListener(visualListener);
         }
-        AbstractWidgetProperty pvNameProperty = getWidgetModel().getProperty(AbstractPVWidgetModel.PROP_PVNAME);
+        var pvNameProperty = getWidgetModel().getProperty(AbstractPVWidgetModel.PROP_PVNAME);
         if (pvNameProperty != null) {
             pvNameProperty.addPropertyChangeListener(visualListener);
         }
@@ -71,28 +69,29 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
 
     @Override
     protected Image getImage() {
-        if (getWidgetModel() instanceof DisplayModel)
+        if (getWidgetModel() instanceof DisplayModel) {
             return super.getImage();
-        String typeID = getWidgetModel().getTypeID();
-        WidgetDescriptor widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(typeID);
-        Image image = CustomMediaFactory.getInstance().getImageFromPlugin(
-                widgetDescriptor.getPluginId(), widgetDescriptor.getIconPath());
+        }
+        var typeID = getWidgetModel().getTypeID();
+        var widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(typeID);
+        var image = CustomMediaFactory.getInstance().getImageFromPlugin(widgetDescriptor.getPluginId(),
+                widgetDescriptor.getIconPath());
         return image;
     }
 
     @Override
     protected String getText() {
 
-        StringBuilder sb = new StringBuilder();
-        Object obj = getViewer().getProperty(ShowIndexInTreeViewAction.SHOW_INDEX_PROPERTY);
+        var sb = new StringBuilder();
+        var obj = getViewer().getProperty(ShowIndexInTreeViewAction.SHOW_INDEX_PROPERTY);
         if (obj != null && obj instanceof Boolean && (Boolean) obj) {
             sb.append(Integer.toString(getWidgetModel().getIndex()));
             sb.append("_");
         }
         sb.append(getWidgetModel().getName());
         if (getWidgetModel() instanceof AbstractPVWidgetModel) {
-            AbstractPVWidgetModel pvWidgetModel = (AbstractPVWidgetModel) getWidgetModel();
-            String pvName = pvWidgetModel.getPVName();
+            var pvWidgetModel = (AbstractPVWidgetModel) getWidgetModel();
+            var pvName = pvWidgetModel.getPVName();
             if (pvName != null && !pvName.trim().equals("")) {
                 sb.append("(");
                 sb.append(pvName);
@@ -104,8 +103,9 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
 
     @Override
     protected void refreshVisuals() {
-        if (getWidget() instanceof Tree)
+        if (getWidget() instanceof Tree) {
             return;
+        }
         super.refreshVisuals();
     }
 

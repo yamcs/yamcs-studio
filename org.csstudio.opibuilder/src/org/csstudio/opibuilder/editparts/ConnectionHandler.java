@@ -91,13 +91,13 @@ public class ConnectionHandler {
      * @param pv
      *            the PV object.
      */
-    public void addPV(final String pvName, final IPV pv) {
+    public void addPV(String pvName, IPV pv) {
         pvMap.put(pvName, pv);
         markWidgetAsDisconnected(pv);
         pv.addListener(new PVConnectionListener());
     }
 
-    public void removePV(final String pvName) {
+    public void removePV(String pvName) {
         if (pvMap == null) {
             return;
         }
@@ -105,7 +105,7 @@ public class ConnectionHandler {
     }
 
     private void refreshModelTooltip() {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         for (Entry<String, IPV> entry : pvMap.entrySet()) {
             if (!entry.getValue().isConnected()) {
                 sb.append(entry.getKey() + " is disconnected.\n");
@@ -154,7 +154,7 @@ public class ConnectionHandler {
         if (connected && !valueChangedFromNull) {
             return;
         }
-        boolean allConnected = true;
+        var allConnected = true;
         hasNullValue = false;
         for (IPV pv2 : pvMap.values()) {
             allConnected &= pv2.isConnected();
@@ -165,8 +165,7 @@ public class ConnectionHandler {
             connected = true;
             UIBundlingThread.getInstance().addRunnable(display, () -> {
                 if (hasNullValue) {
-                    figure.setBorder(
-                            AlarmRepresentationScheme.getInvalidBorder(BorderStyle.DOTTED));
+                    figure.setBorder(AlarmRepresentationScheme.getInvalidBorder(BorderStyle.DOTTED));
                 } else {
                     figure.setBorder(editPart.calculateBorder());
                 }

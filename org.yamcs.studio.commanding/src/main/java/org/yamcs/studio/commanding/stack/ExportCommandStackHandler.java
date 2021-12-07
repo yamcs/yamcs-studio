@@ -15,7 +15,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class ExportCommandStackHandler extends AbstractHandler {
@@ -24,8 +23,8 @@ public class ExportCommandStackHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = HandlerUtil.getActiveShell(event);
-        CommandStack stack = CommandStack.getInstance();
+        var shell = HandlerUtil.getActiveShell(event);
+        var stack = CommandStack.getInstance();
 
         Collection<StackedCommand> commands = stack.getCommands();
         if (commands == null || commands.isEmpty()) {
@@ -34,19 +33,18 @@ public class ExportCommandStackHandler extends AbstractHandler {
             return null;
         }
 
-        FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+        var dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.xml" });
-        String exportFile = dialog.open();
+        var exportFile = dialog.open();
         if (exportFile == null) {
             // cancelled
             return null;
         }
 
         try {
-            String xml = ExportUtil.toXML(stack);
+            var xml = ExportUtil.toXML(stack);
             Files.write(Paths.get(exportFile), xml.getBytes());
-            MessageDialog.openInformation(shell, "Export Command Stack",
-                    "Command stack exported successfully.");
+            MessageDialog.openInformation(shell, "Export Command Stack", "Command stack exported successfully.");
         } catch (IOException | TransformerException e) {
             log.log(Level.SEVERE, "Error while exporting stack", e);
             MessageDialog.openError(shell, "Export Command Stack",

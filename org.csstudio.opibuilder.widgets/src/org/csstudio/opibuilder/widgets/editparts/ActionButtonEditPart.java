@@ -15,13 +15,10 @@ import java.util.List;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
-import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.eclipse.draw2d.IFigure;
@@ -39,7 +36,7 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ActionButtonModel model = getWidgetModel();
+        var model = getWidgetModel();
 
         switch (model.getStyle()) {
         case NATIVE:
@@ -58,18 +55,17 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE)
-            installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,
-                    new TextDirectEditPolicy());
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
+            installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TextDirectEditPolicy());
+        }
     }
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE
-                && (request.getType() == RequestConstants.REQ_DIRECT_EDIT || request
-                        .getType() == RequestConstants.REQ_OPEN))
-            new TextEditManager(this, new LabelCellEditorLocator(getFigure()),
-                    false).show();
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
+            new TextEditManager(this, new LabelCellEditorLocator(getFigure()), false).show();
+        }
     }
 
     @Override
@@ -79,8 +75,8 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public List<AbstractWidgetAction> getHookedActions() {
-        ActionButtonModel widgetModel = getWidgetModel();
-        boolean isSelected = delegate.isSelected();
+        var widgetModel = getWidgetModel();
+        var isSelected = delegate.isSelected();
         return getHookedActionsForButton(widgetModel, isSelected);
 
     }
@@ -92,32 +88,35 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
      * @param isSelected
      * @return
      */
-    public static List<AbstractWidgetAction> getHookedActionsForButton(
-            ActionButtonModel widgetModel, boolean isSelected) {
+    public static List<AbstractWidgetAction> getHookedActionsForButton(ActionButtonModel widgetModel,
+            boolean isSelected) {
         int actionIndex;
 
         if (widgetModel.isToggleButton()) {
             if (isSelected) {
                 actionIndex = widgetModel.getActionIndex();
-            } else
+            } else {
                 actionIndex = widgetModel.getReleasedActionIndex();
-        } else
+            }
+        } else {
             actionIndex = widgetModel.getActionIndex();
-
-        ActionsInput actionsInput = widgetModel.getActionsInput();
-        if (actionsInput.getActionsList().size() <= 0)
-            return null;
-        if (actionsInput.isHookUpAllActionsToWidget())
-            return actionsInput.getActionsList();
-
-        if (actionIndex >= 0
-                && actionsInput.getActionsList().size() > actionIndex) {
-            return widgetModel.getActionsInput().getActionsList()
-                    .subList(actionIndex, actionIndex + 1);
         }
 
-        if (actionIndex == -1)
+        var actionsInput = widgetModel.getActionsInput();
+        if (actionsInput.getActionsList().size() <= 0) {
+            return null;
+        }
+        if (actionsInput.isHookUpAllActionsToWidget()) {
             return actionsInput.getActionsList();
+        }
+
+        if (actionIndex >= 0 && actionsInput.getActionsList().size() > actionIndex) {
+            return widgetModel.getActionsInput().getActionsList().subList(actionIndex, actionIndex + 1);
+        }
+
+        if (actionIndex == -1) {
+            return actionsInput.getActionsList();
+        }
 
         return null;
     }
@@ -141,18 +140,17 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 AbstractWidgetModel model = getWidgetModel();
-                WidgetDescriptor descriptor = WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
-                String type = descriptor == null ? model.getTypeID().substring(
-                        model.getTypeID().lastIndexOf(".") + 1) : descriptor.getName();
+                var descriptor = WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
+                var type = descriptor == null ? model.getTypeID().substring(model.getTypeID().lastIndexOf(".") + 1)
+                        : descriptor.getName();
                 model.setPropertyValue(AbstractWidgetModel.PROP_WIDGET_TYPE, type);
-                AbstractContainerModel parent = model.getParent();
+                var parent = model.getParent();
                 parent.removeChild(model);
                 parent.addChild(model);
                 parent.selectWidget(model, true);
             }
         };
-        getWidgetModel().getProperty(ActionButtonModel.PROP_STYLE).addPropertyChangeListener(
-                styleListener);
+        getWidgetModel().getProperty(ActionButtonModel.PROP_STYLE).addPropertyChangeListener(styleListener);
         updatePropSheet();
 
         delegate.registerPropertyChangeHandlers();
@@ -162,19 +160,14 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
      * @param newValue
      */
     protected void updatePropSheet() {
-        boolean isToggle = getWidgetModel().isToggleButton();
-        getWidgetModel().setPropertyVisible(
-                ActionButtonModel.PROP_RELEASED_ACTION_INDEX, isToggle);
-        getWidgetModel().setPropertyDescription(
-                ActionButtonModel.PROP_ACTION_INDEX,
+        var isToggle = getWidgetModel().isToggleButton();
+        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_RELEASED_ACTION_INDEX, isToggle);
+        getWidgetModel().setPropertyDescription(ActionButtonModel.PROP_ACTION_INDEX,
                 isToggle ? "Push Action Index" : "Click Action Index");
-        boolean isDraw2DButton = delegate instanceof Draw2DButtonEditPartDelegate;
-        getWidgetModel().setPropertyVisible(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
-                isDraw2DButton);
-        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_BACKCOLOR_ALARMSENSITIVE,
-                isDraw2DButton);
-        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_ALARM_PULSING,
-                isDraw2DButton);
+        var isDraw2DButton = delegate instanceof Draw2DButtonEditPartDelegate;
+        getWidgetModel().setPropertyVisible(AbstractWidgetModel.PROP_COLOR_BACKGROUND, isDraw2DButton);
+        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_BACKCOLOR_ALARMSENSITIVE, isDraw2DButton);
+        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_ALARM_PULSING, isDraw2DButton);
     }
 
     @Override
@@ -189,8 +182,9 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
-        if (key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return getFigure();
+        }
 
         return super.getAdapter(key);
     }

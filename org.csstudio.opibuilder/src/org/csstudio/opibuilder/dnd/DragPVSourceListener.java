@@ -18,24 +18,21 @@ public class DragPVSourceListener extends AbstractTransferDragSourceListener {
     public void dragStart(DragSourceEvent event) {
         super.dragStart(event);
         List<?> widgetLists = getViewer().getSelectedEditParts();
-        if (!widgetLists.isEmpty()
-                && widgetLists.get(0) instanceof AbstractPVWidgetEditPart
+        if (!widgetLists.isEmpty() && widgetLists.get(0) instanceof AbstractPVWidgetEditPart
                 && ((AbstractPVWidgetEditPart) (widgetLists.get(0))).getPV() != null
                 && ((AbstractPVWidgetEditPart) (widgetLists.get(0))).getPV().getName().trim().length() > 0) {
             event.doit = true;
-        } else
+        } else {
             event.doit = false;
+        }
     }
 
     @Override
     public void dragSetData(DragSourceEvent event) {
         List<?> widgetLists = getViewer().getSelectedEditParts();
-        if (!widgetLists.isEmpty()
-                && widgetLists.get(0) instanceof AbstractPVWidgetEditPart
-                && ((AbstractPVWidgetEditPart) (widgetLists.get(0))).getPV()
-                        .getName().trim().length() > 0) {
-            String text = ((AbstractPVWidgetEditPart) (widgetLists.get(0)))
-                    .getPV().getName();
+        if (!widgetLists.isEmpty() && widgetLists.get(0) instanceof AbstractPVWidgetEditPart
+                && ((AbstractPVWidgetEditPart) (widgetLists.get(0))).getPV().getName().trim().length() > 0) {
+            var text = ((AbstractPVWidgetEditPart) (widgetLists.get(0))).getPV().getName();
             if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
                 event.data = text;
             }

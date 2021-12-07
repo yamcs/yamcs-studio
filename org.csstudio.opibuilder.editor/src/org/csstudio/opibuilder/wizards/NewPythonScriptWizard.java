@@ -12,14 +12,11 @@ package org.csstudio.opibuilder.wizards;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 
@@ -42,16 +39,16 @@ public class NewPythonScriptWizard extends Wizard implements INewWizard {
 
     @Override
     public boolean performFinish() {
-        IFile file = pyFilePage.createNewFile();
+        var file = pyFilePage.createNewFile();
 
         if (file == null) {
             return false;
         }
         // Open editor on new file.
-        IWorkbenchWindow dw = workbench.getActiveWorkbenchWindow();
+        var dw = workbench.getActiveWorkbenchWindow();
         try {
             if (dw != null) {
-                IWorkbenchPage page = dw.getActivePage();
+                var page = dw.getActivePage();
                 if (page != null) {
                     IDE.openEditor(page, file, true);
                 }

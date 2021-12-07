@@ -29,9 +29,9 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        final KnobModel model = (KnobModel) getModel();
+        var model = (KnobModel) getModel();
 
-        KnobFigure knob = new KnobFigure();
+        var knob = new KnobFigure();
 
         initializeCommonFigureProperties(knob, model);
 
@@ -65,10 +65,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // knob color
         IWidgetPropertyChangeHandler knobColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setBulbColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -78,10 +76,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // thumbColor
         IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setThumbColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
@@ -91,10 +87,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setEffect3D((Boolean) newValue);
                 return false;
             }
@@ -104,10 +98,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // show value label
         IWidgetPropertyChangeHandler valueLabelHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setValueLabelVisibility((Boolean) newValue);
                 return false;
             }
@@ -117,10 +109,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // Ramp gradient
         IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setGradient((Boolean) newValue);
                 return false;
             }
@@ -130,10 +120,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         // increment
         IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                KnobFigure knob = (KnobFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var knob = (KnobFigure) refreshableFigure;
                 knob.setIncrement((Double) newValue);
                 return false;
             }
@@ -141,12 +129,13 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         setPropertyChangeHandler(KnobModel.PROP_INCREMENT, incrementHandler);
 
         // force square size
-        final IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
+        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (((Integer) newValue) < KnobModel.MINIMUM_SIZE)
+                if (((Integer) newValue) < KnobModel.MINIMUM_SIZE) {
                     newValue = KnobModel.MINIMUM_SIZE;
+                }
                 getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
                 return false;
             }

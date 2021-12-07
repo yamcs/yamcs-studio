@@ -57,9 +57,9 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
     protected void layout() {
         super.layout();
         if (!runmode) {
-            Rectangle clientArea = getClientArea().getCopy().shrink(2, 2);
-            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH - 2,
-                    clientArea.y, SELECTOR_WIDTH, clientArea.height));
+            var clientArea = getClientArea().getCopy().shrink(2, 2);
+            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH - 2, clientArea.y,
+                    SELECTOR_WIDTH, clientArea.height));
         }
     }
 
@@ -67,12 +67,11 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
     protected void paintOutlineFigure(Graphics graphics) {
         // draw this so that it can be seen in the outline view
         if (!runmode) {
-            Rectangle clientArea = getClientArea().getCopy().shrink(2, 2);
+            var clientArea = getClientArea().getCopy().shrink(2, 2);
             graphics.setBackgroundColor(GRAY_COLOR);
             graphics.fillRectangle(clientArea);
             graphics.setForegroundColor(DARK_GRAY_COLOR);
-            graphics.drawRectangle(new Rectangle(clientArea.getLocation(),
-                    clientArea.getSize().shrink(1, 1)));
+            graphics.drawRectangle(new Rectangle(clientArea.getLocation(), clientArea.getSize().shrink(1, 1)));
         }
     }
 

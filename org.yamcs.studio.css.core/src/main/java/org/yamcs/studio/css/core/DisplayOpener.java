@@ -3,7 +3,6 @@ package org.yamcs.studio.css.core;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.csstudio.opibuilder.runmode.OPIRunnerPerspective;
@@ -13,7 +12,6 @@ import org.csstudio.opibuilder.runmode.RunnerInput;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Yamcs.Event;
@@ -41,13 +39,13 @@ public class DisplayOpener {
 
     public void processEvent(Event event) {
         // check if this is an OpenDisplay event.
-        String eventMessage = event.getMessage();
+        var eventMessage = event.getMessage();
         if (!eventMessage.startsWith("OpenDisplay: ")) {
             return;
         }
 
-        Matcher mHost = pHostName.matcher(event.getMessage());
-        Matcher m = p.matcher(event.getMessage());
+        var mHost = pHostName.matcher(event.getMessage());
+        var m = p.matcher(event.getMessage());
 
         String displayName = null;
         String hostname = null;
@@ -63,14 +61,14 @@ public class DisplayOpener {
         }
 
         // check if hostname matches the event request
-        String workstationName = Activator.getDefault().getPreferenceStore().getString("events.workstationName");
+        var workstationName = Activator.getDefault().getPreferenceStore().getString("events.workstationName");
         if (hostname != null && !hostname.equals(workstationName)) {
             log.fine("OpenDisplay not targetted for this hostname.");
             return;
         }
 
         // open the requested display
-        String finalDisplayName = displayName;
+        var finalDisplayName = displayName;
         Display.getDefault().asyncExec(() -> {
             log.info("Opening display " + finalDisplayName);
 
@@ -83,7 +81,7 @@ public class DisplayOpener {
 
             if (targetWindow == null) {
                 try {
-                    IWorkbenchPage runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
+                    var runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
                     targetWindow = runnerPage.getWorkbenchWindow();
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Failed to launch display runtime", e);
@@ -94,7 +92,7 @@ public class DisplayOpener {
             targetWindow.getShell().setActive();
 
             IPath path = new Path(finalDisplayName);
-            RunnerInput new_input = new RunnerInput(path, null);
+            var new_input = new RunnerInput(path, null);
 
             RunModeService.openDisplayInView(targetWindow.getActivePage(), new_input, DisplayMode.NEW_TAB);
         });

@@ -61,36 +61,34 @@ public class TableModel extends AbstractWidgetModel {
     @Override
     protected void configureProperties() {
 
-        addProperty(new BooleanProperty(
-                PROP_EDITABLE, "Editable", WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_EDITABLE, "Editable", WidgetPropertyCategory.Behavior, true));
 
-        StringTableProperty contentProperty = new StringTableProperty(
-                PROP_DEFAULT_CONTENT, "Default Content", WidgetPropertyCategory.Display,
-                new String[][] { { "" } }, new String[] { "" });
+        var contentProperty = new StringTableProperty(PROP_DEFAULT_CONTENT, "Default Content",
+                WidgetPropertyCategory.Display, new String[][] { { "" } }, new String[] { "" });
 
         addProperty(contentProperty);
 
-        String[] dropDownOptions = new String[org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType
+        var dropDownOptions = new String[org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType
                 .values().length];
-        for (int i = 0; i < dropDownOptions.length; i++)
+        for (var i = 0; i < dropDownOptions.length; i++) {
             dropDownOptions[i] = org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.values()[i].name();
+        }
 
-        StringTableProperty headersProperty = new StringTableProperty(
-                PROP_COLUMN_HEADERS, "Column Headers", WidgetPropertyCategory.Display,
-                new String[0][0], new String[] { "Column Title", "Column Width", "Editable", "CellEditor" },
-                new CellEditorType[] { CellEditorType.TEXT, CellEditorType.TEXT,
-                        CellEditorType.CHECKBOX, CellEditorType.DROPDOWN },
+        var headersProperty = new StringTableProperty(PROP_COLUMN_HEADERS, "Column Headers",
+                WidgetPropertyCategory.Display, new String[0][0],
+                new String[] { "Column Title", "Column Width", "Editable", "CellEditor" },
+                new CellEditorType[] { CellEditorType.TEXT, CellEditorType.TEXT, CellEditorType.CHECKBOX,
+                        CellEditorType.DROPDOWN },
                 new Object[] { null, null, new String[] { "Yes", "No" }, dropDownOptions });
 
         addProperty(headersProperty);
 
-        IntegerProperty columnsCountProperty = new IntegerProperty(
-                PROP_COLUMNS_COUNT, "Columns Count", WidgetPropertyCategory.Display, 1, 1, 10000);
+        var columnsCountProperty = new IntegerProperty(PROP_COLUMNS_COUNT, "Columns Count",
+                WidgetPropertyCategory.Display, 1, 1, 10000);
 
         addProperty(columnsCountProperty);
 
-        addProperty(new BooleanProperty(
-                PROP_COLUMN_HEADER_VISIBLE, "Column Header Visible",
+        addProperty(new BooleanProperty(PROP_COLUMN_HEADER_VISIBLE, "Column Header Visible",
                 WidgetPropertyCategory.Display, true));
 
         headersProperty.addPropertyChangeListener(new PropertyChangeListener() {
@@ -113,18 +111,20 @@ public class TableModel extends AbstractWidgetModel {
 
     public void updateContentPropertyTitles() {
 
-        String[] headers = getColumnHeaders();
-        int c = getColumnsCount();
-        if (headers.length > c)
+        var headers = getColumnHeaders();
+        var c = getColumnsCount();
+        if (headers.length > c) {
             c = headers.length;
+        }
 
-        String[] titles = new String[c];
+        var titles = new String[c];
 
-        for (int i = 0; i < titles.length; i++) {
+        for (var i = 0; i < titles.length; i++) {
             if (i < headers.length) {
                 titles[i] = headers[i];
-            } else
+            } else {
                 titles[i] = "";
+            }
         }
         ((StringTableProperty) getProperty(PROP_DEFAULT_CONTENT)).setTitles(titles);
     }
@@ -134,26 +134,26 @@ public class TableModel extends AbstractWidgetModel {
     }
 
     public boolean[] isColumnEditable() {
-        String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
-        boolean[] r = new boolean[headers.length];
+        var headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
+        var r = new boolean[headers.length];
         if (headers.length == 0 || headers[0].length < 3) {
             Arrays.fill(r, true);
             return r;
         }
-        for (int i = 0; i < headers.length; i++) {
+        for (var i = 0; i < headers.length; i++) {
             r[i] = headers[i][2].toLowerCase().equals("no") ? false : true;
         }
         return r;
     }
 
     public org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] getColumnCellEditorTypes() {
-        String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
-        org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] r = new org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[headers.length];
+        var headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
+        var r = new org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[headers.length];
         if (headers.length == 0 || headers[0].length < 4) {
             Arrays.fill(r, org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.TEXT);
             return r;
         }
-        for (int i = 0; i < headers.length; i++) {
+        for (var i = 0; i < headers.length; i++) {
             try {
                 r[i] = org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.valueOf(headers[i][3]);
             } catch (Exception e) {
@@ -164,18 +164,18 @@ public class TableModel extends AbstractWidgetModel {
     }
 
     public String[] getColumnHeaders() {
-        String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
-        String[] r = new String[headers.length];
-        for (int i = 0; i < headers.length; i++) {
+        var headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
+        var r = new String[headers.length];
+        for (var i = 0; i < headers.length; i++) {
             r[i] = headers[i][0];
         }
         return r;
     }
 
     public int[] getColumnWidthes() {
-        String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
-        int[] r = new int[headers.length];
-        for (int i = 0; i < headers.length; i++) {
+        var headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
+        var r = new int[headers.length];
+        for (var i = 0; i < headers.length; i++) {
             try {
                 r[i] = Integer.valueOf(headers[i][1]);
             } catch (Exception e) {

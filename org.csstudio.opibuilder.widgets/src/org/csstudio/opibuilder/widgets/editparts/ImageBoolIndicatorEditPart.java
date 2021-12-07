@@ -16,10 +16,8 @@ import org.csstudio.opibuilder.widgets.FigureTransparencyHelper;
 import org.csstudio.opibuilder.widgets.figures.ImageBoolButtonFigure;
 import org.csstudio.opibuilder.widgets.model.ImageBoolIndicatorModel;
 import org.csstudio.swt.widgets.symbol.SymbolImageProperties;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -37,12 +35,12 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ImageBoolIndicatorModel model = getWidgetModel();
+        var model = getWidgetModel();
         // create AND initialize the view properly
-        final ImageBoolButtonFigure figure = new ImageBoolButtonFigure(true);
+        var figure = new ImageBoolButtonFigure(true);
         initializeCommonFigureProperties(figure, model);
 
-        SymbolImageProperties sip = new SymbolImageProperties();
+        var sip = new SymbolImageProperties();
         sip.setStretch(model.isStretch());
         sip.setAutoSize(model.isAutoSize());
         sip.setAnimationDisabled(model.isStopAnimation());
@@ -50,7 +48,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
         sip.setBackgroundColor(new Color(Display.getDefault(), model.getBackgroundColor()));
         figure.setSymbolProperties(sip, model);
         figure.setImageLoadedListener(figure1 -> {
-            ImageBoolButtonFigure symbolFigure = (ImageBoolButtonFigure) figure1;
+            var symbolFigure = (ImageBoolButtonFigure) figure1;
             autoSizeWidget(symbolFigure);
         });
         figure.setOnImagePath(model.getOnImagePath());
@@ -66,7 +64,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
         // removeAllPropertyChangeHandlers(AbstractPVWidgetModel.PROP_PVVALUE);
         // value
         // IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-        // public boolean handleChange(final Object oldValue,
+        // public boolean handleChange(Object oldValue,
         // final Object newValue,
         // final IFigure refreshableFigure) {
         // if(newValue == null)
@@ -80,10 +78,10 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the on image property
         IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
-            String absolutePath = (String) newValue;
+            var imageFigure = (ImageBoolButtonFigure) figure;
+            var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
-                IPath path = Path.fromPortableString(absolutePath);
+                var path = Path.fromPortableString(absolutePath);
                 if (!path.isAbsolute()) {
                     path = ResourceUtil.buildAbsolutePath(getWidgetModel(), path);
                     absolutePath = path.toPortableString();
@@ -98,10 +96,10 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the off image property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
-            String absolutePath = (String) newValue;
+            var imageFigure = (ImageBoolButtonFigure) figure;
+            var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
-                IPath path = Path.fromPortableString(absolutePath);
+                var path = Path.fromPortableString(absolutePath);
                 if (!path.isAbsolute()) {
                     path = ResourceUtil.buildAbsolutePath(getWidgetModel(), path);
                     absolutePath = path.toPortableString();
@@ -116,7 +114,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the stretch property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setStretch((Boolean) newValue);
             autoSizeWidget(imageFigure);
             return true;
@@ -125,7 +123,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the autosize property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             autoSizeWidget(imageFigure);
             return true;
         };
@@ -133,7 +131,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the stop animation property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setAnimationDisabled((Boolean) newValue);
             return false;
         };
@@ -141,7 +139,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the align to nearest second property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setAlignedToNearestSecond((Boolean) newValue);
             return false;
         };
@@ -149,7 +147,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // changes to the border width property
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             autoSizeWidget(imageFigure);
             return true;
         };
@@ -158,7 +156,7 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
 
         // size change handlers - so we can stretch accordingly
         handle = (oldValue, newValue, figure) -> {
-            ImageBoolButtonFigure imageFigure = (ImageBoolButtonFigure) figure;
+            var imageFigure = (ImageBoolButtonFigure) figure;
             autoSizeWidget(imageFigure);
             return true;
         };
@@ -186,8 +184,8 @@ public final class ImageBoolIndicatorEditPart extends AbstractBoolEditPart {
                     Display.getDefault().timerExec(100, this);
                     return;
                 }
-                ImageBoolIndicatorModel model = getWidgetModel();
-                Dimension d = imageFigure.getAutoSizedDimension();
+                var model = getWidgetModel();
+                var d = imageFigure.getAutoSizedDimension();
                 if (model.isAutoSize() && !model.isStretch() && d != null) {
                     model.setSize(d.width, d.height);
                 }

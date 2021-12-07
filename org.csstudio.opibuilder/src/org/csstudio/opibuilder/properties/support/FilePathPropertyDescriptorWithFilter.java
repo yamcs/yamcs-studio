@@ -8,24 +8,22 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * File path property descriptor with filters on image resource name.
  */
-public class FilePathPropertyDescriptorWithFilter extends
-        FilePathPropertyDescriptor {
+public class FilePathPropertyDescriptorWithFilter extends FilePathPropertyDescriptor {
 
     private String[] filters;
 
     private AbstractWidgetModel widgetModel;
 
-    public FilePathPropertyDescriptorWithFilter(Object id, String displayName,
-            AbstractWidgetModel widgetModel, String[] filters) {
+    public FilePathPropertyDescriptorWithFilter(Object id, String displayName, AbstractWidgetModel widgetModel,
+            String[] filters) {
         super(id, displayName, widgetModel, filters);
         this.filters = filters;
         this.widgetModel = widgetModel;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
-        CellEditor editor = new FilePathCellDialogEditorWithFilter(parent,
-                widgetModel, filters);
+    public CellEditor createPropertyEditor(Composite parent) {
+        CellEditor editor = new FilePathCellDialogEditorWithFilter(parent, widgetModel, filters);
         if (getValidator() != null) {
             editor.setValidator(getValidator());
         }

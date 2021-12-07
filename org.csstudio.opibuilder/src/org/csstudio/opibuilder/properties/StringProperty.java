@@ -37,18 +37,17 @@ public class StringProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public StringProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue) {
+    public StringProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue) {
         this(prop_id, description, category, defaultValue, false, false);
     }
 
-    public StringProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue, boolean multiLine) {
+    public StringProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
+            boolean multiLine) {
         this(prop_id, description, category, defaultValue, multiLine, false);
     }
 
-    public StringProperty(String prop_id, String description,
-            WidgetPropertyCategory category, String defaultValue, boolean multiLine, boolean saveAsCDATA) {
+    public StringProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
+            boolean multiLine, boolean saveAsCDATA) {
         super(prop_id, description, category, defaultValue);
         this.multiLine = multiLine;
         this.saveAsCDATA = saveAsCDATA;
@@ -85,8 +84,8 @@ public class StringProperty extends AbstractWidgetProperty {
         if (saveAsCDATA) {
             propElement.setContent(new CDATA(getPropertyValue().toString()));
         } else {
-            String reShapedString = getPropertyValue().toString().replaceAll(
-                    "\\x0D\\x0A?", new String(new byte[] { 13, 10 }));
+            var reShapedString = getPropertyValue().toString().replaceAll("\\x0D\\x0A?",
+                    new String(new byte[] { 13, 10 }));
             propElement.setText(reShapedString);
         }
     }
@@ -99,8 +98,7 @@ public class StringProperty extends AbstractWidgetProperty {
     @Override
     public Object getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            return OPIBuilderMacroUtil.replaceMacros(
-                    widgetModel, (String) super.getPropertyValue());
+            return OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) super.getPropertyValue());
         } else {
             return super.getPropertyValue();
         }

@@ -42,8 +42,8 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        StringTableEditDialog dialog = new StringTableEditDialog(parentShell, arrayToList(data), dialogTitle,
-                columnTitles.getTitles(), cellEditorTypes, cellEditorDatas);
+        var dialog = new StringTableEditDialog(parentShell, arrayToList(data), dialogTitle, columnTitles.getTitles(),
+                cellEditorTypes, cellEditorDatas);
         if (dialog.open() == Window.OK) {
             data = listToArray(dialog.getResult());
         }
@@ -61,10 +61,11 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof String[][]))
+        if (value == null || !(value instanceof String[][])) {
             data = new String[0][0];
-        else
+        } else {
             data = (String[][]) value;
+        }
     }
 
     private List<String[]> arrayToList(String[][] content) {
@@ -72,14 +73,15 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
         if (content.length <= 0) {
             return input;
         }
-        int col = columnTitles.getTitles().length;
-        for (int i = 0; i < content.length; i++) {
-            String[] row = new String[col];
-            for (int j = 0; j < col; j++) {
-                if (j < content[i].length)
+        var col = columnTitles.getTitles().length;
+        for (var i = 0; i < content.length; i++) {
+            var row = new String[col];
+            for (var j = 0; j < col; j++) {
+                if (j < content[i].length) {
                     row[j] = content[i][j];
-                else
+                } else {
                     row[j] = "";
+                }
             }
             input.add(row);
         }
@@ -87,13 +89,13 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
     }
 
     private String[][] listToArray(List<String[]> list) {
-        int col = 0;
+        var col = 0;
         if (list.size() > 0) {
             col = list.get(0).length;
         }
-        String[][] result = new String[list.size()][col];
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < col; j++) {
+        var result = new String[list.size()][col];
+        for (var i = 0; i < list.size(); i++) {
+            for (var j = 0; j < col; j++) {
                 result[i][j] = list.get(i)[j];
             }
         }

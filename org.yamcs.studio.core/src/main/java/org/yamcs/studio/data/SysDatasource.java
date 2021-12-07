@@ -42,7 +42,7 @@ public class SysDatasource implements Datasource {
 
     @Override
     public boolean isConnected(IPV pv) {
-        SysData sysData = pv2data.get(pv);
+        var sysData = pv2data.get(pv);
         return sysData != null && sysData.isConnected();
     }
 
@@ -53,7 +53,7 @@ public class SysDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        SysData sysData = pv2data.get(pv);
+        var sysData = pv2data.get(pv);
         if (sysData != null) {
             return sysData.getValue();
         }
@@ -67,9 +67,9 @@ public class SysDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        String basename = pv.getName().substring(SCHEME.length());
+        var basename = pv.getName().substring(SCHEME.length());
 
-        SysData sysData = name2data.computeIfAbsent(basename, x -> {
+        var sysData = name2data.computeIfAbsent(basename, x -> {
             switch (basename) {
             case "free_mb":
                 return new FreeMbSys(exec);
@@ -87,7 +87,7 @@ public class SysDatasource implements Datasource {
                 return new QualifiedHostNameSys(exec);
             default:
                 if (basename.startsWith("system.")) {
-                    String propertyName = basename.substring("system.".length());
+                    var propertyName = basename.substring("system.".length());
                     return new SystemPropertySys(propertyName, exec);
                 }
                 throw new IllegalArgumentException("Channel " + basename + " does not exist");
@@ -100,7 +100,7 @@ public class SysDatasource implements Datasource {
 
     @Override
     public void onStopped(IPV pv) {
-        SysData sysData = pv2data.remove(pv);
+        var sysData = pv2data.remove(pv);
         if (sysData != null) {
             sysData.unregister(pv);
         }
@@ -151,14 +151,14 @@ public class SysDatasource implements Datasource {
 
         @Override
         VType createValue() {
-            Instant time = Instant.now();
-            String formatted = timeFormat.format(ZonedDateTime.ofInstant(time, ZoneId.systemDefault()));
+            var time = Instant.now();
+            var formatted = timeFormat.format(ZonedDateTime.ofInstant(time, ZoneId.systemDefault()));
             return newVString(formatted, alarmNone(), newTime(time));
         }
     }
 
     private static final class UserSys extends SysData {
-        final String propertyName;
+        String propertyName;
         String previousValue;
 
         UserSys(ScheduledExecutorService executor) {
@@ -168,7 +168,7 @@ public class SysDatasource implements Datasource {
 
         @Override
         VType createValue() {
-            String value = System.getProperty(propertyName);
+            var value = System.getProperty(propertyName);
             if (value == null) {
                 value = "";
             }
@@ -236,7 +236,7 @@ public class SysDatasource implements Datasource {
     }
 
     private static final class SystemPropertySys extends SysData {
-        final String propertyName;
+        String propertyName;
         String previousValue;
 
         SystemPropertySys(String propertyName, ScheduledExecutorService executor) {
@@ -246,7 +246,7 @@ public class SysDatasource implements Datasource {
 
         @Override
         VType createValue() {
-            String value = System.getProperty(propertyName);
+            var value = System.getProperty(propertyName);
             if (value == null) {
                 value = "";
             }

@@ -9,11 +9,7 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.commands;
 
-import java.util.Iterator;
-
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.GuideModel;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 
 /**
@@ -37,7 +33,7 @@ public final class MoveGuideCommand extends Command {
      * @param pDelta
      *            the distance
      */
-    public MoveGuideCommand(final GuideModel guide, final int pDelta) {
+    public MoveGuideCommand(GuideModel guide, int pDelta) {
         this.pDelta = pDelta;
         this.guide = guide;
     }
@@ -45,10 +41,10 @@ public final class MoveGuideCommand extends Command {
     @Override
     public void execute() {
         guide.setPosition(guide.getPosition() + pDelta);
-        Iterator<AbstractWidgetModel> iter = guide.getAttachedModels().iterator();
+        var iter = guide.getAttachedModels().iterator();
         while (iter.hasNext()) {
-            AbstractWidgetModel model = iter.next();
-            Point location = model.getLocation();
+            var model = iter.next();
+            var location = model.getLocation();
             if (guide.isHorizontal()) {
                 location.y += pDelta;
             } else {
@@ -61,10 +57,10 @@ public final class MoveGuideCommand extends Command {
     @Override
     public void undo() {
         guide.setPosition(guide.getPosition() - pDelta);
-        Iterator<AbstractWidgetModel> iter = guide.getAttachedModels().iterator();
+        var iter = guide.getAttachedModels().iterator();
         while (iter.hasNext()) {
-            AbstractWidgetModel model = iter.next();
-            Point location = model.getLocation();
+            var model = iter.next();
+            var location = model.getLocation();
             if (guide.isHorizontal()) {
                 location.y -= pDelta;
             } else {

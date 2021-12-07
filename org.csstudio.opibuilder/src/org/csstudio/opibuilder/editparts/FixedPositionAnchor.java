@@ -68,7 +68,7 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
 
     @Override
     public Point getLocation(Point reference) {
-        Rectangle box = getBox();
+        var box = getBox();
         int x = box.x, y = box.y;
         switch (anchorPosition) {
         case BOTTOM:
@@ -109,7 +109,7 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
         default:
             break;
         }
-        Point p = new Point(x, y);
+        var p = new Point(x, y);
         getOwner().translateToAbsolute(p);
         fixZoomEdgeRounding(p, getOwner());
         return p;
@@ -125,7 +125,7 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof FixedPositionAnchor) {
-            FixedPositionAnchor other = (FixedPositionAnchor) obj;
+            var other = (FixedPositionAnchor) obj;
             return other.getOwner() == getOwner() && other.getBox().equals(getBox())
                     && other.anchorPosition == anchorPosition;
         }
@@ -139,10 +139,11 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
      */
     @Override
     public int hashCode() {
-        if (getOwner() != null)
+        if (getOwner() != null) {
             return getOwner().hashCode() ^ (anchorPosition.ordinal() + 31);
-        else
+        } else {
             return super.hashCode();
+        }
     }
 
 }

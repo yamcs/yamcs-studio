@@ -34,13 +34,8 @@ import org.apache.batik.util.CSSConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.CharacterData;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.svg.SVGLength;
-import org.w3c.dom.svg.SVGSVGElement;
 
 public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 
@@ -117,7 +112,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         if (this.document == null) {
             return null;
         }
-        SVGOMDocument sd = (SVGOMDocument) this.document;
+        var sd = (SVGOMDocument) this.document;
         if (sd.getCSSEngine() != null) {
             return null;
         }
@@ -172,9 +167,9 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     @Override
     protected void transcode(Document document, String uri, TranscoderOutput output) throws TranscoderException {
         super.transcode(document, uri, output);
-        int w = (int) (this.width + 0.5);
-        int h = (int) (this.height + 0.5);
-        ImageRenderer renderer = createImageRenderer();
+        var w = (int) (this.width + 0.5);
+        var h = (int) (this.height + 0.5);
+        var renderer = createImageRenderer();
         renderer.updateOffScreen(w, h);
         // curTxf.translate(0.5, 0.5);
         renderer.setTransform(curTxf);
@@ -191,7 +186,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     protected ImageRenderer createImageRenderer() {
-        StaticRenderer renderer = new StaticRenderer();
+        var renderer = new StaticRenderer();
         renderer.getRenderingHints().add(renderingHints);
         return renderer;
     }
@@ -238,7 +233,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     public Dimension getDocumentSize() {
-        SVGSVGElement svgElmt = ((SVGOMDocument) document).getRootElement();
+        var svgElmt = ((SVGOMDocument) document).getRootElement();
         double width = svgElmt.getWidth().getBaseVal().getValue();
         double height = svgElmt.getHeight().getBaseVal().getValue();
         return new Dimension((int) Math.round(width), (int) Math.round(height));
@@ -250,25 +245,24 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         }
 
         Matcher matcher = null;
-        String svgOldColor = toHexString(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue());
-        String svgNewColor = toHexString(newColor.getRed(), newColor.getGreen(), newColor.getBlue());
-        Pattern fillPattern = Pattern.compile("(?i)" + CSSConstants.CSS_FILL_PROPERTY + ":" + svgOldColor);
-        Pattern strokePattern = Pattern.compile("(?i)" + CSSConstants.CSS_STROKE_PROPERTY + ":" + svgOldColor);
-        String fillReplace = CSSConstants.CSS_FILL_PROPERTY + ":" + svgNewColor;
-        String strokeReplace = CSSConstants.CSS_STROKE_PROPERTY + ":" + svgNewColor;
+        var svgOldColor = toHexString(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue());
+        var svgNewColor = toHexString(newColor.getRed(), newColor.getGreen(), newColor.getBlue());
+        var fillPattern = Pattern.compile("(?i)" + CSSConstants.CSS_FILL_PROPERTY + ":" + svgOldColor);
+        var strokePattern = Pattern.compile("(?i)" + CSSConstants.CSS_STROKE_PROPERTY + ":" + svgOldColor);
+        var fillReplace = CSSConstants.CSS_FILL_PROPERTY + ":" + svgNewColor;
+        var strokeReplace = CSSConstants.CSS_STROKE_PROPERTY + ":" + svgNewColor;
 
         // Search for global style element <style type="text/css"></style>
-        NodeList styleList = doc.getElementsByTagName("style");
-        for (int i = 0; i < styleList.getLength(); i++) {
-            Element style = (Element) styleList.item(i);
-            NodeList childList = style.getChildNodes();
+        var styleList = doc.getElementsByTagName("style");
+        for (var i = 0; i < styleList.getLength(); i++) {
+            var style = (Element) styleList.item(i);
+            var childList = style.getChildNodes();
             if (childList != null) {
-                for (int j = 0; j < childList.getLength(); j++) {
-                    Node child = childList.item(j);
-                    if (child instanceof GenericText
-                            || child instanceof GenericCDATASection) {
-                        CharacterData cdata = (CharacterData) child;
-                        String data = cdata.getData();
+                for (var j = 0; j < childList.getLength(); j++) {
+                    var child = childList.item(j);
+                    if (child instanceof GenericText || child instanceof GenericCDATASection) {
+                        var cdata = (CharacterData) child;
+                        var data = cdata.getData();
                         matcher = fillPattern.matcher(data);
                         data = matcher.replaceAll(fillReplace);
                         matcher = strokePattern.matcher(data);
@@ -279,29 +273,28 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
                 }
             }
         }
-        recursiveCC(doc.getDocumentElement(), oldColor, newColor, fillPattern,
-                strokePattern, fillReplace, strokeReplace);
+        recursiveCC(doc.getDocumentElement(), oldColor, newColor, fillPattern, strokePattern, fillReplace,
+                strokeReplace);
     }
 
-    private void recursiveCC(Element elmt, Color oldColor, Color newColor,
-            Pattern fillPattern, Pattern strokePattern, String fillReplace,
-            String strokeReplace) {
+    private void recursiveCC(Element elmt, Color oldColor, Color newColor, Pattern fillPattern, Pattern strokePattern,
+            String fillReplace, String strokeReplace) {
         if (elmt == null) {
             return;
         }
         Matcher matcher = null;
-        NodeList styleList = elmt.getChildNodes();
+        var styleList = elmt.getChildNodes();
         if (styleList != null) {
-            for (int i = 0; i < styleList.getLength(); i++) {
-                Node child = styleList.item(i);
+            for (var i = 0; i < styleList.getLength(); i++) {
+                var child = styleList.item(i);
                 if (child instanceof SVGStylableElement) {
-                    recursiveCC((Element) child, oldColor, newColor,
-                            fillPattern, strokePattern, fillReplace, strokeReplace);
+                    recursiveCC((Element) child, oldColor, newColor, fillPattern, strokePattern, fillReplace,
+                            strokeReplace);
                 }
             }
         }
         if (elmt instanceof SVGStylableElement) {
-            String style = elmt.getAttribute("style");
+            var style = elmt.getAttribute("style");
             matcher = fillPattern.matcher(style);
             style = matcher.replaceAll(fillReplace);
             matcher = strokePattern.matcher(style);
@@ -312,23 +305,21 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     private String replaceRGB(Color oldColor, Color newColor, String data) {
-        Pattern rgbPattern = Pattern
-                .compile("(?i)rgb\\(([0-9]+\\.?[0-9]*)%,([0-9]+\\.?[0-9]*)%,([0-9]+\\.?[0-9]*)%\\)");
-        int nr = Math.round(newColor.getRed() / 255f * 100);
-        int ng = Math.round(newColor.getGreen() / 255f * 100);
-        int nb = Math.round(newColor.getBlue() / 255f * 100);
-        String rgbReplace = "rgb(" + nr + "%," + ng + "%," + nb + "%)";
-        Matcher matcher = rgbPattern.matcher(data);
-        StringBuilder sb = new StringBuilder();
-        int previousEnd = 0;
+        var rgbPattern = Pattern.compile("(?i)rgb\\(([0-9]+\\.?[0-9]*)%,([0-9]+\\.?[0-9]*)%,([0-9]+\\.?[0-9]*)%\\)");
+        var nr = Math.round(newColor.getRed() / 255f * 100);
+        var ng = Math.round(newColor.getGreen() / 255f * 100);
+        var nb = Math.round(newColor.getBlue() / 255f * 100);
+        var rgbReplace = "rgb(" + nr + "%," + ng + "%," + nb + "%)";
+        var matcher = rgbPattern.matcher(data);
+        var sb = new StringBuilder();
+        var previousEnd = 0;
         while (matcher.find()) {
-            int r = Math.round(Float.valueOf(matcher.group(1)) * 255 / 100);
-            int g = Math.round(Float.valueOf(matcher.group(2)) * 255 / 100);
-            int b = Math.round(Float.valueOf(matcher.group(3)) * 255 / 100);
-            if (r == oldColor.getRed() && g == oldColor.getGreen()
-                    && b == oldColor.getBlue()) {
-                int newStart = matcher.start();
-                int newEnd = matcher.end();
+            var r = Math.round(Float.valueOf(matcher.group(1)) * 255 / 100);
+            var g = Math.round(Float.valueOf(matcher.group(2)) * 255 / 100);
+            var b = Math.round(Float.valueOf(matcher.group(3)) * 255 / 100);
+            if (r == oldColor.getRed() && g == oldColor.getGreen() && b == oldColor.getBlue()) {
+                var newStart = matcher.start();
+                var newEnd = matcher.end();
                 sb.append(data.subSequence(previousEnd, newStart));
                 sb.append(rgbReplace);
                 previousEnd = newEnd;
@@ -343,7 +334,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     private String toSVGHexValue(int number) {
-        StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
+        var builder = new StringBuilder(Integer.toHexString(number & 0xff));
         while (builder.length() < 2) {
             builder.insert(0, '0'); // pad with leading zero if needed
         }
@@ -352,17 +343,17 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 
     private Document applyMatrix(double[][] matrix) {
         // creation of the SVG document
-        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-        String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        final Document newDocument = impl.createDocument(svgNS, "svg", null);
+        var impl = SVGDOMImplementation.getDOMImplementation();
+        var svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+        var newDocument = impl.createDocument(svgNS, "svg", null);
 
         // get the root element (the 'svg' element).
-        Element svgRoot = newDocument.getDocumentElement();
+        var svgRoot = newDocument.getDocumentElement();
 
         // get the original document size
-        SVGSVGElement svgElmt = ((SVGOMDocument) originalDocument).getRootElement();
-        double width = 30;
-        double height = 30;
+        var svgElmt = ((SVGOMDocument) originalDocument).getRootElement();
+        var width = 30D;
+        var height = 30D;
         try {
             width = svgElmt.getWidth().getBaseVal().getValue();
             height = svgElmt.getHeight().getBaseVal().getValue();
@@ -371,7 +362,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
             // this is a dirty workaround for the RAP problem, which doesn't know how to
             // transform between units and pixels. Here we assume that all units are inches
             // and 96 dpi is used.
-            SVGLength length = svgElmt.getWidth().getBaseVal();
+            var length = svgElmt.getWidth().getBaseVal();
             double value = length.getValueInSpecifiedUnits();
             width = value * 25.4 / 0.26458333333333333333333333333333;
             length = svgElmt.getHeight().getBaseVal();
@@ -380,34 +371,31 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         }
 
         // current Transformation Matrix
-        double[][] CTM = {
-                { matrix[0][0], matrix[0][1], 0 },
-                { matrix[1][0], matrix[1][1], 0 },
-                { 0, 0, 1 } };
+        double[][] CTM = { { matrix[0][0], matrix[0][1], 0 }, { matrix[1][0], matrix[1][1], 0 }, { 0, 0, 1 } };
 
         // apply permutation to viewBox corner points
-        double[] a = transformP(0.0, 0.0, 1.0, CTM);
-        double[] b = transformP(width, 0.0, 1.0, CTM);
-        double[] c = transformP(width, height, 1.0, CTM);
-        double[] d = transformP(0.0, height, 1.0, CTM);
+        var a = transformP(0.0, 0.0, 1.0, CTM);
+        var b = transformP(width, 0.0, 1.0, CTM);
+        var c = transformP(width, height, 1.0, CTM);
+        var d = transformP(0.0, height, 1.0, CTM);
 
         // find new points
-        double minX = findMin(a[0], b[0], c[0], d[0]);
-        double minY = findMin(a[1], b[1], c[1], d[1]);
-        double maxX = findMax(a[0], b[0], c[0], d[0]);
-        double maxY = findMax(a[1], b[1], c[1], d[1]);
-        double newWidth = maxX - minX;
-        double newHeight = maxY - minY;
+        var minX = findMin(a[0], b[0], c[0], d[0]);
+        var minY = findMin(a[1], b[1], c[1], d[1]);
+        var maxX = findMax(a[0], b[0], c[0], d[0]);
+        var maxY = findMax(a[1], b[1], c[1], d[1]);
+        var newWidth = maxX - minX;
+        var newHeight = maxY - minY;
 
         // set the width and height attributes on the root 'svg' element.
         svgRoot.setAttributeNS(null, "width", String.valueOf(newWidth));
         svgRoot.setAttributeNS(null, "height", String.valueOf(newHeight));
-        String vbs = minX + " " + minY + " " + newWidth + " " + newHeight;
+        var vbs = minX + " " + minY + " " + newWidth + " " + newHeight;
         svgRoot.setAttributeNS(null, "viewBox", vbs);
         svgRoot.setAttributeNS(null, "preserveAspectRatio", "none");
 
         // Create the transform matrix
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         // a c e
         // b d f
         // 0 0 1
@@ -418,11 +406,11 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         sb.append(CTM[1][1] + ",");
         sb.append(CTM[0][2] + ",");
         sb.append(CTM[1][2] + ")");
-        Element graphic = newDocument.createElementNS(svgNS, "g");
+        var graphic = newDocument.createElementNS(svgNS, "g");
         graphic.setAttributeNS(null, "transform", sb.toString());
 
         // Attach the transform to the root 'svg' element.
-        Node copiedRoot = newDocument.importNode(originalDocument.getDocumentElement(), true);
+        var copiedRoot = newDocument.importNode(originalDocument.getDocumentElement(), true);
         graphic.appendChild(copiedRoot);
         svgRoot.appendChild(graphic);
 
@@ -445,9 +433,9 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     // apply transformation to point { x, y, z } (affine transformation)
     private double[] transformP(double x, double y, double z, double[][] matrix) {
         double[] p = { x, y, z };
-        double[] pp = new double[3];
-        for (int a = 0; a < 3; a++) {
-            for (int b = 0; b < 3; b++) {
+        var pp = new double[3];
+        for (var a = 0; a < 3; a++) {
+            for (var b = 0; b < 3; b++) {
                 pp[a] += matrix[a][b] * p[b];
             }
         }
@@ -455,14 +443,14 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     private double findMax(double a, double b, double c, double d) {
-        double result = Math.max(a, b);
+        var result = Math.max(a, b);
         result = Math.max(result, c);
         result = Math.max(result, d);
         return result;
     }
 
     private double findMin(double a, double b, double c, double d) {
-        double result = Math.min(a, b);
+        var result = Math.min(a, b);
         result = Math.min(result, c);
         result = Math.min(result, d);
         return result;

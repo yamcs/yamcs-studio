@@ -41,8 +41,9 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
             installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new WidgetTreeContainerEditPolicy());
         }
         // If this editpart is the contents of the viewer, then it is not deletable!
-        if (getParent() instanceof RootEditPart)
+        if (getParent() instanceof RootEditPart) {
             installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
+        }
     }
 
     @Override
@@ -54,15 +55,15 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
             public void propertyChange(PropertyChangeEvent evt) {
 
                 if (evt.getOldValue() instanceof Integer) {
-                    addChild(createChild(evt.getNewValue()), ((Integer) evt
-                            .getOldValue()).intValue());
+                    addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
                 } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
-                    EditPart child = (EditPart) getViewer().getEditPartRegistry().get(
-                            evt.getOldValue());
-                    if (child != null)
+                    var child = (EditPart) getViewer().getEditPartRegistry().get(evt.getOldValue());
+                    if (child != null) {
                         removeChild(child);
-                } else
+                    }
+                } else {
                     refreshChildren();
+                }
                 refreshVisuals();
             }
         };
@@ -90,8 +91,9 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
     protected void refreshVisuals() {
         super.refreshVisuals();
         for (Object child : getChildren()) {
-            if (child instanceof WidgetTreeEditpart)
+            if (child instanceof WidgetTreeEditpart) {
                 ((WidgetTreeEditpart) child).refreshVisuals();
+            }
         }
     }
 

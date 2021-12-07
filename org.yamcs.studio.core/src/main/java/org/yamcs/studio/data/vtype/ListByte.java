@@ -85,20 +85,19 @@ public abstract class ListByte implements ListNumber, CollectionByte {
         }
 
         // Should compare to the higher precision if needed
-        if (obj instanceof ListDouble || obj instanceof ListFloat ||
-                obj instanceof ListLong || obj instanceof ListInt ||
-                obj instanceof ListShort) {
+        if (obj instanceof ListDouble || obj instanceof ListFloat || obj instanceof ListLong || obj instanceof ListInt
+                || obj instanceof ListShort) {
             return obj.equals(this);
         }
 
         if (obj instanceof ListNumber) {
-            ListNumber other = (ListNumber) obj;
+            var other = (ListNumber) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (getByte(i) != other.getByte(i)) {
                     return false;
                 }
@@ -112,8 +111,8 @@ public abstract class ListByte implements ListNumber, CollectionByte {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
             result = 31 * result + getShort(i);
         }
         return result;

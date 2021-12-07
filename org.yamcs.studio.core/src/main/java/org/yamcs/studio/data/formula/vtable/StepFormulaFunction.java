@@ -64,9 +64,9 @@ class StepFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VNumber initialValue = (VNumber) args.get(0);
-        VNumber increment = (VNumber) args.get(1);
+    public Object calculate(List<Object> args) {
+        var initialValue = (VNumber) args.get(0);
+        var increment = (VNumber) args.get(1);
 
         if (initialValue == null || increment == null) {
             return null;

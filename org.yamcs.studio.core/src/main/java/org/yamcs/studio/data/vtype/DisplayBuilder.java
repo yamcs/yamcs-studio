@@ -18,10 +18,9 @@ public class DisplayBuilder {
     private Double upperCtrlLimit = Double.NaN;
     private Double upperDisplayLimit = Double.NaN;
 
-    DisplayBuilder(Double lowerDisplayLimit,
-            Double lowerCtrlLimit, Double lowerAlarmLimit, Double lowerWarningLimit,
-            String units, NumberFormat format, Double upperWarningLimit, Double upperAlarmLimit,
-            Double upperCtrlLimit, Double upperDisplayLimit) {
+    DisplayBuilder(Double lowerDisplayLimit, Double lowerCtrlLimit, Double lowerAlarmLimit, Double lowerWarningLimit,
+            String units, NumberFormat format, Double upperWarningLimit, Double upperAlarmLimit, Double upperCtrlLimit,
+            Double upperDisplayLimit) {
         this.lowerDisplayLimit = lowerDisplayLimit;
         this.lowerCtrlLimit = lowerCtrlLimit;
         this.lowerAlarmLimit = lowerAlarmLimit;
@@ -88,8 +87,7 @@ public class DisplayBuilder {
     }
 
     public Display build() {
-        return ValueFactory.newDisplay(lowerDisplayLimit,
-                lowerAlarmLimit, lowerWarningLimit, units, format, upperWarningLimit,
-                upperAlarmLimit, upperDisplayLimit, lowerCtrlLimit, upperCtrlLimit);
+        return ValueFactory.newDisplay(lowerDisplayLimit, lowerAlarmLimit, lowerWarningLimit, units, format,
+                upperWarningLimit, upperAlarmLimit, upperDisplayLimit, lowerCtrlLimit, upperCtrlLimit);
     }
 }

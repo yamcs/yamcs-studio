@@ -10,7 +10,6 @@
 package org.csstudio.swt.widgets.figures;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,9 +39,7 @@ public class TextInputFigure extends TextFigure {
     private static final String SEPARATOR = "|";
 
     public enum SelectorType {
-        NONE("None", null),
-        FILE("File", openFileImg),
-        DATETIME("Datetime", calendarImg);
+        NONE("None", null), FILE("File", openFileImg), DATETIME("Datetime", calendarImg);
 
         public String description;
 
@@ -59,8 +56,8 @@ public class TextInputFigure extends TextFigure {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (SelectorType p : values()) {
                 sv[i++] = p.toString();
             }
@@ -69,8 +66,7 @@ public class TextInputFigure extends TextFigure {
     }
 
     public enum FileSource {
-        WORKSPACE("Workspace"),
-        LOCAL("Local File System");
+        WORKSPACE("Workspace"), LOCAL("Local File System");
 
         public String description;
 
@@ -84,8 +80,8 @@ public class TextInputFigure extends TextFigure {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (FileSource p : values()) {
                 sv[i++] = p.toString();
             }
@@ -94,10 +90,7 @@ public class TextInputFigure extends TextFigure {
     }
 
     public enum FileReturnPart {
-        FULL_PATH("Full Path"),
-        NAME_EXT("Name & Extension"),
-        NAME_ONLY("Name Only"),
-        DIRECTORY("Directory");
+        FULL_PATH("Full Path"), NAME_EXT("Name & Extension"), NAME_ONLY("Name Only"), DIRECTORY("Directory");
 
         public String description;
 
@@ -111,8 +104,8 @@ public class TextInputFigure extends TextFigure {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (FileReturnPart p : values()) {
                 sv[i++] = p.toString();
             }
@@ -153,9 +146,9 @@ public class TextInputFigure extends TextFigure {
     protected void layout() {
         super.layout();
         if (selector != null && selector.isVisible()) {
-            Rectangle clientArea = getClientArea();
-            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH,
-                    clientArea.y, SELECTOR_WIDTH, clientArea.height));
+            var clientArea = getClientArea();
+            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH, clientArea.y,
+                    SELECTOR_WIDTH, clientArea.height));
         }
     }
 
@@ -171,7 +164,7 @@ public class TextInputFigure extends TextFigure {
      * @param newManualValue
      *            the new manual value
      */
-    public void fireManualValueChange(final String newManualValue) {
+    public void fireManualValueChange(String newManualValue) {
 
         for (IManualStringValueChangeListener l : selectorListeners) {
             l.manualValueChanged(newManualValue);
@@ -204,9 +197,8 @@ public class TextInputFigure extends TextFigure {
     protected Rectangle getTextArea() {
         Rectangle textArea;
         if (selector != null && selector.isVisible()) {
-            Rectangle clientArea = getClientArea();
-            textArea = new Rectangle(clientArea.x, clientArea.y,
-                    clientArea.width - SELECTOR_WIDTH, clientArea.height);
+            var clientArea = getClientArea();
+            textArea = new Rectangle(clientArea.x, clientArea.y, clientArea.width - SELECTOR_WIDTH, clientArea.height);
         } else {
             textArea = getClientArea();
         }
@@ -274,7 +266,7 @@ public class TextInputFigure extends TextFigure {
 
     @Override
     public Dimension getPreferredSize(int wHint, int hHint) {
-        Dimension superSize = super.getPreferredSize(wHint, hHint);
+        var superSize = super.getPreferredSize(wHint, hHint);
         if (getSelectorType() != SelectorType.NONE) {
             if (superSize.height < SELECTOR_WIDTH) {
                 superSize.height = SELECTOR_WIDTH;
@@ -301,8 +293,8 @@ public class TextInputFigure extends TextFigure {
     }
 
     private static Image createImage(String name) {
-        InputStream stream = TextInputFigure.class.getResourceAsStream(name);
-        Image image = new Image(null, stream);
+        var stream = TextInputFigure.class.getResourceAsStream(name);
+        var image = new Image(null, stream);
         try {
             stream.close();
         } catch (IOException ioe) {
@@ -318,7 +310,7 @@ public class TextInputFigure extends TextFigure {
                 handleTextInputFigureFileSelector();
                 break;
             case DATETIME:
-                DateTimePickerDialog dialog = new DateTimePickerDialog(Display.getCurrent().getActiveShell());
+                var dialog = new DateTimePickerDialog(Display.getCurrent().getActiveShell());
                 if (dateTime != null) {
                     dialog.setDateTime(dateTime);
                 }
@@ -327,10 +319,8 @@ public class TextInputFigure extends TextFigure {
                     try {
                         setText(new SimpleDateFormat(dateTimeFormat).format(dateTime));
                     } catch (Exception e) {
-                        String msg = NLS.bind(
-                                "Failed to return datetime. The datetime format {0} might be incorrect.\n" +
-                                        e.getMessage(),
-                                dateTimeFormat);
+                        var msg = NLS.bind("Failed to return datetime. The datetime format {0} might be incorrect.\n"
+                                + e.getMessage(), dateTimeFormat);
                         MessageDialog.openError(null, "Failed", msg);
                         break;
                     }
@@ -345,8 +335,8 @@ public class TextInputFigure extends TextFigure {
     }
 
     private void handleTextInputFigureFileSelector() {
-        String startPath = getStartPath();
-        String currentPath = getCurrentPath();
+        var startPath = getStartPath();
+        var currentPath = getCurrentPath();
         switch (getFileReturnPart()) {
         case DIRECTORY:
         case FULL_PATH:
@@ -365,16 +355,15 @@ public class TextInputFigure extends TextFigure {
 
         switch (getFileSource()) {
         case WORKSPACE:
-            ResourceSelectionDialog dialog = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(),
-                    "Select workspace file",
+            var dialog = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(), "Select workspace file",
                     getFileReturnPart() == FileReturnPart.DIRECTORY ? null : new String[] { "*.*" });
             if (currentPath != null) {
                 dialog.setSelectedResource(new Path(currentPath));
             }
             if (dialog.open() == Window.OK) {
-                IPath path = dialog.getSelectedResource();
+                var path = dialog.getSelectedResource();
                 currentPath = path.toPortableString();
-                String fileString = currentPath;
+                var fileString = currentPath;
                 switch (getFileReturnPart()) {
                 case NAME_ONLY:
                     fileString = path.removeFileExtension().lastSegment();
@@ -395,36 +384,33 @@ public class TextInputFigure extends TextFigure {
         case LOCAL:
             IPath paths[] = null;
             if (getFileReturnPart() == FileReturnPart.DIRECTORY) {
-                DirectoryDialog directoryDialog = new DirectoryDialog(
-                        Display.getCurrent().getActiveShell());
+                var directoryDialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
                 directoryDialog.setFilterPath(currentPath);
-                String directory = directoryDialog.open();
+                var directory = directoryDialog.open();
                 if (directory != null) {
                     paths = new Path[] { new Path(directory) };
                 }
 
             } else {
-                FileDialog fileDialog = new FileDialog(Display.getCurrent()
-                        .getActiveShell(), SWT.MULTI);
+                var fileDialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.MULTI);
                 if (currentPath != null) {
                     ((FileDialog) fileDialog).setFileName(currentPath);
                 }
-                String firstPath = fileDialog.open();
+                var firstPath = fileDialog.open();
                 if (firstPath != null) {
                     paths = new Path[fileDialog.getFileNames().length];
                     paths[0] = new Path(firstPath);
-                    for (int i = 1; i < paths.length; i++) {
-                        paths[i] = paths[0].removeLastSegments(1).append(
-                                fileDialog.getFileNames()[i]);
+                    for (var i = 1; i < paths.length; i++) {
+                        paths[i] = paths[0].removeLastSegments(1).append(fileDialog.getFileNames()[i]);
                     }
                 }
             }
             if (paths != null) {
                 currentPath = paths[0].toOSString();
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
                 switch (getFileReturnPart()) {
                 case NAME_ONLY:
-                    for (int i = 0; i < paths.length; i++) {
+                    for (var i = 0; i < paths.length; i++) {
                         if (i > 0) {
                             result.append(SEPARATOR);
                         }
@@ -432,7 +418,7 @@ public class TextInputFigure extends TextFigure {
                     }
                     break;
                 case NAME_EXT:
-                    for (int i = 0; i < paths.length; i++) {
+                    for (var i = 0; i < paths.length; i++) {
                         if (i > 0) {
                             result.append(SEPARATOR);
                         }
@@ -442,7 +428,7 @@ public class TextInputFigure extends TextFigure {
                 case FULL_PATH:
                 case DIRECTORY:
                 default:
-                    for (int i = 0; i < paths.length; i++) {
+                    for (var i = 0; i < paths.length; i++) {
                         if (i > 0) {
                             result.append(SEPARATOR);
                         }

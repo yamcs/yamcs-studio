@@ -20,7 +20,7 @@ public class Header extends Line {
     void drawContent(GC gc) {
         super.drawContent(gc);
 
-        Color background = new Color(timeline.getDisplay(), new RGB(230, 230, 230));
+        var background = new Color(timeline.getDisplay(), new RGB(230, 230, 230));
         gc.setBackground(background);
         gc.fillRectangle(coords);
 

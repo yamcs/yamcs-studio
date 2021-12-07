@@ -28,8 +28,7 @@ public class StringSplitter {
     static final String SUBSTITUTE_QUOTE = "\uF8FF";
     static final String SUBSTITUTE_SINGLE_QUOTE = "\uE000";
 
-    private static final String splitRegex = "(?="
-            + "([" + NOT_QUOTE + "]*" // any number of non-quotes
+    private static final String splitRegex = "(?=" + "([" + NOT_QUOTE + "]*" // any number of non-quotes
             + "[" + QUOTE + "]" // a quote
             + "[" + NOT_QUOTE + "]*" // any number of non-quotes
             + "[" + QUOTE + "]" // a quote, not preceeded by an escape
@@ -56,32 +55,27 @@ public class StringSplitter {
      * @throws Exception
      *             on parse error (missing end of quoted string)
      */
-    public static String[] splitIgnoreInQuotes(final String source,
-            final char splitChar,
-            final boolean deleteHeadTailQuotes) throws Exception {
+    public static String[] splitIgnoreInQuotes(String source, char splitChar, boolean deleteHeadTailQuotes)
+            throws Exception {
         // Trim, replace tabs with spaces so we only need to handle
         // space in the following; only if not splitting on TAB
-        final String trimmedSource;
+        String trimmedSource;
         if (splitChar != TAB) {
             trimmedSource = source.replace(TAB, SPACE).trim();
         } else {
             trimmedSource = source;
         }
 
-        final String escapedSource = substituteEscapedQuotes(trimmedSource);
+        var escapedSource = substituteEscapedQuotes(trimmedSource);
 
-        String fullRegex = splitChar + splitRegex;
+        var fullRegex = splitChar + splitRegex;
         if (splitChar == PIPE) {
             fullRegex = "\\" + fullRegex;
         }
 
-        return Pattern.compile(fullRegex)
-                .splitAsStream(escapedSource)
-                .filter(item -> !item.isEmpty())
-                .map(item -> item.trim())
-                .map(item -> deleteHeadTailQuotes ? removeQuotes(item) : item)
-                .map(item -> revertQuoteSubsitutions(item))
-                .toArray(size -> new String[size]);
+        return Pattern.compile(fullRegex).splitAsStream(escapedSource).filter(item -> !item.isEmpty())
+                .map(item -> item.trim()).map(item -> deleteHeadTailQuotes ? removeQuotes(item) : item)
+                .map(item -> revertQuoteSubsitutions(item)).toArray(size -> new String[size]);
     }
 
     /**
@@ -113,9 +107,8 @@ public class StringSplitter {
      */
     static String substituteEscapedQuotes(String source) {
 
-        return source
-                .replaceAll(ESCAPED_QUOTE, SUBSTITUTE_QUOTE)
-                .replaceAll(ESCAPED_SINGLE_QUOTE, SUBSTITUTE_SINGLE_QUOTE);
+        return source.replaceAll(ESCAPED_QUOTE, SUBSTITUTE_QUOTE).replaceAll(ESCAPED_SINGLE_QUOTE,
+                SUBSTITUTE_SINGLE_QUOTE);
 
     }
 
@@ -127,9 +120,8 @@ public class StringSplitter {
      * @return
      */
     static String revertQuoteSubsitutions(String input) {
-        return input
-                .replaceAll(SUBSTITUTE_SINGLE_QUOTE, ESCAPED_SINGLE_QUOTE)
-                .replaceAll(SUBSTITUTE_QUOTE, ESCAPED_QUOTE);
+        return input.replaceAll(SUBSTITUTE_SINGLE_QUOTE, ESCAPED_SINGLE_QUOTE).replaceAll(SUBSTITUTE_QUOTE,
+                ESCAPED_QUOTE);
 
     }
 }

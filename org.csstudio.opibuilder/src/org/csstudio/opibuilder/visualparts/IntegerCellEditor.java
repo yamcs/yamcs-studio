@@ -17,12 +17,12 @@ import org.eclipse.swt.widgets.Composite;
  */
 public final class IntegerCellEditor extends TextCellEditor {
 
-    public IntegerCellEditor(final Composite parent) {
+    public IntegerCellEditor(Composite parent) {
         super(parent);
     }
 
     @Override
-    protected void doSetValue(final Object value) {
+    protected void doSetValue(Object value) {
         if (value == null) {
             super.doSetValue(String.valueOf(Integer.valueOf(0)));
         } else {

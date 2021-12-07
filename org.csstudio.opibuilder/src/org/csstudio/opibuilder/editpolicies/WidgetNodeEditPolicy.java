@@ -16,13 +16,11 @@ import org.csstudio.opibuilder.commands.ConnectionCreateCommand;
 import org.csstudio.opibuilder.commands.ConnectionReconnectCommand;
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.ConnectionModel.RouterType;
 import org.csstudio.opibuilder.util.SchemaService;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionRouter;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.LayerConstants;
@@ -56,11 +54,10 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
     protected List<AnchorHandle> handles;
 
     @Override
-    protected ConnectionRouter getDummyConnectionRouter(
-            CreateConnectionRequest request) {
-        int i = (Integer) SchemaService.getInstance().getDefaultPropertyValue(
-                ConnectionModel.ID, ConnectionModel.PROP_ROUTER);
-        RouterType routerType = RouterType.values()[i];
+    protected ConnectionRouter getDummyConnectionRouter(CreateConnectionRequest request) {
+        int i = (Integer) SchemaService.getInstance().getDefaultPropertyValue(ConnectionModel.ID,
+                ConnectionModel.PROP_ROUTER);
+        var routerType = RouterType.values()[i];
         switch (routerType) {
         case MANHATTAN:
             return new ManhattanConnectionRouter();
@@ -72,11 +69,10 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
     }
 
     @Override
-    protected Command getConnectionCompleteCommand(
-            CreateConnectionRequest request) {
-        ConnectionCreateCommand cmd = (ConnectionCreateCommand) request.getStartCommand();
+    protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
+        var cmd = (ConnectionCreateCommand) request.getStartCommand();
         cmd.setTarget(getWidgetEditPart().getWidgetModel());
-        ConnectionAnchor anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
+        var anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
         if (anchor == null) {
             return null;
         }
@@ -86,40 +82,38 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
 
     @Override
     protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-        AbstractWidgetModel source = getWidgetEditPart().getWidgetModel();
-        ConnectionAnchor anchor = getWidgetEditPart().getSourceConnectionAnchor(request);
-        String sourceTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
-        ConnectionCreateCommand cmd = new ConnectionCreateCommand(source, sourceTerminal);
+        var source = getWidgetEditPart().getWidgetModel();
+        var anchor = getWidgetEditPart().getSourceConnectionAnchor(request);
+        var sourceTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
+        var cmd = new ConnectionCreateCommand(source, sourceTerminal);
         request.setStartCommand(cmd);
         return cmd;
     }
 
     @Override
     protected Command getReconnectTargetCommand(ReconnectRequest request) {
-        ConnectionModel connection = (ConnectionModel) request.getConnectionEditPart().getModel();
-        AbstractWidgetModel newTarget = getWidgetEditPart().getWidgetModel();
-        ConnectionAnchor anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
-        String newTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
-        ConnectionReconnectCommand cmd = new ConnectionReconnectCommand(connection);
+        var connection = (ConnectionModel) request.getConnectionEditPart().getModel();
+        var newTarget = getWidgetEditPart().getWidgetModel();
+        var anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
+        var newTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
+        var cmd = new ConnectionReconnectCommand(connection);
         cmd.setNewTarget(newTarget);
         cmd.setNewTargetTerminal(newTerminal);
         // clear point list
-        return cmd.chain(new SetWidgetPropertyCommand(
-                connection, ConnectionModel.PROP_POINTS, new PointList()));
+        return cmd.chain(new SetWidgetPropertyCommand(connection, ConnectionModel.PROP_POINTS, new PointList()));
     }
 
     @Override
     protected Command getReconnectSourceCommand(ReconnectRequest request) {
-        ConnectionModel connection = (ConnectionModel) request.getConnectionEditPart().getModel();
-        AbstractWidgetModel newSource = getWidgetEditPart().getWidgetModel();
-        ConnectionAnchor anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
-        String newTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
-        ConnectionReconnectCommand cmd = new ConnectionReconnectCommand(connection);
+        var connection = (ConnectionModel) request.getConnectionEditPart().getModel();
+        var newSource = getWidgetEditPart().getWidgetModel();
+        var anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
+        var newTerminal = getWidgetEditPart().getTerminalNameFromAnchor(anchor);
+        var cmd = new ConnectionReconnectCommand(connection);
         cmd.setNewSource(newSource);
         cmd.setNewSourceTerminal(newTerminal);
         // clear point list
-        return cmd.chain(new SetWidgetPropertyCommand(
-                connection, ConnectionModel.PROP_POINTS, new PointList()));
+        return cmd.chain(new SetWidgetPropertyCommand(connection, ConnectionModel.PROP_POINTS, new PointList()));
     }
 
     protected AbstractBaseEditPart getWidgetEditPart() {
@@ -141,9 +135,9 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
      */
     protected void addAnchorHandles() {
         removeAnchorHandles();
-        IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
+        var layer = getLayer(LayerConstants.HANDLE_LAYER);
         handles = createAnchorHandles();
-        for (int i = 0; i < handles.size(); i++) {
+        for (var i = 0; i < handles.size(); i++) {
             layer.add(handles.get(i));
         }
     }
@@ -168,8 +162,8 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         if (handles == null) {
             return;
         }
-        IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
-        for (int i = 0; i < handles.size(); i++) {
+        var layer = getLayer(LayerConstants.HANDLE_LAYER);
+        for (var i = 0; i < handles.size(); i++) {
             layer.remove(handles.get(i));
         }
         handles = null;

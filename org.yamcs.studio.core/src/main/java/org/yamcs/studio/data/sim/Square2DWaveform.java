@@ -22,11 +22,11 @@ public class Square2DWaveform extends SimFunction<VDoubleArray> {
 
     private static final NumberFormat DOUBLE_FORMAT = new DecimalFormat();
 
-    private final double periodInSeconds;
-    private final double wavelengthInSamples;
+    private double periodInSeconds;
+    private double wavelengthInSamples;
     private final int xSamples;
     private final int ySamples;
-    private final double angle;
+    private double angle;
     private Instant initialReference;
 
     /**
@@ -99,17 +99,17 @@ public class Square2DWaveform extends SimFunction<VDoubleArray> {
         }
     }
 
-    private ListDouble generateNewValue(final double omega, final double t, double k) {
-        final double kx = Math.cos(angle * Math.PI / 180.0) * k;
-        final double ky = Math.sin(angle * Math.PI / 180.0) * k;
+    private ListDouble generateNewValue(double omega, double t, double k) {
+        var kx = Math.cos(angle * Math.PI / 180.0) * k;
+        var ky = Math.sin(angle * Math.PI / 180.0) * k;
         return new ListDouble() {
 
             @Override
             public double getDouble(int index) {
-                int x = index % xSamples;
-                int y = index / xSamples;
-                double length = (omega * t + kx * x + ky * y) / (2 * Math.PI);
-                double normalizedPositionInPeriod = length - (double) (long) length;
+                var x = index % xSamples;
+                var y = index / xSamples;
+                var length = (omega * t + kx * x + ky * y) / (2 * Math.PI);
+                var normalizedPositionInPeriod = length - (double) (long) length;
                 if (normalizedPositionInPeriod < 0.5) {
                     return 1.0;
                 } else if (normalizedPositionInPeriod < 1.0) {
@@ -132,15 +132,14 @@ public class Square2DWaveform extends SimFunction<VDoubleArray> {
             initialReference = lastTime;
         }
         double t = initialReference.until(lastTime, ChronoUnit.SECONDS);
-        double omega = 2 * Math.PI / periodInSeconds;
-        double k = 2 * Math.PI / wavelengthInSamples;
-        double min = -1.0;
-        double max = 1.0;
-        double range = 0.0;
+        var omega = 2 * Math.PI / periodInSeconds;
+        var k = 2 * Math.PI / wavelengthInSamples;
+        var min = -1.0;
+        var max = 1.0;
+        var range = 0.0;
         return (VDoubleArray) ValueFactory.newVNumberArray(generateNewValue(omega, t, k),
-                new ArrayInt(ySamples, xSamples),
-                ValueUtil.defaultArrayDisplay(new ArrayInt(ySamples, xSamples)), alarmNone(),
-                newTime(lastTime), newDisplay(min, min + range * 0.1, min + range * 0.2, "", DOUBLE_FORMAT,
+                new ArrayInt(ySamples, xSamples), ValueUtil.defaultArrayDisplay(new ArrayInt(ySamples, xSamples)),
+                alarmNone(), newTime(lastTime), newDisplay(min, min + range * 0.1, min + range * 0.2, "", DOUBLE_FORMAT,
                         min + range * 0.8, min + range * 0.9, max, min, max));
     }
 }

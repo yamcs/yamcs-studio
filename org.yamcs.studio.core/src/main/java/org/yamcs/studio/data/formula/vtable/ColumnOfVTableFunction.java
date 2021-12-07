@@ -71,16 +71,16 @@ class ColumnOfVTableFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VTable table = (VTable) args.get(0);
-        VString columnName = (VString) args.get(1);
+    public Object calculate(List<Object> args) {
+        var table = (VTable) args.get(0);
+        var columnName = (VString) args.get(1);
 
         if (columnName == null || table == null) {
             return null;
         }
 
-        int index = -1;
-        for (int i = 0; i < table.getColumnCount(); i++) {
+        var index = -1;
+        for (var i = 0; i < table.getColumnCount(); i++) {
             if (Objects.equals(columnName.getValue(), table.getColumnName(i))) {
                 index = i;
             }
@@ -93,18 +93,18 @@ class ColumnOfVTableFunction implements FormulaFunction {
 
         if (String.class.isAssignableFrom(type)) {
             @SuppressWarnings("unchecked")
-            List<String> data = (List<String>) table.getColumnData(index);
+            var data = (List<String>) table.getColumnData(index);
             return ValueFactory.newVStringArray(data, ValueFactory.alarmNone(), ValueFactory.timeNow());
         }
 
         if (Double.TYPE.isAssignableFrom(type)) {
-            ListDouble data = (ListDouble) table.getColumnData(index);
+            var data = (ListDouble) table.getColumnData(index);
             return ValueFactory.newVDoubleArray(data, ValueFactory.alarmNone(), ValueFactory.timeNow(),
                     ValueFactory.displayNone());
         }
 
         if (Integer.TYPE.isAssignableFrom(type)) {
-            ListInt data = (ListInt) table.getColumnData(index);
+            var data = (ListInt) table.getColumnData(index);
             return ValueFactory.newVIntArray(data, ValueFactory.alarmNone(), ValueFactory.timeNow(),
                     ValueFactory.displayNone());
         }

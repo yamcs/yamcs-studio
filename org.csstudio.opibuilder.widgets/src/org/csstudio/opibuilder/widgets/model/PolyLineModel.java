@@ -15,7 +15,6 @@ import org.csstudio.opibuilder.properties.IntegerProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.swt.widgets.figures.PolylineFigure;
 import org.csstudio.swt.widgets.figures.PolylineFigure.ArrowType;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * The model for polyline widget.
@@ -42,12 +41,11 @@ public class PolyLineModel extends AbstractPolyModel {
     protected void configureProperties() {
         super.configureProperties();
         removeProperty(PROP_LINE_COLOR);
-        addProperty(new ComboProperty(PROP_ARROW, "Arrows",
-                WidgetPropertyCategory.Display, ArrowType.stringValues(), 0));
-        addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new IntegerProperty(PROP_ARROW_LENGTH, "Arrow Length",
-                WidgetPropertyCategory.Display, 20, 1, 1000));
+        addProperty(
+                new ComboProperty(PROP_ARROW, "Arrows", WidgetPropertyCategory.Display, ArrowType.stringValues(), 0));
+        addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow", WidgetPropertyCategory.Display, true));
+        addProperty(
+                new IntegerProperty(PROP_ARROW_LENGTH, "Arrow Length", WidgetPropertyCategory.Display, 20, 1, 1000));
 
     }
 
@@ -81,7 +79,7 @@ public class PolyLineModel extends AbstractPolyModel {
      *            true if the zero relative points should be remembered, false otherwise.
      */
     // @Override
-    // public void setPoints(final PointList points,
+    // public void setPoints(PointList points,
     // final boolean rememberPoints) {
     // if (points.size() > 0) {
     // PointList copy = points.getCopy();
@@ -98,8 +96,8 @@ public class PolyLineModel extends AbstractPolyModel {
      * Update the figure bounds based on points and arrows.
      */
     public void updateBounds() {
-        Rectangle bounds = PolylineFigure.getPointsBoundsWithArrows(getPoints(),
-                ArrowType.values()[getArrowType()], getArrowLength(), PolylineFigure.ARROW_ANGLE);
+        var bounds = PolylineFigure.getPointsBoundsWithArrows(getPoints(), ArrowType.values()[getArrowType()],
+                getArrowLength(), PolylineFigure.ARROW_ANGLE);
         getProperty(PROP_XPOS).setPropertyValue(bounds.x);
         getProperty(PROP_YPOS).setPropertyValue(bounds.y);
         getProperty(PROP_WIDTH).setPropertyValue(bounds.width);

@@ -120,13 +120,11 @@ public abstract class AbstractVNumberVNumberToVBooleanFormulaFunction implements
             return null;
         }
 
-        VNumber arg1 = (VNumber) args.get(0);
-        VNumber arg2 = (VNumber) args.get(1);
+        var arg1 = (VNumber) args.get(0);
+        var arg2 = (VNumber) args.get(1);
 
-        return ValueFactory.newVBoolean(
-                calculate(arg1.getValue().doubleValue(), arg2.getValue().doubleValue()),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args));
+        return ValueFactory.newVBoolean(calculate(arg1.getValue().doubleValue(), arg2.getValue().doubleValue()),
+                highestSeverityOf(args, false), latestValidTimeOrNowOf(args));
     }
 
     /**

@@ -29,7 +29,7 @@ public class FunctionTreeContentProvider implements ITreeContentProvider {
         if (parentElement instanceof FormulaFunctionSet) {
             List<FormulaFunction> functions = new ArrayList<>(((FormulaFunctionSet) parentElement).getFunctions());
             Collections.sort(functions, (o1, o2) -> {
-                int result = o1.getName().compareTo(o2.getName());
+                var result = o1.getName().compareTo(o2.getName());
                 if (result != 0) {
                     return result;
                 }

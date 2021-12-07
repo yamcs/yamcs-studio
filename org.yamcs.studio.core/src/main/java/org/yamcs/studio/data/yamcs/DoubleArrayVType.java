@@ -22,12 +22,12 @@ public class DoubleArrayVType extends YamcsVType implements VDoubleArray {
     public DoubleArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
-        double[] doubleValues = new double[size];
-        for (int i = 0; i < doubleValues.length; i++) {
+        var doubleValues = new double[size];
+        for (var i = 0; i < doubleValues.length; i++) {
             doubleValues[i] = value.getArrayValue(i).getDoubleValue();
         }
         data = new ArrayDouble(doubleValues);

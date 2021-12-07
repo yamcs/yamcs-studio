@@ -43,8 +43,7 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
     /** Whether the rectangle should be selectable at runtime. */
     private boolean selectable;
 
-    private Color lineColor = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_PURPLE);
+    private Color lineColor = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_PURPLE);
 
     private Color backGradientStartColor = ColorConstants.white;
     private Color foreGradientStartColor = ColorConstants.white;
@@ -55,8 +54,8 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
     }
 
     @Override
-    protected synchronized void fillShape(final Graphics graphics) {
-        Rectangle figureBounds = getClientArea();
+    protected synchronized void fillShape(Graphics graphics) {
+        var figureBounds = getClientArea();
         if (!transparent) {
             if (isEnabled()) {
                 graphics.setBackgroundColor(getBackgroundColor());
@@ -74,10 +73,10 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
             }
             Rectangle fillRectangle;
             if (horizontalFill) {
-                int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
+                var newW = (int) Math.round(figureBounds.width * (getFill() / 100));
                 fillRectangle = new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height);
             } else {
-                int newH = (int) Math.round(figureBounds.height * (getFill() / 100));
+                var newH = (int) Math.round(figureBounds.height * (getFill() / 100));
                 fillRectangle = new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
                         figureBounds.width, newH);
             }
@@ -176,11 +175,11 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      */
     @Override
     protected void outlineShape(Graphics graphics) {
-        float lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
-        int inset1 = (int) Math.floor(lineInset);
-        int inset2 = (int) Math.ceil(lineInset);
+        var lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
+        var inset1 = (int) Math.floor(lineInset);
+        var inset2 = (int) Math.ceil(lineInset);
 
-        Rectangle r = Draw2dSingletonUtil.getRectangle().setBounds(getClientArea());
+        var r = Draw2dSingletonUtil.getRectangle().setBounds(getClientArea());
         r.x += inset1;
         r.y += inset1;
         r.width -= inset1 + inset2;
@@ -197,7 +196,7 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      * @param fill
      *            the fill grade.
      */
-    public void setFill(final double fill) {
+    public void setFill(double fill) {
         if (this.fill == fill) {
             return;
         }
@@ -211,7 +210,7 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      * @param horizontal
      *            The orientation.
      */
-    public void setHorizontalFill(final boolean horizontal) {
+    public void setHorizontalFill(boolean horizontal) {
         if (this.horizontalFill == horizontal) {
             return;
         }
@@ -237,7 +236,7 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      * @param transparent
      *            the transparent state.
      */
-    public void setTransparent(final boolean transparent) {
+    public void setTransparent(boolean transparent) {
         if (this.transparent == transparent) {
             return;
         }

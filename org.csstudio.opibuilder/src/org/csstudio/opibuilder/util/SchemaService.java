@@ -1,7 +1,6 @@
 package org.csstudio.opibuilder.util;
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,7 +43,7 @@ public final class SchemaService {
 
     public void reload() {
         schemaWidgetsMap.clear();
-        IPath schemaOPI = PreferencesHelper.getSchemaOPIPath();
+        var schemaOPI = PreferencesHelper.getSchemaOPIPath();
         if (schemaOPI == null || schemaOPI.isEmpty()) {
             return;
         }
@@ -52,15 +51,13 @@ public final class SchemaService {
     }
 
     public void loadSchema(IPath schemaOPI) {
-        try (InputStream inputStream = ResourceUtil.pathToInputStream(schemaOPI)) {
-            DisplayModel displayModel = new DisplayModel(schemaOPI);
-            XMLUtil.fillDisplayModelFromInputStream(inputStream,
-                    displayModel, Display.getDefault());
+        try (var inputStream = ResourceUtil.pathToInputStream(schemaOPI)) {
+            var displayModel = new DisplayModel(schemaOPI);
+            XMLUtil.fillDisplayModelFromInputStream(inputStream, displayModel, Display.getDefault());
             schemaWidgetsMap.put(displayModel.getTypeID(), displayModel);
             loadModelFromContainer(displayModel);
             if (!displayModel.getConnectionList().isEmpty()) {
-                schemaWidgetsMap.put(
-                        ConnectionModel.ID, displayModel.getConnectionList().get(0));
+                schemaWidgetsMap.put(ConnectionModel.ID, displayModel.getConnectionList().get(0));
             }
         } catch (FileNotFoundException e) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot locate OPI Schema: " + schemaOPI, e);
@@ -89,8 +86,7 @@ public final class SchemaService {
             return;
         }
         if (schemaWidgetsMap.containsKey(widgetModel.getTypeID())) {
-            AbstractWidgetModel schemaWidgetModel = schemaWidgetsMap
-                    .get(widgetModel.getTypeID());
+            var schemaWidgetModel = schemaWidgetsMap.get(widgetModel.getTypeID());
             for (String id : schemaWidgetModel.getAllPropertyIDs()) {
                 widgetModel.setPropertyValue(id, schemaWidgetModel.getPropertyValue(id), false);
             }
@@ -109,7 +105,7 @@ public final class SchemaService {
         if (schemaWidgetsMap.containsKey(typeId)) {
             return schemaWidgetsMap.get(typeId).getPropertyValue(propId);
         }
-        WidgetDescriptor desc = WidgetsService.getInstance().getWidgetDescriptor(typeId);
+        var desc = WidgetsService.getInstance().getWidgetDescriptor(typeId);
         if (desc != null) {
             return desc.getWidgetModel().getPropertyValue(propId);
         }

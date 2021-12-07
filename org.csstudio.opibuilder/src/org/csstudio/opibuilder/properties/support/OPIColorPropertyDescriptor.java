@@ -29,7 +29,7 @@ public class OPIColorPropertyDescriptor extends PropertyDescriptor {
 
     @Override
     public CellEditor createPropertyEditor(Composite parent) {
-        OPIColorCellEditor editor = new OPIColorCellEditor(parent, "Choose Color");
+        var editor = new OPIColorCellEditor(parent, "Choose Color");
         if (getValidator() != null) {
             editor.setValidator(getValidator());
         }

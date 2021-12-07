@@ -19,8 +19,8 @@ public final class NumberFormats {
     private static volatile DecimalFormatSymbols symbols;
 
     static {
-        Locale newLocale = Locale.getDefault();
-        DecimalFormatSymbols newSymbols = new DecimalFormatSymbols(newLocale);
+        var newLocale = Locale.getDefault();
+        var newSymbols = new DecimalFormatSymbols(newLocale);
         newSymbols.setNaN("NaN");
         newSymbols.setInfinity("Infinity");
         currentLocale = newLocale;
@@ -108,8 +108,8 @@ public final class NumberFormats {
             return new DecimalFormat("0", symbols);
         }
 
-        StringBuilder sb = new StringBuilder("0.");
-        for (int i = 0; i < precision; i++) {
+        var sb = new StringBuilder("0.");
+        for (var i = 0; i < precision; i++) {
             sb.append("0");
         }
         return new DecimalFormat(sb.toString(), symbols);

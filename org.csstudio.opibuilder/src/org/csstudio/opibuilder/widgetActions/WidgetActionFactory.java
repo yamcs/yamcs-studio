@@ -31,8 +31,7 @@ public class WidgetActionFactory {
         private ImageDescriptor iconImage;
         private String description;
 
-        private ActionType(String description,
-                ImageDescriptor iconImage) {
+        private ActionType(String description, ImageDescriptor iconImage) {
             this.description = description;
             this.iconImage = iconImage;
         }
@@ -71,8 +70,7 @@ public class WidgetActionFactory {
         }
 
         private static ImageDescriptor createImage(String path) {
-            ImageDescriptor image = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, path);
+            var image = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, path);
             return image;
         }
 

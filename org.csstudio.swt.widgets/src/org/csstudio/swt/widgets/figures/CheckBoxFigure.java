@@ -71,14 +71,15 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
     private BoxFigure boxFigure;
 
-    public CheckBoxFigure(final boolean runMode) {
+    public CheckBoxFigure(boolean runMode) {
         this.runMode = runMode;
         boxFigure = new BoxFigure();
         setContents(boxFigure);
-        if (!runMode)
+        if (!runMode) {
             setEventHandler(null);
-        else
+        } else {
             setCursor(Cursors.HAND);
+        }
         addActionListener(new ActionListener() {
 
             @Override
@@ -94,11 +95,9 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
                 @Override
                 public void mouseEntered(MouseEvent me) {
-                    Color backColor = getBackgroundColor();
-                    RGB darkColor = GraphicsUtil.mixColors(
-                            backColor.getRGB(), new RGB(94, 151, 230), 0.7);
-                    boxFigure.setBackgroundColor(CustomMediaFactory.getInstance()
-                            .getColor(darkColor));
+                    var backColor = getBackgroundColor();
+                    var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(94, 151, 230), 0.7);
+                    boxFigure.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
                 }
 
                 @Override
@@ -115,13 +114,14 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      * @param listener
      *            the listener to add
      */
-    public void addManualValueChangeListener(final IManualValueChangeListener listener) {
+    public void addManualValueChangeListener(IManualValueChangeListener listener) {
         boolControlListeners.add(listener);
     }
 
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
-        if (boolControlListeners.contains(listener))
+    public void removeManualValueChangeListener(IManualValueChangeListener listener) {
+        if (boolControlListeners.contains(listener)) {
             boolControlListeners.remove(listener);
+        }
     }
 
     /**
@@ -130,7 +130,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      * @param newManualValue
      *            the new manual value
      */
-    protected void fireManualValueChange(final boolean newManualValue) {
+    protected void fireManualValueChange(boolean newManualValue) {
         boolValue = newManualValue;
         updateValue();
         for (IManualValueChangeListener l : boolControlListeners) {
@@ -181,15 +181,17 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      *            the bit to set
      */
     public void setBit(int bit) {
-        if (this.bit == bit)
+        if (this.bit == bit) {
             return;
+        }
         this.bit = bit;
         updateBoolValue();
     }
 
     public void setBoolValue(boolean boolValue) {
-        if (this.boolValue == boolValue)
+        if (this.boolValue == boolValue) {
             return;
+        }
         this.boolValue = boolValue;
         updateValue();
     }
@@ -218,8 +220,9 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      *            the value to set
      */
     public void setValue(long value) {
-        if (this.value == value)
+        if (this.value == value) {
             return;
+        }
         this.value = value;
         updateBoolValue();
         repaint();
@@ -231,9 +234,9 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      */
     protected void updateBoolValue() {
         // get boolValue
-        if (bit < 0)
+        if (bit < 0) {
             boolValue = (this.value != 0);
-        else if (bit >= 0) {
+        } else if (bit >= 0) {
             boolValue = ((value >> bit) & 1L) > 0;
         }
         repaint();
@@ -244,9 +247,9 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
      */
     private void updateValue() {
         // get boolValue
-        if (bit < 0)
+        if (bit < 0) {
             setValue(boolValue ? 1 : 0);
-        else if (bit >= 0) {
+        } else if (bit >= 0) {
             if (bit >= 64) {
                 // Log with exception to obtain call stack
                 Activator.getLogger().log(Level.WARNING, "Bit " + bit + " exceeds 63.", new Exception());
@@ -297,8 +300,8 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
     }
 
     public Dimension getAutoSizeDimension() {
-        Dimension d = boxFigure.getAutoSizeDimension();
-        int textWidth = d.width();
+        var d = boxFigure.getAutoSizeDimension();
+        var textWidth = d.width();
         d.setWidth(textWidth + BOX_SIZE + GAP);
         return d;
     }
@@ -308,21 +311,20 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
         @Override
         protected void paintClientArea(Graphics graphics) {
-            if (support3d == null)
+            if (support3d == null) {
                 support3d = GraphicsUtil.testPatternSupported(graphics);
-            Rectangle clientArea = getClientArea();
-            Rectangle square = new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2 - BOX_SIZE / 2,
-                    BOX_SIZE, BOX_SIZE);
+            }
+            var clientArea = getClientArea();
+            var square = new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2 - BOX_SIZE / 2, BOX_SIZE,
+                    BOX_SIZE);
             graphics.pushState();
-            if (support3d)
-                graphics.setBackgroundPattern(
-                        GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                                square.x, square.y + 1,
-                                square.x, square.y + square.height,
-                                ColorConstants.white, graphics.getBackgroundColor()));
+            if (support3d) {
+                graphics.setBackgroundPattern(GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), square.x,
+                        square.y + 1, square.x, square.y + square.height, ColorConstants.white,
+                        graphics.getBackgroundColor()));
+            }
             graphics.fillRoundRectangle(square, 4, 4);
-            graphics.setForegroundColor(
-                    CustomMediaFactory.getInstance().getColor(130, 130, 130));
+            graphics.setForegroundColor(CustomMediaFactory.getInstance().getColor(130, 130, 130));
             graphics.drawRoundRectangle(square, 4, 4);
 
             if (boolValue) {
@@ -330,9 +332,8 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
                 graphics.setLineWidth(3);
                 graphics.setForegroundColor(selectedColor);
 
-                graphics.drawPolyline(new int[] {
-                        3, (int) (BOX_SIZE * 0.45), (int) (BOX_SIZE * 0.45), BOX_SIZE * 3 / 4 - 1, BOX_SIZE - 2, 3
-                });
+                graphics.drawPolyline(new int[] { 3, (int) (BOX_SIZE * 0.45), (int) (BOX_SIZE * 0.45),
+                        BOX_SIZE * 3 / 4 - 1, BOX_SIZE - 2, 3 });
             }
             graphics.popState();
             textSize = FigureUtilities.getTextExtents(text, graphics.getFont());
@@ -356,8 +357,9 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         }
 
         protected Dimension getTextSize() {
-            if (textSize == null)
+            if (textSize == null) {
                 textSize = calculateTextSize();
+            }
             return textSize;
         }
 
@@ -370,8 +372,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         }
 
         protected Dimension getAutoSizeDimension() {
-            return getPreferredSize().getCopy().expand(
-                    getInsets().getWidth(), getInsets().getHeight());
+            return getPreferredSize().getCopy().expand(getInsets().getWidth(), getInsets().getHeight());
         }
     }
 

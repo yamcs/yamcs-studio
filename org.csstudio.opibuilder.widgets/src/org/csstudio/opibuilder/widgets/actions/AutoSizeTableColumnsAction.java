@@ -28,7 +28,7 @@ public class AutoSizeTableColumnsAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        TableEditPart tableEditPart = getSelectedWidget();
+        var tableEditPart = getSelectedWidget();
 
         tableEditPart.getTable().autoSizeColumns();
     }
@@ -43,8 +43,9 @@ public class AutoSizeTableColumnsAction implements IObjectActionDelegate {
     private TableEditPart getSelectedWidget() {
         if (selection.getFirstElement() instanceof TableEditPart) {
             return (TableEditPart) selection.getFirstElement();
-        } else
+        } else {
             return null;
+        }
     }
 
     @Override

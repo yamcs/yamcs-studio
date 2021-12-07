@@ -25,7 +25,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -39,8 +38,8 @@ import org.eclipse.swt.graphics.FontData;
  */
 public class MeterFigure extends AbstractRoundRampedFigure {
 
-    private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
-            new FontData("Arial", 12, SWT.BOLD));
+    private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance()
+            .getFont(new FontData("Arial", 12, SWT.BOLD));
     // private Ellipse needleCenter;
 
     private Needle needle;
@@ -83,6 +82,7 @@ public class MeterFigure extends AbstractRoundRampedFigure {
         add(valueLabel, XMeterLayout.VALUE_LABEL);
 
         addFigureListener(new FigureListener() {
+            @Override
             public void figureMoved(IFigure source) {
                 ramp.setDirty(true);
                 revalidate();
@@ -135,8 +135,7 @@ public class MeterFigure extends AbstractRoundRampedFigure {
 
     static class Needle extends Polygon {
         public Needle() {
-            setBackgroundColor(CustomMediaFactory.getInstance().getColor(
-                    CustomMediaFactory.COLOR_RED));
+            setBackgroundColor(CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED));
         }
 
         @Override
@@ -172,96 +171,90 @@ public class MeterFigure extends AbstractRoundRampedFigure {
 
         @Override
         public void setConstraint(IFigure child, Object constraint) {
-            if (constraint.equals(SCALE))
+            if (constraint.equals(SCALE)) {
                 scale = (RoundScale) child;
-            else if (constraint.equals(RAMP))
+            } else if (constraint.equals(RAMP)) {
                 ramp = (RoundScaledRamp) child;
-            else if (constraint.equals(NEEDLE))
+            } else if (constraint.equals(NEEDLE)) {
                 needle = (Polygon) child;
-            // else if (constraint.equals(NEEDLE_CENTER))
-            // needleCenter = (Ellipse) child;
-            else if (constraint.equals(VALUE_LABEL))
+            } else if (constraint.equals(VALUE_LABEL)) {
                 valueLabel = (Label) child;
+            }
         }
 
         @Override
-        protected Dimension calculatePreferredSize(IFigure container, int w,
-                int h) {
-            Insets insets = container.getInsets();
-            Dimension d = new Dimension(256, 256);
+        protected Dimension calculatePreferredSize(IFigure container, int w, int h) {
+            var insets = container.getInsets();
+            var d = new Dimension(256, 256);
             d.expand(insets.getWidth(), insets.getHeight());
             return d;
         }
 
+        @Override
         public void layout(IFigure container) {
-            Rectangle area = container.getClientArea();
+            var area = container.getClientArea();
             // calculate a virtual area
 
-            if (scale != null && scale.isDirty())
-                M = Math.max(FigureUtilities.getTextWidth(
-                        scale.format(scale.getRange().getLower()), scale.getFont()),
-                        FigureUtilities.getTextWidth(
-                                scale.format(scale.getRange().getUpper()), scale.getFont()))
-                        / 2;
+            if (scale != null && scale.isDirty()) {
+                M = Math.max(FigureUtilities.getTextWidth(scale.format(scale.getRange().getLower()), scale.getFont()),
+                        FigureUtilities.getTextWidth(scale.format(scale.getRange().getUpper()), scale.getFont())) / 2;
+            }
 
-            int h = area.height;
-            int w = area.width;
-            if (h > HW_RATIO * (w - 2 * M))
+            var h = area.height;
+            var w = area.width;
+            if (h > HW_RATIO * (w - 2 * M)) {
                 h = (int) (HW_RATIO * (w - 2 * M));
+            }
             // else if (w > h/HW_RATIO + 2*M)
             // w = (int) (h/HW_RATIO + 2*M);
-            double r = h / (1 - Math.sin(ALPHA) / 2);
-            int x = (int) (area.x - r * (1.0 - Math.cos(ALPHA)) + M);
-            int y = area.y;
+            var r = h / (1 - Math.sin(ALPHA) / 2);
+            var x = (int) (area.x - r * (1.0 - Math.cos(ALPHA)) + M);
+            var y = area.y;
 
             area = new Rectangle(x, y, (int) (2 * r), (int) (2 * r));
-            Point center = area.getCenter();
+            var center = area.getCenter();
 
             if (scale != null) {
                 scale.setBounds(area);
             }
 
             if (ramp != null && ramp.isVisible()) {
-                Rectangle rampBounds = area.getCopy();
-                ramp.setBounds(rampBounds.shrink(area.width / 4 - ramp.getRampWidth(),
-                        area.height / 4 - ramp.getRampWidth()));
+                var rampBounds = area.getCopy();
+                ramp.setBounds(
+                        rampBounds.shrink(area.width / 4 - ramp.getRampWidth(), area.height / 4 - ramp.getRampWidth()));
             }
 
             if (valueLabel != null) {
-                Dimension labelSize = valueLabel.getPreferredSize();
-                valueLabel.setBounds(new Rectangle(area.x + area.width / 2 - labelSize.width / 2,
-                        area.y + area.height / 2 - area.height / 4
+                var labelSize = valueLabel.getPreferredSize();
+                valueLabel.setBounds(new Rectangle(
+                        area.x + area.width / 2 - labelSize.width / 2, area.y + area.height / 2 - area.height / 4
                                 - (scale.getInnerRadius() - area.height / 4) / 2 - labelSize.height / 2,
                         labelSize.width, labelSize.height));
             }
 
             if (needle != null && scale != null) {
-                needlePoints.setPoint(
-                        new Point(center.x + area.width / 4, center.y - NEEDLE_WIDTH / 2 + 3), 0);
+                needlePoints.setPoint(new Point(center.x + area.width / 4, center.y - NEEDLE_WIDTH / 2 + 3), 0);
                 scale.getScaleTickMarks();
-                needlePoints.setPoint(
-                        new Point(center.x + scale.getInnerRadius() - GAP_BTW_NEEDLE_SCALE, center.y), 1);
-                needlePoints.setPoint(
-                        new Point(center.x + area.width / 4, center.y + NEEDLE_WIDTH / 2 - 3), 2);
+                needlePoints.setPoint(new Point(center.x + scale.getInnerRadius() - GAP_BTW_NEEDLE_SCALE, center.y), 1);
+                needlePoints.setPoint(new Point(center.x + area.width / 4, center.y + NEEDLE_WIDTH / 2 - 3), 2);
 
-                double valuePosition = 360 - scale.getValuePosition(getCoercedValue(), false);
+                var valuePosition = 360 - scale.getValuePosition(getCoercedValue(), false);
                 if (maximum > minimum) {
-                    if (value > maximum)
+                    if (value > maximum) {
                         valuePosition += 8;
-                    else if (value < minimum)
+                    } else if (value < minimum) {
                         valuePosition -= 8;
+                    }
                 } else {
-                    if (value > minimum)
+                    if (value > minimum) {
                         valuePosition -= 8;
-                    else if (value < maximum)
+                    } else if (value < maximum) {
                         valuePosition += 8;
+                    }
                 }
-                needlePoints.setPoint(
-                        PointsUtil.rotate(needlePoints.getPoint(0), valuePosition, center), 0);
-                needlePoints.setPoint(
-                        PointsUtil.rotate(needlePoints.getPoint(1), valuePosition, center), 1);
-                needlePoints.setPoint(
-                        PointsUtil.rotate(needlePoints.getPoint(2), valuePosition, center), 2);
+                needlePoints.setPoint(PointsUtil.rotate(needlePoints.getPoint(0), valuePosition, center), 0);
+                needlePoints.setPoint(PointsUtil.rotate(needlePoints.getPoint(1), valuePosition, center), 1);
+                needlePoints.setPoint(PointsUtil.rotate(needlePoints.getPoint(2), valuePosition, center), 2);
                 needle.setPoints(needlePoints);
 
             }

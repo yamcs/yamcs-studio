@@ -21,8 +21,8 @@ public class ArcEditpart extends AbstractShapeEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        ArcFigure figure = new ArcFigure();
-        ArcModel model = getWidgetModel();
+        var figure = new ArcFigure();
+        var model = getWidgetModel();
         figure.setFill(model.isFill());
         figure.setStartAngle(model.getStartAngle());
         figure.setTotalAngle(model.getTotalAngle());
@@ -40,10 +40,8 @@ public class ArcEditpart extends AbstractShapeEditPart {
         // fill
         IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ArcFigure figure = (ArcFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (ArcFigure) refreshableFigure;
                 figure.setFill((Boolean) newValue);
                 return true;
             }
@@ -53,10 +51,8 @@ public class ArcEditpart extends AbstractShapeEditPart {
         // start angle
         IWidgetPropertyChangeHandler startAngleHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ArcFigure figure = (ArcFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (ArcFigure) refreshableFigure;
                 figure.setStartAngle((Integer) newValue);
                 return true;
             }
@@ -66,10 +62,8 @@ public class ArcEditpart extends AbstractShapeEditPart {
         // total angle
         IWidgetPropertyChangeHandler totalAngleHandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ArcFigure figure = (ArcFigure) refreshableFigure;
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                var figure = (ArcFigure) refreshableFigure;
                 figure.setTotalAngle((Integer) newValue);
                 return true;
             }
@@ -82,8 +76,9 @@ public class ArcEditpart extends AbstractShapeEditPart {
     public void setValue(Object value) {
         if (value instanceof Boolean) {
             ((ArcFigure) getFigure()).setFill((Boolean) value);
-        } else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override

@@ -124,14 +124,11 @@ public abstract class AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunct
             return null;
         }
 
-        VNumberArray arg1 = (VNumberArray) args.get(0);
-        VNumberArray arg2 = (VNumberArray) args.get(1);
+        var arg1 = (VNumberArray) args.get(0);
+        var arg2 = (VNumberArray) args.get(1);
 
-        return newVNumberArray(
-                calculate(arg1.getData(), arg2.getData()),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+        return newVNumberArray(calculate(arg1.getData(), arg2.getData()), highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args), displayNone());
     }
 
     /**

@@ -27,9 +27,9 @@ public class BufferInt extends ListInt {
     }
 
     private void resize() {
-        int oldSize = data.length;
-        int newSize = oldSize * 2;
-        int[] newData = new int[newSize];
+        var oldSize = data.length;
+        var newSize = oldSize * 2;
+        var newData = new int[newSize];
         System.arraycopy(data, 0, newData, 0, oldSize);
         data = newData;
     }
@@ -44,7 +44,7 @@ public class BufferInt extends ListInt {
 
     @Override
     public int size() {
-        int size = endOffset;
+        var size = endOffset;
         return size;
     }
 

@@ -4,11 +4,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.yamcs.client.processor.ProcessorClient;
-import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
 import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 import org.yamcs.studio.commanding.CommandParser;
-import org.yamcs.studio.commanding.CommandParser.ParseResult;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class Yamcs {
@@ -21,15 +18,15 @@ public class Yamcs {
      * Yamcs.issueCommand('/YSS/SIMULATOR/SWITCH_VOLTAGE_ON(voltage_num: 1)');
      */
     public static void issueCommand(String commandText) {
-        ParseResult parsed = CommandParser.parseCommand(commandText);
+        var parsed = CommandParser.parseCommand(commandText);
 
-        ProcessorClient processor = YamcsPlugin.getProcessorClient();
+        var processor = YamcsPlugin.getProcessorClient();
         if (processor == null) {
             log.warning("No active processor");
             return;
         }
 
-        CommandBuilder builder = processor.prepareCommand(parsed.getQualifiedName())
+        var builder = processor.prepareCommand(parsed.getQualifiedName())
                 .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
         for (Assignment arg : parsed.getAssignments()) {
             builder.withArgument(arg.getName(), arg.getValue());
@@ -43,14 +40,13 @@ public class Yamcs {
      * Yamcs.issueCommand('/YSS/SIMULATOR/SWITCH_VOLTAGE_ON', {"voltage_num": 1});
      */
     public static void issueCommand(String command, Map<String, Object> args) {
-        ProcessorClient processor = YamcsPlugin.getProcessorClient();
+        var processor = YamcsPlugin.getProcessorClient();
         if (processor == null) {
             log.warning("No active processor");
             return;
         }
 
-        CommandBuilder builder = processor.prepareCommand(command)
-                .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
+        var builder = processor.prepareCommand(command).withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
         if (args != null) {
             for (Entry<String, Object> arg : args.entrySet()) {
                 builder.withArgument(arg.getKey(), String.valueOf(arg.getValue()));

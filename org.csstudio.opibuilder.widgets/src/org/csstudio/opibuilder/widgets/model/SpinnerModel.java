@@ -55,14 +55,14 @@ public class SpinnerModel extends LabelModel {
     public static final String PROP_FORMAT = "format";
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = Double.NEGATIVE_INFINITY;
+    private static double DEFAULT_MIN = Double.NEGATIVE_INFINITY;
 
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = Double.POSITIVE_INFINITY;
+    private static double DEFAULT_MAX = Double.POSITIVE_INFINITY;
 
-    private static final double DEFAULT_STEP_INCREMENT = 1;
+    private static double DEFAULT_STEP_INCREMENT = 1;
 
-    private static final double DEFAULT_PAGE_INCREMENT = 10;
+    private static double DEFAULT_PAGE_INCREMENT = 10;
 
     public SpinnerModel() {
         setSize(85, 25);
@@ -77,36 +77,31 @@ public class SpinnerModel extends LabelModel {
         removeProperty(LabelModel.PROP_SHOW_SCROLLBAR);
         removeProperty(LabelModel.PROP_WRAP_WORDS);
         setPropertyVisible(LabelModel.PROP_TEXT, false);
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN));
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
 
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX));
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
 
-        addProperty(new DoubleProperty(PROP_STEP_INCREMENT, "Step Increment",
-                WidgetPropertyCategory.Behavior, DEFAULT_STEP_INCREMENT), true);
+        addProperty(new DoubleProperty(PROP_STEP_INCREMENT, "Step Increment", WidgetPropertyCategory.Behavior,
+                DEFAULT_STEP_INCREMENT), true);
 
-        addProperty(new DoubleProperty(PROP_PAGE_INCREMENT, "Page Increment",
-                WidgetPropertyCategory.Behavior, DEFAULT_PAGE_INCREMENT), true);
+        addProperty(new DoubleProperty(PROP_PAGE_INCREMENT, "Page Increment", WidgetPropertyCategory.Behavior,
+                DEFAULT_PAGE_INCREMENT), true);
 
-        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits from PV",
-                WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits from PV", WidgetPropertyCategory.Behavior, true));
 
-        addProperty(new ComboProperty(PROP_FORMAT, "Format",
-                WidgetPropertyCategory.Display, NumericFormatType.stringValues(), 0));
+        addProperty(new ComboProperty(PROP_FORMAT, "Format", WidgetPropertyCategory.Display,
+                NumericFormatType.stringValues(), 0));
 
-        addProperty(new IntegerProperty(PROP_PRECISION, "Precision",
-                WidgetPropertyCategory.Display, 3, 0, 100));
-        addProperty(new BooleanProperty(PROP_PRECISION_FROM_PV, "Precision from PV",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_BUTTONS_ON_LEFT, "Buttons on Left",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new IntegerProperty(PROP_PRECISION, "Precision", WidgetPropertyCategory.Display, 3, 0, 100));
+        addProperty(new BooleanProperty(PROP_PRECISION_FROM_PV, "Precision from PV", WidgetPropertyCategory.Display,
+                false));
+        addProperty(
+                new BooleanProperty(PROP_BUTTONS_ON_LEFT, "Buttons on Left", WidgetPropertyCategory.Display, false));
 
         addProperty(new BooleanProperty(PROP_HORIZONTAL_BUTTONS_LAYOUT, "Horizontal Buttons Layout",
                 WidgetPropertyCategory.Display, false));
 
-        addProperty(new BooleanProperty(PROP_SHOW_TEXT, "Show text",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_TEXT, "Show text", WidgetPropertyCategory.Display, true));
     }
 
     /**

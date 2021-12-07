@@ -12,14 +12,9 @@ public class TimeRuler extends Line {
     public TimeRuler(Timeline timeline) {
         super(timeline);
 
-        orderedScales = new Scale[] {
-                new DecadeScale(timeline), // Macro
-                new YearScale(timeline),
-                new MonthScale(timeline),
-                new WeekScale(timeline),
-                new WeekDayScale(timeline),
-                new QuarterDayScale(timeline),
-                new HourScale(timeline), // Micro
+        orderedScales = new Scale[] { new DecadeScale(timeline), // Macro
+                new YearScale(timeline), new MonthScale(timeline), new WeekScale(timeline), new WeekDayScale(timeline),
+                new QuarterDayScale(timeline), new HourScale(timeline), // Micro
         };
     }
 

@@ -42,11 +42,10 @@ public class ComboModel extends AbstractPVWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new StringListProperty(
-                PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior, new ArrayList<String>()));
+        addProperty(
+                new StringListProperty(PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior, new ArrayList<String>()));
 
-        addProperty(new BooleanProperty(
-                PROP_ITEMS_FROM_PV, "Items From PV", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_ITEMS_FROM_PV, "Items From PV", WidgetPropertyCategory.Behavior, false));
     }
 
     @SuppressWarnings("unchecked")

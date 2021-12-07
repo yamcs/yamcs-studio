@@ -26,19 +26,20 @@ public class DropPVtoPVWidgetEditPolicy extends AbstractEditPolicy {
     @Override
     public Command getCommand(Request request) {
         if (request.getType() == DropPVRequest.REQ_DROP_PV && request instanceof DropPVRequest) {
-            DropPVRequest dropPVRequest = (DropPVRequest) request;
-            if (dropPVRequest.getTargetWidget() != null)
-                return new SetWidgetPropertyCommand(
-                        dropPVRequest.getTargetWidget().getWidgetModel(),
+            var dropPVRequest = (DropPVRequest) request;
+            if (dropPVRequest.getTargetWidget() != null) {
+                return new SetWidgetPropertyCommand(dropPVRequest.getTargetWidget().getWidgetModel(),
                         AbstractPVWidgetModel.PROP_PVNAME, dropPVRequest.getPvNames()[0]);
+            }
         }
         return super.getCommand(request);
     }
 
     @Override
     public EditPart getTargetEditPart(Request request) {
-        if (request.getType() == DropPVRequest.REQ_DROP_PV)
+        if (request.getType() == DropPVRequest.REQ_DROP_PV) {
             return getHost();
+        }
         return super.getTargetEditPart(request);
     }
 

@@ -14,9 +14,9 @@ import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.IntegerProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.yamcs.studio.data.FormatEnum;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.geometry.Point;
+import org.yamcs.studio.data.FormatEnum;
 
 /**
  * The model for text indicator.
@@ -55,8 +55,7 @@ public class TextUpdateModel extends LabelModel {
         addProperty(new IntegerProperty(PROP_PRECISION, "Precision", category, 0, 0, 100));
         addProperty(new BooleanProperty(PROP_PRECISION_FROM_DB, "Precision from PV", category, true));
         addProperty(new BooleanProperty(PROP_SHOW_UNITS, "Show Units", category, true));
-        addProperty(new DoubleProperty(PROP_ROTATION, "Rotation Angle",
-                WidgetPropertyCategory.Display, 0, 0, 360));
+        addProperty(new DoubleProperty(PROP_ROTATION, "Rotation Angle", WidgetPropertyCategory.Display, 0, 0, 360));
         setPropertyValue(PROP_TEXT, "######");
         setPropertyValue(PROP_ALIGN_H, 0);
         setPropertyValue(PROP_ALIGN_V, 1);
@@ -84,11 +83,11 @@ public class TextUpdateModel extends LabelModel {
      *
      * @return The rotation angle
      */
-    public final double getRotationAngle() {
+    public double getRotationAngle() {
         return (Double) getProperty(PROP_ROTATION).getPropertyValue();
     }
 
-    public final void setRotationAngle(final double angle) {
+    public void setRotationAngle(double angle) {
         setPropertyValue(PROP_ROTATION, angle);
     }
 

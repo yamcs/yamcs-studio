@@ -42,8 +42,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public DoubleProperty(String propId, String description,
-            WidgetPropertyCategory category, double defaultValue) {
+    public DoubleProperty(String propId, String description, WidgetPropertyCategory category, double defaultValue) {
         super(propId, description, category, Double.valueOf(defaultValue));
         min = -Double.MAX_VALUE;
         max = Double.MAX_VALUE;
@@ -65,8 +64,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
      * @param max
      *            the maximum allowed double value.
      */
-    public DoubleProperty(String propId, String description,
-            WidgetPropertyCategory category, double defaultValue,
+    public DoubleProperty(String propId, String description, WidgetPropertyCategory category, double defaultValue,
             double min, double max) {
         super(propId, description, category, Double.valueOf(defaultValue));
         this.min = min;
@@ -74,7 +72,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(final Object value) {
+    public Object checkValue(Object value) {
         if (value == null) {
             return null;
         }

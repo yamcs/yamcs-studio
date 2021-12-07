@@ -31,8 +31,8 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
     @SuppressWarnings("unchecked")
     @Override
     public void update(ViewerCell cell) {
-        final List<String[]> items = (List<String[]>) tableViewer.getInput();
-        final int index = ((Integer) cell.getElement()).intValue();
+        var items = (List<String[]>) tableViewer.getInput();
+        var index = ((Integer) cell.getElement()).intValue();
         // if this is the extra row
         if (index < 0) {
             if (editable) {
@@ -43,13 +43,13 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
             }
         } else {
             // For multi-line text, only show the first line
-            final int column = cell.getColumnIndex();
-            String text = "";
+            var column = cell.getColumnIndex();
+            var text = "";
             if (column < items.get(index).length) {
                 text = items.get(index)[column];
             }
             // Not sure whether to look for '\r' or '\n'. Try both
-            int nl = text.indexOf('\r');
+            var nl = text.indexOf('\r');
             if (nl < 0) {
                 nl = text.indexOf('\n');
             }

@@ -37,7 +37,7 @@ public class VColumn {
         if (column == null || table == null) {
             return null;
         }
-        for (int index = 0; index < table.getColumnCount(); index++) {
+        for (var index = 0; index < table.getColumnCount(); index++) {
             if (column.equals(table.getColumnName(index))) {
                 return new VColumn(table.getColumnName(index), table.getColumnType(index), table.getColumnData(index));
             }
@@ -47,7 +47,7 @@ public class VColumn {
 
     public static Map<String, VColumn> columnMap(VTable table) {
         Map<String, VColumn> columns = new HashMap<>();
-        for (int index = 0; index < table.getColumnCount(); index++) {
+        for (var index = 0; index < table.getColumnCount(); index++) {
             columns.put(table.getColumnName(index), from(table, index));
         }
         return columns;
@@ -62,23 +62,23 @@ public class VColumn {
         throw new UnsupportedOperationException("Type " + type + " not supported for column combineData");
     }
 
-    private static Object combineStringData(final int size, final ListInt offsets, final List<VColumn> columns) {
+    private static Object combineStringData(int size, ListInt offsets, List<VColumn> columns) {
         return new AbstractList<String>() {
 
             @Override
             public String get(int index) {
-                int tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
+                var tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
                 if (columns.get(tableIndex) == null) {
                     return null;
                 }
 
-                int rowIndex = index - offsets.getInt(tableIndex);
+                var rowIndex = index - offsets.getInt(tableIndex);
                 // TODO: mismatched type should be handled better
                 if (columns.get(tableIndex).getType() != String.class) {
                     return null;
                 }
                 @SuppressWarnings("unchecked")
-                List<String> values = (List<String>) columns.get(tableIndex).getData();
+                var values = (List<String>) columns.get(tableIndex).getData();
                 if (rowIndex < values.size()) {
                     return values.get(rowIndex);
                 } else {
@@ -93,23 +93,23 @@ public class VColumn {
         };
     }
 
-    private static Object combineDoubleData(final int size, final ListInt offsets, final List<VColumn> columns) {
+    private static Object combineDoubleData(int size, ListInt offsets, List<VColumn> columns) {
         return new ListDouble() {
 
             @Override
             public double getDouble(int index) {
-                int tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
+                var tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
                 if (columns.get(tableIndex) == null) {
                     return Double.NaN;
                 }
 
-                int rowIndex = index - offsets.getInt(tableIndex);
+                var rowIndex = index - offsets.getInt(tableIndex);
                 // TODO: mismatched type should be handled better
                 if (!ListNumber.class.isInstance(columns.get(tableIndex).getData())) {
                     return Double.NaN;
                 }
                 @SuppressWarnings("unchecked")
-                ListNumber values = (ListNumber) columns.get(tableIndex).getData();
+                var values = (ListNumber) columns.get(tableIndex).getData();
                 if (rowIndex < values.size()) {
                     return values.getDouble(rowIndex);
                 } else {

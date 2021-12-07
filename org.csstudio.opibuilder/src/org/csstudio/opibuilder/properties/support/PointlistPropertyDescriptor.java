@@ -32,13 +32,13 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
      * @param category
      *            the category
      */
-    public PointlistPropertyDescriptor(final Object id, final String displayName) {
+    public PointlistPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
         setLabelProvider(new PointlistLabelProvider());
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new PointListCellEditor(parent);
         if (getValidator() != null) {
             editor.setValidator(getValidator());
@@ -51,13 +51,13 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
      */
     private final static class PointlistLabelProvider extends LabelProvider {
         @Override
-        public String getText(final Object element) {
+        public String getText(Object element) {
             if (element instanceof PointList) {
-                PointList list = (PointList) element;
-                StringBuffer buffer = new StringBuffer();
+                var list = (PointList) element;
+                var buffer = new StringBuffer();
                 if (list.size() > 0) {
                     this.addPointText(buffer, list.getPoint(0));
-                    for (int i = 1; i < list.size(); i++) {
+                    for (var i = 1; i < list.size(); i++) {
                         buffer.append("; ");
                         this.addPointText(buffer, list.getPoint(i));
                     }
@@ -76,7 +76,7 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
          * @param point
          *            The Point
          */
-        private void addPointText(final StringBuffer buffer, final Point point) {
+        private void addPointText(StringBuffer buffer, Point point) {
             buffer.append("(");
             buffer.append(point.x);
             buffer.append(",");

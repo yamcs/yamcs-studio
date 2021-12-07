@@ -20,12 +20,12 @@ public abstract class RowEditDialog extends Dialog {
     protected String[] rowData;
 
     /** Initialize Dialog */
-    protected RowEditDialog(final Shell parentShell) {
+    protected RowEditDialog(Shell parentShell) {
         super(parentShell);
     }
 
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Edit Row Data");
     }
@@ -41,7 +41,7 @@ public abstract class RowEditDialog extends Dialog {
      * @param rowData
      *            the rowData to set
      */
-    public void setRowData(final String[] rowData) {
+    public void setRowData(String[] rowData) {
         this.rowData = rowData;
     }
 

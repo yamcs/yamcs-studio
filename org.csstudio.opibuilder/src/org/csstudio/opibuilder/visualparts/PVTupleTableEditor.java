@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.visualparts;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -44,9 +43,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * A table editor which can edit string boolean pair.
@@ -67,7 +64,7 @@ public class PVTupleTableEditor extends Composite {
     public PVTupleTableEditor(Composite parent, List<PVTuple> pvTupleList, int style) {
         super(parent, style);
         this.pvTupleList = pvTupleList;
-        GridLayout gridLayout = new GridLayout(1, false);
+        var gridLayout = new GridLayout(1, false);
         gridLayout.marginLeft = 0;
         gridLayout.marginRight = 0;
         gridLayout.marginBottom = 0;
@@ -76,12 +73,12 @@ public class PVTupleTableEditor extends Composite {
         gridLayout.marginWidth = 0;
         setLayout(gridLayout);
 
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         setLayoutData(gd);
 
-        ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolbarManager.createControl(this);
-        GridData grid = new GridData();
+        var toolbarManager = new ToolBarManager(SWT.FLAT);
+        var toolBar = toolbarManager.createControl(this);
+        var grid = new GridData();
         grid.horizontalAlignment = GridData.FILL;
         grid.verticalAlignment = GridData.BEGINNING;
         toolBar.setLayoutData(grid);
@@ -94,19 +91,19 @@ public class PVTupleTableEditor extends Composite {
 
         toolbarManager.update(true);
 
-        Composite tableWrapper = new Composite(this, SWT.NONE);
+        var tableWrapper = new Composite(this, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
+        var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         pvTupleListTableViewer = createPVTupleListTableViewer(tableWrapper, tcl);
         pvTupleListTableViewer.setInput(pvTupleList);
 
         // Context menu
-        MenuManager menuManager = new MenuManager();
+        var menuManager = new MenuManager();
         menuManager.add(removeAction);
         menuManager.add(checkTriggerAction);
         menuManager.add(uncheckTriggerAction);
-        Menu contextMenu = menuManager.createContextMenu(pvTupleListTableViewer.getTable());
+        var contextMenu = menuManager.createContextMenu(pvTupleListTableViewer.getTable());
         pvTupleListTableViewer.getTable().setMenu(contextMenu);
     }
 
@@ -130,22 +127,21 @@ public class PVTupleTableEditor extends Composite {
      * @return The {@link TableViewer}
      */
     private TableViewer createPVTupleListTableViewer(Composite parent, TableColumnLayout tcl) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER
-                | SWT.FULL_SELECTION | SWT.MULTI);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
 
-        TableViewerColumn numColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var numColumn = new TableViewerColumn(viewer, SWT.NONE);
         numColumn.getColumn().setText("#");
         tcl.setColumnData(numColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn pvColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var pvColumn = new TableViewerColumn(viewer, SWT.NONE);
         pvColumn.getColumn().setText("PV Name");
         tcl.setColumnData(pvColumn.getColumn(), new ColumnWeightData(50));
         pvColumn.setEditingSupport(new PVColumnEditingSupport(viewer, viewer.getTable()));
 
-        TableViewerColumn trigColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var trigColumn = new TableViewerColumn(viewer, SWT.NONE);
         trigColumn.getColumn().setText("Trigger");
         tcl.setColumnData(trigColumn.getColumn(), new ColumnPixelData(50));
         trigColumn.setEditingSupport(new TriggerColumnEditingSupport(viewer, viewer.getTable()));
@@ -156,7 +152,7 @@ public class PVTupleTableEditor extends Composite {
         viewer.addSelectionChangedListener(event -> refreshToolbarOnSelection());
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        DropTarget target = new DropTarget(viewer.getControl(), DND.DROP_MOVE | DND.DROP_COPY);
+        var target = new DropTarget(viewer.getControl(), DND.DROP_MOVE | DND.DROP_COPY);
         target.setTransfer(new Transfer[] { TextTransfer.getInstance() });
         target.addDropListener(new DropTargetListener() {
             @Override
@@ -181,10 +177,10 @@ public class PVTupleTableEditor extends Composite {
                     return;
                 }
 
-                String txt = (String) event.data;
-                String[] names = txt.split("[\r\n]+");
-                PVTuple[] tuples = new PVTuple[names.length];
-                int i = 0;
+                var txt = (String) event.data;
+                var names = txt.split("[\r\n]+");
+                var tuples = new PVTuple[names.length];
+                var i = 0;
                 for (String name : names) {
                     tuples[i] = new PVTuple(name, true);
                     pvTupleList.add(tuples[i]);
@@ -207,10 +203,9 @@ public class PVTupleTableEditor extends Composite {
      */
     private void refreshToolbarOnSelection() {
 
-        IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                .getSelection();
+        var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
 
-        int num_tuple = 0;
+        var num_tuple = 0;
         for (Object obj : selection.toArray()) {
             if (obj instanceof PVTuple) {
                 num_tuple++;
@@ -253,32 +248,27 @@ public class PVTupleTableEditor extends Composite {
         }
     }
 
-    /**
-     * Creates the actions.
-     */
     private void createActions() {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                PVTuple tuple = new PVTuple("", true);
+                var tuple = new PVTuple("", true);
                 pvTupleList.add(tuple);
                 refreshTableViewerFromAction(new PVTuple[] { tuple });
             }
         };
         addAction.setToolTipText("Add a PV");
-        addAction.setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
+        addAction.setImageDescriptor(CustomMediaFactory.getInstance()
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         removeAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                        .getSelection();
+                var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    @SuppressWarnings("rawtypes")
-                    Iterator iter = selection.iterator();
+                    var iter = selection.iterator();
                     while (iter.hasNext()) {
-                        Object item = iter.next();
+                        var item = iter.next();
                         if (item instanceof PVTuple) {
                             pvTupleList.remove(item);
                         }
@@ -298,11 +288,10 @@ public class PVTupleTableEditor extends Composite {
         moveUpAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                        .getSelection();
+                var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof PVTuple) {
-                    PVTuple tuple = (PVTuple) selection.getFirstElement();
-                    int i = pvTupleList.indexOf(tuple);
+                    var tuple = (PVTuple) selection.getFirstElement();
+                    var i = pvTupleList.indexOf(tuple);
                     if (i > 0) {
                         pvTupleList.remove(tuple);
                         pvTupleList.add(i - 1, tuple);
@@ -320,11 +309,10 @@ public class PVTupleTableEditor extends Composite {
         moveDownAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                        .getSelection();
+                var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof PVTuple) {
-                    PVTuple tuple = (PVTuple) selection.getFirstElement();
-                    int i = pvTupleList.indexOf(tuple);
+                    var tuple = (PVTuple) selection.getFirstElement();
+                    var i = pvTupleList.indexOf(tuple);
                     if (i < pvTupleList.size() - 1) {
                         pvTupleList.remove(tuple);
                         pvTupleList.add(i + 1, tuple);
@@ -342,16 +330,14 @@ public class PVTupleTableEditor extends Composite {
         checkTriggerAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                        .getSelection();
+                var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    @SuppressWarnings("rawtypes")
-                    Iterator iter = selection.iterator();
-                    ArrayList<PVTuple> tuples = new ArrayList<>();
+                    var iter = selection.iterator();
+                    var tuples = new ArrayList<PVTuple>();
                     while (iter.hasNext()) {
-                        Object item = iter.next();
+                        var item = iter.next();
                         if (item instanceof PVTuple) {
-                            PVTuple tuple = (PVTuple) item;
+                            var tuple = (PVTuple) item;
                             tuple.trigger = true;
                             tuples.add(tuple);
                         }
@@ -368,16 +354,14 @@ public class PVTupleTableEditor extends Composite {
         uncheckTriggerAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) pvTupleListTableViewer
-                        .getSelection();
+                var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    @SuppressWarnings("rawtypes")
-                    Iterator iter = selection.iterator();
-                    ArrayList<PVTuple> tuples = new ArrayList<>();
+                    var iter = selection.iterator();
+                    var tuples = new ArrayList<PVTuple>();
                     while (iter.hasNext()) {
-                        Object item = iter.next();
+                        var item = iter.next();
                         if (item instanceof PVTuple) {
-                            PVTuple tuple = (PVTuple) item;
+                            var tuple = (PVTuple) item;
                             tuple.trigger = false;
                             tuples.add(tuple);
                         }
@@ -392,8 +376,7 @@ public class PVTupleTableEditor extends Composite {
         uncheckTriggerAction.setEnabled(false);
     }
 
-    private final static class PVTupleLabelProvider extends LabelProvider implements
-            ITableLabelProvider {
+    private final static class PVTupleLabelProvider extends LabelProvider implements ITableLabelProvider {
 
         private List<PVTuple> pvTupleList;
 
@@ -405,11 +388,11 @@ public class PVTupleTableEditor extends Composite {
         public Image getColumnImage(Object element, int columnIndex) {
             if (columnIndex == 2 && element instanceof PVTuple) {
                 if (((PVTuple) element).trigger) {
-                    return CustomMediaFactory.getInstance().getImageFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, "icons/checked.gif");
+                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            "icons/checked.gif");
                 } else {
-                    return CustomMediaFactory.getInstance().getImageFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, "icons/unchecked.gif");
+                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            "icons/unchecked.gif");
                 }
             } else {
                 return null;
@@ -447,7 +430,7 @@ public class PVTupleTableEditor extends Composite {
         }
 
         @Override
-        protected CellEditor getCellEditor(final Object element) {
+        protected CellEditor getCellEditor(Object element) {
             return new PVNameTextCellEditor(table);
         }
 
@@ -462,7 +445,7 @@ public class PVTupleTableEditor extends Composite {
         @Override
         protected void setValue(Object element, Object value) {
             if (element instanceof PVTuple) {
-                String s = value == null ? "" : value.toString();
+                var s = value == null ? "" : value.toString();
                 ((PVTuple) element).pvName = s;
                 getViewer().refresh();
             }

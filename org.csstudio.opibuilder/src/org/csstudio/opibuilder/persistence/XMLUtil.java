@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,15 +37,12 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacroUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.osgi.framework.Version;
@@ -84,7 +80,7 @@ public class XMLUtil {
      */
     public static Element widgetToXMLElement(AbstractWidgetModel widgetModel) {
 
-        Element result = new Element((widgetModel instanceof DisplayModel) ? XMLTAG_DISPLAY
+        var result = new Element((widgetModel instanceof DisplayModel) ? XMLTAG_DISPLAY
                 : (widgetModel instanceof ConnectionModel) ? XMLTAG_CONNECTION : XMLTAG_WIDGET);
         result.setAttribute(XMLATTR_TYPEID, widgetModel.getTypeID());
         result.setAttribute(XMLATTR_VERSION, widgetModel.getVersion().toString());
@@ -92,25 +88,24 @@ public class XMLUtil {
         Collections.sort(propIds);
         for (String propId : propIds) {
             if (widgetModel.getProperty(propId).isSavable()) {
-                Element propElement = new Element(propId);
+                var propElement = new Element(propId);
                 widgetModel.getProperty(propId).writeToXML(propElement);
                 result.addContent(propElement);
             }
         }
 
         if (widgetModel instanceof AbstractContainerModel && !(widgetModel instanceof AbstractLinkingContainerModel)) {
-            AbstractContainerModel containerModel = (AbstractContainerModel) widgetModel;
+            var containerModel = (AbstractContainerModel) widgetModel;
             for (AbstractWidgetModel child : containerModel.getChildren()) {
                 result.addContent(widgetToXMLElement(child));
             }
         }
 
         // convert connections on this displayModel to xml element
-        if (widgetModel instanceof DisplayModel &&
-                ((DisplayModel) widgetModel).getConnectionList() != null) {
+        if (widgetModel instanceof DisplayModel && ((DisplayModel) widgetModel).getConnectionList() != null) {
             for (ConnectionModel connectionModel : ((DisplayModel) widgetModel).getConnectionList()) {
                 if (!connectionModel.isLoadedFromLinkedOpi()) {
-                    Element connElement = widgetToXMLElement(connectionModel);
+                    var connElement = widgetToXMLElement(connectionModel);
                     result.addContent(connElement);
                 }
             }
@@ -126,13 +121,13 @@ public class XMLUtil {
      * @return the XMLOutputter
      */
     private static XMLOutputter getXMLOutputter(boolean prettyFormat) {
-        Format format = Format.getRawFormat();
+        var format = Format.getRawFormat();
         if (prettyFormat) {
             format.setIndent("  ");
         }
         // Always use Unix-style line endings.
         format.setLineSeparator("\n");
-        XMLOutputter xmlOutputter = new XMLOutputter();
+        var xmlOutputter = new XMLOutputter();
         xmlOutputter.setFormat(format);
         return xmlOutputter;
     }
@@ -147,7 +142,7 @@ public class XMLUtil {
      * @return the XML String
      */
     public static String widgetToXMLString(AbstractWidgetModel widgetModel, boolean prettyFormat) {
-        XMLOutputter xmlOutputter = getXMLOutputter(prettyFormat);
+        var xmlOutputter = getXMLOutputter(prettyFormat);
         return xmlOutputter.outputString(widgetToXMLElement(widgetModel));
     }
 
@@ -164,7 +159,7 @@ public class XMLUtil {
      */
     public static void widgetToOutputStream(AbstractWidgetModel widgetModel, OutputStream out, boolean prettyFormat)
             throws IOException {
-        XMLOutputter xmlOutputter = getXMLOutputter(prettyFormat);
+        var xmlOutputter = getXMLOutputter(prettyFormat);
         out.write(XML_HEADER.getBytes("UTF-8"));
         xmlOutputter.output(widgetToXMLElement(widgetModel), out);
     }
@@ -203,8 +198,8 @@ public class XMLUtil {
      *            the display in UI Thread.
      * @throws Exception
      */
-    public static void fillDisplayModelFromInputStream(
-            final InputStream inputStream, final DisplayModel displayModel, Display display) throws Exception {
+    public static void fillDisplayModelFromInputStream(InputStream inputStream, DisplayModel displayModel,
+            Display display) throws Exception {
         fillDisplayModelFromInputStreamSub(inputStream, displayModel, display, new ArrayList<IPath>(), null);
     }
 
@@ -219,36 +214,31 @@ public class XMLUtil {
      *            the display in UI Thread.
      * @throws Exception
      */
-    public static void fillDisplayModelFromInputStream(
-            final InputStream inputStream, final DisplayModel displayModel, Display display,
-            final MacrosInput macrosInput_) throws Exception {
+    public static void fillDisplayModelFromInputStream(InputStream inputStream, DisplayModel displayModel,
+            Display display, MacrosInput macrosInput_) throws Exception {
         fillDisplayModelFromInputStreamSub(inputStream, displayModel, display, new ArrayList<IPath>(), macrosInput_);
     }
 
-    private static void fillDisplayModelFromInputStreamSub(
-            final InputStream inputStream, final DisplayModel displayModel, Display display, List<IPath> trace,
-            final MacrosInput macrosInput_) throws Exception {
+    private static void fillDisplayModelFromInputStreamSub(InputStream inputStream, DisplayModel displayModel,
+            Display display, List<IPath> trace, MacrosInput macrosInput_) throws Exception {
 
         if (display == null) {
             display = Display.getCurrent();
         }
-        IPath opiPath = displayModel.getOpiFilePath();
+        var opiPath = displayModel.getOpiFilePath();
 
-        Element root = inputStreamToXML(inputStream);
+        var root = inputStreamToXML(inputStream);
         if (root != null) {
             XMLElementToWidgetSub(root, displayModel, trace, macrosInput_);
 
             // check version
             if (false && compareVersion(displayModel.getBOYVersion(),
                     OPIBuilderPlugin.getDefault().getBundle().getVersion()) > 0) {
-                final String message = displayModel.getOpiFilePath() == null ? "This OPI"
-                        : displayModel.getOpiFilePath().lastSegment()
-                                + " was created in a newer version of BOY ("
-                                + displayModel.getBOYVersion().toString()
-                                + "). It may not function properly! "
-                                + "Please update your BOY"
-                                + " (" + OPIBuilderPlugin.getDefault().getBundle().getVersion() +
-                                ") to the latest version.";
+                var message = displayModel.getOpiFilePath() == null ? "This OPI"
+                        : displayModel.getOpiFilePath().lastSegment() + " was created in a newer version of BOY ("
+                                + displayModel.getBOYVersion().toString() + "). It may not function properly! "
+                                + "Please update your BOY" + " ("
+                                + OPIBuilderPlugin.getDefault().getBundle().getVersion() + ") to the latest version.";
                 if (display == null) {
                     display = Display.getDefault();
                 }
@@ -269,8 +259,8 @@ public class XMLUtil {
      * @param displayModel
      * @throws Exception
      */
-    public static void fillDisplayModelFromInputStream(
-            final InputStream inputStream, final DisplayModel displayModel) throws Exception {
+    public static void fillDisplayModelFromInputStream(InputStream inputStream, DisplayModel displayModel)
+            throws Exception {
         fillDisplayModelFromInputStream(inputStream, displayModel, null);
     }
 
@@ -290,8 +280,7 @@ public class XMLUtil {
     }
 
     private static AbstractWidgetModel XMLElementToWidgetSub(Element element, DisplayModel displayModel,
-            List<IPath> trace,
-            final MacrosInput macrosInput_) throws Exception {
+            List<IPath> trace, MacrosInput macrosInput_) throws Exception {
         if (element == null) {
             return null;
         }
@@ -308,7 +297,7 @@ public class XMLUtil {
 
             return result;
         } else {
-            String errorMessage = "Unknown Tag: " + element.getName();
+            var errorMessage = "Unknown Tag: " + element.getName();
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, errorMessage);
             return null;
         }
@@ -353,20 +342,20 @@ public class XMLUtil {
                 rootWidgetModel = new DisplayModel(null);
             }
         } else if (element.getName().equals(XMLTAG_WIDGET)) {
-            String typeId = element.getAttributeValue(XMLATTR_TYPEID);
-            WidgetDescriptor desc = WidgetsService.getInstance().getWidgetDescriptor(typeId);
+            var typeId = element.getAttributeValue(XMLATTR_TYPEID);
+            var desc = WidgetsService.getInstance().getWidgetDescriptor(typeId);
             if (desc != null) {
                 rootWidgetModel = desc.getWidgetModel();
             }
             if (rootWidgetModel == null) {
-                String errorMessage = NLS.bind("Unknown widget: {0}", typeId);
+                var errorMessage = NLS.bind("Unknown widget: {0}", typeId);
                 ErrorHandlerUtil.handleError(errorMessage, new Exception("Widget does not exist."));
                 return null;
             }
         } else if (element.getName().equals(XMLTAG_CONNECTION)) {
             rootWidgetModel = new ConnectionModel(displayModel);
         } else {
-            String errorMessage = "Unknown Tag: " + element.getName();
+            var errorMessage = "Unknown Tag: " + element.getName();
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, errorMessage);
             return null;
         }
@@ -374,11 +363,11 @@ public class XMLUtil {
         setPropertiesFromXML(element, rootWidgetModel);
 
         if (rootWidgetModel instanceof AbstractContainerModel) {
-            AbstractContainerModel container = (AbstractContainerModel) rootWidgetModel;
-            List children = element.getChildren();
-            Iterator iterator = children.iterator();
+            var container = (AbstractContainerModel) rootWidgetModel;
+            var children = element.getChildren();
+            var iterator = children.iterator();
             while (iterator.hasNext()) {
-                Element subElement = (Element) iterator.next();
+                var subElement = (Element) iterator.next();
                 if (subElement.getName().equals(XMLTAG_WIDGET)) {
                     container.addChild(fillWidgets(subElement, displayModel));
                 }
@@ -404,9 +393,9 @@ public class XMLUtil {
     }
 
     private static void fillLinkingContainersSub(AbstractContainerModel container, List<IPath> trace,
-            final MacrosInput macrosInput_) throws Exception {
+            MacrosInput macrosInput_) throws Exception {
         if (container instanceof AbstractLinkingContainerModel) {
-            AbstractLinkingContainerModel linkingContainer = (AbstractLinkingContainerModel) container;
+            var linkingContainer = (AbstractLinkingContainerModel) container;
             List<IPath> tempTrace = new ArrayList<>();
             tempTrace.addAll(trace);
             fillLinkingContainerSub(linkingContainer, tempTrace, macrosInput_);
@@ -414,7 +403,7 @@ public class XMLUtil {
 
         for (AbstractWidgetModel w : container.getAllDescendants()) {
             if (w instanceof AbstractLinkingContainerModel) {
-                AbstractLinkingContainerModel linkingContainer = (AbstractLinkingContainerModel) w;
+                var linkingContainer = (AbstractLinkingContainerModel) w;
                 List<IPath> tempTrace = new ArrayList<>();
                 tempTrace.addAll(trace);
                 fillLinkingContainerSub(linkingContainer, tempTrace, macrosInput_);
@@ -425,13 +414,13 @@ public class XMLUtil {
     @SuppressWarnings("rawtypes")
     private static void fillConnections(Element element, DisplayModel displayModel) throws Exception {
         if (element.getName().equals(XMLTAG_CONNECTION)) {
-            ConnectionModel result = new ConnectionModel(displayModel);
+            var result = new ConnectionModel(displayModel);
             setPropertiesFromXML(element, result);
         } else if (element.getName().equals(XMLTAG_DISPLAY)) {
-            List children = element.getChildren();
-            Iterator iterator = children.iterator();
+            var children = element.getChildren();
+            var iterator = children.iterator();
             while (iterator.hasNext()) {
-                Element subElement = (Element) iterator.next();
+                var subElement = (Element) iterator.next();
                 if (subElement.getName().equals(XMLTAG_CONNECTION)) {
                     fillConnections(subElement, displayModel);
                 }
@@ -445,27 +434,26 @@ public class XMLUtil {
             return;
         }
 
-        String versionOnFile = element.getAttributeValue(XMLATTR_VERSION);
+        var versionOnFile = element.getAttributeValue(XMLATTR_VERSION);
         model.setVersionOnFile(Version.parseVersion(versionOnFile));
 
         if (element instanceof LineAwareElement) {
             model.setLineNumber(((LineAwareElement) element).getLineNumber());
         }
 
-        List children = element.getChildren();
-        Iterator iterator = children.iterator();
-        Set<String> propIdSet = model.getAllPropertyIDs();
+        var children = element.getChildren();
+        var iterator = children.iterator();
+        var propIdSet = model.getAllPropertyIDs();
         while (iterator.hasNext()) {
-            Element subElement = (Element) iterator.next();
+            var subElement = (Element) iterator.next();
             // handle property
             if (propIdSet.contains(subElement.getName())) {
-                String propId = subElement.getName();
+                var propId = subElement.getName();
                 try {
-                    model.setPropertyValue(propId,
-                            model.getProperty(propId).readValueFromXML(subElement));
+                    model.setPropertyValue(propId, model.getProperty(propId).readValueFromXML(subElement));
                 } catch (Exception e) {
-                    String errorMessage = "Failed to read the " + propId + " property for " + model.getName() + ". " +
-                            "The default property value will be set instead. \n" + e;
+                    var errorMessage = "Failed to read the " + propId + " property for " + model.getName() + ". "
+                            + "The default property value will be set instead. \n" + e;
                     // MessageDialog.openError(null, "OPI File format error", errorMessage + "\n" + e.getMessage());
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                 }
@@ -480,15 +468,14 @@ public class XMLUtil {
      *            LinkingContainer to be filled.
      * @throws Exception
      */
-    public static void fillLinkingContainer(final AbstractLinkingContainerModel container)
-            throws Exception {
+    public static void fillLinkingContainer(AbstractLinkingContainerModel container) throws Exception {
         fillLinkingContainerSub(container, new ArrayList<IPath>(), null);
     }
 
     private static Map<String, String> buildMacroMap(AbstractContainerModel model) {
         Map<String, String> macros = new HashMap<>();
         if (model != null) {
-            MacrosInput input = model.getMacrosInput();
+            var input = model.getMacrosInput();
             if (input.isInclude_parent_macros()) {
                 macros.putAll(buildMacroMap(model.getParent()));
             }
@@ -497,16 +484,14 @@ public class XMLUtil {
         return macros;
     }
 
-    private static void fillLinkingContainerSub(final AbstractLinkingContainerModel container, List<IPath> trace,
-            final MacrosInput macrosInput_)
-            throws Exception {
+    private static void fillLinkingContainerSub(AbstractLinkingContainerModel container, List<IPath> trace,
+            MacrosInput macrosInput_) throws Exception {
 
         if (container == null) {
             return;
         }
 
-        if (container.getRootDisplayModel() != null &&
-                container.getRootDisplayModel().getOpiFilePath() != null) {
+        if (container.getRootDisplayModel() != null && container.getRootDisplayModel().getOpiFilePath() != null) {
             if (trace.contains(container.getRootDisplayModel().getOpiFilePath())) {
                 container.setOPIFilePath("");
                 throw new Exception("Opi link contains some loops.\n" + trace.toString());
@@ -514,17 +499,17 @@ public class XMLUtil {
                 trace.add(container.getRootDisplayModel().getOpiFilePath());
             }
 
-            IPath path = container.getOPIFilePath();
+            var path = container.getOPIFilePath();
             if (path != null && !path.isEmpty()) {
-                final Map<String, String> macroMap = PreferencesHelper.getMacros();
+                Map<String, String> macroMap = PreferencesHelper.getMacros();
                 if (macrosInput_ != null && macrosInput_.getMacrosMap() != null) {
                     macroMap.putAll(macrosInput_.getMacrosMap());
                 }
                 macroMap.putAll(buildMacroMap(container));
-                String resolvedPath = MacroUtil.replaceMacros(path.toString(), s -> macroMap.get(s));
+                var resolvedPath = MacroUtil.replaceMacros(path.toString(), s -> macroMap.get(s));
                 path = ResourceUtil.getPathFromString(resolvedPath);
 
-                final DisplayModel inside = new DisplayModel(path);
+                var inside = new DisplayModel(path);
                 inside.setDisplayID(container.getRootDisplayModel(false).getDisplayID());
                 inside.setParentDisplayModel(container.getRootDisplayModel());
 
@@ -546,7 +531,7 @@ public class XMLUtil {
                 AbstractContainerModel loadTarget = inside;
 
                 if (!container.getGroupName().trim().equals("")) {
-                    AbstractWidgetModel group = inside.getChildByName(container.getGroupName());
+                    var group = inside.getChildByName(container.getGroupName());
                     if (group != null && group instanceof AbstractContainerModel) {
                         loadTarget = (AbstractContainerModel) group;
                     }
@@ -571,7 +556,7 @@ public class XMLUtil {
             return 0;
         }
 
-        int result = v1.getMajor() - v2.getMajor();
+        var result = v1.getMajor() - v2.getMajor();
         if (result != 0) {
             return result;
         }
@@ -599,15 +584,14 @@ public class XMLUtil {
      * @return String wuid
      * @throws IOException
      */
-    public static String findClosestWidgetUid(InputStream in, int offset)
-            throws IOException {
+    public static String findClosestWidgetUid(InputStream in, int offset) throws IOException {
         if (in == null) {
             return null;
         }
-        StringBuffer out = new StringBuffer();
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        char[] buf = new char[1024];
-        for (int len = br.read(buf); len > 0; len = br.read(buf)) {
+        var out = new StringBuffer();
+        var br = new BufferedReader(new InputStreamReader(in));
+        var buf = new char[1024];
+        for (var len = br.read(buf); len > 0; len = br.read(buf)) {
             out.append(buf, 0, len);
         }
         br.close();
@@ -616,16 +600,15 @@ public class XMLUtil {
             // No widget will be found
             return null;
         }
-        int widgetElementStart = offset;
-        while (widgetElementStart >= 0
-                && !matchXMLTag(out, widgetElementStart, XMLUtil.XMLTAG_WIDGET)) {
+        var widgetElementStart = offset;
+        while (widgetElementStart >= 0 && !matchXMLTag(out, widgetElementStart, XMLUtil.XMLTAG_WIDGET)) {
             widgetElementStart--;
         }
         if (widgetElementStart > 0) {
             // corresponding widget element found
-            int wuidAttrStart = widgetElementStart + 1;
+            var wuidAttrStart = widgetElementStart + 1;
             // looking for <wuid> before a <widget> or </widget
-            String xmlEndTagWidget = "/" + XMLUtil.XMLTAG_WIDGET;
+            var xmlEndTagWidget = "/" + XMLUtil.XMLTAG_WIDGET;
             while (!matchXMLTag(out, wuidAttrStart, XMLUtil.XMLTAG_WIDGET_UID)
                     && !matchXMLTag(out, wuidAttrStart, XMLUtil.XMLTAG_WIDGET)
                     && !matchXMLTag(out, wuidAttrStart, xmlEndTagWidget)) {
@@ -637,8 +620,7 @@ public class XMLUtil {
                 if (wuidAttrStart >= 0) {
                     wuidAttrStart++;
                     if (wuidAttrStart < out.length()) {
-                        int wuidAttrEnd = out.indexOf("</" + XMLTAG_WIDGET_UID,
-                                wuidAttrStart);
+                        var wuidAttrEnd = out.indexOf("</" + XMLTAG_WIDGET_UID, wuidAttrStart);
                         if (wuidAttrEnd >= 0) {
                             return out.substring(wuidAttrStart, wuidAttrEnd);
                         }
@@ -660,17 +642,16 @@ public class XMLUtil {
      *            String The XML tag name to check without '&lt;' and '&gt;'
      * @return
      */
-    private static boolean matchXMLTag(StringBuffer sb, int offset,
-            String xmlTag) {
+    private static boolean matchXMLTag(StringBuffer sb, int offset, String xmlTag) {
         if (offset >= sb.length()) {
             return false;
         }
         if (sb.charAt(offset) != '<') {
             return false;
         }
-        int indexOfSpace = sb.indexOf(" ", offset);
-        int indexOfGt = sb.indexOf(">", offset);
-        int indexOfEndTag = Integer.MAX_VALUE;
+        var indexOfSpace = sb.indexOf(" ", offset);
+        var indexOfGt = sb.indexOf(">", offset);
+        var indexOfEndTag = Integer.MAX_VALUE;
         if (indexOfSpace >= 0) {
             indexOfEndTag = indexOfSpace;
         }
@@ -680,14 +661,14 @@ public class XMLUtil {
         if (indexOfEndTag == Integer.MAX_VALUE) {
             return false;
         }
-        String potentialTag = sb.substring(offset + 1, indexOfEndTag);
+        var potentialTag = sb.substring(offset + 1, indexOfEndTag);
         return potentialTag.equals(xmlTag);
     }
 
     private static Element inputStreamToXML(InputStream stream) throws JDOMException, IOException {
-        SAXBuilder saxBuilder = LineAwareXMLParser.createBuilder();
-        Document doc = saxBuilder.build(stream);
-        Element root = doc.getRootElement();
+        var saxBuilder = LineAwareXMLParser.createBuilder();
+        var doc = saxBuilder.build(stream);
+        var root = doc.getRootElement();
         return root;
     }
 

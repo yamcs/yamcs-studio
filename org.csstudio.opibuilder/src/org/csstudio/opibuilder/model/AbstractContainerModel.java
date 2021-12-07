@@ -22,8 +22,6 @@ import org.csstudio.opibuilder.properties.MacrosProperty;
 import org.csstudio.opibuilder.properties.UnsavableListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.MacrosInput;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gef.GraphicalViewer;
 
 /**
  * The model which could contain children.
@@ -51,11 +49,11 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     public AbstractContainerModel() {
         super();
-        childrenProperty = new UnsavableListProperty(
-                PROP_CHILDREN, "children", WidgetPropertyCategory.Behavior, childrenList);
+        childrenProperty = new UnsavableListProperty(PROP_CHILDREN, "children", WidgetPropertyCategory.Behavior,
+                childrenList);
 
-        selectionProperty = new UnsavableListProperty(
-                PROP_SELECTION, "selection", WidgetPropertyCategory.Behavior, null);
+        selectionProperty = new UnsavableListProperty(PROP_SELECTION, "selection", WidgetPropertyCategory.Behavior,
+                null);
     }
 
     /**
@@ -68,35 +66,41 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      */
     public synchronized void addChild(AbstractWidgetModel child, boolean changeParent) {
         if (child != null && !childrenList.contains(child)) {
-            int newIndex = -1;
+            var newIndex = -1;
             if (layoutWidget != null) {
                 newIndex = childrenList.size() - 1;
                 childrenList.add(newIndex, child);
-            } else
+            } else {
                 childrenList.add(child);
-            if (child instanceof AbstractLayoutModel)
+            }
+            if (child instanceof AbstractLayoutModel) {
                 layoutWidget = (AbstractLayoutModel) child;
-            if (changeParent)
+            }
+            if (changeParent) {
                 child.setParent(this);
+            }
             childrenProperty.firePropertyChange(newIndex, child);
         }
 
     }
 
     public synchronized void addChildren(List<AbstractWidgetModel> children, boolean changeParent) {
-        ArrayList<AbstractWidgetModel> oldList = new ArrayList<AbstractWidgetModel>(childrenList);
+        var oldList = new ArrayList<AbstractWidgetModel>(childrenList);
         for (AbstractWidgetModel child : children) {
             if (child != null && !childrenList.contains(child)) {
-                int newIndex = -1;
+                var newIndex = -1;
                 if (layoutWidget != null) {
                     newIndex = childrenList.size() - 1;
                     childrenList.add(newIndex, child);
-                } else
+                } else {
                     childrenList.add(child);
-                if (child instanceof AbstractLayoutModel)
+                }
+                if (child instanceof AbstractLayoutModel) {
                     layoutWidget = (AbstractLayoutModel) child;
-                if (changeParent)
+                }
+                if (changeParent) {
                     child.setParent(this);
+                }
             }
         }
         childrenProperty.firePropertyChange(oldList, children);
@@ -130,8 +134,9 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     public synchronized void removeChild(AbstractWidgetModel child) {
         if (child != null && childrenList.remove(child)) {
-            if (child instanceof AbstractLayoutModel)
+            if (child instanceof AbstractLayoutModel) {
                 layoutWidget = null;
+            }
             child.setParent(null);
             childrenProperty.firePropertyChange(child, null);
         }
@@ -146,8 +151,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     @Override
     protected void configureBaseProperties() {
         super.configureBaseProperties();
-        addProperty(new MacrosProperty(
-                PROP_MACROS, "Macros", WidgetPropertyCategory.Basic,
+        addProperty(new MacrosProperty(PROP_MACROS, "Macros", WidgetPropertyCategory.Basic,
                 new MacrosInput(new LinkedHashMap<String, String>(), true)));
     }
 
@@ -171,8 +175,9 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     public AbstractWidgetModel getChildByName(String name) {
         for (AbstractWidgetModel child : getChildren()) {
-            if (child.getName().equals(name))
+            if (child.getName().equals(name)) {
                 return child;
+            }
         }
         return null;
     }
@@ -181,7 +186,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      * @param widget
      * @return the index of the widget in the children list, which is also the order of the widget in the display.
      */
-    public final int getIndexOf(final AbstractWidgetModel widget) {
+    public final int getIndexOf(AbstractWidgetModel widget) {
         return childrenList.indexOf(widget);
     }
 
@@ -195,10 +200,11 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      * @param child
      * @param newIndex
      */
-    public final void changeChildOrder(final AbstractWidgetModel child, final int newIndex) {
+    public void changeChildOrder(AbstractWidgetModel child, int newIndex) {
         if (childrenList.contains(child) && newIndex >= 0 && newIndex < childrenList.size()) {
-            if (newIndex == childrenList.indexOf(child))
+            if (newIndex == childrenList.indexOf(child)) {
                 return;
+            }
             removeChild(child);
             addChild(newIndex, child);
             childrenProperty.firePropertyChange(null, childrenList);
@@ -223,7 +229,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      * @param macroMap
      *            Map of macro name/value entries
      */
-    public void setMacroMap(final LinkedHashMap<String, String> macroMap) {
+    public void setMacroMap(LinkedHashMap<String, String> macroMap) {
         this.macroMap = macroMap;
     }
 
@@ -252,10 +258,11 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      * @return the macros of its parent.
      */
     public LinkedHashMap<String, String> getParentMacroMap() {
-        if (getParent() != null)
+        if (getParent() != null) {
             return getParent().getMacroMap();
-        else
+        } else {
             return PreferencesHelper.getMacros();
+        }
     }
 
     /**
@@ -274,18 +281,19 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     }
 
     public void scaleChildren() {
-        Dimension size = getSize();
-        double newWidthRatio = size.width / (double) getOriginSize().width;
-        double newHeightRatio = size.height / (double) getOriginSize().height;
+        var size = getSize();
+        var newWidthRatio = size.width / (double) getOriginSize().width;
+        var newHeightRatio = size.height / (double) getOriginSize().height;
         for (AbstractWidgetModel child : getChildren()) {
             child.scale(newWidthRatio, newHeightRatio);
         }
     }
 
     public AbstractContainerEditpart getEditPart() {
-        GraphicalViewer viewer = getRootDisplayModel().getViewer();
-        if (viewer == null)
+        var viewer = getRootDisplayModel().getViewer();
+        if (viewer == null) {
             return null;
+        }
         return (AbstractContainerEditpart) viewer.getEditPartRegistry().get(this);
     }
 }

@@ -16,7 +16,6 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.IPVWidgetModel;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.properties.PVValueProperty;
 import org.csstudio.opibuilder.properties.StringProperty;
@@ -68,7 +67,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
 
         @Override
         public void valueChanged(IPV pv) {
-            final AbstractWidgetModel widgetModel = editpart.getWidgetModel();
+            var widgetModel = editpart.getWidgetModel();
 
             // write access
             // if(isControlPV)
@@ -76,13 +75,10 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
 
             if (pv.getValue() != null) {
                 if (ignoreOldPVValue) {
-                    widgetModel.getPVMap()
-                            .get(widgetModel.getProperty(pvPropID))
+                    widgetModel.getPVMap().get(widgetModel.getProperty(pvPropID))
                             .setPropertyValue_IgnoreOldValue(pv.getValue());
                 } else {
-                    widgetModel.getPVMap()
-                            .get(widgetModel.getProperty(pvPropID))
-                            .setPropertyValue(pv.getValue());
+                    widgetModel.getPVMap().get(widgetModel.getProperty(pvPropID)).setPropertyValue(pv.getValue());
                 }
             }
 
@@ -168,20 +164,19 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         saveFigureOKStatus(editpart.getFigure());
         if (editpart.getExecutionMode() == ExecutionMode.RUN_MODE) {
             pvMap.clear();
-            final Map<StringProperty, PVValueProperty> pvPropertyMap = editpart.getWidgetModel().getPVMap();
+            Map<StringProperty, PVValueProperty> pvPropertyMap = editpart.getWidgetModel().getPVMap();
 
-            for (final StringProperty sp : pvPropertyMap.keySet()) {
+            for (StringProperty sp : pvPropertyMap.keySet()) {
 
-                if (sp.getPropertyValue() == null ||
-                        ((String) sp.getPropertyValue()).trim().length() <= 0) {
+                if (sp.getPropertyValue() == null || ((String) sp.getPropertyValue()).trim().length() <= 0) {
                     continue;
                 }
 
                 try {
-                    IPV pv = BOYPVFactory.createPV((String) sp.getPropertyValue());
+                    var pv = BOYPVFactory.createPV((String) sp.getPropertyValue());
                     pvMap.put(sp.getPropertyID(), pv);
                     editpart.addToConnectionHandler((String) sp.getPropertyValue(), pv);
-                    WidgetPVListener pvListener = new WidgetPVListener(sp.getPropertyID());
+                    var pvListener = new WidgetPVListener(sp.getPropertyID());
                     pv.addListener(pvListener);
                     pvListenerMap.put(sp.getPropertyID(), pvListener);
                 } catch (Exception e) {
@@ -199,12 +194,11 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         pvsHaveBeenStarted = true;
         // the pv should be started at the last minute
         for (String pvPropId : pvMap.keySet()) {
-            IPV pv = pvMap.get(pvPropId);
+            var pv = pvMap.get(pvPropId);
             try {
                 pv.start();
             } catch (Exception e) {
-                OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                        "Unable to connect to PV:" + pv.getName(), e);
+                OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unable to connect to PV:" + pv.getName(), e);
             }
         }
     }
@@ -266,7 +260,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
      */
     @Override
     public VType getPVValue(String pvPropId) {
-        final IPV pv = pvMap.get(pvPropId);
+        var pv = pvMap.get(pvPropId);
         if (pv != null) {
             return pv.getValue();
         }
@@ -296,8 +290,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         isForeColorAlarmSensitive = getWidgetModel().isForeColorAlarmSensitve();
         isAlarmPulsing = getWidgetModel().isAlarmPulsing();
 
-        if (isBorderAlarmSensitive
-                && editpart.getWidgetModel().getBorderStyle() == BorderStyle.NONE) {
+        if (isBorderAlarmSensitive && editpart.getWidgetModel().getBorderStyle() == BorderStyle.NONE) {
             editpart.setFigureBorder(BORDER_NO_ALARM);
         }
     }
@@ -311,7 +304,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         }
         if (timerTask == null) {
             timerTask = () -> {
-                AbstractWidgetProperty pvValueProperty = editpart.getWidgetModel().getProperty(controlPVValuePropId);
+                var pvValueProperty = editpart.getWidgetModel().getProperty(controlPVValuePropId);
                 // recover update
                 if (pvValueListeners != null) {
                     for (PropertyChangeListener listener : pvValueListeners) {
@@ -319,8 +312,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                     }
                 }
                 // forcefully set PV_Value property again
-                pvValueProperty.setPropertyValue(
-                        pvValueProperty.getPropertyValue(), true);
+                pvValueProperty.setPropertyValue(pvValueProperty.getPropertyValue(), true);
             };
         }
     }
@@ -357,7 +349,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 return false;
             }
 
-            AlarmSeverity newSeverity = VTypeHelper.getAlarmSeverity((VType) newValue);
+            var newSeverity = VTypeHelper.getAlarmSeverity((VType) newValue);
             if (newSeverity == null) {
                 return false;
             }
@@ -419,23 +411,22 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
             }
 
             @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                IPV oldPV = pvMap.get(pvNamePropID);
+            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+                var oldPV = pvMap.get(pvNamePropID);
                 editpart.removeFromConnectionHandler((String) oldValue);
                 if (oldPV != null) {
                     oldPV.stop();
                     oldPV.removeListener(pvListenerMap.get(pvNamePropID));
                 }
                 pvMap.remove(pvNamePropID);
-                String newPVName = ((String) newValue).trim();
+                var newPVName = ((String) newValue).trim();
                 if (newPVName.length() <= 0) {
                     return false;
                 }
                 try {
                     lastWriteAccess = null;
-                    IPV newPV = BOYPVFactory.createPV(newPVName);
-                    WidgetPVListener pvListener = new WidgetPVListener(pvNamePropID);
+                    var newPV = BOYPVFactory.createPV(newPVName);
+                    var pvListener = new WidgetPVListener(pvNamePropID);
                     newPV.addListener(pvListener);
                     pvMap.put(pvNamePropID, newPV);
                     editpart.addToConnectionHandler(newPVName, newPV);
@@ -443,8 +434,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
 
                     newPV.start();
                 } catch (Exception e) {
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unable to connect to PV:" +
-                            newPVName, e);
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unable to connect to PV:" + newPVName, e);
                 }
 
                 return false;
@@ -461,7 +451,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         if (editpart.getExecutionMode() == ExecutionMode.EDIT_MODE) {
             editpart.getWidgetModel().getProperty(IPVWidgetModel.PROP_PVNAME).addPropertyChangeListener(evt -> {
                 // reselect the widget to update feedback.
-                int selected = editpart.getSelected();
+                var selected = editpart.getSelected();
                 if (selected != EditPart.SELECTED_NONE) {
                     editpart.setSelected(EditPart.SELECTED_NONE);
                     editpart.setSelected(selected);
@@ -530,12 +520,8 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 }
             }
         });
-        scheduledFuture = ExecutionService
-                .getInstance()
-                .getScheduledExecutorService()
-                .scheduleAtFixedRate(pulsingTask, PreferencesHelper.getGUIRefreshCycle(),
-                        PreferencesHelper.getGUIRefreshCycle(),
-                        TimeUnit.MILLISECONDS);
+        scheduledFuture = ExecutionService.getInstance().getScheduledExecutorService().scheduleAtFixedRate(pulsingTask,
+                PreferencesHelper.getGUIRefreshCycle(), PreferencesHelper.getGUIRefreshCycle(), TimeUnit.MILLISECONDS);
     }
 
     private void saveFigureOKStatus(IFigure figure) {
@@ -548,7 +534,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
      * timer is due.
      */
     protected synchronized void startUpdateSuppressTimer() {
-        AbstractWidgetProperty pvValueProperty = editpart.getWidgetModel().getProperty(controlPVValuePropId);
+        var pvValueProperty = editpart.getWidgetModel().getProperty(controlPVValuePropId);
         pvValueListeners = pvValueProperty.getAllPropertyChangeListeners();
         pvValueProperty.removeAllPropertyChangeListeners();
         updateSuppressTimer.start(timerTask, getUpdateSuppressTime());
@@ -565,10 +551,8 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 if (editpart.getWidgetModel().getBorderStyle() == BorderStyle.NONE) {
                     alarmBorder = BORDER_NO_ALARM;
                 } else {
-                    alarmBorder = BorderFactory.createBorder(
-                            editpart.getWidgetModel().getBorderStyle(),
-                            editpart.getWidgetModel().getBorderWidth(),
-                            editpart.getWidgetModel().getBorderColor(),
+                    alarmBorder = BorderFactory.createBorder(editpart.getWidgetModel().getBorderStyle(),
+                            editpart.getWidgetModel().getBorderWidth(), editpart.getWidgetModel().getBorderColor(),
                             editpart.getWidgetModel().getName());
                 }
                 break;
@@ -601,12 +585,11 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         if (!isSensitive) {
             return saveColor;
         } else {
-            RGB alarmColor = AlarmRepresentationScheme.getAlarmColor(alarmSeverity);
+            var alarmColor = AlarmRepresentationScheme.getAlarmColor(alarmSeverity);
             if (alarmColor != null) {
                 // Alarm severity is either "Major", "Minor" or "Invalid.
-                if (isAlarmPulsing &&
-                        (alarmSeverity == AlarmSeverity.MINOR || alarmSeverity == AlarmSeverity.MAJOR)) {
-                    double alpha = 0.3;
+                if (isAlarmPulsing && (alarmSeverity == AlarmSeverity.MINOR || alarmSeverity == AlarmSeverity.MAJOR)) {
+                    var alpha = 0.3;
                     int period;
                     if (alarmSeverity == AlarmSeverity.MINOR) {
                         period = PreferencesHelper.getPulsingAlarmMinorPeriod();
@@ -614,8 +597,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                         period = PreferencesHelper.getPulsingAlarmMajorPeriod();
                     }
                     alpha += Math.abs(System.currentTimeMillis() % period - period / 2) / (double) period;
-                    alarmColor = new RGB(
-                            (int) (saveColor.getRed() * alpha + alarmColor.red * (1 - alpha)),
+                    alarmColor = new RGB((int) (saveColor.getRed() * alpha + alarmColor.red * (1 - alpha)),
                             (int) (saveColor.getGreen() * alpha + alarmColor.green * (1 - alpha)),
                             (int) (saveColor.getBlue() * alpha + alarmColor.blue * (1 - alpha)));
                 }
@@ -636,7 +618,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     @Override
     public void setPVValue(String pvPropId, Object value) {
         fireSetPVValue(pvPropId, value);
-        final IPV pv = pvMap.get(pvPropId);
+        var pv = pvMap.get(pvPropId);
         if (pv != null) {
             try {
                 if (pvPropId.equals(controlPVPropId) && controlPVValuePropId != null && getUpdateSuppressTime() > 0) { // activate
@@ -655,9 +637,9 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
 
                 }
                 pv.setValue(value);
-            } catch (final Exception e) {
+            } catch (Exception e) {
                 UIBundlingThread.getInstance().addRunnable(() -> {
-                    String message = "Failed to write PV:" + pv.getName();
+                    var message = "Failed to write PV:" + pv.getName();
                     ErrorHandlerUtil.handleError(message, e);
                 });
             }
@@ -715,11 +697,11 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
             }
             lastWriteAccess.set(pv.isWriteAllowed());
             if (lastWriteAccess.get()) {
-                UIBundlingThread.getInstance().addRunnable(
-                        editpart.getViewer().getControl().getDisplay(), () -> setControlEnabled(true));
+                UIBundlingThread.getInstance().addRunnable(editpart.getViewer().getControl().getDisplay(),
+                        () -> setControlEnabled(true));
             } else {
-                UIBundlingThread.getInstance().addRunnable(
-                        editpart.getViewer().getControl().getDisplay(), () -> setControlEnabled(false));
+                UIBundlingThread.getInstance().addRunnable(editpart.getViewer().getControl().getDisplay(),
+                        () -> setControlEnabled(false));
             }
         }
     }
@@ -731,14 +713,14 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     @Override
     public void setControlEnabled(boolean enabled) {
         if (enabled) {
-            IFigure figure = editpart.getFigure();
+            var figure = editpart.getFigure();
             if (figure.getCursor() == Cursors.NO) {
                 figure.setCursor(savedCursor);
             }
             figure.setEnabled(editpart.getWidgetModel().isEnabled());
             figure.repaint();
         } else {
-            IFigure figure = editpart.getFigure();
+            var figure = editpart.getFigure();
             if (figure.getCursor() != Cursors.NO) {
                 savedCursor = figure.getCursor();
             }

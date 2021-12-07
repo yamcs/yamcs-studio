@@ -72,32 +72,26 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel {
     protected void configureProperties() {
         super.configureProperties();
 
-        addProperty(new ColorProperty(PROP_FILL_COLOR, "Fill Color",
-                WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
+        addProperty(
+                new ColorProperty(PROP_FILL_COLOR, "Fill Color", WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
 
         addProperty(new BooleanProperty(PROP_FILLCOLOR_ALARM_SENSITIVE, "FillColor Alarm Sensitive",
                 WidgetPropertyCategory.Display, false));
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_SHOW_LABEL, "Show Label",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_LABEL, "Show Label", WidgetPropertyCategory.Display, true));
 
-        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal", WidgetPropertyCategory.Display, true));
 
-        addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground",
-                WidgetPropertyCategory.Display, DEFAULT_FILLBACKGROUND_COLOR));
+        addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground", WidgetPropertyCategory.Display,
+                DEFAULT_FILLBACKGROUND_COLOR));
 
-        addProperty(new DoubleProperty(PROP_ORIGIN, "Origin", WidgetPropertyCategory.Behavior,
-                0));
+        addProperty(new DoubleProperty(PROP_ORIGIN, "Origin", WidgetPropertyCategory.Behavior, 0));
 
-        addProperty(new BooleanProperty(PROP_ORIGIN_IGNORED, "Origin Ignored",
-                WidgetPropertyCategory.Behavior, true));
+        addProperty(new BooleanProperty(PROP_ORIGIN_IGNORED, "Origin Ignored", WidgetPropertyCategory.Behavior, true));
 
-        addProperty(new BooleanProperty(PROP_INDICATOR_MODE, "Indicator Mode",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_INDICATOR_MODE, "Indicator Mode", WidgetPropertyCategory.Display, false));
 
         setPropertyValue(PROP_LO_COLOR, new OPIColor(255, 128, 0));
         setPropertyValue(PROP_HI_COLOR, new OPIColor(255, 128, 0));

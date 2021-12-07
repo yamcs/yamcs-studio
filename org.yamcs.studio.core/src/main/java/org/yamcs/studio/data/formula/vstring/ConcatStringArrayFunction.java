@@ -65,19 +65,17 @@ class ConcatStringArrayFunction implements FormulaFunction {
 
     @Override
     public Object calculate(List<Object> args) {
-        VStringArray stringArray = (VStringArray) args.get(0);
+        var stringArray = (VStringArray) args.get(0);
 
         if (stringArray == null) {
             return null;
         }
 
-        StringBuffer sb = new StringBuffer();
+        var sb = new StringBuffer();
         for (String str : stringArray.getData()) {
             sb.append(str);
         }
-        return ValueFactory.newVString(sb.toString(),
-                stringArray,
-                stringArray);
+        return ValueFactory.newVString(sb.toString(), stringArray, stringArray);
 
     }
 

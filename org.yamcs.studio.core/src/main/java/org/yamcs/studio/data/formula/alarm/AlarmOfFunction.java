@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.yamcs.studio.data.formula.FormulaFunction;
-import org.yamcs.studio.data.vtype.Alarm;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.ValueUtil;
@@ -75,10 +74,9 @@ class AlarmOfFunction implements FormulaFunction {
         if (containsNull(args)) {
             return null;
         }
-        Object arg = args.get(0);
-        Alarm alarm = ValueUtil.alarmOf(arg);
-        return newVEnum(alarm.getAlarmSeverity().ordinal(), AlarmSeverity.labels(),
-                alarm,
+        var arg = args.get(0);
+        var alarm = ValueUtil.alarmOf(arg);
+        return newVEnum(alarm.getAlarmSeverity().ordinal(), AlarmSeverity.labels(), alarm,
                 latestValidTimeOrNowOf(args));
     }
 

@@ -26,12 +26,12 @@ public final class MacrosPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public MacrosPropertyDescriptor(final Object id, final String displayName) {
+    public MacrosPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new MacrosCellEditor(parent, "Edit Macros");
         if (getValidator() != null) {
             editor.setValidator(getValidator());

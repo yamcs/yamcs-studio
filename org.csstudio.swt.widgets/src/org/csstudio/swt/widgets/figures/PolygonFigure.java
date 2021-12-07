@@ -19,7 +19,6 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Polygon;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.swt.graphics.Color;
@@ -38,8 +37,7 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
 
     private boolean transparent;
 
-    private Color lineColor = CustomMediaFactory.getInstance().getColor(
-            CustomMediaFactory.COLOR_BLUE);
+    private Color lineColor = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_BLUE);
 
     /**
      * Constructor.
@@ -50,26 +48,26 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
     }
 
     @Override
-    protected void fillShape(final Graphics graphics) {
+    protected void fillShape(Graphics graphics) {
         graphics.pushState();
-        Rectangle figureBounds = getBounds();
+        var figureBounds = getBounds();
         if (!transparent) {
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getBackgroundColor());
+            }
             graphics.fillPolygon(getPoints());
         }
         if (getFill() > 0) {
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getForegroundColor());
+            }
             if (horizontalFill) {
-                int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
-                graphics
-                        .setClip(new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height));
+                var newW = (int) Math.round(figureBounds.width * (getFill() / 100));
+                graphics.setClip(new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height));
             } else {
-                int newH = (int) Math.round(figureBounds.height * (getFill() / 100));
-                graphics
-                        .setClip(new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
-                                figureBounds.width, newH));
+                var newH = (int) Math.round(figureBounds.height * (getFill() / 100));
+                graphics.setClip(new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
+                        figureBounds.width, newH));
             }
             graphics.fillPolygon(getPoints());
 
@@ -119,8 +117,9 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
     @Override
     protected void outlineShape(Graphics g) {
         g.pushState();
-        if (isEnabled())
+        if (isEnabled()) {
             g.setForegroundColor(lineColor);
+        }
         super.outlineShape(g);
         g.popState();
     }
@@ -129,15 +128,14 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
      * Overridden, to ensure that the bounds rectangle gets repainted each time, the _points of the polygon change.
      */
     @Override
-    public void setBounds(final Rectangle rect) {
-        PointList points = getPoints();
+    public void setBounds(Rectangle rect) {
+        var points = getPoints();
         if (!points.getBounds().equals(rect)) {
-            int oldX = getLocation().x;
-            int oldY = getLocation().y;
+            var oldX = getLocation().x;
+            var oldY = getLocation().y;
             points.translate(rect.x - oldX, rect.y - oldY);
 
-            setPoints(PointsUtil.scalePointsBySize(points, rect.width,
-                    rect.height));
+            setPoints(PointsUtil.scalePointsBySize(points, rect.width, rect.height));
         }
         invalidate();
         fireFigureMoved();
@@ -150,9 +148,10 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
      * @param fill
      *            the fill grade.
      */
-    public void setFill(final double fill) {
-        if (this.fill == fill)
+    public void setFill(double fill) {
+        if (this.fill == fill) {
             return;
+        }
         this.fill = fill;
         repaint();
     }
@@ -163,16 +162,18 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
      * @param horizontal
      *            The orientation.
      */
-    public void setHorizontalFill(final boolean horizontal) {
-        if (this.horizontalFill == horizontal)
+    public void setHorizontalFill(boolean horizontal) {
+        if (this.horizontalFill == horizontal) {
             return;
+        }
         horizontalFill = horizontal;
         repaint();
     }
 
     public void setLineColor(Color lineColor) {
-        if (this.lineColor != null && this.lineColor.equals(lineColor))
+        if (this.lineColor != null && this.lineColor.equals(lineColor)) {
             return;
+        }
         this.lineColor = lineColor;
         repaint();
     }
@@ -183,9 +184,10 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
      * @param transparent
      *            the transparent state.
      */
-    public void setTransparent(final boolean transparent) {
-        if (this.transparent == transparent)
+    public void setTransparent(boolean transparent) {
+        if (this.transparent == transparent) {
             return;
+        }
         this.transparent = transparent;
         repaint();
     }

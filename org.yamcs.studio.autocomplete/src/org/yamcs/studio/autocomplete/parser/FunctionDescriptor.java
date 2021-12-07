@@ -79,10 +79,9 @@ public class FunctionDescriptor extends ContentDescriptor {
 
     @Override
     public String toString() {
-        return "FunctionDescriptor [functionName=" + functionName + ", args="
-                + args + ", complete=" + complete + ", hasOpenBracket="
-                + hasOpenBracket + ", currentArgIndex=" + currentArgIndex
-                + ", toString()=" + super.toString() + "]";
+        return "FunctionDescriptor [functionName=" + functionName + ", args=" + args + ", complete=" + complete
+                + ", hasOpenBracket=" + hasOpenBracket + ", currentArgIndex=" + currentArgIndex + ", toString()="
+                + super.toString() + "]";
     }
 
 }

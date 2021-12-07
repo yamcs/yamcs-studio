@@ -25,7 +25,7 @@ public abstract class CenteredImageLabelProvider extends OwnerDrawLabelProvider 
 
     @Override
     public void paint(Event event, Object element) {
-        Image img = getImage(element);
+        var img = getImage(element);
         if (img != null) {
 
             Rectangle bounds;
@@ -34,15 +34,15 @@ public abstract class CenteredImageLabelProvider extends OwnerDrawLabelProvider 
             } else {
                 bounds = ((TableItem) event.item).getBounds(event.index);
             }
-            Rectangle imgBounds = img.getBounds();
+            var imgBounds = img.getBounds();
 
             bounds.width /= 2;
             bounds.width -= imgBounds.width / 2;
             bounds.height /= 2;
             bounds.height -= imgBounds.height / 2;
 
-            int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-            int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+            var x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            var y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
             event.gc.drawImage(img, x, y);
         }
     }

@@ -36,8 +36,8 @@ public class StringListSelectionDialog extends Dialog {
      *            - a List of selected Values
      * @param title
      */
-    public StringListSelectionDialog(Shell parent, List<String> possibleValues,
-            List<String> selectedValues, String title) {
+    public StringListSelectionDialog(Shell parent, List<String> possibleValues, List<String> selectedValues,
+            String title) {
         super(parent);
         setShellStyle(SWT.RESIZE | SWT.DIALOG_TRIM);
         this.initialPossibleValues = possibleValues;
@@ -54,16 +54,14 @@ public class StringListSelectionDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         getShell().setText(title);
-        Composite container = (Composite) super.createDialogArea(parent);
-        GridLayout gridLayout = (GridLayout) container.getLayout();
+        var container = (Composite) super.createDialogArea(parent);
+        var gridLayout = (GridLayout) container.getLayout();
         gridLayout.verticalSpacing = 0;
         gridLayout.marginWidth = 0;
         gridLayout.horizontalSpacing = 0;
         gridLayout.marginHeight = 0;
-        stringListSelectionWidget = new StringListSelectionWidget(container,
-                SWT.NONE);
-        stringListSelectionWidget.setLayoutData(new GridData(SWT.FILL,
-                SWT.FILL, true, true, 1, 1));
+        stringListSelectionWidget = new StringListSelectionWidget(container, SWT.NONE);
+        stringListSelectionWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         populateInitialValues();
         return container;
     }

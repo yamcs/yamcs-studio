@@ -23,8 +23,6 @@ import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
@@ -56,12 +54,12 @@ public class PreferencesHelper {
     }
 
     protected static String getString(String preferenceName, String defaultValue) {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getString(OPIBuilderPlugin.PLUGIN_ID, preferenceName, defaultValue, null);
     }
 
     public static IPath getProbeOPIPath() {
-        String probeOPIPath = getString(PROBE_OPI);
+        var probeOPIPath = getString(PROBE_OPI);
         if (probeOPIPath == null || probeOPIPath.trim().isEmpty()) {
             return null;
         }
@@ -69,7 +67,7 @@ public class PreferencesHelper {
     }
 
     public static IPath getSchemaOPIPath() {
-        String schemaOPIPath = getString(SCHEMA_OPI);
+        var schemaOPIPath = getString(SCHEMA_OPI);
         if (schemaOPIPath == null || schemaOPIPath.trim().isEmpty()) {
             return null;
         }
@@ -77,7 +75,7 @@ public class PreferencesHelper {
     }
 
     public static void setSchemaOPIPath(IPath path) {
-        IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(OPIBuilderPlugin.PLUGIN_ID);
+        var prefs = InstanceScope.INSTANCE.getNode(OPIBuilderPlugin.PLUGIN_ID);
         if (path == null) {
             prefs.put(SCHEMA_OPI, IPreferenceStore.STRING_DEFAULT_DEFAULT);
         } else {
@@ -91,22 +89,22 @@ public class PreferencesHelper {
     }
 
     public static boolean isAutoSaveBeforeRunning() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, AUTOSAVE, false, null);
     }
 
     public static Integer getGUIRefreshCycle() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, OPI_GUI_REFRESH_CYCLE, 100, null);
     }
 
     public static Integer getPulsingAlarmMinorPeriod() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, PULSING_ALARM_MINOR_PERIOD, 3000, null);
     }
 
     public static Integer getPulsingAlarmMajorPeriod() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, PULSING_ALARM_MAJOR_PERIOD, 1500, null);
     }
 
@@ -118,8 +116,8 @@ public class PreferencesHelper {
     public static LinkedHashMap<String, String> getMacros() {
         if (getString(RUN_MACROS) != null) {
             try {
-                LinkedHashMap<String, String> macros = new LinkedHashMap<>();
-                List<String[]> items = StringTableFieldEditor.decodeStringTable(getString(RUN_MACROS));
+                var macros = new LinkedHashMap<String, String>();
+                var items = StringTableFieldEditor.decodeStringTable(getString(RUN_MACROS));
                 for (String[] item : items) {
                     if (item.length == 2) {
                         macros.put(item[0], item[1]);
@@ -139,7 +137,7 @@ public class PreferencesHelper {
      * @return typeId of widgets that should be hidden from the palette.
      */
     public static List<String> getHiddenWidgets() {
-        String rawString = getString(HIDDEN_WIDGETS);
+        var rawString = getString(HIDDEN_WIDGETS);
 
         if (rawString == null || rawString.trim().isEmpty()) {
             rawString = "";
@@ -153,7 +151,7 @@ public class PreferencesHelper {
                 + rawString;
 
         try {
-            String[] parts = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+            var parts = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
             return Arrays.asList(parts);
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Failed to parse hidden_widgets preference", e);
@@ -162,18 +160,18 @@ public class PreferencesHelper {
     }
 
     public static Optional<String> getPythonPath() throws Exception {
-        String rawString = getString(PYTHON_PATH);
+        var rawString = getString(PYTHON_PATH);
         if (rawString == null || rawString.isEmpty()) {
             return Optional.empty();
         }
-        String[] rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
-        StringBuilder sb = new StringBuilder();
+        var rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+        var sb = new StringBuilder();
         for (String rawPath : rawPaths) {
             if (sb.length() > 0) {
                 sb.append(System.getProperty("path.separator"));
             }
             IPath path = new Path(rawPath);
-            IPath location = ResourceUtil.workspacePathToSysPath(path);
+            var location = ResourceUtil.workspacePathToSysPath(path);
             if (location != null) {
                 sb.append(location.toOSString());
             } else {
@@ -184,7 +182,7 @@ public class PreferencesHelper {
     }
 
     public static boolean isShowFullScreenDialog() {
-        IPreferencesService service = Platform.getPreferencesService();
+        var service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, SHOW_FULLSCREEN_DIALOG, true, null);
     }
 
@@ -193,7 +191,7 @@ public class PreferencesHelper {
     }
 
     private static void putBoolean(String name, boolean value) {
-        IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(OPIBuilderPlugin.PLUGIN_ID);
+        var prefs = InstanceScope.INSTANCE.getNode(OPIBuilderPlugin.PLUGIN_ID);
         prefs.putBoolean(name, value);
         try {
             prefs.flush();
@@ -206,7 +204,7 @@ public class PreferencesHelper {
      * Return the absolute path based on OPI Repository.
      */
     protected static IPath getAbsolutePathOnRepo(String pathString) {
-        IPath opiPath = ResourceUtil.getPathFromString(pathString);
+        var opiPath = ResourceUtil.getPathFromString(pathString);
         if (opiPath == null) {
             return null;
         }

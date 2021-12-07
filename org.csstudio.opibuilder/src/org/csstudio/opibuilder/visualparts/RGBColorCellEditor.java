@@ -27,11 +27,12 @@ public class RGBColorCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        ColorDialog dialog = new ColorDialog(parentShell);
+        var dialog = new ColorDialog(parentShell);
         dialog.setRGB(rgb);
-        RGB result = dialog.open();
-        if (result != null)
+        var result = dialog.open();
+        if (result != null) {
             rgb = result;
+        }
     }
 
     @Override
@@ -46,10 +47,11 @@ public class RGBColorCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof RGB))
+        if (value == null || !(value instanceof RGB)) {
             rgb = new RGB(0, 0, 0);
-        else
+        } else {
             rgb = (RGB) value;
+        }
     }
 
 }

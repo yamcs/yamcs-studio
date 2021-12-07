@@ -15,16 +15,15 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.yamcs.studio.data.IPV;
 import org.eclipse.osgi.util.NLS;
+import org.yamcs.studio.data.IPV;
 
 /**
  * The center service for script execution.
  */
 public class ScriptService {
     public enum ScriptType {
-        JAVASCRIPT("JavaScript"),
-        PYTHON("Python/Jython Script");
+        JAVASCRIPT("JavaScript"), PYTHON("Python/Jython Script");
 
         private ScriptType(String description) {
             this.description = description;
@@ -38,8 +37,8 @@ public class ScriptService {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
+            var sv = new String[values().length];
+            var i = 0;
             for (ScriptType p : values()) {
                 sv[i++] = p.toString();
             }
@@ -95,15 +94,15 @@ public class ScriptService {
      * @param pvArray
      * @throws Exception
      */
-    public void registerScript(final ScriptData scriptData, final AbstractBaseEditPart editpart, final IPV[] pvArray) {
+    public void registerScript(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) {
         // UIBundlingThread.getInstance().addRunnable(new Runnable(){
         // public void run() {
         try {
             scriptMap.put(scriptData, ScriptStoreFactory.getScriptStore(scriptData, editpart, pvArray));
         } catch (Exception e) {
-            String name = scriptData instanceof RuleScriptData ? ((RuleScriptData) scriptData).getRuleData().getName()
+            var name = scriptData instanceof RuleScriptData ? ((RuleScriptData) scriptData).getRuleData().getName()
                     : scriptData.getPath().toString();
-            String errorInfo = NLS.bind("Failed to register {0}. \n{1}", name, e);
+            var errorInfo = NLS.bind("Failed to register {0}. \n{1}", name, e);
             OPIBuilderPlugin.getLogger().log(Level.WARNING, errorInfo, e);
         }
         // }

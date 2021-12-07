@@ -8,11 +8,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -30,10 +27,10 @@ public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler 
         IPath path = null;
         LinkingContainerEditpart linkingContainer = null;
 
-        ISelection selection = HandlerUtil.getActiveMenuSelection(event);
+        var selection = HandlerUtil.getActiveMenuSelection(event);
         if (selection instanceof IStructuredSelection) {
-            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-            Object o = structuredSelection.getFirstElement();
+            var structuredSelection = (IStructuredSelection) selection;
+            var o = structuredSelection.getFirstElement();
             if (o instanceof LinkingContainerEditpart) {
                 linkingContainer = (LinkingContainerEditpart) o;
                 path = linkingContainer.getWidgetModel().getOPIFilePath();
@@ -41,17 +38,16 @@ public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler 
         }
 
         if (path != null) {
-            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
             if (window != null) {
-                IWorkbenchPage page = window.getActivePage();
+                var page = window.getActivePage();
                 if (page != null) {
                     try {
-                        IEditorInput editorInput = ResourceUtil.editorInputFromPath(path);
+                        var editorInput = ResourceUtil.editorInputFromPath(path);
                         page.openEditor(editorInput, OPI_EDITOR_ID, true,
                                 IWorkbenchPage.MATCH_ID | IWorkbenchPage.MATCH_INPUT);
                     } catch (PartInitException ex) {
-                        ErrorHandlerUtil.handleError(
-                                "Failed to open embedded OPI in editor", ex);
+                        ErrorHandlerUtil.handleError("Failed to open embedded OPI in editor", ex);
                     }
                 }
             }

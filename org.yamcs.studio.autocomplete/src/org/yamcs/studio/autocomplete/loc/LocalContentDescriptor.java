@@ -56,31 +56,31 @@ public class LocalContentDescriptor extends ContentDescriptor {
                 return "initialValue";
             }
         }
-        if (initialValuesTypes.isEmpty())
+        if (initialValuesTypes.isEmpty()) {
             return "initialValue";
-        if (initialValuesTypes.get(0).equals(String.class))
+        }
+        if (initialValuesTypes.get(0).equals(String.class)) {
             return initialValuesTypes.size() == 1 ? "\"string\"" : "\"string\",...";
-        if (initialValuesTypes.get(0).equals(Double.class))
+        }
+        if (initialValuesTypes.get(0).equals(Double.class)) {
             return initialValuesTypes.size() == 1 ? "number" : "number,...";
+        }
         return "initialValue";
     }
 
     public boolean checkParameters() {
-        if (initialValues.size() == 0 || vType == null)
+        if (initialValues.size() == 0 || vType == null) {
             return true;
+        }
         switch (vType) {
         case "VString":
-            return initialValues.size() == 1
-                    && initialValuesTypes.get(0).equals(String.class);
+            return initialValues.size() == 1 && initialValuesTypes.get(0).equals(String.class);
         case "VStringArray":
-            return initialValues.size() >= 1
-                    && initialValuesTypes.get(0).equals(String.class);
+            return initialValues.size() >= 1 && initialValuesTypes.get(0).equals(String.class);
         case "VDouble":
-            return initialValues.size() == 1
-                    && initialValuesTypes.get(0).equals(Double.class);
+            return initialValues.size() == 1 && initialValuesTypes.get(0).equals(Double.class);
         case "VDoubleArray":
-            return initialValues.size() >= 1
-                    && initialValuesTypes.get(0).equals(Double.class);
+            return initialValues.size() >= 1 && initialValuesTypes.get(0).equals(Double.class);
         case "VTable":
             return true;
         default:
@@ -151,12 +151,10 @@ public class LocalContentDescriptor extends ContentDescriptor {
 
     @Override
     public String toString() {
-        return "LocalContentDescriptor [vType=" + vType + ", pvName=" + pvName
-                + ", initialValues=" + initialValues + ", initialValuesTypes="
-                + initialValuesTypes + ", completingVType=" + completingVType
-                + ", completingInitialValue=" + completingInitialValue
-                + ", complete=" + complete + ", toString()=" + super.toString()
-                + "]";
+        return "LocalContentDescriptor [vType=" + vType + ", pvName=" + pvName + ", initialValues=" + initialValues
+                + ", initialValuesTypes=" + initialValuesTypes + ", completingVType=" + completingVType
+                + ", completingInitialValue=" + completingInitialValue + ", complete=" + complete + ", toString()="
+                + super.toString() + "]";
     }
 
 }

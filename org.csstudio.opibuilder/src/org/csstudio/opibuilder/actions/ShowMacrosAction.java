@@ -35,20 +35,19 @@ public class ShowMacrosAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        AbstractWidgetModel widget = (AbstractWidgetModel) getSelectedWidget().getModel();
-        String message = NLS.bind("The predefined macros of {0}:\n", widget.getName());
-        StringBuilder sb = new StringBuilder(message);
-        Map<String, String> macroMap = OPIBuilderMacroUtil.getWidgetMacroMap(widget);
-        for (final Map.Entry<String, String> entry : macroMap.entrySet()) {
+        var widget = (AbstractWidgetModel) getSelectedWidget().getModel();
+        var message = NLS.bind("The predefined macros of {0}:\n", widget.getName());
+        var sb = new StringBuilder(message);
+        var macroMap = OPIBuilderMacroUtil.getWidgetMacroMap(widget);
+        for (Map.Entry<String, String> entry : macroMap.entrySet()) {
             sb.append(entry.getKey() + "=" + entry.getValue() + "\n");
         }
         sb.append("\n");
-        sb.append("Note: Macros are loaded during OPI opening, so this won't reflect the macro changes after opening." +
-                "To reflect the latest changes, please reopen the OPI and show macros again.");
+        sb.append("Note: Macros are loaded during OPI opening, so this won't reflect the macro changes after opening."
+                + "To reflect the latest changes, please reopen the OPI and show macros again.");
         // show the dialog first, because on some linux systems the console print brings the workbench window to top,
         // blocking entire CSS
-        MessageDialog.openInformation(targetPart.getSite().getShell(),
-                "Predefined Macros", sb.toString());
+        MessageDialog.openInformation(targetPart.getSite().getShell(), "Predefined Macros", sb.toString());
         log.info(sb.toString());
     }
 

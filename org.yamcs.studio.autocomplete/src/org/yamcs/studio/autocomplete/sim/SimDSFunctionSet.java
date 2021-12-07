@@ -24,8 +24,7 @@ public class SimDSFunctionSet extends DSFunctionSet {
     }
 
     private static DSFunctionSetDescription initSet() {
-        DSFunctionSetDescription setDescription = new DSFunctionSetDescription(
-                name, "Simulation DataSource");
+        var setDescription = new DSFunctionSetDescription(name, "Simulation DataSource");
         DSFunction function = null;
         DSFunction polymorphicFunction = null;
 
@@ -67,9 +66,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         // flipflop
         polymorphicFunction = new DSFunction("flipflop", null, true, false);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A boolean value that changes state every timeStep.\nThe default is equivalent to sim://flipflop(0.5).");
+        polymorphicFunction.setDescription(
+                "A boolean value that changes state every timeStep.\nThe default is equivalent to sim://flipflop(0.5).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("flipflop", null, true, false);
@@ -81,9 +79,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("average", Double.class);
         polymorphicFunction.addArgument("stdDev", Double.class);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "Random numbers gaussian distributed around average with stdDev width, generated every timeStep.\nThe default is equivalent to sim://gaussianNoise(0, 1, 0.1).");
+        polymorphicFunction.setDescription(
+                "Random numbers gaussian distributed around average with stdDev width, generated every timeStep.\nThe default is equivalent to sim://gaussianNoise(0, 1, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("gaussianNoise", null, true, false);
@@ -91,15 +88,13 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addPolymorphicFunction(function);
 
         // gaussianWaveform
-        polymorphicFunction = new DSFunction("gaussianWaveform", null, true,
-                false);
+        polymorphicFunction = new DSFunction("gaussianWaveform", null, true, false);
         polymorphicFunction.addArgument("periodInSeconds", Double.class);
         polymorphicFunction.addArgument("stdDev", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("updateRateInSeconds", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform with nSamples shaped like a gaussian that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://gaussianWaveform(1, 100, 100, 0.1).");
+        polymorphicFunction.setDescription(
+                "A waveform with nSamples shaped like a gaussian that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://gaussianWaveform(1, 100, 100, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("gaussianWaveform", null, true, false);
@@ -112,9 +107,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("wavelengthInSamples", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("updateRateInSeconds", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform with nSamples shaped like a sine wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://sineWaveform(1, 100, 100, 0.1).");
+        polymorphicFunction.setDescription(
+                "A waveform with nSamples shaped like a sine wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://sineWaveform(1, 100, 100, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("sineWaveform", null, true, false);
@@ -122,15 +116,13 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addPolymorphicFunction(function);
 
         // squareWaveform
-        polymorphicFunction = new DSFunction("squareWaveform", null, true,
-                false);
+        polymorphicFunction = new DSFunction("squareWaveform", null, true, false);
         polymorphicFunction.addArgument("periodInSeconds", Double.class);
         polymorphicFunction.addArgument("wavelengthInSamples", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("updateRateInSeconds", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform with nSamples shaped like a square wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://squareWaveform(1, 100, 100, 0.1).");
+        polymorphicFunction.setDescription(
+                "A waveform with nSamples shaped like a square wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://squareWaveform(1, 100, 100, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("squareWaveform", null, true, false);
@@ -138,15 +130,13 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addPolymorphicFunction(function);
 
         // triangleWaveform
-        polymorphicFunction = new DSFunction("triangleWaveform", null, true,
-                false);
+        polymorphicFunction = new DSFunction("triangleWaveform", null, true, false);
         polymorphicFunction.addArgument("periodInSeconds", Double.class);
         polymorphicFunction.addArgument("wavelengthInSamples", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("updateRateInSeconds", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform with nSamples shaped like a triangle wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://triangleWaveform(1, 100, 100, 0.1).");
+        polymorphicFunction.setDescription(
+                "A waveform with nSamples shaped like a triangle wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://triangleWaveform(1, 100, 100, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("triangleWaveform", null, true, false);
@@ -154,15 +144,13 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addPolymorphicFunction(function);
 
         // sawtoothWaveform
-        polymorphicFunction = new DSFunction("sawtoothWaveform", null, true,
-                false);
+        polymorphicFunction = new DSFunction("sawtoothWaveform", null, true, false);
         polymorphicFunction.addArgument("periodInSeconds", Double.class);
         polymorphicFunction.addArgument("wavelengthInSamples", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("updateRateInSeconds", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform with nSamples shaped like a sawtooth wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://sawtoothWaveform(1, 100, 100, 0.1).");
+        polymorphicFunction.setDescription(
+                "A waveform with nSamples shaped like a sawtooth wave of width wavelengthInSamples that cycles around in time every periodInSeconds, generated every updateRateInSeconds.\nThe default is equivalent to sim://sawtoothWaveform(1, 100, 100, 0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("sawtoothWaveform", null, true, false);
@@ -174,9 +162,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("minValue", Double.class);
         polymorphicFunction.addArgument("maxValue", Double.class);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "Random numbers uniformly distributed between the minValue and the maxValue, generated every timeStep.\nThe default is equivalent to sim://noise(-5, 5, 1).");
+        polymorphicFunction.setDescription(
+                "Random numbers uniformly distributed between the minValue and the maxValue, generated every timeStep.\nThe default is equivalent to sim://noise(-5, 5, 1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("noise", null, true, false);
@@ -189,9 +176,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("maxValue", Double.class);
         polymorphicFunction.addArgument("nSamples", Double.class);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A waveform filled with nSampes random numbers uniformly distributed between the minValue and the maxValue, generated every timeStep.\nThe default is equivalent to sim://noiseWaveform(-5, 5, 100, 1).");
+        polymorphicFunction.setDescription(
+                "A waveform filled with nSampes random numbers uniformly distributed between the minValue and the maxValue, generated every timeStep.\nThe default is equivalent to sim://noiseWaveform(-5, 5, 100, 1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("noiseWaveform", null, true, false);
@@ -210,9 +196,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("maxValue", Double.class);
         polymorphicFunction.addArgument("step", Double.class);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A ramp (sawtooth wave) between the minValue and maxValue, increasing by the step amount every timeStep. If step is negative, the wave starts at maxValue and decreases.\nThe default is equivalent to sim://ramp(-5, 5, 1, 1).");
+        polymorphicFunction.setDescription(
+                "A ramp (sawtooth wave) between the minValue and maxValue, increasing by the step amount every timeStep. If step is negative, the wave starts at maxValue and decreases.\nThe default is equivalent to sim://ramp(-5, 5, 1, 1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("ramp", null, true, false);
@@ -231,9 +216,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         polymorphicFunction.addArgument("maxValue", Double.class);
         polymorphicFunction.addArgument("samplePerCycle", Double.class);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A sine wave between the minValue and maxValue divided into samplePerCycle samples in each period, updating every timeStep.\nThe default is equivalent to sim://sine(-5, 5, 10, 1).");
+        polymorphicFunction.setDescription(
+                "A sine wave between the minValue and maxValue divided into samplePerCycle samples in each period, updating every timeStep.\nThe default is equivalent to sim://sine(-5, 5, 10, 1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("sine", null, true, false);
@@ -249,9 +233,8 @@ public class SimDSFunctionSet extends DSFunctionSet {
         // strings
         polymorphicFunction = new DSFunction("strings", null, true, false);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription(
-                        "A string generated every timeStamp.\nThe default is equivalent to sim://strings(0.1).");
+        polymorphicFunction.setDescription(
+                "A string generated every timeStamp.\nThe default is equivalent to sim://strings(0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("strings", null, true, false);
@@ -261,8 +244,7 @@ public class SimDSFunctionSet extends DSFunctionSet {
         // table
         polymorphicFunction = new DSFunction("table", null, true, false);
         polymorphicFunction.addArgument("timeStep", Double.class);
-        polymorphicFunction
-                .setDescription("Generates a table.\nThe default is equivalent to sim://table(0.1).");
+        polymorphicFunction.setDescription("Generates a table.\nThe default is equivalent to sim://table(0.1).");
         setDescription.addFunction(polymorphicFunction);
 
         function = new DSFunction("table", null, true, false);

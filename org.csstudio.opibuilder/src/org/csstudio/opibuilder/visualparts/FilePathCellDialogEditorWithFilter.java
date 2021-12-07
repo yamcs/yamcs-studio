@@ -1,7 +1,6 @@
 package org.csstudio.opibuilder.visualparts;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
@@ -9,7 +8,6 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -56,15 +54,14 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
 
     private AbstractWidgetModel widgetModel;
 
-    public FilePathCellDialogEditorWithFilter(final Composite parent,
-            final AbstractWidgetModel widgetModel, final String[] fileExtensions) {
+    public FilePathCellDialogEditorWithFilter(Composite parent, AbstractWidgetModel widgetModel,
+            String[] fileExtensions) {
         super(parent, "Open File");
         this.orgFileExtensions = fileExtensions;
         this.widgetModel = widgetModel;
         convertFileExtensions();
-        IPreferencesService service = Platform.getPreferencesService();
-        TTT_REGEX = service.getString("org.csstudio.opibuilder.widgets.symbol",
-                "filter_regex", "", null);
+        var service = Platform.getPreferencesService();
+        TTT_REGEX = service.getString("org.csstudio.opibuilder.widgets.symbol", "filter_regex", "", null);
     }
 
     /**
@@ -76,7 +73,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
         } else {
             if (orgFileExtensions.length > 0) {
                 filters = new String[orgFileExtensions.length];
-                for (int i = 0; i < filters.length; i++) {
+                for (var i = 0; i < filters.length; i++) {
                     if (orgFileExtensions[i].startsWith("*.")) {
                         filters[i] = orgFileExtensions[i];
                     } else {
@@ -93,7 +90,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
     }
 
     @Override
-    protected void doSetValue(final Object value) {
+    protected void doSetValue(Object value) {
         if (value == null || !(value instanceof IPath)) {
             path = new Path("");
         } else {
@@ -102,31 +99,28 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
     }
 
     @Override
-    protected void openDialog(final Shell parentShell, final String dialogTitle) {
+    protected void openDialog(Shell parentShell, String dialogTitle) {
         if (onlyWorkSpace) {
-            String pvName = (String) widgetModel
-                    .getPropertyValue(AbstractPVWidgetModel.PROP_PVNAME);
+            var pvName = (String) widgetModel.getPropertyValue(AbstractPVWidgetModel.PROP_PVNAME);
             if (!pvName.isEmpty()) {
-                ArrayList<String> listToFind = new ArrayList<>();
-                Pattern pattern = Pattern.compile(TTT_REGEX);
-                Matcher matcher = pattern.matcher(pvName);
+                var listToFind = new ArrayList<String>();
+                var pattern = Pattern.compile(TTT_REGEX);
+                var matcher = pattern.matcher(pvName);
                 if (matcher.find()) {
-                    for (int i = 0; i <= matcher.groupCount(); i++) {
+                    for (var i = 0; i <= matcher.groupCount(); i++) {
                         listToFind.add(matcher.group(i));
                     }
                 }
                 if (!listToFind.isEmpty()) {
-                    filters = (String[]) listToFind
-                            .toArray(new String[listToFind.size()]);
+                    filters = (String[]) listToFind.toArray(new String[listToFind.size()]);
                 }
             } else {
                 filters = IMAGE_EXTENSIONS;
             }
 
-            var rsd = new FilePathDialogWithFilter(
-                    parentShell, widgetModel.getRootDisplayModel()
-                            .getOpiFilePath().removeLastSegments(1),
-                    "Select a resource", filters);
+            var rsd = new FilePathDialogWithFilter(parentShell,
+                    widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1), "Select a resource",
+                    filters);
             rsd.setSelectedResource(path);
             if (rsd.open() == Window.OK) {
                 if (rsd.getSelectedResource() != null) {

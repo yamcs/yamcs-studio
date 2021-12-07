@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.client.Command;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
@@ -113,11 +112,11 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var container = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.numColumns = 1;
         container.setLayout(layout);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var gd = new GridData(GridData.FILL_BOTH);
         container.setLayoutData(gd);
 
         createSashForm(container);
@@ -135,7 +134,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     private void createSashForm(Composite parent) {
         sashForm = new SashForm(parent, SWT.VERTICAL);
-        GridLayout layout = new GridLayout();
+        var layout = new GridLayout();
         layout.marginHeight = layout.marginWidth = 0;
         sashForm.setLayout(layout);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -143,12 +142,12 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void createDetailsSection(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var container = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = layout.marginHeight = 0;
         layout.numColumns = 2;
         container.setLayout(layout);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        var data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 200;
         container.setLayoutData(data);
 
@@ -157,13 +156,13 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void createAckSection(Composite parent) {
-        Composite ackContainer = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var ackContainer = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = 0;
         ackContainer.setLayout(layout);
         ackContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label ackLabel = new Label(ackContainer, SWT.NONE);
+        var ackLabel = new Label(ackContainer, SWT.NONE);
         ackLabel.setText("Yamcs acknowledgments:");
         createLocalAckTable(ackContainer);
 
@@ -173,32 +172,32 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void createLocalAckTable(Composite parent) {
-        Composite tableContainer = new Composite(parent, SWT.NONE);
+        var tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         localAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createExtraAckTable(Composite parent) {
-        Composite tableContainer = new Composite(parent, SWT.NONE);
+        var tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         extraAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createTextSection(Composite parent) {
-        Composite textContainer = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var textContainer = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.numColumns = 3;
         layout.marginHeight = layout.marginWidth = 0;
         textContainer.setLayout(layout);
         textContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label label = new Label(textContainer, SWT.NONE);
+        var label = new Label(textContainer, SWT.NONE);
         label.setText("Date");
         dateLabel = new Text(textContainer, SWT.BORDER);
         dateLabel.setEditable(false);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         dateLabel.setLayoutData(gd);
 
@@ -254,15 +253,15 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void createToolbarButtonBar(Composite parent) {
-        Composite comp = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        var comp = new Composite(parent, SWT.NONE);
+        var layout = new GridLayout();
         layout.marginWidth = layout.marginHeight = 0;
         // layout.numColumns = 1;
         comp.setLayout(layout);
         comp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
         ((GridData) comp.getLayoutData()).verticalAlignment = SWT.BOTTOM;
 
-        Composite container = new Composite(comp, SWT.NONE);
+        var container = new Composite(comp, SWT.NONE);
         layout = new GridLayout();
         layout.marginWidth = 0;
         layout.marginHeight = 0;
@@ -270,7 +269,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         prevButton = createButton(container, IDialogConstants.BACK_ID, "", false);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         prevButton.setLayoutData(gd);
         prevButton.setToolTipText("Previous Entry");
         prevButton.setImage(commandHistoryView.prevImage);
@@ -285,7 +284,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void updateProperties() {
-        Command command = rec.getCommand();
+        var command = rec.getCommand();
         dateLabel.setText(YamcsPlugin.getDefault().formatInstant(command.getGenerationTime()));
         commandStringText.setText(command.getSource());
 
@@ -315,24 +314,18 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         }
 
         if (command.getBinary() != null) {
-            String hexString = StringConverter.arrayToHexString(command.getBinary());
+            var hexString = StringConverter.arrayToHexString(command.getBinary());
             binaryLabel.setText(hexString);
         } else {
             binaryLabel.setText("");
         }
 
-        List<AckTableRecord> localAcks = rec.getCommand().getAcknowledgments().values()
-                .stream()
-                .filter(ack -> ack.isLocal())
-                .map(ack -> new AckTableRecord(ack, rec))
-                .collect(Collectors.toList());
+        List<AckTableRecord> localAcks = rec.getCommand().getAcknowledgments().values().stream()
+                .filter(ack -> ack.isLocal()).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
         localAckTableViewer.setInput(localAcks.toArray());
 
-        List<AckTableRecord> extraAcks = rec.getCommand().getAcknowledgments().values()
-                .stream()
-                .filter(ack -> !ack.isLocal())
-                .map(ack -> new AckTableRecord(ack, rec))
-                .collect(Collectors.toList());
+        List<AckTableRecord> extraAcks = rec.getCommand().getAcknowledgments().values().stream()
+                .filter(ack -> !ack.isLocal()).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
         extraAckTableViewer.setInput(extraAcks.toArray());
     }
 

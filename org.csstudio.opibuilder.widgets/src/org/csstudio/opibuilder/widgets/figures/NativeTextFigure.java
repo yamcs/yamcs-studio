@@ -13,7 +13,6 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -38,9 +37,8 @@ public class NativeTextFigure extends AbstractSWTWidgetFigure<Text> implements I
     }
 
     public Dimension getAutoSizeDimension() {
-        Point preferredSize = text.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        return new Dimension(preferredSize.x + getInsets().getWidth(),
-                preferredSize.y + getInsets().getHeight());
+        var preferredSize = text.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        return new Dimension(preferredSize.x + getInsets().getWidth(), preferredSize.y + getInsets().getHeight());
     }
 
     @Override
@@ -50,8 +48,9 @@ public class NativeTextFigure extends AbstractSWTWidgetFigure<Text> implements I
             // Its parent should be always enabled so the text can be enabled.
             text.getParent().setEnabled(true);
             text.setEnabled(true);
-            if (!readOnly)
+            if (!readOnly) {
                 getSWTWidget().setEditable(value);
+            }
         }
 
     }

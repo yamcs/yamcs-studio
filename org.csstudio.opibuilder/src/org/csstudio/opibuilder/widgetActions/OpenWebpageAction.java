@@ -38,13 +38,12 @@ public class OpenWebpageAction extends AbstractWidgetAction {
 
     @Override
     public void run() {
-        String hyperLink = getHyperLink();
+        var hyperLink = getHyperLink();
         if (!hyperLink.contains("://")) {
             hyperLink = "http://" + hyperLink;
         }
         try {
-            PlatformUI.getWorkbench().getBrowserSupport()
-                    .createBrowser("opi_web_browser").openURL(new URL(hyperLink));
+            PlatformUI.getWorkbench().getBrowserSupport().createBrowser("opi_web_browser").openURL(new URL(hyperLink));
         } catch (Exception e) {
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, "Failed to open " + hyperLink, e);
         }

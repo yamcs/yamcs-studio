@@ -27,8 +27,8 @@ public class MultiLineTextPropertyDescriptor extends TextPropertyDescriptor {
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
-        final String title = NLS.bind("Edit {0}", getDisplayName());
+    public CellEditor createPropertyEditor(Composite parent) {
+        var title = NLS.bind("Edit {0}", getDisplayName());
         CellEditor editor = new MultiLineTextCellEditor(parent, title);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

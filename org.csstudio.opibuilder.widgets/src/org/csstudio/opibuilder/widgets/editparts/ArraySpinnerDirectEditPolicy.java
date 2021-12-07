@@ -19,19 +19,19 @@ import org.eclipse.gef.requests.DirectEditRequest;
 /**
  * The Editpolicy to handle direct text edit in index spinner of an array widget.
  */
-public class ArraySpinnerDirectEditPolicy
-        extends DirectEditPolicy {
+public class ArraySpinnerDirectEditPolicy extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
+    @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String text = (String) edit.getCellEditor().getValue();
+        var text = (String) edit.getCellEditor().getValue();
         text = text.replace("e", "E");
         try {
-            int value = new DecimalFormat().parse(text).intValue();
-            ArrayEditPart array = (ArrayEditPart) getHost();
-            ArraySpinnerEditCommand command = new ArraySpinnerEditCommand(array, value);
+            var value = new DecimalFormat().parse(text).intValue();
+            var array = (ArrayEditPart) getHost();
+            var command = new ArraySpinnerEditCommand(array, value);
             return command;
         } catch (ParseException e) {
             return null;
@@ -64,8 +64,9 @@ public class ArraySpinnerDirectEditPolicy
         @Override
         public void execute() {
             oldIndex = arrayEditpart.getArrayFigure().getIndex();
-            if (newIndex >= arrayEditpart.getArrayFigure().getArrayLength())
+            if (newIndex >= arrayEditpart.getArrayFigure().getArrayLength()) {
                 newIndex = arrayEditpart.getArrayFigure().getArrayLength() - 1;
+            }
             arrayEditpart.getArrayFigure().setIndex(newIndex);
         }
 

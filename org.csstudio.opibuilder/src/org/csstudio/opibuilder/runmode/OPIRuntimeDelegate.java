@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.UpdateListener;
-import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.gef.ContextMenuProvider;
@@ -71,8 +70,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
     private IOPIRuntime opiRuntime;
 
     private PaintListener errorMessagePaintListener = e -> {
-        e.gc.setForeground(CustomMediaFactory.getInstance().getColor(255,
-                0, 0));
+        e.gc.setForeground(CustomMediaFactory.getInstance().getColor(255, 0, 0));
         e.gc.drawString("Failed to load opi " + getEditorInput(), 0, 0);
     };
 
@@ -82,7 +80,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
         this.opiRuntime = opiRuntime;
     }
 
-    public void init(final IWorkbenchPartSite site, final IEditorInput input) throws PartInitException {
+    public void init(IWorkbenchPartSite site, IEditorInput input) throws PartInitException {
         this.site = site;
         setEditorInput(input);
         if (viewer != null) {
@@ -95,7 +93,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
         InputStream inputStream = null;
         try {
             if (input instanceof IRunnerInput) {
-                IRunnerInput run_input = (IRunnerInput) input;
+                var run_input = (IRunnerInput) input;
                 inputStream = run_input.getInputStream();
                 displayOpenManager = run_input.getDisplayOpenManager();
             } else {
@@ -106,8 +104,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
                 if (input instanceof IRunnerInput) {
                     macrosInput = ((IRunnerInput) input).getMacrosInput();
                 }
-                XMLUtil.fillDisplayModelFromInputStream(inputStream,
-                        displayModel, null, macrosInput);
+                XMLUtil.fillDisplayModelFromInputStream(inputStream, displayModel, null, macrosInput);
                 displayModelFilled = true;
                 if (input instanceof IRunnerInput) {
                     addRunnerInputMacros(input);
@@ -155,15 +152,12 @@ public class OPIRuntimeDelegate implements IAdaptable {
         };
         // set clipping strategy for connection layer of connection can be hide
         // when its source or target is not showing.
-        ConnectionLayer connectionLayer = (ConnectionLayer) root
-                .getLayer(LayerConstants.CONNECTION_LAYER);
-        connectionLayer.setClippingStrategy(new PatchedConnectionLayerClippingStrategy(
-                connectionLayer));
+        var connectionLayer = (ConnectionLayer) root.getLayer(LayerConstants.CONNECTION_LAYER);
+        connectionLayer.setClippingStrategy(new PatchedConnectionLayerClippingStrategy(connectionLayer));
 
         viewer.createControl(parent);
         viewer.setRootEditPart(root);
-        viewer.setEditPartFactory(new WidgetEditPartFactory(
-                ExecutionMode.RUN_MODE, site));
+        viewer.setEditPartFactory(new WidgetEditPartFactory(ExecutionMode.RUN_MODE, site));
 
         // viewer.addDropTargetListener(new
         // ProcessVariableNameTransferDropPVTargetListener(viewer));
@@ -183,8 +177,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
         editDomain.addViewer(viewer);
 
         // connect the CSS menu
-        ContextMenuProvider cmProvider = new OPIRunnerContextMenuProvider(
-                viewer, opiRuntime);
+        ContextMenuProvider cmProvider = new OPIRunnerContextMenuProvider(viewer, opiRuntime);
         viewer.setContextMenu(cmProvider);
 
         opiRuntime.getSite().registerContextMenu(cmProvider, viewer);
@@ -213,8 +206,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
         }
 
         /* scroll-wheel zoom */
-        viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
-                MouseWheelZoomHandler.SINGLETON);
+        viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1), MouseWheelZoomHandler.SINGLETON);
 
         /*
          * When Figure instance which corresponds to RootEditPart is updated, calculate the frame rate and set the
@@ -232,16 +224,15 @@ public class OPIRuntimeDelegate implements IAdaptable {
          * meaning of "frame rate" calculated by the following code.
          */
         if (displayModelFilled && displayModel.isFreshRateEnabled()) {
-            UpdateManager updateManager = root.getFigure().getUpdateManager();
+            var updateManager = root.getFigure().getUpdateManager();
             updateManager.addUpdateListener(new UpdateListener() {
 
                 private long updateCycle = -1; // in milliseconds
                 private Date previousDate = null;
 
                 @Override
-                public void notifyPainting(Rectangle damage,
-                        @SuppressWarnings("rawtypes") Map dirtyRegions) {
-                    Date currentDate = new Date();
+                public void notifyPainting(Rectangle damage, @SuppressWarnings("rawtypes") Map dirtyRegions) {
+                    var currentDate = new Date();
 
                     if (previousDate == null) {
                         previousDate = currentDate;
@@ -264,8 +255,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
     }
 
     private void updateEditorTitle() {
-        if (displayModel.getName() != null
-                && displayModel.getName().trim().length() > 0) {
+        if (displayModel.getName() != null && displayModel.getName().trim().length() > 0) {
             opiRuntime.setWorkbenchPartName(displayModel.getName());
         } else {
             opiRuntime.setWorkbenchPartName(getEditorInput().getName());
@@ -273,11 +263,11 @@ public class OPIRuntimeDelegate implements IAdaptable {
     }
 
     public IPath getOPIFilePath() {
-        IEditorInput editorInput = getEditorInput();
+        var editorInput = getEditorInput();
         return ResourceUtil.getPathInEditor(editorInput);
     }
 
-    private void hideCloseButton(final IWorkbenchPartSite site) {
+    private void hideCloseButton(IWorkbenchPartSite site) {
         if (!displayModel.isShowCloseButton()) {
             Display.getCurrent().asyncExec(() -> {
                 // TODO Improve implementation
@@ -291,7 +281,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
                 // Issue 2:
                 // Part can still be closed via Ctrl-W (Command-W on OS X)
                 // or via menu File/close.
-                MPart part = site.getService(MPart.class);
+                var part = site.getService(MPart.class);
                 part.setCloseable(false);
 
                 // Original RCP code
@@ -339,7 +329,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
     private double[] createZoomLevels() {
         List<Double> zoomLevelList = new ArrayList<>();
 
-        double level = 0.1;
+        var level = 0.1;
         while (level <= 0.9) {
             zoomLevelList.add(level);
             level = level + 0.1;
@@ -357,23 +347,21 @@ public class OPIRuntimeDelegate implements IAdaptable {
         zoomLevelList.add(4.5);
         zoomLevelList.add(5.0);
 
-        double[] result = new double[zoomLevelList.size()];
-        for (int i = 0; i < zoomLevelList.size(); i++) {
+        var result = new double[zoomLevelList.size()];
+        for (var i = 0; i < zoomLevelList.size(); i++) {
             result[i] = zoomLevelList.get(i);
         }
 
         return result;
     }
 
-    private void addRunnerInputMacros(final IEditorInput input) {
-        MacrosInput macrosInput = ((IRunnerInput) input).getMacrosInput();
+    private void addRunnerInputMacros(IEditorInput input) {
+        var macrosInput = ((IRunnerInput) input).getMacrosInput();
 
         if (macrosInput != null) {
             macrosInput = macrosInput.getCopy();
-            macrosInput.getMacrosMap().putAll(
-                    displayModel.getMacrosInput().getMacrosMap());
-            displayModel.setPropertyValue(
-                    AbstractContainerModel.PROP_MACROS, macrosInput);
+            macrosInput.getMacrosMap().putAll(displayModel.getMacrosInput().getMacrosMap());
+            displayModel.setPropertyValue(AbstractContainerModel.PROP_MACROS, macrosInput);
         }
     }
 
@@ -395,8 +383,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
             return adapter.cast(viewer.getEditDomain().getCommandStack());
         }
         if (adapter == ZoomManager.class) {
-            return adapter.cast(((ScalableFreeformRootEditPart) viewer.getRootEditPart())
-                    .getZoomManager());
+            return adapter.cast(((ScalableFreeformRootEditPart) viewer.getRootEditPart()).getZoomManager());
         }
         return null;
     }

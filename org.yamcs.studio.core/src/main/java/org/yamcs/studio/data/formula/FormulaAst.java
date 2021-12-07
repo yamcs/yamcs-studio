@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -267,7 +266,7 @@ public class FormulaAst {
      */
     static FormulaParser createParser(String text) {
         CharStream stream = new ANTLRStringStream(text);
-        FormulaLexer lexer = new FormulaLexer(stream);
+        var lexer = new FormulaLexer(stream);
         TokenStream tokenStream = new CommonTokenStream(lexer);
         return new FormulaParser(tokenStream);
     }
@@ -280,7 +279,7 @@ public class FormulaAst {
      * @return the parsed AST
      */
     public static FormulaAst formula(String formula) {
-        FormulaAst ast = staticChannel(formula);
+        var ast = staticChannel(formula);
         if (ast != null) {
             return ast;
         }
@@ -317,7 +316,7 @@ public class FormulaAst {
      * @return the parsed AST
      */
     public static FormulaAst singleChannel(String formula) {
-        FormulaAst ast = staticChannel(formula);
+        var ast = staticChannel(formula);
         if (ast != null) {
             return ast;
         }
@@ -342,14 +341,14 @@ public class FormulaAst {
     public FormulaAst substituteChannels(Map<String, FormulaAst> substitutions) {
         switch (getType()) {
         case CHANNEL:
-            FormulaAst sub = substitutions.get((String) getValue());
+            var sub = substitutions.get((String) getValue());
             if (sub == null) {
                 sub = this;
             }
             return sub;
         case OP:
-            FormulaAst[] subs = new FormulaAst[getChildren().size()];
-            for (int i = 0; i < subs.length; i++) {
+            var subs = new FormulaAst[getChildren().size()];
+            for (var i = 0; i < subs.length; i++) {
                 subs[i] = getChildren().get(i).substituteChannels(substitutions);
             }
             return op((String) getValue(), subs);
@@ -386,10 +385,9 @@ public class FormulaAst {
         }
 
         if (obj instanceof FormulaAst) {
-            FormulaAst other = (FormulaAst) obj;
-            return Objects.equals(getType(), other.getType()) &&
-                    Objects.equals(getValue(), other.getValue()) &&
-                    Objects.equals(getChildren(), other.getChildren());
+            var other = (FormulaAst) obj;
+            return Objects.equals(getType(), other.getType()) && Objects.equals(getValue(), other.getValue())
+                    && Objects.equals(getChildren(), other.getChildren());
         } else {
             return false;
         }
@@ -397,7 +395,7 @@ public class FormulaAst {
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        var hash = 3;
         hash = 89 * hash + Objects.hashCode(this.type);
         hash = 89 * hash + Objects.hashCode(this.children);
         hash = 89 * hash + Objects.hashCode(this.value);
@@ -416,8 +414,8 @@ public class FormulaAst {
      * @return the unescaped string
      */
     private static String unescapeString(String escapedString) {
-        Matcher match = escapeSequence.matcher(escapedString);
-        StringBuffer output = new StringBuffer();
+        var match = escapeSequence.matcher(escapedString);
+        var output = new StringBuffer();
         while (match.find()) {
             match.appendReplacement(output, substitution(match.group()));
         }

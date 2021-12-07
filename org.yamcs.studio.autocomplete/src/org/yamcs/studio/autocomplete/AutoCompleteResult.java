@@ -65,15 +65,17 @@ public class AutoCompleteResult {
 
     public List<String> getProposalsAsString() {
         List<String> strList = new ArrayList<>();
-        for (Proposal p : proposals)
+        for (Proposal p : proposals) {
             strList.add(p.getValue());
+        }
         return strList;
     }
 
     public List<String> getTopProposalsAsString() {
         List<String> strList = new ArrayList<>();
-        for (Proposal p : topProposals)
+        for (Proposal p : topProposals) {
             strList.add(p.getValue());
+        }
         return strList;
     }
 

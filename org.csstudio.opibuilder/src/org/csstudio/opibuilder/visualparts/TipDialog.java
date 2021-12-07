@@ -28,20 +28,17 @@ public class TipDialog extends MessageDialog {
      * @param dialogTitle
      * @param dialogMessage
      */
-    public TipDialog(Shell parentShell, int kind, String dialogTitle,
-            String dialogMessage) {
-        super(parentShell, dialogTitle, null, dialogMessage,
-                kind, getButtonLabels(kind), 0);
+    public TipDialog(Shell parentShell, int kind, String dialogTitle, String dialogMessage) {
+        super(parentShell, dialogTitle, null, dialogMessage, kind, getButtonLabels(kind), 0);
     }
 
-    public TipDialog(Shell parentShell, String dialogTitle,
-            String dialogMessage) {
+    public TipDialog(Shell parentShell, String dialogTitle, String dialogMessage) {
         this(parentShell, MessageDialog.INFORMATION, dialogTitle, dialogMessage);
     }
 
     @Override
     protected Control createCustomArea(Composite parent) {
-        final Button checkbox = new Button(parent, SWT.CHECK);
+        var checkbox = new Button(parent, SWT.CHECK);
         checkbox.setText("Do not show this dialog again");
         checkbox.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -86,8 +83,7 @@ public class TipDialog extends MessageDialog {
             break;
         }
         default: {
-            throw new IllegalArgumentException(
-                    "Illegal value for kind in MessageDialog.open()");
+            throw new IllegalArgumentException("Illegal value for kind in MessageDialog.open()");
         }
         }
         return dialogButtonLabels;

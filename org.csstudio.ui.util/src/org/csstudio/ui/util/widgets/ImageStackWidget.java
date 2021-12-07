@@ -20,7 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
@@ -30,10 +29,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -44,7 +41,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 /**
@@ -56,8 +52,7 @@ public class ImageStackWidget extends Composite {
     private String selectedImageName;
     private boolean scrollBarVisble;
 
-    protected final PropertyChangeSupport changeSupport = new PropertyChangeSupport(
-            this);
+    protected final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private ImagePreview imagePreview;
     private Table table;
     private TableViewer tableViewer;
@@ -86,62 +81,56 @@ public class ImageStackWidget extends Composite {
         changeSupport.removePropertyChangeListener(listener);
     }
 
-    public ImageStackWidget(final Composite parent, int style) {
+    public ImageStackWidget(Composite parent, int style) {
         super(parent, SWT.NONE);
         setLayout(new FormLayout());
 
-        Label label = new Label(this, SWT.SEPARATOR | SWT.VERTICAL);
-        FormData fd_label = new FormData();
+        var label = new Label(this, SWT.SEPARATOR | SWT.VERTICAL);
+        var fd_label = new FormData();
         fd_label.bottom = new FormAttachment(100, 5);
         fd_label.top = new FormAttachment(0, 5);
         fd_label.right = new FormAttachment(100, 100, -125);
         label.setLayoutData(fd_label);
 
-        Label lblImages = new Label(this, SWT.NONE);
-        FormData fd_lblImages = new FormData();
+        var lblImages = new Label(this, SWT.NONE);
+        var fd_lblImages = new FormData();
         fd_lblImages.left = new FormAttachment(label, 5);
         fd_lblImages.top = new FormAttachment(0, 5);
         lblImages.setLayoutData(fd_lblImages);
         lblImages.setText("Images:");
 
-        tableViewer = new TableViewer(this, SWT.DOUBLE_BUFFERED | SWT.NO_SCROLL
-                | SWT.V_SCROLL);
+        tableViewer = new TableViewer(this, SWT.DOUBLE_BUFFERED | SWT.NO_SCROLL | SWT.V_SCROLL);
         table = tableViewer.getTable();
-        FormData fd_table = new FormData();
+        var fd_table = new FormData();
         fd_table.left = new FormAttachment(label, 5);
         fd_table.right = new FormAttachment(100, -5);
         fd_table.bottom = new FormAttachment(100, -5);
         fd_table.top = new FormAttachment(0, 30);
         table.setLayoutData(fd_table);
 
-        Color tableBgColor = parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+        var tableBgColor = parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
         table.setBackground(tableBgColor);
 
         tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         tableViewerColumn.setLabelProvider(new OwnerDrawLabelProvider() {
             @Override
             protected void paint(Event event, Object element) {
-                String imageName = element == null ? "" : element.toString();
-                ImageData imageData = new ImageData(new ByteArrayInputStream(
-                        imageInputStreamsMap.get(imageName)));
-                int width = scrollBarVisble ? 90 : 100;
-                double scale = determineImageScale(imageData, width, width);
-                Image img = new Image(getDisplay(), imageData.scaledTo(
-                        (int) (imageData.width * scale),
-                        (int) (imageData.height * scale)));
+                var imageName = element == null ? "" : element.toString();
+                var imageData = new ImageData(new ByteArrayInputStream(imageInputStreamsMap.get(imageName)));
+                var width = scrollBarVisble ? 90 : 100;
+                var scale = determineImageScale(imageData, width, width);
+                var img = new Image(getDisplay(),
+                        imageData.scaledTo((int) (imageData.width * scale), (int) (imageData.height * scale)));
                 if (img != null) {
-                    Rectangle bounds = ((TableItem) event.item)
-                            .getBounds(event.index);
-                    Rectangle imgBounds = img.getBounds();
+                    var bounds = ((TableItem) event.item).getBounds(event.index);
+                    var imgBounds = img.getBounds();
                     bounds.width /= 2;
                     bounds.width -= imgBounds.width / 2;
                     bounds.height /= 2;
                     bounds.height -= imgBounds.height / 2;
 
-                    int x = bounds.width > 0 ? bounds.x + bounds.width
-                            : bounds.x;
-                    int y = bounds.height > 0 ? bounds.y + bounds.height
-                            : bounds.y;
+                    var x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+                    var y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
 
                     event.gc.drawImage(img, x, y);
                 }
@@ -149,21 +138,19 @@ public class ImageStackWidget extends Composite {
 
             @Override
             protected void measure(Event event, Object element) {
-                String imageName = element == null ? "" : element.toString();
-                ImageData imageData = new ImageData(new ByteArrayInputStream(
-                        imageInputStreamsMap.get(imageName)));
-                double scale = determineImageScale(imageData, 85, 85);
+                var imageName = element == null ? "" : element.toString();
+                var imageData = new ImageData(new ByteArrayInputStream(imageInputStreamsMap.get(imageName)));
+                var scale = determineImageScale(imageData, 85, 85);
                 event.height = (int) (scale * imageData.height) + 10;
             }
 
-            private double determineImageScale(ImageData imgData,
-                    int targetWidth, int targetHeight) {
+            private double determineImageScale(ImageData imgData, int targetWidth, int targetHeight) {
                 if (imgData == null) {
                     return 1;
                 }
-                double scalex = (double) targetWidth / imgData.width;
-                double scaley = (double) targetHeight / imgData.height;
-                double ratio = Math.min(scalex, scaley);
+                var scalex = (double) targetWidth / imgData.width;
+                var scaley = (double) targetHeight / imgData.height;
+                var ratio = Math.min(scalex, scaley);
                 if (ratio > 1) {
                     return 1;
                 }
@@ -172,11 +159,10 @@ public class ImageStackWidget extends Composite {
         });
 
         table.addPaintListener(e -> {
-            Rectangle rect = table.getClientArea();
-            int itemHeight = table.getItemHeight();
-            int headerHeight = table.getHeaderHeight();
-            int visibleCount = (rect.height - headerHeight + itemHeight - 1)
-                    / itemHeight;
+            var rect = table.getClientArea();
+            var itemHeight = table.getItemHeight();
+            var headerHeight = table.getHeaderHeight();
+            var visibleCount = (rect.height - headerHeight + itemHeight - 1) / itemHeight;
             setScrollBarVisble(table.getItemCount() >= visibleCount);
         });
 
@@ -186,8 +172,7 @@ public class ImageStackWidget extends Composite {
         tableViewer.setContentProvider(new IStructuredContentProvider() {
 
             @Override
-            public void inputChanged(Viewer viewer, Object oldInput,
-                    Object newInput) {
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
             }
 
@@ -202,18 +187,15 @@ public class ImageStackWidget extends Composite {
             }
         });
 
-        tableViewer
-                .addSelectionChangedListener(event -> {
-                    ISelection selection = event.getSelection();
-                    if (selection != null
-                            && selection instanceof IStructuredSelection) {
-                        IStructuredSelection sel = (IStructuredSelection) selection;
-                        if (sel.size() == 1) {
-                            setSelectedImageName((String) sel.iterator()
-                                    .next());
-                        }
-                    }
-                });
+        tableViewer.addSelectionChangedListener(event -> {
+            var selection = event.getSelection();
+            if (selection != null && selection instanceof IStructuredSelection) {
+                var sel = (IStructuredSelection) selection;
+                if (sel.size() == 1) {
+                    setSelectedImageName((String) sel.iterator().next());
+                }
+            }
+        });
 
         buttonRemove = new Button(this, SWT.NONE);
         buttonRemove.addSelectionListener(new SelectionAdapter() {
@@ -227,14 +209,14 @@ public class ImageStackWidget extends Composite {
         });
 
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        Bundle bundle = FrameworkUtil.getBundle(ErrorBar.class);
+        var bundle = FrameworkUtil.getBundle(ErrorBar.class);
 
-        ImageDescriptor removeImageDescriptor = ImageDescriptor
+        var removeImageDescriptor = ImageDescriptor
                 .createFromURL(FileLocator.find(bundle, new Path("icons/remove-16.gif"), null));
-        Image removeImageResource = resourceManager.createImage(removeImageDescriptor);
+        var removeImageResource = resourceManager.createImage(removeImageDescriptor);
 
         buttonRemove.setImage(removeImageResource);
-        FormData fd_lblNewLabel = new FormData();
+        var fd_lblNewLabel = new FormData();
         fd_lblNewLabel.right = new FormAttachment(label, -5);
         fd_lblNewLabel.top = new FormAttachment(0, 5);
         buttonRemove.setLayoutData(fd_lblNewLabel);
@@ -242,7 +224,7 @@ public class ImageStackWidget extends Composite {
         buttonRemove.setVisible(false);
 
         imagePreview = new ImagePreview(this);
-        FormData fd_imagePreview = new FormData();
+        var fd_imagePreview = new FormData();
         fd_imagePreview.right = new FormAttachment(label, -5);
         fd_imagePreview.bottom = new FormAttachment(100, -5);
         fd_imagePreview.top = new FormAttachment(0, 5);
@@ -253,24 +235,15 @@ public class ImageStackWidget extends Composite {
             case "editable":
                 break;
             case "imageInputStreamsMap":
-                if (imageInputStreamsMap != null
-                        && !imageInputStreamsMap.isEmpty()) {
+                if (imageInputStreamsMap != null && !imageInputStreamsMap.isEmpty()) {
                     // Populate the list on the side
-                    tableViewer.setInput(imageInputStreamsMap.keySet()
-                            .toArray(
-                                    new String[imageInputStreamsMap
-                                            .keySet().size()]));
-                    if (imageInputStreamsMap.keySet().contains(
-                            selectedImageName)) {
-                        imagePreview
-                                .setImage(new ByteArrayInputStream(
-                                        imageInputStreamsMap
-                                                .get(selectedImageName)));
+                    tableViewer.setInput(
+                            imageInputStreamsMap.keySet().toArray(new String[imageInputStreamsMap.keySet().size()]));
+                    if (imageInputStreamsMap.keySet().contains(selectedImageName)) {
+                        imagePreview.setImage(new ByteArrayInputStream(imageInputStreamsMap.get(selectedImageName)));
                     } else {
-                        Entry<String, byte[]> next = imageInputStreamsMap
-                                .entrySet().iterator().next();
-                        imagePreview.setImage(new ByteArrayInputStream(next
-                                .getValue()));
+                        var next = imageInputStreamsMap.entrySet().iterator().next();
+                        imagePreview.setImage(new ByteArrayInputStream(next.getValue()));
                         selectedImageName = next.getKey();
                         buttonRemove.setVisible(true && editable);
                         table.setSelection(0);
@@ -285,13 +258,11 @@ public class ImageStackWidget extends Composite {
                 imagePreview.redraw();
                 break;
             case "selectedImageName":
-                imagePreview.setImage(new ByteArrayInputStream(
-                        imageInputStreamsMap.get(selectedImageName)));
+                imagePreview.setImage(new ByteArrayInputStream(imageInputStreamsMap.get(selectedImageName)));
                 buttonRemove.setVisible(true && editable);
                 imagePreview.redraw();
-                for (int index = 0; index < table.getItemCount(); index++) {
-                    if (selectedImageName.equals(
-                            table.getItem(index).getData())) {
+                for (var index = 0; index < table.getItemCount(); index++) {
+                    if (selectedImageName.equals(table.getItem(index).getData())) {
                         table.select(index);
                         table.redraw();
                         break;
@@ -314,7 +285,7 @@ public class ImageStackWidget extends Composite {
     }
 
     public void setEditable(boolean editable) {
-        boolean oldValue = this.editable;
+        var oldValue = this.editable;
         this.editable = editable;
         changeSupport.firePropertyChange("editable", oldValue, this.editable);
     }
@@ -327,16 +298,13 @@ public class ImageStackWidget extends Composite {
      *            - a map of image names and image input streams
      * @throws IOException
      */
-    public void setImageInputStreamsMap(
-            Map<String, InputStream> imageInputStreamsMap) throws IOException {
-        Map<String, byte[]> oldValue = this.imageInputStreamsMap;
+    public void setImageInputStreamsMap(Map<String, InputStream> imageInputStreamsMap) throws IOException {
+        var oldValue = this.imageInputStreamsMap;
         this.imageInputStreamsMap = new HashMap<>();
         for (Entry<String, InputStream> test : imageInputStreamsMap.entrySet()) {
-            this.imageInputStreamsMap.put(test.getKey(),
-                    read2byteArray(test.getValue()));
+            this.imageInputStreamsMap.put(test.getKey(), read2byteArray(test.getValue()));
         }
-        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue,
-                this.imageInputStreamsMap);
+        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
     }
 
     /**
@@ -348,13 +316,10 @@ public class ImageStackWidget extends Composite {
      *            - an inputStream for the Image to be added.
      * @throws IOException
      */
-    public void addImage(String name, InputStream imageInputStream)
-            throws IOException {
-        Map<String, byte[]> oldValue = new HashMap<>(
-                this.imageInputStreamsMap);
+    public void addImage(String name, InputStream imageInputStream) throws IOException {
+        Map<String, byte[]> oldValue = new HashMap<>(this.imageInputStreamsMap);
         this.imageInputStreamsMap.put(name, read2byteArray(imageInputStream));
-        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue,
-                this.imageInputStreamsMap);
+        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
     }
 
     /**
@@ -366,11 +331,9 @@ public class ImageStackWidget extends Composite {
      */
     public void removeImage(String name) throws IOException {
         if (imageInputStreamsMap.containsKey(name)) {
-            Map<String, byte[]> oldValue = new HashMap<>(
-                    this.imageInputStreamsMap);
+            Map<String, byte[]> oldValue = new HashMap<>(this.imageInputStreamsMap);
             this.imageInputStreamsMap.remove(name);
-            changeSupport.firePropertyChange("imageInputStreamsMap", oldValue,
-                    this.imageInputStreamsMap);
+            changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
         }
     }
 
@@ -379,10 +342,9 @@ public class ImageStackWidget extends Composite {
      *            the scrollBarVisble to set
      */
     private void setScrollBarVisble(boolean scrollBarVisble) {
-        boolean oldValue = this.scrollBarVisble;
+        var oldValue = this.scrollBarVisble;
         this.scrollBarVisble = scrollBarVisble;
-        changeSupport.firePropertyChange("scrollBarVisible", oldValue,
-                this.scrollBarVisble);
+        changeSupport.firePropertyChange("scrollBarVisible", oldValue, this.scrollBarVisble);
     }
 
     /**
@@ -420,16 +382,15 @@ public class ImageStackWidget extends Composite {
      * @param selectedImageName
      */
     public void setSelectedImageName(String selectedImageName) {
-        String oldValue = this.selectedImageName;
+        var oldValue = this.selectedImageName;
         this.selectedImageName = selectedImageName;
-        changeSupport.firePropertyChange("selectedImageName", oldValue,
-                this.selectedImageName);
+        changeSupport.firePropertyChange("selectedImageName", oldValue, this.selectedImageName);
     }
 
     private static byte[] read2byteArray(InputStream input) throws IOException {
-        byte[] buffer = new byte[8192];
+        var buffer = new byte[8192];
         int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        var output = new ByteArrayOutputStream();
         while ((bytesRead = input.read(buffer)) != -1) {
             output.write(buffer, 0, bytesRead);
         }

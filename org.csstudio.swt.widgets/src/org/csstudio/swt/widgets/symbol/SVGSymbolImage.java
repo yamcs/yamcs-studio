@@ -10,7 +10,6 @@
 package org.csstudio.swt.widgets.symbol;
 
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -23,7 +22,6 @@ import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.utility.batik.SVGHandler;
 import org.csstudio.utility.batik.SVGUtils;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -80,7 +78,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     }
 
     @Override
-    public void paintFigure(final Graphics gfx) {
+    public void paintFigure(Graphics gfx) {
         if (disposed || loadingImage || originalImageData == null) {
             return;
         }
@@ -106,11 +104,11 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         if (bounds == null || imgDimension == null) {
             return;
         }
-        int cropedWidth = imageData.width - (int) Math.round(scale * (leftCrop + rightCrop));
-        int cropedHeight = imageData.height - (int) Math.round(scale * (bottomCrop + topCrop));
-        Rectangle srcArea = new Rectangle((int) Math.round(scale * leftCrop), (int) Math.round(scale * topCrop),
-                cropedWidth, cropedHeight);
-        Rectangle destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
+        var cropedWidth = imageData.width - (int) Math.round(scale * (leftCrop + rightCrop));
+        var cropedHeight = imageData.height - (int) Math.round(scale * (bottomCrop + topCrop));
+        var srcArea = new Rectangle((int) Math.round(scale * leftCrop), (int) Math.round(scale * topCrop), cropedWidth,
+                cropedHeight);
+        var destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
         if (backgroundColor != null) {
             gfx.setBackgroundColor(backgroundColor);
             gfx.fillRectangle(destArea);
@@ -137,7 +135,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             return;
         }
         // Load document if do not exist
-        Document document = getDocument();
+        var document = getDocument();
         if (document == null) {
             return;
         }
@@ -150,9 +148,9 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         }
 
         // Scale image
-        java.awt.Dimension dims = svgHandler.getDocumentSize();
-        int imgWidth = dims.width;
-        int imgHeight = dims.height;
+        var dims = svgHandler.getDocumentSize();
+        var imgWidth = dims.width;
+        var imgHeight = dims.height;
         if (stretch) {
             if (bounds != null && !bounds.equals(0, 0, 0, 0)) {
                 imgWidth = bounds.width;
@@ -168,17 +166,17 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         imgHeight = (int) Math.round(scale * (imgHeight + bottomCrop + topCrop));
         svgHandler.setCanvasSize(imgWidth, imgHeight);
 
-        BufferedImage awtImage = svgHandler.getOffScreen();
+        var awtImage = svgHandler.getOffScreen();
         if (awtImage != null) {
             imageData = SVGUtils.toSWT(Display.getCurrent(), awtImage);
         }
 
         // Calculate areas
-        int cropedWidth = imgWidth - (int) Math.round(scale * (leftCrop + rightCrop));
-        int cropedHeight = imgHeight - (int) Math.round(scale * (bottomCrop + topCrop));
+        var cropedWidth = imgWidth - (int) Math.round(scale * (leftCrop + rightCrop));
+        var cropedHeight = imgHeight - (int) Math.round(scale * (bottomCrop + topCrop));
 
-        Dimension newImgDimension = new Dimension((int) Math.round(cropedWidth / scale), (int) Math.round(cropedHeight
-                / scale));
+        var newImgDimension = new Dimension((int) Math.round(cropedWidth / scale),
+                (int) Math.round(cropedHeight / scale));
         if (imgDimension == null || newImgDimension.width != imgDimension.width
                 || newImgDimension.height != imgDimension.height) {
             fireSizeChanged();
@@ -189,7 +187,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
 
     @Override
     public void setAbsoluteScale(double newScale) {
-        double oldScale = scale;
+        var oldScale = scale;
         super.setAbsoluteScale(newScale);
         if (oldScale != newScale) {
             resizeImage();
@@ -204,7 +202,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     }
 
     @Override
-    public void setAnimationDisabled(final boolean stop) {
+    public void setAnimationDisabled(boolean stop) {
         super.setAnimationDisabled(stop);
         if (svgHandler == null) {
             return;
@@ -233,7 +231,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         svgHandler = null;
         failedToLoadDocument = false;
         try {
-            InputStream inputStream = ResourceUtil.pathToInputStream(imagePath);
+            var inputStream = ResourceUtil.pathToInputStream(imagePath);
             loadDocument(inputStream);
         } catch (Exception e) {
             Activator.getLogger().log(Level.WARNING, "Error loading SVG image " + imagePath, e);
@@ -288,23 +286,22 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading SVG Image...", errorHandler);
     }
 
-    private void loadDocument(final InputStream inputStream) {
+    private void loadDocument(InputStream inputStream) {
         svgHandler = null;
         failedToLoadDocument = true;
         if (imagePath == null || imagePath.isEmpty()) {
             return;
         }
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
+        var parser = XMLResourceDescriptor.getXMLParserClassName();
+        var factory = new SAXSVGDocumentFactory(parser);
         try {
-            IPath workSpacePath = ResourceUtil.workspacePathToSysPath(new Path("/"));
-            String uri = "file://" + (workSpacePath == null ? "" : workSpacePath.toOSString())
-                    + imagePath.toString();
+            var workSpacePath = ResourceUtil.workspacePathToSysPath(new Path("/"));
+            var uri = "file://" + (workSpacePath == null ? "" : workSpacePath.toOSString()) + imagePath.toString();
             svgDocument = factory.createDocument(uri, inputStream);
             svgHandler = new SVGHandler((SVGDocument) svgDocument, Display.getCurrent());
             svgHandler.setAlignedToNearestSecond(alignedToNearestSecond);
             initRenderingHints();
-            BufferedImage awtImage = svgHandler.getOffScreen();
+            var awtImage = svgHandler.getOffScreen();
             if (awtImage != null) {
                 this.originalImageData = SVGUtils.toSWT(Display.getCurrent(), awtImage);
                 resetData();

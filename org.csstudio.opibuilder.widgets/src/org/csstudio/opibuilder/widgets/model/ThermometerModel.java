@@ -69,23 +69,21 @@ public class ThermometerModel extends AbstractMarkedWidgetModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new ColorProperty(PROP_FILL_COLOR, "Fill Color",
-                WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
+        addProperty(
+                new ColorProperty(PROP_FILL_COLOR, "Fill Color", WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
 
         addProperty(new BooleanProperty(PROP_FILLCOLOR_ALARM_SENSITIVE, "FillColor Alarm Sensitive",
                 WidgetPropertyCategory.Display, false));
 
-        addProperty(new BooleanProperty(PROP_SHOW_BULB, "Show Bulb",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_BULB, "Show Bulb", WidgetPropertyCategory.Display, true));
 
-        addProperty(new ComboProperty(PROP_UNIT, "Unit",
-                WidgetPropertyCategory.Display, TemperatureUnit.stringValues(), 0));
+        addProperty(new ComboProperty(PROP_UNIT, "Unit", WidgetPropertyCategory.Display, TemperatureUnit.stringValues(),
+                0));
 
-        addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground",
-                WidgetPropertyCategory.Display, DEFAULT_FILLBACKGROUND_COLOR));
+        addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground", WidgetPropertyCategory.Display,
+                DEFAULT_FILLBACKGROUND_COLOR));
 
-        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect", WidgetPropertyCategory.Display, true));
 
         setPropertyValue(PROP_LO_COLOR, new RGB(255, 128, 0));
         setPropertyValue(PROP_HI_COLOR, new RGB(255, 128, 0));

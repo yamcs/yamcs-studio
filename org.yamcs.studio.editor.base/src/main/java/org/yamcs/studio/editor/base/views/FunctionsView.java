@@ -12,8 +12,6 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.studio.data.formula.FormulaFunction;
 import org.yamcs.studio.data.formula.FormulaFunctionSet;
@@ -27,16 +25,16 @@ public class FunctionsView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
 
-        Composite composite = new Composite(parent, SWT.NONE);
-        TreeColumnLayout tcl_composite = new TreeColumnLayout();
+        var composite = new Composite(parent, SWT.NONE);
+        var tcl_composite = new TreeColumnLayout();
         composite.setLayout(tcl_composite);
 
         treeViewer = new TreeViewer(composite, SWT.BORDER);
-        Tree tree = treeViewer.getTree();
+        var tree = treeViewer.getTree();
         tree.setHeaderVisible(true);
         tree.setLinesVisible(true);
 
-        TreeViewerColumn treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
+        var treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
         treeViewerColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {
@@ -53,12 +51,11 @@ public class FunctionsView extends ViewPart {
                 return "";
             }
         });
-        TreeColumn trclmnNewColumn = treeViewerColumn.getColumn();
-        tcl_composite.setColumnData(trclmnNewColumn, new ColumnWeightData(10,
-                ColumnWeightData.MINIMUM_WIDTH, true));
+        var trclmnNewColumn = treeViewerColumn.getColumn();
+        tcl_composite.setColumnData(trclmnNewColumn, new ColumnWeightData(10, ColumnWeightData.MINIMUM_WIDTH, true));
         trclmnNewColumn.setText("Name");
 
-        TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(treeViewer, SWT.NONE);
+        var treeViewerColumn_1 = new TreeViewerColumn(treeViewer, SWT.NONE);
         treeViewerColumn_1.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {
@@ -75,14 +72,12 @@ public class FunctionsView extends ViewPart {
                 return "";
             }
         });
-        TreeColumn trclmnNewColumn_1 = treeViewerColumn_1.getColumn();
-        tcl_composite.setColumnData(trclmnNewColumn_1, new ColumnWeightData(7,
-                ColumnWeightData.MINIMUM_WIDTH, true));
+        var trclmnNewColumn_1 = treeViewerColumn_1.getColumn();
+        tcl_composite.setColumnData(trclmnNewColumn_1, new ColumnWeightData(7, ColumnWeightData.MINIMUM_WIDTH, true));
         trclmnNewColumn_1.setText("Description");
         treeViewer.setContentProvider(new FunctionTreeContentProvider());
 
-        List<String> functionSetNames = new ArrayList<>(FormulaRegistry.getDefault()
-                .listFunctionSets());
+        List<String> functionSetNames = new ArrayList<>(FormulaRegistry.getDefault().listFunctionSets());
         Collections.sort(functionSetNames);
         List<FormulaFunctionSet> functionSets = new ArrayList<>();
         for (String functionSetName : functionSetNames) {

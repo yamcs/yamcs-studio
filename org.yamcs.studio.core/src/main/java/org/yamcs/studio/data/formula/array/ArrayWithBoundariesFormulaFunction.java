@@ -70,19 +70,19 @@ class ArrayWithBoundariesFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         if (containsNull(args)) {
             return null;
         }
 
-        VNumberArray array = (VNumberArray) args.get(0);
+        var array = (VNumberArray) args.get(0);
         if (array.getSizes().size() != args.size() - 1) {
             throw new IllegalArgumentException("Dimension of the array must match the number of ListNumberProvider");
         }
 
         List<ArrayDimensionDisplay> dimDisplay = new ArrayList<>();
-        for (int i = 1; i < args.size(); i++) {
-            ListNumberProvider numberGenerator = (ListNumberProvider) args.get(i);
+        for (var i = 1; i < args.size(); i++) {
+            var numberGenerator = (ListNumberProvider) args.get(i);
             dimDisplay.add(
                     ValueFactory.newDisplay(numberGenerator.createListNumber(array.getSizes().getInt(i - 1) + 1), ""));
         }

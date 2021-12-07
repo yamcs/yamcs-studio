@@ -27,7 +27,7 @@ public class ValueFactory {
      *            the time
      * @return the new value
      */
-    public static VString newVString(final String value, final Alarm alarm, final Time time) {
+    public static VString newVString(String value, Alarm alarm, Time time) {
         return new IVString(value, alarm, time);
     }
 
@@ -42,7 +42,7 @@ public class ValueFactory {
      *            the time
      * @return the new value
      */
-    public static VBoolean newVBoolean(final boolean value, final Alarm alarm, final Time time) {
+    public static VBoolean newVBoolean(boolean value, Alarm alarm, Time time) {
         return new IVBoolean(value, alarm, time);
     }
 
@@ -59,8 +59,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VMultiDouble newVMultiDouble(List<VDouble> values, final Alarm alarm, final Time time,
-            final Display display) {
+    public static VMultiDouble newVMultiDouble(List<VDouble> values, Alarm alarm, Time time, Display display) {
         return new IVMultiDouble(values, alarm, time, display);
     }
 
@@ -77,7 +76,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VLong newVLong(final Long value, final Alarm alarm, final Time time, final Display display) {
+    public static VLong newVLong(Long value, Alarm alarm, Time time, Display display) {
         return new IVLong(value, alarm, time, display);
     }
 
@@ -94,7 +93,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VInt newVInt(final Integer value, final Alarm alarm, final Time time, final Display display) {
+    public static VInt newVInt(Integer value, Alarm alarm, Time time, Display display) {
         return new IVInt(value, alarm, time, display);
     }
 
@@ -111,7 +110,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VShort newVShort(final Short value, final Alarm alarm, final Time time, final Display display) {
+    public static VShort newVShort(Short value, Alarm alarm, Time time, Display display) {
         return new IVShort(value, alarm, time, display);
     }
 
@@ -128,7 +127,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VByte newVByte(final Byte value, final Alarm alarm, final Time time, final Display display) {
+    public static VByte newVByte(Byte value, Alarm alarm, Time time, Display display) {
         return new IVByte(value, alarm, time, display);
     }
 
@@ -141,7 +140,7 @@ public class ValueFactory {
      *            the alarm name
      * @return the new alarm
      */
-    public static Alarm newAlarm(final AlarmSeverity alarmSeverity, final String alarmName) {
+    public static Alarm newAlarm(AlarmSeverity alarmSeverity, String alarmName) {
         return new Alarm() {
 
             @Override
@@ -163,8 +162,8 @@ public class ValueFactory {
     }
 
     private static final Alarm alarmNone = newAlarm(AlarmSeverity.NONE, "NONE");
-    private static final Display displayBoolean = newDisplay(0.0, 0.0, 0.0, "", NumberFormats.toStringFormat(),
-            1.0, 1.0, 1.0, 0.0, 1.0);
+    private static final Display displayBoolean = newDisplay(0.0, 0.0, 0.0, "", NumberFormats.toStringFormat(), 1.0,
+            1.0, 1.0, 0.0, 1.0);
 
     /**
      * No alarm.
@@ -186,8 +185,8 @@ public class ValueFactory {
      */
     public static Alarm newAlarm(Number value, Display display) {
         // Calculate new AlarmSeverity, using display ranges
-        AlarmSeverity severity = AlarmSeverity.NONE;
-        String status = "NONE";
+        var severity = AlarmSeverity.NONE;
+        var status = "NONE";
         if (value.doubleValue() <= display.getLowerAlarmLimit()) {
             status = "LOLO";
             severity = AlarmSeverity.MAJOR;
@@ -216,7 +215,7 @@ public class ValueFactory {
      *            whether the time is valid
      * @return the new time
      */
-    public static Time newTime(final Instant timestamp, final Integer timeUserTag, final boolean timeValid) {
+    public static Time newTime(Instant timestamp, Integer timeUserTag, boolean timeValid) {
         return new Time() {
 
             @Override
@@ -243,7 +242,7 @@ public class ValueFactory {
      *            the timestamp
      * @return the new time
      */
-    public static Time newTime(final Instant timestamp) {
+    public static Time newTime(Instant timestamp) {
         return newTime(timestamp, null, true);
     }
 
@@ -281,11 +280,9 @@ public class ValueFactory {
      *            the upper control limit
      * @return the new display
      */
-    public static Display newDisplay(final Double lowerDisplayLimit, final Double lowerAlarmLimit,
-            final Double lowerWarningLimit,
-            final String units, final NumberFormat numberFormat, final Double upperWarningLimit,
-            final Double upperAlarmLimit, final Double upperDisplayLimit,
-            final Double lowerCtrlLimit, final Double upperCtrlLimit) {
+    public static Display newDisplay(Double lowerDisplayLimit, Double lowerAlarmLimit, double lowerWarningLimit,
+            String units, NumberFormat numberFormat, Double upperWarningLimit, double upperAlarmLimit,
+            Double upperDisplayLimit, double lowerCtrlLimit, Double upperCtrlLimit) {
         return new Display() {
             @Override
             public Double getLowerCtrlLimit() {
@@ -340,21 +337,19 @@ public class ValueFactory {
         };
     }
 
-    public static ArrayDimensionDisplay newDisplay(final ListNumber boundaries, final String unit) {
+    public static ArrayDimensionDisplay newDisplay(ListNumber boundaries, String unit) {
         return newDisplay(boundaries, false, unit);
     }
 
-    public static ArrayDimensionDisplay newDisplay(final ListNumber boundaries, final boolean reversed,
-            final String unit) {
+    public static ArrayDimensionDisplay newDisplay(ListNumber boundaries, boolean reversed, String unit) {
         return new IArrayDimensionDisplay(boundaries, reversed, unit);
     }
 
-    public static ArrayDimensionDisplay newDisplay(final int size, final ListNumberProvider boundaryProvider,
-            final boolean invert) {
+    public static ArrayDimensionDisplay newDisplay(int size, ListNumberProvider boundaryProvider, boolean invert) {
         return newDisplay(boundaryProvider.createListNumber(size + 1), invert, "");
     }
 
-    public static ArrayDimensionDisplay newDisplay(final int size, final ListNumberProvider boundaryProvider) {
+    public static ArrayDimensionDisplay newDisplay(int size, ListNumberProvider boundaryProvider) {
         return newDisplay(boundaryProvider.createListNumber(size + 1), false, "");
     }
 
@@ -366,13 +361,12 @@ public class ValueFactory {
      * @return a new array display
      */
     public static ArrayDimensionDisplay newDisplay(int nCells) {
-        final ListNumber boundaries = ListNumbers.linearList(0, 1, nCells + 1);
+        var boundaries = ListNumbers.linearList(0, 1, nCells + 1);
         return newDisplay(boundaries, "");
     }
 
-    private static final Display displayNone = newDisplay(Double.NaN, Double.NaN,
-            Double.NaN, "", NumberFormats.toStringFormat(), Double.NaN, Double.NaN,
-            Double.NaN, Double.NaN, Double.NaN);
+    private static final Display displayNone = newDisplay(Double.NaN, Double.NaN, Double.NaN, "",
+            NumberFormats.toStringFormat(), Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
 
     /**
      * Empty display information.
@@ -435,7 +429,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VDouble newVDouble(final Double value, final Alarm alarm, final Time time, final Display display) {
+    public static VDouble newVDouble(Double value, Alarm alarm, Time time, Display display) {
         return new IVDouble(value, alarm, time, display);
     }
 
@@ -506,7 +500,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VFloat newVFloat(final Float value, final Alarm alarm, final Time time, final Display display) {
+    public static VFloat newVFloat(Float value, Alarm alarm, Time time, Display display) {
         return new IVFloat(value, alarm, time, display);
     }
 
@@ -548,11 +542,9 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VStatistics newVStatistics(final double average, final double stdDev,
-            final double min, final double max, final int nSamples, final Alarm alarm,
-            final Time time, final Display display) {
-        return new IVStatistics(average, stdDev, min, max, nSamples,
-                alarm, time, display);
+    public static VStatistics newVStatistics(double average, double stdDev, double min, double max, int nSamples,
+            Alarm alarm, Time time, Display display) {
+        return new IVStatistics(average, stdDev, min, max, nSamples, alarm, time, display);
     }
 
     /**
@@ -568,10 +560,9 @@ public class ValueFactory {
      *            the display
      * @return a new value
      */
-    public static VNumberArray newVNumberArray(final ListNumber data, final Alarm alarm, final Time time,
-            final Display display) {
+    public static VNumberArray newVNumberArray(ListNumber data, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(data.size());
-        List<ArrayDimensionDisplay> dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
+        var dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
         return newVNumberArray(data, sizes, dimensionDisplay, alarm, time, display);
     }
 
@@ -592,9 +583,8 @@ public class ValueFactory {
      *            the display
      * @return a new value
      */
-    public static VNumberArray newVNumberArray(final ListNumber data, final ListInt sizes,
-            final List<ArrayDimensionDisplay> dimensionDisplay,
-            final Alarm alarm, final Time time, final Display display) {
+    public static VNumberArray newVNumberArray(ListNumber data, ListInt sizes,
+            List<ArrayDimensionDisplay> dimensionDisplay, Alarm alarm, Time time, Display display) {
         if (data instanceof ListDouble) {
             return new IVDoubleArray((ListDouble) data, sizes, dimensionDisplay, alarm, time, display);
         } else if (data instanceof ListFloat) {
@@ -621,10 +611,10 @@ public class ValueFactory {
      * @return a new array
      */
     public static VNumberArray ndArray(VNumberArray data, ArrayDimensionDisplay... dimensions) {
-        int[] sizes = new int[dimensions.length];
+        var sizes = new int[dimensions.length];
         List<ArrayDimensionDisplay> displays = new ArrayList<>();
-        for (int i = 0; i < dimensions.length; i++) {
-            ArrayDimensionDisplay dimensionInfo = dimensions[i];
+        for (var i = 0; i < dimensions.length; i++) {
+            var dimensionInfo = dimensions[i];
             sizes[i] = dimensionInfo.getCellBoundaries().size() - 1;
             displays.add(dimensionInfo);
         }
@@ -645,8 +635,7 @@ public class ValueFactory {
      * @return the new value
      */
     public static VDoubleArray newVDoubleArray(ListDouble data, Alarm alarm, Time time, Display display) {
-        return new IVDoubleArray(data, new ArrayInt(data.size()), alarm,
-                time, display);
+        return new IVDoubleArray(data, new ArrayInt(data.size()), alarm, time, display);
     }
 
     /**
@@ -663,8 +652,7 @@ public class ValueFactory {
      * @return the new value
      */
     public static VFloatArray newVFloatArray(ListFloat data, Alarm alarm, Time time, Display display) {
-        return new IVFloatArray(data, new ArrayInt(data.size()), alarm,
-                time, display);
+        return new IVFloatArray(data, new ArrayInt(data.size()), alarm, time, display);
     }
 
     /**
@@ -719,8 +707,8 @@ public class ValueFactory {
      *            the time
      * @return a new object
      */
-    public static VImage newVImage(int height, int width, final ListNumber data, VImageDataType imageDataType,
-            Alarm alarm, Time time) {
+    public static VImage newVImage(int height, int width, ListNumber data, VImageDataType imageDataType, Alarm alarm,
+            Time time) {
         return new IVImage(height, width, data, imageDataType, VImageType.TYPE_3BYTE_BGR, alarm, time);
     }
 
@@ -737,7 +725,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VLongArray newVLongArray(final ListLong values, Alarm alarm, Time time, Display display) {
+    public static VLongArray newVLongArray(ListLong values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
         return new IVLongArray(values, sizes, ValueUtil.defaultArrayDisplay(sizes), alarm, time, display);
     }
@@ -755,7 +743,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VIntArray newVIntArray(final ListInt values, Alarm alarm, Time time, Display display) {
+    public static VIntArray newVIntArray(ListInt values, Alarm alarm, Time time, Display display) {
         return new IVIntArray(values, new ArrayInt(values.size()), alarm, time, display);
     }
 
@@ -772,7 +760,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VShortArray newVShortArray(final ListShort values, Alarm alarm, Time time, Display display) {
+    public static VShortArray newVShortArray(ListShort values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
         return new IVShortArray(values, sizes, ValueUtil.defaultArrayDisplay(sizes), alarm, time, display);
     }
@@ -790,7 +778,7 @@ public class ValueFactory {
      *            the display
      * @return the new value
      */
-    public static VByteArray newVByteArray(final ListByte values, Alarm alarm, Time time, Display display) {
+    public static VByteArray newVByteArray(ListByte values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
         return new IVByteArray(values, sizes, ValueUtil.defaultArrayDisplay(sizes), alarm, time, display);
     }
@@ -890,19 +878,17 @@ public class ValueFactory {
     public static VType wrapValue(Object value, Alarm alarm) {
         if (value instanceof Number) {
             // Special support for numbers
-            return newVDouble(((Number) value).doubleValue(), alarm, timeNow(),
-                    displayNone());
+            return newVDouble(((Number) value).doubleValue(), alarm, timeNow(), displayNone());
         } else if (value instanceof String) {
             // Special support for strings
-            return newVString(((String) value),
-                    alarm, timeNow());
+            return newVString(((String) value), alarm, timeNow());
         } else if (value instanceof double[]) {
             return newVDoubleArray(new ArrayDouble((double[]) value), alarm, timeNow(), displayNone());
         } else if (value instanceof ListDouble) {
             return newVDoubleArray((ListDouble) value, alarm, timeNow(), displayNone());
         } else if (value instanceof List) {
-            boolean matches = true;
-            List list = (List) value;
+            var matches = true;
+            var list = (List) value;
             for (Object object : list) {
                 if (!(object instanceof String)) {
                     matches = false;
@@ -910,7 +896,7 @@ public class ValueFactory {
             }
             if (matches) {
                 @SuppressWarnings("unchecked")
-                List<String> newList = (List<String>) list;
+                var newList = (List<String>) list;
                 return newVStringArray(Collections.unmodifiableList(newList), alarm, timeNow());
             } else {
                 throw new UnsupportedOperationException("Type " + value.getClass().getName() + " contains non Strings");
@@ -964,20 +950,16 @@ public class ValueFactory {
             return newVString((String) javaObject, alarm, time);
         } else if (javaObject instanceof Boolean) {
             return newVBoolean((Boolean) javaObject, alarm, time);
-        } else if (javaObject instanceof byte[]
-                || javaObject instanceof short[]
-                || javaObject instanceof int[]
-                || javaObject instanceof long[]
-                || javaObject instanceof float[]
-                || javaObject instanceof double[]) {
+        } else if (javaObject instanceof byte[] || javaObject instanceof short[] || javaObject instanceof int[]
+                || javaObject instanceof long[] || javaObject instanceof float[] || javaObject instanceof double[]) {
             return newVNumberArray(ListNumbers.toListNumber(javaObject), alarm, time, display);
         } else if (javaObject instanceof ListNumber) {
             return newVNumberArray((ListNumber) javaObject, alarm, time, display);
         } else if (javaObject instanceof String[]) {
             return newVStringArray(Arrays.asList((String[]) javaObject), alarm, time);
         } else if (javaObject instanceof List) {
-            boolean matches = true;
-            List list = (List) javaObject;
+            var matches = true;
+            var list = (List) javaObject;
             for (Object object : list) {
                 if (!(object instanceof String)) {
                     matches = false;
@@ -985,7 +967,7 @@ public class ValueFactory {
             }
             if (matches) {
                 @SuppressWarnings("unchecked")
-                List<String> newList = (List<String>) list;
+                var newList = (List<String>) list;
                 return newVStringArray(Collections.unmodifiableList(newList), alarm, time);
             } else {
                 return null;
@@ -1003,7 +985,7 @@ public class ValueFactory {
      * @return the new VType value
      */
     public static VType toVTypeChecked(Object javaObject) {
-        VType value = toVType(javaObject);
+        var value = toVType(javaObject);
         if (value == null) {
             throw new RuntimeException("Value " + value + " cannot be converted to VType.");
         }
@@ -1026,7 +1008,7 @@ public class ValueFactory {
      * @return the new VType value
      */
     public static VType toVTypeChecked(Object javaObject, Alarm alarm, Time time, Display display) {
-        VType value = toVType(javaObject, alarm, time, display);
+        var value = toVType(javaObject, alarm, time, display);
         if (value == null) {
             throw new RuntimeException("Value " + value + " cannot be converted to VType.");
         }

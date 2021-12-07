@@ -10,16 +10,13 @@
 
 package org.csstudio.opibuilder.widgets.model;
 
-import org.csstudio.opibuilder.datadefinition.WidgetScaleData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.PointListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.swt.widgets.util.PointsUtil;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 public abstract class AbstractPolyModel extends AbstractShapeModel {
 
@@ -47,10 +44,8 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new DoubleProperty(PROP_ROTATION, "Rotation Angle",
-                WidgetPropertyCategory.Display, 0, 0, 360));
-        addProperty(new PointListProperty(PROP_POINTS,
-                "Points", WidgetPropertyCategory.Display, new PointList()));
+        addProperty(new DoubleProperty(PROP_ROTATION, "Rotation Angle", WidgetPropertyCategory.Display, 0, 0, 360));
+        addProperty(new PointListProperty(PROP_POINTS, "Points", WidgetPropertyCategory.Display, new PointList()));
     }
 
     /**
@@ -61,15 +56,14 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      * @param rememberPoints
      *            true if the zero degree relative points should be remembered, false otherwise.
      */
-    public void setPoints(final PointList points,
-            final boolean rememberPoints) {
+    public void setPoints(PointList points, boolean rememberPoints) {
         if (points.size() > 0) {
-            PointList copy = points.getCopy();
+            var copy = points.getCopy();
             if (rememberPoints) {
                 this.rememberZeroDegreePoints(copy);
             }
 
-            Rectangle bounds = copy.getBounds();
+            var bounds = copy.getBounds();
             super.setPropertyValue(PROP_XPOS, bounds.x);
             super.setPropertyValue(PROP_YPOS, bounds.y);
             super.setPropertyValue(PROP_WIDTH, bounds.width);
@@ -88,20 +82,21 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     }
 
     @Override
-    public void setSize(final int width, final int height) {
-        if (getSize().width == width && getSize().height == height)
+    public void setSize(int width, int height) {
+        if (getSize().width == width && getSize().height == height) {
             return;
+        }
 
-        PointList newPoints = PointsUtil.scalePointsBySize(getPoints(), width, height);
+        var newPoints = PointsUtil.scalePointsBySize(getPoints(), width, height);
 
         setPoints(newPoints, true);
     }
 
     @Override
-    public void setLocation(final int x, final int y) {
-        PointList points = getPoints();
-        int oldX = getLocation().x;
-        int oldY = getLocation().y;
+    public void setLocation(int x, int y) {
+        var points = getPoints();
+        var oldX = getLocation().x;
+        var oldY = getLocation().y;
         points.translate(x - oldX, y - oldY);
 
         setPoints(points, true);
@@ -116,20 +111,18 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      *            The angle to rotate
      * @return The rotated PointList
      */
-    public PointList rotatePoints(final PointList points, final double angle) {
-        Rectangle pointBounds = points.getBounds();
-        Point rotationPoint = pointBounds.getCenter();
-        PointList newPoints = new PointList();
+    public PointList rotatePoints(PointList points, double angle) {
+        var pointBounds = points.getBounds();
+        var rotationPoint = pointBounds.getCenter();
+        var newPoints = new PointList();
 
-        for (int i = 0; i < points.size(); i++) {
-            newPoints.addPoint(PointsUtil.rotate(points.getPoint(i), angle,
-                    rotationPoint));
+        for (var i = 0; i < points.size(); i++) {
+            newPoints.addPoint(PointsUtil.rotate(points.getPoint(i), angle, rotationPoint));
         }
 
-        Rectangle newPointBounds = newPoints.getBounds();
+        var newPointBounds = newPoints.getBounds();
         if (!rotationPoint.equals(newPointBounds.getCenter())) {
-            Dimension difference = rotationPoint.getCopy().getDifference(
-                    newPointBounds.getCenter());
+            var difference = rotationPoint.getCopy().getDifference(newPointBounds.getCenter());
             newPoints.translate(difference.width, difference.height);
         }
 
@@ -142,7 +135,7 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      * @param points
      *            The current {@link PointList}
      */
-    protected void rememberZeroDegreePoints(final PointList points) {
+    protected void rememberZeroDegreePoints(PointList points) {
         if (this.getRotationAngle() == 0) {
             zeroDegreePoints = points.getCopy();
         } else {
@@ -155,7 +148,7 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      *
      * @return The rotation angle
      */
-    public final double getRotationAngle() {
+    public double getRotationAngle() {
         return (Double) getProperty(PROP_ROTATION).getPropertyValue();
     }
 
@@ -165,28 +158,25 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      * @param angle
      *            The angle
      */
-    public final void setRotationAngle(final double angle) {
+    public void setRotationAngle(double angle) {
         setPropertyValue(PROP_ROTATION, angle);
     }
 
     @Override
-    public final synchronized void setPropertyValue(Object propertyID,
-            Object value) {
+    public final synchronized void setPropertyValue(Object propertyID, Object value) {
         if (propertyID.equals(AbstractPolyModel.PROP_POINTS)) {
             if (value instanceof PointList) {
                 this.setPoints((PointList) value, true);
-            } else if (value instanceof int[])
+            } else if (value instanceof int[]) {
                 this.setPoints(new PointList((int[]) value), true);
-        } else if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) ||
-                propertyID.equals(AbstractWidgetModel.PROP_YPOS) ||
-                propertyID.equals(AbstractWidgetModel.PROP_WIDTH) ||
-                propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
-            int newValue = (int) Double.parseDouble(value.toString());
-            if (propertyID.equals(AbstractWidgetModel.PROP_XPOS)
-                    && (newValue != getPoints().getBounds().x)) {
+            }
+        } else if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) || propertyID.equals(AbstractWidgetModel.PROP_YPOS)
+                || propertyID.equals(AbstractWidgetModel.PROP_WIDTH)
+                || propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
+            var newValue = (int) Double.parseDouble(value.toString());
+            if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) && (newValue != getPoints().getBounds().x)) {
                 setLocation(newValue, getLocation().y);
-            } else if (propertyID.equals(AbstractWidgetModel.PROP_YPOS)
-                    && ((newValue != getPoints().getBounds().y))) {
+            } else if (propertyID.equals(AbstractWidgetModel.PROP_YPOS) && ((newValue != getPoints().getBounds().y))) {
                 setLocation(getLocation().x, newValue);
             } else if (propertyID.equals(AbstractWidgetModel.PROP_WIDTH)
                     && (newValue != getPoints().getBounds().width)) {
@@ -239,20 +229,20 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         if (initialPoints == null) {
             initialPoints = getPoints();
         }
-        PointList pl = initialPoints.getCopy();
-        Point initLoc = pl.getBounds().getLocation();
+        var pl = initialPoints.getCopy();
+        var initLoc = pl.getBounds().getLocation();
         pl.translate((int) Math.round(initLoc.x * widthRatio) - initLoc.x,
                 (int) Math.round(initLoc.y * heightRatio) - initLoc.y);
 
-        WidgetScaleData scaleOptions = getScaleOptions();
-        if (scaleOptions.isKeepWHRatio() &&
-                scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()) {
+        var scaleOptions = getScaleOptions();
+        if (scaleOptions.isKeepWHRatio() && scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()) {
             widthRatio = Math.min(widthRatio, heightRatio);
             heightRatio = widthRatio;
-        } else if (!scaleOptions.isHeightScalable())
+        } else if (!scaleOptions.isHeightScalable()) {
             heightRatio = 1;
-        else if (!scaleOptions.isWidthScalable())
+        } else if (!scaleOptions.isWidthScalable()) {
             widthRatio = 1;
+        }
 
         PointsUtil.scalePoints(pl, widthRatio, heightRatio);
 

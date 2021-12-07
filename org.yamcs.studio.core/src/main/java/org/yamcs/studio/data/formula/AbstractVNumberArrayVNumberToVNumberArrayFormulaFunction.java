@@ -48,8 +48,7 @@ import org.yamcs.studio.data.vtype.VNumberArray;
  * <li>display handling - returns display none</li>
  * </ul>
  */
-public abstract class AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction implements
-        FormulaFunction {
+public abstract class AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction implements FormulaFunction {
 
     private static final List<Class<?>> argumentTypes = Arrays.<Class<?>> asList(VNumberArray.class, VNumber.class);
 
@@ -69,8 +68,8 @@ public abstract class AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction i
      * @param arg2Name
      *            second argument name; can't be null
      */
-    public AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction(String name, String description,
-            String arg1Name, String arg2Name) {
+    public AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction(String name, String description, String arg1Name,
+            String arg2Name) {
         // Validate parameters
         if (name == null) {
             throw new NullPointerException("Function name can't be null");
@@ -126,14 +125,11 @@ public abstract class AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction i
             return null;
         }
 
-        VNumberArray arg1 = (VNumberArray) args.get(0);
-        VNumber arg2 = (VNumber) args.get(1);
+        var arg1 = (VNumberArray) args.get(0);
+        var arg2 = (VNumber) args.get(1);
 
-        return newVNumberArray(
-                calculate(arg1.getData(), arg2.getValue().doubleValue()),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+        return newVNumberArray(calculate(arg1.getData(), arg2.getValue().doubleValue()), highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args), displayNone());
     }
 
     /**

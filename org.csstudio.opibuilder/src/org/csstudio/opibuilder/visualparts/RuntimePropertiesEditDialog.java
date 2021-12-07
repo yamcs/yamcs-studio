@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.datadefinition.PropertyData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
@@ -41,22 +39,22 @@ public class RuntimePropertiesEditDialog extends Dialog {
     private TableViewer propertiesViewer;
     private PropertyData[] propertyDataArray;
 
-    public RuntimePropertiesEditDialog(Shell parentShell,
-            AbstractWidgetModel widgetModel) {
+    public RuntimePropertiesEditDialog(Shell parentShell, AbstractWidgetModel widgetModel) {
         super(parentShell);
-        List<AbstractWidgetProperty> runningPropertyList = widgetModel.getRuntimePropertyList();
+        var runningPropertyList = widgetModel.getRuntimePropertyList();
         if (runningPropertyList != null) {
-            int i = 0;
+            var i = 0;
             for (AbstractWidgetProperty prop : runningPropertyList) {
-                if (prop.isVisibleInPropSheet())
+                if (prop.isVisibleInPropSheet()) {
                     i++;
+                }
             }
             propertyDataArray = new PropertyData[i];
             i = 0;
             for (AbstractWidgetProperty prop : runningPropertyList) {
-                if (prop.isVisibleInPropSheet())
-                    propertyDataArray[i++] = new PropertyData(prop,
-                            prop.getPropertyValue());
+                if (prop.isVisibleInPropSheet()) {
+                    propertyDataArray[i++] = new PropertyData(prop, prop.getPropertyValue());
+                }
             }
         } else {
             propertyDataArray = new PropertyData[0];
@@ -77,10 +75,10 @@ public class RuntimePropertiesEditDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
-        Composite rightComposite = new Composite(parent_Composite, SWT.NONE);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
+        var rightComposite = new Composite(parent_Composite, SWT.NONE);
         rightComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 350;
         rightComposite.setLayoutData(gd);
 
@@ -93,11 +91,10 @@ public class RuntimePropertiesEditDialog extends Dialog {
     }
 
     private TableViewer createPropertiesViewer(Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
-        TableViewerColumn tvColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var tvColumn = new TableViewerColumn(viewer, SWT.NONE);
         tvColumn.getColumn().setText("Property");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(150);
@@ -105,14 +102,12 @@ public class RuntimePropertiesEditDialog extends Dialog {
         tvColumn.getColumn().setText("Value");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(200);
-        EditingSupport editingSupport = new PropertyDataEditingSupport(viewer,
-                viewer.getTable());
+        EditingSupport editingSupport = new PropertyDataEditingSupport(viewer, viewer.getTable());
         tvColumn.setEditingSupport(editingSupport);
 
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new PropertyDataLabelProvider());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
 
@@ -128,19 +123,18 @@ class PropertyDataEditingSupport extends EditingSupport {
      */
     private final Table table;
 
-    public PropertyDataEditingSupport(final ColumnViewer viewer,
-            final Table table) {
+    public PropertyDataEditingSupport(ColumnViewer viewer, Table table) {
         super(viewer);
         this.table = table;
     }
 
     @Override
-    protected boolean canEdit(final Object element) {
+    protected boolean canEdit(Object element) {
         return true;
     }
 
     @Override
-    protected CellEditor getCellEditor(final Object element) {
+    protected CellEditor getCellEditor(Object element) {
         PropertyData propertyData;
         if ((propertyData = getSelectedProperty()) != null) {
             return propertyData.property.getPropertyDescriptor().createPropertyEditor(table);
@@ -149,18 +143,16 @@ class PropertyDataEditingSupport extends EditingSupport {
     }
 
     private PropertyData getSelectedProperty() {
-        IStructuredSelection selection = (IStructuredSelection) this
-                .getViewer().getSelection();
+        var selection = (IStructuredSelection) this.getViewer().getSelection();
         if (selection.getFirstElement() instanceof PropertyData) {
-            PropertyData property = (PropertyData) selection
-                    .getFirstElement();
+            var property = (PropertyData) selection.getFirstElement();
             return property;
         }
         return null;
     }
 
     @Override
-    protected Object getValue(final Object element) {
+    protected Object getValue(Object element) {
         if (element instanceof PropertyData) {
             return ((PropertyData) element).tmpValue;
         }
@@ -169,9 +161,9 @@ class PropertyDataEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected void setValue(final Object element, final Object value) {
+    protected void setValue(Object element, Object value) {
         if (element instanceof PropertyData) {
-            PropertyData prop = (PropertyData) element;
+            var prop = (PropertyData) element;
             prop.tmpValue = value;
             getViewer().refresh();
         }
@@ -181,14 +173,12 @@ class PropertyDataEditingSupport extends EditingSupport {
 /**
  * The {@link LabelProvider} for the properties table.
  */
-class PropertyDataLabelProvider extends LabelProvider implements
-        ITableLabelProvider {
+class PropertyDataLabelProvider extends LabelProvider implements ITableLabelProvider {
 
     @Override
-    public Image getColumnImage(final Object element,
-            final int columnIndex) {
+    public Image getColumnImage(Object element, int columnIndex) {
         if (columnIndex == 1 && element instanceof PropertyData) {
-            PropertyData propertyData = (PropertyData) element;
+            var propertyData = (PropertyData) element;
 
             try {
                 return propertyData.property.getPropertyDescriptor().getLabelProvider().getImage(propertyData.tmpValue);
@@ -200,16 +190,14 @@ class PropertyDataLabelProvider extends LabelProvider implements
     }
 
     @Override
-    public String getColumnText(final Object element,
-            final int columnIndex) {
+    public String getColumnText(Object element, int columnIndex) {
         if (element instanceof PropertyData) {
-            PropertyData propertyData = (PropertyData) element;
+            var propertyData = (PropertyData) element;
             if (columnIndex == 0) {
                 return propertyData.property.getDescription();
             }
             try {
-                return propertyData.property.getPropertyDescriptor().getLabelProvider().getText(
-                        propertyData.tmpValue);
+                return propertyData.property.getPropertyDescriptor().getLabelProvider().getText(propertyData.tmpValue);
             } catch (NullPointerException e) {
             }
         }

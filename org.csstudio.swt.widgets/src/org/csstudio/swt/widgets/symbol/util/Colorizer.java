@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 public class Colorizer {
@@ -53,22 +52,21 @@ public class Colorizer {
         lum_green_lookup = new int[MAX_COLOR];
         lum_blue_lookup = new int[MAX_COLOR];
 
-        double temp_hue = hue / 360f;
-        double temp_sat = saturation / 100f;
+        var temp_hue = hue / 360f;
+        var temp_sat = saturation / 100f;
 
         final_red_lookup = new int[MAX_COLOR];
         final_green_lookup = new int[MAX_COLOR];
         final_blue_lookup = new int[MAX_COLOR];
 
-        for (int i = 0; i < MAX_COLOR; ++i) {
+        for (var i = 0; i < MAX_COLOR; ++i) {
             lum_red_lookup[i] = (int) (i * LUMINANCE_RED);
             lum_green_lookup[i] = (int) (i * LUMINANCE_GREEN);
             lum_blue_lookup[i] = (int) (i * LUMINANCE_BLUE);
 
-            double temp_light = (double) i / 255f;
+            var temp_light = (double) i / 255f;
 
-            Color color = new Color(Color.HSBtoRGB((float) temp_hue,
-                    (float) temp_sat, (float) temp_light));
+            var color = new Color(Color.HSBtoRGB((float) temp_hue, (float) temp_sat, (float) temp_light));
 
             final_red_lookup[i] = (int) (color.getRed());
             final_green_lookup[i] = (int) (color.getGreen());
@@ -77,15 +75,15 @@ public class Colorizer {
     }
 
     public void doColorize(ImageData image) {
-        int[] lineData = new int[image.width];
-        PaletteData palette = image.palette;
+        var lineData = new int[image.width];
+        var palette = image.palette;
 
-        for (int y = 0; y < image.height; y++) {
+        for (var y = 0; y < image.height; y++) {
             image.getPixels(0, y, image.width, lineData, 0);
 
             // Analyze each pixel value in the line
-            for (int x = 0; x < lineData.length; x++) {
-                int pixelValue = lineData[x];
+            for (var x = 0; x < lineData.length; x++) {
+                var pixelValue = lineData[x];
 
                 // Do not set transparent pixel
                 if (lineData[x] != image.transparentPixel) {
@@ -93,14 +91,11 @@ public class Colorizer {
                     if (!palette.isDirect) {
                         pixelValue = palette.getPixel(palette.colors[lineData[x]]);
                     }
-                    RGB current = palette.getRGB(pixelValue);
-                    if (current.blue == current.green
-                            && current.blue == current.red
-                            && current.blue < 255) {
-                        Color color = new Color(current.red, current.green, current.blue);
+                    var current = palette.getRGB(pixelValue);
+                    if (current.blue == current.green && current.blue == current.red && current.blue < 255) {
+                        var color = new Color(current.red, current.green, current.blue);
 
-                        int lum = lum_red_lookup[color.getRed()]
-                                + lum_green_lookup[color.getGreen()]
+                        var lum = lum_red_lookup[color.getRed()] + lum_green_lookup[color.getGreen()]
                                 + lum_blue_lookup[color.getBlue()];
 
                         if (lightness > 0) {
@@ -109,11 +104,11 @@ public class Colorizer {
                         } else if (lightness < 0) {
                             lum = (int) (((double) lum * (lightness + 100f)) / 100f);
                         }
-                        Color final_color = new Color(final_red_lookup[lum], final_green_lookup[lum],
+                        var final_color = new Color(final_red_lookup[lum], final_green_lookup[lum],
                                 final_blue_lookup[lum]);
-                        RGB degraded = new RGB(final_color.getRed(), final_color.getGreen(), final_color.getBlue());
+                        var degraded = new RGB(final_color.getRed(), final_color.getGreen(), final_color.getBlue());
                         if (palette.isDirect) {
-                            int appliedColor = palette.getPixel(degraded);
+                            var appliedColor = palette.getPixel(degraded);
                             image.setPixel(x, y, appliedColor);
                         } else {
                             palette.colors[lineData[x]] = degraded;
@@ -124,17 +119,15 @@ public class Colorizer {
         }
     }
 
-    public BufferedImage changeContrast(BufferedImage inImage,
-            float increasingFactor) {
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
+    public BufferedImage changeContrast(BufferedImage inImage, float increasingFactor) {
+        var w = inImage.getWidth();
+        var h = inImage.getHeight();
 
-        BufferedImage outImage = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_ARGB);
+        var outImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                Color color = new Color(inImage.getRGB(i, j), true);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var color = new Color(inImage.getRGB(i, j), true);
                 int r, g, b, a;
                 float fr, fg, fb;
 
@@ -162,15 +155,14 @@ public class Colorizer {
     }
 
     public BufferedImage changeGreen(BufferedImage inImage, int increasingFactor) {
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
+        var w = inImage.getWidth();
+        var h = inImage.getHeight();
 
-        BufferedImage outImage = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_ARGB);
+        var outImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                Color color = new Color(inImage.getRGB(i, j), true);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var color = new Color(inImage.getRGB(i, j), true);
                 int r, g, b, a;
                 r = color.getRed();
                 g = keep256(color.getGreen() + increasingFactor);
@@ -183,15 +175,14 @@ public class Colorizer {
     }
 
     public BufferedImage changeBlue(BufferedImage inImage, int increasingFactor) {
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
+        var w = inImage.getWidth();
+        var h = inImage.getHeight();
 
-        BufferedImage outImage = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_ARGB);
+        var outImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                Color color = new Color(inImage.getRGB(i, j), true);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var color = new Color(inImage.getRGB(i, j), true);
                 int r, g, b, a;
                 r = color.getRed();
                 g = color.getGreen();
@@ -204,15 +195,14 @@ public class Colorizer {
     }
 
     public BufferedImage changeRed(BufferedImage inImage, int increasingFactor) {
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
+        var w = inImage.getWidth();
+        var h = inImage.getHeight();
 
-        BufferedImage outImage = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_ARGB);
+        var outImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                Color color = new Color(inImage.getRGB(i, j), true);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var color = new Color(inImage.getRGB(i, j), true);
                 int r, g, b, a;
                 r = keep256(color.getRed() + increasingFactor);
                 g = color.getGreen();
@@ -225,15 +215,14 @@ public class Colorizer {
     }
 
     public BufferedImage changeBrightness(BufferedImage inImage, int increasingFactor) {
-        int w = inImage.getWidth();
-        int h = inImage.getHeight();
+        var w = inImage.getWidth();
+        var h = inImage.getHeight();
 
-        BufferedImage outImage = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_ARGB);
+        var outImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                Color color = new Color(inImage.getRGB(i, j), true);
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var color = new Color(inImage.getRGB(i, j), true);
                 int r, g, b, a;
                 r = keep256(color.getRed() + increasingFactor);
                 g = keep256(color.getGreen() + increasingFactor);
@@ -246,10 +235,12 @@ public class Colorizer {
     }
 
     public int keep256(int i) {
-        if (i <= 255 && i >= 0)
+        if (i <= 255 && i >= 0) {
             return i;
-        if (i > 255)
+        }
+        if (i > 255) {
             return 255;
+        }
         return 0;
     }
 

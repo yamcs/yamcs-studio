@@ -15,7 +15,7 @@ public class EventLogViewColumnsDialog extends ViewerColumnsDialog {
 
     @Override
     protected void performDefaults() {
-        ColumnData defaultData = viewer.createDefaultColumnData();
+        var defaultData = viewer.createDefaultColumnData();
 
         getVisible().clear();
         getVisible().addAll(defaultData.getVisibleColumns());

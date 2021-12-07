@@ -22,12 +22,12 @@ public class FloatArrayVType extends YamcsVType implements VFloatArray {
     public FloatArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
-        float[] floatValues = new float[size];
-        for (int i = 0; i < floatValues.length; i++) {
+        var floatValues = new float[size];
+        for (var i = 0; i < floatValues.length; i++) {
             floatValues[i] = value.getArrayValue(i).getFloatValue();
         }
         data = new ArrayFloat(floatValues);

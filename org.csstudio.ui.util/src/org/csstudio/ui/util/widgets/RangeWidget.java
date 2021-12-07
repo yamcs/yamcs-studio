@@ -113,8 +113,9 @@ public class RangeWidget extends Canvas {
 
     private String calculateLabel(double distance) {
         // Calculate the label
-        if (distance == 0)
+        if (distance == 0) {
             return "now";
+        }
         if (distance >= 0.999) {
             return numberFormat.format(distance) + " s";
         } else if (distance >= 0.000999) {
@@ -148,7 +149,7 @@ public class RangeWidget extends Canvas {
                 // Re-scale based on how much the mouse is dragged
                 if ((startPosition & SWT.DOWN) != 0) {
                     // Calculate the coordinates starting from the bottom
-                    int height = getClientArea().height;
+                    var height = getClientArea().height;
                     if (e.y < height) {
                         setDistancePerPx(startDistancePerPx * (height - startY) / (height - e.y));
                     }
@@ -177,10 +178,12 @@ public class RangeWidget extends Canvas {
         this.pxPerTick = 1.0 / distancePerPx;
         if (pxPerTick > 0.0) {
             while (pxPerTick < 2.0 || pxPerTick > 20.0) {
-                if (pxPerTick < 2.0)
+                if (pxPerTick < 2.0) {
                     pxPerTick *= 10;
-                if (pxPerTick > 20.0)
+                }
+                if (pxPerTick > 20.0) {
                     pxPerTick /= 10;
+                }
             }
         }
 
@@ -204,12 +207,12 @@ public class RangeWidget extends Canvas {
         @Override
         public void paintControl(PaintEvent e) {
             double height = getClientArea().height;
-            int width = getClientArea().width;
-            double currentPx = 0.0;
-            int sizeIndex = 0;
+            var width = getClientArea().width;
+            var currentPx = 0.0;
+            var sizeIndex = 0;
             while (currentPx < height) {
                 // Calculate new tick screen position (if from bottom, invert it)
-                int tickPosition = (int) currentPx;
+                var tickPosition = (int) currentPx;
                 if ((startPosition & SWT.BOTTOM) != 0) {
                     tickPosition = getClientArea().height - tickPosition - 1;
                 }
@@ -245,8 +248,9 @@ public class RangeWidget extends Canvas {
 
                 // Increment the pointer for the tick size, and look around if necessary
                 sizeIndex++;
-                if (sizeIndex == sizes.length)
+                if (sizeIndex == sizes.length) {
                     sizeIndex = 0;
+                }
             }
 
         }

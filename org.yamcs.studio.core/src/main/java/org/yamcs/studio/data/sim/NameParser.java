@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -37,10 +36,10 @@ public class NameParser {
         }
 
         // Parse parameters
-        Matcher matcher = doubleParameter.matcher(string);
+        var matcher = doubleParameter.matcher(string);
         List<Object> parameters = new ArrayList<>();
         while (matcher.find()) {
-            String parameter = matcher.group();
+            var parameter = matcher.group();
             Double value = Double.parseDouble(parameter);
             parameters.add(value);
         }
@@ -57,7 +56,7 @@ public class NameParser {
      * @return the name and the parameters
      */
     static List<Object> parseFunction(String string) {
-        Matcher matcher = functionAndParameter.matcher(string);
+        var matcher = functionAndParameter.matcher(string);
         // Match comma separate double list
         if (matcher.matches()) {
             List<Object> parameters = new ArrayList<>();
@@ -71,7 +70,7 @@ public class NameParser {
         if (matcher.matches()) {
             List<Object> parameters = new ArrayList<>();
             parameters.add(matcher.group(1));
-            String quotedString = matcher.group(3);
+            var quotedString = matcher.group(3);
             parameters.add(quotedString.substring(1, quotedString.length() - 1));
             return parameters;
         }
@@ -89,18 +88,18 @@ public class NameParser {
      * @return the function
      */
     public static SimFunction<?> createFunction(String string) {
-        List<Object> parameters = parseFunction(string);
-        StringBuilder className = new StringBuilder("org.yamcs.studio.data.sim.");
-        int firstCharPosition = className.length();
+        var parameters = parseFunction(string);
+        var className = new StringBuilder("org.yamcs.studio.data.sim.");
+        var firstCharPosition = className.length();
         className.append((String) parameters.get(0));
         className.setCharAt(firstCharPosition, Character.toUpperCase(className.charAt(firstCharPosition)));
 
         try {
             @SuppressWarnings("unchecked")
-            Class<SimFunction<?>> clazz = (Class<SimFunction<?>>) Class.forName(className.toString());
-            Object[] constructorParams = parameters.subList(1, parameters.size()).toArray();
-            Class[] types = new Class[constructorParams.length];
-            for (int i = 0; i < types.length; i++) {
+            var clazz = (Class<SimFunction<?>>) Class.forName(className.toString());
+            var constructorParams = parameters.subList(1, parameters.size()).toArray();
+            var types = new Class[constructorParams.length];
+            for (var i = 0; i < types.length; i++) {
                 types[i] = constructorParams[i].getClass();
             }
             return clazz.getConstructor(types).newInstance(constructorParams);
@@ -108,7 +107,7 @@ public class NameParser {
             throw new RuntimeException("Simulation channel " + parameters.get(0) + " is not defined");
         } catch (NoClassDefFoundError ex) {
             if (ex.getMessage().contains("wrong name") && ex.getMessage().lastIndexOf("/") != -1) {
-                String suggestedName = ex.getMessage().substring(ex.getMessage().lastIndexOf("/") + 1,
+                var suggestedName = ex.getMessage().substring(ex.getMessage().lastIndexOf("/") + 1,
                         ex.getMessage().length() - 1);
                 throw new RuntimeException(
                         "Function " + parameters.get(0) + " is not defined (Looking for " + suggestedName + "?)");

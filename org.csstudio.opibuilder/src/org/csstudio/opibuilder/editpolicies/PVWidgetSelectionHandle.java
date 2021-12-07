@@ -23,7 +23,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
@@ -40,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.CellEditorActionHandler;
@@ -59,14 +57,14 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
     private AbstractWidgetModel widgetModel;
     private String pvName = "";
 
-    public PVWidgetSelectionHandle(final GraphicalEditPart owner) {
+    public PVWidgetSelectionHandle(GraphicalEditPart owner) {
         super(owner, new Locator() {
 
             @Override
             public void relocate(IFigure target) {
-                IFigure ownerFigure = owner.getFigure();
-                Dimension preferedSize = target.getPreferredSize();
-                Point targetLocation = ownerFigure.getBounds().getLocation();
+                var ownerFigure = owner.getFigure();
+                var preferedSize = target.getPreferredSize();
+                var targetLocation = ownerFigure.getBounds().getLocation();
                 ownerFigure.translateToAbsolute(targetLocation);
                 target.translateToRelative(targetLocation);
                 targetLocation.translate(-3, -preferedSize.height - 2);
@@ -75,11 +73,12 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
         });
         setCursor(Cursors.HAND);
 
-        if (owner.getModel() instanceof AbstractWidgetModel)
+        if (owner.getModel() instanceof AbstractWidgetModel) {
             this.widgetModel = (AbstractWidgetModel) owner.getModel();
+        }
 
         if (widgetModel instanceof IPVWidgetModel) {
-            String p = ((IPVWidgetModel) widgetModel).getPVName();
+            var p = ((IPVWidgetModel) widgetModel).getPVName();
             if (p != null && !p.isEmpty()) {
                 pvName = p;
             }
@@ -109,16 +108,17 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
                                 @Override
                                 public void relocate(CellEditor celleditor) {
                                     Rectangle rect;
-                                    int width = 120;
-                                    if (!pvName.isEmpty() && getTextExtent().width > 120)
+                                    var width = 120;
+                                    if (!pvName.isEmpty() && getTextExtent().width > 120) {
                                         width = getTextExtent().width + 4;
+                                    }
 
                                     rect = new Rectangle(PVWidgetSelectionHandle.this.getLocation(),
                                             new Dimension(width, getTextExtent().height));
 
                                     translateToAbsolute(rect);
-                                    Text control = (Text) celleditor.getControl();
-                                    org.eclipse.swt.graphics.Rectangle trim = control.computeTrim(0, 0, 0, 0);
+                                    var control = (Text) celleditor.getControl();
+                                    var trim = control.computeTrim(0, 0, 0, 0);
                                     rect.translate(trim.x, trim.y);
                                     rect.width += trim.width;
                                     rect.height += trim.height;
@@ -138,10 +138,11 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
     @Override
     protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
-        if (pvName == null || pvName.isEmpty())
+        if (pvName == null || pvName.isEmpty()) {
             graphics.setBackgroundColor(handleBackColor);
-        else
+        } else {
             graphics.setBackgroundColor(handleFilledBackColor);
+        }
         graphics.fillRectangle(getClientArea());
     }
 
@@ -157,15 +158,13 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
         private CellEditorActionHandler actionHandler;
         private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
 
-        public PVNameDirectEditManager(GraphicalEditPart source,
-                CellEditorLocator locator) {
+        public PVNameDirectEditManager(GraphicalEditPart source, CellEditorLocator locator) {
             super(source, null, locator);
         }
 
         @Override
         protected CellEditor createCellEditorOn(Composite composite) {
-            final PVNameTextCellEditor cellEditor = new PVNameTextCellEditor(
-                    (Composite) getEditPart().getViewer().getControl());
+            var cellEditor = new PVNameTextCellEditor((Composite) getEditPart().getViewer().getControl());
             return cellEditor;
         };
 
@@ -176,8 +175,7 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
             getCellEditor().getControl().moveAbove(null);
             // Hook the cell editor's copy/paste actions to the actionBars so that they can
             // be invoked via keyboard shortcuts.
-            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor();
+            var activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             if (activeEditor != null) {
                 actionBars = activeEditor.getEditorSite().getActionBars();
                 saveCurrentActions(actionBars);
@@ -194,19 +192,16 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
          */
         @Override
         protected void commit() {
-            if (committing)
+            if (committing) {
                 return;
+            }
             committing = true;
             try {
                 eraseFeedback();
-                String newName = (String) getCellEditor().getValue();
+                var newName = (String) getCellEditor().getValue();
                 if (isDirty() && !newName.equals(TIP)) {
-                    CommandStack stack = getEditPart().getViewer().getEditDomain()
-                            .getCommandStack();
-                    stack.execute(new SetWidgetPropertyCommand(
-                            widgetModel,
-                            IPVWidgetModel.PROP_PVNAME,
-                            newName));
+                    var stack = getEditPart().getViewer().getEditDomain().getCommandStack();
+                    stack.execute(new SetWidgetPropertyCommand(widgetModel, IPVWidgetModel.PROP_PVNAME, newName));
                 }
             } finally {
                 // work around to make sure autocomplete widget get notified before bringdown

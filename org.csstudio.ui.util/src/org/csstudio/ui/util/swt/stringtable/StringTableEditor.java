@@ -28,17 +28,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * Editor for table (list) of String or String[] entries, allows up/down ordering, add and delete
  */
 public class StringTableEditor extends Composite {
     public enum CellEditorType {
-        TEXT,
-        CHECKBOX,
-        DROPDOWN
+        TEXT, CHECKBOX, DROPDOWN
     }
 
     private static final String DELETE = "delete";
@@ -80,10 +76,8 @@ public class StringTableEditor extends Composite {
      * @param columnsMinWidth
      *            The minimum width for each column. Cannot be null.
      */
-    public StringTableEditor(final Composite parent, final String[] headers,
-            final boolean[] editable, final List<String[]> items,
-            final RowEditDialog rowEditDialog,
-            final int[] columnsMinWidth) {
+    public StringTableEditor(Composite parent, String[] headers, boolean[] editable, List<String[]> items,
+            RowEditDialog rowEditDialog, int[] columnsMinWidth) {
         this(parent, headers, editable, items, rowEditDialog, columnsMinWidth, null, null);
     }
 
@@ -112,20 +106,18 @@ public class StringTableEditor extends Composite {
      *            the corresponding data for the cell editor. For example, a String[] for dropdown and checkbox cell
      *            editor. null if not needed. For checkbox, String[0] is the text for false, String[1] is for true.
      */
-    public StringTableEditor(final Composite parent, final String[] headers,
-            final boolean[] editable, final List<String[]> items,
-            final RowEditDialog rowEditDialog,
-            final int[] columnsMinWidth, final CellEditorType[] cellEditorTypes, final Object[] cellEditorDatas) {
+    public StringTableEditor(Composite parent, String[] headers, boolean[] editable, List<String[]> items,
+            RowEditDialog rowEditDialog, int[] columnsMinWidth, CellEditorType[] cellEditorTypes,
+            Object[] cellEditorDatas) {
         super(parent, 0);
 
-        final int table_columns = headers.length;
-        boolean[] editableArray = editable;
+        var table_columns = headers.length;
+        var editableArray = editable;
         if (editable == null) {
             editableArray = new boolean[table_columns];
             Arrays.fill(editableArray, true);
         }
-        if (editableArray.length != table_columns ||
-                columnsMinWidth.length != table_columns) {
+        if (editableArray.length != table_columns || columnsMinWidth.length != table_columns) {
             throw new Error("Inconsistent table column count");
         }
 
@@ -135,23 +127,23 @@ public class StringTableEditor extends Composite {
         setLayout(new GridLayout(2, false));
 
         // Edit-able Table in its own Composite for TableColumnLayout
-        final Composite table_parent = new Composite(this, 0);
-        final GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4);
+        var table_parent = new Composite(this, 0);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4);
         gd.heightHint = 100;
         table_parent.setLayoutData(gd);
-        final TableColumnLayout table_layout = new TableColumnLayout();
+        var table_layout = new TableColumnLayout();
         table_parent.setLayout(table_layout);
 
-        tableViewer = new TableViewer(table_parent, SWT.BORDER | SWT.FULL_SELECTION |
-                SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        final Table table = tableViewer.getTable();
+        tableViewer = new TableViewer(table_parent,
+                SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        var table = tableViewer.getTable();
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
 
         // Create edit-able columns
-        for (int i = 0; i < table_columns; i++) {
-            final TableViewerColumn view_col = new TableViewerColumn(tableViewer, 0);
-            final TableColumn col = view_col.getColumn();
+        for (var i = 0; i < table_columns; i++) {
+            var view_col = new TableViewerColumn(tableViewer, 0);
+            var col = view_col.getColumn();
             col.setText(headers[i]);
             col.setMoveable(true);
             col.setResizable(true);
@@ -168,8 +160,8 @@ public class StringTableEditor extends Composite {
                 if (cellEditorDatas != null) {
                     cellEditorData = cellEditorDatas[i];
                 }
-                view_col.setEditingSupport(new StringMultiColumnsEditor(tableViewer,
-                        table_columns, i, cellEditorType, cellEditorData));
+                view_col.setEditingSupport(
+                        new StringMultiColumnsEditor(tableViewer, table_columns, i, cellEditorType, cellEditorData));
             }
         }
         tableViewer.setContentProvider(new StringTableContentProvider<String[]>());
@@ -193,26 +185,26 @@ public class StringTableEditor extends Composite {
      * @param items
      *            List of strings, will be changed in-place
      */
-    public StringTableEditor(final Composite parent, final List<String> items) {
+    public StringTableEditor(Composite parent, List<String> items) {
         super(parent, 0);
-        final GridLayout layout = new GridLayout();
+        var layout = new GridLayout();
         layout.numColumns = 2;
         setLayout(layout);
 
         // Edit-able List in its own Composite for TableColumnLayout
-        final Composite table_parent = new Composite(this, 0);
+        var table_parent = new Composite(this, 0);
         table_parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
-        final TableColumnLayout table_layout = new TableColumnLayout();
+        var table_layout = new TableColumnLayout();
         table_parent.setLayout(table_layout);
 
-        tableViewer = new TableViewer(table_parent, SWT.BORDER | SWT.FULL_SELECTION |
-                SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        final Table table = tableViewer.getTable();
+        tableViewer = new TableViewer(table_parent,
+                SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        var table = tableViewer.getTable();
         table.setLinesVisible(true);
         table.setHeaderVisible(false);
         // Create edit-able column
-        final TableViewerColumn view_col = new TableViewerColumn(tableViewer, 0);
-        final TableColumn col = view_col.getColumn();
+        var view_col = new TableViewerColumn(tableViewer, 0);
+        var col = view_col.getColumn();
         col.setText("Value");
         col.setResizable(true);
         table_layout.setColumnData(col, new ColumnWeightData(100, 200));
@@ -245,9 +237,8 @@ public class StringTableEditor extends Composite {
         tableViewer.refresh();
     }
 
-    private Button createEditButton(final int numColumns,
-            final RowEditDialog rowEditDialog) {
-        final Button edit = new Button(this, SWT.PUSH);
+    private Button createEditButton(int numColumns, RowEditDialog rowEditDialog) {
+        var edit = new Button(this, SWT.PUSH);
         edit.setImage(images.get(EDIT));
         edit.setToolTipText("Edit the selected item");
         edit.setLayoutData(new GridData());
@@ -256,11 +247,11 @@ public class StringTableEditor extends Composite {
             @SuppressWarnings("unchecked")
             @Override
             public void widgetSelected(SelectionEvent e) {
-                final List<String[]> items = (List<String[]>) tableViewer.getInput();
-                final Integer index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+                var items = (List<String[]>) tableViewer.getInput();
+                var index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
 
                 if (index == StringTableContentProvider.ADD_ELEMENT) {
-                    String[] emptyData = new String[numColumns];
+                    var emptyData = new String[numColumns];
                     Arrays.fill(emptyData, "");
                     rowEditDialog.setRowData(emptyData);
                 } else {
@@ -286,7 +277,7 @@ public class StringTableEditor extends Composite {
     }
 
     private Button createUpButton() {
-        final Button up = new Button(this, SWT.PUSH);
+        var up = new Button(this, SWT.PUSH);
         up.setImage(images.get(UP));
         up.setToolTipText("Move selected items up");
         up.setLayoutData(new GridData());
@@ -295,10 +286,9 @@ public class StringTableEditor extends Composite {
             @Override
             @SuppressWarnings({ "unchecked", "rawtypes" })
             public void widgetSelected(SelectionEvent e) {
-                final List items = (List) tableViewer.getInput();
-                final Integer index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-                if (index == StringTableContentProvider.ADD_ELEMENT ||
-                        index < 1) {
+                var items = (List) tableViewer.getInput();
+                var index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+                if (index == StringTableContentProvider.ADD_ELEMENT || index < 1) {
                     return;
                 }
                 // final String[] item = items.get(index);
@@ -312,7 +302,7 @@ public class StringTableEditor extends Composite {
     }
 
     private Button createDownButton() {
-        final Button down = new Button(this, SWT.PUSH);
+        var down = new Button(this, SWT.PUSH);
         down.setImage(images.get(DOWN));
         down.setToolTipText("Move selected items down");
         down.setLayoutData(new GridData());
@@ -321,10 +311,9 @@ public class StringTableEditor extends Composite {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public void widgetSelected(SelectionEvent e) {
-                final List items = (List) tableViewer.getInput();
-                final Integer index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-                if (index == StringTableContentProvider.ADD_ELEMENT ||
-                        index >= items.size() - 1) {
+                var items = (List) tableViewer.getInput();
+                var index = (Integer) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+                if (index == StringTableContentProvider.ADD_ELEMENT || index >= items.size() - 1) {
                     return;
                 }
                 items.add(index + 2, items.get(index));
@@ -337,7 +326,7 @@ public class StringTableEditor extends Composite {
     }
 
     private Button createDeleteButton() {
-        final Button delete = new Button(this, SWT.PUSH);
+        var delete = new Button(this, SWT.PUSH);
         delete.setImage(images.get(DELETE));
         delete.setToolTipText("Delete selected items");
         delete.setLayoutData(new GridData());
@@ -346,11 +335,11 @@ public class StringTableEditor extends Composite {
             @SuppressWarnings({ "rawtypes" })
             @Override
             public void widgetSelected(SelectionEvent e) {
-                final List items = (List) tableViewer.getInput();
-                final Object sel[] = ((IStructuredSelection) tableViewer.getSelection()).toArray();
-                int adjust = 0;
+                var items = (List) tableViewer.getInput();
+                Object sel[] = ((IStructuredSelection) tableViewer.getSelection()).toArray();
+                var adjust = 0;
                 for (Object s : sel) {
-                    final Integer index = (Integer) s;
+                    var index = (Integer) s;
                     if (index == StringTableContentProvider.ADD_ELEMENT) {
                         continue;
                     }
@@ -378,8 +367,8 @@ public class StringTableEditor extends Composite {
     }
 
     private void setButtonsEnable() {
-        final IStructuredSelection sel = (IStructuredSelection) tableViewer.getSelection();
-        final int count = sel.size();
+        var sel = (IStructuredSelection) tableViewer.getSelection();
+        var count = sel.size();
         if (editButton != null) {
             editButton.setEnabled(count == 1);
         }

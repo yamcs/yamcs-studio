@@ -59,17 +59,14 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
 
     @Override
     protected void configureProperties() {
-        addProperty(new StringProperty(PROP_LABEL, "Label",
-                WidgetPropertyCategory.Display, ""));
-        addProperty(new BooleanProperty(PROP_ACTIONS_FROM_PV, "Actions From PV",
-                WidgetPropertyCategory.Behavior, DEFAULT_ACTIONS_FROM_PV));
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_SHOW_DOWN_ARROW, "Show Down Arrow",
-                WidgetPropertyCategory.Display, false));
+        addProperty(new StringProperty(PROP_LABEL, "Label", WidgetPropertyCategory.Display, ""));
+        addProperty(new BooleanProperty(PROP_ACTIONS_FROM_PV, "Actions From PV", WidgetPropertyCategory.Behavior,
+                DEFAULT_ACTIONS_FROM_PV));
+        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent", WidgetPropertyCategory.Display, false));
+        addProperty(
+                new BooleanProperty(PROP_SHOW_DOWN_ARROW, "Show Down Arrow", WidgetPropertyCategory.Display, false));
         removeProperty(PROP_ACTIONS);
-        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
 
         setPropertyVisible(PROP_ACTIONS, !DEFAULT_ACTIONS_FROM_PV);
 

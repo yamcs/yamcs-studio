@@ -44,10 +44,11 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (ArrowType p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (ArrowType p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
 
@@ -57,7 +58,7 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         }
     }
 
-    public static final double ARROW_ANGLE = Math.PI / 10;
+    public static double ARROW_ANGLE = Math.PI / 10;
 
     /**
      * Calculate the three points for an arrow.
@@ -75,22 +76,21 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      *         1: Left arrow point; <br>
      *         2: Intersection point.
      */
-    public static PointList calcArrowPoints(Point startPoint, Point endPoint,
-            int l, double angle) {
+    public static PointList calcArrowPoints(Point startPoint, Point endPoint, int l, double angle) {
 
-        PointList result = new PointList();
+        var result = new PointList();
 
-        PolarPoint ppE = PolarPoint.point2PolarPoint(endPoint, startPoint);
+        var ppE = PolarPoint.point2PolarPoint(endPoint, startPoint);
 
-        PolarPoint ppR = new PolarPoint(l, ppE.theta - angle);
-        PolarPoint ppL = new PolarPoint(l, ppE.theta + angle);
+        var ppR = new PolarPoint(l, ppE.theta - angle);
+        var ppL = new PolarPoint(l, ppE.theta + angle);
 
         // the intersection point bettwen arrow and line.
-        PolarPoint ppI = new PolarPoint((int) (l * Math.cos(angle)), ppE.theta);
+        var ppI = new PolarPoint((int) (l * Math.cos(angle)), ppE.theta);
 
-        Point pR = ppR.toPoint().translate(endPoint);
-        Point pL = ppL.toPoint().translate(endPoint);
-        Point pI = ppI.toPoint().translate(endPoint);
+        var pR = ppR.toPoint().translate(endPoint);
+        var pL = ppL.toPoint().translate(endPoint);
+        var pI = ppI.toPoint().translate(endPoint);
 
         result.addPoint(pR);
         result.addPoint(pL);
@@ -102,14 +102,15 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 
     public static Rectangle getPointsBoundsWithArrows(PointList points, ArrowType arrowType, int arrowLength,
             double arrowAngle) {
-        PointList copy = points.getCopy();
+        var copy = points.getCopy();
         if (points.size() >= 2) {
-            if (arrowType == ArrowType.To || arrowType == ArrowType.Both)
-                copy.addAll(calcArrowPoints(points.getPoint(points.size() - 2),
-                        points.getLastPoint(), arrowLength, arrowAngle));
-            if (arrowType == ArrowType.From || arrowType == ArrowType.Both)
-                copy.addAll(calcArrowPoints(points.getPoint(1),
-                        points.getFirstPoint(), arrowLength, arrowAngle));
+            if (arrowType == ArrowType.To || arrowType == ArrowType.Both) {
+                copy.addAll(calcArrowPoints(points.getPoint(points.size() - 2), points.getLastPoint(), arrowLength,
+                        arrowAngle));
+            }
+            if (arrowType == ArrowType.From || arrowType == ArrowType.Both) {
+                copy.addAll(calcArrowPoints(points.getPoint(1), points.getFirstPoint(), arrowLength, arrowAngle));
+            }
         }
         return copy.getBounds();
     }
@@ -140,23 +141,25 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
     }
 
     private void drawPolyLineWithArrow(Graphics graphics) {
-        PointList points = getPoints().getCopy();
+        var points = getPoints().getCopy();
 
         graphics.pushState();
 
         if (points.size() >= 2) {
-            Point endPoint = points.getLastPoint();
-            Point firstPoint = points.getFirstPoint();
+            var endPoint = points.getLastPoint();
+            var firstPoint = points.getFirstPoint();
             if (arrowType == ArrowType.To || arrowType == ArrowType.Both) {
                 // draw end arrow
-                PointList arrowPoints = calcArrowPoints(points.getPoint(points.size() - 2),
-                        endPoint, arrowLineLength, ARROW_ANGLE);
-                if (fillArrow)
+                var arrowPoints = calcArrowPoints(points.getPoint(points.size() - 2), endPoint, arrowLineLength,
+                        ARROW_ANGLE);
+                if (fillArrow) {
                     points.setPoint(arrowPoints.getLastPoint(), points.size() - 1);
+                }
                 arrowPoints.setPoint(endPoint, 2);
                 if (fillArrow) {
-                    if (isEnabled())
+                    if (isEnabled()) {
                         graphics.setBackgroundColor(graphics.getForegroundColor());
+                    }
                     graphics.fillPolygon(arrowPoints);
 
                 } else {
@@ -166,14 +169,15 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
             }
             if (arrowType == ArrowType.From || arrowType == ArrowType.Both) {
                 // draw start arrow
-                PointList arrowPoints = calcArrowPoints(points.getPoint(1),
-                        firstPoint, arrowLineLength, ARROW_ANGLE);
-                if (fillArrow)
+                var arrowPoints = calcArrowPoints(points.getPoint(1), firstPoint, arrowLineLength, ARROW_ANGLE);
+                if (fillArrow) {
                     points.setPoint(arrowPoints.getLastPoint(), 0);
+                }
                 arrowPoints.setPoint(firstPoint, 2);
                 if (fillArrow) {
-                    if (isEnabled())
+                    if (isEnabled()) {
                         graphics.setBackgroundColor(graphics.getForegroundColor());
+                    }
                     graphics.fillPolygon(arrowPoints);
                 } else {
                     graphics.drawLine(firstPoint, arrowPoints.getFirstPoint());
@@ -203,12 +207,12 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      * Overridden, to ensure that the bounds rectangle gets repainted each time, the points of the polygon change.
      */
     /*
-     * @Override public void setBounds(final Rectangle rect) { invalidate(); fireFigureMoved(); repaint(); int
+     * @Override public void setBounds(Rectangle rect) { invalidate(); fireFigureMoved(); repaint(); int
      * correctedWidth = rect.width + getLineWidth(); int correctedHeight = rect.height + getLineWidth(); Rectangle
      * correctedRectangle = new Rectangle(rect.x, rect.y, correctedWidth, correctedHeight);
      * super.setBounds(correctedRectangle); }
      * 
-     * @Override public void setSize(final int w, final int h) { int correctedWidth = w + getLineWidth(); int
+     * @Override public void setSize(int w, int h) { int correctedWidth = w + getLineWidth(); int
      * correctedHeight = h + getLineWidth(); super.setSize(correctedWidth, correctedHeight); }
      * 
      * @Override public void setLocation(Point p) { super.setLocation(p); }
@@ -217,12 +221,12 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
     @Override
     public Rectangle getBounds() {
 
-        if (arrowType == ArrowType.None)
+        if (arrowType == ArrowType.None) {
             return super.getBounds();
+        }
         if (bounds == null) {
-            bounds = getPointsBoundsWithArrows(
-                    getPoints(), arrowType, arrowLineLength, ARROW_ANGLE);
-            int expand = (int) (getLineWidthFloat() / 2.0f);
+            bounds = getPointsBoundsWithArrows(getPoints(), arrowType, arrowLineLength, ARROW_ANGLE);
+            var expand = (int) (getLineWidthFloat() / 2.0f);
             bounds = bounds.getExpanded(expand, expand);
         }
 
@@ -269,31 +273,31 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
     }
 
     @Override
-    protected void outlineShape(final Graphics graphics) {
-        Rectangle figureBounds = getBounds();
+    protected void outlineShape(Graphics graphics) {
+        var figureBounds = getBounds();
 
         graphics.pushState();
         if (!transparent) {
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setForegroundColor(getBackgroundColor());
+            }
             drawPolyLineWithArrow(graphics);
         }
         if (getFill() > 0) {
             // set clip by fill level
             if (horizontalFill) {
 
-                int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
+                var newW = (int) Math.round(figureBounds.width * (getFill() / 100));
 
-                graphics
-                        .clipRect(new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height));
+                graphics.clipRect(new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height));
             } else {
-                int newH = (int) Math.round(figureBounds.height * (getFill() / 100));
-                graphics
-                        .clipRect(new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
-                                figureBounds.width, newH));
+                var newH = (int) Math.round(figureBounds.height * (getFill() / 100));
+                graphics.clipRect(new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
+                        figureBounds.width, newH));
             }
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setForegroundColor(getForegroundColor());
+            }
             drawPolyLineWithArrow(graphics);
         }
         graphics.popState();
@@ -318,30 +322,33 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
             fireCoordinateSystemChanged();
             return;
         }
-        for (int i = 0; i < getChildren().size(); i++)
+        for (var i = 0; i < getChildren().size(); i++) {
             ((IFigure) getChildren().get(i)).translate(dx, dy);
+        }
     }
 
     public void setArrowLineLength(int arrowLineLength) {
-        if (this.arrowLineLength == arrowLineLength)
+        if (this.arrowLineLength == arrowLineLength) {
             return;
+        }
         this.arrowLineLength = arrowLineLength;
         repaint();
     }
 
     public void setArrowType(ArrowType arrowType) {
-        if (this.arrowType == arrowType)
+        if (this.arrowType == arrowType) {
             return;
+        }
         this.arrowType = arrowType;
         repaint();
     }
 
     @Override
     public void setBounds(Rectangle rect) {
-        PointList points = getPoints();
+        var points = getPoints();
         if (!points.getBounds().equals(rect)) {
-            int oldX = getLocation().x;
-            int oldY = getLocation().y;
+            var oldX = getLocation().x;
+            var oldY = getLocation().y;
             points.translate(rect.x - oldX, rect.y - oldY);
 
             setPoints(PointsUtil.scalePointsBySize(points, rect.width, rect.height));
@@ -359,16 +366,18 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      * @param fill
      *            the fill grade.
      */
-    public void setFill(final double fill) {
-        if (this.fill == fill)
+    public void setFill(double fill) {
+        if (this.fill == fill) {
             return;
+        }
         this.fill = fill;
         repaint();
     }
 
     public void setFillArrow(boolean fillArrow) {
-        if (this.fillArrow == fillArrow)
+        if (this.fillArrow == fillArrow) {
             return;
+        }
         this.fillArrow = fillArrow;
         repaint();
     }
@@ -379,9 +388,10 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      * @param horizontal
      *            The orientation.
      */
-    public void setHorizontalFill(final boolean horizontal) {
-        if (this.horizontalFill == horizontal)
+    public void setHorizontalFill(boolean horizontal) {
+        if (this.horizontalFill == horizontal) {
             return;
+        }
         horizontalFill = horizontal;
         repaint();
     }
@@ -392,17 +402,19 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      * @param transparent
      *            the transparent state.
      */
-    public void setTransparent(final boolean transparent) {
-        if (this.transparent == transparent)
+    public void setTransparent(boolean transparent) {
+        if (this.transparent == transparent) {
             return;
+        }
         this.transparent = transparent;
         repaint();
     }
 
     @Override
     public Dimension getMinimumSize(int wHint, int hHint) {
-        if (wHint == -1 && hHint == -1)
+        if (wHint == -1 && hHint == -1) {
             return new Dimension(1, 1);
+        }
         return super.getMinimumSize(wHint, hHint);
     }
 
@@ -413,12 +425,12 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      */
     @Override
     public boolean containsPoint(int x, int y) {
-        int tolerance = (int) Math.max(getLineWidthFloat() / 2.0f,
-                2);
+        var tolerance = (int) Math.max(getLineWidthFloat() / 2.0f, 2);
         LINEBOUNDS.setBounds(getBounds());
         LINEBOUNDS.expand(tolerance, tolerance);
-        if (!LINEBOUNDS.contains(x, y))
+        if (!LINEBOUNDS.contains(x, y)) {
             return false;
+        }
         return shapeContainsPoint(x, y, tolerance) || childrenContainsPoint(x, y);
     }
 

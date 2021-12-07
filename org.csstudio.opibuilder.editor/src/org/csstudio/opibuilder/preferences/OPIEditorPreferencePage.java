@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.preferences;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -30,15 +29,15 @@ public class OPIEditorPreferencePage extends FieldEditorPreferencePage implement
 
     @Override
     protected void createFieldEditors() {
-        Composite parent = getFieldEditorParent();
+        var parent = getFieldEditorParent();
 
-        WorkspaceFileFieldEditor schemaOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.SCHEMA_OPI,
-                "Schema OPI: ", new String[] { "opi" }, parent);
-        schemaOPIEditor.getTextControl(parent).setToolTipText(
-                "The opi file that defines the default widget properties value");
+        var schemaOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.SCHEMA_OPI, "Schema OPI: ",
+                new String[] { "opi" }, parent);
+        schemaOPIEditor.getTextControl(parent)
+                .setToolTipText("The opi file that defines the default widget properties value");
         addField(schemaOPIEditor);
 
-        BooleanFieldEditor autoSaveEditor = new BooleanFieldEditor(PreferencesHelper.AUTOSAVE,
+        var autoSaveEditor = new BooleanFieldEditor(PreferencesHelper.AUTOSAVE,
                 "Automatically save file before running.", parent);
         addField(autoSaveEditor);
     }

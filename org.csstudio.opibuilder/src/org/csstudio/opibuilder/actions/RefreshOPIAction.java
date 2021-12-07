@@ -30,9 +30,8 @@ public class RefreshOPIAction extends Action {
         setActionDefinitionId(IWorkbenchCommandConstants.FILE_REFRESH);
         setId(ActionFactory.REFRESH.getId());
         setText("Refresh OPI");
-        setImageDescriptor(
-                CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                        OPIBuilderPlugin.PLUGIN_ID, "icons/refresh.gif"));
+        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                "icons/refresh.gif"));
     }
 
     @Override

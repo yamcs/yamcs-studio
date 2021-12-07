@@ -31,7 +31,7 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
         this.cssEngine = cssEngine;
         this.element = element;
         this.originalCSSText = element.getStyle().getCssText();
-        SVGStylableElement.StyleDeclaration embedStyle = (SVGStylableElement.StyleDeclaration) element.getStyle();
+        var embedStyle = (SVGStylableElement.StyleDeclaration) element.getStyle();
         this.originalStyle = new CloneableStyleDeclaration(embedStyle.getStyleDeclaration());
     }
 
@@ -41,17 +41,17 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
             return;
         }
 
-        FloatValue newRedValue = new FloatValue((short) 1, (float) newColor.getRed());
-        FloatValue newGreenValue = new FloatValue((short) 1, (float) newColor.getGreen());
-        FloatValue newBlueValue = new FloatValue((short) 1, (float) newColor.getBlue());
-        RGBColorValue newRGBColorValue = new RGBColorValue(newRedValue, newGreenValue, newBlueValue);
+        var newRedValue = new FloatValue((short) 1, (float) newColor.getRed());
+        var newGreenValue = new FloatValue((short) 1, (float) newColor.getGreen());
+        var newBlueValue = new FloatValue((short) 1, (float) newColor.getBlue());
+        var newRGBColorValue = new RGBColorValue(newRedValue, newGreenValue, newBlueValue);
 
         StyleDeclaration sd = originalStyle.clone();
-        int sdlen = sd.size();
-        for (int sdindex = 0; sdindex < sdlen; sdindex++) {
-            Value val = sd.getValue(sdindex);
+        var sdlen = sd.size();
+        for (var sdindex = 0; sdindex < sdlen; sdindex++) {
+            var val = sd.getValue(sdindex);
             if (val instanceof RGBColorValue) {
-                RGBColorValue colorVal = (RGBColorValue) val;
+                var colorVal = (RGBColorValue) val;
                 if (isSameColor(colorVal, colorToChange)) {
                     sd.put(sdindex, newRGBColorValue, sd.getIndex(sdindex), sd.getPriority(sdindex));
                 }
@@ -62,12 +62,12 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
 
     private boolean isSameColor(RGBColorValue colorVal, Color swtColor) {
         if (colorVal.getCssText().contains("%")) {
-            int nr = Math.round(swtColor.getRed() / 255f * 100);
-            int ng = Math.round(swtColor.getGreen() / 255f * 100);
-            int nb = Math.round(swtColor.getBlue() / 255f * 100);
-            int or = Math.round(colorVal.getRed().getFloatValue());
-            int og = Math.round(colorVal.getGreen().getFloatValue());
-            int ob = Math.round(colorVal.getBlue().getFloatValue());
+            var nr = Math.round(swtColor.getRed() / 255f * 100);
+            var ng = Math.round(swtColor.getGreen() / 255f * 100);
+            var nb = Math.round(swtColor.getBlue() / 255f * 100);
+            var or = Math.round(colorVal.getRed().getFloatValue());
+            var og = Math.round(colorVal.getGreen().getFloatValue());
+            var ob = Math.round(colorVal.getBlue().getFloatValue());
             if (or == nr && og == ng && ob == nb) {
                 return true;
             }
@@ -89,15 +89,15 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
         public CloneableStyleDeclaration(StyleDeclaration sd) {
             this.count = sd.size();
             this.values = new Value[count];
-            for (int idx = 0; idx < count; idx++) {
+            for (var idx = 0; idx < count; idx++) {
                 this.values[idx] = sd.getValue(idx);
             }
             this.indexes = new int[count];
-            for (int idx = 0; idx < count; idx++) {
+            for (var idx = 0; idx < count; idx++) {
                 this.indexes[idx] = sd.getIndex(idx);
             }
             this.priorities = new boolean[count];
-            for (int idx = 0; idx < count; idx++) {
+            for (var idx = 0; idx < count; idx++) {
                 this.priorities[idx] = sd.getPriority(idx);
             }
         }

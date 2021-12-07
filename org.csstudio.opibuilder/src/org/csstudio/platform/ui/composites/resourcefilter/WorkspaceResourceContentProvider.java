@@ -36,8 +36,7 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     public WorkspaceResourceContentProvider(String[] filters) {
         if (filters != null) {
             this.filters = new String[filters.length];
-            System.arraycopy(filters, 0, this.filters, 0,
-                    filters.length);
+            System.arraycopy(filters, 0, this.filters, 0, filters.length);
         } else {
             this.filters = new String[0];
         }
@@ -52,28 +51,27 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public Object[] getChildren(final Object element) {
+    public Object[] getChildren(Object element) {
         if (element instanceof IWorkspace) {
             // check if closed projects should be shown
-            IProject[] allProjects = ((IWorkspace) element).getRoot()
-                    .getProjects();
+            var allProjects = ((IWorkspace) element).getRoot().getProjects();
             if (showClosedProjects) {
                 return allProjects;
             }
 
-            ArrayList<IProject> accessibleProjects = new ArrayList<IProject>();
-            for (int i = 0; i < allProjects.length; i++) {
+            var accessibleProjects = new ArrayList<IProject>();
+            for (var i = 0; i < allProjects.length; i++) {
                 if (allProjects[i].isOpen()) {
                     accessibleProjects.add(allProjects[i]);
                 }
             }
             return accessibleProjects.toArray();
         } else if (element instanceof IContainer) {
-            IContainer container = (IContainer) element;
+            var container = (IContainer) element;
             if (container.isAccessible()) {
                 try {
                     List<IResource> children = new ArrayList<IResource>();
-                    IResource[] members = container.members();
+                    var members = container.members();
                     for (IResource member : members) {
                         if (includeResource(member)) {
                             children.add(member);
@@ -81,8 +79,7 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
                     }
                     return children.toArray();
                 } catch (CoreException e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-                            "", e);
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e);
                 }
             }
         }
@@ -111,12 +108,12 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public Object[] getElements(final Object element) {
+    public Object[] getElements(Object element) {
         return getChildren(element);
     }
 
     @Override
-    public Object getParent(final Object element) {
+    public Object getParent(Object element) {
         if (element instanceof IResource) {
             return ((IResource) element).getParent();
         }
@@ -124,13 +121,12 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public boolean hasChildren(final Object element) {
+    public boolean hasChildren(Object element) {
         return getChildren(element).length > 0;
     }
 
     @Override
-    public void inputChanged(final Viewer viewer, final Object oldInput,
-            final Object newInput) {
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
     /**
@@ -139,7 +135,7 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
      * @param show
      *            boolean if false, do not show closed projects in the tree
      */
-    public void showClosedProjects(final boolean show) {
+    public void showClosedProjects(boolean show) {
         showClosedProjects = show;
     }
 }

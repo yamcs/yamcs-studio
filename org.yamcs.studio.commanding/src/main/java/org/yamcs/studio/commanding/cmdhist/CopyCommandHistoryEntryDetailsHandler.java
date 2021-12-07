@@ -5,14 +5,12 @@ import java.util.Iterator;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.client.Command;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
@@ -25,17 +23,17 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ISelection sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+        var sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
         if (sel != null && sel instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) sel;
+            var selection = (IStructuredSelection) sel;
 
-            String property = event.getParameter(CommandHistory.CMDPARAM_EVENT_PROPERTY);
+            var property = event.getParameter(CommandHistory.CMDPARAM_EVENT_PROPERTY);
 
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
-                CommandHistoryRecord rec = (CommandHistoryRecord) it.next();
-                Command command = rec.getCommand();
+                var rec = (CommandHistoryRecord) it.next();
+                var command = rec.getCommand();
                 switch (property) {
                 case PARAM_GENTIME:
                     text.append(command.getGenerationTime());
@@ -50,7 +48,7 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
                     text.append(command.getSequenceNumber());
                     break;
                 case PARAM_BIN:
-                    String hexString = StringConverter.arrayToHexString(command.getBinary());
+                    var hexString = StringConverter.arrayToHexString(command.getBinary());
                     text.append(hexString);
                     break;
                 default:
@@ -62,9 +60,9 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
                 }
             }
 
-            Display display = Display.getCurrent();
-            Clipboard clipboard = new Clipboard(display);
-            Transfer[] transfers = new Transfer[] { TextTransfer.getInstance() };
+            var display = Display.getCurrent();
+            var clipboard = new Clipboard(display);
+            var transfers = new Transfer[] { TextTransfer.getInstance() };
 
             clipboard.setContents(new Object[] { text.toString() }, transfers);
             clipboard.dispose();

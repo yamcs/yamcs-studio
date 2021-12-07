@@ -65,14 +65,14 @@ class NdArrayFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         if (containsNull(args)) {
             return null;
         }
 
-        VNumberArray data = (VNumberArray) args.get(0);
-        ArrayDimensionDisplay[] displays = new ArrayDimensionDisplay[args.size() - 1];
-        for (int i = 0; i < displays.length; i++) {
+        var data = (VNumberArray) args.get(0);
+        var displays = new ArrayDimensionDisplay[args.size() - 1];
+        for (var i = 0; i < displays.length; i++) {
             displays[i] = (ArrayDimensionDisplay) args.get(i + 1);
         }
 

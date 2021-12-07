@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.osgi.framework.Bundle;
 
 /**
  * Utility class, which provides access to images. Images returned by this utility are managed by a ImageRegistry and
@@ -72,8 +71,8 @@ public final class ImageUtil {
      *            the path
      * @return an ImageDescriptor or null
      */
-    public ImageDescriptor getImageDescriptorFromFile(final String fullPath) {
-        ImageDescriptor descriptor = _imageRegistry.getDescriptor(fullPath);
+    public ImageDescriptor getImageDescriptorFromFile(String fullPath) {
+        var descriptor = _imageRegistry.getDescriptor(fullPath);
 
         if (descriptor == null) {
             try {
@@ -100,10 +99,9 @@ public final class ImageUtil {
      *            the path
      * @return an ImageDescriptor or null
      */
-    public ImageDescriptor getImageDescriptor(final String pluginId,
-            final String path) {
-        String id = pluginId + "/" + path;
-        ImageDescriptor descriptor = _imageRegistry.getDescriptor(id);
+    public ImageDescriptor getImageDescriptor(String pluginId, String path) {
+        var id = pluginId + "/" + path;
+        var descriptor = _imageRegistry.getDescriptor(id);
 
         if (descriptor == null) {
             descriptor = imageDescriptorFromPlugin(pluginId, path);
@@ -126,10 +124,9 @@ public final class ImageUtil {
      *            the path
      * @return an Image or null
      */
-    public Image getImage(final String pluginId,
-            final String path) {
-        String id = pluginId + "/" + path;
-        ImageDescriptor descriptor = _imageRegistry.getDescriptor(id);
+    public Image getImage(String pluginId, String path) {
+        var id = pluginId + "/" + path;
+        var descriptor = _imageRegistry.getDescriptor(id);
 
         if (descriptor == null) {
             descriptor = imageDescriptorFromPlugin(pluginId, path);
@@ -159,19 +156,17 @@ public final class ImageUtil {
      * @return an image descriptor, or <code>null</code> if no image could be found
      * @since 3.0
      */
-    private static ImageDescriptor imageDescriptorFromPlugin(
-            final String pluginId, final String imageFilePath) {
+    private static ImageDescriptor imageDescriptorFromPlugin(String pluginId, String imageFilePath) {
         if (pluginId == null || imageFilePath == null) {
             throw new IllegalArgumentException();
         }
 
         // if the bundle is not ready then there is no image
-        Bundle bundle = Platform.getBundle(pluginId);
+        var bundle = Platform.getBundle(pluginId);
 
         // look for the image (this will check both the plugin and fragment
         // folders
-        URL fullPathString = FileLocator.find(bundle, new Path(imageFilePath),
-                null);
+        var fullPathString = FileLocator.find(bundle, new Path(imageFilePath), null);
 
         if (fullPathString == null) {
             try {

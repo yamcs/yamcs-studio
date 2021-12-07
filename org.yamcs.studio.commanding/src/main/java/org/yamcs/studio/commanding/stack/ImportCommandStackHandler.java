@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -18,12 +17,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -34,10 +30,10 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = HandlerUtil.getActiveShell(event);
-        FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+        var shell = HandlerUtil.getActiveShell(event);
+        var dialog = new FileDialog(shell, SWT.OPEN);
         dialog.setFilterExtensions(new String[] { "*.xml" });
-        String importFile = dialog.open();
+        var importFile = dialog.open();
         if (importFile == null) {
             // cancelled
             return null;
@@ -45,9 +41,9 @@ public class ImportCommandStackHandler extends AbstractHandler {
         log.info("Importing command stack from file: " + importFile);
 
         // get command stack object
-        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
-        CommandStackView commandStackView = (CommandStackView) part;
+        var commandStackView = (CommandStackView) part;
 
         // import new commands
         for (StackedCommand sc : parseCommandStack(shell, Paths.get(importFile))) {
@@ -59,46 +55,46 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
     private List<StackedCommand> parseCommandStack(Shell shell, Path file) {
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(file.toFile());
+            var dbFactory = DocumentBuilderFactory.newInstance();
+            var dBuilder = dbFactory.newDocumentBuilder();
+            var doc = dBuilder.parse(file.toFile());
             doc.getDocumentElement().normalize();
 
-            NodeList nodes = doc.getElementsByTagName("command");
+            var nodes = doc.getElementsByTagName("command");
 
             List<StackedCommand> commands = new ArrayList<>();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
+            for (var i = 0; i < nodes.getLength(); i++) {
+                var node = nodes.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element commandElement = (Element) node;
-                    String qname = commandElement.getAttribute("qualifiedName");
+                    var commandElement = (Element) node;
+                    var qname = commandElement.getAttribute("qualifiedName");
 
-                    CommandInfo mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qname);
+                    var mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qname);
                     if (mdbInfo == null) {
                         MessageDialog.openError(shell, "Import Command Stack",
                                 "Command " + qname + " does not exist in MDB.");
                         return null;
                     }
 
-                    StackedCommand command = new StackedCommand();
+                    var command = new StackedCommand();
                     command.setMetaCommand(mdbInfo);
                     if (commandElement.hasAttribute("comment")) {
-                        String comment = commandElement.getAttribute("comment");
+                        var comment = commandElement.getAttribute("comment");
                         command.setComment(comment);
                     }
                     if (commandElement.hasAttribute("delayMs")) {
-                        int delay = Integer.parseInt(commandElement.getAttribute("delayMs"));
+                        var delay = Integer.parseInt(commandElement.getAttribute("delayMs"));
                         command.setDelayMs(delay);
                     }
 
-                    NodeList argNodes = commandElement.getElementsByTagName("commandArgument");
-                    for (int j = 0; j < argNodes.getLength(); j++) {
-                        Node argNode = argNodes.item(j);
+                    var argNodes = commandElement.getElementsByTagName("commandArgument");
+                    for (var j = 0; j < argNodes.getLength(); j++) {
+                        var argNode = argNodes.item(j);
                         if (argNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element argElement = (Element) argNode;
-                            String argName = argElement.getAttribute("argumentName");
-                            String argValue = argElement.getAttribute("argumentValue");
-                            ArgumentInfo argInfo = getArgumentFromYamcs(mdbInfo, argName);
+                            var argElement = (Element) argNode;
+                            var argName = argElement.getAttribute("argumentName");
+                            var argValue = argElement.getAttribute("argumentValue");
+                            var argInfo = getArgumentFromYamcs(mdbInfo, argName);
                             if (argInfo == null) {
                                 MessageDialog.openError(shell, "Import Command Stack",
                                         "In command " + qname + ", argument " + argName + " does not exist in MDB.");

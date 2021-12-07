@@ -11,14 +11,14 @@ package org.yamcs.studio.autocomplete.ui;
 
 import java.util.List;
 
-import org.yamcs.studio.autocomplete.ui.content.ContentProposalAdapter;
-import org.yamcs.studio.autocomplete.ui.content.IContentProposalListener2;
-import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.yamcs.studio.autocomplete.ui.content.ContentProposalAdapter;
+import org.yamcs.studio.autocomplete.ui.content.IContentProposalListener2;
+import org.yamcs.studio.autocomplete.ui.history.AutoCompleteHistory;
 
 public class AutoCompleteTextCellEditor extends TextCellEditor {
 
@@ -28,18 +28,14 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     public AutoCompleteTextCellEditor(Composite parent, String type) {
         super(parent);
 
-        AutoCompleteProposalProvider provider = new AutoCompleteProposalProvider(type);
-        contentProposalAdapter = new ContentProposalAdapter(text,
-                new TextContentAdapter(), provider,
-                AutoCompleteWidget.getActivationKeystroke(),
-                AutoCompleteWidget.getAutoactivationChars());
-        enableContentProposal(provider,
-                AutoCompleteWidget.getActivationKeystroke(),
+        var provider = new AutoCompleteProposalProvider(type);
+        contentProposalAdapter = new ContentProposalAdapter(text, new TextContentAdapter(), provider,
+                AutoCompleteWidget.getActivationKeystroke(), AutoCompleteWidget.getAutoactivationChars());
+        enableContentProposal(provider, AutoCompleteWidget.getActivationKeystroke(),
                 AutoCompleteWidget.getAutoactivationChars());
     }
 
-    public AutoCompleteTextCellEditor(Composite parent, String type,
-            List<Control> historyHandlers) {
+    public AutoCompleteTextCellEditor(Composite parent, String type, List<Control> historyHandlers) {
         this(parent, type);
         if (historyHandlers != null) {
             for (Control handler : historyHandlers) {
@@ -48,23 +44,22 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
         }
     }
 
-    private void enableContentProposal(AutoCompleteProposalProvider provider,
-            KeyStroke keyStroke, char[] autoActivationCharacters) {
+    private void enableContentProposal(AutoCompleteProposalProvider provider, KeyStroke keyStroke,
+            char[] autoActivationCharacters) {
         // Listen for popup open/close events to be able to handle focus events
         // correctly
-        contentProposalAdapter
-                .addContentProposalListener(new IContentProposalListener2() {
+        contentProposalAdapter.addContentProposalListener(new IContentProposalListener2() {
 
-                    public void proposalPopupClosed(
-                            ContentProposalAdapter adapter) {
-                        popupOpen = false;
-                    }
+            @Override
+            public void proposalPopupClosed(ContentProposalAdapter adapter) {
+                popupOpen = false;
+            }
 
-                    public void proposalPopupOpened(
-                            ContentProposalAdapter adapter) {
-                        popupOpen = true;
-                    }
-                });
+            @Override
+            public void proposalPopupOpened(ContentProposalAdapter adapter) {
+                popupOpen = true;
+            }
+        });
     }
 
     /**

@@ -40,20 +40,21 @@ abstract public class ControlSystemDropTarget {
      * @param accepted
      *            (Base) class of accepted items
      */
-    public ControlSystemDropTarget(final Control control,
-            final Class<?>... accepted) {
+    public ControlSystemDropTarget(Control control, Class<?>... accepted) {
         target = new DropTarget(control, DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 
-        final List<Transfer> supportedTransfers = new ArrayList<Transfer>();
+        List<Transfer> supportedTransfers = new ArrayList<Transfer>();
         for (Class<?> clazz : accepted) {
-            if (clazz == String.class)
+            if (clazz == String.class) {
                 supportedTransfers.add(TextTransfer.getInstance());
-            if (clazz == File.class)
+            }
+            if (clazz == File.class) {
                 supportedTransfers.add(FileTransfer.getInstance());
-            else {
-                final SerializableItemTransfer xfer = SerializableItemTransfer.getTransfer(clazz.getName());
-                if (xfer != null)
+            } else {
+                var xfer = SerializableItemTransfer.getTransfer(clazz.getName());
+                if (xfer != null) {
                     supportedTransfers.add(xfer);
+                }
             }
         }
         target.setTransfer(supportedTransfers.toArray(new Transfer[supportedTransfers.size()]));
@@ -63,10 +64,10 @@ abstract public class ControlSystemDropTarget {
              * Used internally by the system when a DnD operation enters the control.
              */
             @Override
-            public void dragEnter(final DropTargetEvent event) {
+            public void dragEnter(DropTargetEvent event) {
                 // Seems DropTarget it is not honoring the order of the transferData:
                 // Making sure is right
-                boolean done = false;
+                var done = false;
                 for (Transfer transfer : target.getTransfer()) {
                     for (TransferData data : event.dataTypes) {
                         if (transfer.isSupportedType(data)) {
@@ -75,21 +76,23 @@ abstract public class ControlSystemDropTarget {
                             break;
                         }
                     }
-                    if (done)
+                    if (done) {
                         break;
+                    }
                 }
 
-                if ((event.operations & DND.DROP_COPY) != 0)
+                if ((event.operations & DND.DROP_COPY) != 0) {
                     event.detail = DND.DROP_COPY;
-                else
+                } else {
                     event.detail = DND.DROP_NONE;
+                }
             }
 
             /**
              * Data was dropped into the target. Check the actual type, handle received data.
              */
             @Override
-            public void drop(final DropTargetEvent event) {
+            public void drop(DropTargetEvent event) {
                 handleDrop(event.data);
             }
         });

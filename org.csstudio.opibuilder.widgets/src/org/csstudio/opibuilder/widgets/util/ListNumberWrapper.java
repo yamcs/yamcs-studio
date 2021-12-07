@@ -1,7 +1,7 @@
 package org.csstudio.opibuilder.widgets.util;
 
-import org.yamcs.studio.data.vtype.ListNumber;
 import org.csstudio.swt.widgets.datadefinition.IPrimaryArrayWrapper;
+import org.yamcs.studio.data.vtype.ListNumber;
 
 /**
  * An {@link IPrimaryArrayWrapper} for {@link ListNumber}

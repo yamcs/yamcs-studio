@@ -46,15 +46,11 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         // (PVs send individual events, so this bundles them)
         executor.scheduleWithFixedDelay(() -> {
             if (subscriptionDirty.getAndSet(false) && subscription != null) {
-                Set<NamedObjectId> ids = getRequestedIdentifiers();
+                var ids = getRequestedIdentifiers();
                 log.fine(String.format("Modifying subscription to %s", ids));
-                subscription.sendMessage(SubscribeParametersRequest.newBuilder()
-                        .setAction(Action.REPLACE)
-                        .setSendFromCache(true)
-                        .setAbortOnInvalid(false)
-                        .setUpdateOnExpiration(true)
-                        .addAllId(ids)
-                        .build());
+                subscription.sendMessage(
+                        SubscribeParametersRequest.newBuilder().setAction(Action.REPLACE).setSendFromCache(true)
+                                .setAbortOnInvalid(false).setUpdateOnExpiration(true).addAllId(ids).build());
             }
         }, 500, 500, TimeUnit.MILLISECONDS);
 
@@ -62,9 +58,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     }
 
     private Set<NamedObjectId> getRequestedIdentifiers() {
-        return pvsById.entrySet().stream()
-                .filter(entry -> !entry.getValue().isEmpty())
-                .map(Entry::getKey)
+        return pvsById.entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).map(Entry::getKey)
                 .collect(Collectors.toSet());
     }
 
@@ -73,11 +67,11 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     }
 
     public VType getValue(String pvName) {
-        NamedObjectId id = identityOf(pvName);
+        var id = identityOf(pvName);
         if (subscription != null) {
-            ParameterValue pval = subscription.get(id);
+            var pval = subscription.get(id);
             if (pval != null) {
-                boolean raw = pvName.startsWith("raw://");
+                var raw = pvName.startsWith("raw://");
                 return YamcsVType.fromYamcs(pval, raw);
             }
         }
@@ -113,16 +107,11 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 });
 
                 // Ready to receive some data
-                Set<NamedObjectId> ids = getRequestedIdentifiers();
+                var ids = getRequestedIdentifiers();
                 log.fine(String.format("Subscribing to %s [%s/%s]", ids, instance, processor));
-                subscription.sendMessage(SubscribeParametersRequest.newBuilder()
-                        .setInstance(instance)
-                        .setProcessor(processor)
-                        .setSendFromCache(true)
-                        .setAbortOnInvalid(false)
-                        .setUpdateOnExpiration(true)
-                        .addAllId(ids)
-                        .build());
+                subscription.sendMessage(SubscribeParametersRequest.newBuilder().setInstance(instance)
+                        .setProcessor(processor).setSendFromCache(true).setAbortOnInvalid(false)
+                        .setUpdateOnExpiration(true).addAllId(ids).build());
             }
         });
     }
@@ -131,9 +120,9 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async adds a Yamcs PV for receiving updates.
      */
     public void register(IPV pv) {
-        NamedObjectId id = identityOf(pv.getName());
+        var id = identityOf(pv.getName());
         executor.execute(() -> {
-            Set<IPV> pvs = pvsById.computeIfAbsent(id, x -> new HashSet<>());
+            var pvs = pvsById.computeIfAbsent(id, x -> new HashSet<>());
             pvs.add(pv);
             subscriptionDirty.set(true);
         });
@@ -143,11 +132,11 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async removes a Yamcs PV from receiving updates.
      */
     public void unregister(IPV pv) {
-        NamedObjectId id = identityOf(pv.getName());
+        var id = identityOf(pv.getName());
         executor.execute(() -> {
-            Set<IPV> pvs = pvsById.get(id);
+            var pvs = pvsById.get(id);
             if (pvs != null) {
-                boolean removed = pvs.remove(pv);
+                var removed = pvs.remove(pv);
                 if (removed) {
                     subscriptionDirty.set(true);
                 }
@@ -165,7 +154,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     public void onData(List<ParameterValue> values) {
         executor.execute(() -> {
             for (ParameterValue pval : values) {
-                Set<IPV> pvs = pvsById.get(pval.getId());
+                var pvs = pvsById.get(pval.getId());
                 if (pvs != null) {
                     pvs.forEach(pv -> pv.notifyValueChange());
                 }
@@ -183,7 +172,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         executor.execute(() -> {
             // We keep the id in pvsById, we want to again receive the invalid
             // identification when the subscription is updated.
-            Set<IPV> pvs = pvsById.get(id);
+            var pvs = pvsById.get(id);
             if (pvs != null) {
                 pvs.forEach(IPV::setInvalid);
             }
@@ -192,22 +181,14 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
 
     public static NamedObjectId identityOf(String pvName) {
         if (pvName.startsWith("ops://")) {
-            return NamedObjectId.newBuilder()
-                    .setNamespace("MDB:OPS Name")
-                    .setName(pvName.substring("ops://".length()))
+            return NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(pvName.substring("ops://".length()))
                     .build();
         } else if (pvName.startsWith("para://")) {
-            return NamedObjectId.newBuilder()
-                    .setName(pvName.substring("para://".length()))
-                    .build();
+            return NamedObjectId.newBuilder().setName(pvName.substring("para://".length())).build();
         } else if (pvName.startsWith("raw://")) {
-            return NamedObjectId.newBuilder()
-                    .setName(pvName.substring("raw://".length()))
-                    .build();
+            return NamedObjectId.newBuilder().setName(pvName.substring("raw://".length())).build();
         } else {
-            return NamedObjectId.newBuilder()
-                    .setName(pvName)
-                    .build();
+            return NamedObjectId.newBuilder().setName(pvName).build();
         }
     }
 

@@ -8,7 +8,6 @@ import java.util.List;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPIFont;
@@ -18,6 +17,13 @@ import org.csstudio.opibuilder.widgets.model.IntensityGraphModel;
 import org.csstudio.opibuilder.widgets.model.IntensityGraphModel.AxisProperty;
 import org.csstudio.opibuilder.widgets.model.IntensityGraphModel.ROIProperty;
 import org.csstudio.opibuilder.widgets.util.ListNumberWrapper;
+import org.csstudio.swt.widgets.datadefinition.ColorMap;
+import org.csstudio.swt.widgets.datadefinition.ColorMap.PredefinedColorMap;
+import org.csstudio.swt.widgets.figures.IntensityGraphFigure;
+import org.csstudio.ui.util.CustomMediaFactory;
+import org.csstudio.ui.util.thread.UIBundlingThread;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.nebula.visualization.xygraph.figures.Axis;
 import org.yamcs.studio.data.VTypeHelper;
 import org.yamcs.studio.data.vtype.ArrayDouble;
 import org.yamcs.studio.data.vtype.ArrayInt;
@@ -25,14 +31,6 @@ import org.yamcs.studio.data.vtype.ListNumber;
 import org.yamcs.studio.data.vtype.VNumberArray;
 import org.yamcs.studio.data.vtype.VType;
 import org.yamcs.studio.data.vtype.ValueFactory;
-import org.csstudio.swt.widgets.datadefinition.ColorMap;
-import org.csstudio.swt.widgets.datadefinition.ColorMap.PredefinedColorMap;
-import org.csstudio.swt.widgets.figures.IntensityGraphFigure;
-import org.csstudio.ui.util.CustomMediaFactory;
-import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.nebula.visualization.xygraph.figures.Axis;
 
 public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
 
@@ -49,7 +47,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        IntensityGraphModel model = getWidgetModel();
+        var model = getWidgetModel();
         graph = new IntensityGraphFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
         graph.setMin(model.getMinimum());
         graph.setMax(model.getMaximum());
@@ -67,34 +65,31 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
         graph.setROIColor(model.getROIColor().getSWTColor());
         // init X-Axis
         for (AxisProperty axisProperty : AxisProperty.values()) {
-            String propID = IntensityGraphModel.makeAxisPropID(
-                    IntensityGraphModel.X_AXIS_ID, axisProperty.propIDPre);
+            var propID = IntensityGraphModel.makeAxisPropID(IntensityGraphModel.X_AXIS_ID, axisProperty.propIDPre);
             setAxisProperty(graph.getXAxis(), axisProperty, model.getPropertyValue(propID));
         }
         // init Y-Axis
         for (AxisProperty axisProperty : AxisProperty.values()) {
-            String propID = IntensityGraphModel.makeAxisPropID(
-                    IntensityGraphModel.Y_AXIS_ID, axisProperty.propIDPre);
+            var propID = IntensityGraphModel.makeAxisPropID(IntensityGraphModel.Y_AXIS_ID, axisProperty.propIDPre);
             setAxisProperty(graph.getYAxis(), axisProperty, model.getPropertyValue(propID));
         }
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             // add profile data listener
-            if (model.getHorizonProfileYPV().trim().length() > 0 ||
-                    model.getVerticalProfileYPV().trim().length() > 0) {
+            if (model.getHorizonProfileYPV().trim().length() > 0 || model.getVerticalProfileYPV().trim().length() > 0) {
                 graph.addProfileDataListener((xProfileData, yProfileData, xAxisRange, yAxisRange) -> {
                     // horizontal
                     setPVValue(IntensityGraphModel.PROP_HORIZON_PROFILE_Y_PV_NAME, xProfileData);
-                    double[] horizonXData = new double[xProfileData.length];
-                    double d = (xAxisRange.getUpper() - xAxisRange.getLower()) / (xProfileData.length - 1);
-                    for (int i1 = 0; i1 < xProfileData.length; i1++) {
+                    var horizonXData = new double[xProfileData.length];
+                    var d = (xAxisRange.getUpper() - xAxisRange.getLower()) / (xProfileData.length - 1);
+                    for (var i1 = 0; i1 < xProfileData.length; i1++) {
                         horizonXData[i1] = xAxisRange.getLower() + d * i1;
                     }
                     setPVValue(IntensityGraphModel.PROP_HORIZON_PROFILE_X_PV_NAME, horizonXData);
                     // vertical
                     setPVValue(IntensityGraphModel.PROP_VERTICAL_PROFILE_Y_PV_NAME, yProfileData);
-                    double[] verticalXData = new double[yProfileData.length];
+                    var verticalXData = new double[yProfileData.length];
                     d = (yAxisRange.getUpper() - yAxisRange.getLower()) / (yProfileData.length - 1);
-                    for (int i2 = 0; i2 < yProfileData.length; i2++) {
+                    for (var i2 = 0; i2 < yProfileData.length; i2++) {
                         verticalXData[i2] = yAxisRange.getUpper() - d * i2;
                     }
                     setPVValue(IntensityGraphModel.PROP_VERTICAL_PROFILE_X_PV_NAME, verticalXData);
@@ -105,12 +100,10 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
                 graph.addPixelInfoListener((pixel_info, selected) -> {
                     // TODO "Selected" column should be boolean, but there is no 'ArrayBoolean', and List<Boolean>
                     // also fails
-                    final List<Object> values = Arrays.<Object> asList(new ArrayDouble(pixel_info.xcoord),
-                            new ArrayDouble(pixel_info.ycoord),
-                            new ArrayDouble(pixel_info.value),
+                    List<Object> values = Arrays.<Object> asList(new ArrayDouble(pixel_info.xcoord),
+                            new ArrayDouble(pixel_info.ycoord), new ArrayDouble(pixel_info.value),
                             new ArrayInt(selected ? 1 : 0));
-                    final Object value = ValueFactory.newVTable(pixel_info_table_types, pixel_info_table_columns,
-                            values);
+                    Object value = ValueFactory.newVTable(pixel_info_table_types, pixel_info_table_columns, values);
                     setPVValue(IntensityGraphModel.PROP_PIXEL_INFO_PV_NAME, value);
                 });
             }
@@ -130,13 +123,10 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
      * @param actionsFromPV
      */
     private void updatePropSheet() {
-        boolean rgbMode = getWidgetModel().isRGBMode();
-        getWidgetModel().setPropertyVisible(
-                IntensityGraphModel.PROP_COLOR_DEPTH, rgbMode);
-        getWidgetModel().setPropertyVisible(
-                IntensityGraphModel.PROP_COLOR_MAP, !rgbMode);
-        getWidgetModel().setPropertyVisible(
-                IntensityGraphModel.PROP_SHOW_RAMP, !rgbMode);
+        var rgbMode = getWidgetModel().isRGBMode();
+        getWidgetModel().setPropertyVisible(IntensityGraphModel.PROP_COLOR_DEPTH, rgbMode);
+        getWidgetModel().setPropertyVisible(IntensityGraphModel.PROP_COLOR_MAP, !rgbMode);
+        getWidgetModel().setPropertyVisible(IntensityGraphModel.PROP_SHOW_RAMP, !rgbMode);
 
     }
 
@@ -150,7 +140,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
             if (newValue == null) {
                 return false;
             }
-            VType value = (VType) newValue;
+            var value = (VType) newValue;
 
             if (value instanceof VNumberArray) {
                 setValue(((VNumberArray) value).getData());
@@ -164,39 +154,31 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
 
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_MIN).addPropertyChangeListener(
-                evt -> {
-                    ((IntensityGraphFigure) figure).setMin((Double) evt.getNewValue());
-                    figure.repaint();
-                    innerUpdateGraphAreaSizeProperty();
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_MIN).addPropertyChangeListener(evt -> {
+            ((IntensityGraphFigure) figure).setMin((Double) evt.getNewValue());
+            figure.repaint();
+            innerUpdateGraphAreaSizeProperty();
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_MAX).addPropertyChangeListener(
-                evt -> {
-                    ((IntensityGraphFigure) figure).setMax((Double) evt.getNewValue());
-                    figure.repaint();
-                    innerUpdateGraphAreaSizeProperty();
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_MAX).addPropertyChangeListener(evt -> {
+            ((IntensityGraphFigure) figure).setMax((Double) evt.getNewValue());
+            figure.repaint();
+            innerUpdateGraphAreaSizeProperty();
+        });
 
         getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_STYLE).removeAllPropertyChangeListeners();
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_STYLE).addPropertyChangeListener(
-                evt -> {
-                    figure.setBorder(
-                            BorderFactory.createBorder(BorderStyle.values()[(Integer) evt.getNewValue()],
-                                    getWidgetModel().getBorderWidth(), getWidgetModel().getBorderColor(),
-                                    getWidgetModel().getName()));
-                    innerUpdateGraphAreaSizeProperty();
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_STYLE).addPropertyChangeListener(evt -> {
+            figure.setBorder(BorderFactory.createBorder(BorderStyle.values()[(Integer) evt.getNewValue()],
+                    getWidgetModel().getBorderWidth(), getWidgetModel().getBorderColor(), getWidgetModel().getName()));
+            innerUpdateGraphAreaSizeProperty();
+        });
 
         getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_WIDTH).removeAllPropertyChangeListeners();
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_WIDTH).addPropertyChangeListener(
-                evt -> {
-                    figure.setBorder(
-                            BorderFactory.createBorder(getWidgetModel().getBorderStyle(),
-                                    (Integer) evt.getNewValue(), getWidgetModel().getBorderColor(),
-                                    getWidgetModel().getName()));
-                    innerUpdateGraphAreaSizeProperty();
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_BORDER_WIDTH).addPropertyChangeListener(evt -> {
+            figure.setBorder(BorderFactory.createBorder(getWidgetModel().getBorderStyle(), (Integer) evt.getNewValue(),
+                    getWidgetModel().getBorderColor(), getWidgetModel().getName()));
+            innerUpdateGraphAreaSizeProperty();
+        });
 
         handler = (oldValue, newValue, figure) -> {
             ((IntensityGraphFigure) figure).setDataWidth((Integer) newValue);
@@ -240,73 +222,67 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
         };
         setPropertyChangeHandler(IntensityGraphModel.PROP_CROP_BOTTOM, handler);
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_SHOW_RAMP).addPropertyChangeListener(
-                evt -> {
-                    ((IntensityGraphFigure) getFigure()).setShowRamp((Boolean) evt.getNewValue());
-                    Dimension d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
-                    innerTrig = true;
-                    getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH,
-                            getWidgetModel().getWidth() - d.width);
-                    innerTrig = false;
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_SHOW_RAMP).addPropertyChangeListener(evt -> {
+            ((IntensityGraphFigure) getFigure()).setShowRamp((Boolean) evt.getNewValue());
+            var d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
+            innerTrig = true;
+            getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH,
+                    getWidgetModel().getWidth() - d.width);
+            innerTrig = false;
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_WIDTH).addPropertyChangeListener(
-                evt -> {
-                    if (!innerTrig) { // if it is not triggered from inner
-                        innerTrig = true;
-                        Dimension d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
-                        getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH,
-                                ((Integer) evt.getNewValue()) - d.width);
-                        innerTrig = false; // reset innerTrig to false after each inner triggering
-                    } else {
-                        innerTrig = false;
-                    }
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_WIDTH).addPropertyChangeListener(evt -> {
+            if (!innerTrig) { // if it is not triggered from inner
+                innerTrig = true;
+                var d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
+                getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH,
+                        ((Integer) evt.getNewValue()) - d.width);
+                innerTrig = false; // reset innerTrig to false after each inner triggering
+            } else {
+                innerTrig = false;
+            }
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH).addPropertyChangeListener(
-                evt -> {
-                    if (!innerTrig) {
-                        innerTrig = true;
-                        Dimension d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
-                        getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_WIDTH,
-                                ((Integer) evt.getNewValue()) + d.width);
-                        innerTrig = false; // reset innerTrig to false after each inner triggering
-                    } else {
-                        innerTrig = false;
-                    }
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH).addPropertyChangeListener(evt -> {
+            if (!innerTrig) {
+                innerTrig = true;
+                var d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
+                getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_WIDTH,
+                        ((Integer) evt.getNewValue()) + d.width);
+                innerTrig = false; // reset innerTrig to false after each inner triggering
+            } else {
+                innerTrig = false;
+            }
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_HEIGHT).addPropertyChangeListener(
-                evt -> {
-                    if (!innerTrig) {
-                        innerTrig = true;
-                        Dimension d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
-                        getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_HEIGHT,
-                                ((Integer) evt.getNewValue()) - d.height);
-                        innerTrig = false; // reset innerTrig to false after each inner triggering
-                    } else {
-                        innerTrig = false;
-                    }
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_HEIGHT).addPropertyChangeListener(evt -> {
+            if (!innerTrig) {
+                innerTrig = true;
+                var d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
+                getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_HEIGHT,
+                        ((Integer) evt.getNewValue()) - d.height);
+                innerTrig = false; // reset innerTrig to false after each inner triggering
+            } else {
+                innerTrig = false;
+            }
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_GRAPH_AREA_HEIGHT).addPropertyChangeListener(
-                evt -> {
-                    if (!innerTrig) {
-                        innerTrig = true;
-                        Dimension d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
-                        getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_HEIGHT,
-                                ((Integer) evt.getNewValue()) + d.height);
-                        innerTrig = false; // reset innerTrig to false after each inner triggering
-                    } else {
-                        innerTrig = false;
-                    }
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_GRAPH_AREA_HEIGHT).addPropertyChangeListener(evt -> {
+            if (!innerTrig) {
+                innerTrig = true;
+                var d = ((IntensityGraphFigure) getFigure()).getGraphAreaInsets();
+                getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_HEIGHT,
+                        ((Integer) evt.getNewValue()) + d.height);
+                innerTrig = false; // reset innerTrig to false after each inner triggering
+            } else {
+                innerTrig = false;
+            }
+        });
 
-        getWidgetModel().getProperty(IntensityGraphModel.PROP_RGB_MODE)
-                .addPropertyChangeListener(evt -> {
-                    updatePropSheet();
-                    ((IntensityGraphFigure) getFigure()).setInRGBMode((Boolean) (evt.getNewValue()));
-                });
+        getWidgetModel().getProperty(IntensityGraphModel.PROP_RGB_MODE).addPropertyChangeListener(evt -> {
+            updatePropSheet();
+            ((IntensityGraphFigure) getFigure()).setInRGBMode((Boolean) (evt.getNewValue()));
+        });
 
         handler = (oldValue, newValue, figure) -> {
             ((IntensityGraphFigure) getFigure()).setColorDepth(getWidgetModel().getColorDepth());
@@ -328,7 +304,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
     }
 
     private synchronized void innerUpdateGraphAreaSizeProperty() {
-        Dimension d = ((IntensityGraphFigure) figure).getGraphAreaInsets();
+        var d = ((IntensityGraphFigure) figure).getGraphAreaInsets();
         innerTrig = true;
         getWidgetModel().setPropertyValue(IntensityGraphModel.PROP_GRAPH_AREA_WIDTH,
                 getWidgetModel().getSize().width - d.width);
@@ -344,59 +320,50 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
             int currentCount = (Integer) evt.getOldValue();
             int newCount = (Integer) evt.getNewValue();
             if (newCount > currentCount) {
-                for (int i1 = currentCount; i1 < newCount; i1++) {
+                for (var i1 = currentCount; i1 < newCount; i1++) {
                     for (ROIProperty roiProperty1 : ROIProperty.values()) {
-                        if (roiProperty1 != ROIProperty.XPV_VALUE
-                                && roiProperty1 != ROIProperty.YPV_VALUE
-                                && roiProperty1 != ROIProperty.WPV_VALUE
-                                && roiProperty1 != ROIProperty.HPV_VALUE) {
-                            String propID1 = IntensityGraphModel.makeROIPropID(
-                                    roiProperty1.propIDPre, i1);
+                        if (roiProperty1 != ROIProperty.XPV_VALUE && roiProperty1 != ROIProperty.YPV_VALUE
+                                && roiProperty1 != ROIProperty.WPV_VALUE && roiProperty1 != ROIProperty.HPV_VALUE) {
+                            var propID1 = IntensityGraphModel.makeROIPropID(roiProperty1.propIDPre, i1);
                             getWidgetModel().setPropertyVisible(propID1, true);
                         }
                     }
-                    final int roiIndex = i1;
+                    var roiIndex = i1;
                     graph.addROI(getROIName(roiIndex), (xIndex, yIndex, width, height) -> {
-                        String propID = IntensityGraphModel.makeROIPropID(
-                                ROIProperty.XPV.propIDPre, roiIndex);
+                        var propID = IntensityGraphModel.makeROIPropID(ROIProperty.XPV.propIDPre, roiIndex);
                         setPVValue(propID, xIndex);
-                        propID = IntensityGraphModel.makeROIPropID(
-                                ROIProperty.YPV.propIDPre, roiIndex);
+                        propID = IntensityGraphModel.makeROIPropID(ROIProperty.YPV.propIDPre, roiIndex);
                         setPVValue(propID, yIndex);
-                        propID = IntensityGraphModel.makeROIPropID(
-                                ROIProperty.WPV.propIDPre, roiIndex);
+                        propID = IntensityGraphModel.makeROIPropID(ROIProperty.WPV.propIDPre, roiIndex);
                         setPVValue(propID, width);
-                        propID = IntensityGraphModel.makeROIPropID(
-                                ROIProperty.HPV.propIDPre, roiIndex);
+                        propID = IntensityGraphModel.makeROIPropID(ROIProperty.HPV.propIDPre, roiIndex);
                         setPVValue(propID, height);
                     }, (xIndex, yIndex, width, height) -> {
-                        String propID = IntensityGraphModel.makeROIPropID(
-                                ROIProperty.TITLE.propIDPre, roiIndex);
+                        var propID = IntensityGraphModel.makeROIPropID(ROIProperty.TITLE.propIDPre, roiIndex);
                         return (String) getPropertyValue(propID);
                     });
                 }
             } else if (newCount < currentCount) {
-                for (int i2 = currentCount - 1; i2 >= newCount; i2--) {
+                for (var i2 = currentCount - 1; i2 >= newCount; i2--) {
                     graph.removeROI(getROIName(i2));
                     for (ROIProperty roiProperty2 : ROIProperty.values()) {
-                        String propID2 = IntensityGraphModel.makeROIPropID(
-                                roiProperty2.propIDPre, i2);
+                        var propID2 = IntensityGraphModel.makeROIPropID(roiProperty2.propIDPre, i2);
                         getWidgetModel().setPropertyVisible(propID2, false);
                     }
                 }
             }
         };
-        AbstractWidgetProperty countProperty = getWidgetModel().getProperty(IntensityGraphModel.PROP_ROI_COUNT);
+        var countProperty = getWidgetModel().getProperty(IntensityGraphModel.PROP_ROI_COUNT);
         countProperty.addPropertyChangeListener(listener);
 
         // init
         int currentCount = (Integer) getPropertyValue(IntensityGraphModel.PROP_ROI_COUNT);
-        listener.propertyChange(new PropertyChangeEvent(countProperty, IntensityGraphModel.PROP_ROI_COUNT, 0,
-                currentCount));
-        for (int i = 0; i < currentCount; i++) {
-            for (final ROIProperty roiProperty : ROIProperty.values()) {
-                String propID = IntensityGraphModel.makeROIPropID(roiProperty.propIDPre, i);
-                Object propertyValue = getPropertyValue(propID);
+        listener.propertyChange(
+                new PropertyChangeEvent(countProperty, IntensityGraphModel.PROP_ROI_COUNT, 0, currentCount));
+        for (var i = 0; i < currentCount; i++) {
+            for (ROIProperty roiProperty : ROIProperty.values()) {
+                var propID = IntensityGraphModel.makeROIPropID(roiProperty.propIDPre, i);
+                var propertyValue = getPropertyValue(propID);
                 if (propertyValue != null) {
                     setROIProperty(getROIName(i), roiProperty, propertyValue);
                 }
@@ -410,23 +377,22 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
     }
 
     private void registerROIPropertyChangeHandlers() {
-        for (int i = 0; i < IntensityGraphModel.MAX_ROIS_AMOUNT; i++) {
-            final String roiName = getROIName(i);
-            for (final ROIProperty roiProperty : ROIProperty.values()) {
-                String propID = IntensityGraphModel.makeROIPropID(roiProperty.propIDPre, i);
+        for (var i = 0; i < IntensityGraphModel.MAX_ROIS_AMOUNT; i++) {
+            var roiName = getROIName(i);
+            for (ROIProperty roiProperty : ROIProperty.values()) {
+                var propID = IntensityGraphModel.makeROIPropID(roiProperty.propIDPre, i);
                 if (i >= (Integer) getPropertyValue(IntensityGraphModel.PROP_ROI_COUNT)) {
                     getWidgetModel().setPropertyVisible(propID, false);
                 }
-                setPropertyChangeHandler(propID,
-                        (oldValue, newValue, figure) -> {
-                            setROIProperty(roiName, roiProperty, newValue);
-                            return false;
-                        });
+                setPropertyChangeHandler(propID, (oldValue, newValue, figure) -> {
+                    setROIProperty(roiName, roiProperty, newValue);
+                    return false;
+                });
             }
         }
     }
 
-    private void setROIProperty(final String roiName, final ROIProperty roiProperty, Object newValue) {
+    private void setROIProperty(String roiName, ROIProperty roiProperty, Object newValue) {
         switch (roiProperty) {
         case TITLE:
             break;
@@ -453,17 +419,17 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
     private void registerAxisPropertyChangeHandler() {
         for (String axisID : new String[] { IntensityGraphModel.X_AXIS_ID, IntensityGraphModel.Y_AXIS_ID }) {
             for (AxisProperty axisProperty : AxisProperty.values()) {
-                final IWidgetPropertyChangeHandler handler = new AxisPropertyChangeHandler(
+                IWidgetPropertyChangeHandler handler = new AxisPropertyChangeHandler(
                         axisID.equals(IntensityGraphModel.X_AXIS_ID) ? ((IntensityGraphFigure) getFigure()).getXAxis()
                                 : ((IntensityGraphFigure) getFigure()).getYAxis(),
                         axisProperty);
                 // must use listener instead of handler because the prop sheet need to be
                 // refreshed immediately.
-                getWidgetModel().getProperty(IntensityGraphModel.makeAxisPropID(
-                        axisID, axisProperty.propIDPre)).addPropertyChangeListener(evt -> {
+                getWidgetModel().getProperty(IntensityGraphModel.makeAxisPropID(axisID, axisProperty.propIDPre))
+                        .addPropertyChangeListener(evt -> {
                             handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-                            UIBundlingThread.getInstance().addRunnable(
-                                    getViewer().getControl().getDisplay(), () -> getFigure().repaint());
+                            UIBundlingThread.getInstance().addRunnable(getViewer().getControl().getDisplay(),
+                                    () -> getFigure().repaint());
                         });
 
             }
@@ -480,13 +446,13 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
             axis.setForegroundColor(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
             break;
         case MAX:
-            String axisID = (axis == graph.getXAxis()) ? IntensityGraphModel.X_AXIS_ID : IntensityGraphModel.Y_AXIS_ID;
+            var axisID = (axis == graph.getXAxis()) ? IntensityGraphModel.X_AXIS_ID : IntensityGraphModel.Y_AXIS_ID;
             double lower = (Double) getPropertyValue(
                     IntensityGraphModel.makeAxisPropID(axisID, AxisProperty.MIN.propIDPre));
             axis.setRange(lower, (Double) newValue);
             break;
         case MIN:
-            String axisID2 = (axis == graph.getXAxis()) ? IntensityGraphModel.X_AXIS_ID : IntensityGraphModel.Y_AXIS_ID;
+            var axisID2 = (axis == graph.getXAxis()) ? IntensityGraphModel.X_AXIS_ID : IntensityGraphModel.Y_AXIS_ID;
             double upper = (Double) getPropertyValue(
                     IntensityGraphModel.makeAxisPropID(axisID2, AxisProperty.MAX.propIDPre));
             axis.setRange((Double) newValue, upper);
@@ -531,8 +497,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
         if (value instanceof double[]) {
             ((IntensityGraphFigure) getFigure()).setDataArray((double[]) value);
         } else if (value instanceof ListNumber) {
-            ((IntensityGraphFigure) getFigure()).setDataArray(
-                    new ListNumberWrapper((ListNumber) value));
+            ((IntensityGraphFigure) getFigure()).setDataArray(new ListNumberWrapper((ListNumber) value));
         } else if (value instanceof short[]) {
             ((IntensityGraphFigure) getFigure()).setDataArray((short[]) value);
         } else if (value instanceof byte[]) {
@@ -564,8 +529,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
         }
 
         @Override
-        public boolean handleChange(Object oldValue, Object newValue,
-                IFigure refreshableFigure) {
+        public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
             setAxisProperty(axis, axisProperty, newValue);
             innerTrig = true;
             innerUpdateGraphAreaSizeProperty();

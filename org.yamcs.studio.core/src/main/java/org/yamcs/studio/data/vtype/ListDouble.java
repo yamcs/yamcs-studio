@@ -85,14 +85,14 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
      *            the lists to concatenate
      * @return the given lists concatenated together
      */
-    public static ListDouble concatenate(final ListNumber... lists) {
+    public static ListDouble concatenate(ListNumber... lists) {
 
         // since these lists are read-only, we precompute the size
-        int size = 0;
+        var size = 0;
         for (ListNumber l : lists) {
             size += l.size();
         }
-        final int sizeCopy = size;
+        var sizeCopy = size;
 
         return new ListDouble() {
 
@@ -113,9 +113,9 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
                 // for example, {a, b, c} {d, e, f} used to be indexed as
                 // {0, 1, 2} {0, 1, 2} and they are now indexed as
                 // {0, 1, 2} {3, 4, 5}
-                int startIdx = 0;
+                var startIdx = 0;
                 for (ListNumber l : lists) {
-                    int endIdx = startIdx + l.size() - 1;
+                    var endIdx = startIdx + l.size() - 1;
                     if (startIdx <= index && index <= endIdx) {
                         return l.getDouble(index - startIdx);
                     }
@@ -135,13 +135,13 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
         }
 
         if (obj instanceof ListDouble) {
-            ListDouble other = (ListDouble) obj;
+            var other = (ListDouble) obj;
 
             if (size() != other.size()) {
                 return false;
             }
 
-            for (int i = 0; i < size(); i++) {
+            for (var i = 0; i < size(); i++) {
                 if (Double.doubleToLongBits(getDouble(i)) != Double.doubleToLongBits(other.getDouble(i))) {
                     return false;
                 }
@@ -155,9 +155,9 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size(); i++) {
-            long bits = Double.doubleToLongBits(getDouble(i));
+        var result = 1;
+        for (var i = 0; i < size(); i++) {
+            var bits = Double.doubleToLongBits(getDouble(i));
             result = 31 * result + (int) (bits ^ (bits >>> 32));
         }
         return result;
@@ -165,9 +165,9 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("[");
-        int i = 0;
+        var i = 0;
         for (; i < size() - 1; i++) {
             builder.append(getDouble(i)).append(", ");
         }

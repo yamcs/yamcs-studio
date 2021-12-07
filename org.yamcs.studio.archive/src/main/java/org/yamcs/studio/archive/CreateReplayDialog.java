@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateProcessorRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -71,8 +70,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Instant start = startDate.getSelection().toInstant();
-        Instant stop = stopDate.getSelection().toInstant();
+        var start = startDate.getSelection().toInstant();
+        var stop = stopDate.getSelection().toInstant();
         if (start.isAfter(stop)) {
             errorMessage = "Stop has to be greater than start";
         }
@@ -83,11 +82,11 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
-        Composite container = new Composite(area, SWT.NONE);
+        var area = (Composite) super.createDialogArea(parent);
+        var container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout layout = new GridLayout(2, false);
+        var layout = new GridLayout(2, false);
         layout.marginHeight = 20;
         layout.marginWidth = 20;
         layout.verticalSpacing = 2;
@@ -118,7 +117,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         name.setText(nameValue);
 
         lbl = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         gd.verticalAlignment = SWT.CENTER;
         gd.heightHint = 20;
@@ -126,7 +125,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
         lbl = new Label(container, SWT.NONE);
         lbl.setText("Packets:");
-        Button includePackets = new Button(container, SWT.CHECK);
+        var includePackets = new Button(container, SWT.CHECK);
         includePackets.setText("All");
         includePackets.setLayoutData(new GridData());
         includePackets.setSelection(true);
@@ -137,9 +136,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
         gd = new GridData();
         gd.verticalAlignment = SWT.TOP;
         lbl.setLayoutData(gd);
-        Composite tableWrapper = new Composite(container, SWT.NONE);
+        var tableWrapper = new Composite(container, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        GridLayout gl = new GridLayout();
+        var gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         tableWrapper.setLayout(gl);
@@ -176,7 +175,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
         request = toCreateProcessorRequest();
-        YamcsClient client = YamcsPlugin.getYamcsClient();
+        var client = YamcsPlugin.getYamcsClient();
         client.createProcessor(request).whenComplete((processorClient, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
@@ -204,13 +203,13 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     private CreateProcessorRequest toCreateProcessorRequest() {
-        JsonObject spec = new JsonObject();
+        var spec = new JsonObject();
         spec.addProperty("start", startDate.getSelection().toInstant().toString());
         spec.addProperty("stop", stopDate.getSelection().toInstant().toString());
 
         spec.add("packetRequest", new JsonObject());
 
-        JsonArray ppFilters = new JsonArray();
+        var ppFilters = new JsonArray();
         for (TableItem item : ppTable.getTable().getItems()) {
             if (item.getChecked()) {
                 ppFilters.add(item.getText());
@@ -218,23 +217,20 @@ public class CreateReplayDialog extends TitleAreaDialog {
         }
 
         if (ppFilters.size() > 0) {
-            JsonObject ppObj = new JsonObject();
+            var ppObj = new JsonObject();
             ppObj.add("groupNameFilter", ppFilters);
             spec.add("ppRequest", ppObj);
         }
 
         if (stepByStepButton.getSelection()) {
-            JsonObject speed = new JsonObject();
+            var speed = new JsonObject();
             speed.addProperty("type", "STEP_BY_STEP");
             spec.add("speed", speed);
         }
 
-        String specJson = new Gson().toJson(spec);
-        CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
-                .setInstance(YamcsPlugin.getInstance())
-                .setName(name.getText())
-                .setType("Archive")
-                .setPersistent(true) // TODO temp
+        var specJson = new Gson().toJson(spec);
+        var resultb = CreateProcessorRequest.newBuilder().setInstance(YamcsPlugin.getInstance()).setName(name.getText())
+                .setType("Archive").setPersistent(true) // TODO temp
                 .setConfig(specJson);
 
         return resultb.build();

@@ -37,8 +37,7 @@ public class ConnectionModel extends AbstractWidgetModel {
      * Type of router.
      */
     public enum RouterType {
-        MANHATTAN("Manhattan"),
-        STRAIGHT_LINE("Direct Connect");
+        MANHATTAN("Manhattan"), STRAIGHT_LINE("Direct Connect");
 
         String description;
 
@@ -52,10 +51,11 @@ public class ConnectionModel extends AbstractWidgetModel {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (RouterType p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (RouterType p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
     }
@@ -70,10 +70,11 @@ public class ConnectionModel extends AbstractWidgetModel {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (ArrowType p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (ArrowType p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
 
@@ -84,9 +85,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     public enum LineJumpAdd {
-        NONE("none"),
-        HORIZONTAL_LINES("horizontal lines"),
-        VERTICAL_LINES("vertical lines");
+        NONE("none"), HORIZONTAL_LINES("horizontal lines"), VERTICAL_LINES("vertical lines");
 
         String description;
 
@@ -100,19 +99,17 @@ public class ConnectionModel extends AbstractWidgetModel {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (LineJumpAdd p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (LineJumpAdd p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
     }
 
     public enum LineJumpStyle {
-        ARC("arc"),
-        GAP("gap"),
-        SQUARE("square"),
-        SLIDES2("2 slides");
+        ARC("arc"), GAP("gap"), SQUARE("square"), SLIDES2("2 slides");
 
         String description;
 
@@ -126,15 +123,16 @@ public class ConnectionModel extends AbstractWidgetModel {
         }
 
         public static String[] stringValues() {
-            String[] sv = new String[values().length];
-            int i = 0;
-            for (LineJumpStyle p : values())
+            var sv = new String[values().length];
+            var i = 0;
+            for (LineJumpStyle p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
     }
 
-    public static final double ARROW_ANGLE = Math.PI / 10;
+    public static double ARROW_ANGLE = Math.PI / 10;
 
     /**
      * The type ID of this model.
@@ -244,34 +242,28 @@ public class ConnectionModel extends AbstractWidgetModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new IntegerProperty(PROP_LINE_WIDTH, "Line Width",
-                WidgetPropertyCategory.Display, 1, 1, 100));
-        addProperty(new ComboProperty(PROP_LINE_STYLE, "Line Style",
-                WidgetPropertyCategory.Display, LineStyle.stringValues(), 0));
-        addProperty(new ColorProperty(PROP_LINE_COLOR, "Line Color",
-                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_BLACK));
-        addProperty(new ComboProperty(PROP_ROUTER, "Router",
-                WidgetPropertyCategory.Display, RouterType.stringValues(), 0));
-        addProperty(new ComboProperty(PROP_ARROW_TYPE, "Arrows",
-                WidgetPropertyCategory.Display, ArrowType.stringValues(), 0));
-        addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new IntegerProperty(PROP_ARROW_LENGTH, "Arrow Length",
-                WidgetPropertyCategory.Display, 15, 5, 1000));
-        addProperty(new BooleanProperty(PROP_ANTIALIAS, "Anti Alias",
-                WidgetPropertyCategory.Display, true));
-        addProperty(new StringProperty(PROP_SRC_TERM, "Source Terminal",
-                WidgetPropertyCategory.Display, ""));
-        addProperty(new StringProperty(PROP_TGT_TERM, "Target Terminal",
-                WidgetPropertyCategory.Display, ""));
-        addProperty(new PointListProperty(PROP_POINTS, "Points",
-                WidgetPropertyCategory.Display, new PointList()));
-        addProperty(new ComboProperty(PROP_LINE_JUMP_ADD, "Add Line Jump To",
-                WidgetPropertyCategory.Display, LineJumpAdd.stringValues(), 0));
-        addProperty(new ComboProperty(PROP_LINE_JUMP_STYLE, "Line Jump Style",
-                WidgetPropertyCategory.Display, LineJumpStyle.stringValues(), 0));
-        addProperty(new IntegerProperty(PROP_LINE_JUMP_SIZE, "Line Jump Size",
-                WidgetPropertyCategory.Display, 10, 1, 100));
+        addProperty(new IntegerProperty(PROP_LINE_WIDTH, "Line Width", WidgetPropertyCategory.Display, 1, 1, 100));
+        addProperty(new ComboProperty(PROP_LINE_STYLE, "Line Style", WidgetPropertyCategory.Display,
+                LineStyle.stringValues(), 0));
+        addProperty(new ColorProperty(PROP_LINE_COLOR, "Line Color", WidgetPropertyCategory.Display,
+                CustomMediaFactory.COLOR_BLACK));
+        addProperty(
+                new ComboProperty(PROP_ROUTER, "Router", WidgetPropertyCategory.Display, RouterType.stringValues(), 0));
+        addProperty(new ComboProperty(PROP_ARROW_TYPE, "Arrows", WidgetPropertyCategory.Display,
+                ArrowType.stringValues(), 0));
+        addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow", WidgetPropertyCategory.Display, true));
+        addProperty(
+                new IntegerProperty(PROP_ARROW_LENGTH, "Arrow Length", WidgetPropertyCategory.Display, 15, 5, 1000));
+        addProperty(new BooleanProperty(PROP_ANTIALIAS, "Anti Alias", WidgetPropertyCategory.Display, true));
+        addProperty(new StringProperty(PROP_SRC_TERM, "Source Terminal", WidgetPropertyCategory.Display, ""));
+        addProperty(new StringProperty(PROP_TGT_TERM, "Target Terminal", WidgetPropertyCategory.Display, ""));
+        addProperty(new PointListProperty(PROP_POINTS, "Points", WidgetPropertyCategory.Display, new PointList()));
+        addProperty(new ComboProperty(PROP_LINE_JUMP_ADD, "Add Line Jump To", WidgetPropertyCategory.Display,
+                LineJumpAdd.stringValues(), 0));
+        addProperty(new ComboProperty(PROP_LINE_JUMP_STYLE, "Line Jump Style", WidgetPropertyCategory.Display,
+                LineJumpStyle.stringValues(), 0));
+        addProperty(
+                new IntegerProperty(PROP_LINE_JUMP_SIZE, "Line Jump Size", WidgetPropertyCategory.Display, 10, 1, 100));
 
         AbstractWidgetProperty loadedFromLinkingContainer = new StringProperty(PROP_IS_LOADED_FROM_LINKING_CONTAINER,
                 "Is Loaded From Linking Container", WidgetPropertyCategory.Behavior, "false");
@@ -280,16 +272,17 @@ public class ConnectionModel extends AbstractWidgetModel {
 
         setPropertyVisibleAndSavable(PROP_POINTS, false, true);
 
-        AbstractWidgetProperty srcWUIDProp = new StringProperty(PROP_SRC_WUID,
-                "Source WUID", WidgetPropertyCategory.Display, "");
+        AbstractWidgetProperty srcWUIDProp = new StringProperty(PROP_SRC_WUID, "Source WUID",
+                WidgetPropertyCategory.Display, "");
         addProperty(srcWUIDProp);
         srcWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if (displayModel == null)
+                if (displayModel == null) {
                     return;
-                String wuid = evt.getNewValue().toString();
-                String path = getPropertyValue(PROP_SRC_PATH).toString();
+                }
+                var wuid = evt.getNewValue().toString();
+                var path = getPropertyValue(PROP_SRC_PATH).toString();
 
                 AbstractWidgetModel w = null;
                 if (path == null || path.equals("")) {
@@ -301,20 +294,22 @@ public class ConnectionModel extends AbstractWidgetModel {
                 if (w != null) {
                     source = w;
                     reconnect();
-                } else
+                } else {
                     throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
+                }
             }
         });
-        AbstractWidgetProperty tgtWUIDProp = new StringProperty(PROP_TGT_WUID,
-                "Target WUID", WidgetPropertyCategory.Display, "");
+        AbstractWidgetProperty tgtWUIDProp = new StringProperty(PROP_TGT_WUID, "Target WUID",
+                WidgetPropertyCategory.Display, "");
         addProperty(tgtWUIDProp);
         tgtWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if (displayModel == null)
+                if (displayModel == null) {
                     return;
-                String wuid = evt.getNewValue().toString();
-                String path = getPropertyValue(PROP_TGT_PATH).toString();
+                }
+                var wuid = evt.getNewValue().toString();
+                var path = getPropertyValue(PROP_TGT_PATH).toString();
                 AbstractWidgetModel w = null;
                 if (path == null || path.equals("")) {
                     w = getTerminal(displayModel, null, wuid);
@@ -325,17 +320,18 @@ public class ConnectionModel extends AbstractWidgetModel {
                 if (w != null) {
                     target = w;
                     reconnect();
-                } else
+                } else {
                     throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
+                }
             }
         });
 
-        AbstractWidgetProperty srcPathProp = new StringProperty(PROP_SRC_PATH,
-                "Source Path", WidgetPropertyCategory.Display, "");
+        AbstractWidgetProperty srcPathProp = new StringProperty(PROP_SRC_PATH, "Source Path",
+                WidgetPropertyCategory.Display, "");
         addProperty(srcPathProp);
 
-        AbstractWidgetProperty tgtPathProp = new StringProperty(PROP_TGT_PATH,
-                "Target Path", WidgetPropertyCategory.Display, "");
+        AbstractWidgetProperty tgtPathProp = new StringProperty(PROP_TGT_PATH, "Target Path",
+                WidgetPropertyCategory.Display, "");
         addProperty(tgtPathProp);
 
         setPropertyVisibleAndSavable(PROP_SRC_WUID, false, true);
@@ -367,21 +363,22 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private AbstractWidgetModel getTerminal(AbstractContainerModel root, List<String> paths, String wuid) {
-        if (root == null)
+        if (root == null) {
             return null;
+        }
 
         if (paths == null || paths.isEmpty()) {
             return getTerminal(root, wuid);
         }
 
-        AbstractContainerModel widget = root;
-        String tempId = paths.get(0);
+        var widget = root;
+        var tempId = paths.get(0);
         for (AbstractWidgetModel w : widget.getChildren()) {
             if (w instanceof AbstractContainerModel && w.getWUID().equals(tempId)) {
-                AbstractWidgetModel tempResult = getTerminal((AbstractContainerModel) w, paths.subList(1, paths.size()),
-                        wuid);
-                if (tempResult != null)
+                var tempResult = getTerminal((AbstractContainerModel) w, paths.subList(1, paths.size()), wuid);
+                if (tempResult != null) {
                     return tempResult;
+                }
             }
         }
 
@@ -394,9 +391,10 @@ public class ConnectionModel extends AbstractWidgetModel {
                 return w;
             }
             if (w instanceof AbstractContainerModel) {
-                AbstractWidgetModel m = getTerminal((AbstractContainerModel) w, wuid);
-                if (m != null)
+                var m = getTerminal((AbstractContainerModel) w, wuid);
+                if (m != null) {
                     return m;
+                }
             }
         }
         return null;
@@ -443,10 +441,10 @@ public class ConnectionModel extends AbstractWidgetModel {
         if (source == null || target == null) {
             return;
         }
-        boolean connected = isConnected;
+        var connected = isConnected;
         disconnect();
-        String wuid = target.getWUID();
-        String path = getPropertyValue(PROP_TGT_PATH).toString();
+        var wuid = target.getWUID();
+        var path = getPropertyValue(PROP_TGT_PATH).toString();
         AbstractWidgetModel w = null;
         if (path == null || path.equals("")) {
             w = getTerminal(displayModel, null, wuid);
@@ -482,11 +480,10 @@ public class ConnectionModel extends AbstractWidgetModel {
      * @throws IllegalArgumentException
      *             if any of the paramers are null or newSource == newTarget
      */
-    public void connect(AbstractWidgetModel newSource,
-            String newSourceTerminal, AbstractWidgetModel newTarget,
+    public void connect(AbstractWidgetModel newSource, String newSourceTerminal, AbstractWidgetModel newTarget,
             String newTargetTerminal) {
-        if (newSource == null || newTarget == null || newSource == newTarget
-                || newSourceTerminal == null || newTargetTerminal == null) {
+        if (newSource == null || newTarget == null || newSource == newTarget || newSourceTerminal == null
+                || newTargetTerminal == null) {
             throw new IllegalArgumentException();
         }
         disconnect();
@@ -604,8 +601,9 @@ public class ConnectionModel extends AbstractWidgetModel {
      * @return the original points before scaling.
      */
     public PointList getOriginPoints() {
-        if (originPoints == null)
+        if (originPoints == null) {
             originPoints = getPoints();
+        }
         return originPoints;
     }
 
@@ -624,20 +622,22 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private String buildTerminalPathFromModel(AbstractWidgetModel model) {
-        if (model == null)
+        if (model == null) {
             return "";
+        }
 
         AbstractWidgetModel parent = model.getParent();
-        String result = "";
+        var result = "";
         while (parent != null && parent.getWUID() != null && !(parent instanceof DisplayModel)) {
             result = parent.getWUID() + PATH_DELIMITER + result;
             parent = parent.getParent();
         }
 
-        if (result.endsWith(PATH_DELIMITER))
+        if (result.endsWith(PATH_DELIMITER)) {
             return result.substring(0, result.length() - 1);
-        else
+        } else {
             return result;
+        }
     }
 
     public LineJumpAdd getLineJumpAdd() {

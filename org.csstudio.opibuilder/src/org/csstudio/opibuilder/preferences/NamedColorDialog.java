@@ -11,7 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -50,10 +49,10 @@ public class NamedColorDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
+        var fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
 
-        boolean noName = name == null;
-        String title = noName ? "Add Color" : "Edit Color";
+        var noName = name == null;
+        var title = noName ? "Add Color" : "Edit Color";
 
         getShell().setText(title);
         setTitle(title);
@@ -62,10 +61,10 @@ public class NamedColorDialog extends TitleAreaDialog {
 
         fieldArea.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout gl = new GridLayout(2, false);
+        var gl = new GridLayout(2, false);
         fieldArea.setLayout(gl);
 
-        Label label = new Label(fieldArea, SWT.NONE);
+        var label = new Label(fieldArea, SWT.NONE);
         label.setText("Name:");
         label.setLayoutData(new GridData());
         nameText = new Text(fieldArea, SWT.BORDER);
@@ -81,7 +80,7 @@ public class NamedColorDialog extends TitleAreaDialog {
         label.setLayoutData(new GridData());
         rgbSelector = new ColorSelector(fieldArea);
         rgbSelector.setColorValue(rgb);
-        Button backgroundColorButton = rgbSelector.getButton();
+        var backgroundColorButton = rgbSelector.getButton();
         backgroundColorButton.setLayoutData(new GridData());
 
         Dialog.applyDialogFont(fieldArea);
@@ -90,7 +89,7 @@ public class NamedColorDialog extends TitleAreaDialog {
     }
 
     private void updatePageComplete() {
-        String text = nameText.getText() == null ? "" : nameText.getText().trim();
+        var text = nameText.getText() == null ? "" : nameText.getText().trim();
         if (text.equals("")) {
             setErrorMessage("Name is required");
             getButton(IDialogConstants.OK_ID).setEnabled(false);

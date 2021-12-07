@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.properties;
 
 import org.csstudio.opibuilder.properties.support.PointlistPropertyDescriptor;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
@@ -47,8 +46,8 @@ public class PointListProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. cannot be null.
      */
-    public PointListProperty(String prop_id, String description,
-            WidgetPropertyCategory category, PointList defaultValue) {
+    public PointListProperty(String prop_id, String description, WidgetPropertyCategory category,
+            PointList defaultValue) {
         super(prop_id, description, category, defaultValue);
 
     }
@@ -74,9 +73,9 @@ public class PointListProperty extends AbstractWidgetProperty {
 
     @Override
     public PointList readValueFromXML(Element propElement) {
-        PointList result = new PointList();
+        var result = new PointList();
         for (Object oe : propElement.getChildren(XML_ELEMENT_POINT)) {
-            Element se = (Element) oe;
+            var se = (Element) oe;
             result.addPoint(Integer.parseInt(se.getAttributeValue(XML_ATTRIBUTE_X)),
                     Integer.parseInt(se.getAttributeValue(XML_ATTRIBUTE_Y)));
         }
@@ -85,10 +84,10 @@ public class PointListProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        int size = ((PointList) getPropertyValue()).size();
-        for (int i = 0; i < size; i++) {
-            Point point = ((PointList) getPropertyValue()).getPoint(i);
-            Element pointElement = new Element(XML_ELEMENT_POINT);
+        var size = ((PointList) getPropertyValue()).size();
+        for (var i = 0; i < size; i++) {
+            var point = ((PointList) getPropertyValue()).getPoint(i);
+            var pointElement = new Element(XML_ELEMENT_POINT);
             pointElement.setAttribute(XML_ATTRIBUTE_X, "" + point.x);
             pointElement.setAttribute(XML_ATTRIBUTE_Y, "" + point.y);
             propElement.addContent(pointElement);

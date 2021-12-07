@@ -41,10 +41,9 @@ public class StringListProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created. It can be null.
      */
-    public StringListProperty(String prop_id, String description,
-            WidgetPropertyCategory category, List<String> default_value) {
-        super(prop_id, description, category,
-                default_value == null ? Collections.EMPTY_LIST : default_value);
+    public StringListProperty(String prop_id, String description, WidgetPropertyCategory category,
+            List<String> default_value) {
+        super(prop_id, description, category, default_value == null ? Collections.EMPTY_LIST : default_value);
     }
 
     @SuppressWarnings("unchecked")
@@ -55,8 +54,8 @@ public class StringListProperty extends AbstractWidgetProperty {
         }
         List<String> acceptableValue = null;
         if (value instanceof List) {
-            if (((List<?>) value).size() == 0 ||
-                    (((List<?>) value).size() > 0 && ((List<?>) value).get(0) instanceof String)) {
+            if (((List<?>) value).size() == 0
+                    || (((List<?>) value).size() > 0 && ((List<?>) value).get(0) instanceof String)) {
                 acceptableValue = (List<String>) value;
             }
         }
@@ -69,8 +68,7 @@ public class StringListProperty extends AbstractWidgetProperty {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
             List<String> result = new ArrayList<>();
             for (String item : (List<String>) super.getPropertyValue()) {
-                result.add(OPIBuilderMacroUtil.replaceMacros(
-                        widgetModel, item));
+                result.add(OPIBuilderMacroUtil.replaceMacros(widgetModel, item));
             }
             return result;
         } else {
@@ -87,7 +85,7 @@ public class StringListProperty extends AbstractWidgetProperty {
     public List<String> readValueFromXML(Element propElement) {
         List<String> result = new ArrayList<>();
         for (Object oe : propElement.getChildren()) {
-            Element se = (Element) oe;
+            var se = (Element) oe;
             if (se.getName().equals(XML_ELEMENT_ITEM)) {
                 result.add(se.getText());
             }
@@ -99,9 +97,9 @@ public class StringListProperty extends AbstractWidgetProperty {
     @SuppressWarnings("unchecked")
     @Override
     public void writeToXML(Element propElement) {
-        List<String> data = (List<String>) propertyValue;
+        var data = (List<String>) propertyValue;
         for (String item : data) {
-            Element newElement = new Element(XML_ELEMENT_ITEM);
+            var newElement = new Element(XML_ELEMENT_ITEM);
             newElement.setText(item);
             propElement.addContent(newElement);
         }

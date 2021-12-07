@@ -23,7 +23,7 @@ public class LinkTableViewerLabelProvider extends LabelProvider implements ITabl
     @Override
     public String getColumnText(Object element, int columnIndex) {
         // each element comes from the ContentProvider.getElements(Object)
-        LinkRecord rec = (LinkRecord) element;
+        var rec = (LinkRecord) element;
         switch (columnIndex) {
         case 0:
             return rec.getLinkInfo().getName();
@@ -43,7 +43,7 @@ public class LinkTableViewerLabelProvider extends LabelProvider implements ITabl
     @Override
     public Color getForeground(Object element) {
         if (index == 4) {
-            LinkRecord rec = (LinkRecord) element;
+            var rec = (LinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_FG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
@@ -56,7 +56,7 @@ public class LinkTableViewerLabelProvider extends LabelProvider implements ITabl
                 return UiColors.ERROR_FAINT_FG;
             }
         } else if (index == 5) {
-            LinkRecord rec = (LinkRecord) element;
+            var rec = (LinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_FG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
@@ -85,7 +85,7 @@ public class LinkTableViewerLabelProvider extends LabelProvider implements ITabl
         index++;
 
         if (index == 4) { // cell status
-            LinkRecord rec = (LinkRecord) element;
+            var rec = (LinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_BG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
@@ -98,7 +98,7 @@ public class LinkTableViewerLabelProvider extends LabelProvider implements ITabl
                 return UiColors.ERROR_FAINT_BG;
             }
         } else if (index == 5) {
-            LinkRecord rec = (LinkRecord) element;
+            var rec = (LinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_BG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {

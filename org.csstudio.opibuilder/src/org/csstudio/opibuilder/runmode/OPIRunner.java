@@ -51,8 +51,7 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
     }
 
     @Override
-    public void init(final IEditorSite site, final IEditorInput input)
-            throws PartInitException {
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         setSite(site);
 
         setInput(input);
@@ -75,26 +74,23 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
     }
 
     @Override
-    public void createPartControl(final Composite parent) {
+    public void createPartControl(Composite parent) {
         opiRuntimeDelegate.createGUI(parent);
         // if this is the first OPI in this window, resize the window to match the OPI size.
         Display.getCurrent().asyncExec(() -> {
-            if (getSite().getWorkbenchWindow().getActivePage()
-                    .getEditorReferences().length == 1 &&
-                    getSite().getWorkbenchWindow().getActivePage().getViewReferences().length == 0) {
+            if (getSite().getWorkbenchWindow().getActivePage().getEditorReferences().length == 1
+                    && getSite().getWorkbenchWindow().getActivePage().getViewReferences().length == 0) {
                 int trimWidth = 45, trimHeight = 165;
-                final Rectangle bounds;
+                Rectangle bounds;
                 if (opiRuntimeDelegate.getDisplayModel() != null) {
-                    bounds = opiRuntimeDelegate.getDisplayModel()
-                            .getBounds();
+                    bounds = opiRuntimeDelegate.getDisplayModel().getBounds();
                 } else {
                     bounds = new Rectangle(-1, -1, 800, 600);
                 }
                 if (bounds.x >= 0 && bounds.y >= 0) {
                     parent.getShell().setLocation(bounds.x, bounds.y);
                 }
-                parent.getShell().setSize(bounds.width + trimWidth,
-                        bounds.height + trimHeight);
+                parent.getShell().setSize(bounds.width + trimWidth, bounds.height + trimHeight);
             }
         });
 
@@ -107,7 +103,7 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (opiRuntimeDelegate != null) {
-            T obj = opiRuntimeDelegate.getAdapter(adapter);
+            var obj = opiRuntimeDelegate.getAdapter(adapter);
             if (obj != null) {
                 return obj;
             }

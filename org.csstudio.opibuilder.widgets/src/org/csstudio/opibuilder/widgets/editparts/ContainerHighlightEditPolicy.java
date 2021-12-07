@@ -66,12 +66,12 @@ public class ContainerHighlightEditPolicy extends GraphicalEditPolicy {
 
     @Override
     public void showTargetFeedback(Request request) {
-        if (request.getType().equals(RequestConstants.REQ_MOVE) ||
-                request.getType().equals(RequestConstants.REQ_ADD) ||
-                request.getType().equals(RequestConstants.REQ_CLONE) ||
-                request.getType().equals(RequestConstants.REQ_CREATE) ||
-                request.getType().equals(DropPVRequest.REQ_DROP_PV))
+        if (request.getType().equals(RequestConstants.REQ_MOVE) || request.getType().equals(RequestConstants.REQ_ADD)
+                || request.getType().equals(RequestConstants.REQ_CLONE)
+                || request.getType().equals(RequestConstants.REQ_CREATE)
+                || request.getType().equals(DropPVRequest.REQ_DROP_PV)) {
             showHighlight();
+        }
     }
 
 }

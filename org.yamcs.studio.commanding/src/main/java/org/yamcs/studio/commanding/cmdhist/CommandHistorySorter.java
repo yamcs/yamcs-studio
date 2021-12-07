@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
-import org.yamcs.client.Command;
 
 public class CommandHistorySorter extends ViewerComparator {
 
@@ -35,8 +34,8 @@ public class CommandHistorySorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
-        Command r1 = ((CommandHistoryRecord) o1).getCommand();
-        Command r2 = ((CommandHistoryRecord) o2).getCommand();
+        var r1 = ((CommandHistoryRecord) o1).getCommand();
+        var r2 = ((CommandHistoryRecord) o2).getCommand();
         int rc;
         switch (currentColumn) {
         case CommandHistoryView.COL_COMMAND:

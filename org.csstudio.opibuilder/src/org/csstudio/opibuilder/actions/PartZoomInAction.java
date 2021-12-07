@@ -28,8 +28,9 @@ public class PartZoomInAction extends PartZoomAction {
      */
     @Override
     public void run() {
-        if (zoomManager != null)
+        if (zoomManager != null) {
             zoomManager.zoomIn();
+        }
     }
 
     /**

@@ -22,11 +22,10 @@ public class ValueUtil {
     }
 
     private static Collection<Class<?>> types = Arrays.<Class<?>> asList(VByte.class, VByteArray.class, VDouble.class,
-            VDoubleArray.class, VEnum.class, VEnumArray.class, VFloat.class, VFloatArray.class,
-            VLong.class, VLongArray.class, VInt.class, VIntArray.class, VMultiDouble.class, VMultiEnum.class,
-            VMultiInt.class, VMultiString.class, VShort.class, VShortArray.class,
-            VStatistics.class, VString.class, VStringArray.class, VBoolean.class, VBooleanArray.class, VTable.class,
-            VImage.class, VTimestamp.class);
+            VDoubleArray.class, VEnum.class, VEnumArray.class, VFloat.class, VFloatArray.class, VLong.class,
+            VLongArray.class, VInt.class, VIntArray.class, VMultiDouble.class, VMultiEnum.class, VMultiInt.class,
+            VMultiString.class, VShort.class, VShortArray.class, VStatistics.class, VString.class, VStringArray.class,
+            VBoolean.class, VBooleanArray.class, VTable.class, VImage.class, VTimestamp.class);
 
     /**
      * Returns the type of the object by returning the class object of one of the VXxx interfaces. The getClass()
@@ -50,7 +49,7 @@ public class ValueUtil {
             return Object.class;
         }
 
-        for (int i = 0; i < clazz.getInterfaces().length; i++) {
+        for (var i = 0; i < clazz.getInterfaces().length; i++) {
             Class<?> interf = clazz.getInterfaces()[i];
             if (types.contains(interf)) {
                 return interf;
@@ -105,7 +104,7 @@ public class ValueUtil {
         if (!(obj instanceof Display)) {
             return null;
         }
-        Display display = (Display) obj;
+        var display = (Display) obj;
         if (display.getLowerAlarmLimit() == null || display.getLowerDisplayLimit() == null) {
             return null;
         }
@@ -187,7 +186,7 @@ public class ValueUtil {
      */
     public static Double numericValueOf(Object obj) {
         if (obj instanceof VNumber) {
-            Number value = ((VNumber) obj).getValue();
+            var value = ((VNumber) obj).getValue();
             if (value != null) {
                 return value.doubleValue();
             }
@@ -202,7 +201,7 @@ public class ValueUtil {
         }
 
         if (obj instanceof VNumberArray) {
-            ListNumber data = ((VNumberArray) obj).getData();
+            var data = ((VNumberArray) obj).getData();
             if (data != null && data.size() != 0) {
                 return data.getDouble(0);
             }
@@ -216,7 +215,7 @@ public class ValueUtil {
         }
 
         if (obj instanceof MultiScalar) {
-            List values = ((MultiScalar) obj).getValues();
+            var values = ((MultiScalar) obj).getValues();
             if (!values.isEmpty()) {
                 return numericValueOf(values.get(0));
             }
@@ -237,10 +236,9 @@ public class ValueUtil {
      */
     public static BufferedImage toImage(VImage vImage) {
         if (vImage.getVImageType() == VImageType.TYPE_3BYTE_BGR) {
-            BufferedImage image = new BufferedImage(vImage.getWidth(), vImage.getHeight(),
-                    BufferedImage.TYPE_3BYTE_BGR);
-            ListNumber data = vImage.getData();
-            for (int i = 0; i < data.size(); i++) {
+            var image = new BufferedImage(vImage.getWidth(), vImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+            var data = vImage.getData();
+            for (var i = 0; i < data.size(); i++) {
                 ((DataBufferByte) image.getRaster().getDataBuffer()).getData()[i] = data.getByte(i);
             }
             return image;
@@ -261,13 +259,12 @@ public class ValueUtil {
      */
     public static VImage toVImage(BufferedImage image) {
         if (image.getType() != BufferedImage.TYPE_3BYTE_BGR) {
-            BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(),
-                    BufferedImage.TYPE_3BYTE_BGR);
+            var newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
             newImage.getGraphics().drawImage(image, 0, 0, null);
             image = newImage;
         }
 
-        byte[] buffer = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        var buffer = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         return ValueFactory.newVImage(image.getHeight(), image.getWidth(), buffer);
     }
 
@@ -285,16 +282,15 @@ public class ValueUtil {
             return true;
         }
 
-        if (Objects.equals(d1.getFormat(), d2.getFormat()) &&
-                Objects.equals(d1.getUnits(), d2.getUnits()) &&
-                Objects.equals(d1.getLowerDisplayLimit(), d2.getLowerDisplayLimit()) &&
-                Objects.equals(d1.getLowerAlarmLimit(), d2.getLowerAlarmLimit()) &&
-                Objects.equals(d1.getLowerWarningLimit(), d2.getLowerWarningLimit()) &&
-                Objects.equals(d1.getUpperWarningLimit(), d2.getUpperWarningLimit()) &&
-                Objects.equals(d1.getUpperAlarmLimit(), d2.getUpperAlarmLimit()) &&
-                Objects.equals(d1.getUpperDisplayLimit(), d2.getUpperDisplayLimit()) &&
-                Objects.equals(d1.getLowerCtrlLimit(), d2.getLowerCtrlLimit()) &&
-                Objects.equals(d1.getUpperCtrlLimit(), d2.getUpperCtrlLimit())) {
+        if (Objects.equals(d1.getFormat(), d2.getFormat()) && Objects.equals(d1.getUnits(), d2.getUnits())
+                && Objects.equals(d1.getLowerDisplayLimit(), d2.getLowerDisplayLimit())
+                && Objects.equals(d1.getLowerAlarmLimit(), d2.getLowerAlarmLimit())
+                && Objects.equals(d1.getLowerWarningLimit(), d2.getLowerWarningLimit())
+                && Objects.equals(d1.getUpperWarningLimit(), d2.getUpperWarningLimit())
+                && Objects.equals(d1.getUpperAlarmLimit(), d2.getUpperAlarmLimit())
+                && Objects.equals(d1.getUpperDisplayLimit(), d2.getUpperDisplayLimit())
+                && Objects.equals(d1.getLowerCtrlLimit(), d2.getLowerCtrlLimit())
+                && Objects.equals(d1.getUpperCtrlLimit(), d2.getUpperCtrlLimit())) {
             return true;
         }
 
@@ -422,7 +418,7 @@ public class ValueUtil {
             return null;
         }
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
+        for (var i = 0; i < table.getColumnCount(); i++) {
             if (columnName.equals(table.getColumnName(i))) {
                 if (table.getColumnType(i).isPrimitive()) {
                     return (ListNumber) table.getColumnData(i);
@@ -452,11 +448,11 @@ public class ValueUtil {
             return null;
         }
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
+        for (var i = 0; i < table.getColumnCount(); i++) {
             if (columnName.equals(table.getColumnName(i))) {
                 if (table.getColumnType(i).equals(String.class)) {
                     @SuppressWarnings("unchecked")
-                    List<String> result = (List<String>) table.getColumnData(i);
+                    var result = (List<String>) table.getColumnData(i);
                     return result;
                 } else {
                     throw new IllegalArgumentException("Column '" + columnName + "' is not string (contains "
@@ -490,7 +486,7 @@ public class ValueUtil {
      */
     public static List<ArrayDimensionDisplay> defaultArrayDisplay(ListInt sizes) {
         List<ArrayDimensionDisplay> displays = new ArrayList<>();
-        for (int i = 0; i < sizes.size(); i++) {
+        for (var i = 0; i < sizes.size(); i++) {
             displays.add(ValueFactory.newDisplay(sizes.getInt(i)));
         }
         return displays;
@@ -513,9 +509,8 @@ public class ValueUtil {
             throw new IllegalArgumentException("Index not in the array range");
         }
 
-        ArrayDimensionDisplay display = array.getDimensionDisplay().get(0);
-        return ValueFactory.newVNumberArray(new ArrayDouble(array.getData().getDouble(index)),
-                new ArrayInt(1),
+        var display = array.getDimensionDisplay().get(0);
+        return ValueFactory.newVNumberArray(new ArrayDouble(array.getData().getDouble(index)), new ArrayInt(1),
                 Arrays.asList(ValueFactory.newDisplay(new ArrayDouble(display.getCellBoundaries().getDouble(index),
                         display.getCellBoundaries().getDouble(index + 1)), display.getUnits())),
                 array, array, array);

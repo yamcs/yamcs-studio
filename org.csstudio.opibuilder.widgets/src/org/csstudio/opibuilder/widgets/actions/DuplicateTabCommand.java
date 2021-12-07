@@ -25,13 +25,13 @@ public class DuplicateTabCommand extends Command {
     final private TabModel tabModel;
     private TabItem tabItem;
 
-    public DuplicateTabCommand(final TabEditPart tabEditPart) {
+    public DuplicateTabCommand(TabEditPart tabEditPart) {
         this.tabModel = tabEditPart.getWidgetModel();
         this.tabIndex = tabEditPart.getActiveTabIndex() + 1;
         try {
             this.tabItem = tabEditPart.getTabItem(tabIndex - 1).getCopy();
         } catch (Exception e) {
-            final String message = "Failed to duplicate tab";
+            var message = "Failed to duplicate tab";
             Activator.getLogger().log(Level.SEVERE, message, e);
         }
         setLabel("Duplicate Tab");

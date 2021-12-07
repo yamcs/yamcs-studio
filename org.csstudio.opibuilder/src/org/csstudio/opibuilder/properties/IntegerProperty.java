@@ -41,8 +41,7 @@ public class IntegerProperty extends AbstractWidgetProperty {
      * @param defaultValue
      *            the default value when the widget is first created.
      */
-    public IntegerProperty(final String prop_id, final String description,
-            final WidgetPropertyCategory category, final int defaultValue) {
+    public IntegerProperty(String prop_id, String description, WidgetPropertyCategory category, int defaultValue) {
         super(prop_id, description, category, Integer.valueOf(defaultValue));
         min = Integer.MIN_VALUE;
         max = Integer.MAX_VALUE;
@@ -64,9 +63,8 @@ public class IntegerProperty extends AbstractWidgetProperty {
      * @param maxValue
      *            the maximum allowed integer value.
      */
-    public IntegerProperty(final String prop_id, final String description,
-            final WidgetPropertyCategory category, final int defaultValue,
-            final int minValue, final int maxValue) {
+    public IntegerProperty(String prop_id, String description, WidgetPropertyCategory category, int defaultValue,
+            int minValue, int maxValue) {
         super(prop_id, description, category, Integer.valueOf(defaultValue));
         assert minValue < maxValue;
         min = minValue;
@@ -74,7 +72,7 @@ public class IntegerProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(final Object value) {
+    public Object checkValue(Object value) {
         if (value == null) {
             return null;
         }

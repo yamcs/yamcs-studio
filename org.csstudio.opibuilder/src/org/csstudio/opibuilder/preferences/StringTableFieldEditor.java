@@ -57,9 +57,8 @@ public class StringTableFieldEditor extends FieldEditor {
      * @param editable
      *            Whether it is editable for each column. The size must be same as headers.
      */
-    public StringTableFieldEditor(String name, String labelText, final Composite parent, final String[] headers,
-            final boolean[] editable, final RowEditDialog rowEditDialog,
-            final int[] columnsMinWidth) {
+    public StringTableFieldEditor(String name, String labelText, Composite parent, String[] headers, boolean[] editable,
+            RowEditDialog rowEditDialog, int[] columnsMinWidth) {
         init(name, labelText);
         this.headers = headers;
         this.editable = editable;
@@ -72,7 +71,7 @@ public class StringTableFieldEditor extends FieldEditor {
 
     @Override
     protected void adjustForNumColumns(int numColumns) {
-        GridData gd = (GridData) tableEditor.getLayoutData();
+        var gd = (GridData) tableEditor.getLayoutData();
         gd.horizontalSpan = numColumns;
         gd = (GridData) getLabelControl().getLayoutData();
         gd.horizontalSpan = numColumns;
@@ -81,11 +80,10 @@ public class StringTableFieldEditor extends FieldEditor {
     @Override
     protected void doFillIntoGrid(Composite parent, int numColumns) {
         getLabelControl(parent);
-        GridData gd = new GridData();
+        var gd = new GridData();
         gd.horizontalSpan = numColumns;
         getLabelControl().setLayoutData(gd);
-        tableEditor = new StringTableEditor(
-                parent, headers, editable, items, rowEditDialog, columnsMinWidth);
+        tableEditor = new StringTableEditor(parent, headers, editable, items, rowEditDialog, columnsMinWidth);
         gd = new GridData();
         gd.horizontalSpan = numColumns;
         gd.grabExcessHorizontalSpace = true;
@@ -103,8 +101,7 @@ public class StringTableFieldEditor extends FieldEditor {
                 items = decodeStringTable(getPreferenceStore().getString(getPreferenceName()));
                 tableEditor.updateInput(items);
             } catch (Exception e) {
-                MessageDialog.openError(getPage().getShell(), "Error",
-                        DECODE_ERROR_MESSAGE + e.getMessage());
+                MessageDialog.openError(getPage().getShell(), "Error", DECODE_ERROR_MESSAGE + e.getMessage());
                 OPIBuilderPlugin.getLogger().log(Level.WARNING, DECODE_ERROR_MESSAGE, e);
             }
         }
@@ -117,8 +114,7 @@ public class StringTableFieldEditor extends FieldEditor {
                 items = decodeStringTable(getPreferenceStore().getDefaultString(getPreferenceName()));
                 tableEditor.updateInput(items);
             } catch (Exception e) {
-                MessageDialog.openError(getPage().getShell(), "Error",
-                        DECODE_ERROR_MESSAGE + e.getMessage());
+                MessageDialog.openError(getPage().getShell(), "Error", DECODE_ERROR_MESSAGE + e.getMessage());
                 OPIBuilderPlugin.getLogger().log(Level.WARNING, DECODE_ERROR_MESSAGE, e);
             }
         }
@@ -141,28 +137,31 @@ public class StringTableFieldEditor extends FieldEditor {
      * @return
      */
     public static String flattenStringTable(List<String[]> stringTable) {
-        StringBuilder result = new StringBuilder("");
+        var result = new StringBuilder("");
         for (String[] row : stringTable) {
             for (String item : row) {
                 result.append(QUOTE + item + QUOTE + ITEM_SEPARATOR);
             }
-            if (row.length > 0)
+            if (row.length > 0) {
                 result.deleteCharAt(result.length() - 1);
+            }
             result.append(ROW_SEPARATOR);
         }
-        if (stringTable.size() > 0)
+        if (stringTable.size() > 0) {
             result.deleteCharAt(result.length() - 1);
+        }
         return result.toString();
     }
 
-    public static List<String[]> decodeStringTable(final String flattedString) throws Exception {
-        final List<String[]> result = new ArrayList<String[]>();
-        final String[] rows = StringSplitter.splitIgnoreInQuotes(flattedString, ROW_SEPARATOR, false);
+    public static List<String[]> decodeStringTable(String flattedString) throws Exception {
+        List<String[]> result = new ArrayList<String[]>();
+        var rows = StringSplitter.splitIgnoreInQuotes(flattedString, ROW_SEPARATOR, false);
         for (String rowString : rows) {
             // Skip empty rowString, don't split it into String[1] { "" }
-            if (rowString.length() <= 0)
+            if (rowString.length() <= 0) {
                 continue;
-            final String[] items = StringSplitter.splitIgnoreInQuotes(rowString, ITEM_SEPARATOR, true);
+            }
+            var items = StringSplitter.splitIgnoreInQuotes(rowString, ITEM_SEPARATOR, true);
             result.add(items);
         }
         return result;

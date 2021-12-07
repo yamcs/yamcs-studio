@@ -19,7 +19,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * A text figure for single line text display.
@@ -51,9 +50,9 @@ public class LabelFigure extends Figure implements Introspectable {
     }
 
     protected void calculateTextLocation() {
-        Rectangle clientArea = getClientArea();
-        Dimension textSize = getTextSize();
-        int x = 0;
+        var clientArea = getClientArea();
+        var textSize = getTextSize();
+        var x = 0;
         if (clientArea.width > textSize.width) {
 
             switch (horizontalAlignment) {
@@ -69,7 +68,7 @@ public class LabelFigure extends Figure implements Introspectable {
             }
         }
 
-        int y = 0;
+        var y = 0;
         if (clientArea.height > textSize.height) {
             switch (verticalAlignment) {
             case MIDDLE:
@@ -98,17 +97,18 @@ public class LabelFigure extends Figure implements Introspectable {
 
     @Override
     public boolean containsPoint(int x, int y) {
-        if (runMode && !selectable)
+        if (runMode && !selectable) {
             return false;
-        else
+        } else {
             return super.containsPoint(x, y);
+        }
     }
 
     public Dimension getAutoSizeDimension() {
-        return getPreferredSize().getCopy().expand(
-                getInsets().getWidth(), getInsets().getHeight());
+        return getPreferredSize().getCopy().expand(getInsets().getWidth(), getInsets().getHeight());
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -136,15 +136,17 @@ public class LabelFigure extends Figure implements Introspectable {
     }
 
     protected Point getTextLocation() {
-        if (textLocation != null)
+        if (textLocation != null) {
             return textLocation;
+        }
         calculateTextLocation();
         return textLocation;
     }
 
     protected Dimension getTextSize() {
-        if (textSize == null)
+        if (textSize == null) {
             textSize = calculateTextSize();
+        }
         return textSize;
     }
 
@@ -178,17 +180,19 @@ public class LabelFigure extends Figure implements Introspectable {
     @Override
     protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
-        if (text.length() == 0)
+        if (text.length() == 0) {
             return;
-        Rectangle clientArea = getClientArea();
+        }
+        var clientArea = getClientArea();
         graphics.translate(clientArea.x, clientArea.y);
         graphics.drawText(text, getTextLocation());
         graphics.translate(-clientArea.x, -clientArea.y);
     }
 
     public void setHorizontalAlignment(H_ALIGN hAlignment) {
-        if (this.horizontalAlignment == hAlignment)
+        if (this.horizontalAlignment == hAlignment) {
             return;
+        }
         horizontalAlignment = hAlignment;
         revalidate();
         repaint();
@@ -212,31 +216,32 @@ public class LabelFigure extends Figure implements Introspectable {
 
     public void setText(String s) {
         // "text" will never be null.
-        if (s == null)
+        if (s == null) {
             s = "";
-        if (text.equals(s))
+        }
+        if (text.equals(s)) {
             return;
+        }
         text = s;
         clearLocation();
         repaint();
     }
 
     public void setVerticalAlignment(V_ALIGN vAlignment) {
-        if (this.verticalAlignment == vAlignment)
+        if (this.verticalAlignment == vAlignment) {
             return;
+        }
         verticalAlignment = vAlignment;
         revalidate();
         repaint();
     }
 
     public enum H_ALIGN {
-        LEFT("Left"),
-        CENTER("Center"),
-        RIGHT("Right");
+        LEFT("Left"), CENTER("Center"), RIGHT("Right");
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (H_ALIGN h : values()) {
                 result[i++] = h.toString();
             }
@@ -256,13 +261,11 @@ public class LabelFigure extends Figure implements Introspectable {
     }
 
     public enum V_ALIGN {
-        TOP("Top"),
-        MIDDLE("Middle"),
-        BOTTOM("Bottom");
+        TOP("Top"), MIDDLE("Middle"), BOTTOM("Bottom");
 
         public static String[] stringValues() {
-            String[] result = new String[values().length];
-            int i = 0;
+            var result = new String[values().length];
+            var i = 0;
             for (V_ALIGN h : values()) {
                 result[i++] = h.toString();
             }

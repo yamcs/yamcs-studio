@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 public class AddToStackWizard extends Wizard {
 
@@ -41,7 +40,7 @@ public class AddToStackWizard extends Wizard {
 
     @Override
     public boolean canFinish() {
-        Control page2Control = page2.getControl();
+        var page2Control = page2.getControl();
         return page2Control != null && page2Control.isVisible() && page2.isPageComplete();
     }
 }

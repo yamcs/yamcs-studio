@@ -26,8 +26,6 @@ package org.yamcs.studio.data.formula;
 import java.util.Arrays;
 import java.util.List;
 
-import org.yamcs.studio.data.vtype.Alarm;
-import org.yamcs.studio.data.vtype.Time;
 import org.yamcs.studio.data.vtype.VNumber;
 import org.yamcs.studio.data.vtype.ValueFactory;
 
@@ -116,20 +114,18 @@ public abstract class AbstractVNumberVNumberToVNumberFormulaFunction implements 
 
     @Override
     public final Object calculate(List<Object> args) {
-        Object arg1 = args.get(0);
-        Object arg2 = args.get(1);
+        var arg1 = args.get(0);
+        var arg2 = args.get(1);
         if (arg1 == null || arg2 == null) {
             return null;
         }
-        Alarm alarm = highestSeverityOf(args, false);
-        Time time = latestValidTimeOrNowOf(args);
+        var alarm = highestSeverityOf(args, false);
+        var time = latestValidTimeOrNowOf(args);
         if (time == null) {
             time = ValueFactory.timeNow();
         }
-        return ValueFactory.newVDouble(
-                calculate(((VNumber) args.get(0)).getValue().doubleValue(),
-                        ((VNumber) args.get(1)).getValue().doubleValue()),
-                alarm, time, ValueFactory.displayNone());
+        return ValueFactory.newVDouble(calculate(((VNumber) args.get(0)).getValue().doubleValue(),
+                ((VNumber) args.get(1)).getValue().doubleValue()), alarm, time, ValueFactory.displayNone());
     }
 
     /**

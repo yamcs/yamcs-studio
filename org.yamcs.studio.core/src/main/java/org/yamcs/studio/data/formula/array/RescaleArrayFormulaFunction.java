@@ -54,8 +54,7 @@ class RescaleArrayFormulaFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>> asList(VNumberArray.class, VNumber.class,
-                VNumber.class);
+        return Arrays.<Class<?>> asList(VNumberArray.class, VNumber.class, VNumber.class);
     }
 
     @Override
@@ -69,20 +68,18 @@ class RescaleArrayFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
+    public Object calculate(List<Object> args) {
         if (containsNull(args)) {
             return null;
         }
 
-        VNumberArray arg1 = (VNumberArray) args.get(0);
-        VNumber arg2 = (VNumber) args.get(1);
-        VNumber arg3 = (VNumber) args.get(2);
+        var arg1 = (VNumberArray) args.get(0);
+        var arg2 = (VNumber) args.get(1);
+        var arg3 = (VNumber) args.get(2);
 
         return newVNumberArray(
                 ListMath.rescale(arg1.getData(), arg2.getValue().doubleValue(), arg3.getValue().doubleValue()),
-                highestSeverityOf(args, false),
-                latestValidTimeOrNowOf(args),
-                displayNone());
+                highestSeverityOf(args, false), latestValidTimeOrNowOf(args), displayNone());
     }
 
     private static boolean containsNull(Collection<Object> args) {

@@ -77,21 +77,23 @@ public class ContentProposalList {
     }
 
     private boolean startWithContent(Proposal proposal) {
-        int insertionPos = proposal.getInsertionPos();
-        if (insertionPos >= originalValue.length())
+        var insertionPos = proposal.getInsertionPos();
+        if (insertionPos >= originalValue.length()) {
             return false;
-        if (proposal.getValue().startsWith(
-                originalValue.substring(insertionPos)))
+        }
+        if (proposal.getValue().startsWith(originalValue.substring(insertionPos))) {
             return true;
+        }
         return false;
     }
 
     public void addTopProposals(List<Proposal> proposals) {
-        if (proposals == null || proposals.isEmpty())
+        if (proposals == null || proposals.isEmpty()) {
             return;
+        }
         if (maxTopProposals == 0 && proposals.size() == 1) {
             if (!proposals.get(0).getValue().equals(originalValue)) {
-                int index = topProposalList.indexOf(proposals.get(0));
+                var index = topProposalList.indexOf(proposals.get(0));
                 if (index == -1) {
                     proposals.get(0).setStartWithContent(startWithContent(proposals.get(0)));
                     proposals.get(0).setOriginalValue(originalValue);
@@ -103,7 +105,7 @@ public class ContentProposalList {
         } else if (maxTopProposals > 0) {
             for (Proposal proposal : proposals) {
                 if (!proposal.getValue().equals(originalValue)) {
-                    int index = topProposalList.indexOf(proposal);
+                    var index = topProposalList.indexOf(proposal);
                     if (index == -1) {
                         proposal.setStartWithContent(startWithContent(proposal));
                         proposal.setOriginalValue(originalValue);
@@ -123,10 +125,8 @@ public class ContentProposalList {
             return list;
         }
 
-        Proposal originalTopProposal = new Proposal(originalValue,
-                hasContentMatchingProposal ? false : true);
-        originalTopProposal.addStyle(ProposalStyle.getDefault(0,
-                originalValue.length()));
+        var originalTopProposal = new Proposal(originalValue, hasContentMatchingProposal ? false : true);
+        originalTopProposal.addStyle(ProposalStyle.getDefault(0, originalValue.length()));
 
         if (topProposalList.size() == 1 && !originalValue.contains("*")
                 && topProposalList.get(0).getStartWithContent() == true) {
@@ -134,7 +134,7 @@ public class ContentProposalList {
             list.add(originalTopProposal);
         } else {
             list.add(originalTopProposal);
-            int index = 0;
+            var index = 0;
             for (Proposal tp : topProposalList) {
                 if (maxTopProposals == 0) {
                     list.add(tp);
@@ -147,22 +147,25 @@ public class ContentProposalList {
 
         // We do not display top proposals if the content match a proposal and all
         // provided top proposals match a complete proposal
-        boolean allComplete = true;
-        for (Proposal tp : list)
-            if (tp.isPartial())
+        var allComplete = true;
+        for (Proposal tp : list) {
+            if (tp.isPartial()) {
                 allComplete = false;
-        if (allComplete)
+            }
+        }
+        if (allComplete) {
             list.clear();
+        }
 
         return list;
     }
 
-    public void addProposals(String provider, Proposal[] proposals,
-            Integer count, Integer index) {
+    public void addProposals(String provider, Proposal[] proposals, Integer count, Integer index) {
         for (Proposal p : proposals) {
             p.setOriginalValue(originalValue);
-            if (p.getValue().equals(originalValue))
+            if (p.getValue().equals(originalValue)) {
                 hasContentMatchingProposal = true;
+            }
         }
         proposalMap.put(provider, proposals);
         countMap.put(provider, count);
@@ -180,9 +183,11 @@ public class ContentProposalList {
 
     public List<String> getProviderList() {
         List<String> list = new ArrayList<String>();
-        for (String provider : providerMap.values())
-            if (provider != null && !provider.isEmpty())
+        for (String provider : providerMap.values()) {
+            if (provider != null && !provider.isEmpty()) {
                 list.add(provider);
+            }
+        }
         return list;
     }
 
@@ -205,17 +210,16 @@ public class ContentProposalList {
         hasContentMatchingProposal = false;
     }
 
+    @Override
     public ContentProposalList clone() {
         return new ContentProposalList(this);
     }
 
     @Override
     public String toString() {
-        return "ContentProposalList [originalValue=" + originalValue
-                + ", topProposalList=" + topProposalList + ", proposalMap="
-                + proposalMap + ", countMap=" + countMap + ", providerMap="
-                + providerMap + ", length=" + length + ", expected=" + expected
-                + ", responded=" + responded + ", maxTopProposals="
+        return "ContentProposalList [originalValue=" + originalValue + ", topProposalList=" + topProposalList
+                + ", proposalMap=" + proposalMap + ", countMap=" + countMap + ", providerMap=" + providerMap
+                + ", length=" + length + ", expected=" + expected + ", responded=" + responded + ", maxTopProposals="
                 + maxTopProposals + "]";
     }
 

@@ -81,7 +81,7 @@ public class MeterWidget extends Canvas {
     private int y_radius;
 
     /** Constructor */
-    public MeterWidget(final Composite parent, final int style) {
+    public MeterWidget(Composite parent, int style) {
         // To reduce flicker, don't clear the background.
         // On Linux, however, that seems to corrupt the overall
         // widget layout, so we don't use that option.
@@ -121,16 +121,11 @@ public class MeterWidget extends Canvas {
      * @param precision
      *            Display precision
      */
-    public void setLimits(final double min,
-            final double lowAlarm,
-            final double lowWarning,
-            final double highWarning,
-            final double highAlarm,
-            final double max,
-            final int precision) {
-        if (this.min == min && this.lowAlarm == lowAlarm && this.lowWarning == lowWarning &&
-                this.highWarning == highWarning && this.highAlarm == highAlarm &&
-                this.max == max && this.precision == precision) {
+    public void setLimits(double min, double lowAlarm, double lowWarning, double highWarning, double highAlarm,
+            double max, int precision) {
+        if (this.min == min && this.lowAlarm == lowAlarm && this.lowWarning == lowWarning
+                && this.highWarning == highWarning && this.highAlarm == highAlarm && this.max == max
+                && this.precision == precision) {
             return;
         }
 
@@ -147,25 +142,29 @@ public class MeterWidget extends Canvas {
 
         // Check for limits that are outside the value range
         // or NaN (since EPICS R3.14.11)
-        if (lowAlarm > this.min && lowAlarm < this.max)
+        if (lowAlarm > this.min && lowAlarm < this.max) {
             this.lowAlarm = lowAlarm;
-        else
+        } else {
             this.lowAlarm = this.min;
+        }
 
-        if (lowWarning > this.min && lowWarning < this.max)
+        if (lowWarning > this.min && lowWarning < this.max) {
             this.lowWarning = lowWarning;
-        else
+        } else {
             this.lowWarning = this.lowAlarm;
+        }
 
-        if (highAlarm > this.min && highAlarm < this.max)
+        if (highAlarm > this.min && highAlarm < this.max) {
             this.highAlarm = highAlarm;
-        else
+        } else {
             this.highAlarm = this.max;
+        }
 
-        if (highWarning > this.min && highWarning < this.max)
+        if (highWarning > this.min && highWarning < this.max) {
             this.highWarning = highWarning;
-        else
+        } else {
             this.highWarning = this.highAlarm;
+        }
 
         this.precision = precision;
         invalidateScale();
@@ -173,9 +172,10 @@ public class MeterWidget extends Canvas {
     }
 
     /** Set current value. */
-    public void setValue(final double value) {
-        if (this.value == value)
+    public void setValue(double value) {
+        if (this.value == value) {
             return;
+        }
 
         this.value = value;
         if (!isDisposed()) {
@@ -186,7 +186,7 @@ public class MeterWidget extends Canvas {
     @Override
     public void setEnabled(boolean enabled) {
         // When the widget is disabled, force the redraw.
-        boolean oldEnabled = getEnabled();
+        var oldEnabled = getEnabled();
         super.setEnabled(enabled);
         if (oldEnabled != enabled) {
             invalidateScale();
@@ -208,7 +208,7 @@ public class MeterWidget extends Canvas {
 
     /** @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean) */
     @Override
-    public Point computeSize(final int wHint, final int hHint, final boolean changed) {
+    public Point computeSize(int wHint, int hHint, boolean changed) {
         int width, height;
         height = 100;
         width = 100;
@@ -222,7 +222,7 @@ public class MeterWidget extends Canvas {
     }
 
     /** @return Angle in degrees for given value on scale. */
-    private double getAngle(final double value) {
+    private double getAngle(double value) {
         if (value <= min) {
             return startAngle;
         }
@@ -238,11 +238,11 @@ public class MeterWidget extends Canvas {
         public void paintControl(PaintEvent e) {
             // long start = System.nanoTime();
 
-            final GC gc = e.gc;
+            var gc = e.gc;
 
             // Get the rectangle that exactly fills the 'inner' area
             // such that drawRectangle() will match.
-            Rectangle displayArea = getClientArea();
+            var displayArea = getClientArea();
 
             // paintScale(client_rect, gc);
 
@@ -261,36 +261,34 @@ public class MeterWidget extends Canvas {
 
                 paintNeedle(gc);
             } else { // Not enabled
-                final Image grayed = new Image(gc.getDevice(), scaleImage, SWT.IMAGE_DISABLE);
+                var grayed = new Image(gc.getDevice(), scaleImage, SWT.IMAGE_DISABLE);
                 gc.drawImage(grayed, 0, 0);
                 grayed.dispose();
 
-                final String message = "No numeric display info";
-                final Point size = gc.textExtent(message);
-                gc.drawString(message,
-                        (displayArea.width - size.x) / 2, (displayArea.height - size.y) / 2, true);
+                var message = "No numeric display info";
+                var size = gc.textExtent(message);
+                gc.drawString(message, (displayArea.width - size.x) / 2, (displayArea.height - size.y) / 2, true);
             }
 
             // System.out.println("MeterWidget paint: " + (System.nanoTime() - start));
         }
     };
 
-    private void paintNeedle(final GC gc) {
+    private void paintNeedle(GC gc) {
         gc.setLineWidth(LINE_WIDTH);
         gc.setLineCap(SWT.CAP_ROUND);
         gc.setLineJoin(SWT.JOIN_ROUND);
 
-        final double needle_angle = getAngle(value);
-        final int needle_x_radius = (int) ((1 - 0.5 * scaleWidth) * x_radius);
-        final int needle_y_radius = (int) ((1 - 0.5 * scaleWidth) * y_radius);
+        var needle_angle = getAngle(value);
+        var needle_x_radius = (int) ((1 - 0.5 * scaleWidth) * x_radius);
+        var needle_y_radius = (int) ((1 - 0.5 * scaleWidth) * y_radius);
         gc.setForeground(needleColor);
-        gc.drawLine(pivot_x, pivot_y,
-                (int) (pivot_x + needle_x_radius * Math.cos(Math.toRadians(needle_angle))),
+        gc.drawLine(pivot_x, pivot_y, (int) (pivot_x + needle_x_radius * Math.cos(Math.toRadians(needle_angle))),
                 (int) (pivot_y - needle_y_radius * Math.sin(Math.toRadians(needle_angle))));
     }
 
     /** Create image of the scale (labels etc.) _if_needed_ */
-    private void createScaleImage(final GC gc, final Rectangle client_rect) {
+    private void createScaleImage(GC gc, Rectangle client_rect) {
         // Is there already a matching image?
         if ((scaleImage != null) && old_client_rect.equals(client_rect)) {
             return;
@@ -301,8 +299,8 @@ public class MeterWidget extends Canvas {
 
         // The area that one can use with drawRectangle()
         // is actually one pixel smaller...
-        final Rectangle real_client_rect = new Rectangle(client_rect.x, client_rect.y,
-                client_rect.width - 1, client_rect.height - 1);
+        var real_client_rect = new Rectangle(client_rect.x, client_rect.y, client_rect.width - 1,
+                client_rect.height - 1);
 
         // Create image buffer, prepare GC for it.
         // In case there's old one, delete it.
@@ -310,13 +308,13 @@ public class MeterWidget extends Canvas {
             scaleImage.dispose();
         }
         scaleImage = new Image(gc.getDevice(), client_rect);
-        final GC scale_gc = new GC(scaleImage);
+        var scale_gc = new GC(scaleImage);
         paintScale(real_client_rect, scale_gc);
 
         scale_gc.dispose();
     }
 
-    private void paintScale(final Rectangle displayArea, final GC scale_gc) {
+    private void paintScale(Rectangle displayArea, GC scale_gc) {
         scale_gc.setForeground(faceColor);
         scale_gc.setBackground(backgroundColor);
         scale_gc.setLineWidth(LINE_WIDTH);
@@ -328,82 +326,67 @@ public class MeterWidget extends Canvas {
         scale_gc.drawRectangle(displayArea);
 
         // Calculate meter area and center it.
-        double ratio = 1.654;
-        int meterWidth = (int) Math.min(displayArea.width, displayArea.height * ratio);
-        int meterHeight = (int) Math.min(displayArea.height, displayArea.width / ratio);
-        int meterX = (displayArea.width - meterWidth) / 2;
-        int meterY = (displayArea.height - meterHeight) / 2;
-        Rectangle meterArea = new Rectangle(meterX, meterY, meterWidth, meterHeight);
+        var ratio = 1.654;
+        var meterWidth = (int) Math.min(displayArea.width, displayArea.height * ratio);
+        var meterHeight = (int) Math.min(displayArea.height, displayArea.width / ratio);
+        var meterX = (displayArea.width - meterWidth) / 2;
+        var meterY = (displayArea.height - meterHeight) / 2;
+        var meterArea = new Rectangle(meterX, meterY, meterWidth, meterHeight);
         pivot_x = meterArea.x + meterArea.width / 2;
         pivot_y = meterArea.y + meterArea.height;
-        final NumberFormat fmt = NumberFormat.getNumberInstance();
+        var fmt = NumberFormat.getNumberInstance();
         fmt.setMaximumFractionDigits(precision);
 
-        final Point min_size = scale_gc.textExtent(fmt.format(min));
-        final Point max_size = scale_gc.textExtent(fmt.format(max));
-        final int text_width_idea = Math.max(min_size.x / 2, max_size.x / 2);
-        final int text_height_idea = min_size.y;
+        var min_size = scale_gc.textExtent(fmt.format(min));
+        var max_size = scale_gc.textExtent(fmt.format(max));
+        var text_width_idea = Math.max(min_size.x / 2, max_size.x / 2);
+        var text_height_idea = min_size.y;
 
         // Labels should somehow fit around the outside of the scale
-        final int tick_x_radius = meterArea.width / 2 - text_width_idea;
-        final int tick_y_radius = meterArea.height - 2 * text_height_idea;
+        var tick_x_radius = meterArea.width / 2 - text_width_idea;
+        var tick_y_radius = meterArea.height - 2 * text_height_idea;
         y_radius = tick_y_radius - text_height_idea;
         x_radius = tick_x_radius * y_radius / tick_y_radius;
         // Inner radius of scale.
-        final int x_radius2 = (int) ((1 - scaleWidth) * x_radius);
-        final int y_radius2 = (int) ((1 - scaleWidth) * y_radius);
+        var x_radius2 = (int) ((1 - scaleWidth) * x_radius);
+        var y_radius2 = (int) ((1 - scaleWidth) * y_radius);
         // Lower end of ticks.
-        final int tick_x_radius2 = (int) (0.6 * x_radius2);
-        final int tick_y_radius2 = (int) (0.6 * y_radius2);
+        var tick_x_radius2 = (int) (0.6 * x_radius2);
+        var tick_y_radius2 = (int) (0.6 * y_radius2);
 
         // Path for outline of scale
-        final Path scale_path = createSectionPath(scale_gc.getDevice(),
-                pivot_x, pivot_y,
-                x_radius, y_radius,
-                x_radius2, y_radius2,
-                startAngle, endAngle);
+        var scale_path = createSectionPath(scale_gc.getDevice(), pivot_x, pivot_y, x_radius, y_radius, x_radius2,
+                y_radius2, startAngle, endAngle);
         // Fill scale with 'ok' color
         scale_gc.setBackground(okColor);
         scale_gc.fillPath(scale_path);
         // Border around the scale drawn later...
 
         // Colored alarm sections
-        final int high_alarm_start = (int) getAngle(highAlarm);
-        final Path high_alarm_path = createSectionPath(scale_gc.getDevice(),
-                pivot_x, pivot_y,
-                x_radius, y_radius,
-                x_radius2, y_radius2,
-                high_alarm_start, endAngle);
+        var high_alarm_start = (int) getAngle(highAlarm);
+        var high_alarm_path = createSectionPath(scale_gc.getDevice(), pivot_x, pivot_y, x_radius, y_radius, x_radius2,
+                y_radius2, high_alarm_start, endAngle);
         scale_gc.setBackground(alarmColor);
         scale_gc.fillPath(high_alarm_path);
         high_alarm_path.dispose();
 
-        final int low_alarm_end = (int) getAngle(lowAlarm);
-        final Path low_alarm_path = createSectionPath(scale_gc.getDevice(),
-                pivot_x, pivot_y,
-                x_radius, y_radius,
-                x_radius2, y_radius2,
-                startAngle, low_alarm_end);
+        var low_alarm_end = (int) getAngle(lowAlarm);
+        var low_alarm_path = createSectionPath(scale_gc.getDevice(), pivot_x, pivot_y, x_radius, y_radius, x_radius2,
+                y_radius2, startAngle, low_alarm_end);
         scale_gc.fillPath(low_alarm_path);
         low_alarm_path.dispose();
 
         // Warning sections
-        final int high_warning_start = (int) getAngle(highWarning);
-        final Path high_warning_path = createSectionPath(scale_gc.getDevice(),
-                pivot_x, pivot_y,
-                x_radius, y_radius,
-                x_radius2, y_radius2,
-                high_warning_start, high_alarm_start);
+        var high_warning_start = (int) getAngle(highWarning);
+        var high_warning_path = createSectionPath(scale_gc.getDevice(), pivot_x, pivot_y, x_radius, y_radius, x_radius2,
+                y_radius2, high_warning_start, high_alarm_start);
         scale_gc.setBackground(warningColor);
         scale_gc.fillPath(high_warning_path);
         high_warning_path.dispose();
 
-        final int low_warning_end = (int) getAngle(lowWarning);
-        final Path low_warning_path = createSectionPath(scale_gc.getDevice(),
-                pivot_x, pivot_y,
-                x_radius, y_radius,
-                x_radius2, y_radius2,
-                low_alarm_end, low_warning_end);
+        var low_warning_end = (int) getAngle(lowWarning);
+        var low_warning_path = createSectionPath(scale_gc.getDevice(), pivot_x, pivot_y, x_radius, y_radius, x_radius2,
+                y_radius2, low_alarm_end, low_warning_end);
         scale_gc.fillPath(low_warning_path);
         low_warning_path.dispose();
 
@@ -413,26 +396,22 @@ public class MeterWidget extends Canvas {
 
         // Labels and tick marks
         scale_gc.setLineWidth(1);
-        for (int i = 0; i < LABEL_COUNT; ++i) {
-            final double label_value = min + (max - min) * i / (LABEL_COUNT - 1);
-            final double angle = getAngle(label_value);
-            final double cos_angle = Math.cos(Math.toRadians(angle));
-            final double sin_angle = Math.sin(Math.toRadians(angle));
-            scale_gc.drawLine(
-                    (int) (pivot_x + tick_x_radius2 * cos_angle),
-                    (int) (pivot_y - tick_y_radius2 * sin_angle),
-                    (int) (pivot_x + tick_x_radius * cos_angle),
+        for (var i = 0; i < LABEL_COUNT; ++i) {
+            var label_value = min + (max - min) * i / (LABEL_COUNT - 1);
+            var angle = getAngle(label_value);
+            var cos_angle = Math.cos(Math.toRadians(angle));
+            var sin_angle = Math.sin(Math.toRadians(angle));
+            scale_gc.drawLine((int) (pivot_x + tick_x_radius2 * cos_angle),
+                    (int) (pivot_y - tick_y_radius2 * sin_angle), (int) (pivot_x + tick_x_radius * cos_angle),
                     (int) (pivot_y - tick_y_radius * sin_angle));
 
-            final String label_text = fmt.format(label_value);
-            final Point size = scale_gc.textExtent(label_text);
+            var label_text = fmt.format(label_value);
+            var size = scale_gc.textExtent(label_text);
 
             // Don't print the numbers if disabled
             if (getEnabled()) {
-                scale_gc.drawString(label_text,
-                        (int) (pivot_x + tick_x_radius * cos_angle) - size.x / 2,
-                        (int) (pivot_y - tick_y_radius * sin_angle) - size.y,
-                        true);
+                scale_gc.drawString(label_text, (int) (pivot_x + tick_x_radius * cos_angle) - size.x / 2,
+                        (int) (pivot_y - tick_y_radius * sin_angle) - size.y, true);
             }
         }
     }
@@ -460,24 +439,18 @@ public class MeterWidget extends Canvas {
      *            degrees
      * @return
      */
-    private Path createSectionPath(final Device device,
-            final int x0, final int y0,
-            final int x_radius, final int y_radius,
-            final int x_radius2, final int y_radius2,
-            final int start_angle, final int end_angle) {
-        final Path path = new Path(device);
+    private Path createSectionPath(Device device, int x0, int y0, int x_radius, int y_radius,
+            int x_radius2, int y_radius2, int start_angle, int end_angle) {
+        var path = new Path(device);
         // Right edge
         path.moveTo((float) (x0 + x_radius2 * Math.cos(Math.toRadians(end_angle))),
                 (float) (y0 - y_radius2 * Math.sin(Math.toRadians(end_angle))));
         // Upper edge
-        path.addArc(x0 - x_radius, y0 - y_radius,
-                2 * x_radius, 2 * y_radius,
-                end_angle, start_angle - end_angle);
+        path.addArc(x0 - x_radius, y0 - y_radius, 2 * x_radius, 2 * y_radius, end_angle, start_angle - end_angle);
         // Left edge
         path.lineTo((float) (x0 + x_radius2 * Math.cos(Math.toRadians(start_angle))),
                 (float) (y0 - y_radius2 * Math.sin(Math.toRadians(start_angle))));
-        addClockwiseArc(path, x0, y0, x_radius2, y_radius2,
-                start_angle, end_angle);
+        addClockwiseArc(path, x0, y0, x_radius2, y_radius2, start_angle, end_angle);
         path.close();
         return path;
     }
@@ -499,12 +472,8 @@ public class MeterWidget extends Canvas {
      * @param end_angle
      *            end degrees
      */
-    private void addClockwiseArc(final Path path,
-            final int x0, final int y0,
-            final int x_radius,
-            final int y_radius,
-            final float start_angle,
-            final float end_angle) {
+    private void addClockwiseArc(Path path, int x0, int y0, int x_radius, int y_radius,
+            float start_angle, float end_angle) {
         // TODO Would like to draw arc back, i.e. go clockwise,
         // but SWT didn't do that on all platforms, so we draw the arc ourselves.
         // Linux: OK
@@ -515,17 +484,15 @@ public class MeterWidget extends Canvas {
         // start_angle, end_angle-start_angle);
         // else
         // {
-        final double d_rad = Math.toRadians(5);
-        final double start_rad = Math.toRadians(start_angle);
-        final double end_rad = Math.toRadians(end_angle);
-        double rad = start_rad;
+        var d_rad = Math.toRadians(5);
+        var start_rad = Math.toRadians(start_angle);
+        var end_rad = Math.toRadians(end_angle);
+        var rad = start_rad;
         while (rad >= end_rad) {
-            path.lineTo((float) (x0 + x_radius * Math.cos(rad)),
-                    (float) (y0 - y_radius * Math.sin(rad)));
+            path.lineTo((float) (x0 + x_radius * Math.cos(rad)), (float) (y0 - y_radius * Math.sin(rad)));
             rad -= d_rad;
         }
-        path.lineTo((float) (x0 + x_radius * Math.cos(end_rad)),
-                (float) (y0 - y_radius * Math.sin(end_rad)));
+        path.lineTo((float) (x0 + x_radius * Math.cos(end_rad)), (float) (y0 - y_radius * Math.sin(end_rad)));
         // }
     }
 }

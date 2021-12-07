@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class LinkTableViewer extends TableViewer {
@@ -43,8 +42,8 @@ public class LinkTableViewer extends TableViewer {
         setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
-                LinkRecord rec1 = (LinkRecord) o1;
-                LinkRecord rec2 = (LinkRecord) o2;
+                var rec1 = (LinkRecord) o1;
+                var rec2 = (LinkRecord) o2;
                 return rec1.getLinkInfo().getName().compareToIgnoreCase(rec2.getLinkInfo().getName());
             }
         });
@@ -53,7 +52,7 @@ public class LinkTableViewer extends TableViewer {
     }
 
     private void showMessage(Shell shell, String string) {
-        MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+        var dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
         dialog.setText("Error");
         dialog.setMessage(string);
 
@@ -63,23 +62,23 @@ public class LinkTableViewer extends TableViewer {
 
     private void addFixedColumns(TableColumnLayout tcl) {
 
-        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.LEFT);
+        var nameColumn = new TableViewerColumn(this, SWT.LEFT);
         nameColumn.getColumn().setText(COL_NAME);
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn typeColumn = new TableViewerColumn(this, SWT.LEFT);
+        var typeColumn = new TableViewerColumn(this, SWT.LEFT);
         typeColumn.getColumn().setText(COL_TYPE);
         tcl.setColumnData(typeColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.CENTER);
+        var statusColumn = new TableViewerColumn(this, SWT.CENTER);
         statusColumn.getColumn().setText(COL_STATUS);
         tcl.setColumnData(statusColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn inColumn = new TableViewerColumn(this, SWT.RIGHT);
+        var inColumn = new TableViewerColumn(this, SWT.RIGHT);
         inColumn.getColumn().setText(COL_IN);
         tcl.setColumnData(inColumn.getColumn(), new ColumnWeightData(10));
 
-        TableViewerColumn outColumn = new TableViewerColumn(this, SWT.RIGHT);
+        var outColumn = new TableViewerColumn(this, SWT.RIGHT);
         outColumn.getColumn().setText(COL_OUT);
         tcl.setColumnData(outColumn.getColumn(), new ColumnWeightData(10));
 
@@ -108,9 +107,9 @@ public class LinkTableViewer extends TableViewer {
     }
 
     private void addPopupMenu() {
-        Menu contextMenu = new Menu(getTable());
+        var contextMenu = new Menu(getTable());
         getTable().setMenu(contextMenu);
-        MenuItem mItem1 = new MenuItem(contextMenu, SWT.None);
+        var mItem1 = new MenuItem(contextMenu, SWT.None);
         mItem1.setText("Enable Link");
         mItem1.addSelectionListener(new SelectionListener() {
             @Override
@@ -120,12 +119,12 @@ public class LinkTableViewer extends TableViewer {
 
             @Override
             public void widgetSelected(SelectionEvent arg0) {
-                LinkRecord rec = (LinkRecord) (getTable().getSelection()[0].getData());
+                var rec = (LinkRecord) (getTable().getSelection()[0].getData());
                 if (rec == null) {
                     return;
                 }
 
-                YamcsClient yamcs = YamcsPlugin.getYamcsClient();
+                var yamcs = YamcsPlugin.getYamcsClient();
                 yamcs.enableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName())
                         .whenComplete((data, exc) -> {
                             if (exc != null) {
@@ -137,7 +136,7 @@ public class LinkTableViewer extends TableViewer {
             }
         });
 
-        MenuItem mItem2 = new MenuItem(contextMenu, SWT.None);
+        var mItem2 = new MenuItem(contextMenu, SWT.None);
         mItem2.setText("Disable Link");
         mItem2.addSelectionListener(new SelectionListener() {
             @Override
@@ -147,12 +146,12 @@ public class LinkTableViewer extends TableViewer {
 
             @Override
             public void widgetSelected(SelectionEvent arg0) {
-                LinkRecord rec = (LinkRecord) (getTable().getSelection()[0].getData());
+                var rec = (LinkRecord) (getTable().getSelection()[0].getData());
                 if (rec == null) {
                     return;
                 }
 
-                YamcsClient yamcs = YamcsPlugin.getYamcsClient();
+                var yamcs = YamcsPlugin.getYamcsClient();
                 yamcs.disableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName())
                         .whenComplete((data, exc) -> {
                             if (exc != null) {

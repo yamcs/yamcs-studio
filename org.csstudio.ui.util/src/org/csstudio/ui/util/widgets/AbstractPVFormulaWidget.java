@@ -32,12 +32,14 @@ public class AbstractPVFormulaWidget extends Composite {
 
     public void setPVFormula(String pvFormula) {
         // If new query is the same, don't change -- you may lose the cached result
-        if (getPVFormula() != null && getPVFormula().equals(pvFormula))
+        if (getPVFormula() != null && getPVFormula().equals(pvFormula)) {
             return;
-        if (getPVFormula() == null && pvFormula == null)
+        }
+        if (getPVFormula() == null && pvFormula == null) {
             return;
+        }
 
-        String oldValue = this.pvFormula;
+        var oldValue = this.pvFormula;
         this.pvFormula = pvFormula;
         changeSupport.firePropertyChange("pvFormula", oldValue, pvFormula);
     }

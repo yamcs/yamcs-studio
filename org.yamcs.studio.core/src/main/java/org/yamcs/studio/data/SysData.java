@@ -17,14 +17,10 @@ public abstract class SysData {
 
     private static Logger log = Logger.getLogger(SysData.class.getName());
 
-    protected static Display memoryDisplay = new DisplayBuilder().format(NumberFormats.format(3))
-            .units("MiB")
+    protected static Display memoryDisplay = new DisplayBuilder().format(NumberFormats.format(3)).units("MiB")
             .lowerAlarmLimit(0.0).lowerCtrlLimit(0.0).lowerDisplayLimit(0.0).lowerWarningLimit(0.0)
-            .upperAlarmLimit(maxMemory())
-            .upperCtrlLimit(maxMemory())
-            .upperDisplayLimit(maxMemory())
-            .upperWarningLimit(maxMemory())
-            .build();
+            .upperAlarmLimit(maxMemory()).upperCtrlLimit(maxMemory()).upperDisplayLimit(maxMemory())
+            .upperWarningLimit(maxMemory()).build();
 
     protected static double bytesToMebiByte(long bytes) {
         return ((double) bytes) / (1024.0 * 1024.0);
@@ -61,7 +57,7 @@ public abstract class SysData {
     }
 
     private void createAndSaveValue() {
-        VType newValue = createValue();
+        var newValue = createValue();
         if (newValue != null) {
             this.value = newValue;
         }

@@ -48,20 +48,15 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new StringProperty(PROP_TEXT, "Text",
-                WidgetPropertyCategory.Display, "Label", true));
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent",
-                WidgetPropertyCategory.Display, !pvModel));
-        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new ComboProperty(PROP_ALIGN_H, "Horizontal Alignment",
-                WidgetPropertyCategory.Display, H_ALIGN.stringValues(), 1));
-        addProperty(new ComboProperty(PROP_ALIGN_V, "Vertical Alignment",
-                WidgetPropertyCategory.Display, V_ALIGN.stringValues(), 1));
-        addProperty(new BooleanProperty(PROP_WRAP_WORDS, "Wrap Words",
-                WidgetPropertyCategory.Behavior, false));
-        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new StringProperty(PROP_TEXT, "Text", WidgetPropertyCategory.Display, "Label", true));
+        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent", WidgetPropertyCategory.Display, !pvModel));
+        addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size", WidgetPropertyCategory.Display, false));
+        addProperty(new ComboProperty(PROP_ALIGN_H, "Horizontal Alignment", WidgetPropertyCategory.Display,
+                H_ALIGN.stringValues(), 1));
+        addProperty(new ComboProperty(PROP_ALIGN_V, "Vertical Alignment", WidgetPropertyCategory.Display,
+                V_ALIGN.stringValues(), 1));
+        addProperty(new BooleanProperty(PROP_WRAP_WORDS, "Wrap Words", WidgetPropertyCategory.Behavior, false));
+        addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar", WidgetPropertyCategory.Behavior, false));
 
         if (!pvModel) {
             setTooltip("");

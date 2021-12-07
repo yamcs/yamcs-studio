@@ -22,10 +22,10 @@ public class EditableLinkingContainerPropertyTester extends PropertyTester {
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         IPath displayPath = null;
         IPath embeddedPath = null;
-        boolean editable = false;
+        var editable = false;
         if (property.equals("isEditable")) {
             if (receiver instanceof LinkingContainerEditpart) {
-                LinkingContainerEditpart lc = (LinkingContainerEditpart) receiver;
+                var lc = (LinkingContainerEditpart) receiver;
                 displayPath = lc.getWidgetModel().getDisplayModel().getOpiFilePath();
                 embeddedPath = lc.getWidgetModel().getOPIFilePath();
             }

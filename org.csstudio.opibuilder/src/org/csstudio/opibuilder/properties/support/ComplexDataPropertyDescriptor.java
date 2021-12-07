@@ -31,14 +31,13 @@ public class ComplexDataPropertyDescriptor extends TextPropertyDescriptor {
      * @param dialogTitle
      *            title of the dialog.
      */
-    public ComplexDataPropertyDescriptor(final Object id,
-            final String displayName, final String dialogTitle) {
+    public ComplexDataPropertyDescriptor(Object id, String displayName, String dialogTitle) {
         super(id, displayName);
         this.dialogTitle = dialogTitle;
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new ComplexDataCellEditor(parent, dialogTitle);
         if (getValidator() != null) {
             editor.setValidator(getValidator());

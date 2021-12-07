@@ -12,13 +12,10 @@ package org.csstudio.opibuilder.dnd;
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.commands.WidgetCreateCommand;
 import org.csstudio.opibuilder.editparts.AbstractContainerEditpart;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.util.WidgetsService;
 import org.csstudio.opibuilder.visualparts.WidgetsSelectDialog;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -36,43 +33,42 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
     @Override
     public Command getCommand(Request request) {
         if (request.getType() == DropPVRequest.REQ_DROP_PV && request instanceof DropPVRequest) {
-            DropPVRequest dropPVRequest = (DropPVRequest) request;
-            if (dropPVRequest.getTargetWidget() != null &&
-                    dropPVRequest.getTargetWidget() instanceof AbstractContainerEditpart) {
+            var dropPVRequest = (DropPVRequest) request;
+            if (dropPVRequest.getTargetWidget() != null
+                    && dropPVRequest.getTargetWidget() instanceof AbstractContainerEditpart) {
 
-                WidgetsSelectDialog dialog = new WidgetsSelectDialog(
-                        getHost().getViewer().getControl().getShell(), dropPVRequest.getPvNames().length, true);
+                var dialog = new WidgetsSelectDialog(getHost().getViewer().getControl().getShell(),
+                        dropPVRequest.getPvNames().length, true);
 
                 if (dialog.open() == Window.OK) {
-                    String typeID = dialog.getOutput();
-                    CompoundCommand command = new CompoundCommand("Create Widget");
-                    String[] pvNames = dropPVRequest.getPvNames();
-                    Point location = dropPVRequest.getLocation().getCopy();
-                    AbstractContainerModel container = ((AbstractContainerEditpart) dropPVRequest.getTargetWidget())
-                            .getWidgetModel();
-                    AbstractContainerModel parent = container.getParent();
-                    AbstractContainerModel temp = container;
+                    var typeID = dialog.getOutput();
+                    var command = new CompoundCommand("Create Widget");
+                    var pvNames = dropPVRequest.getPvNames();
+                    var location = dropPVRequest.getLocation().getCopy();
+                    var container = ((AbstractContainerEditpart) dropPVRequest.getTargetWidget()).getWidgetModel();
+                    var parent = container.getParent();
+                    var temp = container;
                     while (parent != null) {
                         location.translate(temp.getLocation().getNegated());
                         temp = parent;
                         parent = parent.getParent();
                     }
-                    int i = 1;
+                    var i = 1;
                     int lastWidth = 0, lastHeight = 0;
                     for (String pvName : pvNames) {
-                        AbstractWidgetModel widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID)
-                                .getWidgetModel();
+                        var widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
                         command.add(new WidgetCreateCommand(widgetModel, container,
                                 new Rectangle(location.getCopy().translate(lastWidth, lastHeight),
                                         new Dimension(-1, -1)),
                                 i != 1, true));
-                        command.add(new SetWidgetPropertyCommand(widgetModel,
-                                AbstractPVWidgetModel.PROP_PVNAME, pvName.trim()));
+                        command.add(new SetWidgetPropertyCommand(widgetModel, AbstractPVWidgetModel.PROP_PVNAME,
+                                pvName.trim()));
                         if (i % WIDGETS_ACCOUNT_ON_A_ROW == 0) {
                             lastWidth = 0;
                             lastHeight += widgetModel.getHeight();
-                        } else
+                        } else {
                             lastWidth += widgetModel.getWidth();
+                        }
                         i++;
                     }
 
@@ -86,8 +82,9 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
 
     @Override
     public EditPart getTargetEditPart(Request request) {
-        if (request.getType() == DropPVRequest.REQ_DROP_PV)
+        if (request.getType() == DropPVRequest.REQ_DROP_PV) {
             return getHost();
+        }
         return super.getTargetEditPart(request);
     }
 

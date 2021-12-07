@@ -22,7 +22,7 @@ public class SelectAllInGroupAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
 
-        GroupingContainerModel containerModel = getContainerModel();
+        var containerModel = getContainerModel();
         containerModel.selectWidgets(containerModel.getChildren(), false);
     }
 

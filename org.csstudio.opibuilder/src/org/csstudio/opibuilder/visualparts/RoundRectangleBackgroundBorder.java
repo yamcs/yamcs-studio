@@ -54,8 +54,9 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
      */
     @Override
     public void paint(IFigure figure, Graphics graphics, Insets insets) {
-        if (lineWidth <= 0)
+        if (lineWidth <= 0) {
             return;
+        }
         graphics.pushState();
         graphics.setAntialias(SWT.ON);
         tempRect.setBounds(getPaintRectangle(figure, insets));

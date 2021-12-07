@@ -45,22 +45,22 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
-        Composite container = new Composite(area, SWT.NONE);
+        var area = (Composite) super.createDialogArea(parent);
+        var container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout layout = new GridLayout(2, false);
+        var layout = new GridLayout(2, false);
         layout.marginHeight = 20;
         layout.marginWidth = 20;
         layout.verticalSpacing = 2;
         container.setLayout(layout);
 
-        Composite startLabelWrapper = new Composite(container, SWT.NONE);
-        GridLayout gl = new GridLayout(2, false);
+        var startLabelWrapper = new Composite(container, SWT.NONE);
+        var gl = new GridLayout(2, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         startLabelWrapper.setLayout(gl);
-        Label lbl = new Label(startLabelWrapper, SWT.NONE);
+        var lbl = new Label(startLabelWrapper, SWT.NONE);
         lbl.setText("Start");
 
         startDate = new CDateTime(container,
@@ -70,7 +70,7 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             startDate.setSelection(Date.from(startTimeValue));
         }
 
-        Composite stopLabelWrapper = new Composite(container, SWT.NONE);
+        var stopLabelWrapper = new Composite(container, SWT.NONE);
         gl = new GridLayout(2, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;

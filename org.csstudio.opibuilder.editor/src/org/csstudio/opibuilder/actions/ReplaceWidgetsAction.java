@@ -37,27 +37,27 @@ public class ReplaceWidgetsAction extends SelectionAction {
         super(part);
         setText("Replace Widgets With...");
         setId(ID);
-        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/replace.png"));
+        setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                "icons/replace.png"));
     }
 
     @Override
     protected boolean calculateEnabled() {
-        if (getSelectedWidgetModels().size() > 0 &&
-                !(getSelectedWidgetModels().get(0) instanceof DisplayModel))
+        if (getSelectedWidgetModels().size() > 0 && !(getSelectedWidgetModels().get(0) instanceof DisplayModel)) {
             return true;
+        }
         return false;
     }
 
     public Command createReplaceWidgetCommand(String typeID) {
-        CompoundCommand cmd = new CompoundCommand("Replace widgets");
+        var cmd = new CompoundCommand("Replace widgets");
 
         for (AbstractWidgetModel targetWidget : getSelectedWidgetModels()) {
-            AbstractWidgetModel widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
+            var widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
             for (String prop_id : targetWidget.getAllPropertyIDs()) {
-                if (widgetModel.getProperty(prop_id) == null ||
-                        prop_id.equals(AbstractWidgetModel.PROP_WIDGET_TYPE))
+                if (widgetModel.getProperty(prop_id) == null || prop_id.equals(AbstractWidgetModel.PROP_WIDGET_TYPE)) {
                     continue;
+                }
                 widgetModel.setPropertyValue(prop_id, targetWidget.getPropertyValue(prop_id));
             }
             cmd.add(new ReplaceWidgetCommand(targetWidget.getParent(), targetWidget, widgetModel));
@@ -69,11 +69,10 @@ public class ReplaceWidgetsAction extends SelectionAction {
 
     @Override
     public void run() {
-        WidgetsSelectDialog dialog = new WidgetsSelectDialog(
-                getWorkbenchPart().getSite().getShell(), 1, false);
+        var dialog = new WidgetsSelectDialog(getWorkbenchPart().getSite().getShell(), 1, false);
         dialog.setDefaultSelectedWidgetID("org.csstudio.opibuilder.widgets.NativeText");
         if (dialog.open() == Window.OK) {
-            String typeID = dialog.getOutput();
+            var typeID = dialog.getOutput();
             execute(createReplaceWidgetCommand(typeID));
         }
     }

@@ -26,7 +26,7 @@ public class TimeInterval implements Serializable {
     }
 
     public static TimeInterval starting(Instant start) {
-        TimeInterval range = new TimeInterval();
+        var range = new TimeInterval();
         range.setStart(start);
         return range;
     }
@@ -59,8 +59,7 @@ public class TimeInterval implements Serializable {
         if (start != null) {
             return start;
         } else {
-            return YamcsPlugin.getMissionTime(true)
-                    .truncatedTo(ChronoUnit.DAYS);
+            return YamcsPlugin.getMissionTime(true).truncatedTo(ChronoUnit.DAYS);
         }
     }
 
@@ -68,9 +67,7 @@ public class TimeInterval implements Serializable {
         if (stop != null) {
             return stop;
         } else {
-            return YamcsPlugin.getMissionTime(true)
-                    .plus(1, ChronoUnit.DAYS)
-                    .truncatedTo(ChronoUnit.DAYS);
+            return YamcsPlugin.getMissionTime(true).plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
         }
     }
 
@@ -79,13 +76,13 @@ public class TimeInterval implements Serializable {
         if (!(obj instanceof TimeInterval)) {
             return false;
         }
-        TimeInterval other = (TimeInterval) obj;
+        var other = (TimeInterval) obj;
         return Objects.equals(start, other.start) && Objects.equals(stop, other.stop);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("(");
         if (start != null) {
             sb.append(start);

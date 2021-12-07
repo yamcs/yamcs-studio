@@ -23,7 +23,6 @@ public class Arc extends Figure {
 
     @Override
     public void paint(Graphics graphics) {
-        graphics.drawArc(x, y,
-                height, width, startAngle, totalAngle);
+        graphics.drawArc(x, y, height, width, startAngle, totalAngle);
     }
 }

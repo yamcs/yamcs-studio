@@ -15,31 +15,35 @@ public class ExprDouble extends ExprNumber {
     public static final ExprDouble PI = new ExprDouble(Math.PI);
     public static final ExprDouble E = new ExprDouble(Math.E);
 
-    public final double value;
+    public double value;
 
     public ExprDouble(double value) {
         super(ExprType.Double);
         this.value = value;
     }
 
+    @Override
     public int intValue() {
         return (int) value;
     }
 
+    @Override
     public double doubleValue() {
         return value;
     }
 
+    @Override
     public String toString() {
         return Double.toString(value);
     }
 
+    @Override
     public int hashCode() {
         return (int) value * 100;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        return obj instanceof ExprDouble
-                && Math.abs(value - ((ExprDouble) obj).value) < 1.0e-10;
+        return obj instanceof ExprDouble && Math.abs(value - ((ExprDouble) obj).value) < 1.0e-10;
     }
 }

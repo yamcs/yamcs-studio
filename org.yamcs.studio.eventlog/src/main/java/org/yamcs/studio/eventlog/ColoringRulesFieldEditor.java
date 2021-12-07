@@ -23,12 +23,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 
 public class ColoringRulesFieldEditor extends FieldEditor {
 
@@ -69,7 +66,7 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private TableViewer getTableControl(Composite parent) {
-        TableViewer tableViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
+        var tableViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 
         tableViewer.setLabelProvider(new ColumnLabelProvider() {
@@ -80,13 +77,13 @@ public class ColoringRulesFieldEditor extends FieldEditor {
 
             @Override
             public Color getBackground(Object element) {
-                ColoringRule rule = (ColoringRule) element;
+                var rule = (ColoringRule) element;
                 return colorCache.computeIfAbsent(rule.bg, resourceManager::createColor);
             }
 
             @Override
             public Color getForeground(Object element) {
-                ColoringRule rule = (ColoringRule) element;
+                var rule = (ColoringRule) element;
                 return colorCache.computeIfAbsent(rule.fg, resourceManager::createColor);
             }
         });
@@ -102,18 +99,18 @@ public class ColoringRulesFieldEditor extends FieldEditor {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-                TableItem item = tableViewer.getTable().getItem(new Point(e.x, e.y));
+                var item = tableViewer.getTable().getItem(new Point(e.x, e.y));
                 if (item == null) {
                     return;
                 }
 
-                Rectangle bounds = item.getBounds();
-                boolean isClickOnCheckbox = e.x < bounds.x;
+                var bounds = item.getBounds();
+                var isClickOnCheckbox = e.x < bounds.x;
                 if (isClickOnCheckbox) {
                     return;
                 }
 
-                ColoringRule selectedRule = getSelectedRule();
+                var selectedRule = getSelectedRule();
                 editRule(selectedRule);
                 updateButtonStatus();
             }
@@ -122,7 +119,7 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private Composite getButtonControl(Composite parent) {
-        Composite box = new Composite(parent, SWT.NONE);
+        var box = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().applyTo(box);
 
         addButton = createButton(box, "Add...");
@@ -177,12 +174,12 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private ColoringRule getSelectedRule() {
-        List<ColoringRule> tableInput = getTableViewerInput();
+        var tableInput = getTableViewerInput();
         if (tableInput == null) {
             return null;
         }
 
-        int index = tableViewer.getTable().getSelectionIndex();
+        var index = tableViewer.getTable().getSelectionIndex();
         if (index < 0) {
             return null;
         }
@@ -195,8 +192,8 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private void updateButtonStatus() {
-        int selectionIndex = tableViewer.getTable().getSelectionIndex();
-        ColoringRule selectedRule = getSelectedRule();
+        var selectionIndex = tableViewer.getTable().getSelectionIndex();
+        var selectedRule = getSelectedRule();
         if (selectedRule == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
@@ -211,29 +208,29 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private void removeRule(ColoringRule selectedRule) {
-        List<ColoringRule> list = getTableViewerInput();
+        var list = getTableViewerInput();
         list.remove(selectedRule);
         tableViewer.refresh();
     }
 
     private void addNewRule() {
-        Shell shell = tableViewer.getTable().getShell();
-        ColoringRuleDialog newRuleDialog = new ColoringRuleDialog(shell, null);
+        var shell = tableViewer.getTable().getShell();
+        var newRuleDialog = new ColoringRuleDialog(shell, null);
         if (newRuleDialog.open() == Window.OK) {
-            ColoringRule newRule = newRuleDialog.getRule();
-            List<ColoringRule> list = getTableViewerInput();
+            var newRule = newRuleDialog.getRule();
+            var list = getTableViewerInput();
             list.add(newRule);
             tableViewer.refresh();
         }
     }
 
     private void editRule(ColoringRule selectedRule) {
-        Shell shell = tableViewer.getTable().getShell();
-        ColoringRuleDialog editRuleDialog = new ColoringRuleDialog(shell, selectedRule);
+        var shell = tableViewer.getTable().getShell();
+        var editRuleDialog = new ColoringRuleDialog(shell, selectedRule);
         if (editRuleDialog.open() == Window.OK) {
-            ColoringRule updatedRule = editRuleDialog.getRule();
-            List<ColoringRule> list = getTableViewerInput();
-            int indexOfOriginalRule = list.indexOf(selectedRule);
+            var updatedRule = editRuleDialog.getRule();
+            var list = getTableViewerInput();
+            var indexOfOriginalRule = list.indexOf(selectedRule);
             list.remove(indexOfOriginalRule);
             list.add(indexOfOriginalRule, updatedRule);
             tableViewer.refresh();
@@ -241,26 +238,26 @@ public class ColoringRulesFieldEditor extends FieldEditor {
     }
 
     private void moveRuleUp(ColoringRule selectedRule) {
-        List<ColoringRule> list = getTableViewerInput();
-        int index = list.indexOf(selectedRule);
+        var list = getTableViewerInput();
+        var index = list.indexOf(selectedRule);
         list.remove(index);
         list.add(index - 1, selectedRule);
         tableViewer.refresh();
     }
 
     private void moveRuleDown(ColoringRule selectedRule) {
-        List<ColoringRule> list = getTableViewerInput();
-        int index = list.indexOf(selectedRule);
+        var list = getTableViewerInput();
+        var index = list.indexOf(selectedRule);
         list.remove(index);
         list.add(index + 1, selectedRule);
         tableViewer.refresh();
     }
 
     private Button createButton(Composite box, String text) {
-        Button button = new Button(box, SWT.PUSH);
+        var button = new Button(box, SWT.PUSH);
         button.setText(text);
 
-        int widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
+        var widthHint = Math.max(convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH),
                 button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
         GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(button);
 
@@ -269,19 +266,19 @@ public class ColoringRulesFieldEditor extends FieldEditor {
 
     @Override
     protected void doLoad() {
-        List<ColoringRule> rules = EventLogPlugin.getDefault().loadColoringRules();
+        var rules = EventLogPlugin.getDefault().loadColoringRules();
         tableViewer.setInput(rules);
     }
 
     @Override
     protected void doLoadDefault() {
-        List<ColoringRule> rules = EventLogPlugin.getDefault().loadDefaultColoringRules();
+        var rules = EventLogPlugin.getDefault().loadDefaultColoringRules();
         tableViewer.setInput(rules);
     }
 
     @Override
     protected void doStore() {
-        List<ColoringRule> rules = getTableViewerInput();
+        var rules = getTableViewerInput();
         EventLogPlugin.getDefault().storeColoringRules(rules);
     }
 

@@ -6,8 +6,6 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.CheckBoxModel;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.AbstractBoolFigure.TotalBits;
 import org.csstudio.swt.widgets.figures.CheckBoxFigure;
 import org.csstudio.swt.widgets.figures.ITextFigure;
@@ -16,13 +14,14 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 
 public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        CheckBoxFigure figure = new CheckBoxFigure(getExecutionMode().equals(
-                ExecutionMode.RUN_MODE));
+        var figure = new CheckBoxFigure(getExecutionMode().equals(ExecutionMode.RUN_MODE));
         figure.setBit(getWidgetModel().getBit());
         figure.setText(getWidgetModel().getLabel());
         figure.setSelectedColor(getWidgetModel().getSelectedColor().getSWTColor());
@@ -45,14 +44,13 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
     }
 
     protected void performDirectEdit() {
-        new TextEditManager(this,
-                new LabelCellEditorLocator(getFigure()), false).show();
+        new TextEditManager(this, new LabelCellEditorLocator(getFigure()), false).show();
     }
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN)) {
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
         }
     }
@@ -70,7 +68,7 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
             if (newValue == null) {
                 return false;
             }
-            CheckBoxFigure figure = (CheckBoxFigure) refreshableFigure;
+            var figure = (CheckBoxFigure) refreshableFigure;
 
             switch (VTypeHelper.getBasicDataType((VType) newValue)) {
             case SHORT:
@@ -91,7 +89,7 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
         // bit
         handler = (oldValue, newValue, refreshableFigure) -> {
-            CheckBoxFigure figure = (CheckBoxFigure) refreshableFigure;
+            var figure = (CheckBoxFigure) refreshableFigure;
             figure.setBit((Integer) newValue);
             return true;
         };
@@ -99,7 +97,7 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
         // label
         handler = (oldValue, newValue, refreshableFigure) -> {
-            CheckBoxFigure figure = (CheckBoxFigure) refreshableFigure;
+            var figure = (CheckBoxFigure) refreshableFigure;
             figure.setText((String) newValue);
             Display.getCurrent().timerExec(10, () -> {
                 if (getWidgetModel().isAutoSize()) {
@@ -120,8 +118,7 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(CheckBoxModel.PROP_AUTOSIZE, handler);
 
         handler = (oldValue, newValue, figure) -> {
-            ((CheckBoxFigure) figure).setSelectedColor(
-                    getWidgetModel().getSelectedColor().getSWTColor());
+            ((CheckBoxFigure) figure).setSelectedColor(getWidgetModel().getSelectedColor().getSWTColor());
             return true;
         };
         setPropertyChangeHandler(CheckBoxModel.PROP_SELECTED_COLOR, handler);

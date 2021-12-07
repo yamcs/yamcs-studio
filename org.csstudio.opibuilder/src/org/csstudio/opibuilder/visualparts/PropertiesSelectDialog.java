@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.visualparts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -41,8 +40,7 @@ public class PropertiesSelectDialog extends Dialog {
     private List<String> selectedProps;
     private AbstractWidgetModel widgetModel;
 
-    public PropertiesSelectDialog(Shell parentShell,
-            AbstractWidgetModel widgetModel) {
+    public PropertiesSelectDialog(Shell parentShell, AbstractWidgetModel widgetModel) {
         super(parentShell);
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
@@ -63,26 +61,27 @@ public class PropertiesSelectDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
-        Composite rightComposite = new Composite(parent_Composite, SWT.NONE);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
+        var rightComposite = new Composite(parent_Composite, SWT.NONE);
         rightComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 320;
         gd.heightHint = 500;
         rightComposite.setLayoutData(gd);
 
         propertiesViewer = createPropertiesViewer(rightComposite);
 
-        Set<String> propSet = widgetModel.getAllPropertyIDs();
+        var propSet = widgetModel.getAllPropertyIDs();
 
         propSet.remove(AbstractPVWidgetModel.PROP_PVVALUE);
 
         for (Object propId : propSet.toArray()) {
-            if (!widgetModel.getProperty(propId.toString()).isVisibleInPropSheet())
+            if (!widgetModel.getProperty(propId.toString()).isVisibleInPropSheet()) {
                 propSet.remove(propId);
+            }
         }
 
-        String[] propArray = propSet.toArray(new String[0]);
+        var propArray = propSet.toArray(new String[0]);
         Arrays.sort(propArray);
 
         propertiesViewer.setInput(propArray);
@@ -92,12 +91,10 @@ public class PropertiesSelectDialog extends Dialog {
     }
 
     private ListViewer createPropertiesViewer(Composite parent) {
-        final ListViewer viewer = new ListViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI);
+        var viewer = new ListViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI);
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new PropertyListLableProvider());
-        viewer.getList().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -120,7 +117,7 @@ public class PropertiesSelectDialog extends Dialog {
     class PropertyListLableProvider extends LabelProvider {
         @Override
         public String getText(Object element) {
-            String propID = (String) element;
+            var propID = (String) element;
             return widgetModel.getProperty(propID).getDescription() + " (" + propID + ")";
         }
     }

@@ -25,8 +25,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.StringConverter;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -72,11 +70,11 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         // Reload the schema if the change file is somehow related to the active schema
         ResourcesPlugin.getWorkspace().addResourceChangeListener(event -> {
-            IPath schemaPath = PreferencesHelper.getSchemaOPIPath();
+            var schemaPath = PreferencesHelper.getSchemaOPIPath();
             if (schemaPath != null) {
-                IResourceDelta delta = event.getDelta();
+                var delta = event.getDelta();
                 if (delta != null) {
-                    List<IPath> allPaths = findAllDeltaPaths(delta);
+                    var allPaths = findAllDeltaPaths(delta);
                     if (allPaths.contains(schemaPath)) {
                         SchemaService.getInstance().reload();
                     }
@@ -95,14 +93,14 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     }
 
     public List<NamedColor> loadColors() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getString(PreferencesHelper.COLORS);
+        var store = getPreferenceStore();
+        var joined = store.getString(PreferencesHelper.COLORS);
         return composeColors(joined);
     }
 
     public List<NamedColor> loadDefaultColors() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getDefaultString(PreferencesHelper.COLORS);
+        var store = getPreferenceStore();
+        var joined = store.getDefaultString(PreferencesHelper.COLORS);
         return composeColors(joined);
     }
 
@@ -113,18 +111,18 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         List<NamedColor> colors = new ArrayList<>();
         for (String colorString : joined.split(";")) {
-            String[] parts = colorString.split("@");
-            RGB rgb = StringConverter.asRGB(parts[1]);
+            var parts = colorString.split("@");
+            var rgb = StringConverter.asRGB(parts[1]);
             colors.add(new NamedColor(parts[0], rgb));
         }
         return colors;
     }
 
     public void storeColors(List<NamedColor> colors) {
-        IPreferenceStore store = getPreferenceStore();
+        var store = getPreferenceStore();
 
-        StringBuilder buf = new StringBuilder();
-        boolean first = true;
+        var buf = new StringBuilder();
+        var first = true;
         for (NamedColor color : colors) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter
@@ -138,14 +136,14 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     }
 
     public List<OPIFont> loadFonts() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getString(PreferencesHelper.FONTS);
+        var store = getPreferenceStore();
+        var joined = store.getString(PreferencesHelper.FONTS);
         return composeFonts(joined);
     }
 
     public List<OPIFont> loadDefaultFonts() {
-        IPreferenceStore store = getPreferenceStore();
-        String joined = store.getDefaultString(PreferencesHelper.COLORS);
+        var store = getPreferenceStore();
+        var joined = store.getDefaultString(PreferencesHelper.COLORS);
         return composeFonts(joined);
     }
 
@@ -156,9 +154,9 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         List<OPIFont> fonts = new ArrayList<>();
         for (String colorString : joined.split(";")) {
-            String[] parts = colorString.split("@");
-            FontData fontData = StringConverter.asFontData(parts[1]);
-            OPIFont font = new OPIFont(parts[0], fontData);
+            var parts = colorString.split("@");
+            var fontData = StringConverter.asFontData(parts[1]);
+            var font = new OPIFont(parts[0], fontData);
             font.setSizeInPixels(false); // Trying to get rid of pixels (pt is swt default)
             fonts.add(font);
         }
@@ -166,10 +164,10 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     }
 
     public void storeFonts(List<OPIFont> fonts) {
-        IPreferenceStore store = getPreferenceStore();
+        var store = getPreferenceStore();
 
-        StringBuilder buf = new StringBuilder();
-        boolean first = true;
+        var buf = new StringBuilder();
+        var first = true;
         for (OPIFont font : fonts) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter

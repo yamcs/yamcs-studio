@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -48,7 +47,7 @@ public class PVInfoDialog extends Dialog {
         Combo combo = null;
         if (pvInfoByDisplayname.size() > 1) {
             combo = new Combo(parent, SWT.READ_ONLY);
-            GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+            var gd = new GridData(GridData.FILL_HORIZONTAL);
             combo.setLayoutData(gd);
 
             for (Entry<String, PVInfo> entry : pvInfoByDisplayname.entrySet()) {
@@ -57,23 +56,23 @@ public class PVInfoDialog extends Dialog {
         }
 
         // Placeholder for any selected PVs
-        Composite pvInfoComposite = new Composite(parent, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        var pvInfoComposite = new Composite(parent, SWT.NONE);
+        var gd = new GridData(GridData.FILL_BOTH);
         pvInfoComposite.setLayoutData(gd);
         pvInfoComposite.setLayout(new GridLayout());
 
-        boolean first = true;
+        var first = true;
         for (Entry<String, PVInfo> entry : pvInfoByDisplayname.entrySet()) {
             pvCompositesByDisplayname.put(entry.getKey(), createPVComposite(pvInfoComposite, entry.getValue(), first));
             first = false;
         }
 
         if (combo != null) {
-            final Combo finalCombo = combo; // Grrr
+            var finalCombo = combo; // Grrr
             finalCombo.addListener(SWT.Selection, evt -> {
                 List<Composite> pvComposites = new ArrayList<>(pvCompositesByDisplayname.values());
-                for (int i = 0; i < pvComposites.size(); i++) {
-                    GridData data = ((GridData) pvComposites.get(i).getLayoutData());
+                for (var i = 0; i < pvComposites.size(); i++) {
+                    var data = ((GridData) pvComposites.get(i).getLayoutData());
 
                     data.exclude = (i != finalCombo.getSelectionIndex());
 
@@ -91,8 +90,8 @@ public class PVInfoDialog extends Dialog {
 
         // pvInfoComposite.getShell().setSize(pvInfoComposite.getShell().computeSize(400, SWT.DEFAULT));
 
-        Rectangle screenSize = pvInfoComposite.getDisplay().getPrimaryMonitor().getBounds();
-        Rectangle shellSize = pvInfoComposite.getShell().getBounds();
+        var screenSize = pvInfoComposite.getDisplay().getPrimaryMonitor().getBounds();
+        var shellSize = pvInfoComposite.getShell().getBounds();
         pvInfoComposite.getShell().setLocation((screenSize.width - shellSize.width) / 2,
                 (screenSize.height - shellSize.height) / 2);
 
@@ -100,14 +99,14 @@ public class PVInfoDialog extends Dialog {
     }
 
     private Composite createPVComposite(Composite parent, PVInfo pvInfo, boolean first) {
-        PVComposite pvWrapper = new PVComposite(parent, SWT.NONE, pvInfo);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        var pvWrapper = new PVComposite(parent, SWT.NONE, pvInfo);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         pvWrapper.setLayoutData(gd);
 
         gd.exclude = !first;
         pvWrapper.setVisible(!gd.exclude);
 
-        GridLayout gl = new GridLayout(2, false);
+        var gl = new GridLayout(2, false);
         gl.marginTop = 10;
         pvWrapper.setLayout(gl);
 
@@ -116,7 +115,7 @@ public class PVInfoDialog extends Dialog {
 
     @Override
     public boolean close() {
-        boolean ret = super.close();
+        var ret = super.close();
         for (Composite composite : pvCompositesByDisplayname.values()) {
             composite.dispose();
         }

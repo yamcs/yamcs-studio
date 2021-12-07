@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.prefs.Preferences;
 
@@ -32,14 +31,14 @@ public class Prefs {
                           // to gson. TimeInterval was moved multiple times.
         }
         if (range == null) {
-            Instant missionTime = YamcsPlugin.getMissionTime(true);
+            var missionTime = YamcsPlugin.getMissionTime(true);
             range = TimeInterval.starting(missionTime.minus(30, ChronoUnit.DAYS));
         }
         return range;
     }
 
     public void setVisiblePackets(Object[] packets) {
-        StringBuilder strbuf = new StringBuilder();
+        var strbuf = new StringBuilder();
         for (Object s : packets) {
             strbuf.append(" ");
             strbuf.append(s.toString());
@@ -48,13 +47,13 @@ public class Prefs {
     }
 
     public String[] getVisiblePackets() {
-        String[] s = prefs.get("packets", "").split(" ");
+        var s = prefs.get("packets", "").split(" ");
         return s[0].equals("") ? new String[0] : s;
     }
 
     static public void putObject(Preferences prefs, String key, Object o) {
         try {
-            byte[] raw = object2Bytes(o);
+            var raw = object2Bytes(o);
             prefs.putByteArray(key, raw);
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +61,7 @@ public class Prefs {
     }
 
     static public Object getObject(Preferences prefs, String key) throws ClassNotFoundException {
-        byte[] raw = prefs.getByteArray(key, null);
+        var raw = prefs.getByteArray(key, null);
         if (raw == null) {
             return null;
         }
@@ -75,14 +74,14 @@ public class Prefs {
     }
 
     static private byte[] object2Bytes(Object o) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        var baos = new ByteArrayOutputStream();
+        var oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
         return baos.toByteArray();
     }
 
     static private Object bytes2Object(byte[] raw) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        var bais = new ByteArrayInputStream(raw);
         return new ObjectInputStream(bais).readObject();
     }
 }

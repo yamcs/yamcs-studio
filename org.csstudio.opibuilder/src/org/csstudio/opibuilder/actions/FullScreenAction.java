@@ -28,8 +28,7 @@ import org.eclipse.ui.internal.WorkbenchWindow;
  * The action to make CSS full screen.
  */
 @SuppressWarnings("restriction")
-public class FullScreenAction extends Action implements
-        IWorkbenchWindowActionDelegate {
+public class FullScreenAction extends Action implements IWorkbenchWindowActionDelegate {
 
     public static final String ID = "org.csstudio.opibuilder.actions.fullscreen";
     private static final String FULLSCREEN = "Full Screen";
@@ -39,10 +38,10 @@ public class FullScreenAction extends Action implements
     private Menu menuBar;
     private boolean inFullScreen = false;
     private Shell shell;
-    private ImageDescriptor fullScreenImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-            OPIBuilderPlugin.PLUGIN_ID, "icons/fullscreen.png");
-    private ImageDescriptor exitFullScreenImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-            OPIBuilderPlugin.PLUGIN_ID, "icons/exitfullscreen.png");
+    private ImageDescriptor fullScreenImage = CustomMediaFactory.getInstance()
+            .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/fullscreen.png");
+    private ImageDescriptor exitFullScreenImage = CustomMediaFactory.getInstance()
+            .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/exitfullscreen.png");
     private IWorkbenchWindow window;
     private boolean toolbarWasInvisible;
     private boolean menuBarWasInvisible;
@@ -67,31 +66,31 @@ public class FullScreenAction extends Action implements
             if (!toolbarWasInvisible) {
                 WorkbenchWindowService.setToolbarVisibility((WorkbenchWindow) window, true);
             }
-            if (!menuBarWasInvisible)
+            if (!menuBarWasInvisible) {
                 shell.setMenuBar(menuBar);
+            }
             inFullScreen = false;
             setText(FULLSCREEN);
             setImageDescriptor(fullScreenImage);
         } else {
 
             if (PreferencesHelper.isShowFullScreenDialog()) {
-                TipDialog dialog = new TipDialog(shell, "Tip",
-                        "Press F11 to exit full screen.");
+                var dialog = new TipDialog(shell, "Tip", "Press F11 to exit full screen.");
                 dialog.open();
-                if (!dialog.isShowThisDialogAgain())
+                if (!dialog.isShowThisDialogAgain()) {
                     PreferencesHelper.setShowFullScreenDialog(false);
+                }
             }
             shell.setFullScreen(true);
-            if (window instanceof WorkbenchWindow
-                    && !((WorkbenchWindow) window).getCoolBarVisible()) {
+            if (window instanceof WorkbenchWindow && !((WorkbenchWindow) window).getCoolBarVisible()) {
                 toolbarWasInvisible = true;
             } else {
                 toolbarWasInvisible = false;
                 WorkbenchWindowService.setToolbarVisibility((WorkbenchWindow) window, false);
             }
-            if (shell.getMenuBar() == null)
+            if (shell.getMenuBar() == null) {
                 menuBarWasInvisible = true;
-            else {
+            } else {
                 menuBar = shell.getMenuBar();
                 menuBarWasInvisible = false;
             }
@@ -119,7 +118,7 @@ public class FullScreenAction extends Action implements
         this.window = window;
         shell = window.getShell();
         menuBar = shell.getMenuBar();
-        FullScreenAction registeredAction = WorkbenchWindowService.getInstance().getFullScreenAction(window);
+        var registeredAction = WorkbenchWindowService.getInstance().getFullScreenAction(window);
         // copy states
         if (registeredAction != null) {
             inFullScreen = registeredAction.inFullScreen;

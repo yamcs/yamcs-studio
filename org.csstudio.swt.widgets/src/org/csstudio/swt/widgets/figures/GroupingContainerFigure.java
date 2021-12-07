@@ -51,6 +51,7 @@ public class GroupingContainerFigure extends Figure implements Introspectable {
         setShowScrollBar(true);
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -71,8 +72,9 @@ public class GroupingContainerFigure extends Figure implements Introspectable {
     }
 
     public void setShowScrollBar(boolean show) {
-        if (this.showScrollbar == show)
+        if (this.showScrollbar == show) {
             return;
+        }
         this.showScrollbar = show;
         scrollPane.setScrollBarVisibility(show ? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
     }

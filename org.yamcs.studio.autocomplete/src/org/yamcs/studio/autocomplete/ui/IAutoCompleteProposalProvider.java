@@ -25,8 +25,7 @@ public interface IAutoCompleteProposalProvider {
      * @param handler
      *            see {@link IContentProposalSearchHandler}.
      */
-    public void getProposals(final String contents,
-            final IContentProposalSearchHandler handler);
+    public void getProposals(String contents, IContentProposalSearchHandler handler);
 
     /** @return <code>true</code> if at least one provider is defined. */
     public boolean hasProviders();

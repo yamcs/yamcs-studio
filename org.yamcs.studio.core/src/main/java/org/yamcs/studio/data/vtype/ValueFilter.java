@@ -34,11 +34,11 @@ public class ValueFilter {
 
     public boolean filterRow(int rowIndex) {
         if (value instanceof VNumber) {
-            double columnValue = ((ListNumber) table.getColumnData(columnIndex)).getDouble(rowIndex);
+            var columnValue = ((ListNumber) table.getColumnData(columnIndex)).getDouble(rowIndex);
             return columnValue == ((VNumber) value).getValue().doubleValue();
         } else if (value instanceof VString) {
             @SuppressWarnings("unchecked")
-            List<String> columnData = (List<String>) table.getColumnData(columnIndex);
+            var columnData = (List<String>) table.getColumnData(columnIndex);
             return Objects.equals(columnData.get(rowIndex), ((VString) value).getValue());
         }
         throw new IllegalStateException("Unexpected error");

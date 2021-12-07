@@ -18,20 +18,19 @@ public class PVNameTextCellEditor extends TextCellEditor {
 
     public PVNameTextCellEditor(Composite parent) {
         super(parent);
-        AutoCompleteWidget autoCompleteWidget = new AutoCompleteWidget(this, AutoCompleteTypes.Formula);
-        autoCompleteWidget.getContentProposalAdapter().addContentProposalListener(
-                new IContentProposalListener2() {
+        var autoCompleteWidget = new AutoCompleteWidget(this, AutoCompleteTypes.Formula);
+        autoCompleteWidget.getContentProposalAdapter().addContentProposalListener(new IContentProposalListener2() {
 
-                    @Override
-                    public void proposalPopupOpened(ContentProposalAdapter adapter) {
-                        proposalPopuped = true;
-                    }
+            @Override
+            public void proposalPopupOpened(ContentProposalAdapter adapter) {
+                proposalPopuped = true;
+            }
 
-                    @Override
-                    public void proposalPopupClosed(ContentProposalAdapter adapter) {
-                        proposalPopuped = false;
-                    }
-                });
+            @Override
+            public void proposalPopupClosed(ContentProposalAdapter adapter) {
+                proposalPopuped = false;
+            }
+        });
     }
 
     @Override

@@ -69,12 +69,12 @@ class TableUnionFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VString columnName = (VString) args.get(0);
-        VStringArray columnValues = (VStringArray) args.get(1);
+    public Object calculate(List<Object> args) {
+        var columnName = (VString) args.get(0);
+        var columnValues = (VStringArray) args.get(1);
         List<VTable> tables = new ArrayList<>();
-        for (int i = 2; i < args.size(); i++) {
-            Object object = args.get(i);
+        for (var i = 2; i < args.size(); i++) {
+            var object = args.get(i);
             tables.add((VTable) object);
         }
 

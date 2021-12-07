@@ -4,16 +4,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.State;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.client.YamcsClient;
 import org.yamcs.studio.core.RemoteEntityHolder;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -27,14 +24,14 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
             return null;
         }
 
-        String radioParameter = event.getParameter(RadioState.PARAMETER_ID); // processor name
+        var radioParameter = event.getParameter(RadioState.PARAMETER_ID); // processor name
         HandlerUtil.updateRadioState(event.getCommand(), radioParameter);
 
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        var yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.createProcessorClient(YamcsPlugin.getInstance(), radioParameter).getInfo()
                 .whenComplete((processor, err) -> {
                     if (err == null) {
-                        RemoteEntityHolder holder = new RemoteEntityHolder();
+                        var holder = new RemoteEntityHolder();
                         holder.yamcsClient = YamcsPlugin.getYamcsClient();
                         holder.serverInfo = YamcsPlugin.getServerInfo();
                         holder.userInfo = YamcsPlugin.getUser();
@@ -57,10 +54,10 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
      */
     @Override
     public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
-        ICommandService service = (ICommandService) element.getServiceLocator().getService(ICommandService.class);
-        String state = (String) parameters.get(RadioState.PARAMETER_ID);
-        Command command = service.getCommand(SwitchProcessorCompoundContributionItem.SWITCH_PROCESSOR_COMMAND);
-        State commandState = command.getState(RadioState.STATE_ID);
+        var service = (ICommandService) element.getServiceLocator().getService(ICommandService.class);
+        var state = (String) parameters.get(RadioState.PARAMETER_ID);
+        var command = service.getCommand(SwitchProcessorCompoundContributionItem.SWITCH_PROCESSOR_COMMAND);
+        var commandState = command.getState(RadioState.STATE_ID);
         if (commandState.getValue().equals(state)) {
             element.setChecked(true);
         }

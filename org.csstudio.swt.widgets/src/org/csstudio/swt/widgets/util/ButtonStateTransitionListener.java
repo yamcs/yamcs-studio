@@ -11,22 +11,22 @@ package org.csstudio.swt.widgets.util;
 
 class ButtonStateTransitionListener {
 
-    protected final void cancel() throws Exception {
+    protected void cancel() throws Exception {
     }
 
     public void canceled() {
     }
 
-    final void cancelled() throws Exception {
+    void cancelled() throws Exception {
     }
 
-    protected final void press() throws Exception {
+    protected void press() throws Exception {
     }
 
     public void pressed() {
     }
 
-    protected final void release() throws Exception {
+    protected void release() throws Exception {
     }
 
     public void released() {

@@ -22,8 +22,6 @@ import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.YamcsPlugin;
 
-import com.google.protobuf.Timestamp;
-
 public class ScrollViewer extends TableViewer {
 
     public static final String COL_TIME = "Timestamp";
@@ -54,17 +52,17 @@ public class ScrollViewer extends TableViewer {
         setContentProvider(contentProvider);
         setInput(contentProvider);
 
-        TableViewerColumn timeColumn = new TableViewerColumn(this, SWT.LEFT);
+        var timeColumn = new TableViewerColumn(this, SWT.LEFT);
         timeColumn.getColumn().setText(COL_TIME);
         tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(30));
         timeColumn.setLabelProvider(new ColumnLabelProvider() {
 
             @Override
             public String getText(Object element) {
-                ParameterData pdata = (ParameterData) element;
-                ParameterValue pval = pdata.getParameter(0);
-                Timestamp proto = pval.getGenerationTime();
-                Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                var pdata = (ParameterData) element;
+                var pval = pdata.getParameter(0);
+                var proto = pval.getGenerationTime();
+                var generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
                 return YamcsPlugin.getDefault().formatInstant(generationTime);
             }
         });
@@ -105,7 +103,7 @@ public class ScrollViewer extends TableViewer {
         qualifiedNames.add(element.getQualifiedName());
         // addColumn(element);
         getTable().getColumn(0).setWidth(180);
-        for (int i = 1; i < getTable().getColumnCount(); i++) {
+        for (var i = 1; i < getTable().getColumnCount(); i++) {
             getTable().getColumn(i).setWidth(60);
         }
 
@@ -126,7 +124,7 @@ public class ScrollViewer extends TableViewer {
 
         getTable().getColumn(i).dispose();
         parameters.remove(info);
-        String qualifiedName = "";
+        var qualifiedName = "";
         for (String qname : qualifiedNames) {
             if (qname.endsWith(info)) {
                 qualifiedName = qname;

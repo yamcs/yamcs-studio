@@ -56,8 +56,7 @@ public class ChangeOrderAction extends SelectionAction {
         }
 
         public ImageDescriptor getImageDescriptor() {
-            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, iconPath);
+            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
 
     }
@@ -95,26 +94,31 @@ public class ChangeOrderAction extends SelectionAction {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+            var prime = 31;
+            var result = 1;
             result = prime * result + ((index == null) ? 0 : index.hashCode());
             return result;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
-            IndexedWidget other = (IndexedWidget) obj;
+            }
+            var other = (IndexedWidget) obj;
             if (index == null) {
-                if (other.index != null)
+                if (other.index != null) {
                     return false;
-            } else if (!index.equals(other.index))
+                }
+            } else if (!index.equals(other.index)) {
                 return false;
+            }
             return true;
         }
 
@@ -133,18 +137,19 @@ public class ChangeOrderAction extends SelectionAction {
 
     @Override
     protected boolean calculateEnabled() {
-        if (getSelectedObjects().size() == 0 ||
-                getSelectedObjects().size() == 1 && getSelectedObjects().get(0) instanceof EditPart
-                        && ((EditPart) getSelectedObjects().get(0)).getModel() instanceof DisplayModel)
+        if (getSelectedObjects().size() == 0
+                || getSelectedObjects().size() == 1 && getSelectedObjects().get(0) instanceof EditPart
+                        && ((EditPart) getSelectedObjects().get(0)).getModel() instanceof DisplayModel) {
             return false;
+        }
         Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<AbstractContainerModel, List<IndexedWidget>>();
         fillWidgetMap(widgetMap);
 
         // create compound command
-        for (final Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
+        for (Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
             // sort the list in map by the widget's original order in its container
-            AbstractContainerModel container = entry.getKey();
-            List<IndexedWidget> widgetList = entry.getValue();
+            var container = entry.getKey();
+            var widgetList = entry.getValue();
             Collections.sort(widgetList);
 
             int newIndex;
@@ -163,11 +168,13 @@ public class ChangeOrderAction extends SelectionAction {
                 newIndex = 0;
                 break;
             }
-            if (newIndex > container.getChildren().size() - 1 || newIndex < 0)
+            if (newIndex > container.getChildren().size() - 1 || newIndex < 0) {
                 return false;
+            }
             for (IndexedWidget indexedWidget : widgetList) {
-                if (container.getIndexOf(indexedWidget.getWidget()) != newIndex)
+                if (container.getIndexOf(indexedWidget.getWidget()) != newIndex) {
                     return true;
+                }
             }
         }
         return false;
@@ -178,13 +185,13 @@ public class ChangeOrderAction extends SelectionAction {
         Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<AbstractContainerModel, List<IndexedWidget>>();
         fillWidgetMap(widgetMap);
 
-        CompoundCommand compoundCommand = new CompoundCommand(orderType.getLabel());
+        var compoundCommand = new CompoundCommand(orderType.getLabel());
 
         // create compound command
-        for (final Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
+        for (Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
             // sort the list in map by the widget's original order in its container
-            AbstractContainerModel container = entry.getKey();
-            List<IndexedWidget> widgetList = entry.getValue();
+            var container = entry.getKey();
+            var widgetList = entry.getValue();
             Collections.sort(widgetList);
 
             int newIndex;
@@ -209,15 +216,13 @@ public class ChangeOrderAction extends SelectionAction {
             case TO_FRONT:
             case STEP_FRONT:
                 for (IndexedWidget indexedWidget : widgetList) {
-                    compoundCommand.add(new ChangeOrderCommand(
-                            newIndex, container, indexedWidget.getWidget()));
+                    compoundCommand.add(new ChangeOrderCommand(newIndex, container, indexedWidget.getWidget()));
                 }
                 break;
             case STEP_BACK:
             case TO_BACK:
-                for (int i = widgetList.size() - 1; i >= 0; i--) {
-                    compoundCommand.add(new ChangeOrderCommand(
-                            newIndex, container, widgetList.get(i).getWidget()));
+                for (var i = widgetList.size() - 1; i >= 0; i--) {
+                    compoundCommand.add(new ChangeOrderCommand(newIndex, container, widgetList.get(i).getWidget()));
                 }
                 break;
             default:
@@ -230,22 +235,20 @@ public class ChangeOrderAction extends SelectionAction {
     /**
      * @param widgetMap
      */
-    private void fillWidgetMap(
-            Map<AbstractContainerModel, List<IndexedWidget>> widgetMap) {
+    private void fillWidgetMap(Map<AbstractContainerModel, List<IndexedWidget>> widgetMap) {
 
         for (Object selection : getSelectedObjects()) {
             if (selection instanceof AbstractBaseEditPart) {
-                AbstractBaseEditPart widgetEditpart = (AbstractBaseEditPart) selection;
-                AbstractWidgetModel widgetModel = (AbstractWidgetModel) widgetEditpart.getModel();
+                var widgetEditpart = (AbstractBaseEditPart) selection;
+                var widgetModel = (AbstractWidgetModel) widgetEditpart.getModel();
                 if (widgetEditpart.getParent() != null && widgetModel.getParent() != null) {
-                    AbstractContainerModel containerModel = (AbstractContainerModel) widgetEditpart.getParent()
-                            .getModel();
+                    var containerModel = (AbstractContainerModel) widgetEditpart.getParent().getModel();
 
                     if (!widgetMap.containsKey(containerModel)) {
                         widgetMap.put(containerModel, new LinkedList<IndexedWidget>());
                     }
-                    widgetMap.get(containerModel).add(
-                            new IndexedWidget(containerModel.getIndexOf(widgetModel), widgetModel));
+                    widgetMap.get(containerModel)
+                            .add(new IndexedWidget(containerModel.getIndexOf(widgetModel), widgetModel));
                 }
             }
         }

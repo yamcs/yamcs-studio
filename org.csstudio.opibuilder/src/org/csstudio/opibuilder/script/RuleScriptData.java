@@ -38,7 +38,7 @@ public class RuleScriptData extends ScriptData {
      * @param scriptString
      *            the scriptString to set
      */
-    public final void setScriptString(String scriptString) {
+    public void setScriptString(String scriptString) {
         this.scriptString = scriptString;
     }
 

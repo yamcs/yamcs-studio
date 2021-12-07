@@ -75,7 +75,7 @@ class LogicalNotFormulaFunction implements FormulaFunction {
 
     @Override
     public Object calculate(List<Object> args) {
-        VBoolean value = (VBoolean) args.get(0);
+        var value = (VBoolean) args.get(0);
         if (value == null) {
             return null;
         }

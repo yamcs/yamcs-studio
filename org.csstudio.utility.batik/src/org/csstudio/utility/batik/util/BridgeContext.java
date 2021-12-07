@@ -40,6 +40,7 @@ public class BridgeContext extends org.apache.batik.bridge.BridgeContext {
     /**
      * Returns the AnimationEngine for the document. Creates one if it doesn't exist.
      */
+    @Override
     public org.apache.batik.bridge.SVGAnimationEngine getAnimationEngine() {
         if (animationEngine == null) {
             animationEngine = new SVGAnimationEngine(document, this);

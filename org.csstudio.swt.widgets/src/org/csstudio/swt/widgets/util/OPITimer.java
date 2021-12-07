@@ -35,6 +35,7 @@ public class OPITimer {
 
     private final Runnable dueTask = new Runnable() {
 
+        @Override
         public void run() {
             due = true;
         }
@@ -52,19 +53,20 @@ public class OPITimer {
      * @throws IllegalStateException
      *             if task was already scheduled or canceled, or timer was canceled.
      */
-    public synchronized void start(final Runnable task, long delay) {
+    public synchronized void start(Runnable task, long delay) {
         this.delay = delay;
         this.task = task;
-        if (!due)
+        if (!due) {
             stop();
+        }
 
         // mark it as due before task started
-        dueTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(
-                dueTask, delay - 1, TimeUnit.MILLISECONDS);
+        dueTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(dueTask, delay - 1,
+                TimeUnit.MILLISECONDS);
 
         // start task
-        scheduledTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(
-                task, delay, TimeUnit.MILLISECONDS);
+        scheduledTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(task, delay,
+                TimeUnit.MILLISECONDS);
 
         due = false;
     }
@@ -73,8 +75,9 @@ public class OPITimer {
      * Reset the timer to start from zero again.
      */
     public synchronized void reset() {
-        if (!due)
+        if (!due) {
             start(task, delay);
+        }
     }
 
     /**
@@ -91,8 +94,9 @@ public class OPITimer {
         if (dueTaskFuture != null) {
             dueTaskFuture.cancel(false);
         }
-        if (scheduledTaskFuture != null)
+        if (scheduledTaskFuture != null) {
             scheduledTaskFuture.cancel(false);
+        }
         due = true;
     }
 

@@ -2,7 +2,6 @@ package org.yamcs.studio.editor.base;
 
 import org.csstudio.opibuilder.actions.EditOPIAction;
 import org.csstudio.opibuilder.actions.RunOPIAction;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.ICoolBarManager;
@@ -22,7 +21,6 @@ import org.eclipse.ui.actions.NewWizardMenu;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.yamcs.studio.core.ui.ConnectionStringStatusLineContributionItem;
 import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
@@ -269,7 +267,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
          */
         if (isMac()) {
             windowMenu.add(new MinimizeWindowAction(window));
-            MaximizeWindowAction zoom = new MaximizeWindowAction(window);
+            var zoom = new MaximizeWindowAction(window);
             zoom.setText("Zoom");
             windowMenu.add(zoom);
         } else {
@@ -353,11 +351,11 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
      * Remove an unnecessary action. (does not appear to work with every matching id)
      */
     private void removeAction(String id) {
-        ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
-        IActionSetDescriptor[] actionSets = reg.getActionSets();
+        var reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
+        var actionSets = reg.getActionSets();
         for (IActionSetDescriptor actionSet : actionSets) {
             if (actionSet.getId().equals(id)) {
-                IExtension ext = actionSet.getConfigurationElement().getDeclaringExtension();
+                var ext = actionSet.getConfigurationElement().getDeclaringExtension();
                 reg.removeExtension(ext, new Object[] { actionSet });
             }
         }

@@ -72,17 +72,15 @@ class EnumFromVNumberFunction implements FormulaFunction {
         if (containsNull(args)) {
             return null;
         }
-        VNumber value = (VNumber) args.get(0);
-        VNumberArray intervals = (VNumberArray) args.get(1);
-        VStringArray labels = (VStringArray) args.get(2);
-        int index = 0;
+        var value = (VNumber) args.get(0);
+        var intervals = (VNumberArray) args.get(1);
+        var labels = (VStringArray) args.get(2);
+        var index = 0;
         while (index < intervals.getData().size()
                 && value.getValue().doubleValue() >= intervals.getData().getDouble(index)) {
             index++;
         }
-        return newVEnum(index, labels.getData(),
-                value,
-                latestValidTimeOrNowOf(args));
+        return newVEnum(index, labels.getData(), value, latestValidTimeOrNowOf(args));
     }
 
     private static boolean containsNull(Collection<Object> args) {

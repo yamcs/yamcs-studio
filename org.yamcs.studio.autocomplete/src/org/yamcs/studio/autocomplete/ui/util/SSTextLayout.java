@@ -29,7 +29,7 @@ public class SSTextLayout {
     }
 
     public void addStyle(Font font, Color color, int x, int y) {
-        TextStyle textStyle = new TextStyle(font, color, null);
+        var textStyle = new TextStyle(font, color, null);
         textLayout.setStyle(textStyle, x, y);
     }
 
@@ -38,7 +38,7 @@ public class SSTextLayout {
     }
 
     public void handleMeasureItemEvent(Event event) {
-        Rectangle textLayoutBounds = textLayout.getBounds();
+        var textLayoutBounds = textLayout.getBounds();
         event.width = textLayoutBounds.width;
         event.height = textLayoutBounds.height;
     }

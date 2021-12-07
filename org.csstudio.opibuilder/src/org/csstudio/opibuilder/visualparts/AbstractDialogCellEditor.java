@@ -42,14 +42,14 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
      * @param title
      *            The title for this CellEditor
      */
-    public AbstractDialogCellEditor(final Composite parent, final String title) {
+    public AbstractDialogCellEditor(Composite parent, String title) {
         super(parent, SWT.NONE);
         _shell = parent.getShell();
         _title = title;
     }
 
     @Override
-    public final void activate() {
+    public void activate() {
         if (!_dialogIsOpen) {
             _dialogIsOpen = true;
             this.openDialog(_shell, _title);
@@ -68,7 +68,7 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
      * @param dialogTitle
      *            The title for the dialog
      */
-    protected abstract void openDialog(final Shell parentShell, final String dialogTitle);
+    protected abstract void openDialog(Shell parentShell, String dialogTitle);
 
     /**
      * Returns, if CellEditor.fireApplyEditorValue() should be called.
@@ -78,7 +78,7 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
     protected abstract boolean shouldFireChanges();
 
     @Override
-    protected final Control createControl(final Composite parent) {
+    protected final Control createControl(Composite parent) {
         return null;
     }
 

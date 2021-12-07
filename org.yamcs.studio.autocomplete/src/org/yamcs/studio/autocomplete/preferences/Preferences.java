@@ -9,9 +9,8 @@
  ********************************************************************************/
 package org.yamcs.studio.autocomplete.preferences;
 
-import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 
 /**
  * Read preferences
@@ -30,7 +29,7 @@ public class Preferences {
      *            Preference identifier
      * @return String from preference system, or <code>null</code>
      */
-    private static String getString(final String setting) {
+    private static String getString(String setting) {
         return getString(setting, null);
     }
 
@@ -41,29 +40,29 @@ public class Preferences {
      *            Default value when preferences unavailable
      * @return String from preference system, or <code>null</code>
      */
-    private static String getString(final String setting,
-            final String default_value) {
-        final IPreferencesService service = Platform.getPreferencesService();
-        if (service == null)
+    private static String getString(String setting, String default_value) {
+        var service = Platform.getPreferencesService();
+        if (service == null) {
             return default_value;
-        return service.getString(AutoCompletePlugin.PLUGIN_ID, setting,
-                default_value, null);
+        }
+        return service.getString(AutoCompletePlugin.PLUGIN_ID, setting, default_value, null);
     }
 
     /** @return default list max size */
     public static int getDefaultMaxResults() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        if (service == null)
+        var service = Platform.getPreferencesService();
+        if (service == null) {
             return 100; // default
-        return service.getInt(AutoCompletePlugin.PLUGIN_ID,
-                DEFAULT_MAX_RESULTS, 10, null);
+        }
+        return service.getInt(AutoCompletePlugin.PLUGIN_ID, DEFAULT_MAX_RESULTS, 10, null);
     }
 
     /** @return providers settings */
     public static String getProviders(String type) {
-        final IPreferencesService service = Platform.getPreferencesService();
-        if (service == null)
+        var service = Platform.getPreferencesService();
+        if (service == null) {
             return null; // default
+        }
         return getString(PROVIDERS + "." + type);
     }
 
@@ -74,11 +73,11 @@ public class Preferences {
 
     /** @return max top results */
     public static int getMaxTopResults() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        if (service == null)
+        var service = Platform.getPreferencesService();
+        if (service == null) {
             return 0; // default
-        return service.getInt(AutoCompletePlugin.PLUGIN_ID, MAX_TOP_RESULTS, 0,
-                null);
+        }
+        return service.getInt(AutoCompletePlugin.PLUGIN_ID, MAX_TOP_RESULTS, 0, null);
     }
 
 }

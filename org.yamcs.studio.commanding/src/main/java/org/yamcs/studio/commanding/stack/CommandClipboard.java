@@ -39,7 +39,7 @@ public class CommandClipboard {
             cutStackedCommands.addAll(scs);
         }
 
-        String source = "";
+        var source = "";
         for (StackedCommand sc : scs) {
             source += sc.getSource() + "\n";
         }
@@ -60,25 +60,25 @@ public class CommandClipboard {
         // Convert CommandHistoryRecord to new Stacked Command
         // first compute the stack delays from the cmd history generation times
         List<CommandHistoryRecord> sortedRecords = new ArrayList<>();
-        HashMap<CommandHistoryRecord, Integer> commandHistoryRecordDelays = new HashMap<>();
+        var commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
             sortedRecords.add(chr);
         }
         Collections.sort(sortedRecords, new SortByGenerationTime());
-        long lastTime = 0;
+        var lastTime = 0L;
         for (CommandHistoryRecord chr : sortedRecords) {
-            long currentTime = chr.getCommand().getGenerationTime().toEpochMilli();
+            var currentTime = chr.getCommand().getGenerationTime().toEpochMilli();
             if (lastTime == 0) {
                 commandHistoryRecordDelays.put(chr, 0);
             } else {
-                int currentDelay = (int) (currentTime - lastTime);
+                var currentDelay = (int) (currentTime - lastTime);
                 commandHistoryRecordDelays.put(chr, currentDelay);
             }
             lastTime = currentTime;
         }
         // then add to the result
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
-            StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommand().getSource());
+            var pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommand().getSource());
             pastedCommand.setComment(chr.getTextForColumn("Comment", false));
             pastedCommand.setDelayMs(commandHistoryRecordDelays.get(chr));
             result.add(pastedCommand);
@@ -86,7 +86,7 @@ public class CommandClipboard {
 
         // copy stacked commands
         for (StackedCommand sc : copiedStackedCommands) {
-            StackedCommand copy = new StackedCommand();
+            var copy = new StackedCommand();
             copy.setMetaCommand(sc.getMetaCommand());
             if (sc.getComment() != null) {
                 copy.setComment(sc.getComment());
@@ -114,8 +114,8 @@ public class CommandClipboard {
     }
 
     static private void textToClipboard(String text, Display display) {
-        final Clipboard cb = new Clipboard(display);
-        TextTransfer textTransfer = TextTransfer.getInstance();
+        var cb = new Clipboard(display);
+        var textTransfer = TextTransfer.getInstance();
         cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });
     }
 

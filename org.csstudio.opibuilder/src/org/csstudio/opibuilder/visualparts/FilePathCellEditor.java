@@ -71,7 +71,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
         } else {
             if (_orgFileExtensions.length > 0) {
                 _fileExtensions = new String[_orgFileExtensions.length];
-                for (int i = 0; i < _fileExtensions.length; i++) {
+                for (var i = 0; i < _fileExtensions.length; i++) {
                     if (_orgFileExtensions[i].startsWith("*.")) {
                         _fileExtensions[i] = _orgFileExtensions[i];
                     } else {
@@ -99,9 +99,9 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
         if (_onlyWorkSpace) {
-            RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
-                    parentShell, widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1),
-                    "Select a resource", _fileExtensions);
+            var rsd = new RelativePathSelectionDialog(parentShell,
+                    widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1), "Select a resource",
+                    _fileExtensions);
             if (_path != null && !_path.isEmpty()) {
                 rsd.setSelectedResource(_path);
             } else {
@@ -115,7 +115,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
                 }
             }
         } else {
-            FileDialog dialog = new FileDialog(parentShell, SWT.OPEN | SWT.MULTI);
+            var dialog = new FileDialog(parentShell, SWT.OPEN | SWT.MULTI);
             dialog.setText(dialogTitle);
             if (_path != null) {
                 _filterPath = _path.toString();
@@ -123,7 +123,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
             dialog.setFilterPath(_filterPath);
             dialog.setFilterExtensions(_fileExtensions);
             dialog.open();
-            String name = dialog.getFileName();
+            var name = dialog.getFileName();
             _filterPath = dialog.getFilterPath();
             _path = new Path(_filterPath + Path.SEPARATOR + name).toPortableString();
         }

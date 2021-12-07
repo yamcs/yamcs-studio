@@ -67,7 +67,7 @@ public class OPIColorDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
@@ -76,40 +76,39 @@ public class OPIColorDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parent_Composite = (Composite) super.createDialogArea(parent);
 
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
+        var mainComposite = new Composite(parent_Composite, SWT.None);
         mainComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = 300;
         mainComposite.setLayoutData(gridData);
-        final Composite leftComposite = new Composite(mainComposite, SWT.None);
+        var leftComposite = new Composite(mainComposite, SWT.None);
         leftComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 220;
         leftComposite.setLayoutData(gd);
         createLabel(leftComposite, "Choose from Predefined Colors:");
 
         preDefinedColorsViewer = createPredefinedColorsTableViewer(leftComposite);
-        preDefinedColorsViewer.setInput(
-                MediaService.getInstance().getAllPredefinedColors());
+        preDefinedColorsViewer.setInput(MediaService.getInstance().getAllPredefinedColors());
 
-        Composite rightComposite = new Composite(mainComposite, SWT.None);
+        var rightComposite = new Composite(mainComposite, SWT.None);
         rightComposite.setLayout(new GridLayout(1, false));
         gd = new GridData(SWT.LEFT, SWT.BEGINNING, true, true);
         rightComposite.setLayoutData(gd);
 
         createLabel(rightComposite, "");
 
-        Button colorDialogButton = new Button(rightComposite, SWT.PUSH);
+        var colorDialogButton = new Button(rightComposite, SWT.PUSH);
         colorDialogButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
         colorDialogButton.setText("Choose from Color Dialog");
         colorDialogButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                ColorDialog dialog = new ColorDialog(Display.getCurrent().getActiveShell());
+                var dialog = new ColorDialog(Display.getCurrent().getActiveShell());
                 dialog.setRGB(opiColor.getRGBValue());
-                RGB rgb = dialog.open();
+                var rgb = dialog.open();
                 if (rgb != null) {
                     opiColor.setColorValue(rgb);
                     preDefinedColorsViewer.setSelection(null);
@@ -124,7 +123,7 @@ public class OPIColorDialog extends TrayDialog {
 
         createRGBEditGroup(rightComposite);
 
-        Group group = new Group(rightComposite, SWT.None);
+        var group = new Group(rightComposite, SWT.None);
         group.setLayoutData(new GridData(SWT.FILL, SWT.END, true, true));
         group.setLayout(new GridLayout(3, false));
         group.setText("Output");
@@ -161,10 +160,10 @@ public class OPIColorDialog extends TrayDialog {
      */
     private void createRGBEditGroup(Composite rightComposite) {
 
-        GridData rgbGD = new GridData();
+        var rgbGD = new GridData();
         rgbGD.horizontalAlignment = org.eclipse.swt.layout.GridData.CENTER;
         rgbGD.grabExcessHorizontalSpace = true;
-        GridLayout gridLayout = new GridLayout();
+        var gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
         rgbGroup = new Group(rightComposite, SWT.NONE);
         rgbGroup.setLayout(gridLayout);
@@ -211,10 +210,7 @@ public class OPIColorDialog extends TrayDialog {
         blueScale.addSelectionListener(new RGBEditListener(2));
         blueSpinner.addSelectionListener(new RGBEditListener(2));
 
-        rgbGroup.setTabList(new Control[] {
-                redScale, greenScale, blueScale,
-                redSpinner, greenSpinner, blueSpinner
-        });
+        rgbGroup.setTabList(new Control[] { redScale, greenScale, blueScale, redSpinner, greenSpinner, blueSpinner });
 
     }
 
@@ -225,19 +221,17 @@ public class OPIColorDialog extends TrayDialog {
      *            The parent for the table
      * @return The {@link TableViewer}
      */
-    private TableViewer createPredefinedColorsTableViewer(final Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+    private TableViewer createPredefinedColorsTableViewer(Composite parent) {
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @Override
-            public Object[] getElements(final Object element) {
+            public Object[] getElements(Object element) {
                 return (Object[]) element;
             }
         });
         viewer.setLabelProvider(new WorkbenchLabelProvider());
         viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
@@ -247,10 +241,8 @@ public class OPIColorDialog extends TrayDialog {
      * Refreshes the enabled-state of the actions.
      */
     private void refreshGUIOnSelection() {
-        IStructuredSelection selection = (IStructuredSelection) preDefinedColorsViewer
-                .getSelection();
-        if (!selection.isEmpty()
-                && selection.getFirstElement() instanceof OPIColor) {
+        var selection = (IStructuredSelection) preDefinedColorsViewer.getSelection();
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof OPIColor) {
             opiColor = ((OPIColor) selection.getFirstElement()).getCopy();
             setRGBEditValue(opiColor.getRGBValue());
             outputTextLabel.setText(opiColor.getColorName());
@@ -267,11 +259,10 @@ public class OPIColorDialog extends TrayDialog {
      * @param text
      *            The text for the label
      */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
+    private void createLabel(Composite parent, String text) {
+        var label = new Label(parent, SWT.WRAP);
         label.setText(text);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false,
-                false, 1, 1));
+        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
     }
 
     public OPIColor getOutput() {
@@ -312,8 +303,8 @@ public class OPIColorDialog extends TrayDialog {
 
         @Override
         public void widgetSelected(SelectionEvent e) {
-            RGB rgb = opiColor.getRGBValue();
-            int newValue = 0;
+            var rgb = opiColor.getRGBValue();
+            var newValue = 0;
 
             if (e.getSource() instanceof Scale) {
                 newValue = ((Scale) e.getSource()).getSelection();

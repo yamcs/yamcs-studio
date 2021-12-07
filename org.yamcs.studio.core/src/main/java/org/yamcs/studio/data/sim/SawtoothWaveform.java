@@ -72,11 +72,11 @@ public class SawtoothWaveform extends SimFunction<VDoubleArray> {
         }
     }
 
-    private ListDouble generateNewValue(final double omega, final double t, double k) {
-        double[] newArray = new double[nSamples];
-        for (int i = 0; i < newArray.length; i++) {
-            double x = (omega * t + k * i) / (2 * Math.PI);
-            double normalizedPositionInPeriod = x - (double) (long) x;
+    private ListDouble generateNewValue(double omega, double t, double k) {
+        var newArray = new double[nSamples];
+        for (var i = 0; i < newArray.length; i++) {
+            var x = (omega * t + k * i) / (2 * Math.PI);
+            var normalizedPositionInPeriod = x - (double) (long) x;
             newArray[i] = -1.0 + 2 * normalizedPositionInPeriod;
         }
         return new ArrayDouble(newArray);
@@ -88,13 +88,13 @@ public class SawtoothWaveform extends SimFunction<VDoubleArray> {
             initialRefernce = lastTime;
         }
         double t = initialRefernce.until(lastTime, ChronoUnit.SECONDS);
-        double omega = 2 * Math.PI / periodInSeconds;
-        double k = 2 * Math.PI / wavelengthInSamples;
-        double min = 1.0;
-        double max = -1.0;
-        double range = 0.0;
-        return ValueFactory.newVDoubleArray(generateNewValue(omega, t, k), alarmNone(),
-                newTime(lastTime), newDisplay(min, min + range * 0.1, min + range * 0.2, "", DOUBLE_FORMAT,
-                        min + range * 0.8, min + range * 0.9, max, min, max));
+        var omega = 2 * Math.PI / periodInSeconds;
+        var k = 2 * Math.PI / wavelengthInSamples;
+        var min = 1.0;
+        var max = -1.0;
+        var range = 0.0;
+        return ValueFactory.newVDoubleArray(generateNewValue(omega, t, k), alarmNone(), newTime(lastTime),
+                newDisplay(min, min + range * 0.1, min + range * 0.2, "", DOUBLE_FORMAT, min + range * 0.8,
+                        min + range * 0.9, max, min, max));
     }
 }

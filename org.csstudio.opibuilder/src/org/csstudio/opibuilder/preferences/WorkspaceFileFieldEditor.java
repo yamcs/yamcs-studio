@@ -66,19 +66,20 @@ public class WorkspaceFileFieldEditor extends StringButtonFieldEditor {
     @Override
     protected String changePressed() {
         IPath startPath = new Path(getTextControl().getText());
-        IPath path = getPath(startPath);
-        if (path != null)
+        var path = getPath(startPath);
+        if (path != null) {
             return path.toPortableString();
-        else
+        } else {
             return null;
+        }
 
     }
 
     private IPath getPath(IPath startPath) {
-        ResourceSelectionDialog rsDialog = new ResourceSelectionDialog(
-                Display.getCurrent().getActiveShell(), "Choose File", extensions);
-        if (startPath != null)
+        var rsDialog = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(), "Choose File", extensions);
+        if (startPath != null) {
             rsDialog.setSelectedResource(startPath);
+        }
 
         if (rsDialog.open() == Window.OK) {
             return rsDialog.getSelectedResource();

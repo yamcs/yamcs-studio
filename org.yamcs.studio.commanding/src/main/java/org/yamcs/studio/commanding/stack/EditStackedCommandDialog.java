@@ -4,7 +4,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -54,7 +53,7 @@ public class EditStackedCommandDialog extends TitleAreaDialog implements Command
     @Override
     public void validityUpdated(String invalidMessage) {
         setErrorMessage(invalidMessage);
-        Button okButton = getButton(OK);
+        var okButton = getButton(OK);
         if (okButton != null) { // Null during initial setup
             okButton.setEnabled(invalidMessage == null);
         }

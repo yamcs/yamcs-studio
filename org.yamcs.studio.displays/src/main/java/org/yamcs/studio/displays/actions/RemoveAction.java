@@ -34,7 +34,7 @@ public class RemoveAction extends Action {
     }
 
     private ImageDescriptor getImageDescriptor(String path) {
-        return ImageDescriptor.createFromURL(FileLocator
-                .find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
+        return ImageDescriptor
+                .createFromURL(FileLocator.find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
     }
 }

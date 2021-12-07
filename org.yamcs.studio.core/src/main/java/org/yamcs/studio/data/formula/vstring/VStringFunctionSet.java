@@ -35,10 +35,8 @@ public class VStringFunctionSet extends FormulaFunctionSet {
      * Creates a new set.
      */
     public VStringFunctionSet() {
-        super(new FormulaFunctionSetDescription("vstring",
-                "Function to aggregate and manipulate strings")
-                        .addFormulaFunction(new ConcatStringArrayFunction())
-                        .addFormulaFunction(new ConcatStringsFunction())
-                        .addFormulaFunction(new ToStringFunction()));
+        super(new FormulaFunctionSetDescription("vstring", "Function to aggregate and manipulate strings")
+                .addFormulaFunction(new ConcatStringArrayFunction()).addFormulaFunction(new ConcatStringsFunction())
+                .addFormulaFunction(new ToStringFunction()));
     }
 }

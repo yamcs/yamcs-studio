@@ -35,12 +35,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public void addEvent(Event event) {
-        EventLogItem item = new EventLogItem(event);
+        var item = new EventLogItem(event);
 
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
         item.colorize(plugin.loadColoringRules());
 
-        boolean update = items.contains(item);
+        var update = items.contains(item);
         items.add(item);
 
         if (update) {
@@ -60,13 +60,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             return;
         }
 
-        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        var plugin = EventLogPlugin.getDefault();
 
         List<EventLogItem> updated = new ArrayList<>();
         List<EventLogItem> added = new ArrayList<>();
 
-        List<EventLogItem> newItems = events.stream()
-                .map(EventLogItem::new).collect(Collectors.toList());
+        List<EventLogItem> newItems = events.stream().map(EventLogItem::new).collect(Collectors.toList());
 
         newItems.forEach(newItem -> {
             newItem.colorize(plugin.loadColoringRules());

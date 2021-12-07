@@ -14,10 +14,9 @@ public class PVWidgetAdapterFactory implements IAdapterFactory {
             if (adapterType == ProcessVariable.class) {
                 return adapterType.cast(new ProcessVariable(((IPVWidgetEditpart) adaptableObject).getPVName()));
             } else if (adapterType == ProcessVariable[].class) {
-                String[] allPVNames = ((IPVWidgetEditpart) adaptableObject)
-                        .getAllPVNames();
-                ProcessVariable[] pvs = new ProcessVariable[allPVNames.length];
-                int i = 0;
+                var allPVNames = ((IPVWidgetEditpart) adaptableObject).getAllPVNames();
+                var pvs = new ProcessVariable[allPVNames.length];
+                var i = 0;
                 for (String s : allPVNames) {
                     pvs[i++] = new ProcessVariable(s);
                 }

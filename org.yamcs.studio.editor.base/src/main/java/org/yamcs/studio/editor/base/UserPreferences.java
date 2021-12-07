@@ -1,6 +1,5 @@
 package org.yamcs.studio.editor.base;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 public class UserPreferences {
 
     public static Path getDataDir() {
-        Path userHome = Paths.get(System.getProperty("user.home"));
+        var userHome = Paths.get(System.getProperty("user.home"));
         // The location ~/.config conforms to XDG.
         // For windows it'd be more standard if we could write to '~\Local Settings\Application Data' but I'm
         // not aware of cross-platform API for this.
@@ -28,14 +27,12 @@ public class UserPreferences {
     }
 
     public static List<String> readWorkspaceHistory() {
-        Path file = getHistoryFile();
+        var file = getHistoryFile();
         if (!Files.exists(file)) {
             return new ArrayList<>(0);
         }
         try {
-            return Files.readAllLines(file, StandardCharsets.UTF_8)
-                    .stream()
-                    .filter(line -> !line.trim().isEmpty())
+            return Files.readAllLines(file, StandardCharsets.UTF_8).stream().filter(line -> !line.trim().isEmpty())
                     .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,9 +41,9 @@ public class UserPreferences {
     }
 
     public static void updateWorkspaceHistory(String mostRecentWorkspace) {
-        String normalized = Paths.get(mostRecentWorkspace).normalize().toAbsolutePath().toString();
+        var normalized = Paths.get(mostRecentWorkspace).normalize().toAbsolutePath().toString();
 
-        List<String> history = readWorkspaceHistory();
+        var history = readWorkspaceHistory();
         history.removeIf(w -> w.equals(normalized));
         history.add(0, normalized);
 
@@ -55,7 +52,7 @@ public class UserPreferences {
             history.remove(history.size() - 1);
         }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(getHistoryFile(), StandardCharsets.UTF_8)) {
+        try (var writer = Files.newBufferedWriter(getHistoryFile(), StandardCharsets.UTF_8)) {
             for (String workspace : history) {
                 writer.write(workspace);
                 writer.newLine();

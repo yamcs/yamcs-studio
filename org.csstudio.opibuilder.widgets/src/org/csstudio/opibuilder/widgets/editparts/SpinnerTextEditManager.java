@@ -3,7 +3,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.editparts.IPVWidgetEditpart;
-import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -35,16 +34,16 @@ public class SpinnerTextEditManager extends TextEditManager {
             protected void focusLost() {
                 // in run mode, if the widget has a PV attached,
                 // lose focus should cancel the editing.
-                if (editPart.getExecutionMode() == ExecutionMode.RUN_MODE
-                        && editPart instanceof IPVWidgetEditpart
+                if (editPart.getExecutionMode() == ExecutionMode.RUN_MODE && editPart instanceof IPVWidgetEditpart
                         && ((IPVWidgetEditpart) editPart).getPV() != null) {
                     if (isActivated()) {
                         fireCancelEditor();
                         deactivate();
                     }
                     editPart.getFigure().requestFocus();
-                } else
+                } else {
                     super.focusLost();
+                }
             }
 
             @Override
@@ -59,10 +58,8 @@ public class SpinnerTextEditManager extends TextEditManager {
             @Override
             protected void keyReleaseOccured(KeyEvent keyEvent) {
                 // In run mode, CTRL+ENTER will always perform a write if it is multiline text input
-                if (keyEvent.character == '\r' &&
-                        editPart.getExecutionMode() == ExecutionMode.RUN_MODE) { // Return key
-                    if (text != null && !text.isDisposed()
-                            && (text.getStyle() & SWT.MULTI) != 0) {
+                if (keyEvent.character == '\r' && editPart.getExecutionMode() == ExecutionMode.RUN_MODE) { // Return key
+                    if (text != null && !text.isDisposed() && (text.getStyle() & SWT.MULTI) != 0) {
                         if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                             setDirty(true);
                         }
@@ -70,22 +67,22 @@ public class SpinnerTextEditManager extends TextEditManager {
                 }
                 if (keyEvent.keyCode == SWT.ARROW_UP) {
                     doSetValue(String.valueOf(Double.valueOf(doGetValue().toString()) + step_increment));
-                    CommandStack stack = getEditPart().getViewer().getEditDomain().getCommandStack();
+                    var stack = getEditPart().getViewer().getEditDomain().getCommandStack();
                     stack.execute(getEditPart().getCommand(getDirectEditRequest()));
                 }
                 if (keyEvent.keyCode == SWT.ARROW_DOWN) {
                     doSetValue(String.valueOf(Double.valueOf(doGetValue().toString()) - step_increment));
-                    CommandStack stack = getEditPart().getViewer().getEditDomain().getCommandStack();
+                    var stack = getEditPart().getViewer().getEditDomain().getCommandStack();
                     stack.execute(getEditPart().getCommand(getDirectEditRequest()));
                 }
                 if (keyEvent.keyCode == SWT.PAGE_UP) {
                     doSetValue(String.valueOf(Double.valueOf(doGetValue().toString()) + page_increment));
-                    CommandStack stack = getEditPart().getViewer().getEditDomain().getCommandStack();
+                    var stack = getEditPart().getViewer().getEditDomain().getCommandStack();
                     stack.execute(getEditPart().getCommand(getDirectEditRequest()));
                 }
                 if (keyEvent.keyCode == SWT.PAGE_DOWN) {
                     doSetValue(String.valueOf(Double.valueOf(doGetValue().toString()) - page_increment));
-                    CommandStack stack = getEditPart().getViewer().getEditDomain().getCommandStack();
+                    var stack = getEditPart().getViewer().getEditDomain().getCommandStack();
                     stack.execute(getEditPart().getCommand(getDirectEditRequest()));
                 }
                 super.keyReleaseOccured(keyEvent);

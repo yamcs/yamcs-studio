@@ -1,5 +1,9 @@
 package org.csstudio.ui.util;
 
+import static org.csstudio.ui.util.ReflectUtil.getComponentType;
+import static org.csstudio.ui.util.ReflectUtil.isArray;
+import static org.csstudio.ui.util.ReflectUtil.isInstance;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +12,6 @@ import java.util.List;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-
-import static org.csstudio.ui.util.ReflectUtil.*;
 
 /**
  * Utilities for using adapters, particularly against selections.
@@ -47,22 +49,23 @@ public class AdapterUtil {
     @SuppressWarnings("unchecked")
     public static <T> T[] convert(ISelection selection, Class<T> clazz) {
         if (selection instanceof IStructuredSelection) {
-            IStructuredSelection strucSelection = (IStructuredSelection) selection;
+            var strucSelection = (IStructuredSelection) selection;
 
-            T[] result = (T[]) convert(strucSelection.toArray(), ReflectUtil.toArrayClass(clazz.getName()));
-            if (result != null)
+            var result = (T[]) convert(strucSelection.toArray(), ReflectUtil.toArrayClass(clazz.getName()));
+            if (result != null) {
                 return result;
+            }
 
             // The selection might contain objects that are descendants of the requested class. In this case the above
             // returns a null result. Check the type of the first element and try to convert. The elements are usually
             // all of the same type. If they are of mixed type, tough luck (only those that are of the first type will
             // be returned).
-            Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+            var firstElement = ((IStructuredSelection) selection).getFirstElement();
             if (firstElement != null) {
                 // null check must be made, because null is a legitimate value in this case
                 Class<?> selectionClass = firstElement.getClass();
                 if (clazz.isAssignableFrom(selectionClass)) {
-                    Object[] s = (Object[]) convert(strucSelection.toArray(),
+                    var s = (Object[]) convert(strucSelection.toArray(),
                             ReflectUtil.toArrayClass(selectionClass.getName()));
                     result = (T[]) Array.newInstance(clazz, s.length);
                     System.arraycopy(s, 0, result, 0, s.length);
@@ -70,7 +73,7 @@ public class AdapterUtil {
                 }
             }
         }
-        T[] result = (T[]) Array.newInstance(clazz, 0);
+        var result = (T[]) Array.newInstance(clazz, 0);
         return result;
     }
 
@@ -94,7 +97,7 @@ public class AdapterUtil {
         // If object is of the right class, but the target is an array,
         // return a single element array
         if (isArray(targetClass) && isInstance(obj, getComponentType(targetClass))) {
-            Object[] result = (Object[]) Array.newInstance(obj.getClass(), 1);
+            var result = (Object[]) Array.newInstance(obj.getClass(), 1);
             result[0] = obj;
             return result;
         }
@@ -102,7 +105,7 @@ public class AdapterUtil {
         // If the object to adapt is an array,
         // adapt each element
         if (obj instanceof Object[]) {
-            Object[] elementsToAdapt = (Object[]) obj;
+            var elementsToAdapt = (Object[]) obj;
 
             // If target class is not an array, and
             // there is only one element, adapt only that
@@ -120,17 +123,17 @@ public class AdapterUtil {
 
             // Target class is an array
             List<Object> adaptedElements = new ArrayList<Object>();
-            String adaptedElementType = getComponentType(targetClass);
+            var adaptedElementType = getComponentType(targetClass);
             Object[] savedArrayToGetType = null;
             for (Object element : elementsToAdapt) {
                 // Try to use the conversion to array first
-                Object[] newAdaptedElements = (Object[]) convert(element, targetClass);
+                var newAdaptedElements = (Object[]) convert(element, targetClass);
                 if (newAdaptedElements != null) {
                     adaptedElements.addAll(Arrays.asList(newAdaptedElements));
                     savedArrayToGetType = newAdaptedElements;
                 } else {
                     // If no conversion to array is found, try converting the single element
-                    Object newAdaptedElement = convert(element, adaptedElementType);
+                    var newAdaptedElement = convert(element, adaptedElementType);
                     if (newAdaptedElement != null) {
                         adaptedElements.add(newAdaptedElement);
                     }
@@ -147,25 +150,25 @@ public class AdapterUtil {
                     return null;
                 }
             } else {
-                Object[] result = (Object[]) Array.newInstance(adaptedElements.get(0).getClass(),
-                        adaptedElements.size());
+                var result = (Object[]) Array.newInstance(adaptedElements.get(0).getClass(), adaptedElements.size());
                 return adaptedElements.toArray(result);
             }
         }
 
         // Time to try out the registered adapterFactories to the platform
         if (Platform.isRunning()) {
-            final Object adapted = Platform.getAdapterManager().loadAdapter(obj, targetClass);
-            if (adapted != null)
+            var adapted = Platform.getAdapterManager().loadAdapter(obj, targetClass);
+            if (adapted != null) {
                 return adapted;
+            }
         }
 
         // No adapter was found. Check if target class is array, and try the single
         // element conversion
         if (isArray(targetClass)) {
-            Object newElement = convert(obj, getComponentType(targetClass));
+            var newElement = convert(obj, getComponentType(targetClass));
             if (newElement != null) {
-                Object[] result = (Object[]) Array.newInstance(newElement.getClass(), 1);
+                var result = (Object[]) Array.newInstance(newElement.getClass(), 1);
                 result[0] = newElement;
                 return result;
             }

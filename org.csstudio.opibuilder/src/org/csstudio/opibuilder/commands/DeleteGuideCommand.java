@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.commands;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -27,7 +26,7 @@ public final class DeleteGuideCommand extends Command {
     private GuideModel guide;
     private Map<AbstractWidgetModel, Integer> oldParts;
 
-    public DeleteGuideCommand(final GuideModel guide, final RulerModel parent) {
+    public DeleteGuideCommand(GuideModel guide, RulerModel parent) {
         this.guide = guide;
         this.parent = parent;
     }
@@ -35,7 +34,7 @@ public final class DeleteGuideCommand extends Command {
     @Override
     public void execute() {
         oldParts = new HashMap<AbstractWidgetModel, Integer>(guide.getMap());
-        Iterator<AbstractWidgetModel> iter = oldParts.keySet().iterator();
+        var iter = oldParts.keySet().iterator();
         while (iter.hasNext()) {
             guide.detachPart(iter.next());
         }
@@ -45,9 +44,9 @@ public final class DeleteGuideCommand extends Command {
     @Override
     public void undo() {
         parent.addGuide(guide);
-        Iterator<AbstractWidgetModel> iter = oldParts.keySet().iterator();
+        var iter = oldParts.keySet().iterator();
         while (iter.hasNext()) {
-            AbstractWidgetModel model = iter.next();
+            var model = iter.next();
             guide.attachPart(model, ((Integer) oldParts.get(model)).intValue());
         }
     }

@@ -16,7 +16,6 @@ import org.csstudio.opibuilder.commands.WidgetDeleteCommand;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.widgets.editparts.GroupingContainerEditPart;
 import org.csstudio.opibuilder.widgets.model.GroupingContainerModel;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.action.IAction;
@@ -28,18 +27,18 @@ public class RemoveGroupAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
-        CompoundCommand compoundCommand = new CompoundCommand("Remove Group");
+        var compoundCommand = new CompoundCommand("Remove Group");
 
-        GroupingContainerModel containerModel = getSelectedContainer();
+        var containerModel = getSelectedContainer();
 
         // Orphan order should be reversed so that undo operation has the correct order.
-        AbstractWidgetModel[] widgetsArray = containerModel.getChildren().toArray(
-                new AbstractWidgetModel[containerModel.getChildren().size()]);
-        for (int i = widgetsArray.length - 1; i >= 0; i--) {
+        var widgetsArray = containerModel.getChildren()
+                .toArray(new AbstractWidgetModel[containerModel.getChildren().size()]);
+        for (var i = widgetsArray.length - 1; i >= 0; i--) {
             compoundCommand.add(new OrphanChildCommand(containerModel, widgetsArray[i]));
         }
 
-        Point leftCorner = containerModel.getLocation();
+        var leftCorner = containerModel.getLocation();
         for (AbstractWidgetModel widget : containerModel.getChildren()) {
             compoundCommand.add(new AddWidgetCommand(containerModel.getParent(), widget,
                     new Rectangle(widget.getLocation(), widget.getSize()).translate(leftCorner)));

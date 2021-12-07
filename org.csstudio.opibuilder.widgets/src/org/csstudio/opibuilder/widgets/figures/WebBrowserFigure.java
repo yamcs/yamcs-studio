@@ -13,7 +13,6 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -31,20 +30,20 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
     private String errorMassage;
 
     public WebBrowserFigure(AbstractBaseEditPart editPart, boolean showToolbar) {
-        super(editPart, showToolbar ? BrowserViewer.BUTTON_BAR
-                | BrowserViewer.LOCATION_BAR : SWT.None);
+        super(editPart, showToolbar ? BrowserViewer.BUTTON_BAR | BrowserViewer.LOCATION_BAR : SWT.None);
     }
 
     @Override
     public void setUrl(String url) {
-        if (runmode && url.trim().length() > 0)
+        if (runmode && url.trim().length() > 0) {
             try {
                 browserViewer.setURL(url);
             } catch (Exception e) {
-                errorMassage = "Failed to set URL to the web browser widget.\n" +
-                        "It may not available on your platform.\n" + e;
+                errorMassage = "Failed to set URL to the web browser widget.\n"
+                        + "It may not available on your platform.\n" + e;
                 ErrorHandlerUtil.handleError(errorMassage, e);
             }
+        }
     }
 
     @Override
@@ -53,7 +52,7 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
         if (errorMassage != null) {
             graphics.pushState();
             graphics.setBackgroundColor(ColorConstants.white);
-            Rectangle clientArea = getClientArea();
+            var clientArea = getClientArea();
             graphics.fillRectangle(clientArea);
             if (getBorder() == null) {
                 graphics.setForegroundColor(ColorConstants.gray);
@@ -78,8 +77,7 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
             browserViewer.setLayoutData(null);
             browser = browserViewer.getBrowser();
         } catch (Exception e) {
-            errorMassage = "Failed to create web browser widget.\n" +
-                    "It may not available on your platform.\n" + e;
+            errorMassage = "Failed to create web browser widget.\n" + "It may not available on your platform.\n" + e;
             ;
             ErrorHandlerUtil.handleError(errorMassage, e);
         }

@@ -25,8 +25,8 @@ public class RerouteConnectionAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
-        execute(new SetWidgetPropertyCommand(
-                getSelectedConnection().getWidgetModel(), ConnectionModel.PROP_POINTS, new PointList()));
+        execute(new SetWidgetPropertyCommand(getSelectedConnection().getWidgetModel(), ConnectionModel.PROP_POINTS,
+                new PointList()));
     }
 
     protected WidgetConnectionEditPart getSelectedConnection() {
@@ -36,11 +36,11 @@ public class RerouteConnectionAction extends AbstractWidgetTargetAction {
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         super.selectionChanged(action, selection);
-        if (getSelectedConnection() == null)
+        if (getSelectedConnection() == null) {
             return;
+        }
         Connection figure = getSelectedConnection().getConnectionFigure();
-        action.setEnabled(figure != null &&
-                figure.getConnectionRouter() instanceof FixedPointsConnectionRouter);
+        action.setEnabled(figure != null && figure.getConnectionRouter() instanceof FixedPointsConnectionRouter);
     }
 
 }

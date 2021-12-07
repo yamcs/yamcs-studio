@@ -41,8 +41,7 @@ public final class SetBoundsCommand extends Command {
      * @param newBounds
      *            the new size and location
      */
-    public SetBoundsCommand(final AbstractWidgetModel widgetModel,
-            final Rectangle newBounds) {
+    public SetBoundsCommand(AbstractWidgetModel widgetModel, Rectangle newBounds) {
         assert widgetModel != null;
         assert newBounds != null;
         this.widgetModel = widgetModel;
@@ -69,7 +68,7 @@ public final class SetBoundsCommand extends Command {
      * @param bounds
      *            the bounds
      */
-    private void doApplyBounds(final Rectangle bounds) {
+    private void doApplyBounds(Rectangle bounds) {
         // change element size
         widgetModel.setSize(bounds.width, bounds.height);
 

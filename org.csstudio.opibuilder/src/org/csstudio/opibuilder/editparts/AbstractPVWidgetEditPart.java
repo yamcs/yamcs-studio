@@ -2,10 +2,10 @@ package org.csstudio.opibuilder.editparts;
 
 import org.csstudio.csdata.ProcessVariable;
 import org.csstudio.opibuilder.dnd.DropPVtoPVWidgetEditPolicy;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.vtype.VType;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.vtype.VType;
 
 /**
  * The abstract edit part for all PV armed widgets. Widgets inheritate this class will have the CSS context menu on it.
@@ -38,7 +38,7 @@ public abstract class AbstractPVWidgetEditPart extends AbstractBaseEditPart impl
 
     @Override
     public Border calculateBorder() {
-        Border border = delegate.calculateBorder();
+        var border = delegate.calculateBorder();
         if (border == null) {
             return super.calculateBorder();
         } else {
@@ -54,8 +54,7 @@ public abstract class AbstractPVWidgetEditPart extends AbstractBaseEditPart impl
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE,
-                new DropPVtoPVWidgetEditPolicy());
+        installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, new DropPVtoPVWidgetEditPolicy());
     }
 
     @Override

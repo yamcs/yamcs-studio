@@ -12,18 +12,12 @@ package org.yamcs.studio.autocomplete.ui.content;
 import java.awt.Dimension;
 import java.util.List;
 
-import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
-import org.yamcs.studio.autocomplete.tooltips.TooltipContent;
-import org.yamcs.studio.autocomplete.tooltips.TooltipData;
-import org.yamcs.studio.autocomplete.tooltips.TooltipDataHandler;
-import org.yamcs.studio.autocomplete.ui.util.SSStyledText;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -31,8 +25,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
+import org.yamcs.studio.autocomplete.tooltips.TooltipContent;
+import org.yamcs.studio.autocomplete.tooltips.TooltipData;
+import org.yamcs.studio.autocomplete.tooltips.TooltipDataHandler;
+import org.yamcs.studio.autocomplete.ui.util.SSStyledText;
 
 /**
  * The popup used to display tooltips.
@@ -42,7 +40,7 @@ public class ContentHelperPopup extends PopupDialog {
     private final class PopupCloserListener extends SelectionAdapter implements Listener {
 
         @Override
-        public void handleEvent(final Event e) {
+        public void handleEvent(Event e) {
             // If focus is leaving an important widget or the field's
             // shell is deactivating
             if (e.type == SWT.FocusOut) {
@@ -62,7 +60,7 @@ public class ContentHelperPopup extends PopupDialog {
                         // This can happen, for example, when resizing
                         // the helper shell on the Mac.
                         // Check the active shell.
-                        Shell activeShell = e.display.getActiveShell();
+                        var activeShell = e.display.getActiveShell();
                         if (activeShell == getShell()) {
                             return;
                         }
@@ -81,7 +79,7 @@ public class ContentHelperPopup extends PopupDialog {
         }
 
         @Override
-        public void widgetSelected(final SelectionEvent e) {
+        public void widgetSelected(SelectionEvent e) {
             close();
         }
 
@@ -98,7 +96,7 @@ public class ContentHelperPopup extends PopupDialog {
             control.addListener(SWT.Dispose, this);
             control.addListener(SWT.FocusOut, this);
             // Listeners on the target control's shell
-            Shell controlShell = control.getShell();
+            var controlShell = control.getShell();
             controlShell.addListener(SWT.Move, this);
             controlShell.addListener(SWT.Resize, this);
 
@@ -123,7 +121,7 @@ public class ContentHelperPopup extends PopupDialog {
                 control.removeListener(SWT.Dispose, this);
                 control.removeListener(SWT.FocusOut, this);
 
-                Shell controlShell = control.getShell();
+                var controlShell = control.getShell();
                 controlShell.removeListener(SWT.Move, this);
                 controlShell.removeListener(SWT.Resize, this);
 
@@ -173,8 +171,7 @@ public class ContentHelperPopup extends PopupDialog {
      * Construct an helper with the specified parent.
      */
     public ContentHelperPopup(ContentProposalAdapter adapter) {
-        super(adapter.getControl().getShell(), SWT.NO_TRIM | SWT.ON_TOP, false,
-                false, false, false, false, null, null);
+        super(adapter.getControl().getShell(), SWT.NO_TRIM | SWT.ON_TOP, false, false, false, false, false, null, null);
         this.adapter = adapter;
         this.control = adapter.getControl();
         this.dataHandler = new TooltipDataHandler();
@@ -186,11 +183,11 @@ public class ContentHelperPopup extends PopupDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         // Use the compact margins employed by PopupDialog.
-        GridData gd = new GridData(GridData.BEGINNING);
+        var gd = new GridData(GridData.BEGINNING);
         gd.horizontalIndent = margins.width;
         gd.verticalIndent = margins.height;
         text = new SSStyledText();
-        Control c = text.init(parent, SWT.MULTI | SWT.READ_ONLY | SWT.NO_FOCUS, gd);
+        var c = text.init(parent, SWT.MULTI | SWT.READ_ONLY | SWT.NO_FOCUS, gd);
         updateDisplay();
         return c;
     }
@@ -201,7 +198,7 @@ public class ContentHelperPopup extends PopupDialog {
         }
         text.setText(content.value);
         for (ProposalStyle ps : content.styles) {
-            Color color = control.getDisplay().getSystemColor(ps.fontColor);
+            var color = control.getDisplay().getSystemColor(ps.fontColor);
             text.setStyle(color, ps.fontStyle, ps.from, ps.to - ps.from);
         }
     }
@@ -212,36 +209,31 @@ public class ContentHelperPopup extends PopupDialog {
     @Override
     protected void adjustBounds() {
         // Get our control's location in display coordinates.
-        Point location = control.getDisplay().map(control.getParent(), null,
-                control.getLocation());
-        int controlX = location.x;
-        int controlY = location.y;
-        int controlWidht = control.getBounds().width;
-        int controlHeight = control.getBounds().height;
+        var location = control.getDisplay().map(control.getParent(), null, control.getLocation());
+        var controlX = location.x;
+        var controlY = location.y;
+        var controlWidht = control.getBounds().width;
+        var controlHeight = control.getBounds().height;
 
         if (content != null) {
-            Point size = text.getSize();
+            var size = text.getSize();
             controlWidht = size.x + margins.width * 2;
             controlHeight = size.y + margins.height * 2;
         }
 
-        Rectangle parentBounds = new Rectangle(controlX, controlY,
-                controlWidht, controlHeight);
+        var parentBounds = new Rectangle(controlX, controlY, controlWidht, controlHeight);
 
         // Try placing the helper on the top
-        final Rectangle proposedBounds = new Rectangle(parentBounds.x
-                + PopupDialog.POPUP_HORIZONTALSPACING,
-                parentBounds.y
-                        - parentBounds.height - PopupDialog.POPUP_VERTICALSPACING,
-                parentBounds.width, parentBounds.height);
+        var proposedBounds = new Rectangle(parentBounds.x + PopupDialog.POPUP_HORIZONTALSPACING,
+                parentBounds.y - parentBounds.height - PopupDialog.POPUP_VERTICALSPACING, parentBounds.width,
+                parentBounds.height);
 
         // Constrain to the display
-        Rectangle constrainedBounds = getConstrainedShellBounds(proposedBounds);
+        var constrainedBounds = getConstrainedShellBounds(proposedBounds);
 
         // If it won't fit on the top, try the bottom
         if (constrainedBounds.intersects(parentBounds)) {
-            proposedBounds.y = parentBounds.y + parentBounds.height
-                    + PopupDialog.POPUP_VERTICALSPACING;
+            proposedBounds.y = parentBounds.y + parentBounds.height + PopupDialog.POPUP_VERTICALSPACING;
         }
         proposedBounds.x = constrainedBounds.x;
 
@@ -274,14 +266,13 @@ public class ContentHelperPopup extends PopupDialog {
             isOpened = false;
             return Window.CANCEL;
         }
-        String fieldContent = adapter.getControlContentAdapter()
-                .getControlContents(control);
+        var fieldContent = adapter.getControlContentAdapter().getControlContents(control);
         content = dataHandler.generateTooltipContent(fieldContent);
         if (content == null) {
             isOpened = false;
             return Window.CANCEL;
         }
-        int value = super.open();
+        var value = super.open();
         if (popupCloser == null) {
             popupCloser = new PopupCloserListener();
         }
@@ -320,8 +311,7 @@ public class ContentHelperPopup extends PopupDialog {
         if (!isOpened) {
             return false;
         }
-        String fieldContent = adapter.getControlContentAdapter()
-                .getControlContents(control);
+        var fieldContent = adapter.getControlContentAdapter().getControlContents(control);
         content = dataHandler.generateTooltipContent(fieldContent);
         if (content == null) {
             close();

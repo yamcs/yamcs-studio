@@ -19,10 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Version;
 import org.yamcs.client.ClearanceSubscription;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.ConnectionListener;
@@ -33,7 +31,6 @@ import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.client.storage.StorageClient;
-import org.yamcs.protobuf.ClearanceInfo;
 import org.yamcs.protobuf.GetServerInfoResponse;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.ObjectPrivilegeInfo;
@@ -132,8 +129,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.changeProcessorInfo(plugin.processor);
         }
         if (plugin.clearanceSubscription != null) {
-            boolean enabled = plugin.processor != null && plugin.processor.getCheckCommandClearance();
-            ClearanceInfo clearanceInfo = plugin.clearanceSubscription.getCurrent();
+            var enabled = plugin.processor != null && plugin.processor.getCheckCommandClearance();
+            var clearanceInfo = plugin.clearanceSubscription.getCurrent();
             if (clearanceInfo != null && clearanceInfo.hasLevel()) {
                 listener.updateClearance(enabled, clearanceInfo.getLevel());
             } else {
@@ -165,7 +162,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     private static boolean isSuperuser() {
-        UserInfo userInfo = getUser();
+        var userInfo = getUser();
         return userInfo != null && (userInfo.hasSuperuser() && userInfo.getSuperuser());
     }
 
@@ -177,9 +174,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             return false;
         }
 
-        return isSuperuser() || getUser().getObjectPrivilegeList()
-                .stream()
-                .map(ObjectPrivilegeInfo::getType)
+        return isSuperuser() || getUser().getObjectPrivilegeList().stream().map(ObjectPrivilegeInfo::getType)
                 .anyMatch(type -> type.equals(objectPrivilegeType));
     }
 
@@ -191,8 +186,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             return false;
         }
 
-        return isSuperuser() || getUser().getObjectPrivilegeList()
-                .stream()
+        return isSuperuser() || getUser().getObjectPrivilegeList().stream()
                 .anyMatch(privilege -> privilege.getType().equals(objectPrivilegeType)
                         && privilege.getObjectList().stream().anyMatch(regex -> object.matches(regex)));
     }
@@ -209,7 +203,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static boolean isAuthorizationEnabled() {
-        UserInfo userInfo = getUser();
+        var userInfo = getUser();
         return userInfo != null ? !userInfo.getSuperuser() : false;
     }
 
@@ -262,11 +256,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
      */
     public String formatInstant(Instant instant, boolean tzOffset) {
         if (format == null) {
-            IPreferenceStore store = getPreferenceStore();
-            String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+            var store = getPreferenceStore();
+            var pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
             setDateFormat(pattern);
         }
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, YamcsPlugin.getZoneId());
+        var zdt = ZonedDateTime.ofInstant(instant, YamcsPlugin.getZoneId());
         Calendar cal = GregorianCalendar.from(zdt);
         cal.setTimeZone(YamcsPlugin.getTimeZone());
         if (tzOffset) {
@@ -287,7 +281,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static ArchiveClient getArchiveClient() {
-        YamcsClient client = getYamcsClient();
+        var client = getYamcsClient();
         if (client != null) {
             return client.createArchiveClient(plugin.instance);
         }
@@ -295,7 +289,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static StorageClient getStorageClient() {
-        YamcsClient client = getYamcsClient();
+        var client = getYamcsClient();
         if (client != null) {
             return client.createStorageClient();
         }
@@ -303,7 +297,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static ProcessorClient getProcessorClient() {
-        YamcsClient client = getYamcsClient();
+        var client = getYamcsClient();
         if (client != null) {
             return client.createProcessorClient(plugin.instance, plugin.processor.getName());
         }
@@ -311,7 +305,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static MissionDatabaseClient getMissionDatabaseClient() {
-        YamcsClient client = getYamcsClient();
+        var client = getYamcsClient();
         if (client != null) {
             return client.createMissionDatabaseClient(plugin.instance);
         }
@@ -323,7 +317,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static String getProcessor() {
-        ProcessorInfo info = getProcessorInfo();
+        var info = getProcessorInfo();
         return info != null ? info.getName() : null;
     }
 
@@ -332,7 +326,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static SignificanceLevelType getClearance() {
-        ClearanceInfo info = plugin.clearanceSubscription.getCurrent();
+        var info = plugin.clearanceSubscription.getCurrent();
         return info.hasLevel() ? info.getLevel() : null;
     }
 
@@ -345,7 +339,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static Instant getMissionTime(boolean wallClockIfUnset) {
-        Instant t = plugin.timeSubscription != null ? plugin.timeSubscription.getCurrent() : null;
+        var t = plugin.timeSubscription != null ? plugin.timeSubscription.getCurrent() : null;
         if (wallClockIfUnset && t == null) {
             t = Instant.now();
         }
@@ -365,8 +359,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static String getProductString() {
-        String productName = Platform.getProduct().getName();
-        Version productVersion = Platform.getProduct().getDefiningBundle().getVersion();
+        var productName = Platform.getProduct().getName();
+        var productVersion = Platform.getProduct().getDefiningBundle().getVersion();
         return productName + " v" + productVersion;
     }
 
@@ -417,11 +411,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
         if (plugin.instance != null) {
             plugin.timeSubscription = getYamcsClient().createTimeSubscription();
             plugin.timeSubscription.addMessageListener(proto -> {
-                Instant instant = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                var instant = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
                 plugin.listeners.forEach(l -> l.updateTime(instant));
             });
-            SubscribeTimeRequest.Builder requestb = SubscribeTimeRequest.newBuilder()
-                    .setInstance(plugin.instance);
+            var requestb = SubscribeTimeRequest.newBuilder().setInstance(plugin.instance);
             if (plugin.processor != null) {
                 requestb.setProcessor(plugin.processor.getName());
             }
@@ -432,7 +425,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static void setupGlobalClearanceSubscription() {
         plugin.clearanceSubscription = getYamcsClient().createClearanceSubscription();
         plugin.clearanceSubscription.addMessageListener(info -> {
-            boolean enabled = plugin.processor != null && plugin.processor.getCheckCommandClearance();
+            var enabled = plugin.processor != null && plugin.processor.getCheckCommandClearance();
             if (info.hasLevel()) {
                 plugin.listeners.forEach(l -> l.updateClearance(enabled, info.getLevel()));
             } else {
@@ -449,9 +442,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 plugin.listeners.forEach(l -> l.changeProcessorInfo(info));
             });
             plugin.processorSubscription.sendMessage(SubscribeProcessorsRequest.newBuilder()
-                    .setInstance(plugin.instance)
-                    .setProcessor(plugin.processor.getName())
-                    .build());
+                    .setInstance(plugin.instance).setProcessor(plugin.processor.getName()).build());
         }
     }
 

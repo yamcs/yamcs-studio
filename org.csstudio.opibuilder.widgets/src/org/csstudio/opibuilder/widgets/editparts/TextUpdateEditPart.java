@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
@@ -10,10 +9,6 @@ import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextUpdateModel;
-import org.yamcs.studio.data.FormatEnum;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VType;
-import org.yamcs.studio.data.vtype.ValueFactory;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextFigure.H_ALIGN;
@@ -25,6 +20,10 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.data.FormatEnum;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.vtype.ValueFactory;
 
 public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
@@ -41,7 +40,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     protected IFigure doCreateFigure() {
 
         initFields();
-        TextFigure labelFigure = createTextFigure();
+        var labelFigure = createTextFigure();
         initTextFigure(labelFigure);
         return labelFigure;
     }
@@ -118,8 +117,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(TextUpdateModel.PROP_TEXT, handler);
 
         IWidgetPropertyChangeHandler fontHandler = (oldValue, newValue, figure) -> {
-            figure.setFont(CustomMediaFactory.getInstance().getFont(
-                    ((OPIFont) newValue).getFontData()));
+            figure.setFont(CustomMediaFactory.getInstance().getFont(((OPIFont) newValue).getFontData()));
             return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_FONT, fontHandler);
@@ -156,8 +154,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
         handler = (oldValue, newValue, figure) -> {
             if (figure instanceof TextFigure) {
-                ((TextFigure) figure).setHorizontalAlignment(
-                        H_ALIGN.values()[(Integer) newValue]);
+                ((TextFigure) figure).setHorizontalAlignment(H_ALIGN.values()[(Integer) newValue]);
             }
             return true;
         };
@@ -218,7 +215,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
         handler = (oldValue, newValue, figure) -> {
             AbstractWidgetModel model = getWidgetModel();
-            AbstractContainerModel parent = model.getParent();
+            var parent = model.getParent();
             parent.removeChild(model);
             parent.addChild(model);
             parent.selectWidget(model, true);
@@ -238,8 +235,8 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN)) {
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
         }
     }
@@ -266,7 +263,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         }
         VType value = null;
 
-        int tempPrecision = precision;
+        var tempPrecision = precision;
         if (isPrecisionFromDB) {
             tempPrecision = -1;
         }
@@ -277,19 +274,17 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
             value = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
         }
 
-        String text = VTypeHelper.formatValue(
-                format, value, tempPrecision);
+        var text = VTypeHelper.formatValue(format, value, tempPrecision);
 
         if (isShowUnits && VTypeHelper.getDisplayInfo(value) != null) {
-            String units = VTypeHelper.getDisplayInfo(value).getUnits();
+            var units = VTypeHelper.getDisplayInfo(value).getUnits();
             if (units != null && units.trim().length() > 0) {
                 text = text + " " + units;
             }
         }
 
         // synchronize the property value without fire listeners.
-        widgetModel.getProperty(
-                TextUpdateModel.PROP_TEXT).setPropertyValue(text, false);
+        widgetModel.getProperty(TextUpdateModel.PROP_TEXT).setPropertyValue(text, false);
         setFigureText(text);
 
         if (isAutoSize) {

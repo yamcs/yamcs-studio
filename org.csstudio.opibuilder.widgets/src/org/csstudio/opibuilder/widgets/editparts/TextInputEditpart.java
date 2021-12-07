@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.scriptUtil.GUIUtil;
@@ -56,10 +55,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
         initFields();
 
         if (shouldBeTextInputFigure()) {
-            TextInputFigure textInputFigure = (TextInputFigure) createTextFigure();
+            var textInputFigure = (TextInputFigure) createTextFigure();
             initTextFigure(textInputFigure);
-            setDelegate(new Draw2DTextInputEditpartDelegate(
-                    this, getWidgetModel(), textInputFigure));
+            setDelegate(new Draw2DTextInputEditpartDelegate(this, getWidgetModel(), textInputFigure));
 
         } else {
             setDelegate(new NativeTextEditpartDelegate(this, getWidgetModel()));
@@ -75,7 +73,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @return true if it should use Draw2D {@link TextInputFigure}.
      */
     protected boolean shouldBeTextInputFigure() {
-        TextInputModel model = getWidgetModel();
+        var model = getWidgetModel();
         return model.getStyle() != Style.NATIVE;
     }
 
@@ -92,8 +90,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     public void activate() {
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME,
-                AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
         super.activate();
     }
 
@@ -108,27 +105,22 @@ public class TextInputEditpart extends TextUpdateEditPart {
      */
     private void registerLoadLimitsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-            final TextInputModel model = getWidgetModel();
+            var model = getWidgetModel();
             if (model.isLimitsFromPV()) {
-                IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
-                                VType value = pv.getValue();
-                                if (value != null
-                                        && VTypeHelper.getDisplayInfo(value) != null) {
-                                    org.yamcs.studio.data.vtype.Display new_meta = VTypeHelper.getDisplayInfo(value);
+                                var value = pv.getValue();
+                                if (value != null && VTypeHelper.getDisplayInfo(value) != null) {
+                                    var new_meta = VTypeHelper.getDisplayInfo(value);
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
                                         // Update min/max from the control range of the PV
-                                        model.setPropertyValue(
-                                                TextInputModel.PROP_MAX,
-                                                meta.getUpperCtrlLimit());
-                                        model.setPropertyValue(
-                                                TextInputModel.PROP_MIN,
-                                                meta.getLowerCtrlLimit());
+                                        model.setPropertyValue(TextInputModel.PROP_MAX, meta.getUpperCtrlLimit());
+                                        model.setPropertyValue(TextInputModel.PROP_MIN, meta.getLowerCtrlLimit());
                                     }
                                 }
                             }
@@ -145,29 +137,22 @@ public class TextInputEditpart extends TextUpdateEditPart {
      */
     public void outputPVValue(String text) {
         if (!getWidgetModel().getConfirmMessage().isEmpty()) {
-            if (!GUIUtil.openConfirmDialog("PV Name: " + getPVName() +
-                    "\nNew Value: " + text + "\n\n" +
-                    getWidgetModel().getConfirmMessage())) {
+            if (!GUIUtil.openConfirmDialog("PV Name: " + getPVName() + "\nNew Value: " + text + "\n\n"
+                    + getWidgetModel().getConfirmMessage())) {
                 return;
             }
         }
         try {
             Object result;
-            if (getWidgetModel().getFormat() != FormatEnum.STRING
-                    && text.trim().indexOf(SPACE) != -1) {
+            if (getWidgetModel().getFormat() != FormatEnum.STRING && text.trim().indexOf(SPACE) != -1) {
                 result = parseStringArray(text);
             } else {
                 result = parseString(text);
             }
             setPVValue(AbstractPVWidgetModel.PROP_PVNAME, result);
         } catch (Exception e) {
-            String msg = NLS
-                    .bind("Failed to write value to PV {0} from widget {1}.\nIllegal input : {2} \n",
-                            new String[] {
-                                    getPVName(),
-                                    getWidgetModel().getName(),
-                                    text })
-                    + e.toString();
+            var msg = NLS.bind("Failed to write value to PV {0} from widget {1}.\nIllegal input : {2} \n",
+                    new String[] { getPVName(), getWidgetModel().getName(), text }) + e.toString();
             Activator.getLogger().log(Level.SEVERE, msg);
         }
     }
@@ -178,7 +163,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             removeAllPropertyChangeHandlers(LabelModel.PROP_TEXT);
             IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
-                String text = (String) newValue;
+                var text = (String) newValue;
 
                 if (getPV() == null) {
                     setFigureText(text);
@@ -197,8 +182,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
             registerLoadLimitsListener();
             return false;
         };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME,
-                pvNameHandler);
+        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
 
         PropertyChangeListener updatePropSheetListener = arg0 -> updatePropSheet();
         getWidgetModel().getProperty(TextInputModel.PROP_LIMITS_FROM_PV)
@@ -209,15 +193,14 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
         PropertyChangeListener reCreateWidgetListener = evt -> reCreateWidget();
 
-        getWidgetModel().getProperty(TextInputModel.PROP_STYLE)
-                .addPropertyChangeListener(reCreateWidgetListener);
+        getWidgetModel().getProperty(TextInputModel.PROP_STYLE).addPropertyChangeListener(reCreateWidgetListener);
 
         delegate.registerPropertyChangeHandlers();
     }
 
     private void reCreateWidget() {
-        TextInputModel model = getWidgetModel();
-        AbstractContainerModel parent = model.getParent();
+        var model = getWidgetModel();
+        var parent = model.getParent();
         parent.removeChild(model);
         parent.addChild(model);
         parent.selectWidget(model, true);
@@ -225,8 +208,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     public DragTracker getDragTracker(Request request) {
-        if (getExecutionMode() == ExecutionMode.RUN_MODE &&
-                delegate instanceof Draw2DTextInputEditpartDelegate) {
+        if (getExecutionMode() == ExecutionMode.RUN_MODE && delegate instanceof Draw2DTextInputEditpartDelegate) {
             return new SelectEditPartTracker(this) {
                 @Override
                 protected boolean handleButtonUp(int button) {
@@ -244,18 +226,15 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     public void performRequest(Request request) {
-        if (getFigure().isEnabled()
-                && ((request.getType() == RequestConstants.REQ_DIRECT_EDIT &&
-                        getExecutionMode() != ExecutionMode.RUN_MODE) ||
-                        request.getType() == RequestConstants.REQ_OPEN)) {
+        if (getFigure().isEnabled() && ((request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                && getExecutionMode() != ExecutionMode.RUN_MODE) || request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
         }
     }
 
     @Override
     protected void performDirectEdit() {
-        new TextEditManager(this, new LabelCellEditorLocator(
-                getFigure()), getWidgetModel().isMultilineInput()).show();
+        new TextEditManager(this, new LabelCellEditorLocator(getFigure()), getWidgetModel().isMultilineInput()).show();
     }
 
     /**
@@ -265,13 +244,13 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @return
      * @throws ParseException
      */
-    private Object parseStringArray(final String text) throws ParseException {
-        String[] texts = text.split(" +");
-        VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+    private Object parseStringArray(String text) throws ParseException {
+        var texts = text.split(" +");
+        var pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
         if (pvValue instanceof VNumberArray) {
-            double[] result = new double[texts.length];
-            for (int i = 0; i < texts.length; i++) {
-                Object o = parseString(texts[i]);
+            var result = new double[texts.length];
+            for (var i = 0; i < texts.length; i++) {
+                var o = parseString(texts[i]);
                 if (o instanceof Number) {
                     result[i] = ((Number) o).doubleValue();
                 } else {
@@ -291,9 +270,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @return value
      * @throws ParseException
      */
-    private Object parseString(final String text) throws ParseException {
-        VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
-        FormatEnum formatEnum = getWidgetModel().getFormat();
+    private Object parseString(String text) throws ParseException {
+        var pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+        var formatEnum = getWidgetModel().getFormat();
 
         if (pvValue == null) {
             return text;
@@ -303,10 +282,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     }
 
-    private Object parseStringForPVManagerPV(FormatEnum formatEnum,
-            final String text, VType pvValue) throws ParseException {
+    private Object parseStringForPVManagerPV(FormatEnum formatEnum, String text, VType pvValue) throws ParseException {
         if (pvValue instanceof Scalar) {
-            Object value = ((Scalar) pvValue).getValue();
+            var value = ((Scalar) pvValue).getValue();
             if (value instanceof Number) {
                 switch (formatEnum) {
                 case HEX:
@@ -395,29 +373,28 @@ public class TextInputEditpart extends TextUpdateEditPart {
         return text;
     }
 
-    private int[] parseCharArray(final String text, int currentLength) {
+    private int[] parseCharArray(String text, int currentLength) {
         // Turn text into array of character codes,
         // at least as long as the current value of the PV.
         // New text may be longer (and IOC can then refuse the extra chars)
-        final int newLength = text.length();
-        int[] iString = new int[Math.max(newLength, currentLength)];
-        char[] textChars = text.toCharArray();
+        var newLength = text.length();
+        var iString = new int[Math.max(newLength, currentLength)];
+        var textChars = text.toCharArray();
 
-        for (int ii = 0; ii < newLength; ii++) {
+        for (var ii = 0; ii < newLength; ii++) {
             iString[ii] = Integer.valueOf(textChars[ii]);
         }
-        for (int ii = newLength; ii < currentLength; ii++) {
+        for (var ii = newLength; ii < currentLength; ii++) {
             iString[ii] = 0;
         }
         return iString;
     }
 
-    private double parseDouble(final String text, final boolean coerce)
-            throws ParseException {
+    private double parseDouble(String text, boolean coerce) throws ParseException {
         if (text.contains("\n") && !text.endsWith("\n")) {
             throw new ParseException(NLS.bind("{0} cannot be parsed to double", text), text.indexOf("\n"));
         }
-        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue();
+        var value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue();
         if (coerce) {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
@@ -433,15 +410,15 @@ public class TextInputEditpart extends TextUpdateEditPart {
         return value;
     }
 
-    private int parseHEX(final String text, final boolean coerce) {
-        String valueText = text.trim();
+    private int parseHEX(String text, boolean coerce) {
+        var valueText = text.trim();
         if (text.startsWith(TextUpdateEditPart.HEX_PREFIX)) {
             valueText = text.substring(TextUpdateEditPart.HEX_PREFIX.length());
         }
         if (valueText.contains(" ")) {
             valueText = valueText.substring(0, valueText.indexOf(SPACE));
         }
-        long i = Long.parseLong(valueText, 16);
+        var i = Long.parseLong(valueText, 16);
         if (coerce) {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
@@ -457,15 +434,15 @@ public class TextInputEditpart extends TextUpdateEditPart {
         return (int) i; // EPICS_V3_PV doesn't support Long
     }
 
-    private double parseSexagesimal(final String text, final boolean coerce) throws ParseException {
-        double value = Double.NaN;
-        boolean negative = false;
-        double hours = 0.0;
-        double minutes = 0.0;
-        double seconds = 0.0;
-        boolean error = false;
+    private double parseSexagesimal(String text, boolean coerce) throws ParseException {
+        var value = Double.NaN;
+        var negative = false;
+        var hours = 0.0;
+        var minutes = 0.0;
+        var seconds = 0.0;
+        var error = false;
 
-        String[] parts = text.trim().split(":");
+        var parts = text.trim().split(":");
 
         if (parts.length > 0) {
             if (parts[0].trim().startsWith("-")) {
@@ -544,9 +521,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     protected String formatValue(Object newValue, String propId) {
-        String text = super.formatValue(newValue, propId);
-        getWidgetModel()
-                .setPropertyValue(TextInputModel.PROP_TEXT, text, false);
+        var text = super.formatValue(newValue, propId);
+        getWidgetModel().setPropertyValue(TextInputModel.PROP_TEXT, text, false);
         return text;
 
     }
@@ -555,16 +531,13 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @param newValue
      */
     protected void updatePropSheet() {
-        TextInputModel model = getWidgetModel();
-        model.setPropertyVisible(
-                TextInputModel.PROP_MAX, !getWidgetModel().isLimitsFromPV());
-        model.setPropertyVisible(
-                TextInputModel.PROP_MIN, !getWidgetModel().isLimitsFromPV());
+        var model = getWidgetModel();
+        model.setPropertyVisible(TextInputModel.PROP_MAX, !getWidgetModel().isLimitsFromPV());
+        model.setPropertyVisible(TextInputModel.PROP_MIN, !getWidgetModel().isLimitsFromPV());
 
         // set native text related properties visibility
-        boolean isNative = delegate instanceof NativeTextEditpartDelegate;
-        model.setPropertyVisible(TextInputModel.PROP_SHOW_NATIVE_BORDER,
-                isNative);
+        var isNative = delegate instanceof NativeTextEditpartDelegate;
+        model.setPropertyVisible(TextInputModel.PROP_SHOW_NATIVE_BORDER, isNative);
         model.setPropertyVisible(TextInputModel.PROP_PASSWORD_INPUT, isNative);
         model.setPropertyVisible(TextInputModel.PROP_READ_ONLY, isNative);
         model.setPropertyVisible(TextInputModel.PROP_SHOW_H_SCROLL, isNative);

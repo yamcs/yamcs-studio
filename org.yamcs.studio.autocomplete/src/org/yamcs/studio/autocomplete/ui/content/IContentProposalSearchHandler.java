@@ -19,7 +19,7 @@ import org.yamcs.studio.autocomplete.ui.IAutoCompleteProposalProvider;
  */
 public interface IContentProposalSearchHandler {
 
-    public void handleResult(final ContentProposalList proposalList);
+    public void handleResult(ContentProposalList proposalList);
 
-    public void handleTooltips(final List<TooltipData> tooltips);
+    public void handleTooltips(List<TooltipData> tooltips);
 }

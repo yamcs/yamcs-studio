@@ -41,24 +41,26 @@ public class DataSourceProvider implements IAutoCompleteProvider {
         Set<String> supportedTypes = new HashSet<>();
         supportedTypes.addAll(AutoCompleteHelper.retrievePVManagerSupported());
         dataSources = new ArrayList<>();
-        for (String supportedType : supportedTypes)
+        for (String supportedType : supportedTypes) {
             dataSources.add(supportedType + AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR);
+        }
         Collections.sort(dataSources);
     }
 
     @Override
-    public boolean accept(final ContentType type) {
-        if (type == ContentType.PVDataSource)
+    public boolean accept(ContentType type) {
+        if (type == ContentType.PVDataSource) {
             return true;
+        }
         return false;
     }
 
     @Override
-    public AutoCompleteResult listResult(final ContentDescriptor desc, final int limit) {
-        AutoCompleteResult result = new AutoCompleteResult();
+    public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
+        var result = new AutoCompleteResult();
         for (String ds : dataSources) {
             if (ds.startsWith(desc.getValue())) {
-                Proposal proposal = new Proposal(ds, true);
+                var proposal = new Proposal(ds, true);
                 proposal.addStyle(ProposalStyle.getDefault(0, desc.getValue().length() - 1));
                 proposal.setInsertionPos(desc.getStartIndex());
                 result.addTopProposal(proposal);

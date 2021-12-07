@@ -1,9 +1,7 @@
 package org.csstudio.opibuilder.scriptUtil;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Objects;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
@@ -17,12 +15,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
-import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.AlarmSeverity;
-import org.yamcs.studio.data.vtype.ListInt;
-import org.yamcs.studio.data.vtype.ListNumber;
 import org.yamcs.studio.data.vtype.VDoubleArray;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VEnumArray;
@@ -55,7 +49,7 @@ public class PVUtil {
      */
     public final static IPV createPV(String name, AbstractBaseEditPart widget) throws Exception {
 
-        final IPV pv = BOYPVFactory.createPV(name, 20);
+        var pv = BOYPVFactory.createPV(name, 20);
         pv.start();
         widget.addEditPartListener(new EditPartListener.Stub() {
 
@@ -152,31 +146,31 @@ public class PVUtil {
      *         returned.
      */
     public final static String[] getStringArray(IPV pv) {
-        final VType value = checkPVValue(pv);
+        var value = checkPVValue(pv);
 
         if (value instanceof VStringArray) {
-            final List<String> list = ((VStringArray) value).getData();
+            var list = ((VStringArray) value).getData();
             return list.toArray(new String[list.size()]);
         } else if (value instanceof VDoubleArray) {
-            final ListNumber list = ((VNumberArray) value).getData();
-            final String[] text = new String[list.size()];
-            for (int i = 0; i < text.length; ++i) {
+            var list = ((VNumberArray) value).getData();
+            var text = new String[list.size()];
+            for (var i = 0; i < text.length; ++i) {
                 text[i] = Double.toString(list.getDouble(i));
             }
             return text;
         } else if (value instanceof VNumberArray) {
-            final ListNumber list = ((VNumberArray) value).getData();
-            final String[] text = new String[list.size()];
-            for (int i = 0; i < text.length; ++i) {
+            var list = ((VNumberArray) value).getData();
+            var text = new String[list.size()];
+            for (var i = 0; i < text.length; ++i) {
                 text[i] = Long.toString(list.getLong(i));
             }
             return text;
         } else if (value instanceof VEnumArray) {
-            final List<String> labels = ((VEnumArray) value).getLabels();
-            final ListInt list = ((VEnumArray) value).getIndexes();
-            final String[] text = new String[list.size()];
-            for (int i = 0; i < text.length; ++i) {
-                final int index = list.getInt(i);
+            var labels = ((VEnumArray) value).getLabels();
+            var list = ((VEnumArray) value).getIndexes();
+            var text = new String[list.size()];
+            for (var i = 0; i < text.length; ++i) {
+                var index = list.getInt(i);
                 if (index >= 0 && index <= labels.size()) {
                     text[i] = labels.get(index);
                 } else {
@@ -199,14 +193,14 @@ public class PVUtil {
      *         number, or if the value's severity indicates that there happens to be no useful value.
      */
     public final static long[] getLongArray(IPV pv) {
-        final VType value = checkPVValue(pv);
-        Object wrappedArray = VTypeHelper.getWrappedArray(value);
+        var value = checkPVValue(pv);
+        var wrappedArray = VTypeHelper.getWrappedArray(value);
         if (wrappedArray != null && wrappedArray instanceof long[]) {
             return (long[]) wrappedArray;
         }
-        double[] dblArray = VTypeHelper.getDoubleArray(value);
-        long[] longArray = new long[dblArray.length];
-        int i = 0;
+        var dblArray = VTypeHelper.getDoubleArray(value);
+        var longArray = new long[dblArray.length];
+        var i = 0;
         for (double d : dblArray) {
             longArray[i++] = (long) d;
         }
@@ -246,7 +240,7 @@ public class PVUtil {
      * @return the timestamp in string.
      */
     public final static String getTimeString(IPV pv) {
-        Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
+        var time = VTypeHelper.getTimestamp(checkPVValue(pv));
         if (time != null) {
             return timeFormat.format(time);
         }
@@ -264,7 +258,7 @@ public class PVUtil {
      */
 
     public final static String getTimeString(IPV pv, String formatPattern) {
-        Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
+        var time = VTypeHelper.getTimestamp(checkPVValue(pv));
         if (time != null) {
             if (formatPattern != null) {
                 return DateTimeFormatter.ofPattern(formatPattern).withZone(ZoneId.systemDefault()).format(time);
@@ -286,7 +280,7 @@ public class PVUtil {
      * @return milliseconds since 1970.
      */
     public final static double getTimeInMilliseconds(IPV pv) {
-        Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
+        var time = VTypeHelper.getTimestamp(checkPVValue(pv));
         if (time != null) {
             return time.toEpochMilli();
         }
@@ -301,7 +295,7 @@ public class PVUtil {
      * @return 0:OK; -1: Invalid or Undefined; 1: Major; 2:Minor.
      */
     public final static int getSeverity(IPV pv) {
-        AlarmSeverity severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
+        var severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
         if (severity == null) {
             return -1;
         }
@@ -327,7 +321,7 @@ public class PVUtil {
      * @return The string representation of the severity.
      */
     public final static String getSeverityString(IPV pv) {
-        AlarmSeverity severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
+        var severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
         if (severity == null) {
             return "No Severity Info.";
         }
@@ -359,13 +353,13 @@ public class PVUtil {
      *            maximum time to try connection.
      */
     public final static void writePV(String pvName, Object value, int timeout) {
-        final Display display = DisplayUtils.getDisplay();
+        var display = DisplayUtils.getDisplay();
         Job job = new Job("Writing PV: " + pvName) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
 
                 try {
-                    IPV pv = BOYPVFactory.createPV(pvName);
+                    var pv = BOYPVFactory.createPV(pvName);
                     pv.start();
                     try {
                         if (!pv.setValue(value, timeout * 1000)) {
@@ -374,9 +368,9 @@ public class PVUtil {
                     } finally {
                         pv.stop();
                     }
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     UIBundlingThread.getInstance().addRunnable(display, () -> {
-                        String message = "Failed to write PV: " + pvName + "\n"
+                        var message = "Failed to write PV: " + pvName + "\n"
                                 + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
                         ErrorHandlerUtil.handleError(message, e, true, true);
                     });
@@ -413,10 +407,10 @@ public class PVUtil {
      */
     public final static String[] getLabels(IPV pv) {
 
-        final VType value = checkPVValue(pv);
+        var value = checkPVValue(pv);
 
         if (value instanceof VEnum) {
-            final List<String> labels = ((VEnum) value).getLabels();
+            var labels = ((VEnum) value).getLabels();
             return labels.toArray(new String[] {});
         }
         return new String[] {};

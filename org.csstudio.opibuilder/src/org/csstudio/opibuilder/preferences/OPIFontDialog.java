@@ -44,10 +44,10 @@ public class OPIFontDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
+        var fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
 
-        boolean noName = name == null;
-        String title = noName ? "Add Font" : "Edit Font";
+        var noName = name == null;
+        var title = noName ? "Add Font" : "Edit Font";
 
         getShell().setText(title);
         setTitle(title);
@@ -56,10 +56,10 @@ public class OPIFontDialog extends TitleAreaDialog {
 
         fieldArea.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridLayout gl = new GridLayout(2, false);
+        var gl = new GridLayout(2, false);
         fieldArea.setLayout(gl);
 
-        Label label = new Label(fieldArea, SWT.NONE);
+        var label = new Label(fieldArea, SWT.NONE);
         label.setText("Name:");
         label.setLayoutData(new GridData());
         nameText = new Text(fieldArea, SWT.BORDER);
@@ -73,7 +73,7 @@ public class OPIFontDialog extends TitleAreaDialog {
         label.setText("Font:");
         label.setLayoutData(new GridData());
 
-        Composite fontSelector = new Composite(fieldArea, SWT.NONE);
+        var fontSelector = new Composite(fieldArea, SWT.NONE);
         fontSelector.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         gl = new GridLayout(2, false);
         gl.marginHeight = 0;
@@ -86,13 +86,13 @@ public class OPIFontDialog extends TitleAreaDialog {
         }
         fontText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Button browseButton = new Button(fontSelector, SWT.PUSH);
+        var browseButton = new Button(fontSelector, SWT.PUSH);
         browseButton.setText("Browse...");
 
         Listener browseListener = evt -> {
-            FontDialog dialog = new FontDialog(getParentShell());
+            var dialog = new FontDialog(getParentShell());
             dialog.setFontList(new FontData[] { fontData });
-            FontData fontData = dialog.open();
+            var fontData = dialog.open();
             if (fontData != null) {
                 this.fontData = fontData;
                 fontText.setText(StringConverter.asString(fontData));
@@ -109,7 +109,7 @@ public class OPIFontDialog extends TitleAreaDialog {
     }
 
     private void updatePageComplete() {
-        String text = nameText.getText() == null ? "" : nameText.getText().trim();
+        var text = nameText.getText() == null ? "" : nameText.getText().trim();
         if (text.equals("")) {
             setErrorMessage("Name is required");
             getButton(IDialogConstants.OK_ID).setEnabled(false);

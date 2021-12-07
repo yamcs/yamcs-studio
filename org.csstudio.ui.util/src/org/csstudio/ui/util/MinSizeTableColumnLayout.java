@@ -39,18 +39,18 @@ public class MinSizeTableColumnLayout extends TableColumnLayout {
      * @param min_width
      *            Minimum column size in pixels
      */
-    public MinSizeTableColumnLayout(final int min_width) {
+    public MinSizeTableColumnLayout(int min_width) {
         this.min_width = min_width;
     }
 
     @Override
-    protected void updateColumnData(final Widget column) {
-        final TableColumn tColumn = (TableColumn) column;
+    protected void updateColumnData(Widget column) {
+        var tColumn = (TableColumn) column;
 
         // Delegate to default implementation?
-        if (tColumn.getWidth() > min_width)
+        if (tColumn.getWidth() > min_width) {
             super.updateColumnData(column);
-        else { // Enforce minimum width
+        } else { // Enforce minimum width
             tColumn.setWidth(min_width);
             layout(tColumn.getParent().getParent(), true);
         }

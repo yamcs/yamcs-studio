@@ -2,7 +2,6 @@ package org.yamcs.studio.data;
 
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -27,8 +26,7 @@ public class SimData {
             if (function.lastTime == null) {
                 function.lastTime = Instant.now();
             }
-            List<VType> newValues = function
-                    .createValues(TimeInterval.between(function.lastTime, Instant.now()));
+            var newValues = function.createValues(TimeInterval.between(function.lastTime, Instant.now()));
 
             for (VType newValue : newValues) {
                 if (newValue != null) {

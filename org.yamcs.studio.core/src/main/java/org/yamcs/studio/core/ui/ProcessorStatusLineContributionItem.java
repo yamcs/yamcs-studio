@@ -23,7 +23,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
 
     @Override
     public void changeProcessorInfo(ProcessorInfo processor) {
-        Display display = Display.getDefault();
+        var display = Display.getDefault();
         if (display.isDisposed()) {
             return;
         }

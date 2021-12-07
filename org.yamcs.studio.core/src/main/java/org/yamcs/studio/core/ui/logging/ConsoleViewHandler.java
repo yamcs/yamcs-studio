@@ -65,20 +65,20 @@ public class ConsoleViewHandler extends Handler {
         }
 
         try {
-            final Display display = Display.getCurrent();
+            var display = Display.getCurrent();
             if (display == null) {
                 throw new Exception("No display");
             }
 
-            final ConsoleViewHandler handler = new ConsoleViewHandler(display);
+            var handler = new ConsoleViewHandler(display);
             Logger.getLogger("").addHandler(handler);
             Logger.getLogger("").setLevel(Level.INFO);
             have_console = true;
             return handler;
         } catch (Throwable ex) {
             have_console = true;
-            Logger.getLogger(ConsoleViewHandler.class.getName())
-                    .log(Level.WARNING, "Cannot configure console view: {0}", ex.getMessage());
+            Logger.getLogger(ConsoleViewHandler.class.getName()).log(Level.WARNING,
+                    "Cannot configure console view: {0}", ex.getMessage());
             return null;
         }
     }
@@ -90,7 +90,7 @@ public class ConsoleViewHandler extends Handler {
      * 
      * @see #addToLogger()
      */
-    private ConsoleViewHandler(final Display display) {
+    private ConsoleViewHandler(Display display) {
         this.display = display;
 
         // Allocate a console for text messages.
@@ -99,9 +99,8 @@ public class ConsoleViewHandler extends Handler {
         console.setWaterMarks(80000, 100000);
 
         // Add to the 'Console' View
-        final ConsolePlugin consolePlugin = ConsolePlugin.getDefault();
-        consolePlugin.getConsoleManager().addConsoles(
-                new IConsole[] { console });
+        var consolePlugin = ConsolePlugin.getDefault();
+        consolePlugin.getConsoleManager().addConsoles(new IConsole[] { console });
 
         // Streams to the MessageConsole
         severe_stream = console.newMessageStream();
@@ -128,12 +127,12 @@ public class ConsoleViewHandler extends Handler {
         // in an exception inside 'publish' when it tries to write to the dead console stream.
         consolePlugin.getConsoleManager().addConsoleListener(new IConsoleListener() {
             @Override
-            public void consolesAdded(final IConsole[] consoles) {
+            public void consolesAdded(IConsole[] consoles) {
                 // NOP
             }
 
             @Override
-            public void consolesRemoved(final IConsole[] consoles) {
+            public void consolesRemoved(IConsole[] consoles) {
                 // Check if it's this console
                 for (IConsole console : consoles) {
                     if (console == ConsoleViewHandler.this.console) { // Mark as closed/detached
@@ -146,12 +145,12 @@ public class ConsoleViewHandler extends Handler {
     }
 
     @Override
-    public void publish(final LogRecord record) {
+    public void publish(LogRecord record) {
         if (!isLoggable(record)) {
             return;
         }
 
-        final String msg;
+        String msg;
         try {
             msg = getFormatter().format(record);
         } catch (Exception ex) {
@@ -169,7 +168,7 @@ public class ConsoleViewHandler extends Handler {
                 if (console == null) {
                     return;
                 }
-                final MessageConsoleStream stream = getStream(record.getLevel());
+                var stream = getStream(record.getLevel());
                 if (stream.isClosed()) {
                     return;
                 }
@@ -187,7 +186,7 @@ public class ConsoleViewHandler extends Handler {
      *            Message {@link Level}
      * @return Suggested stream for that Level or <code>null</code>
      */
-    private MessageConsoleStream getStream(final Level level) {
+    private MessageConsoleStream getStream(Level level) {
         if (level.intValue() >= Level.SEVERE.intValue()) {
             return severe_stream;
         } else if (level.intValue() >= Level.WARNING.intValue()) {
@@ -221,15 +220,14 @@ public class ConsoleViewHandler extends Handler {
     @Override
     public void close() throws SecurityException {
         // Mark as detached from console
-        final MessageConsole console_copy = console;
+        var console_copy = console;
         if (console_copy == null) {
             return;
         }
         console = null;
         // Remove from 'Console' view
         console_copy.clearConsole();
-        final ConsolePlugin consolePlugin = ConsolePlugin.getDefault();
-        consolePlugin.getConsoleManager().removeConsoles(
-                new IConsole[] { console_copy });
+        var consolePlugin = ConsolePlugin.getDefault();
+        consolePlugin.getConsoleManager().removeConsoles(new IConsole[] { console_copy });
     }
 }

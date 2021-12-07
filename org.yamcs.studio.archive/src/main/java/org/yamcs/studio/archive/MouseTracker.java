@@ -27,7 +27,7 @@ public class MouseTracker extends Drawable implements MouseMoveListener {
         if (time != null) {
             var x = (int) Math.round(timeline.positionTime(time));
 
-            Color foreground = new Color(204, 204, 204);
+            var foreground = new Color(204, 204, 204);
             gc.setForeground(foreground);
             gc.setLineDash(new int[] { 4, 3 });
             gc.drawLine(x, 0, x, timeline.getBounds().height);

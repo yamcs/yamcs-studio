@@ -12,7 +12,7 @@ public class SortedListView extends ListDouble {
     SortedListView(ListNumber values) {
         this.values = values;
         indexArray = new int[values.size()];
-        for (int i = 0; i < indexArray.length; i++) {
+        for (var i = 0; i < indexArray.length; i++) {
             indexArray[i] = i;
         }
         this.indexes = new ArrayInt(indexArray);
@@ -35,7 +35,7 @@ public class SortedListView extends ListDouble {
     }
 
     void exhange(int i, int j) {
-        int b = indexArray[i];
+        var b = indexArray[i];
         indexArray[i] = indexArray[j];
         indexArray[j] = b;
     }
@@ -63,16 +63,15 @@ public class SortedListView extends ListDouble {
         if (right <= left) {
             return;
         }
-        int i = partition(list, left, right);
+        var i = partition(list, left, right);
         quicksort(list, left, i - 1);
         quicksort(list, i + 1, right);
     }
 
     // partition a[left] to a[right], assumes left < right
-    private static int partition(SortedListView list,
-            int left, int right) {
-        int i = left - 1;
-        int j = right;
+    private static int partition(SortedListView list, int left, int right) {
+        var i = left - 1;
+        var j = right;
         while (true) {
             while (less(list.getDouble(++i), list.getDouble(right))) {
                 ; // a[right] acts as sentinel

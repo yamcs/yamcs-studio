@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
@@ -35,8 +34,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
     private Text text;
     private boolean skipTraverse;
 
-    public NativeTextEditpartDelegate(TextInputEditpart editpart,
-            TextInputModel model) {
+    public NativeTextEditpartDelegate(TextInputEditpart editpart, TextInputModel model) {
         this.editpart = editpart;
         this.model = model;
     }
@@ -44,7 +42,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
     @Override
     public IFigure doCreateFigure() {
 
-        int style = SWT.NONE;
+        var style = SWT.NONE;
         if (model.isShowNativeBorder()) {
             style |= SWT.BORDER;
         }
@@ -81,7 +79,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
             break;
         }
 
-        final NativeTextFigure figure = new NativeTextFigure(editpart, style);
+        var figure = new NativeTextFigure(editpart, style);
         text = figure.getSWTWidget();
 
         if (!model.isReadOnly()) {
@@ -90,8 +88,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
                     @Override
                     public void keyPressed(KeyEvent keyEvent) {
                         if (keyEvent.character == '\r') { // Return key
-                            if (text != null && !text.isDisposed()
-                                    && (text.getStyle() & SWT.MULTI) != 0) {
+                            if (text != null && !text.isDisposed() && (text.getStyle() & SWT.MULTI) != 0) {
                                 if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                                     outputText(text.getText());
                                     keyEvent.doit = false;
@@ -172,7 +169,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
 
     @Override
     public void updatePropSheet() {
-        boolean isMulti = model.isMultilineInput();
+        var isMulti = model.isMultilineInput();
         model.setPropertyVisible(TextInputModel.PROP_SHOW_H_SCROLL, isMulti);
         model.setPropertyVisible(TextInputModel.PROP_SHOW_V_SCROLL, isMulti);
         model.setPropertyVisible(TextInputModel.PROP_WRAP_WORDS, isMulti);
@@ -196,11 +193,10 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
 
         PropertyChangeListener updatePropSheetListener = evt -> updatePropSheet();
 
-        model.getProperty(TextInputModel.PROP_MULTILINE_INPUT)
-                .addPropertyChangeListener(updatePropSheetListener);
+        model.getProperty(TextInputModel.PROP_MULTILINE_INPUT).addPropertyChangeListener(updatePropSheetListener);
 
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
-            AbstractContainerModel parent = model.getParent();
+            var parent = model.getParent();
             parent.removeChild(model);
             parent.addChild(model);
             parent.selectWidget(model, true);

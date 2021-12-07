@@ -35,11 +35,10 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
     protected void configureBaseProperties() {
         super.configureBaseProperties();
 
-        addProperty(new FilePathProperty(PROP_OPI_FILE, "OPI File",
-                WidgetPropertyCategory.Behavior, "", new String[] { "opi" }));
+        addProperty(new FilePathProperty(PROP_OPI_FILE, "OPI File", WidgetPropertyCategory.Behavior, "",
+                new String[] { "opi" }));
 
-        addProperty(new StringProperty(PROP_GROUP_NAME, "Group Name",
-                WidgetPropertyCategory.Behavior, ""));
+        addProperty(new StringProperty(PROP_GROUP_NAME, "Group Name", WidgetPropertyCategory.Behavior, ""));
     }
 
     public String getGroupName() {
@@ -52,7 +51,7 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
      * @return The target resource.
      */
     public IPath getOPIFilePath() {
-        IPath absolutePath = Path.fromPortableString((String) getProperty(PROP_OPI_FILE).getPropertyValue());
+        var absolutePath = Path.fromPortableString((String) getProperty(PROP_OPI_FILE).getPropertyValue());
         if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(this, absolutePath);
         }

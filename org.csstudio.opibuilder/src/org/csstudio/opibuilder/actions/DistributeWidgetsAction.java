@@ -55,8 +55,7 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         public ImageDescriptor getImageDescriptor() {
-            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, iconPath);
+            return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
 
     }
@@ -80,8 +79,9 @@ public class DistributeWidgetsAction extends SelectionAction {
 
     @Override
     protected boolean calculateEnabled() {
-        if (getSelectedWidgetModels().size() < 2)
+        if (getSelectedWidgetModels().size() < 2) {
             return false;
+        }
         return true;
     }
 
@@ -112,20 +112,19 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getHorizontalGapCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
-        CompoundCommand cmd = new CompoundCommand("Horizontal Gap Distribution");
-        int widthSum = 0;
-        for (int i = 1; i < sortedModelArray.length - 1; i++) {
+        var sortedModelArray = getSortedModelArray(true);
+        var cmd = new CompoundCommand("Horizontal Gap Distribution");
+        var widthSum = 0;
+        for (var i = 1; i < sortedModelArray.length - 1; i++) {
             widthSum += sortedModelArray[i].getWidth();
         }
-        int averageGap = (sortedModelArray[sortedModelArray.length - 1].getX() -
-                (sortedModelArray[0].getX() + sortedModelArray[0].getWidth()) - widthSum)
+        var averageGap = (sortedModelArray[sortedModelArray.length - 1].getX()
+                - (sortedModelArray[0].getX() + sortedModelArray[0].getWidth()) - widthSum)
                 / (sortedModelArray.length - 1);
 
-        int startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
-        for (int i = 1; i < sortedModelArray.length - 1; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
+        var startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
+        for (var i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
                     startX + averageGap));
             startX += averageGap + sortedModelArray[i].getWidth();
         }
@@ -135,19 +134,18 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getVerticalGapCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
-        CompoundCommand cmd = new CompoundCommand("Vertical Gap Distribution");
-        int widthSum = 0;
-        for (int i = 1; i < sortedModelArray.length - 1; i++) {
+        var sortedModelArray = getSortedModelArray(false);
+        var cmd = new CompoundCommand("Vertical Gap Distribution");
+        var widthSum = 0;
+        for (var i = 1; i < sortedModelArray.length - 1; i++) {
             widthSum += sortedModelArray[i].getHeight();
         }
-        int averageGap = (sortedModelArray[sortedModelArray.length - 1].getY() -
-                (sortedModelArray[0].getY() + sortedModelArray[0].getHeight()) - widthSum)
+        var averageGap = (sortedModelArray[sortedModelArray.length - 1].getY()
+                - (sortedModelArray[0].getY() + sortedModelArray[0].getHeight()) - widthSum)
                 / (sortedModelArray.length - 1);
-        int startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
-        for (int i = 1; i < sortedModelArray.length; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
+        var startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
+        for (var i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
                     startX + averageGap));
             startX += averageGap + sortedModelArray[i].getHeight();
         }
@@ -157,17 +155,15 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getHorizontalCenterCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
-        CompoundCommand cmd = new CompoundCommand("Horizontal Center Distribution");
+        var sortedModelArray = getSortedModelArray(true);
+        var cmd = new CompoundCommand("Horizontal Center Distribution");
 
-        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], true) -
-                getCenterLoc(sortedModelArray[0], true))
-                / (sortedModelArray.length - 1);
+        var averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], true)
+                - getCenterLoc(sortedModelArray[0], true)) / (sortedModelArray.length - 1);
 
-        int startX = getCenterLoc(sortedModelArray[0], true);
-        for (int i = 1; i < sortedModelArray.length - 1; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
+        var startX = getCenterLoc(sortedModelArray[0], true);
+        for (var i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
                     startX + averageGap - sortedModelArray[i].getWidth() / 2));
             startX += averageGap;
         }
@@ -176,17 +172,15 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getVerticalCenterCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
-        CompoundCommand cmd = new CompoundCommand("Vertical Center Distribution");
+        var sortedModelArray = getSortedModelArray(false);
+        var cmd = new CompoundCommand("Vertical Center Distribution");
 
-        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], false) -
-                getCenterLoc(sortedModelArray[0], false))
-                / (sortedModelArray.length - 1);
+        var averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], false)
+                - getCenterLoc(sortedModelArray[0], false)) / (sortedModelArray.length - 1);
 
-        int startX = getCenterLoc(sortedModelArray[0], false);
-        for (int i = 1; i < sortedModelArray.length - 1; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
+        var startX = getCenterLoc(sortedModelArray[0], false);
+        for (var i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
                     startX + averageGap - sortedModelArray[i].getHeight() / 2));
             startX += averageGap;
         }
@@ -195,14 +189,12 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getHorizontalCompressCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
-        CompoundCommand cmd = new CompoundCommand("Horizontal Compress Distribution");
+        var sortedModelArray = getSortedModelArray(true);
+        var cmd = new CompoundCommand("Horizontal Compress Distribution");
 
-        int startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
-        for (int i = 1; i < sortedModelArray.length; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
-                    startX));
+        var startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
+        for (var i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_XPOS, startX));
             startX += sortedModelArray[i].getWidth();
         }
 
@@ -211,14 +203,12 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private Command getVerticalCompressCommand() {
-        AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
-        CompoundCommand cmd = new CompoundCommand("Vertical Compress Distribution");
+        var sortedModelArray = getSortedModelArray(false);
+        var cmd = new CompoundCommand("Vertical Compress Distribution");
 
-        int startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
-        for (int i = 1; i < sortedModelArray.length; i++) {
-            cmd.add(new SetWidgetPropertyCommand(
-                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
-                    startX));
+        var startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
+        for (var i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(sortedModelArray[i], AbstractWidgetModel.PROP_YPOS, startX));
             startX += sortedModelArray[i].getHeight();
         }
 
@@ -227,15 +217,16 @@ public class DistributeWidgetsAction extends SelectionAction {
     }
 
     private int getCenterLoc(AbstractWidgetModel model, boolean x) {
-        if (x)
+        if (x) {
             return model.getX() + model.getWidth() / 2;
-        else
+        } else {
             return model.getY() + model.getHeight() / 2;
+        }
     }
 
-    private AbstractWidgetModel[] getSortedModelArray(final boolean byHorizontal) {
-        AbstractWidgetModel[] modelArray = new AbstractWidgetModel[getSelectedWidgetModels().size()];
-        int i = 0;
+    private AbstractWidgetModel[] getSortedModelArray(boolean byHorizontal) {
+        var modelArray = new AbstractWidgetModel[getSelectedWidgetModels().size()];
+        var i = 0;
         for (AbstractWidgetModel model : getSelectedWidgetModels()) {
             modelArray[i++] = model;
         }
@@ -250,12 +241,13 @@ public class DistributeWidgetsAction extends SelectionAction {
                     o1loc = o1.getLocation().y;
                     o2loc = o2.getLocation().y;
                 }
-                if (o1loc < o2loc)
+                if (o1loc < o2loc) {
                     return -1;
-                else if (o1loc > o2loc)
+                } else if (o1loc > o2loc) {
                     return 1;
-                else
+                } else {
                     return 0;
+                }
             }
         });
         return modelArray;
@@ -273,8 +265,7 @@ public class DistributeWidgetsAction extends SelectionAction {
 
         for (Object o : selection) {
             if (o instanceof AbstractBaseEditPart) {
-                selectedWidgetModels.add(((AbstractBaseEditPart) o)
-                        .getWidgetModel());
+                selectedWidgetModels.add(((AbstractBaseEditPart) o).getWidgetModel());
             }
         }
         return selectedWidgetModels;

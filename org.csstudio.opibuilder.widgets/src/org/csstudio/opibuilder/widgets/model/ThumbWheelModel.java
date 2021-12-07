@@ -55,9 +55,9 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     private static final int DEFAULT_WIDTH = 120;
 
     /** The default value of the minimum property. */
-    private static final double DEFAULT_MIN = 0;
+    private static double DEFAULT_MIN = 0;
     /** The default value of the maximum property. */
-    private static final double DEFAULT_MAX = 100;
+    private static double DEFAULT_MAX = 100;
 
     /** The default value of the number of integer digits property. */
     private static final int DEFAULT_INTEGER_DIGITS = 3;
@@ -79,28 +79,22 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     protected void configureProperties() {
         // addProperty(new DoubleProperty(PROP_VALUE, "Value",
         // WidgetPropertyCategory.Behavior, 0));
-        addProperty(new DoubleProperty(PROP_MIN, "Minimum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MIN));
-        addProperty(new DoubleProperty(PROP_MAX, "Maximum",
-                WidgetPropertyCategory.Behavior, DEFAULT_MAX));
-        addProperty(new IntegerProperty(PROP_INTEGER_DIGITS_PART,
-                "Integer Digits", WidgetPropertyCategory.Behavior, DEFAULT_INTEGER_DIGITS));
-        addProperty(new IntegerProperty(PROP_DECIMAL_DIGITS_PART,
-                "Decimal Digits", WidgetPropertyCategory.Behavior, DEFAULT_DECIMAL_DIGITS));
-        addProperty(new ColorProperty(PROP_INTERNAL_FRAME_COLOR,
-                "Internal Frame Color", WidgetPropertyCategory.Display,
+        addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
+        addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
+        addProperty(new IntegerProperty(PROP_INTEGER_DIGITS_PART, "Integer Digits", WidgetPropertyCategory.Behavior,
+                DEFAULT_INTEGER_DIGITS));
+        addProperty(new IntegerProperty(PROP_DECIMAL_DIGITS_PART, "Decimal Digits", WidgetPropertyCategory.Behavior,
+                DEFAULT_DECIMAL_DIGITS));
+        addProperty(new ColorProperty(PROP_INTERNAL_FRAME_COLOR, "Internal Frame Color", WidgetPropertyCategory.Display,
                 ColorConstants.black.getRGB()));
-        addProperty(new ColorProperty(PROP_INTERNAL_FOCUSED_FRAME_COLOR,
-                "Focused Frame Color", WidgetPropertyCategory.Display,
-                ColorConstants.blue.getRGB()));
+        addProperty(new ColorProperty(PROP_INTERNAL_FOCUSED_FRAME_COLOR, "Focused Frame Color",
+                WidgetPropertyCategory.Display, ColorConstants.blue.getRGB()));
 
-        addProperty(new IntegerProperty(PROP_INTERNAL_FRAME_THICKNESS,
-                "Internal Frame Thickness", WidgetPropertyCategory.Display, 1));
-        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV",
-                WidgetPropertyCategory.Behavior, false));
+        addProperty(new IntegerProperty(PROP_INTERNAL_FRAME_THICKNESS, "Internal Frame Thickness",
+                WidgetPropertyCategory.Display, 1));
+        addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, false));
 
-        addProperty(new BooleanProperty(PROP_SHOW_BUTTONS, "Show Buttons",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_SHOW_BUTTONS, "Show Buttons", WidgetPropertyCategory.Display, true));
 
     }
 

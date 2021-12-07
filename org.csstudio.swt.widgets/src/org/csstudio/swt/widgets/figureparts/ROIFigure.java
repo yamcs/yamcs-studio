@@ -26,9 +26,7 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -89,12 +87,11 @@ public class ROIFigure extends Figure {
          */
         @Override
         protected void updateROIBounds(MouseEvent me) {
-            int dx = me.x - start.x;
-            int dy = me.y - start.y;
-            RECT_SINGLETON.setBounds(startROIBounds.x + dx, startROIBounds.y + dy,
-                    startROIBounds.width, startROIBounds.height);
-            setROIGeoBounds(RECT_SINGLETON.x, RECT_SINGLETON.y,
-                    RECT_SINGLETON.width, RECT_SINGLETON.height);
+            var dx = me.x - start.x;
+            var dy = me.y - start.y;
+            RECT_SINGLETON.setBounds(startROIBounds.x + dx, startROIBounds.y + dy, startROIBounds.width,
+                    startROIBounds.height);
+            setROIGeoBounds(RECT_SINGLETON.x, RECT_SINGLETON.y, RECT_SINGLETON.width, RECT_SINGLETON.height);
         }
 
     }
@@ -102,8 +99,8 @@ public class ROIFigure extends Figure {
     class HandlerBoundsCalulator {
         public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
             // the bounds for handler 0 on left top corner
-            return new Rectangle(roiBounds.x - HANDLE_SIZE / 2,
-                    roiBounds.y - HANDLE_SIZE / 2, HANDLE_SIZE, HANDLE_SIZE);
+            return new Rectangle(roiBounds.x - HANDLE_SIZE / 2, roiBounds.y - HANDLE_SIZE / 2, HANDLE_SIZE,
+                    HANDLE_SIZE);
         }
     }
 
@@ -131,10 +128,9 @@ public class ROIFigure extends Figure {
                 dragger = new CommonDragger() {
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(me.x, me.y,
-                                startROIBounds.width - dx, startROIBounds.height - dy);
+                        var dx = me.x - start.x;
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(me.x, me.y, startROIBounds.width - dx, startROIBounds.height - dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator();
@@ -145,15 +141,13 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(startROIBounds.x, me.y,
-                                startROIBounds.width, startROIBounds.height - dy);
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(startROIBounds.x, me.y, startROIBounds.width, startROIBounds.height - dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
                         return super.calcBoundsFromROIBounds(roiBounds).translate(roiBounds.width / 2, 0);
                     }
                 };
@@ -164,16 +158,15 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(startROIBounds.x, startROIBounds.y + dy,
-                                startROIBounds.width + dx, startROIBounds.height - dy);
+                        var dx = me.x - start.x;
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(startROIBounds.x, startROIBounds.y + dy, startROIBounds.width + dx,
+                                startROIBounds.height - dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
                         return super.calcBoundsFromROIBounds(roiBounds).translate(roiBounds.width, 0);
                     }
                 };
@@ -184,17 +177,16 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        setROIGeoBounds(startROIBounds.x, startROIBounds.y,
-                                startROIBounds.width + dx, startROIBounds.height);
+                        var dx = me.x - start.x;
+                        setROIGeoBounds(startROIBounds.x, startROIBounds.y, startROIBounds.width + dx,
+                                startROIBounds.height);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
-                        return super.calcBoundsFromROIBounds(roiBounds).translate(
-                                roiBounds.width, roiBounds.height / 2);
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
+                        return super.calcBoundsFromROIBounds(roiBounds).translate(roiBounds.width,
+                                roiBounds.height / 2);
                     }
                 };
                 break;
@@ -204,16 +196,15 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(startROIBounds.x, startROIBounds.y,
-                                startROIBounds.width + dx, startROIBounds.height + dy);
+                        var dx = me.x - start.x;
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(startROIBounds.x, startROIBounds.y, startROIBounds.width + dx,
+                                startROIBounds.height + dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
                         return super.calcBoundsFromROIBounds(roiBounds).translate(roiBounds.width, roiBounds.height);
                     }
                 };
@@ -224,17 +215,16 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(startROIBounds.x, startROIBounds.y,
-                                startROIBounds.width, startROIBounds.height + dy);
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(startROIBounds.x, startROIBounds.y, startROIBounds.width,
+                                startROIBounds.height + dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
-                        return super.calcBoundsFromROIBounds(roiBounds).translate(
-                                roiBounds.width / 2, roiBounds.height);
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
+                        return super.calcBoundsFromROIBounds(roiBounds).translate(roiBounds.width / 2,
+                                roiBounds.height);
                     }
                 };
                 break;
@@ -244,16 +234,15 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        int dy = me.y - start.y;
-                        setROIGeoBounds(startROIBounds.x + dx, startROIBounds.y,
-                                startROIBounds.width - dx, startROIBounds.height + dy);
+                        var dx = me.x - start.x;
+                        var dy = me.y - start.y;
+                        setROIGeoBounds(startROIBounds.x + dx, startROIBounds.y, startROIBounds.width - dx,
+                                startROIBounds.height + dy);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
                         return super.calcBoundsFromROIBounds(roiBounds).translate(0, roiBounds.height);
                     }
                 };
@@ -264,15 +253,14 @@ public class ROIFigure extends Figure {
 
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
-                        int dx = me.x - start.x;
-                        setROIGeoBounds(startROIBounds.x + dx, startROIBounds.y,
-                                startROIBounds.width - dx, startROIBounds.height);
+                        var dx = me.x - start.x;
+                        setROIGeoBounds(startROIBounds.x + dx, startROIBounds.y, startROIBounds.width - dx,
+                                startROIBounds.height);
                     }
                 };
                 handlerBoundsCalulator = new HandlerBoundsCalulator() {
                     @Override
-                    public Rectangle calcBoundsFromROIBounds(
-                            Rectangle roiBounds) {
+                    public Rectangle calcBoundsFromROIBounds(Rectangle roiBounds) {
                         return super.calcBoundsFromROIBounds(roiBounds).translate(0, roiBounds.height / 2);
                     }
                 };
@@ -341,22 +329,22 @@ public class ROIFigure extends Figure {
         roiRectFigure = new RectangleFigure() {
             @Override
             public boolean containsPoint(int x, int y) {
-                if (!super.containsPoint(x, y))
+                if (!super.containsPoint(x, y)) {
                     return false;
-                return !Draw2dSingletonUtil.getRectangle().setBounds(getBounds())
-                        .shrink(3, 3).contains(x, y);
+                }
+                return !Draw2dSingletonUtil.getRectangle().setBounds(getBounds()).shrink(3, 3).contains(x, y);
             }
         };
         roiRectFigure.setCursor(Cursors.SIZEALL);
         roiRectFigure.setFill(false);
         roiRectFigure.setOutline(true);
         roiRectFigure.setForegroundColor(color);
-        ROIRectDragger roiRectDragger = new ROIRectDragger();
+        var roiRectDragger = new ROIRectDragger();
         roiRectFigure.addMouseListener(roiRectDragger);
         roiRectFigure.addMouseMotionListener(roiRectDragger);
         resizeHandlers = new ResizeHandler[HANDLERS_COUNT];
         add(roiRectFigure);
-        for (int i = 0; i < HANDLERS_COUNT; i++) {
+        for (var i = 0; i < HANDLERS_COUNT; i++) {
             resizeHandlers[i] = new ResizeHandler(i);
             add(resizeHandlers[i]);
         }
@@ -379,8 +367,7 @@ public class ROIFigure extends Figure {
         intensityGraphFigure.addCroppedDataSizeListener(new ICroppedDataSizeListener() {
 
             @Override
-            public void croppedDataSizeChanged(int croppedDataWidth,
-                    int croppedDataHeight) {
+            public void croppedDataSizeChanged(int croppedDataWidth, int croppedDataHeight) {
                 updateROIGeoBounds();
                 updateChildrenBounds();
             }
@@ -392,7 +379,7 @@ public class ROIFigure extends Figure {
     public boolean containsPoint(int x, int y) {
         x = x - getBounds().x;
         y = y - getBounds().y;
-        boolean contain = false;
+        var contain = false;
         for (ResizeHandler handler : resizeHandlers) {
             contain = contain || handler.containsPoint(x, y);
         }
@@ -416,9 +403,9 @@ public class ROIFigure extends Figure {
     @Override
     protected void paintFigure(Graphics graphics) {
         if (roiInfoProvider != null && roiDataBounds != null) {
-            String text = roiInfoProvider.getROIInfo(roiDataBounds.x, roiDataBounds.y,
-                    roiDataBounds.width, roiDataBounds.height);
-            Dimension size = Draw2dSingletonUtil.getTextUtilities().getTextExtents(text, getFont());
+            var text = roiInfoProvider.getROIInfo(roiDataBounds.x, roiDataBounds.y, roiDataBounds.width,
+                    roiDataBounds.height);
+            var size = Draw2dSingletonUtil.getTextUtilities().getTextExtents(text, getFont());
             graphics.pushState();
             graphics.translate(getLocation());
             graphics.fillRectangle(roiGeoBounds.x, roiGeoBounds.y - size.height, size.width, size.height);
@@ -435,11 +422,11 @@ public class ROIFigure extends Figure {
     protected void updateChildrenBounds() {
         roiRectFigure.setBounds(roiGeoBounds);
         for (ResizeHandler handler : resizeHandlers) {
-            handler.setBounds(
-                    handler.getHandlerBoundsCalulator().calcBoundsFromROIBounds(roiGeoBounds));
+            handler.setBounds(handler.getHandlerBoundsCalulator().calcBoundsFromROIBounds(roiGeoBounds));
         }
-        if (roiInfoProvider != null)
+        if (roiInfoProvider != null) {
             repaint();
+        }
     }
 
     @Override
@@ -448,20 +435,24 @@ public class ROIFigure extends Figure {
     }
 
     public void setROIGeoBounds(int x, int y, int w, int h) {
-        if (w <= 0)
+        if (w <= 0) {
             w = 1;
+        }
 
-        if (h <= 0)
+        if (h <= 0) {
             h = 1;
+        }
 
         roiGeoBounds.setBounds(x, y, w, h);
         roiDataBounds = getROIFromGeoBounds(new PrecisionRectangle(roiGeoBounds.preciseX() + getBounds().x,
                 roiGeoBounds.preciseY() + getBounds().y, roiGeoBounds.preciseWidth(), roiGeoBounds.preciseHeight()));
         if (roiDataBounds.width < 1 || roiDataBounds.height < 1) {
-            if (roiDataBounds.width < 1)
+            if (roiDataBounds.width < 1) {
                 roiDataBounds.width = 1;
-            if (roiDataBounds.height < 1)
+            }
+            if (roiDataBounds.height < 1) {
                 roiDataBounds.height = 1;
+            }
             roiGeoBounds = getGeoBoundsFromROI(roiDataBounds);
         }
         updateChildrenBounds();
@@ -469,10 +460,12 @@ public class ROIFigure extends Figure {
 
     public void setROIDataBounds(int xIndex, int yIndex, int width, int height) {
         RECT_SINGLETON.setBounds(xIndex, yIndex, width, height);
-        if (RECT_SINGLETON.equals(roiDataBounds))
+        if (RECT_SINGLETON.equals(roiDataBounds)) {
             return;
-        if (roiDataBounds == null)
+        }
+        if (roiDataBounds == null) {
             roiDataBounds = new PrecisionRectangle();
+        }
         roiDataBounds.setBounds(xIndex, yIndex, width, height);
         updateROIGeoBounds();
         updateChildrenBounds();
@@ -517,8 +510,8 @@ public class ROIFigure extends Figure {
     }
 
     private Rectangle getROIFromGeoBounds(PrecisionRectangle roiBounds) {
-        PrecisionPoint lt = ((GraphArea) getParent()).getDataLocation(roiBounds.preciseX(), roiBounds.preciseY());
-        PrecisionPoint rb = ((GraphArea) getParent()).getDataLocation(roiBounds.preciseX() + roiBounds.preciseWidth(),
+        var lt = ((GraphArea) getParent()).getDataLocation(roiBounds.preciseX(), roiBounds.preciseY());
+        var rb = ((GraphArea) getParent()).getDataLocation(roiBounds.preciseX() + roiBounds.preciseWidth(),
                 roiBounds.preciseY() + roiBounds.preciseHeight());
         return new Rectangle((int) Math.round(lt.preciseX()) + intensityGraphFigure.getCropLeft(),
                 (int) Math.round(lt.preciseY()) + intensityGraphFigure.getCropTop(),
@@ -526,10 +519,9 @@ public class ROIFigure extends Figure {
     }
 
     private PrecisionRectangle getGeoBoundsFromROI(Rectangle roiDataBounds) {
-        PrecisionPoint lt = ((GraphArea) getParent()).getGeoLocation(
-                roiDataBounds.preciseX() - intensityGraphFigure.getCropLeft(),
+        var lt = ((GraphArea) getParent()).getGeoLocation(roiDataBounds.preciseX() - intensityGraphFigure.getCropLeft(),
                 roiDataBounds.preciseY() - intensityGraphFigure.getCropTop());
-        PrecisionPoint rb = ((GraphArea) getParent()).getGeoLocation(
+        var rb = ((GraphArea) getParent()).getGeoLocation(
                 roiDataBounds.preciseX() + roiDataBounds.preciseWidth() - intensityGraphFigure.getCropLeft(),
                 roiDataBounds.preciseY() + roiDataBounds.preciseHeight() - intensityGraphFigure.getCropTop());
         return new PrecisionRectangle(lt.preciseX() - getBounds().x, lt.preciseY() - getBounds().y,

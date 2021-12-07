@@ -19,7 +19,6 @@ import org.csstudio.opibuilder.util.SizeLimitedStack;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 
 /**
@@ -40,20 +39,23 @@ public class DisplayOpenManager {
     }
 
     public void openNewDisplay() {
-        IRunnerInput input = getCurrentRunnerInputInEditor();
-        if (input != null)
+        var input = getCurrentRunnerInputInEditor();
+        if (input != null) {
             backStack.push(input);
+        }
         forwardStack.clear();
         fireOperationsHistoryChanged();
     }
 
     public void goBack() {
-        if (backStack.size() == 0)
+        if (backStack.size() == 0) {
             return;
+        }
 
-        IRunnerInput input = getCurrentRunnerInputInEditor();
-        if (input != null)
+        var input = getCurrentRunnerInputInEditor();
+        if (input != null) {
             forwardStack.push(input);
+        }
 
         openOPI(backStack.pop());
 
@@ -61,46 +63,44 @@ public class DisplayOpenManager {
 
     private IRunnerInput getCurrentRunnerInputInEditor() {
 
-        IEditorInput input = opiRuntime.getOPIInput();
+        var input = opiRuntime.getOPIInput();
 
         if (input instanceof IRunnerInput) {
-            if (((IRunnerInput) input).getDisplayOpenManager() == null)
-                ((IRunnerInput) input).setDisplayOpenManager(
-                        opiRuntime.getAdapter(DisplayOpenManager.class));
+            if (((IRunnerInput) input).getDisplayOpenManager() == null) {
+                ((IRunnerInput) input).setDisplayOpenManager(opiRuntime.getAdapter(DisplayOpenManager.class));
+            }
             return (IRunnerInput) input;
+        } else {
+            return new RunnerInput(getCurrentPathInEditor(), opiRuntime.getAdapter(DisplayOpenManager.class));
         }
-
-        else
-            return new RunnerInput(getCurrentPathInEditor(),
-                    opiRuntime.getAdapter(DisplayOpenManager.class));
 
     }
 
     private IPath getCurrentPathInEditor() {
-        return ResourceUtil.getPathInEditor(
-                opiRuntime.getOPIInput());
+        return ResourceUtil.getPathInEditor(opiRuntime.getOPIInput());
 
     }
 
     /** @param input */
-    private void openOPI(final IRunnerInput input) {
+    private void openOPI(IRunnerInput input) {
         try {
             opiRuntime.setOPIInput(input);
         } catch (PartInitException e) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to go back", e);
-            MessageDialog.openError(Display.getDefault().getActiveShell(), "Open file error",
-                    "Failed to go back");
+            MessageDialog.openError(Display.getDefault().getActiveShell(), "Open file error", "Failed to go back");
         }
 
         fireOperationsHistoryChanged();
     }
 
     public void goForward() {
-        if (forwardStack.size() == 0)
+        if (forwardStack.size() == 0) {
             return;
-        IRunnerInput input = getCurrentRunnerInputInEditor();
-        if (input != null)
+        }
+        var input = getCurrentRunnerInputInEditor();
+        if (input != null) {
             backStack.push(input);
+        }
 
         openOPI(forwardStack.pop());
 
@@ -109,11 +109,12 @@ public class DisplayOpenManager {
     public void goBack(int index) {
         if (backStack.size() > index) {
 
-            IRunnerInput input = getCurrentRunnerInputInEditor();
-            if (input != null)
+            var input = getCurrentRunnerInputInEditor();
+            if (input != null) {
                 forwardStack.push(input);
+            }
 
-            for (int i = 0; i < index; i++) {
+            for (var i = 0; i < index; i++) {
                 forwardStack.push(backStack.pop());
             }
 
@@ -124,11 +125,12 @@ public class DisplayOpenManager {
     public void goForward(int index) {
         if (forwardStack.size() > index) {
 
-            IRunnerInput input = getCurrentRunnerInputInEditor();
-            if (input != null)
+            var input = getCurrentRunnerInputInEditor();
+            if (input != null) {
                 backStack.push(input);
+            }
 
-            for (int i = 0; i < index; i++) {
+            for (var i = 0; i < index; i++) {
                 backStack.push(forwardStack.pop());
             }
 
@@ -137,8 +139,9 @@ public class DisplayOpenManager {
     }
 
     public void addListener(IDisplayOpenManagerListener listener) {
-        if (!listeners.contains(listener))
+        if (!listeners.contains(listener)) {
             listeners.add(listener);
+        }
     }
 
     public boolean removeListener(IDisplayOpenManagerListener listener) {
@@ -146,8 +149,9 @@ public class DisplayOpenManager {
     }
 
     private void fireOperationsHistoryChanged() {
-        for (IDisplayOpenManagerListener listener : listeners)
+        for (IDisplayOpenManagerListener listener : listeners) {
             listener.displayOpenHistoryChanged(this);
+        }
     }
 
     public boolean canBackward() {

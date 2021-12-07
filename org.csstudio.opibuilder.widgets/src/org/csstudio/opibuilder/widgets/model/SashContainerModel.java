@@ -53,10 +53,8 @@ public class SashContainerModel extends AbstractContainerModel {
 
     @Override
     protected void configureProperties() {
-        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent",
-                WidgetPropertyCategory.Display, false));
-        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal",
-                WidgetPropertyCategory.Display, true));
+        addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent", WidgetPropertyCategory.Display, false));
+        addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal", WidgetPropertyCategory.Display, true));
         addProperty(new ComboProperty(PROP_SASH_STYLE, "Sash Style", WidgetPropertyCategory.Display,
                 SashContainerFigure.SashStyle.stringValues(), 2));
         addProperty(new DoubleProperty(PROP_SASH_POSITION, "Sash Position", WidgetPropertyCategory.Display, 0.5));
@@ -64,15 +62,15 @@ public class SashContainerModel extends AbstractContainerModel {
         // addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children",
         // WidgetPropertyCategory.Behavior, false));
 
-        addProperty(new BooleanProperty(PROP_PANEL1_AUTO_SCALE_CHILDREN,
-                "Auto Scale Children (at Runtime)", new WidgetPropertyCategory() {
+        addProperty(new BooleanProperty(PROP_PANEL1_AUTO_SCALE_CHILDREN, "Auto Scale Children (at Runtime)",
+                new WidgetPropertyCategory() {
                     @Override
                     public String toString() {
                         return "Panel 1 (Left/Up)";
                     }
                 }, false));
-        addProperty(new BooleanProperty(PROP_PANEL2_AUTO_SCALE_CHILDREN,
-                "Auto Scale Children (at Runtime)", new WidgetPropertyCategory() {
+        addProperty(new BooleanProperty(PROP_PANEL2_AUTO_SCALE_CHILDREN, "Auto Scale Children (at Runtime)",
+                new WidgetPropertyCategory() {
                     @Override
                     public String toString() {
                         return "Panel 2 (Right/Down)";
@@ -137,7 +135,7 @@ public class SashContainerModel extends AbstractContainerModel {
 
     @Override
     public void flipVertically() {
-        int centerY = getHeight() / 2;
+        var centerY = getHeight() / 2;
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipVertically(centerY);
         }
@@ -145,7 +143,7 @@ public class SashContainerModel extends AbstractContainerModel {
 
     @Override
     public void flipHorizontally() {
-        int centerX = getWidth() / 2;
+        var centerX = getWidth() / 2;
         for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipHorizontally(centerX);
         }

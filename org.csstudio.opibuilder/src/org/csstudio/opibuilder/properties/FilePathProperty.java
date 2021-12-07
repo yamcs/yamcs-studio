@@ -89,8 +89,8 @@ public class FilePathProperty extends AbstractWidgetProperty {
             } else {
                 path = ((IPath) value).toPortableString();
             }
-            int idx = path.lastIndexOf('.');
-            String dotExt = (idx != -1) ? path.substring(idx) : "";
+            var idx = path.lastIndexOf('.');
+            var dotExt = (idx != -1) ? path.substring(idx) : "";
             if (fileExtensions != null && fileExtensions.length > 0) {
                 for (String extension : fileExtensions) {
                     if (("." + extension).equalsIgnoreCase(dotExt)) {
@@ -118,13 +118,13 @@ public class FilePathProperty extends AbstractWidgetProperty {
 
     @Override
     public Object getPropertyValue() {
-        if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE
-                && propertyValue != null && !((String) propertyValue).isEmpty()) {
-            String s = OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) propertyValue);
+        if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE && propertyValue != null
+                && !((String) propertyValue).isEmpty()) {
+            var s = OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) propertyValue);
             if (s.contains("://")) {
                 return s;
             } else {
-                IPath path = ResourceUtil.getPathFromString(s);
+                var path = ResourceUtil.getPathFromString(s);
                 if (buildAbsolutePath && !path.isAbsolute()) {
                     path = ResourceUtil.buildAbsolutePath(widgetModel, path);
                 }
@@ -141,11 +141,11 @@ public class FilePathProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        String value = (String) getPropertyValue();
+        var value = (String) getPropertyValue();
         if (value.contains("://")) {
             propElement.setText(value);
         } else {
-            IPath path = ResourceUtil.getPathFromString(value);
+            var path = ResourceUtil.getPathFromString(value);
             propElement.setText(path.toPortableString());
         }
     }

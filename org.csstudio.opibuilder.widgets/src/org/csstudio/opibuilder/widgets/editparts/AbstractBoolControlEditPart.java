@@ -33,15 +33,13 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
      * @param model
      *            the model.
      */
-    protected void initializeCommonFigureProperties(
-            final AbstractBoolControlFigure figure, final AbstractBoolControlModel model) {
+    protected void initializeCommonFigureProperties(AbstractBoolControlFigure figure, AbstractBoolControlModel model) {
         super.initializeCommonFigureProperties(figure, model);
         figure.setToggle(model.isToggleButton());
         figure.setShowConfirmDialog(model.getShowConfirmDialog());
         figure.setConfirmTip(model.getConfirmTip());
         figure.setPassword(model.getPassword());
-        figure.setRunMode(getExecutionMode().equals(
-                ExecutionMode.RUN_MODE));
+        figure.setRunMode(getExecutionMode().equals(ExecutionMode.RUN_MODE));
         figure.addManualValueChangeListener(newValue -> {
             if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                 if (getWidgetModel().getDataType() == 0) {
@@ -69,8 +67,8 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
         super.registerCommonPropertyChangeHandlers();
 
         // toggle button
-        final IWidgetPropertyChangeHandler toggleHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolControlFigure figure = (AbstractBoolControlFigure) refreshableFigure;
+        IWidgetPropertyChangeHandler toggleHandler = (oldValue, newValue, refreshableFigure) -> {
+            var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setToggle((Boolean) newValue);
             return true;
         };
@@ -81,7 +79,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
 
         // show confirm dialog
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolControlFigure figure = (AbstractBoolControlFigure) refreshableFigure;
+            var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setShowConfirmDialog(getWidgetModel().getShowConfirmDialog());
             return true;
         };
@@ -89,7 +87,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
 
         // confirm tip
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolControlFigure figure = (AbstractBoolControlFigure) refreshableFigure;
+            var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setConfirmTip((String) newValue);
             return true;
         };
@@ -97,7 +95,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
 
         // password
         handler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolControlFigure figure = (AbstractBoolControlFigure) refreshableFigure;
+            var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setPassword((String) newValue);
             return true;
         };
@@ -106,7 +104,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
         // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
         // which is not the case for the bool control widget
         IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, refreshableFigure) -> {
-            AbstractBoolControlFigure figure = (AbstractBoolControlFigure) refreshableFigure;
+            var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setEnabled((Boolean) newValue);
             return true;
         };
@@ -125,8 +123,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
      * @param figure
      *            The figure of the widget
      */
-    private void configureButtonListener(
-            final AbstractBoolControlFigure figure) {
+    private void configureButtonListener(AbstractBoolControlFigure figure) {
         figure.addManualValueChangeListener(newValue -> {
             // If the display is not in run mode, don't do anything.
             if (getExecutionMode() != ExecutionMode.RUN_MODE) {
@@ -142,8 +139,7 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
             }
 
             if (actionIndex >= 0 && getWidgetModel().getActionsInput().getActionsList().size() > actionIndex) {
-                getWidgetModel().getActionsInput().getActionsList().get(
-                        actionIndex).run();
+                getWidgetModel().getActionsInput().getActionsList().get(actionIndex).run();
             }
         });
     }

@@ -53,7 +53,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
         Display.getDefault().asyncExec(() -> {
             connecting = true;
             connected = false;
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
@@ -64,7 +64,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
         Display.getDefault().asyncExec(() -> {
             connecting = false;
             connected = true;
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
@@ -75,7 +75,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
         Display.getDefault().asyncExec(() -> {
             connecting = false;
             connected = false;
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
@@ -86,7 +86,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
         Display.getDefault().asyncExec(() -> {
             connecting = false;
             connected = false;
-            Map newState = getCurrentState();
+            var newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });

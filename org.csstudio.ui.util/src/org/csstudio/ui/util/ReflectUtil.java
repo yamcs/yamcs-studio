@@ -34,8 +34,9 @@ public class ReflectUtil {
      * @return the class of the array
      */
     public static String getComponentType(String targetClass) {
-        if (!isArray(targetClass))
+        if (!isArray(targetClass)) {
             return null;
+        }
         return targetClass.substring(2, targetClass.length() - 1);
     }
 

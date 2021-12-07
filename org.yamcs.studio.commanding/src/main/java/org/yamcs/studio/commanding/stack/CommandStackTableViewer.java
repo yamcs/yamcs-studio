@@ -81,20 +81,20 @@ public class CommandStackTableViewer extends TableViewer {
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
-        Image level0Image = resourceManager
+        var level0Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
-        Image level1Image = resourceManager
+        var level1Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
-        Image level2Image = resourceManager
+        var level2Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
-        Image level3Image = resourceManager
+        var level3Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
-        Image level4Image = resourceManager
+        var level4Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
-        Image level5Image = resourceManager
+        var level5Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
 
-        TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
+        var rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);
         rowIdColumn.getColumn().setToolTipText("Sequence Number within Stack");
         rowIdColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -111,10 +111,10 @@ public class CommandStackTableViewer extends TableViewer {
         delayColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
-                int delayMs = cmd.getDelayMs();
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-                String numberAsString = decimalFormat.format(delayMs);
+                var cmd = (StackedCommand) element;
+                var delayMs = cmd.getDelayMs();
+                var decimalFormat = new DecimalFormat("#,##0");
+                var numberAsString = decimalFormat.format(delayMs);
                 return (delayMs > 0) ? numberAsString + " ms" : "-";
             }
         });
@@ -123,18 +123,18 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(delayColumn.getColumn(), new ColumnPixelData(0));
         // this.hideDelayColumn();
 
-        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
+        var nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
         nameColumn.setLabelProvider(new CommandSourceColumnLabelProvider(styleProvider));
         tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(300));
 
-        TableViewerColumn significanceColumn = new TableViewerColumn(this, SWT.CENTER);
+        var significanceColumn = new TableViewerColumn(this, SWT.CENTER);
         significanceColumn.getColumn().setText(COL_SIGNIFICANCE);
         significanceColumn.getColumn().setToolTipText("Significance Level");
         significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getMetaCommand().getSignificance() == null) {
                     return null;
                 }
@@ -156,7 +156,7 @@ public class CommandStackTableViewer extends TableViewer {
 
             @Override
             public String getToolTipText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getMetaCommand().getSignificance() == null) {
                     return super.getToolTipText(element);
                 }
@@ -166,18 +166,18 @@ public class CommandStackTableViewer extends TableViewer {
         significanceColumn.getColumn().setWidth(50);
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn constraintsColumn = new TableViewerColumn(this, SWT.LEFT);
+        var constraintsColumn = new TableViewerColumn(this, SWT.LEFT);
         constraintsColumn.getColumn().setText(COL_CONSTRAINTS);
         constraintsColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
-                StringBuilder buf = new StringBuilder();
-                for (int i = 0; i < cmd.getMetaCommand().getConstraintCount(); i++) {
+                var cmd = (StackedCommand) element;
+                var buf = new StringBuilder();
+                for (var i = 0; i < cmd.getMetaCommand().getConstraintCount(); i++) {
                     if (i != 0) {
                         buf.append(" and ");
                     }
-                    TransmissionConstraintInfo constraint = cmd.getMetaCommand().getConstraint(i);
+                    var constraint = cmd.getMetaCommand().getConstraint(i);
                     buf.append(constraint.getExpression());
                 }
                 return buf.length() != 0 ? buf.toString() : "-";
@@ -185,13 +185,13 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(constraintsColumn.getColumn(), new ColumnPixelData(250));
 
-        TableViewerColumn constraintsTimeOutColumn = new TableViewerColumn(this, SWT.CENTER);
+        var constraintsTimeOutColumn = new TableViewerColumn(this, SWT.CENTER);
         constraintsTimeOutColumn.getColumn().setText(COL_CONSTRAINTS_TIMEOUT);
         constraintsTimeOutColumn.getColumn().setToolTipText("Constraints Timeout");
         constraintsTimeOutColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 long timeout = -1;
                 for (TransmissionConstraintInfo constraint : cmd.getMetaCommand().getConstraintList()) {
                     timeout = Math.max(timeout, constraint.getTimeout());
@@ -202,7 +202,7 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(constraintsTimeOutColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.CENTER);
+        var releaseColumn = new TableViewerColumn(this, SWT.CENTER);
         releaseColumn.getColumn().setText(COL_RELEASE);
         releaseColumn.getColumn().setToolTipText("Release Time");
         releaseColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -213,19 +213,19 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
 
-        TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
+        var stateColumn = new TableViewerColumn(this, SWT.CENTER);
         stateColumn.getColumn().setText(COL_STATE);
         stateColumn.getColumn().setToolTipText("Stack State");
         stateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 return cmd.getStackedState().getText();
             }
 
             @Override
             public Color getBackground(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.isArmed()) {
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
                 } else if (cmd.getStackedState() == StackedState.ISSUED) {
@@ -239,7 +239,7 @@ public class CommandStackTableViewer extends TableViewer {
 
             @Override
             public Color getForeground(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getStackedState() == StackedState.REJECTED) {
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_RED);
                 }
@@ -249,13 +249,13 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
 
-        TableViewerColumn qColumn = new TableViewerColumn(this, SWT.CENTER);
+        var qColumn = new TableViewerColumn(this, SWT.CENTER);
         qColumn.getColumn().setText(COL_QUEUED);
         qColumn.getColumn().setToolTipText("Queued");
         qColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getQueuedState() == null) {
                     return grayBubble;
                 }
@@ -275,13 +275,13 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(qColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn rColumn = new TableViewerColumn(this, SWT.CENTER);
+        var rColumn = new TableViewerColumn(this, SWT.CENTER);
         rColumn.getColumn().setText(COL_RELEASED);
         rColumn.getColumn().setToolTipText("Released");
         rColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getReleasedState() == null) {
                     return grayBubble;
                 }
@@ -301,13 +301,13 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(rColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn sColumn = new TableViewerColumn(this, SWT.CENTER);
+        var sColumn = new TableViewerColumn(this, SWT.CENTER);
         sColumn.getColumn().setText(COL_SENT);
         sColumn.getColumn().setToolTipText("Sent");
         sColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
+                var cmd = (StackedCommand) element;
                 if (cmd.getSentState() == null) {
                     return grayBubble;
                 }
@@ -328,7 +328,7 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(sColumn.getColumn(), new ColumnPixelData(50));
 
         // column comment
-        TableViewerColumn commentColumn = new TableViewerColumn(this, SWT.LEFT);
+        var commentColumn = new TableViewerColumn(this, SWT.LEFT);
         commentColumn.getColumn().setText(COL_COMMENT);
         commentColumn.getColumn().setToolTipText("Free Text Comment");
         commentColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -404,9 +404,9 @@ public class CommandStackTableViewer extends TableViewer {
         }
         refreshScheduled = true;
 
-        long delayMs = refreshDelayMs;
-        Date currentTime = new Date();
-        long ellapsedMs = currentTime.getTime() - lastRefreshTime.getTime();
+        var delayMs = refreshDelayMs;
+        var currentTime = new Date();
+        var ellapsedMs = currentTime.getTime() - lastRefreshTime.getTime();
         if (ellapsedMs > delayMs) {
             // if last refresh if older than 200 ms, schedule the refresh now
             delayMs = 0;

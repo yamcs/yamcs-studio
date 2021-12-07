@@ -17,11 +17,11 @@ public class BooleanArrayVType extends YamcsVType implements VBooleanArray {
     public BooleanArrayVType(ParameterValue pval, boolean raw) {
         super(pval, raw);
 
-        int size = value.getArrayValueCount();
+        var size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
-        boolean[] booleanValues = new boolean[size];
-        for (int i = 0; i < booleanValues.length; i++) {
+        var booleanValues = new boolean[size];
+        for (var i = 0; i < booleanValues.length; i++) {
             booleanValues[i] = value.getArrayValue(i).getBooleanValue();
         }
         data = new ArrayBoolean(booleanValues);

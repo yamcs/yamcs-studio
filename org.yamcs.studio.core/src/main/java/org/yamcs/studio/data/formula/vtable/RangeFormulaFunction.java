@@ -64,9 +64,9 @@ class RangeFormulaFunction implements FormulaFunction {
     }
 
     @Override
-    public Object calculate(final List<Object> args) {
-        VNumber minValue = (VNumber) args.get(0);
-        VNumber maxValue = (VNumber) args.get(1);
+    public Object calculate(List<Object> args) {
+        var minValue = (VNumber) args.get(0);
+        var maxValue = (VNumber) args.get(1);
 
         if (minValue == null || maxValue == null) {
             return null;

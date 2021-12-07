@@ -27,10 +27,10 @@ public class ShowIndexInTreeViewAction extends Action {
 
     private boolean showIndex = false;
 
-    private ImageDescriptor showIndexImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-            OPIBuilderPlugin.PLUGIN_ID, "icons/show_index.png");
-    private ImageDescriptor hideIndexImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-            OPIBuilderPlugin.PLUGIN_ID, "icons/hide_index.png");
+    private ImageDescriptor showIndexImage = CustomMediaFactory.getInstance()
+            .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/show_index.png");
+    private ImageDescriptor hideIndexImage = CustomMediaFactory.getInstance()
+            .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/hide_index.png");
 
     public ShowIndexInTreeViewAction(EditPartViewer editPartViewer) {
         setText("Show Index");

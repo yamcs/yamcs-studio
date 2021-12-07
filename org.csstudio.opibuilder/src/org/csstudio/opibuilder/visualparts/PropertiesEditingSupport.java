@@ -23,19 +23,18 @@ public class PropertiesEditingSupport extends EditingSupport {
 
     private final Table table;
 
-    public PropertiesEditingSupport(final ColumnViewer viewer,
-            final Table table) {
+    public PropertiesEditingSupport(ColumnViewer viewer, Table table) {
         super(viewer);
         this.table = table;
     }
 
     @Override
-    protected boolean canEdit(final Object element) {
+    protected boolean canEdit(Object element) {
         return true;
     }
 
     @Override
-    protected CellEditor getCellEditor(final Object element) {
+    protected CellEditor getCellEditor(Object element) {
         AbstractWidgetProperty property;
         if ((property = getSelectedProperty()) != null) {
             return property.getPropertyDescriptor().createPropertyEditor(table);
@@ -44,18 +43,16 @@ public class PropertiesEditingSupport extends EditingSupport {
     }
 
     private AbstractWidgetProperty getSelectedProperty() {
-        IStructuredSelection selection = (IStructuredSelection) this
-                .getViewer().getSelection();
+        var selection = (IStructuredSelection) this.getViewer().getSelection();
         if (selection.getFirstElement() instanceof AbstractWidgetProperty) {
-            AbstractWidgetProperty property = (AbstractWidgetProperty) selection
-                    .getFirstElement();
+            var property = (AbstractWidgetProperty) selection.getFirstElement();
             return property;
         }
         return null;
     }
 
     @Override
-    protected Object getValue(final Object element) {
+    protected Object getValue(Object element) {
         if (element instanceof AbstractWidgetProperty) {
             return ((AbstractWidgetProperty) element).getPropertyValue();
         }
@@ -64,9 +61,9 @@ public class PropertiesEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected void setValue(final Object element, final Object value) {
+    protected void setValue(Object element, Object value) {
         if (element instanceof AbstractWidgetProperty) {
-            AbstractWidgetProperty prop = (AbstractWidgetProperty) element;
+            var prop = (AbstractWidgetProperty) element;
             prop.setPropertyValue(value);
             getViewer().refresh();
         }

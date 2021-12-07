@@ -10,11 +10,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.client.processor.ProcessorClient;
-import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
-import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -24,13 +20,13 @@ public class ArmCommandHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
-        CommandStackView commandStackView = (CommandStackView) part;
+        var commandStackView = (CommandStackView) part;
 
-        Shell shell = HandlerUtil.getActiveShellChecked(event);
-        CommandStack stack = CommandStack.getInstance();
-        StackedCommand command = stack.getActiveCommand();
+        var shell = HandlerUtil.getActiveShellChecked(event);
+        var stack = CommandStack.getInstance();
+        var command = stack.getActiveCommand();
         armCommand(shell, commandStackView, command);
 
         return null;
@@ -39,11 +35,10 @@ public class ArmCommandHandler extends AbstractHandler {
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
 
-        ProcessorClient processorClient = YamcsPlugin.getProcessorClient();
-        String qname = command.getName();
+        var processorClient = YamcsPlugin.getProcessorClient();
+        var qname = command.getName();
 
-        CommandBuilder builder = processorClient.prepareCommand(qname)
-                .withDryRun(true)
+        var builder = processorClient.prepareCommand(qname).withDryRun(true)
                 .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
 
         if (command.getComment() != null) {
@@ -61,17 +56,17 @@ public class ArmCommandHandler extends AbstractHandler {
         builder.issue().whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
-                    boolean doArm = false;
-                    SignificanceInfo significance = command.getMetaCommand().getSignificance();
+                    var doArm = false;
+                    var significance = command.getMetaCommand().getSignificance();
                     switch (significance.getConsequenceLevel()) {
                     case WATCH:
                     case WARNING:
                     case DISTRESS:
                     case CRITICAL:
                     case SEVERE:
-                        String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
+                        var level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
                                 + significance.getConsequenceLevel().toString().substring(1);
-                        String message = String.format("%s: Are you sure you want to arm this command?\n    %s\n\n%s",
+                        var message = String.format("%s: Are you sure you want to arm this command?\n    %s\n\n%s",
                                 level, command.toStyledString(view).getString(), significance.getReasonForWarning());
                         MessageDialog dialog = new ConfirmDialogWithCancelDefault(activeShell, "Confirm", message);
                         if (dialog.open() == MessageDialog.OK) {
@@ -105,10 +100,8 @@ public class ArmCommandHandler extends AbstractHandler {
     private static class ConfirmDialogWithCancelDefault extends MessageDialog {
 
         public ConfirmDialogWithCancelDefault(Shell parentShell, String title, String message) {
-            super(parentShell, title, null, message, MessageDialog.CONFIRM, new String[] {
-                    IDialogConstants.OK_LABEL,
-                    IDialogConstants.CANCEL_LABEL,
-            }, 1 /* cancel */);
+            super(parentShell, title, null, message, MessageDialog.CONFIRM,
+                    new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL, }, 1 /* cancel */);
             // setShellStyle(getShellStyle() | SWT.SHEET);
         }
     }

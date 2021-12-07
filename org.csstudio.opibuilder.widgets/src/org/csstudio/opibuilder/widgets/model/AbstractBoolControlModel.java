@@ -52,17 +52,16 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
     @Override
     protected void configureProperties() {
         super.configureProperties();
-        addProperty(new BooleanProperty(PROP_TOGGLE_BUTTON, "Toggle Button",
-                WidgetPropertyCategory.Behavior, DEFAULT_TOGGLE_BUTTON));
-        addProperty(new ComboProperty(PROP_CONFIRM_DIALOG, "Show Confirm Dialog",
-                WidgetPropertyCategory.Behavior, ShowConfirmDialog.stringValues(), 0));
-        addProperty(new StringProperty(PROP_PASSWORD, "Password",
-                WidgetPropertyCategory.Behavior, ""));
-        addProperty(new StringProperty(PROP_CONFIRM_TIP, "Confirm Message",
-                WidgetPropertyCategory.Behavior, DEFAULT_CONFIRM_TIP));
+        addProperty(new BooleanProperty(PROP_TOGGLE_BUTTON, "Toggle Button", WidgetPropertyCategory.Behavior,
+                DEFAULT_TOGGLE_BUTTON));
+        addProperty(new ComboProperty(PROP_CONFIRM_DIALOG, "Show Confirm Dialog", WidgetPropertyCategory.Behavior,
+                ShowConfirmDialog.stringValues(), 0));
+        addProperty(new StringProperty(PROP_PASSWORD, "Password", WidgetPropertyCategory.Behavior, ""));
+        addProperty(new StringProperty(PROP_CONFIRM_TIP, "Confirm Message", WidgetPropertyCategory.Behavior,
+                DEFAULT_CONFIRM_TIP));
 
-        addProperty(new IntegerProperty(PROP_PUSH_ACTION_INDEX, "Push Action Index",
-                WidgetPropertyCategory.Behavior, 0, 0, Integer.MAX_VALUE));
+        addProperty(new IntegerProperty(PROP_PUSH_ACTION_INDEX, "Push Action Index", WidgetPropertyCategory.Behavior, 0,
+                0, Integer.MAX_VALUE));
 
         addProperty(new IntegerProperty(PROP_RELEASED_ACTION_INDEX, "Release Action Index",
                 WidgetPropertyCategory.Behavior, 0, 0, Integer.MAX_VALUE));

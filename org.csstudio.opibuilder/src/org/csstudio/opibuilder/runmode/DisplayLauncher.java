@@ -24,8 +24,8 @@ import org.eclipse.ui.IEditorLauncher;
  */
 public class DisplayLauncher implements IEditorLauncher {
     @Override
-    public void open(final IPath path) {
-        IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
+    public void open(IPath path) {
+        var workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
         RunModeService.openDisplay(workspacePath, Optional.empty(), DisplayMode.NEW_TAB, Optional.empty());
     }
 }

@@ -42,14 +42,14 @@ public final class BooleanPropertyDescriptor extends PropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      */
-    public BooleanPropertyDescriptor(final Object id, final String displayName) {
+    public BooleanPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);
 
         setLabelProvider(new BooleanLabelProvider());
     }
 
     @Override
-    public CellEditor createPropertyEditor(final Composite parent) {
+    public CellEditor createPropertyEditor(Composite parent) {
         CellEditor editor = new CheckboxCellEditor(parent);
         if (getValidator() != null) {
             editor.setValidator(getValidator());
@@ -63,7 +63,7 @@ public final class BooleanPropertyDescriptor extends PropertyDescriptor {
     private final static class BooleanLabelProvider extends LabelProvider {
 
         @Override
-        public Image getImage(final Object element) {
+        public Image getImage(Object element) {
             if (element instanceof Boolean) {
                 if (((Boolean) element).booleanValue()) {
                     return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
@@ -78,7 +78,7 @@ public final class BooleanPropertyDescriptor extends PropertyDescriptor {
         }
 
         @Override
-        public String getText(final Object element) {
+        public String getText(Object element) {
             if (element instanceof Boolean) {
                 if (((Boolean) element).booleanValue()) {
                     return "yes";

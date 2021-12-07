@@ -1,10 +1,10 @@
 package org.csstudio.ui.util.helpers;
 
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
 public class ComboHistoryHelperSample {
@@ -18,8 +18,8 @@ public class ComboHistoryHelperSample {
      * @param args
      */
     public static void main(String[] args) {
-        Display display = Display.getDefault();
-        Shell shell = new Shell();
+        var display = Display.getDefault();
+        var shell = new Shell();
         shell.setSize(450, 300);
         shell.setText("SWT Application");
 
@@ -32,9 +32,9 @@ public class ComboHistoryHelperSample {
 
         new ComboHistoryHelper(null, "tag", combo) {
             @Override
-            public void newSelection(final String pvName) {
+            public void newSelection(String pvName) {
                 // Need to use \r\n. Unbelievable!!!
-                String newText = text.getText() + pvName + "\r\n";
+                var newText = text.getText() + pvName + "\r\n";
                 text.setText(newText);
 
             }

@@ -15,15 +15,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.yamcs.studio.autocomplete.sim.DSFunctionRegistry;
-import org.yamcs.studio.autocomplete.sim.SimDSFunctionSet;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.yamcs.studio.autocomplete.sim.DSFunctionRegistry;
+import org.yamcs.studio.autocomplete.sim.SimDSFunctionSet;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -80,7 +79,7 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
         if (plugin == null) {
             return;
         }
-        IDialogSettings ds = plugin.getDialogSettings();
+        var ds = plugin.getDialogSettings();
         if (ds != null) {
             settings = ds.getSection(HISTORY_TAG);
             if (settings == null) {
@@ -91,14 +90,13 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
 
     /** Save list values to persistent storage. */
     public synchronized void saveSettings() {
-        IDialogSettings ds = plugin.getDialogSettings();
+        var ds = plugin.getDialogSettings();
         if (ds != null) {
             for (Entry<String, LinkedList<String>> entry : fifos.entrySet()) {
-                final String value_tag = entry.getKey();
-                final LinkedList<String> fifo = entry.getValue();
+                var value_tag = entry.getKey();
+                var fifo = entry.getValue();
                 if (fifo != null && !fifo.isEmpty()) {
-                    settings.put(value_tag,
-                            fifo.toArray(new String[fifo.size()]));
+                    settings.put(value_tag, fifo.toArray(new String[fifo.size()]));
                 }
             }
         }
@@ -106,20 +104,20 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
 
     /** Clear list values from persistent storage. */
     public synchronized void clearSettings() {
-        IDialogSettings ds = plugin.getDialogSettings();
+        var ds = plugin.getDialogSettings();
         if (ds != null) {
             settings = ds.addNewSection(HISTORY_TAG);
         }
         fifos.clear();
     }
 
-    public synchronized LinkedList<String> getHistory(final String type) {
+    public synchronized LinkedList<String> getHistory(String type) {
         if (fifos.get(type) == null) {
-            final LinkedList<String> fifo = new LinkedList<>();
+            var fifo = new LinkedList<String>();
             if (settings != null) {
                 String values[] = settings.getArray(type);
                 if (values != null) {
-                    for (int i = values.length - 1; i >= 0; i--) {
+                    for (var i = values.length - 1; i >= 0; i--) {
                         // Load as if they were entered, i.e. skip duplicates
                         fifo.addFirst(values[i]);
                     }
@@ -139,16 +137,14 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
      *            The resource path of the requested image.
      * @return The <code>Image</code> from the given path in the given plugin.
      */
-    public Image getImageFromPlugin(final String pluginId,
-            final String relativePath) {
+    public Image getImageFromPlugin(String pluginId, String relativePath) {
         if (imageRegistry == null) {
             imageRegistry = new ImageRegistry(Display.getDefault());
         }
-        String key = pluginId + "." + relativePath;
+        var key = pluginId + "." + relativePath;
         // does image exist
         if (imageRegistry.get(key) == null) {
-            ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(
-                    pluginId, relativePath);
+            var descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
             imageRegistry.put(key, descr);
         }
         return imageRegistry.get(key);

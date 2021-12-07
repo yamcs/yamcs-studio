@@ -22,7 +22,7 @@ public class ListMath {
      *            end point (exclusive) for the sublist
      * @return the sublist
      */
-    public static ListDouble limit(final ListDouble data, final int start, final int end) {
+    public static ListDouble limit(ListDouble data, int start, int end) {
         return new ListDouble() {
 
             @Override
@@ -50,7 +50,7 @@ public class ListMath {
      *            end point (exclusive) for the sublist
      * @return the sublist
      */
-    public static ListNumber limit(final ListNumber data, final int start, final int end) {
+    public static ListNumber limit(ListNumber data, int start, int end) {
         return new ListDouble() {
 
             @Override
@@ -76,7 +76,7 @@ public class ListMath {
      *            end point (exclusive) for the sublist
      * @return the sublist
      */
-    public static ListLong limit(final ListLong data, final int start, final int end) {
+    public static ListLong limit(ListLong data, int start, int end) {
         return new ListLong() {
 
             @Override
@@ -102,7 +102,7 @@ public class ListMath {
      *            The additive constant
      * @return result[x] = data[x] * factor + offset
      */
-    public static ListDouble rescale(final ListNumber data, final double factor, final double offset) {
+    public static ListDouble rescale(ListNumber data, double factor, double offset) {
         if (factor == 1.0) {
             return add(data, offset);
         }
@@ -131,7 +131,7 @@ public class ListMath {
      *            The additive constant
      * @return result[x] = numerator / data[x] + offset
      */
-    public static ListDouble inverseRescale(final ListNumber data, final double numerator, final double offset) {
+    public static ListDouble inverseRescale(ListNumber data, double numerator, double offset) {
         return new ListDouble() {
 
             @Override
@@ -155,7 +155,7 @@ public class ListMath {
      *            The power to raise each number in the list to
      * @return result[x] = data[x] ** expon
      */
-    public static ListDouble pow(final ListNumber data, final double expon) {
+    public static ListDouble pow(ListNumber data, double expon) {
         return new ListDouble() {
 
             @Override
@@ -179,7 +179,7 @@ public class ListMath {
      *            The list of exponents to raise the base value to
      * @return result[x] = base ** expons[x]
      */
-    public static ListDouble pow(final double base, final ListNumber expons) {
+    public static ListDouble pow(double base, ListNumber expons) {
         return new ListDouble() {
 
             @Override
@@ -203,7 +203,7 @@ public class ListMath {
      *            the additive constant
      * @return result[x] = data[x] + offset
      */
-    public static ListDouble add(final ListNumber data, final double offset) {
+    public static ListDouble add(ListNumber data, double offset) {
         return new ListDouble() {
 
             @Override
@@ -228,7 +228,7 @@ public class ListMath {
      *            another list of numbers
      * @return result[x] = data1[x] + data2[x]
      */
-    public static ListDouble add(final ListNumber data1, final ListNumber data2) {
+    public static ListDouble add(ListNumber data1, ListNumber data2) {
         if (data1.size() != data2.size()) {
             throw new IllegalArgumentException(
                     "Can't sum ListNumbers of different size (" + data1.size() + " - " + data2.size() + ")");
@@ -257,7 +257,7 @@ public class ListMath {
      *            another list of numbers
      * @return result[x] = data1[x] - data2[x]
      */
-    public static ListDouble subtract(final ListNumber data1, final ListNumber data2) {
+    public static ListDouble subtract(ListNumber data1, ListNumber data2) {
         if (data1.size() != data2.size()) {
             throw new IllegalArgumentException(
                     "Can't subtract ListNumbers of different size (" + data1.size() + " - " + data2.size() + ")");
@@ -286,11 +286,10 @@ public class ListMath {
      *            another list of numbers
      * @return result[x] = data1[x] * data2[x]
      */
-    public static ListDouble multiply(final ListNumber data1, final ListNumber data2) {
+    public static ListDouble multiply(ListNumber data1, ListNumber data2) {
         if (data1.size() != data2.size()) {
-            throw new IllegalArgumentException(
-                    "Can't do element-wise mult on ListNumbers of different size ("
-                            + data1.size() + " - " + data2.size() + ")");
+            throw new IllegalArgumentException("Can't do element-wise mult on ListNumbers of different size ("
+                    + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
 
@@ -316,11 +315,10 @@ public class ListMath {
      *            another list of numbers
      * @return result[x] = data1[x] / data2[x]
      */
-    public static ListDouble divide(final ListNumber data1, final ListNumber data2) {
+    public static ListDouble divide(ListNumber data1, ListNumber data2) {
         if (data1.size() != data2.size()) {
-            throw new IllegalArgumentException(
-                    "Can't do element-wise mult on ListNumbers of different size ("
-                            + data1.size() + " - " + data2.size() + ")");
+            throw new IllegalArgumentException("Can't do element-wise mult on ListNumbers of different size ("
+                    + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
 
@@ -351,14 +349,14 @@ public class ListMath {
         }
 
         double cosarg, sinarg;
-        double[] resX = new double[x.size()];
-        double[] resY = new double[x.size()];
-        int direction = 1; // -1 would be inverse
+        var resX = new double[x.size()];
+        var resY = new double[x.size()];
+        var direction = 1; // -1 would be inverse
         double size = x.size();
 
-        for (int i = 0; i < x.size(); i++) {
-            double arg = -direction * 2.0 * Math.PI * (double) i / size;
-            for (int k = 0; k < x.size(); k++) {
+        for (var i = 0; i < x.size(); i++) {
+            var arg = -direction * 2.0 * Math.PI * (double) i / size;
+            for (var k = 0; k < x.size(); k++) {
                 cosarg = Math.cos(k * arg);
                 sinarg = Math.sin(k * arg);
                 resX[i] += (x.getDouble(k) * cosarg - y.getDouble(k) * sinarg);
@@ -367,7 +365,7 @@ public class ListMath {
         }
 
         if (direction == 1) {
-            for (int i = 0; i < x.size(); i++) {
+            for (var i = 0; i < x.size(); i++) {
                 resX[i] = resX[i] / size;
                 resY[i] = resY[i] / size;
             }

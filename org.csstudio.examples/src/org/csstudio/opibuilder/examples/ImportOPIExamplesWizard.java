@@ -41,19 +41,18 @@ public class ImportOPIExamplesWizard extends Wizard implements IImportWizard {
             public void createControl(Composite parent) {
                 setTitle("Install OPI Examples");
                 setDescription("Creates a new project with sample OPI displays");
-                Composite container = new Composite(parent, SWT.None);
+                var container = new Composite(parent, SWT.None);
                 container.setLayout(new GridLayout());
                 setControl(container);
 
-                Label label = new Label(container, SWT.WRAP);
-                GridData gd = new GridData();
+                var label = new Label(container, SWT.WRAP);
+                var gd = new GridData();
                 gd.widthHint = 500;
                 label.setLayoutData(gd);
 
-                label.setText("OPI Examples will be imported to your workspace. " +
-                        NLS.bind("If there is already a project named \"{0}\" in your workspace," +
-                                "the import will fail. ",
-                                InstallOPIExamplesAction.PROJECT_NAME)
+                label.setText("OPI Examples will be imported to your workspace. "
+                        + NLS.bind("If there is already a project named \"{0}\" in your workspace,"
+                                + "the import will fail. ", InstallOPIExamplesAction.PROJECT_NAME)
                         + "Please rename or delete it and import again.");
             }
         });

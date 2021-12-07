@@ -128,19 +128,17 @@ public class StartEndRangeWidget extends Canvas {
         if (this.min != min) {
             if (min <= this.max) {
                 this.min = min;
-                double oldSelectedRange = getSelectedRange();
+                var oldSelectedRange = getSelectedRange();
                 if (followMin || this.selectedMin < min) {
                     this.selectedMin = min;
                 }
                 if (this.selectedMax < min) {
-                    this.selectedMax = min + oldSelectedRange > this.max ? this.max
-                            : min + oldSelectedRange;
+                    this.selectedMax = min + oldSelectedRange > this.max ? this.max : min + oldSelectedRange;
                 }
                 recalculateDistancePerPx();
             } else {
                 throw new IllegalArgumentException(
-                        "Invalid argument, min value " + min
-                                + " must be smaller than max " + this.max);
+                        "Invalid argument, min value " + min + " must be smaller than max " + this.max);
             }
         }
     }
@@ -165,8 +163,7 @@ public class StartEndRangeWidget extends Canvas {
                 recalculateDistancePerPx();
             } else {
                 throw new IllegalArgumentException(
-                        "Invalid argument, max value " + max
-                                + " must be larger than minimum " + this.min);
+                        "Invalid argument, max value " + max + " must be larger than minimum " + this.min);
             }
         }
     }
@@ -213,8 +210,7 @@ public class StartEndRangeWidget extends Canvas {
     public void setSelectedMin(double selectedMin) {
         if (rangeSet) {
             if (this.selectedMin != selectedMin) {
-                if (!(selectedMin < this.min)
-                        && (selectedMin <= this.selectedMax)) {
+                if (!(selectedMin < this.min) && (selectedMin <= this.selectedMax)) {
                     this.selectedMin = selectedMin;
                     followMin = false;
                     if (selectedMin == this.min) {
@@ -222,15 +218,12 @@ public class StartEndRangeWidget extends Canvas {
                     }
                     fireRangeChanged();
                 } else {
-                    throw new IllegalArgumentException(
-                            "Invalid value for selectedMin," + selectedMin
-                                    + " must be within the range " + this.min
-                                    + "-" + this.selectedMax);
+                    throw new IllegalArgumentException("Invalid value for selectedMin," + selectedMin
+                            + " must be within the range " + this.min + "-" + this.selectedMax);
                 }
             }
         } else {
-            throw new IllegalArgumentException(
-                    "Widget Range is not set, thus selected range cannot be set.");
+            throw new IllegalArgumentException("Widget Range is not set, thus selected range cannot be set.");
         }
     }
 
@@ -251,8 +244,7 @@ public class StartEndRangeWidget extends Canvas {
     public void setSelectedMax(double selectedMax) {
         if (rangeSet) {
             if (this.selectedMax != selectedMax) {
-                if (!(selectedMax > this.max)
-                        && (selectedMax >= this.selectedMin)) {
+                if (!(selectedMax > this.max) && (selectedMax >= this.selectedMin)) {
                     this.selectedMax = selectedMax;
                     followMax = false;
                     if (selectedMax == this.max) {
@@ -260,15 +252,12 @@ public class StartEndRangeWidget extends Canvas {
                     }
                     fireRangeChanged();
                 } else {
-                    throw new IllegalArgumentException(
-                            "Invalid value for selectedMax," + selectedMax
-                                    + " must be within the range "
-                                    + this.selectedMin + "-" + this.max);
+                    throw new IllegalArgumentException("Invalid value for selectedMax," + selectedMax
+                            + " must be within the range " + this.selectedMin + "-" + this.max);
                 }
             }
         } else {
-            throw new IllegalArgumentException(
-                    "Widget Range is not set, thus selected range cannot be set.");
+            throw new IllegalArgumentException("Widget Range is not set, thus selected range cannot be set.");
         }
     }
 
@@ -288,8 +277,7 @@ public class StartEndRangeWidget extends Canvas {
                 throw new IllegalArgumentException("Invalid range values.");
             }
         } else {
-            throw new IllegalArgumentException(
-                    "Widget Range is not set, thus selected range cannot be set.");
+            throw new IllegalArgumentException("Widget Range is not set, thus selected range cannot be set.");
         }
     }
 
@@ -308,9 +296,7 @@ public class StartEndRangeWidget extends Canvas {
                 // there was no prior range set
                 // or the old selected range no longer fits in the current range
                 // reset the selected range
-                if (!rangeSet ||
-                        selectedMax <= this.min ||
-                        selectedMin >= this.max) {
+                if (!rangeSet || selectedMax <= this.min || selectedMin >= this.max) {
                     this.selectedMin = min;
                     followMin = true;
                     this.selectedMax = max;
@@ -330,8 +316,7 @@ public class StartEndRangeWidget extends Canvas {
                 rangeSet = true;
                 recalculateDistancePerPx();
             } else {
-                throw new IllegalArgumentException(
-                        "Invalid range values, minimum cannot be greater than maximum");
+                throw new IllegalArgumentException("Invalid range values, minimum cannot be greater than maximum");
             }
         }
     }
@@ -345,8 +330,7 @@ public class StartEndRangeWidget extends Canvas {
      * @param selectedMax
      */
     public synchronized void setRanges(double min, double max, double selectedMin, double selectedMax) {
-        if (min <= selectedMin && selectedMin <= selectedMax
-                && selectedMax <= max) {
+        if (min <= selectedMin && selectedMin <= selectedMax && selectedMax <= max) {
             this.min = min;
             this.max = max;
             this.rangeSet = true;
@@ -426,10 +410,10 @@ public class StartEndRangeWidget extends Canvas {
         @Override
         public void mouseDown(MouseEvent e) {
             // Save the starting point
-            double zero = (0 - min) * distancePerPx;
+            var zero = (0 - min) * distancePerPx;
 
-            double minSelectedOval = zero + (selectedMin * distancePerPx);
-            double maxSelectedOval = zero + (selectedMax * distancePerPx);
+            var minSelectedOval = zero + (selectedMin * distancePerPx);
+            var maxSelectedOval = zero + (selectedMax * distancePerPx);
 
             int valueAlongOrientationAxis;
             int valueAlongNonOrientationAxis;
@@ -472,7 +456,7 @@ public class StartEndRangeWidget extends Canvas {
             if (rangeSet) {
                 // System.out.println(e.x + " " + e.y);
                 int valueAlongOrientationAxis;
-                double zero = (0 - min * distancePerPx);
+                var zero = (0 - min * distancePerPx);
                 if (orientation.equals(ORIENTATION.HORIZONTAL)) {
                     valueAlongOrientationAxis = e.x;
                 } else {
@@ -480,34 +464,26 @@ public class StartEndRangeWidget extends Canvas {
                 }
                 switch (moveControl) {
                 case SELECTEDMIN:
-                    double newSelectedMin = Math.max(
-                            (valueAlongOrientationAxis - zero) / distancePerPx,
-                            getMin());
+                    var newSelectedMin = Math.max((valueAlongOrientationAxis - zero) / distancePerPx, getMin());
                     if (newSelectedMin < getSelectedMax()) {
                         setSelectedMin(newSelectedMin);
                     }
                     break;
                 case SELECTEDMAX:
-                    double newSelectedMax = Math.min(
-                            (valueAlongOrientationAxis - zero) / distancePerPx,
-                            getMax());
+                    var newSelectedMax = Math.min((valueAlongOrientationAxis - zero) / distancePerPx, getMax());
                     if (newSelectedMax > getSelectedMin()) {
                         setSelectedMax(newSelectedMax);
                     }
                     break;
                 case RANGE:
-                    double increment = ((valueAlongOrientationAxis - rangeX) / distancePerPx);
-                    if ((getSelectedMin() + increment) >= getMin()
-                            && (getSelectedMax() + increment) <= getMax()) {
-                        setSelectedRange(getSelectedMin() + increment,
-                                getSelectedMax() + increment);
+                    var increment = ((valueAlongOrientationAxis - rangeX) / distancePerPx);
+                    if ((getSelectedMin() + increment) >= getMin() && (getSelectedMax() + increment) <= getMax()) {
+                        setSelectedRange(getSelectedMin() + increment, getSelectedMax() + increment);
                         rangeX = valueAlongOrientationAxis;
                     } else if (getSelectedMin() + increment < getMin()) {
-                        setSelectedRange(getMin(), getMin()
-                                + getSelectedRange());
+                        setSelectedRange(getMin(), getMin() + getSelectedRange());
                     } else if (getSelectedMax() + increment > getMax()) {
-                        setSelectedRange(getMax() - getSelectedRange(),
-                                getMax());
+                        setSelectedRange(getMax() - getSelectedRange(), getMax());
                     }
                     break;
                 default:
@@ -533,22 +509,22 @@ public class StartEndRangeWidget extends Canvas {
         @Override
         public void paintControl(PaintEvent e) {
             // selected min max arcs
-            int arcRadius = 5;
+            var arcRadius = 5;
             int startAngle;
 
-            Point minArc = new Point(0, 0);
+            var minArc = new Point(0, 0);
             Point maxArc;
 
             // selection Rectangle
             // rectangleHeight = 2*arcRadius
-            int rectangleHeight = 10;
+            var rectangleHeight = 10;
             Point topLeft;
             Point bottomRight;
-            Color rectangleFill = new Color(getDisplay(), 255, 255, 255);
-            Color arcFill = new Color(getDisplay(), 255, 255, 255);
+            var rectangleFill = new Color(getDisplay(), 255, 255, 255);
+            var arcFill = new Color(getDisplay(), 255, 255, 255);
 
             // Range line
-            Point origin = new Point(arcRadius, arcRadius);
+            var origin = new Point(arcRadius, arcRadius);
             Point end;
 
             if (Double.isInfinite(distancePerPx) || Double.isNaN(distancePerPx)) {
@@ -568,35 +544,28 @@ public class StartEndRangeWidget extends Canvas {
                     maxArc = new Point(0, getClientArea().height - (2 * arcRadius));
 
                     topLeft = new Point(minArc.x, minArc.y + arcRadius);
-                    bottomRight = new Point(maxArc.x + rectangleHeight,
-                            maxArc.y + arcRadius);
+                    bottomRight = new Point(maxArc.x + rectangleHeight, maxArc.y + arcRadius);
                 }
             } else {
-                double zero = (0 - min) * distancePerPx;
+                var zero = (0 - min) * distancePerPx;
                 if (orientation.equals(ORIENTATION.HORIZONTAL)) {
                     end = new Point(getClientArea().width - (arcRadius + 1), arcRadius);
 
                     startAngle = 90;
-                    minArc = new Point(
-                            (int) (zero + (selectedMin * distancePerPx)), 0);
-                    maxArc = new Point(
-                            (int) (zero + (selectedMax * distancePerPx)), 0);
+                    minArc = new Point((int) (zero + (selectedMin * distancePerPx)), 0);
+                    maxArc = new Point((int) (zero + (selectedMax * distancePerPx)), 0);
 
                     topLeft = new Point(minArc.x + arcRadius, minArc.y);
-                    bottomRight = new Point(maxArc.x + arcRadius, maxArc.y
-                            + rectangleHeight);
+                    bottomRight = new Point(maxArc.x + arcRadius, maxArc.y + rectangleHeight);
                 } else {
                     end = new Point(arcRadius, getClientArea().height - (arcRadius + 1));
 
                     startAngle = 360;
-                    minArc = new Point(0,
-                            (int) (zero + (selectedMin * distancePerPx)));
-                    maxArc = new Point(0,
-                            (int) (zero + (selectedMax * distancePerPx)));
+                    minArc = new Point(0, (int) (zero + (selectedMin * distancePerPx)));
+                    maxArc = new Point(0, (int) (zero + (selectedMax * distancePerPx)));
 
                     topLeft = new Point(minArc.x, minArc.y + arcRadius);
-                    bottomRight = new Point(maxArc.x + (2 * arcRadius),
-                            maxArc.y + arcRadius);
+                    bottomRight = new Point(maxArc.x + (2 * arcRadius), maxArc.y + arcRadius);
                 }
             }
 
@@ -613,10 +582,8 @@ public class StartEndRangeWidget extends Canvas {
             e.gc.drawArc(maxArc.x, maxArc.y, 10, 10, startAngle, -180);
 
             e.gc.setBackground(rectangleFill);
-            Rectangle rectangle = new Rectangle(topLeft.x, topLeft.y,
-                    bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
-            e.gc.fillRectangle(rectangle.x, rectangle.y, rectangle.width,
-                    rectangle.height);
+            var rectangle = new Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+            e.gc.fillRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
             e.gc.drawRectangle(rectangle);
         }
     };

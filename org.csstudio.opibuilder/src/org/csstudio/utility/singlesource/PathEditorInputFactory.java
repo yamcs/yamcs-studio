@@ -10,7 +10,6 @@
 package org.csstudio.utility.singlesource;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
@@ -25,14 +24,14 @@ public class PathEditorInputFactory implements IElementFactory {
     public static final String TAG_PATH = "path";
 
     @Override
-    public IAdaptable createElement(final IMemento memento) {
-        String port_path = memento.getString(TAG_PATH);
+    public IAdaptable createElement(IMemento memento) {
+        var port_path = memento.getString(TAG_PATH);
         if (port_path == null) {
             return null;
         }
 
         // TODO Use URL Path
-        IPath path = Path.fromPortableString(port_path);
+        var path = Path.fromPortableString(port_path);
         return new PathEditorInput(path);
     }
 }

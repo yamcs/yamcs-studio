@@ -47,8 +47,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     protected boolean stretch = false;
     protected boolean autoSize = true;
     protected PermutationMatrix oldPermutationMatrix = null;
-    protected PermutationMatrix permutationMatrix = PermutationMatrix
-            .generateIdentityMatrix();
+    protected PermutationMatrix permutationMatrix = PermutationMatrix.generateIdentityMatrix();
 
     protected boolean animationDisabled = false;
     protected boolean alignedToNearestSecond = false;
@@ -75,10 +74,10 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         this.autoSize = sip.isAutoSize();
         this.animationDisabled = sip.isAnimationDisabled();
         this.alignedToNearestSecond = sip.isAlignedToNearestSecond();
-        this.backgroundColor = sip.getBackgroundColor() == null ? new Color(
-                Display.getCurrent(), new RGB(0, 0, 0)) : sip.getBackgroundColor();
-        this.colorToChange = sip.getColorToChange() == null ? new Color(
-                Display.getCurrent(), new RGB(0, 0, 0)) : sip.getColorToChange();
+        this.backgroundColor = sip.getBackgroundColor() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
+                : sip.getBackgroundColor();
+        this.colorToChange = sip.getColorToChange() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
+                : sip.getColorToChange();
     }
 
     @Override
@@ -136,8 +135,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         if (isEditMode()) {
             return;
         }
-        if (newColor == null
-                || (currentColor != null && currentColor.equals(newColor))) {
+        if (newColor == null || (currentColor != null && currentColor.equals(newColor))) {
             return;
         }
         this.currentColor = newColor;
@@ -149,8 +147,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         if (isEditMode()) {
             return;
         }
-        if (newColor == null
-                || (colorToChange != null && colorToChange.equals(newColor))) {
+        if (newColor == null || (colorToChange != null && colorToChange.equals(newColor))) {
             return;
         }
         this.colorToChange = newColor;
@@ -180,8 +177,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     @Override
     public void setBounds(Rectangle newBounds) {
-        if (newBounds == null || newBounds.equals(this.bounds)
-                || newBounds.width <= 0 || newBounds.height <= 0) {
+        if (newBounds == null || newBounds.equals(this.bounds) || newBounds.width <= 0 || newBounds.height <= 0) {
             return;
         }
         if (this.bounds == null) {
@@ -189,10 +185,10 @@ public abstract class AbstractSymbolImage implements SymbolImage {
             resizeImage();
             return;
         }
-        Rectangle oldBounds = this.bounds.getCopy();
+        var oldBounds = this.bounds.getCopy();
         this.bounds = newBounds.getCopy();
         if (autoSize) {
-            Dimension dim = getAutoSizedDimension();
+            var dim = getAutoSizedDimension();
             if (dim == null) {
                 return;
             }
@@ -200,8 +196,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
                 resizeImage();
             }
         } else {
-            if (oldBounds.width != newBounds.width
-                    || oldBounds.height != newBounds.height) {
+            if (oldBounds.width != newBounds.width || oldBounds.height != newBounds.height) {
                 resizeImage();
             }
         }
@@ -216,7 +211,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     @Override
-    public void setAutoSize(final boolean autoSize) {
+    public void setAutoSize(boolean autoSize) {
         if (this.autoSize == autoSize) {
             return;
         }
@@ -227,7 +222,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     @Override
-    public void setStretch(final boolean newval) {
+    public void setStretch(boolean newval) {
         if (stretch == newval) {
             return;
         }
@@ -240,7 +235,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // ************************************************************
 
     @Override
-    public void setLeftCrop(final int newval) {
+    public void setLeftCrop(int newval) {
         if (leftCrop == newval || newval < 0) {
             return;
         }
@@ -249,7 +244,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     @Override
-    public void setRightCrop(final int newval) {
+    public void setRightCrop(int newval) {
         if (rightCrop == newval || newval < 0) {
             return;
         }
@@ -258,7 +253,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     @Override
-    public void setBottomCrop(final int newval) {
+    public void setBottomCrop(int newval) {
         if (bottomCrop == newval || newval < 0) {
             return;
         }
@@ -267,7 +262,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     @Override
-    public void setTopCrop(final int newval) {
+    public void setTopCrop(int newval) {
         if (topCrop == newval || newval < 0) {
             return;
         }
@@ -280,12 +275,11 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // ************************************************************
 
     @Override
-    public void setPermutationMatrix(final PermutationMatrix permutationMatrix) {
+    public void setPermutationMatrix(PermutationMatrix permutationMatrix) {
         this.oldPermutationMatrix = this.permutationMatrix;
         this.permutationMatrix = permutationMatrix;
         if (permutationMatrix == null
-                || (oldPermutationMatrix != null && oldPermutationMatrix
-                        .equals(permutationMatrix))) {
+                || (oldPermutationMatrix != null && oldPermutationMatrix.equals(permutationMatrix))) {
             return;
         }
         resizeImage();
@@ -301,7 +295,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // ************************************************************
 
     @Override
-    public void setAnimationDisabled(final boolean stop) {
+    public void setAnimationDisabled(boolean stop) {
         if (animationDisabled == stop) {
             return;
         }

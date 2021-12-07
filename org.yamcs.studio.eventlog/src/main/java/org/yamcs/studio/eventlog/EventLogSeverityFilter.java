@@ -2,7 +2,6 @@ package org.yamcs.studio.eventlog;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 
 public class EventLogSeverityFilter extends ViewerFilter {
@@ -16,7 +15,7 @@ public class EventLogSeverityFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof EventLogItem) {
-            Event event = ((EventLogItem) element).event;
+            var event = ((EventLogItem) element).event;
             switch (minimumSeverity) {
             case INFO:
                 return true;

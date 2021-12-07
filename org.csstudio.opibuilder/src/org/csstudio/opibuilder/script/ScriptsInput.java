@@ -40,7 +40,7 @@ public class ScriptsInput {
      * @return a total contents copy of this ScriptsInput.
      */
     public ScriptsInput getCopy() {
-        ScriptsInput copy = new ScriptsInput();
+        var copy = new ScriptsInput();
         for (ScriptData data : scriptList) {
             copy.getScriptList().add(data.getCopy());
         }
@@ -53,8 +53,9 @@ public class ScriptsInput {
             return "no script attached";
         }
         if (scriptList.size() == 1) {
-            if (scriptList.get(0).isEmbedded())
+            if (scriptList.get(0).isEmbedded()) {
                 return scriptList.get(0).getScriptName();
+            }
             return scriptList.get(0).getPath().toString();
         }
         return scriptList.size() + " scripts attached";

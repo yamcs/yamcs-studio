@@ -21,7 +21,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Display;
 
 /**
  * Show details information of widget's primary PV.
@@ -33,8 +32,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
         private Map<String, IPV> pvMap;
 
         public PVsInfoDialog(Shell parentShell, String dialogTitle, Map<String, IPV> pvMap) {
-            super(parentShell, dialogTitle, null, "PVs' details on this widget:",
-                    MessageDialog.INFORMATION, new String[] { JFaceResources.getString("ok") }, 0);
+            super(parentShell, dialogTitle, null, "PVs' details on this widget:", MessageDialog.INFORMATION,
+                    new String[] { JFaceResources.getString("ok") }, 0);
             this.pvMap = pvMap;
         }
 
@@ -44,11 +43,11 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                 return super.createCustomArea(parent);
             }
             parent.setLayout(new FillLayout());
-            TabFolder tabFolder = new TabFolder(parent, SWT.None);
+            var tabFolder = new TabFolder(parent, SWT.None);
             for (Entry<String, IPV> entry : pvMap.entrySet()) {
-                TabItem tabItem = new TabItem(tabFolder, SWT.None);
+                var tabItem = new TabItem(tabFolder, SWT.None);
                 tabItem.setText(entry.getKey());
-                Text text = new Text(tabFolder, SWT.MULTI | SWT.READ_ONLY);
+                var text = new Text(tabFolder, SWT.MULTI | SWT.READ_ONLY);
                 text.setText(getPVInfo(entry.getValue()));
                 tabItem.setControl(text);
 
@@ -72,21 +71,19 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        if (getSelectedWidget() == null ||
-                getSelectedWidget().getAllPVs() == null ||
-                getSelectedWidget().getAllPVs().size() == 0) {
+        if (getSelectedWidget() == null || getSelectedWidget().getAllPVs() == null
+                || getSelectedWidget().getAllPVs().size() == 0) {
             MessageDialog.openInformation(null, "No PV", "No related PV on this widget.");
             return;
         }
 
-        PVsInfoDialog dialog = new PVsInfoDialog(
-                targetPart.getSite().getShell(), "PV Info", getSelectedWidget().getAllPVs());
+        var dialog = new PVsInfoDialog(targetPart.getSite().getShell(), "PV Info", getSelectedWidget().getAllPVs());
         dialog.open();
 
     }
 
     private String getPVInfo(IPV pv) {
-        StringBuilder stateInfo = new StringBuilder();
+        var stateInfo = new StringBuilder();
         if (!pv.isStarted()) {
             stateInfo.append("Not started");
         } else if (pv.isConnected()) {
@@ -95,13 +92,13 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             stateInfo.append("Connecting");
         }
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append("Name: " + pv.getName() + "\n");
         sb.append("State: " + stateInfo + "\n");
         if (pv.getValue() != null) {
             sb.append((pv.isConnected() ? "Value: " : "Last received value: ") + pv.getValue() + "\n");
             sb.append("Display Info: ");
-            Display displayInfo = VTypeHelper.getDisplayInfo(pv.getValue());
+            var displayInfo = VTypeHelper.getDisplayInfo(pv.getValue());
             if (displayInfo != null) {
                 sb.append("\nUnits: ");
                 sb.append(displayInfo.getUnits());

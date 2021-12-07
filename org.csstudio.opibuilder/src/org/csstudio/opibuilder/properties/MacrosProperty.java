@@ -40,8 +40,8 @@ public class MacrosProperty extends AbstractWidgetProperty {
      * @param default_macros
      *            the default macros when the widget is first created.
      */
-    public MacrosProperty(String prop_id, String description,
-            WidgetPropertyCategory category, MacrosInput default_macros) {
+    public MacrosProperty(String prop_id, String description, WidgetPropertyCategory category,
+            MacrosInput default_macros) {
         super(prop_id, description, category, default_macros);
 
     }
@@ -62,9 +62,9 @@ public class MacrosProperty extends AbstractWidgetProperty {
     @Override
     public Object getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
-            MacrosInput value = ((MacrosInput) super.getPropertyValue()).getCopy();
+            var value = ((MacrosInput) super.getPropertyValue()).getCopy();
             for (String key : value.getMacrosMap().keySet()) {
-                String newS = OPIBuilderMacroUtil.replaceMacros(widgetModel, value.getMacrosMap().get(key));
+                var newS = OPIBuilderMacroUtil.replaceMacros(widgetModel, value.getMacrosMap().get(key));
                 if (!newS.equals(value.getMacrosMap().get(key))) {
                     value.getMacrosMap().put(key, newS);
                 }
@@ -82,10 +82,10 @@ public class MacrosProperty extends AbstractWidgetProperty {
 
     @Override
     public MacrosInput readValueFromXML(Element propElement) {
-        LinkedHashMap<String, String> macros = new LinkedHashMap<>();
-        boolean b = true;
+        var macros = new LinkedHashMap<String, String>();
+        var b = true;
         for (Object oe : propElement.getChildren()) {
-            Element se = (Element) oe;
+            var se = (Element) oe;
             if (se.getName().equals(XML_ELEMENT_INCLUDE_PARENT_MACROS)) {
                 b = Boolean.parseBoolean(se.getText());
             } else {
@@ -98,12 +98,12 @@ public class MacrosProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        MacrosInput macros = (MacrosInput) propertyValue;
-        Element be = new Element(XML_ELEMENT_INCLUDE_PARENT_MACROS);
+        var macros = (MacrosInput) propertyValue;
+        var be = new Element(XML_ELEMENT_INCLUDE_PARENT_MACROS);
         be.setText("" + macros.isInclude_parent_macros());
         propElement.addContent(be);
         for (String key : macros.getMacrosMap().keySet()) {
-            Element newElement = new Element(key);
+            var newElement = new Element(key);
             newElement.setText(macros.getMacrosMap().get(key));
             propElement.addContent(newElement);
         }

@@ -18,7 +18,7 @@ public class Activator extends AbstractUIPlugin {
         bundleContext = context;
         plugin = this;
         beeper = new Beeper();
-        YamcsSubscriptionService service = YamcsPlugin.getService(YamcsSubscriptionService.class);
+        var service = YamcsPlugin.getService(YamcsSubscriptionService.class);
         service.addParameterValueListener(beeper);
     }
 

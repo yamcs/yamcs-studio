@@ -35,7 +35,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -62,8 +61,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
         @Override
         public void mouseEnter(MouseEvent e) {
-            control.setToolTipText(getConnectionText() + editPart.getWidgetModel()
-                    .getTooltip());
+            control.setToolTipText(getConnectionText() + editPart.getWidgetModel().getTooltip());
         };
 
         private String getConnectionText() {
@@ -105,7 +103,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      * @param editpart
      *            the editpart that holds this figure
      */
-    public AbstractSWTWidgetFigure(final AbstractBaseEditPart editpart) {
+    public AbstractSWTWidgetFigure(AbstractBaseEditPart editpart) {
         this(editpart, SWT.NONE);
     }
 
@@ -117,7 +115,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      * @param style
      *            style of the SWT widget, which will be passed to {@link #createSWTWidget(Composite, int)}.
      */
-    public AbstractSWTWidgetFigure(final AbstractBaseEditPart editpart, final int style) {
+    public AbstractSWTWidgetFigure(AbstractBaseEditPart editpart, int style) {
         super();
         this.editPart = editpart;
         this.composite = (Composite) editpart.getViewer().getControl();
@@ -177,8 +175,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                 hookGEFToSWTWidget(swtWidget, menuDetectListener);
 
                 // hook the context menu to combo
-                swtWidget.setMenu(editPart.getViewer().getContextMenu()
-                        .createContextMenu(composite));
+                swtWidget.setMenu(editPart.getViewer().getContextMenu().createContextMenu(composite));
             }
 
             /**
@@ -188,8 +185,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
              * @param menuDetectListener
              * @param toolTipListener
              */
-            private void hookGEFToSWTWidget(final Control swtWidget,
-                    MenuDetectListener menuDetectListener) {
+            private void hookGEFToSWTWidget(Control swtWidget, MenuDetectListener menuDetectListener) {
                 swtWidget.addMenuDetectListener(menuDetectListener);
 
                 addMouseTrackListener(swtWidget, new ToolTipListener(swtWidget));
@@ -375,8 +371,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             if (!isDirectlyOnDisplay()) {
                 updateManagerListener = new UpdateListener() {
                     @Override
-                    public void notifyPainting(Rectangle damage,
-                            @SuppressWarnings("rawtypes") Map dirtyRegions) {
+                    public void notifyPainting(Rectangle damage, @SuppressWarnings("rawtypes") Map dirtyRegions) {
                         updateWidgetVisibility();
                     }
 
@@ -394,10 +389,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      * relocate the widget so it follows the figure position.
      */
     protected void relocateWidget() {
-        if (wrapComposite != null
-                && getParent().getParent() instanceof Viewport) {
-            Rectangle viewPortArea = getParent().getParent().getClientArea();
-            Rectangle clientArea = getClientArea();
+        if (wrapComposite != null && getParent().getParent() instanceof Viewport) {
+            var viewPortArea = getParent().getParent().getClientArea();
+            var clientArea = getClientArea();
             getParent().translateToAbsolute(viewPortArea);
             translateToAbsolute(clientArea);
             isIntersectViewPort = viewPortArea.intersects(clientArea);
@@ -405,27 +399,26 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             // .intersects(getClientArea());
         }
 
-        GUIRefreshThread.getInstance(runmode).addIgnorableTask(
-                new WidgetIgnorableUITask(this, () -> {
-                    if (!getSWTWidget().isDisposed() && getParent() != null) {
-                        doRelocateWidget();
-                    }
-                }, composite.getDisplay()));
+        GUIRefreshThread.getInstance(runmode).addIgnorableTask(new WidgetIgnorableUITask(this, () -> {
+            if (!getSWTWidget().isDisposed() && getParent() != null) {
+                doRelocateWidget();
+            }
+        }, composite.getDisplay()));
 
     }
 
     private void doRelocateWidget() {
-        boolean sizeWasSet = false;
-        Rectangle clientArea = getClientArea();
-        Rectangle rect = clientArea.getCopy();
+        var sizeWasSet = false;
+        var clientArea = getClientArea();
+        var rect = clientArea.getCopy();
         translateToAbsolute(rect);
         // scale the font if necessary
-        double scale = (double) rect.height / (double) clientArea.height;
+        var scale = (double) rect.height / (double) clientArea.height;
         if (Math.abs(scale - 1) > 0.05) {
             if (Math.abs(scale - lastScale) >= 0.05) {
-                FontData fontData = getFont().getFontData()[0];
-                FontData newFontData = new FontData(fontData.getName(),
-                        Math.max((int) (fontData.getHeight() * scale), 0), fontData.getStyle());
+                var fontData = getFont().getFontData()[0];
+                var newFontData = new FontData(fontData.getName(), Math.max((int) (fontData.getHeight() * scale), 0),
+                        fontData.getStyle());
                 getSWTWidget().setFont(CustomMediaFactory.getInstance().getFont(newFontData));
                 lastScale = scale;
             }
@@ -441,36 +434,31 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         // rect.width += trim.width;
         // rect.height += trim.height;
         // }
-        if (wrapComposite != null
-                && getParent().getParent() instanceof Viewport) {
-            Rectangle viewPortArea = getParent().getParent().getClientArea();
+        if (wrapComposite != null && getParent().getParent() instanceof Viewport) {
+            var viewPortArea = getParent().getParent().getClientArea();
             getParent().translateToAbsolute(viewPortArea);
             clientArea = rect;
             isIntersectViewPort = viewPortArea.intersects(clientArea);
             if (isIntersectViewPort) {
                 // if the SWT widget is cut by viewPort
                 if (!viewPortArea.contains(clientArea)) {
-                    Rectangle intersection = viewPortArea.getIntersection(clientArea);
-                    org.eclipse.swt.graphics.Rectangle oldBounds = wrapComposite.getBounds();
-                    if (oldBounds.x != (rect.x + intersection.x - clientArea.x) ||
-                            oldBounds.y != (rect.y + intersection.y - clientArea.y) ||
-                            oldBounds.width != intersection.width || oldBounds.height != intersection.height) {
-                        wrapComposite.setBounds(
-                                rect.x + intersection.x - clientArea.x,
-                                rect.y + intersection.y - clientArea.y,
-                                intersection.width,
-                                intersection.height);
+                    var intersection = viewPortArea.getIntersection(clientArea);
+                    var oldBounds = wrapComposite.getBounds();
+                    if (oldBounds.x != (rect.x + intersection.x - clientArea.x)
+                            || oldBounds.y != (rect.y + intersection.y - clientArea.y)
+                            || oldBounds.width != intersection.width || oldBounds.height != intersection.height) {
+                        wrapComposite.setBounds(rect.x + intersection.x - clientArea.x,
+                                rect.y + intersection.y - clientArea.y, intersection.width, intersection.height);
                     }
                     oldBounds = getSWTWidget().getBounds();
-                    if (oldBounds.x != (clientArea.x - intersection.x) ||
-                            oldBounds.y != (clientArea.y - intersection.y) ||
-                            oldBounds.width != rect.width || oldBounds.height != rect.height) {
-                        getSWTWidget().setBounds(clientArea.x - intersection.x,
-                                clientArea.y - intersection.y, rect.width, rect.height);
+                    if (oldBounds.x != (clientArea.x - intersection.x) || oldBounds.y != (clientArea.y - intersection.y)
+                            || oldBounds.width != rect.width || oldBounds.height != rect.height) {
+                        getSWTWidget().setBounds(clientArea.x - intersection.x, clientArea.y - intersection.y,
+                                rect.width, rect.height);
                     }
                     sizeWasSet = true;
                 } else {
-                    Point oldLoc = getSWTWidget().getLocation();
+                    var oldLoc = getSWTWidget().getLocation();
                     if (oldLoc.x != 0 || oldLoc.y != 0) {
                         getSWTWidget().setLocation(0, 0);
                     }
@@ -480,20 +468,17 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
         if (!sizeWasSet) {
             if (wrapComposite != null) {
-                Rectangle oldBounds = new Rectangle(wrapComposite.getBounds());
+                var oldBounds = new Rectangle(wrapComposite.getBounds());
                 if (!oldBounds.equals(rect)) {
-                    wrapComposite.setBounds(rect.x, rect.y, rect.width,
-                            rect.height);
+                    wrapComposite.setBounds(rect.x, rect.y, rect.width, rect.height);
                 }
-                Point oldSize = getSWTWidget().getSize();
+                var oldSize = getSWTWidget().getSize();
                 if (oldSize.x != rect.width || oldSize.y != rect.height) {
                     getSWTWidget().setSize(rect.width, rect.height);
                 }
-            } else if (!getSWTWidget().getBounds().equals(
-                    new org.eclipse.swt.graphics.Rectangle(rect.x, rect.y,
-                            rect.width, rect.height))) {
-                getSWTWidget().setBounds(rect.x, rect.y, rect.width,
-                        rect.height);
+            } else if (!getSWTWidget().getBounds()
+                    .equals(new org.eclipse.swt.graphics.Rectangle(rect.x, rect.y, rect.width, rect.height))) {
+                getSWTWidget().setBounds(rect.x, rect.y, rect.width, rect.height);
             }
 
         }

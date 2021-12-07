@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
@@ -47,8 +46,8 @@ public class NativeTextEditpart extends TextInputEditpart {
     protected IFigure doCreateFigure() {
         initFields();
 
-        int style = SWT.NONE;
-        NativeTextModel model = getWidgetModel();
+        var style = SWT.NONE;
+        var model = getWidgetModel();
         if (model.isShowNativeBorder()) {
             style |= SWT.BORDER;
         }
@@ -85,7 +84,7 @@ public class NativeTextEditpart extends TextInputEditpart {
             break;
         }
 
-        final NativeTextFigure figure = new NativeTextFigure(this, style);
+        var figure = new NativeTextFigure(this, style);
         text = figure.getSWTWidget();
 
         if (!model.isReadOnly()) {
@@ -94,8 +93,7 @@ public class NativeTextEditpart extends TextInputEditpart {
                     @Override
                     public void keyPressed(KeyEvent keyEvent) {
                         if (keyEvent.character == '\r') { // Return key
-                            if (text != null && !text.isDisposed()
-                                    && (text.getStyle() & SWT.MULTI) != 0) {
+                            if (text != null && !text.isDisposed() && (text.getStyle() & SWT.MULTI) != 0) {
                                 if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                                     outputText(text.getText());
                                     keyEvent.doit = false;
@@ -166,7 +164,7 @@ public class NativeTextEditpart extends TextInputEditpart {
     @Override
     protected void updatePropSheet() {
         super.updatePropSheet();
-        boolean isMulti = getWidgetModel().isMultilineInput();
+        var isMulti = getWidgetModel().isMultilineInput();
         getWidgetModel().setPropertyVisible(NativeTextModel.PROP_SHOW_H_SCROLL, isMulti);
         getWidgetModel().setPropertyVisible(NativeTextModel.PROP_SHOW_V_SCROLL, isMulti);
         getWidgetModel().setPropertyVisible(NativeTextModel.PROP_WRAP_WORDS, isMulti);
@@ -198,7 +196,7 @@ public class NativeTextEditpart extends TextInputEditpart {
 
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
             AbstractWidgetModel model = getWidgetModel();
-            AbstractContainerModel parent = model.getParent();
+            var parent = model.getParent();
             parent.removeChild(model);
             parent.addChild(model);
             parent.selectWidget(model, true);
@@ -216,9 +214,8 @@ public class NativeTextEditpart extends TextInputEditpart {
 
     @Override
     protected String formatValue(Object newValue, String propId) {
-        String text = super.formatValue(newValue, propId);
-        getWidgetModel()
-                .setPropertyValue(TextInputModel.PROP_TEXT, text, false);
+        var text = super.formatValue(newValue, propId);
+        getWidgetModel().setPropertyValue(TextInputModel.PROP_TEXT, text, false);
         return text;
 
     }

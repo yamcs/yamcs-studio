@@ -41,7 +41,7 @@ public abstract class StateData {
     }
 
     private void createAndSaveValue() {
-        VType newValue = createValue();
+        var newValue = createValue();
         if (newValue != null) {
             this.value = newValue;
         }

@@ -72,12 +72,11 @@ class ElementAtStringFormulaFunction implements FormulaFunction {
             return null;
         }
 
-        VStringArray stringArray = (VStringArray) args.get(0);
-        VNumber index = (VNumber) args.get(1);
-        int i = index.getValue().intValue();
+        var stringArray = (VStringArray) args.get(0);
+        var index = (VNumber) args.get(1);
+        var i = index.getValue().intValue();
 
-        return newVString(stringArray.getData().get(i),
-                stringArray, stringArray);
+        return newVString(stringArray.getData().get(i), stringArray, stringArray);
     }
 
     private static boolean containsNull(Collection<Object> args) {

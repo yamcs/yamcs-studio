@@ -29,7 +29,7 @@ public class ActionsCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        ActionsInputDialog dialog = new ActionsInputDialog(parentShell, actionsInput, dialogTitle, showHookOption);
+        var dialog = new ActionsInputDialog(parentShell, actionsInput, dialogTitle, showHookOption);
 
         if (dialog.open() == Window.OK) {
             actionsInput = dialog.getOutput();

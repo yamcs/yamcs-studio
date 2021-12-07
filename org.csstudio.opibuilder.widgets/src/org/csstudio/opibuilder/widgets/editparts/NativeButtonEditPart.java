@@ -22,7 +22,6 @@ import org.csstudio.opibuilder.widgets.figures.NativeButtonFigure;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
 import org.csstudio.opibuilder.widgets.model.NativeButtonModel;
 import org.csstudio.swt.widgets.figures.ITextFigure;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPolicy;
@@ -45,11 +44,11 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        NativeButtonModel model = getWidgetModel();
-        int style = SWT.None;
+        var model = getWidgetModel();
+        var style = SWT.None;
         style |= model.isToggleButton() ? SWT.TOGGLE : SWT.PUSH;
         style |= SWT.WRAP;
-        final NativeButtonFigure buttonFigure = new NativeButtonFigure(this, style);
+        var buttonFigure = new NativeButtonFigure(this, style);
         button = buttonFigure.getSWTWidget();
         button.setText(model.getText());
         buttonFigure.setImagePath(model.getImagePath());
@@ -68,10 +67,9 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public void performRequest(Request request) {
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN)) {
-            new TextEditManager(this,
-                    new LabelCellEditorLocator(getFigure()), false).show();
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT
+                || request.getType() == RequestConstants.REQ_OPEN)) {
+            new TextEditManager(this, new LabelCellEditorLocator(getFigure()), false).show();
         }
     }
 
@@ -80,7 +78,7 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
         button.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                List<AbstractWidgetAction> actions = getHookedActions();
+                var actions = getHookedActions();
                 if (actions != null) {
                     for (AbstractWidgetAction action : actions) {
                         if (action instanceof OpenDisplayAction) {
@@ -98,7 +96,7 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
     @Override
     public List<AbstractWidgetAction> getHookedActions() {
         ActionButtonModel widgetModel = getWidgetModel();
-        boolean isSelected = button.getSelection();
+        var isSelected = button.getSelection();
         return ActionButtonEditPart.getHookedActionsForButton(widgetModel, isSelected);
 
     }
@@ -121,10 +119,10 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
 
         // image
         IWidgetPropertyChangeHandler imageHandler = (oldValue, newValue, refreshableFigure) -> {
-            NativeButtonFigure figure = (NativeButtonFigure) refreshableFigure;
-            String absolutePath = (String) newValue;
+            var figure = (NativeButtonFigure) refreshableFigure;
+            var absolutePath = (String) newValue;
             if (absolutePath != null && !absolutePath.contains("://")) {
-                IPath path = Path.fromPortableString(absolutePath);
+                var path = Path.fromPortableString(absolutePath);
                 path = ResourceUtil.buildAbsolutePath(getWidgetModel(), path);
                 absolutePath = path.toPortableString();
             }
@@ -138,14 +136,12 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
             updatePropSheet((Boolean) newValue);
             return true;
         };
-        getWidgetModel().getProperty(ActionButtonModel.PROP_TOGGLE_BUTTON)
-                .addPropertyChangeListener(
-                        evt -> buttonStyleHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
+        getWidgetModel().getProperty(ActionButtonModel.PROP_TOGGLE_BUTTON).addPropertyChangeListener(
+                evt -> buttonStyleHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
     }
 
-    private void updatePropSheet(final boolean newValue) {
-        getWidgetModel().setPropertyVisible(
-                ActionButtonModel.PROP_RELEASED_ACTION_INDEX, newValue);
+    private void updatePropSheet(boolean newValue) {
+        getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_RELEASED_ACTION_INDEX, newValue);
         getWidgetModel().setPropertyDescription(ActionButtonModel.PROP_ACTION_INDEX,
                 newValue ? "Push Action Index" : "Click Action Index");
     }

@@ -26,7 +26,7 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        MultilineTextEditDialog dialog = new MultilineTextEditDialog(parentShell, stringValue, dialogTitle);
+        var dialog = new MultilineTextEditDialog(parentShell, stringValue, dialogTitle);
         if (dialog.open() == Window.OK) {
             stringValue = dialog.getResult();
         }
@@ -45,10 +45,11 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null)
+        if (value == null) {
             stringValue = "";
-        else
+        } else {
             stringValue = value.toString();
+        }
 
     }
 

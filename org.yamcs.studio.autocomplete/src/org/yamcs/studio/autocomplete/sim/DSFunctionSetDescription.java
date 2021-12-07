@@ -33,8 +33,7 @@ public class DSFunctionSetDescription {
         this.name = name;
         this.description = description;
         if (!DSFunctionSet.namePattern.matcher(name).matches()) {
-            throw new IllegalArgumentException(
-                    "Name must start by a letter and only consist of letters and numbers");
+            throw new IllegalArgumentException("Name must start by a letter and only consist of letters and numbers");
         }
     }
 

@@ -49,8 +49,8 @@ public class PolarPoint {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        var prime = 31;
+        var result = 1;
         result = prime * result + r;
         long temp;
         temp = Double.doubleToLongBits(theta);
@@ -60,18 +60,22 @@ public class PolarPoint {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        PolarPoint other = (PolarPoint) obj;
-        if (r != other.r)
+        }
+        var other = (PolarPoint) obj;
+        if (r != other.r) {
             return false;
-        if (Double.doubleToLongBits(theta) != Double
-                .doubleToLongBits(other.theta))
+        }
+        if (Double.doubleToLongBits(theta) != Double.doubleToLongBits(other.theta)) {
             return false;
+        }
         return true;
     }
 
@@ -82,8 +86,8 @@ public class PolarPoint {
      * @return the point in rectangular coordinates
      */
     public Point toPoint() {
-        int x = (int) (r * Math.cos(theta));
-        int y = (int) (-r * Math.sin(theta));
+        var x = (int) (r * Math.cos(theta));
+        var y = (int) (-r * Math.sin(theta));
         return new Point(x, y);
     }
 
@@ -96,9 +100,8 @@ public class PolarPoint {
      * @return the point in absolute coordinate system.
      */
     public Point toAbsolutePoint(Rectangle rect) {
-        Point p = this.toPoint();
-        return p.translate(rect.width / 2, rect.height / 2).translate(
-                rect.x, rect.y);
+        var p = this.toPoint();
+        return p.translate(rect.width / 2, rect.height / 2).translate(rect.x, rect.y);
     }
 
     /**
@@ -110,7 +113,7 @@ public class PolarPoint {
      * @return the point in relative coordinate system.
      */
     public Point toRelativePoint(Rectangle rect) {
-        Point p = this.toPoint();
+        var p = this.toPoint();
         return p.translate(rect.width / 2, rect.height / 2);
     }
 
@@ -124,14 +127,15 @@ public class PolarPoint {
      * @return the corresponding polar point.
      */
     public static PolarPoint point2PolarPoint(Point pole, Point point) {
-        int x = point.x - pole.x;
-        int y = point.y - pole.y;
+        var x = point.x - pole.x;
+        var y = point.y - pole.y;
 
-        double r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        var r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-        double theta = Math.acos((double) x / r);
-        if (y > 0)
+        var theta = Math.acos((double) x / r);
+        if (y > 0) {
             theta = 2 * Math.PI - theta;
+        }
         return new PolarPoint((int) r, theta);
     }
 
@@ -144,11 +148,13 @@ public class PolarPoint {
      *            true if the axisDirection is in radians, false if in degrees.
      */
     public void rotateAxis(double axisDirection, boolean inRadians) {
-        if (!inRadians)
+        if (!inRadians) {
             axisDirection = axisDirection * Math.PI / 180.0;
+        }
         theta -= axisDirection;
-        if (theta < 0)
+        if (theta < 0) {
             theta += 2 * Math.PI;
+        }
     }
 
     @Override
