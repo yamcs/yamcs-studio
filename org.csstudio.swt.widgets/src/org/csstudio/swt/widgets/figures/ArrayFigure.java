@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2012 Oak Ridge National Laboratory and others
+ * Copyright (c) 2012, 2021 Oak Ridge National Laboratory and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
