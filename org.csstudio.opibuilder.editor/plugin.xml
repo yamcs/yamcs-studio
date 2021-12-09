@@ -184,7 +184,7 @@
             hasPages="true"
             icon="icons/js.gif"
             id="org.csstudio.opibuilder.wizards.newJSWizard"
-            name="JavaScript">
+            name="JavaScript File">
       </wizard>
       <wizard
             canFinishEarly="false"
@@ -193,7 +193,7 @@
             hasPages="true"
             icon="icons/python_file.gif"
             id="org.csstudio.opibuilder.wizards.newPyWizard"
-            name="Python Script">
+            name="Python File">
       </wizard>
    </extension>
    <extension

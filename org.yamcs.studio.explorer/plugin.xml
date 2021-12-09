@@ -45,6 +45,20 @@
             </or>
          </enablement>
       </actionProvider>
+      <commonWizard
+            type="new"
+            wizardId="org.csstudio.opibuilder.wizards.newOPIWizard">
+         <enablement>
+            <instanceof value="org.eclipse.core.resources.IResource" />
+         </enablement>
+      </commonWizard>
+      <commonWizard
+            type="new"
+            wizardId="org.csstudio.opibuilder.wizards.newJSWizard">
+         <enablement>
+            <instanceof value="org.eclipse.core.resources.IResource" />
+         </enablement>
+      </commonWizard>
    </extension>
 
    <extension
