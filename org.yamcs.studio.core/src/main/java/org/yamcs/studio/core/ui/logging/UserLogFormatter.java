@@ -31,8 +31,18 @@ public class UserLogFormatter extends Formatter {
         buf.append("] ");
 
         buf.append(formatMessage(record));
-        buf.append("\n");
 
+        // Add short error cause (detailed stack trace available in log files)
+        var t = record.getThrown();
+        if (t != null) {
+            var errorMessage = t.getMessage();
+            if (errorMessage == null) {
+                errorMessage = t.toString();
+            }
+            buf.append(": ").append(errorMessage);
+        }
+
+        buf.append("\n");
         return buf.toString();
     }
 }
