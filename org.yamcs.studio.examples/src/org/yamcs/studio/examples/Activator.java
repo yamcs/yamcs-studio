@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
-package org.csstudio.examples;
+package org.yamcs.studio.examples;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -17,7 +17,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "org.csstudio.examples";
+    public static final String PLUGIN_ID = "org.yamcs.studio.examples";
     private static Activator plugin;
 
     public Activator() {

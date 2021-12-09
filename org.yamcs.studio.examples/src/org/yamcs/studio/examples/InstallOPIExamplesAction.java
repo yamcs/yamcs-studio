@@ -1,19 +1,18 @@
-/*******************************************************************************
- * Copyright (c) 2021 Space Applications Services and others
+/********************************************************************************
+ * Copyright (c) 2008, 2021 DESY and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *******************************************************************************/
-package org.csstudio.opibuilder.examples;
+ ********************************************************************************/
+package org.yamcs.studio.examples;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.csstudio.examples.Activator;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -32,9 +31,11 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class InstallYSSLandingAction extends Action implements IWorkbenchWindowActionDelegate {
-
-    public static final String PROJECT_NAME = "YSS Landing";
+/**
+ * The action that install examples
+ */
+public class InstallOPIExamplesAction extends Action implements IWorkbenchWindowActionDelegate {
+    public static final String PROJECT_NAME = "OPI Examples";
 
     @Override
     public void dispose() {
@@ -58,7 +59,7 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
             return;
         }
 
-        Job job = new Job("Import YSS Landing") {
+        var job = new Job("Import OPI Examples") {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
@@ -67,14 +68,14 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
                     var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/YSS Landing"),
+                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/BOY Examples"),
                             null);
 
                     try {
                         var directory = new File(FileLocator.toFileURL(url).getPath());
                         if (directory.isDirectory()) {
                             var files = directory.listFiles();
-                            monitor.beginTask("Copying Files", count(files));
+                            monitor.beginTask("Copying Examples", count(files));
                             copy(files, project, monitor);
                         }
                     } catch (IOException e) {
@@ -95,7 +96,7 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
 
     private int count(File[] files) {
         var result = 0;
-        for (File file : files) {
+        for (var file : files) {
             if (file.isDirectory()) {
                 result += count(file.listFiles());
             } else {
@@ -108,13 +109,15 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
 
     private void copy(File[] files, IContainer container, IProgressMonitor monitor) {
         try {
-            for (File file : files) {
+            for (var file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
-                    var folder = container.getFolder(new Path(file.getName()));
-                    if (!folder.exists()) {
-                        folder.create(true, true, null);
-                        copy(file.listFiles(), folder, monitor);
+                    if (!file.getName().equals("CVS")) {
+                        var folder = container.getFolder(new Path(file.getName()));
+                        if (!folder.exists()) {
+                            folder.create(true, true, null);
+                            copy(file.listFiles(), folder, monitor);
+                        }
                     }
                 } else {
                     var pFile = container.getFile(new Path(file.getName()));

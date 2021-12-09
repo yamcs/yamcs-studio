@@ -15,23 +15,23 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.ui.Examples"
-            class="org.csstudio.opibuilder.examples.ImportOPIExamplesWizard"
+            class="org.yamcs.studio.examples.ImportOPIExamplesWizard"
             icon="icons/activity_category.png"
-            id="org.csstudio.opibuilder.examples.examplesWizard"
+            id="org.yamcs.studio.examples.examplesWizard"
             name="OPI Examples">
       </wizard>
       <wizard
             category="org.eclipse.ui.Examples"
-            class="org.csstudio.opibuilder.examples.ImportYSSLandingWizard"
+            class="org.yamcs.studio.examples.ImportYSSLandingWizard"
             icon="icons/activity_category.png"
-            id="org.csstudio.opibuilder.examples.yssLandingWizard"
+            id="org.yamcs.studio.examples.yssLandingWizard"
             name="YSS Landing">
       </wizard>
       <wizard
             category="org.eclipse.ui.Examples"
-            class="org.csstudio.opibuilder.examples.NewOPIImageLibExampleWizard"
+            class="org.yamcs.studio.examples.NewOPIImageLibExampleWizard"
             icon="icons/activity_category.png"
-            id="org.csstudio.opibuilder.examples.imageLibWizard"
+            id="org.yamcs.studio.examples.imageLibWizard"
             name="OPI Image Library">
       </wizard>
    </extension>

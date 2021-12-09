@@ -30,7 +30,6 @@
   </properties>
 
   <modules>
-    <module>org.csstudio.examples</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.opibuilder.widgets</module>
@@ -47,6 +46,7 @@
     <module>org.yamcs.studio.displays</module>
     <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>
+    <module>org.yamcs.studio.examples</module>
     <module>org.yamcs.studio.explorer</module>
     <module>org.yamcs.studio.links</module>
 

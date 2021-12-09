@@ -16,6 +16,6 @@
     <artifactId>yamcs-studio</artifactId>
     <version>1.6.1-SNAPSHOT</version>
   </parent>
-  <artifactId>org.csstudio.examples</artifactId>
+  <artifactId>org.yamcs.studio.examples</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project>

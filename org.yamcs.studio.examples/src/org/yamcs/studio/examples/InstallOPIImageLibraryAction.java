@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2008, 2021 DESY and others
+ * Copyright (c) 2010, 2021 ITER Organization and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -7,13 +7,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ********************************************************************************/
-package org.csstudio.opibuilder.examples;
+package org.yamcs.studio.examples;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.csstudio.examples.Activator;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -22,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
@@ -33,10 +33,14 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * The action that install examples
+ * The action to install OPI symbol images library.
  */
-public class InstallOPIExamplesAction extends Action implements IWorkbenchWindowActionDelegate {
-    public static final String PROJECT_NAME = "OPI Examples";
+public class InstallOPIImageLibraryAction extends Action implements IWorkbenchWindowActionDelegate {
+
+    public static final String PROJECT_NAME = "OPI Image Library";
+    private static final String SRC_FOLDER_TOCOPY = "./SymbolLibrary/";
+    private static final String JOB_NAME = "Import OPI image library";
+    private static final String TASK_NAME = "Copying OPI image library";
 
     @Override
     public void dispose() {
@@ -59,9 +63,7 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
                             PROJECT_NAME));
             return;
         }
-
-        Job job = new Job("Import OPI Examples") {
-
+        var job = new Job(JOB_NAME) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
@@ -69,14 +71,13 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
                     var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/BOY Examples"),
-                            null);
-
+                    var bundle = Platform.getBundle(Activator.PLUGIN_ID);
+                    var url = FileLocator.find(bundle, new Path(SRC_FOLDER_TOCOPY), null);
                     try {
                         var directory = new File(FileLocator.toFileURL(url).getPath());
                         if (directory.isDirectory()) {
                             var files = directory.listFiles();
-                            monitor.beginTask("Copying Examples", count(files));
+                            monitor.beginTask(TASK_NAME, count(files));
                             copy(files, project, monitor);
                         }
                     } catch (IOException e) {
@@ -85,40 +86,33 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
                 } catch (CoreException e) {
                     e.printStackTrace();
                 }
-
                 return Status.OK_STATUS;
             }
-
         };
-
         job.schedule();
-
     }
 
     private int count(File[] files) {
         var result = 0;
-        for (File file : files) {
+        for (var file : files) {
             if (file.isDirectory()) {
                 result += count(file.listFiles());
             } else {
                 result++;
             }
         }
-
         return result;
     }
 
     private void copy(File[] files, IContainer container, IProgressMonitor monitor) {
         try {
-            for (File file : files) {
+            for (var file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
-                    if (!file.getName().equals("CVS")) {
-                        var folder = container.getFolder(new Path(file.getName()));
-                        if (!folder.exists()) {
-                            folder.create(true, true, null);
-                            copy(file.listFiles(), folder, monitor);
-                        }
+                    var folder = container.getFolder(new Path(file.getName()));
+                    if (!folder.exists()) {
+                        folder.create(true, true, null);
+                        copy(file.listFiles(), folder, monitor);
                     }
                 } else {
                     var pFile = container.getFile(new Path(file.getName()));
@@ -127,7 +121,6 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
                     }
                     monitor.internalWorked(1);
                 }
-
             }
         } catch (Exception e) {
             MessageDialog.openError(null, "Error", NLS.bind("Error happened during copy: \n{0}.", e));
