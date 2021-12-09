@@ -13,12 +13,11 @@ import java.awt.RenderingHints;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.csstudio.swt.widgets.Activator;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
-import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.utility.batik.SVGHandler;
 import org.csstudio.utility.batik.SVGUtils;
@@ -36,6 +35,8 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class SVGSymbolImage extends AbstractSymbolImage {
 
+    private static final Logger log = Logger.getLogger(SVGSymbolImage.class.getName());
+
     private Dimension imgDimension = null;
 
     private boolean loadingImage = false;
@@ -46,6 +47,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     private boolean needRender = true;
 
     private Image animatedImage;
+
     /**
      * If <code>true</code>, the repaint was called by animated SVG thread.
      */
@@ -234,7 +236,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             var inputStream = ResourceUtil.pathToInputStream(imagePath);
             loadDocument(inputStream);
         } catch (Exception e) {
-            Activator.getLogger().log(Level.WARNING, "Error loading SVG image " + imagePath, e);
+            log.log(Level.WARNING, "Error loading SVG image " + imagePath, e);
         }
     }
 
@@ -244,27 +246,6 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             return;
         }
         loadingImage = true;
-        loadImage(new IJobErrorHandler() {
-            private int maxAttempts = 5;
-
-            @Override
-            public void handleError(Exception exception) {
-                if (maxAttempts-- > 0) {
-                    try {
-                        Thread.sleep(100);
-                        loadImage(this);
-                        return;
-                    } catch (InterruptedException e) {
-                    }
-                }
-                loadingImage = false;
-                // fireSymbolImageLoaded();
-                Activator.getLogger().log(Level.WARNING, "ERROR in loading SVG image " + imagePath, exception);
-            }
-        });
-    }
-
-    private void loadImage(IJobErrorHandler errorHandler) {
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
             @Override
             public void runWithInputStream(InputStream stream) {
@@ -275,7 +256,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                         try {
                             stream.close();
                         } catch (IOException e) {
-                            Activator.getLogger().log(Level.WARNING, "ERROR in closing SVG image stream ", e);
+                            log.log(Level.WARNING, "ERROR in closing SVG image stream ", e);
                         }
                     }
                     loadingImage = false;
@@ -283,7 +264,11 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                 }
             }
         };
-        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading SVG Image...", errorHandler);
+        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading SVG Image...", exception -> {
+            loadingImage = false;
+            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            log.log(Level.WARNING, "ERROR in loading SVG image " + imagePath, exception);
+        });
     }
 
     private void loadDocument(InputStream inputStream) {
@@ -317,7 +302,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             needRender = true;
             failedToLoadDocument = false;
         } catch (Exception e) {
-            Activator.getLogger().log(Level.WARNING, "Error loading SVG image " + imagePath, e);
+            log.log(Level.WARNING, "Error loading SVG image " + imagePath, e);
         }
     }
 

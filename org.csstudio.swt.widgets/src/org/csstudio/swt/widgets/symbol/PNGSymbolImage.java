@@ -12,11 +12,10 @@ package org.csstudio.swt.widgets.symbol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.csstudio.swt.widgets.Activator;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
-import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -26,6 +25,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
 public class PNGSymbolImage extends AbstractSymbolImage {
+
+    private static final Logger log = Logger.getLogger(PNGSymbolImage.class.getName());
 
     private Dimension imgDimension = null;
 
@@ -39,10 +40,6 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         this.originalImageData = originalImageData;
         resetData();
     }
-
-    // ************************************************************
-    // Image color & paint
-    // ************************************************************
 
     @Override
     public void paintFigure(Graphics gfx) {
@@ -118,20 +115,12 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         imgDimension = newImgDimension;
     }
 
-    // ************************************************************
-    // Image size calculation
-    // ************************************************************
-
     @Override
     public Dimension getAutoSizedDimension() {
         // if (imgDimension == null)
         // generatePNGData();
         return imgDimension;
     }
-
-    // ************************************************************
-    // Image loading
-    // ************************************************************
 
     @Override
     public void syncLoadImage() {
@@ -146,7 +135,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
             var imgData = tempImage.getImageData();
             setOriginalImageData(imgData);
         } catch (Exception e) {
-            Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
+            log.log(Level.WARNING, "ERROR loading image " + imagePath, e);
         } finally {
             try {
                 if (stream != null) {
@@ -156,7 +145,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                     tempImage.dispose();
                 }
             } catch (IOException e) {
-                Activator.getLogger().log(Level.WARNING, "ERROR in closing PNG image stream ", e);
+                log.log(Level.WARNING, "ERROR closing image stream", e);
             }
         }
     }
@@ -167,27 +156,6 @@ public class PNGSymbolImage extends AbstractSymbolImage {
             return;
         }
         loadingImage = true;
-        loadImage(new IJobErrorHandler() {
-            private int maxAttempts = 5;
-
-            @Override
-            public void handleError(Exception exception) {
-                if (maxAttempts-- > 0) {
-                    try {
-                        Thread.sleep(100);
-                        loadImage(this);
-                        return;
-                    } catch (InterruptedException e) {
-                    }
-                }
-                loadingImage = false;
-                // fireSymbolImageLoaded();
-                Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, exception);
-            }
-        });
-    }
-
-    private void loadImage(IJobErrorHandler errorHandler) {
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
             @Override
             public void runWithInputStream(InputStream stream) {
@@ -204,7 +172,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                                 tempImage.dispose();
                             }
                         } catch (IOException e) {
-                            Activator.getLogger().log(Level.WARNING, "ERROR in closing PNG image stream ", e);
+                            log.log(Level.WARNING, "ERROR closing image stream", e);
                         }
                     }
                     loadingImage = false;
@@ -212,7 +180,10 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                 }
             }
         };
-        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading PNG Image...", errorHandler);
+        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading Image...", e -> {
+            loadingImage = false;
+            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            log.log(Level.WARNING, "ERROR loading image " + imagePath, e);
+        });
     }
-
 }

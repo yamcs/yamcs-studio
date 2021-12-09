@@ -15,7 +15,9 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.p2.batik,
  com.google.guava,
  org.eclipse.core.resources,
- org.apache.commons.lang3
+ org.apache.commons.lang3,
+ org.yamcs.studio.core,
+ org.yamcs.p2.client
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.swt.widgets.datadefinition,

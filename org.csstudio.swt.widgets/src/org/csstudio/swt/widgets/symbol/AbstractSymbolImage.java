@@ -124,10 +124,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         return originalImageData == null;
     }
 
-    // ************************************************************
-    // Image color & paint
-    // ************************************************************
-
     public abstract void resetData();
 
     @Override
@@ -162,10 +158,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         }
         this.backgroundColor = newColor;
     }
-
-    // ************************************************************
-    // Image size calculation
-    // ************************************************************
 
     @Override
     public abstract Dimension getAutoSizedDimension();
@@ -230,10 +222,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         resizeImage();
     }
 
-    // ************************************************************
-    // Image crop calculation
-    // ************************************************************
-
     @Override
     public void setLeftCrop(int newval) {
         if (leftCrop == newval || newval < 0) {
@@ -270,10 +258,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         resizeImage();
     }
 
-    // ************************************************************
-    // Image rotation calculation
-    // ************************************************************
-
     @Override
     public void setPermutationMatrix(PermutationMatrix permutationMatrix) {
         this.oldPermutationMatrix = this.permutationMatrix;
@@ -290,10 +274,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         return permutationMatrix;
     }
 
-    // ************************************************************
-    // Animated images
-    // ************************************************************
-
     @Override
     public void setAnimationDisabled(boolean stop) {
         if (animationDisabled == stop) {
@@ -306,10 +286,6 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     public void setAlignedToNearestSecond(boolean aligned) {
         this.alignedToNearestSecond = aligned;
     }
-
-    // ************************************************************
-    // Image loading
-    // ************************************************************
 
     @Override
     public void setListener(SymbolImageListener listener) {

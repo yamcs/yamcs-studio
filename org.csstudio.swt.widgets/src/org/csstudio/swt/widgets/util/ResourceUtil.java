@@ -27,11 +27,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.client.storage.ObjectId;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.ByteStreams;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class ResourceUtil {
 
@@ -76,7 +79,7 @@ public class ResourceUtil {
     public static void pathToInputStreamInJob(String path, AbstractInputStreamRunnable uiTask, String jobName,
             IJobErrorHandler errorHandler) {
         var display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
-        Job job = new Job(jobName) {
+        var job = new Job(jobName) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask("Connecting to " + path, IProgressMonitor.UNKNOWN);
@@ -90,6 +93,8 @@ public class ResourceUtil {
                     }
                     uiTask.setInputStream(inputStream);
                     display.asyncExec(uiTask);
+                } catch (UncheckedExecutionException e) {
+                    errorHandler.handleError(e.getCause());
                 } catch (Exception e) {
                     errorHandler.handleError(e);
                 } finally {
@@ -148,28 +153,37 @@ public class ResourceUtil {
      * @throws Exception
      */
     public static InputStream pathToInputStream(String path) throws Exception {
-        // Not a workspace file. Try local file system
-        var local_file = new File(path);
-        if (local_file.getPath().startsWith("file:")) {
-            local_file = new File(local_file.getPath().substring(5));
-        }
-        String urlString;
-        try {
-            return new FileInputStream(local_file);
-        } catch (Exception ex) {
-            urlString = path.toString();
-            if (!urlString.contains(":/")) {
-                throw new Exception("Cannot open " + ex.getMessage(), ex);
+        if (path.startsWith("ys://")) {
+            var id = ObjectId.parseURL(path);
+            var storageClient = YamcsPlugin.getStorageClient();
+            if (storageClient == null) {
+                throw new IOException("Not connected");
             }
-        }
+            var obj = storageClient.downloadObject(id).get(5, TimeUnit.SECONDS);
+            return new ByteArrayInputStream(obj);
+        } else {
+            var localFile = new File(path);
+            if (localFile.getPath().startsWith("file:")) {
+                localFile = new File(localFile.getPath().substring(5));
+            }
+            String urlString;
+            try {
+                return new FileInputStream(localFile);
+            } catch (Exception ex) {
+                urlString = path.toString();
+                if (!urlString.contains(":/")) {
+                    throw new Exception("Cannot open " + ex.getMessage(), ex);
+                }
+            }
 
-        // Must be a URL
-        // Allow URLs with spaces. Ideally, the URL class would handle this?
-        urlString = urlString.replaceAll(" ", "%20");
-        var uri = new URI(urlString);
-        var url = uri.toURL();
-        var connection = url.openConnection();
-        connection.setReadTimeout(5000);
-        return connection.getInputStream();
+            // Must be a URL
+            // Allow URLs with spaces. Ideally, the URL class would handle this?
+            urlString = urlString.replaceAll(" ", "%20");
+            var uri = new URI(urlString);
+            var url = uri.toURL();
+            var connection = url.openConnection();
+            connection.setReadTimeout(5000);
+            return connection.getInputStream();
+        }
     }
 }

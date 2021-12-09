@@ -36,11 +36,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
 
     private String filePath;
 
-    /**
-     * The image itself.
-     */
     private SymbolImage image;
-
     private SymbolImageProperties symbolProperties;
 
     private AtomicInteger remainingImagesToLoad = new AtomicInteger(0);
@@ -66,12 +62,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         this.model = model;
     }
 
-    /**
-     * Sets the path to the image.
-     *
-     * @param newval
-     *            The path to the image
-     */
     public void setFilePath(String newval) {
         if (newval == null) {
             return;
@@ -82,7 +72,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
             image = null;
         }
         if (filePath != null && !filePath.isEmpty()) {
-            incrementLoadingCounter();
+            remainingImagesToLoad.incrementAndGet();
         }
         image = SymbolImageFactory.asynCreateSymbolImage(filePath, true, symbolProperties, this);
     }
@@ -95,10 +85,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         remainingImagesToLoad.decrementAndGet();
     }
 
-    public void incrementLoadingCounter() {
-        remainingImagesToLoad.incrementAndGet();
-    }
-
     @Override
     protected void paintClientArea(Graphics gfx) {
         if (isLoadingImage()) {
@@ -108,15 +94,17 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         if (bounds.width <= 0 || bounds.height <= 0) {
             return;
         }
-        if (image == null || image.isEmpty()) {
-            if (!filePath.isEmpty()) {
-                gfx.setBackgroundColor(getBackgroundColor());
-                gfx.setForegroundColor(getForegroundColor());
-                gfx.fillRectangle(bounds);
-                gfx.translate(bounds.getLocation());
-                TextPainter.drawText(gfx, "ERROR in loading image\n" + filePath, bounds.width / 2, bounds.height / 2,
-                        TextPainter.CENTER);
+        if (image == null || image.isEmpty() || image.getImagePath() == null) {
+            String msg = "Could not load image\n" + filePath;
+            if (filePath == null || filePath.isEmpty()) {
+                msg = "No file specified";
             }
+
+            gfx.setBackgroundColor(getBackgroundColor());
+            gfx.setForegroundColor(getForegroundColor());
+            gfx.fillRectangle(bounds);
+            gfx.translate(bounds.getLocation());
+            TextPainter.drawText(gfx, msg, bounds.width / 2, bounds.height / 2, TextPainter.CENTER);
             return;
         }
         image.setBounds(bounds);
@@ -126,10 +114,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         image.paintFigure(gfx);
         super.paintClientArea(gfx);
     }
-
-    // ************************************************************
-    // Image size calculation delegation
-    // ************************************************************
 
     public void resizeImage() {
         var bounds = getBounds().getCopy();
@@ -163,10 +147,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         }
         return new Dimension(dim.width + getInsets().getWidth(), dim.height + getInsets().getHeight());
     }
-
-    // ************************************************************
-    // Image crop calculation delegation
-    // ************************************************************
 
     public void setLeftCrop(int newval) {
         if (symbolProperties != null) {
@@ -207,10 +187,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         }
         repaint();
     }
-
-    // ************************************************************
-    // Image flip & degree & stretch calculation delegation
-    // ************************************************************
 
     public void setStretch(boolean newval) {
         if (symbolProperties != null) {
@@ -262,13 +238,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
 
-    // ************************************************************
-    // Animated images
-    // ************************************************************
-
-    /**
-     * @return the animationDisabled
-     */
     public boolean isAnimationDisabled() {
         return animationDisabled;
     }
@@ -297,10 +266,6 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         repaint();
     }
 
-    // ************************************************************
-    // Symbol Image Listener
-    // ************************************************************
-
     public void setImageLoadedListener(IImageListener listener) {
         this.imageListener = listener;
     }
@@ -324,5 +289,4 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
             imageListener.imageResized(this);
         }
     }
-
 }

@@ -12,6 +12,7 @@ package org.csstudio.swt.widgets.util;
 /**
  * The error handler for exception in job.
  */
+@FunctionalInterface
 public interface IJobErrorHandler {
 
     /**
@@ -20,6 +21,6 @@ public interface IJobErrorHandler {
      * @param exception
      *            the exception to be handled
      */
-    public void handleError(Exception exception);
+    public void handleError(Throwable exception);
 
 }

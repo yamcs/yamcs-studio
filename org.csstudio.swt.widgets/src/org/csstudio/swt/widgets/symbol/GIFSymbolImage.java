@@ -16,13 +16,12 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
-import org.csstudio.swt.widgets.Activator;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
-import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.Graphics;
@@ -36,6 +35,8 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 
 public class GIFSymbolImage extends AbstractSymbolImage {
+
+    private static final Logger log = Logger.getLogger(GIFSymbolImage.class.getName());
 
     private static final int MILLISEC_IN_SEC = 1000;
 
@@ -390,7 +391,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             originalImageData = originalImageDataArray[0];
             animated = originalImageDataArray.length > 1;
         } catch (Exception e) {
-            Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
+            log.log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
         } finally {
             try {
                 if (stream != null) {
@@ -400,7 +401,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                     tempImage.dispose();
                 }
             } catch (IOException e) {
-                Activator.getLogger().log(Level.WARNING, "ERROR in closing GIF image stream ", e);
+                log.log(Level.WARNING, "ERROR in closing GIF image stream ", e);
             }
         }
         loadingImage = false;
@@ -421,30 +422,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             showIndex = 0;
             animationIndex = 0;
         }
-        // loading by stream
-        loadAnimatedImage(new IJobErrorHandler() {
-            private int maxAttempts = 5;
-
-            @Override
-            public void handleError(Exception e) {
-                if (maxAttempts-- > 0) {
-                    try {
-                        Thread.sleep(100);
-                        loadAnimatedImage(this);
-                        return;
-                    } catch (InterruptedException exception) {
-                    }
-                }
-                loadingImage = false;
-                // fireSymbolImageLoaded();
-                Activator.getLogger().log(Level.WARNING, "ERROR in loading GIF image " + imagePath, e);
-            }
-        });
-    }
-
-    private void loadAnimatedImage(IJobErrorHandler errorHandler) {
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
-
             @Override
             public void runWithInputStream(InputStream stream) {
                 synchronized (GIFSymbolImage.this) {
@@ -464,6 +442,10 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                 }
             }
         };
-        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading GIF Image...", errorHandler);
+        ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading GIF Image...", e -> {
+            loadingImage = false;
+            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            log.log(Level.WARNING, "ERROR in loading GIF image " + imagePath, e);
+        });
     }
 }
