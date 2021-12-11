@@ -12,3 +12,4 @@ if isWorkspaceFile:
 	opiFolderPath = FileUtil.workspacePathToSysPath(opiFolderPath)
 	
 System.setProperty("shellScript2.dir", opiFolderPath)
+()

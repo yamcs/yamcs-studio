@@ -476,12 +476,9 @@ $(pv_value)</tooltip>
           <value>../pictures/snsBuilding.jpg</value>
         </exp>
         <exp bool_exp="pv0==2">
-          <value>platform:/plugin/org.csstudio.opibuilder/html/img/Widgets.png</value>
-        </exp>
-        <exp bool_exp="pv0==3">
           <value>https://www.google.com/images/srpr/logo11w.png</value>
         </exp>
-        <pv trig="true">sim://ramp(0,3,1,1)</pv>
+        <pv trig="true">sim://ramp(0,2,1,1)</pv>
       </rule>
     </rules>
     <crop_left>0</crop_left>

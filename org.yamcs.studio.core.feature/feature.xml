@@ -86,13 +86,6 @@ https://www.eclipse.org/legal/epl-2.0/
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.ui.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.python.jython"
          download-size="0"
          install-size="0"
@@ -710,14 +703,6 @@ https://www.eclipse.org/legal/epl-2.0/
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.yamcs.studio.css.script"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
    <plugin

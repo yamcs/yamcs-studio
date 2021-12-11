@@ -30,6 +30,7 @@ Require-Bundle: com.google.guava,
  org.yamcs.p2.client,
  org.yamcs.p2.nashorn,
  org.yamcs.studio.autocomplete,
+ org.yamcs.studio.commanding,
  org.yamcs.studio.core
 Eclipse-RegisterBuddy: org.python.jython,
  org.yamcs.p2.nashorn
@@ -69,6 +70,7 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.swt.widgets.natives,
  org.csstudio.swt.widgets.symbol,
  org.csstudio.swt.widgets.symbol.util,
- org.csstudio.swt.widgets.util
+ org.csstudio.swt.widgets.util,
+ org.yamcs.studio.script
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.csstudio.opibuilder
