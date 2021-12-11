@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.yamcs.studio.editor.base.Activator;
 
 public class SchemaDecorator implements ILightweightLabelDecorator {
 

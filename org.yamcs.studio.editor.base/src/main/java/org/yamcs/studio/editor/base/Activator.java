@@ -9,6 +9,10 @@
  *******************************************************************************/
 package org.yamcs.studio.editor.base;
 
+import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.editor.SchemaDecorator;
+import org.csstudio.opibuilder.preferences.PreferencesHelper;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -22,10 +26,18 @@ public class Activator extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+
         plugin = this;
 
         // Trigger other bundles
         YamcsPlugin.getDefault();
+
+        OPIBuilderPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
+            if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
+                var decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
+                decoratorManager.update(SchemaDecorator.ID);
+            }
+        });
     }
 
     @Override

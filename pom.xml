@@ -31,7 +31,6 @@
 
   <modules>
     <module>org.csstudio.opibuilder</module>
-    <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.ui.util</module>
     <module>org.yamcs.studio.archive</module>
     <module>org.yamcs.studio.autocomplete</module>

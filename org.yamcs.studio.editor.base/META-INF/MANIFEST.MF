@@ -8,17 +8,25 @@ Bundle-SymbolicName: org.yamcs.studio.editor.base;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Version: 1.6.1.qualifier
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
+ org.eclipse.gef,
+ org.eclipse.jface,
+ org.eclipse.ui,
  org.eclipse.ui.console,
+ org.eclipse.ui.editors,
  org.eclipse.ui.ide,
+ org.eclipse.ui.views,
+ org.jdom,
  org.yamcs.p2.client,
  org.yamcs.studio.core,
  org.yamcs.studio.css.core,
  org.csstudio.ui.util,
- org.csstudio.opibuilder,
- org.eclipse.jface,
- org.csstudio.opibuilder.editor
-Export-Package: org.yamcs.studio.editor.base
+ org.csstudio.opibuilder
+Export-Package: org.yamcs.studio.editor.base,
+ org.csstudio.opibuilder.actions,
+ org.csstudio.opibuilder.editor,
+ org.csstudio.opibuilder.preferences,
+ org.csstudio.opibuilder.wizards
 Automatic-Module-Name: org.yamcs.studio.editor.base
