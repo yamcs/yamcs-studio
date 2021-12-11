@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil, ConsoleUtil, ColorFontUtil
 from java.lang import Thread, Runnable
 
 startButton = display.getWidget("Start_Button")
@@ -24,7 +23,6 @@ class Blink(Runnable):
                         ColorFontUtil.YELLOW if i%2==0 else ColorFontUtil.RED)
             i=i+1
         timerLabel.setPropertyValue("foreground_color", ColorFontUtil.BLACK)
-
 
 
 class Timer(Runnable):
@@ -75,6 +73,7 @@ class Timer(Runnable):
         minText.setEnabled(True)
         secText.setEnabled(True)
 
+
 if PVUtil.getLong(pvs[0])==1:
-	thread =Thread(Timer());
+	thread = Thread(Timer());
 	thread.start()

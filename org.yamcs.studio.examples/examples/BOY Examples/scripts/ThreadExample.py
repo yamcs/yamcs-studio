@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil, ConsoleUtil
 from java.lang import Thread, Runnable
 
 
@@ -21,5 +20,5 @@ class MyTask(Runnable):
         display.getWidget("Start_Button_Py").setPropertyValue("visible", True)
         display.getWidget("Start_Button_JS").setPropertyValue("visible", True)
 
-thread =Thread(MyTask());
+thread = Thread(MyTask());
 thread.start()

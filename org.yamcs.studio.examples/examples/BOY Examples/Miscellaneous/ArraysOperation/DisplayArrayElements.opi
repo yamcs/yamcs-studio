@@ -1,72 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<display typeId="org.csstudio.opibuilder.Display" version="1.0">
-  <width>800</width>
-  <scripts />
-  <rules />
-  <actions hook="false" />
-  <macros>
-    <include_parent_macros>true</include_parent_macros>
-  </macros>
-  <snap_to_geometry>true</snap_to_geometry>
-  <show_grid>true</show_grid>
-  <show_edit_range>true</show_edit_range>
-  <grid_space>6</grid_space>
-  <height>600</height>
-  <widget_type>Display</widget_type>
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <actions hook="false" hook_all="false" />
+  <auto_scale_widgets>
+    <auto_scale_widgets>false</auto_scale_widgets>
+    <min_width>-1</min_width>
+    <min_height>-1</min_height>
+  </auto_scale_widgets>
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <background_color>
     <color red="240" green="240" blue="240" />
   </background_color>
+  <boy_version>1.6.1.qualifier</boy_version>
   <foreground_color>
     <color red="192" green="192" blue="192" />
   </foreground_color>
-  <y>-1</y>
-  <show_ruler>true</show_ruler>
+  <grid_space>6</grid_space>
+  <height>600</height>
+  <macros>
+    <include_parent_macros>true</include_parent_macros>
+  </macros>
   <name>Display</name>
+  <rules />
+  <scripts />
+  <show_close_button>true</show_close_button>
+  <show_edit_range>true</show_edit_range>
+  <show_grid>true</show_grid>
+  <show_ruler>true</show_ruler>
+  <snap_to_geometry>true</snap_to_geometry>
+  <widget_type>Display</widget_type>
+  <width>800</width>
+  <wuid>-6da91dc3:17dab4be3d8:-7721</wuid>
   <x>-1</x>
-  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0">
-    <width>187</width>
-    <scripts>
-      <path pathString="DisplayArrayElements.js">
-        <pv trig="true">loc://testArray(0.1,0.2,2.3,45,123.4,45.6)</pv>
-      </path>
-    </scripts>
-    <border_style>0</border_style>
-    <rules />
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
+  <y>-1</y>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <vertical_alignment>1</vertical_alignment>
-    <transparent>false</transparent>
-    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
     <font>
-      <fontdata fontName="Arial" height="9" style="0" />
+      <fontdata fontName="Arial" height="9" style="0" pixels="false" />
     </font>
-    <pv_name />
-    <height>277</height>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <name>Text Update</name>
     <format_type>0</format_type>
-    <auto_size>false</auto_size>
-    <border_width>1</border_width>
-    <actions hook="false" />
-    <precision_from_pv>true</precision_from_pv>
-    <text>######</text>
-    <show_units>true</show_units>
-    <widget_type>Text Update</widget_type>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
-    <enabled>true</enabled>
-    <y>108</y>
-    <visible>true</visible>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <precision>0</precision>
+    <height>277</height>
     <horizontal_alignment>1</horizontal_alignment>
+    <name>Text Update</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name></pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts>
+      <path pathString="DisplayArrayElements.js" checkConnect="true" seoe="false">
+        <pv trig="true">loc://testArray(0.1,0.2,2.3,45,123.4,45.6)</pv>
+      </path>
+    </scripts>
+    <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Text Update</widget_type>
+    <width>187</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-6da91dc3:17dab4be3d8:-7720</wuid>
     <x>276</x>
+    <y>108</y>
   </widget>
 </display>

@@ -1,134 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<display typeId="org.csstudio.opibuilder.Display" version="1.0">
-  <width>300</width>
-  <scripts />
-  <rules />
-  <actions hook="false" />
-  <macros>
-    <include_parent_macros>true</include_parent_macros>
-  </macros>
-  <snap_to_geometry>true</snap_to_geometry>
-  <show_grid>false</show_grid>
-  <show_edit_range>true</show_edit_range>
-  <grid_space>6</grid_space>
-  <height>150</height>
-  <widget_type>Display</widget_type>
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <actions hook="false" hook_all="false" />
+  <auto_scale_widgets>
+    <auto_scale_widgets>false</auto_scale_widgets>
+    <min_width>-1</min_width>
+    <min_height>-1</min_height>
+  </auto_scale_widgets>
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
   <background_color>
     <color red="255" green="255" blue="255" />
   </background_color>
+  <boy_version>1.6.1.qualifier</boy_version>
   <foreground_color>
     <color red="192" green="192" blue="192" />
   </foreground_color>
-  <y>-1</y>
-  <show_ruler>false</show_ruler>
+  <grid_space>6</grid_space>
+  <height>150</height>
+  <macros>
+    <include_parent_macros>true</include_parent_macros>
+  </macros>
   <name>$(pv)</name>
+  <rules />
+  <scripts />
+  <show_close_button>true</show_close_button>
+  <show_edit_range>true</show_edit_range>
+  <show_grid>false</show_grid>
+  <show_ruler>false</show_ruler>
+  <snap_to_geometry>true</snap_to_geometry>
+  <widget_type>Display</widget_type>
+  <width>300</width>
+  <wuid>-6da91dc3:17dab4be3d8:-772b</wuid>
   <x>-1</x>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0">
+  <y>-1</y>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
     <auto_size>true</auto_size>
-    <width>110</width>
-    <scripts />
-    <border_width>1</border_width>
-    <border_style>0</border_style>
-    <rules />
-    <tooltip />
-    <actions hook="false" />
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <vertical_alignment>1</vertical_alignment>
-    <transparent>false</transparent>
-    <font>
-      <fontdata fontName="Arial" height="9" style="0" />
-    </font>
-    <text>My PV name is $(pv)</text>
-    <widget_type>Label</widget_type>
-    <height>15</height>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <enabled>true</enabled>
-    <y>19</y>
-    <visible>true</visible>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <horizontal_alignment>1</horizontal_alignment>
-    <name>Label</name>
-    <x>30</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0">
-    <width>148</width>
-    <scripts />
-    <border_style>0</border_style>
-    <rules />
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <vertical_alignment>1</vertical_alignment>
-    <transparent>false</transparent>
-    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
     <font>
-      <fontdata fontName="Arial" height="9" style="0" />
+      <fontdata fontName="Arial" height="9" style="0" pixels="false" />
     </font>
-    <pv_name>$(pv)</pv_name>
-    <height>20</height>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>11</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>Label</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>My PV name is $(pv)</text>
+    <tooltip></tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>84</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-6da91dc3:17dab4be3d8:-772a</wuid>
+    <x>30</x>
+    <y>19</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="255" green="255" blue="255" />
+    </background_color>
+    <border_alarm_sensitive>true</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <fontdata fontName="Arial" height="9" style="0" pixels="false" />
+    </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <name>Text Update</name>
     <format_type>0</format_type>
-    <auto_size>false</auto_size>
-    <border_width>1</border_width>
-    <actions hook="false" />
+    <height>20</height>
+    <horizontal_alignment>0</horizontal_alignment>
+    <name>Text Update</name>
+    <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <text>######</text>
+    <pv_name>$(pv)</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
     <show_units>true</show_units>
+    <text>######</text>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
     <widget_type>Text Update</widget_type>
+    <width>148</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-6da91dc3:17dab4be3d8:-7729</wuid>
+    <x>118</x>
+    <y>39</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
     <background_color>
       <color red="255" green="255" blue="255" />
     </background_color>
-    <enabled>true</enabled>
-    <y>39</y>
-    <visible>true</visible>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <precision>0</precision>
-    <horizontal_alignment>0</horizontal_alignment>
-    <x>118</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0">
-    <auto_size>false</auto_size>
-    <width>100</width>
-    <scripts />
-    <border_width>1</border_width>
-    <border_style>0</border_style>
-    <rules />
-    <tooltip />
-    <actions hook="false" />
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <vertical_alignment>1</vertical_alignment>
-    <transparent>false</transparent>
-    <font>
-      <fontdata fontName="Arial" height="9" style="0" />
-    </font>
-    <text>My PV value is</text>
-    <widget_type>Label</widget_type>
-    <height>20</height>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
     <enabled>true</enabled>
-    <y>39</y>
-    <visible>true</visible>
+    <font>
+      <fontdata fontName="Arial" height="9" style="0" pixels="false" />
+    </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
+    <height>20</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>Label_1</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>My PV value is</text>
+    <tooltip></tooltip>
+    <transparent>false</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>100</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-6da91dc3:17dab4be3d8:-7728</wuid>
     <x>19</x>
+    <y>39</y>
   </widget>
 </display>

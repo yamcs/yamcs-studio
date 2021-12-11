@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.figures.IntensityGraphFigure import IPixelInfoProvider
 
 class MyPixelInfoProvider(IPixelInfoProvider):

@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.figures.IntensityGraphFigure import IROIListener, IROIInfoProvider
 from org.yamcs.studio.data import IPVListener
 from java.lang import Thread, Runnable
@@ -7,7 +6,6 @@ from org.csstudio.swt.xygraph.figures import Annotation, IAnnotationListener
 
 leftPV = pvs[1]
 rightPV = pvs[2]
-
 
 xyGraph = widget.getFigure().getXYGraph()
 
@@ -52,6 +50,3 @@ class UpdateAnnotationPVListener(IPVListener):
 
 leftPV.addListener(UpdateAnnotationPVListener())
 rightPV.addListener(UpdateAnnotationPVListener())
-
-
-

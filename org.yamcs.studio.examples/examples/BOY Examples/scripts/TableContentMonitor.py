@@ -1,6 +1,4 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.natives.SpreadSheetTable  import ITableModifiedListener
-from java.util import Arrays
 
 table = widget.getTable()
 
@@ -20,5 +18,3 @@ class ContentListener(ITableModifiedListener):
 contentListener = ContentListener()
 contentListener.modified(table.getContent())
 table.addModifiedListener(contentListener)
-
-

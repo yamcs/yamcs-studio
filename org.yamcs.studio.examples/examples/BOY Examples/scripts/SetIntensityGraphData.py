@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.ui.util.thread import UIBundlingThread
 from org.eclipse.swt.widgets import Display
 from java.lang import Thread, Runnable
@@ -22,14 +21,13 @@ class MyTask(Runnable):
 		else:
 			for i in range(256):
 				for j in range(256):
-					x = j-128
-					y = i-128
+					x = j - 128
+					y = i - 128
 					p = math.sqrt(x*x + y*y)
 					simuData[i*256 + j] = math.sin(p*2*math.pi/256 + value)
 		class UITask(Runnable):
 			def run(self):
 					widget.setValue(simuData)
 		UIBundlingThread.getInstance().addRunnable(currentDisplay, UITask())
-thread =Thread(MyTask())
+thread = Thread(MyTask())
 thread.start()
-

@@ -1,8 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import ConsoleUtil
-from org.csstudio.opibuilder.scriptUtil import PVUtil
-from org.csstudio.opibuilder.scriptUtil import ColorFontUtil
-from org.eclipse.jface.dialogs import MessageDialog
-
 #module in the same directory is visible to this script
 import WidgetUtil
 
@@ -16,8 +11,8 @@ labelName = "myLabel"
 
 if widget.getExternalObject(flagName) == None:
     widget.setExternalObject(flagName, 0)    
-    #Example to write text to BOY Console    
-    ConsoleUtil.writeInfo("Welcome to Best OPI, Yet (BOY)!")
+    #Example to write text to Console View
+    ConsoleUtil.writeInfo("Welcome to OPI Examples!")
 
 b = widget.getExternalObject(flagName);
 
@@ -28,9 +23,8 @@ if PVUtil.getDouble(pvs[0]) > PVUtil.getDouble(pvs[1]):
         #If dialog has not been popped up, pop up the dialog
         if b == 0:
             #set popped flag to true
-            widget.setExternalObject(flagName, 1)                   
-            MessageDialog.openWarning(
-                None, "Warning", "The temperature you set is too high!")        
+            widget.setExternalObject(flagName, 1)
+            GUIUtil.showWarningDialog("The temperature you set is too high!")
 else:
     s = "Temperature is normal"
     WidgetUtil.setText(display, "myLabel", s)

@@ -1,4 +1,3 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.natives.SpreadSheetTable  import ITableSelectionChangedListener
 from java.util import Arrays
 
@@ -18,5 +17,3 @@ class SelectionListener(ITableSelectionChangedListener):
         display.getWidget("selectionLabel").setPropertyValue("text", text)
 
 table.addSelectionChangedListener(SelectionListener())
-
-

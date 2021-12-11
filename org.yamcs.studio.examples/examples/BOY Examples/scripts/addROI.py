@@ -1,9 +1,7 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.figures.IntensityGraphFigure import IROIListener, IROIInfoProvider
 from org.yamcs.studio.data import IPVListener
 from java.lang import Thread, Runnable
 from org.eclipse.swt.widgets import Display
-
 
 roiXPV = pvs[1]
 roiYPV = pvs[2]
@@ -45,6 +43,3 @@ roiXPV.addListener(UpdateROIFromPVListener())
 roiYPV.addListener(UpdateROIFromPVListener())
 roiWPV.addListener(UpdateROIFromPVListener())
 roiHPV.addListener(UpdateROIFromPVListener())
-
-
-

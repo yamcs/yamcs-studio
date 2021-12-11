@@ -1,17 +1,15 @@
-from org.csstudio.opibuilder.scriptUtil import PVUtil
-
-op1=PVUtil.getDouble(pvs[0])
-op2=PVUtil.getDouble(pvs[1])
+op1 = PVUtil.getDouble(pvs[0])
+op2 = PVUtil.getDouble(pvs[1])
 
 operator = PVUtil.getString(pvs[2])
 
-resultPV=pvs[3]
+resultPV = pvs[3]
 
-if operator=="+":
+if operator == "+":
     resultPV.setValue(op1 + op2)
-elif operator=="-":
+elif operator == "-":
     resultPV.setValue(op1 - op2)    
-elif operator=="*":
+elif operator == "*":
     resultPV.setValue(op1 * op2)
-elif operator=="/":
+elif operator == "/":
     resultPV.setValue(op1 / op2)

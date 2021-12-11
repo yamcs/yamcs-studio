@@ -1,860 +1,943 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<display typeId="org.csstudio.opibuilder.Display" version="1.0">
-  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
-  <macros>
-    <include_parent_macros>true</include_parent_macros>
-  </macros>
-  <wuid>1f1d1c28:133a7c4b96d:-7fd6</wuid>
-  <boy_version>3.1.1.qualifier</boy_version>
-  <scripts>
-    <path pathString="init.py" checkConnect="true" sfe="false" seoe="false">
-      <pv trig="true">1</pv>
-    </path>
-  </scripts>
-  <show_ruler>true</show_ruler>
-  <height>220</height>
-  <name>Calculator by BOY</name>
-  <snap_to_geometry>true</snap_to_geometry>
-  <show_grid>true</show_grid>
-  <background_color>
-    <color red="240" green="240" blue="240" />
-  </background_color>
-  <foreground_color>
-    <color red="192" green="192" blue="192" />
-  </foreground_color>
-  <widget_type>Display</widget_type>
-  <show_close_button>true</show_close_button>
-  <width>180</width>
-  <rules />
-  <show_edit_range>true</show_edit_range>
-  <grid_space>6</grid_space>
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <actions hook="false" hook_all="false" />
   <auto_scale_widgets>
     <auto_scale_widgets>true</auto_scale_widgets>
     <min_width>-1</min_width>
     <min_height>-1</min_height>
   </auto_scale_widgets>
-  <actions hook="false" hook_all="false" />
-  <y>-1</y>
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
+  <background_color>
+    <color red="240" green="240" blue="240" />
+  </background_color>
+  <boy_version>1.6.1.qualifier</boy_version>
+  <foreground_color>
+    <color red="192" green="192" blue="192" />
+  </foreground_color>
+  <grid_space>6</grid_space>
+  <height>220</height>
+  <macros>
+    <include_parent_macros>true</include_parent_macros>
+  </macros>
+  <name>Calculator by BOY</name>
+  <rules />
+  <scripts>
+    <path pathString="init.py" checkConnect="true" seoe="false">
+      <pv trig="true">=1</pv>
+    </path>
+  </scripts>
+  <show_close_button>true</show_close_button>
+  <show_edit_range>true</show_edit_range>
+  <show_grid>true</show_grid>
+  <show_ruler>true</show_ruler>
+  <snap_to_geometry>true</snap_to_geometry>
+  <widget_type>Display</widget_type>
+  <width>180</width>
+  <wuid>1f1d1c28:133a7c4b96d:-7fd6</wuid>
   <x>-1</x>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+  <y>-1</y>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="EXECUTE_PYTHONSCRIPT">
+        <path></path>
+        <scriptText><![CDATA[display.getVar("calc").calc()]]></scriptText>
+        <embedded>true</embedded>
+        <description></description>
+      </action>
+    </actions>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d48</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>=</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>=</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d48</wuid>
+    <x>132</x>
     <y>168</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").calc()]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>132</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d43</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>+</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>+</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d43</wuid>
+    <x>90</x>
     <y>168</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>90</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3d</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>-</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>-</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3d</wuid>
+    <x>48</x>
     <y>168</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>48</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d44</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>*</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>*</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d44</wuid>
+    <x>6</x>
     <y>168</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>6</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d46</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>/</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>/</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d46</wuid>
+    <x>132</x>
     <y>126</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>132</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d39</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>.</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>.</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d39</wuid>
+    <x>90</x>
     <y>126</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>90</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3b</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>0</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>0</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3b</wuid>
+    <x>48</x>
     <y>126</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>48</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d42</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>9</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>9</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d42</wuid>
+    <x>6</x>
     <y>126</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>6</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3e</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>8</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>8</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3e</wuid>
+    <x>132</x>
     <y>84</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>132</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3a</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>7</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>7</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3a</wuid>
+    <x>90</x>
     <y>84</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>90</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d45</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>6</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>6</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d45</wuid>
+    <x>48</x>
     <y>84</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>48</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d40</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>5</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>5</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d40</wuid>
+    <x>6</x>
     <y>84</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>6</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3f</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>4</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>4</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <y>42</y>
-    <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
-        <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
-        <embedded>true</embedded>
-        <description></description>
-      </action>
-    </actions>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3f</wuid>
     <x>132</x>
+    <y>42</y>
   </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="EXECUTE_PYTHONSCRIPT">
+        <path></path>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <embedded>true</embedded>
+        <description></description>
+      </action>
+    </actions>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d3c</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>3</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>3</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <y>42</y>
-    <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
-        <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
-        <embedded>true</embedded>
-        <description></description>
-      </action>
-    </actions>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d3c</wuid>
     <x>90</x>
+    <y>42</y>
   </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="EXECUTE_PYTHONSCRIPT">
+        <path></path>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <embedded>true</embedded>
+        <description></description>
+      </action>
+    </actions>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d41</wuid>
-    <scripts />
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
     <height>37</height>
+    <image></image>
     <name>2</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Button</widget_type>
-    <enabled>true</enabled>
+    <scripts />
+    <style>0</style>
     <text>2</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
     <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <y>42</y>
-    <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
-        <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
-        <embedded>true</embedded>
-        <description></description>
-      </action>
-    </actions>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-    <x>48</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeButton" version="1.0">
-    <border_alarm_sensitive>false</border_alarm_sensitive>
     <visible>true</visible>
-    <wuid>23229793:138968b5218:-7d47</wuid>
-    <scripts />
-    <height>37</height>
-    <name>1</name>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
     <widget_type>Button</widget_type>
-    <enabled>true</enabled>
-    <text>1</text>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
     <width>37</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image></image>
-    <rules />
-    <pv_value />
-    <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
+    <wuid>23229793:138968b5218:-7d41</wuid>
+    <x>48</x>
     <y>42</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_PYTHONSCRIPT">
         <path></path>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
     </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>6</x>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.NativeText" version="1.0">
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
     <border_alarm_sensitive>false</border_alarm_sensitive>
-    <read_only>true</read_only>
-    <visible>true</visible>
-    <minimum>-Infinity</minimum>
-    <show_units>true</show_units>
-    <multiline_input>false</multiline_input>
-    <wuid>23229793:138968b5218:-7cbf</wuid>
-    <show_native_border>true</show_native_border>
-    <auto_size>false</auto_size>
-    <scripts />
-    <height>31</height>
-    <password_input>false</password_input>
-    <name>LCD</name>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <format_type>0</format_type>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>37</height>
+    <image></image>
+    <name>1</name>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
     <scale_options>
       <width_scalable>true</width_scalable>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
-    <precision_from_pv>true</precision_from_pv>
-    <pv_name></pv_name>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
+    <scripts />
+    <style>0</style>
+    <text>1</text>
+    <toggle_button>false</toggle_button>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Button</widget_type>
+    <width>37</width>
+    <wuid>23229793:138968b5218:-7d47</wuid>
+    <x>6</x>
+    <y>42</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
+    <actions hook="false" hook_all="false" />
+    <alarm_pulsing>false</alarm_pulsing>
+    <auto_size>false</auto_size>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
       <color red="0" green="255" blue="255" />
     </background_color>
-    <enabled>true</enabled>
-    <widget_type>Text</widget_type>
-    <text>0</text>
-    <precision>0</precision>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <font>
-      <opifont.name fontName="Sans" height="10" style="1">Default Bold</opifont.name>
-    </font>
-    <width>163</width>
-    <border_style>0</border_style>
-    <rules />
-    <pv_value />
-    <maximum>Infinity</maximum>
-    <border_width>1</border_width>
-    <limits_from_pv>false</limits_from_pv>
-    <horizontal_alignment>2</horizontal_alignment>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <y>6</y>
-    <actions hook="false" hook_all="false" />
-    <x>6</x>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <confirm_message></confirm_message>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <format_type>0</format_type>
+    <height>31</height>
+    <horizontal_alignment>2</horizontal_alignment>
+    <limits_from_pv>false</limits_from_pv>
+    <maximum>1.7976931348623157E308</maximum>
+    <minimum>-1.7976931348623157E308</minimum>
+    <multiline_input>false</multiline_input>
+    <name>LCD</name>
+    <precision>0</precision>
+    <precision_from_pv>true</precision_from_pv>
+    <pv_name>Actions</pv_name>
+    <pv_value />
+    <rotation_angle>0.0</rotation_angle>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <selector_type>0</selector_type>
+    <show_units>true</show_units>
+    <style>0</style>
+    <text>0</text>
     <tooltip></tooltip>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <widget_type>Text Input</widget_type>
+    <width>163</width>
+    <wuid>23229793:138968b5218:-7cbf</wuid>
+    <x>6</x>
+    <y>6</y>
   </widget>
 </display>
