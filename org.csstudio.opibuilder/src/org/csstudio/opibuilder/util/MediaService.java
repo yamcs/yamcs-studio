@@ -10,6 +10,8 @@
 package org.csstudio.opibuilder.util;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -72,29 +74,29 @@ public final class MediaService {
                 var bundle = OPIBuilderPlugin.getDefault().getBundle();
 
                 var url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Regular.ttf"), null);
-                var fontFile = FileLocator.toFileURL(url).getPath().toString();
+                var fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Regular'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Bold.ttf"), null);
-                fontFile = FileLocator.toFileURL(url).getPath().toString();
+                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Bold'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-BoldItalic.ttf"), null);
-                fontFile = FileLocator.toFileURL(url).getPath().toString();
+                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Bold Italic'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Italic.ttf"), null);
-                fontFile = FileLocator.toFileURL(url).getPath().toString();
+                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Italic'");
                 }
-            } catch (IOException e) {
+            } catch (URISyntaxException | IOException e) {
                 log.log(Level.INFO, "Failed to load default fonts", e);
             }
         }
