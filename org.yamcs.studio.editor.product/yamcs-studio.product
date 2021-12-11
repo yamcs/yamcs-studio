@@ -40,6 +40,7 @@ See https://yamcs.org
       <macosx icon="/launcher/logo.icns"/>
       <win useIco="true">
          <ico path="/launcher/logo.ico"/>
+         <bmp/>
       </win>
    </launcher>
 

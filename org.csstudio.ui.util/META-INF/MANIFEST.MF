@@ -20,7 +20,6 @@ Export-Package: org.csstudio.csdata,
  org.csstudio.ui.util.dialogs,
  org.csstudio.ui.util.dnd,
  org.csstudio.ui.util.helpers,
- org.csstudio.ui.util.swt.stringtable,
  org.csstudio.ui.util.thread,
  org.csstudio.ui.util.widgets,
  org.csstudio.ui.util.wizards

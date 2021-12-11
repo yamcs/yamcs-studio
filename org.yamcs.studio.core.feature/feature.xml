@@ -8,7 +8,6 @@
    
     SPDX-License-Identifier: EPL-2.0
  -->
-
 <feature
       id="org.yamcs.studio.core.feature"
       label="Yamcs Studio Components"
@@ -94,28 +93,7 @@ https://www.eclipse.org/legal/epl-2.0/
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.opibuilder.widgets"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.swt.widgets"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.ui.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.utility.batik"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -29,24 +29,15 @@ import org.eclipse.core.runtime.Platform;
  */
 public final class WidgetsService {
 
-    private static final String BOY_WIDGETS_PLUGIN_NAME = "org.csstudio.opibuilder.widgets";
-
-    /**
-     * The shared instance of this class.
-     */
-    private static WidgetsService instance = null;
-
+    private static final String BOY_WIDGETS_PLUGIN_NAME = "org.csstudio.opibuilder";
     private static final String DEFAULT_CATEGORY = "Others";
 
+    private static WidgetsService instance = null;
+
     private Map<String, WidgetDescriptor> allWidgetDescriptorsMap;
-
     private Map<String, List<String>> allCategoriesMap;
-
     private Map<String, IGraphicalFeedbackFactory> feedbackFactoriesMap;
 
-    /**
-     * @return the instance
-     */
     public synchronized static final WidgetsService getInstance() {
         if (instance == null) {
             instance = new WidgetsService();
@@ -55,10 +46,10 @@ public final class WidgetsService {
     }
 
     public WidgetsService() {
-        feedbackFactoriesMap = new HashMap<String, IGraphicalFeedbackFactory>();
-        allWidgetDescriptorsMap = new LinkedHashMap<String, WidgetDescriptor>();
-        allCategoriesMap = new LinkedHashMap<String, List<String>>();
-        for (MajorCategories mc : MajorCategories.values()) {
+        feedbackFactoriesMap = new HashMap<>();
+        allWidgetDescriptorsMap = new LinkedHashMap<>();
+        allCategoriesMap = new LinkedHashMap<>();
+        for (var mc : MajorCategories.values()) {
             allCategoriesMap.put(mc.toString(), new ArrayList<String>());
         }
         loadAllWidgets();
@@ -71,10 +62,10 @@ public final class WidgetsService {
     private void loadAllWidgets() {
         var extReg = Platform.getExtensionRegistry();
         var confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_WIDGET);
-        List<IConfigurationElement> boyElements = new LinkedList<IConfigurationElement>();
-        List<IConfigurationElement> otherElements = new LinkedList<IConfigurationElement>();
+        var boyElements = new LinkedList<IConfigurationElement>();
+        var otherElements = new LinkedList<IConfigurationElement>();
         // Sort elements. opibuilder.widgets should always appear first.
-        for (IConfigurationElement element : confElements) {
+        for (var element : confElements) {
             if (element.getContributor().getName().equals(BOY_WIDGETS_PLUGIN_NAME)) {
                 boyElements.add(element);
             } else {
@@ -82,7 +73,7 @@ public final class WidgetsService {
             }
         }
         boyElements.addAll(otherElements);
-        for (IConfigurationElement element : boyElements) {
+        for (var element : boyElements) {
             var typeId = element.getAttribute("typeId");
             var name = element.getAttribute("name");
             var icon = element.getAttribute("icon");
@@ -100,7 +91,7 @@ public final class WidgetsService {
             if (typeId != null) {
                 var list = allCategoriesMap.get(category);
                 if (list == null) {
-                    list = new ArrayList<String>();
+                    list = new ArrayList<>();
                     allCategoriesMap.put(category, list);
                 }
                 // ensure no duplicates in the widgets palette
@@ -120,7 +111,7 @@ public final class WidgetsService {
     private void loadAllFeedbackFactories() {
         var extReg = Platform.getExtensionRegistry();
         var confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_FEEDBACK_FACTORY);
-        for (IConfigurationElement element : confElements) {
+        for (var element : confElements) {
             var typeId = element.getAttribute("typeId");
             if (typeId != null) {
                 try {
@@ -134,18 +125,13 @@ public final class WidgetsService {
     }
 
     /**
-     * @return the allCategoriesMap the map which contains all the name of the categories and the widgets under them.
-     *         The widgets list has been sorted by string.
+     * @return map which contains all the name of the categories and the widgets under them. The widgets list has been
+     *         sorted by string.
      */
     public final Map<String, List<String>> getAllCategoriesMap() {
         return allCategoriesMap;
     }
 
-    /**
-     * @param typeId
-     *            the typeId of the widget.
-     * @return the {@link WidgetDescriptor} of the widget.
-     */
     public final WidgetDescriptor getWidgetDescriptor(String typeId) {
         return allWidgetDescriptorsMap.get(typeId);
     }
@@ -157,5 +143,4 @@ public final class WidgetsService {
     public final IGraphicalFeedbackFactory getWidgetFeedbackFactory(String typeId) {
         return feedbackFactoriesMap.get(typeId);
     }
-
 }
