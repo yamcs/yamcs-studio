@@ -1,15 +1,14 @@
-importPackage(Packages.java.lang);
+var Runnable = Java.type("java.lang.Runnable");
+var Thread = Java.type("java.lang.Thread");
 
-runnable = {
-	run:function() {
-			for (var i = 5; i > 0; i--) {
-				if (!display.isActive()) {
-					return;
-				}
-				Thread.sleep(1000);
+new Thread(new Runnable({
+	run: function() {
+		for (var i = 5; i > 0; i--) {
+			if (!display.isActive()) {
+				return;
 			}
-			pvs[1].setValue(PVUtil.getLong(pvs[0]));
+			Thread.sleep(1000);
 		}
-	};
-
-new Thread(new Runnable(runnable)).start();
+		pvs[1].setValue(PVUtil.getLong(pvs[0]));
+	}
+})).start();

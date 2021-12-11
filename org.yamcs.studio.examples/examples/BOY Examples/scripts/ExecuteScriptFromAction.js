@@ -1,5 +1,3 @@
-importPackage(Packages.java.lang);
-
 var color;
 var colorName;
 if (Math.random() > 0.5) {
