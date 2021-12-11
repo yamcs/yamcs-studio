@@ -12,7 +12,6 @@ package org.csstudio.ui.util.swt.stringtable;
 import java.util.Arrays;
 import java.util.List;
 
-import org.csstudio.ui.util.Activator;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -28,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Editor for table (list) of String or String[] entries, allows up/down ordering, add and delete
@@ -50,10 +50,10 @@ public class StringTableEditor extends Composite {
 
     static {
         // Buttons: edit/up/down/delete
-        images.put(EDIT, Activator.getImageDescriptor("icons/edit.gif"));
-        images.put(UP, Activator.getImageDescriptor("icons/up.gif"));
-        images.put(DOWN, Activator.getImageDescriptor("icons/down.gif"));
-        images.put(DELETE, Activator.getImageDescriptor("icons/delete.gif"));
+        images.put(EDIT, YamcsPlugin.getImageDescriptor("icons/edit.gif"));
+        images.put(UP, YamcsPlugin.getImageDescriptor("icons/up.gif"));
+        images.put(DOWN, YamcsPlugin.getImageDescriptor("icons/down.gif"));
+        images.put(DELETE, YamcsPlugin.getImageDescriptor("icons/delete.gif"));
     }
 
     /**

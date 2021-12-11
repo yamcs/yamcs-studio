@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.yamcs.p2.client,
  org.yamcs.studio.core,
  org.yamcs.studio.css.core,
- org.csstudio.ui.util,
  org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.editor.base,
  org.csstudio.opibuilder.actions,

@@ -7,24 +7,22 @@ Bundle-SymbolicName: org.yamcs.studio.displays;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Version: 1.6.1.qualifier
-Require-Bundle: org.eclipse.ui,
- org.yamcs.studio.core,
- org.yamcs.studio.css.core,
- org.yamcs.p2.client,
+Require-Bundle: com.google.gson,
+ javax.inject,
+ org.csstudio.opibuilder,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.core.expressions,
  org.eclipse.equinox.security,
- org.eclipse.osgi.services,
- org.eclipse.platform,
- javax.inject,
- org.eclipse.ui,
- org.eclipse.ui.forms,
- org.eclipse.ui.editors,
  org.eclipse.gef,
  org.eclipse.jface,
- org.csstudio.ui.util,
+ org.eclipse.osgi.services,
+ org.eclipse.platform,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.forms,
  org.eclipse.ui.ide,
- com.google.gson,
- org.csstudio.opibuilder
+ org.yamcs.p2.client,
+ org.yamcs.studio.core,
+ org.yamcs.studio.css.core
 Automatic-Module-Name: org.yamcs.studio.displays

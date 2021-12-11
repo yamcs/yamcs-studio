@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.client.ClearanceSubscription;
@@ -62,6 +63,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static final AtomicInteger COMMAND_SEQUENCE = new AtomicInteger(1);
 
     private static YamcsPlugin plugin;
+    private BundleContext context;
 
     private SimpleDateFormat format;
     private SimpleDateFormat tzFormat;
@@ -115,6 +117,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        this.context = context;
         plugin = this;
         // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
         // chaos.
@@ -500,5 +503,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.changeProcessorInfo(null);
             listener.updateTime(null);
         });
+    }
+
+    /**
+     * Obtain image descriptor for image in plugin
+     * 
+     * @param path
+     *            Path to image within plugin
+     * @return {@link ImageDescriptor}
+     */
+    public static ImageDescriptor getImageDescriptor(String path) {
+        return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    public BundleContext getContext() {
+        return context;
     }
 }

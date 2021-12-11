@@ -21,17 +21,16 @@ Require-Bundle: com.google.guava,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.help,
- org.csstudio.ui.util,
- org.jdom,
- org.yamcs.studio.core,
  org.eclipse.e4.ui.workbench,
  org.eclipse.nebula.visualization.xygraph,
  org.eclipse.swt,
+ org.jdom,
  org.python.jython,
  org.yamcs.p2.batik,
  org.yamcs.p2.client,
  org.yamcs.p2.nashorn,
- org.yamcs.studio.autocomplete
+ org.yamcs.studio.autocomplete,
+ org.yamcs.studio.core
 Eclipse-RegisterBuddy: org.python.jython,
  org.yamcs.p2.nashorn
 Bundle-ActivationPolicy: lazy

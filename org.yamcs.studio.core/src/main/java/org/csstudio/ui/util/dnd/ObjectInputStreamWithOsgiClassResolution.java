@@ -17,9 +17,9 @@ import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.csstudio.ui.util.Activator;
 import org.csstudio.ui.util.ReflectUtil;
 import org.osgi.framework.Bundle;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * De-serializes java classes looking for the classloaders in the appropriate osgi bundle. Using the normal
@@ -33,12 +33,12 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
     }
 
     // classes already resolved
-    private static Map<String, Class<?>> resolvedClasses = new ConcurrentHashMap<String, Class<?>>();
+    private static Map<String, Class<?>> resolvedClasses = new ConcurrentHashMap<>();
 
     private static Class<?> findClass(String className, String bundleName) {
         try {
             // Find the matching bundle and try to load the class
-            for (Bundle bundle : Activator.getDefault().getContext().getBundles()) {
+            for (Bundle bundle : YamcsPlugin.getDefault().getContext().getBundles()) {
                 if (bundle.getSymbolicName().equals(bundleName)) {
                     return bundle.loadClass(className);
                 }

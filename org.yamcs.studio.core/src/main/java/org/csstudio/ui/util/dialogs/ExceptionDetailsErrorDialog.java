@@ -12,7 +12,6 @@ package org.csstudio.ui.util.dialogs;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.csstudio.ui.util.Activator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -37,6 +36,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * A dialog to display one or more errors to the user, as contained in an <code>IStatus</code> object. If an error
@@ -582,13 +582,12 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     public static int openError(Shell shell, String title, Exception ex) {
-        IStatus status = new Status(IStatus.ERROR, Activator.ID, ex.getLocalizedMessage(), ex);
+        IStatus status = new Status(IStatus.ERROR, YamcsPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex);
         return ExceptionDetailsErrorDialog.openError(shell, title, null, status);
     }
 
     public static int openError(Shell shell, String title, String message, Exception ex) {
-        IStatus status = new Status(IStatus.ERROR, Activator.ID, message, ex);
+        IStatus status = new Status(IStatus.ERROR, YamcsPlugin.PLUGIN_ID, message, ex);
         return ExceptionDetailsErrorDialog.openError(shell, title, null, status);
     }
-
 }

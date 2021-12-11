@@ -11,7 +11,6 @@ package org.csstudio.platform.ui.composites.resourcefilter;
 
 import java.util.ArrayList;
 
-import org.csstudio.ui.util.Activator;
 import org.csstudio.ui.util.ImageUtil;
 import org.csstudio.ui.util.ResourceUtil;
 import org.eclipse.core.resources.IContainer;
@@ -38,6 +37,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Workbench-level composite for choosing a filtered resource.
@@ -53,7 +53,8 @@ public final class ResourceSelectionGroup extends Composite {
             _shell = shell;
             this.setText("Create new folder");
             this.setToolTipText("Creates a new folder");
-            this.setImageDescriptor(ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png"));
+            this.setImageDescriptor(
+                    ImageUtil.getInstance().getImageDescriptor(YamcsPlugin.PLUGIN_ID, "icons/new_folder.png"));
         }
 
         @Override
@@ -89,7 +90,8 @@ public final class ResourceSelectionGroup extends Composite {
             _shell = shell;
             this.setText("Create new project");
             this.setToolTipText("Creates a new project");
-            this.setImageDescriptor(ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_project.png"));
+            this.setImageDescriptor(
+                    ImageUtil.getInstance().getImageDescriptor(YamcsPlugin.PLUGIN_ID, "icons/new_project.png"));
         }
 
         @Override
