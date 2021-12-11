@@ -12,8 +12,6 @@ package org.csstudio.swt.widgets.figures;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.ButtonModel;
-import org.eclipse.draw2d.ChangeEvent;
-import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
@@ -24,6 +22,7 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Toggle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -102,12 +101,9 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
         @Override
         protected void init() {
             super.init();
-            addChangeListener(new ChangeListener() {
-                @Override
-                public void handleStateChanged(ChangeEvent changeEvent) {
-                    if (changeEvent.getPropertyName().equals(ButtonModel.SELECTED_PROPERTY)) {
-                        handleSelectionChanged();
-                    }
+            addChangeListener(changeEvent -> {
+                if (changeEvent.getPropertyName().equals(ButtonModel.SELECTED_PROPERTY)) {
+                    handleSelectionChanged();
                 }
             });
         }
@@ -142,12 +138,17 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
             var circle = new Rectangle(clientArea.x, clientArea.getCenter().y - RADIO_RADIUS, 2 * RADIO_RADIUS,
                     2 * RADIO_RADIUS);
             graphics.pushState();
+            Pattern pattern = null;
             if (support3d) {
-                graphics.setBackgroundPattern(GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), circle.x,
+                pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), circle.x,
                         circle.y, circle.x + circle.width, circle.y + circle.height, ColorConstants.white,
-                        graphics.getBackgroundColor()));
+                        graphics.getBackgroundColor());
+                graphics.setBackgroundPattern(pattern);
             }
             graphics.fillArc(circle, 0, 360);
+            if (pattern != null) {
+                pattern.dispose();
+            }
             graphics.setForegroundColor(CustomMediaFactory.getInstance().getColor(120, 120, 120));
             graphics.drawArc(circle, 0, 360);
             if (selected) {

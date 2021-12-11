@@ -112,11 +112,13 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                 if (effect3D && support3D) {
                     graphics.setBackgroundPattern(pattern);
                     graphics.fillPolygon(echelon);
+                    pattern.dispose();
                 }
 
                 // paint big end
                 graphics.setBackgroundColor(booleanValue ? onColor : offColor);
                 graphics.fillOval(bigEndBounds);
+
                 if (effect3D && support3D) {
                     /*
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bigEndBounds.x, bigEndBounds.y,
@@ -127,8 +129,10 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                     var b = bigEndBounds.height / 2;
                     var w = Math.sqrt(a * a + b * b);
                     double wp = b - a;
-                    var ul = new Point(bigEndBounds.x + a + (wp - w) / 2 - 1, bigEndBounds.y + b - (wp + w) / 2 - 1);
-                    var br = new Point(bigEndBounds.x + a + (wp + w) / 2 + 5, bigEndBounds.y + b - (wp - w) / 2 + 5);
+                    var ul = new Point((int) (bigEndBounds.x + a + (wp - w) / 2 - 1),
+                            (int) (bigEndBounds.y + b - (wp + w) / 2 - 1));
+                    var br = new Point((int) (bigEndBounds.x + a + (wp + w) / 2 + 5),
+                            (int) (bigEndBounds.y + b - (wp - w) / 2 + 5));
 
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y, br.x, br.y,
                             BLACK_COLOR, 10, BLACK_COLOR, booleanValue ? 180 : 160);
@@ -162,23 +166,21 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                 if (effect3D && support3D) {
                     graphics.setBackgroundPattern(pattern);
                     graphics.fillPolygon(echelon);
+                    pattern.dispose();
                 }
 
                 // paint big end
                 graphics.setBackgroundColor(booleanValue ? onColor : offColor);
                 graphics.fillOval(bigEndBounds);
                 if (effect3D && support3D) {
-                    /*
-                    pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bigEndBounds.x, bigEndBounds.y,
-                            bigEndBounds.x+bigEndBounds.width, bigEndBounds.y + bigEndBounds.height,
-                            BLACK_COLOR, boolValue ? 5 : 10, BLACK_COLOR, boolValue ? 180 : 160);
-                    */
                     var a = bigEndBounds.width / 2;
                     var b = bigEndBounds.height / 2;
                     var w = Math.sqrt(a * a + b * b);
                     double wp = b - a;
-                    var ul = new Point(bigEndBounds.x + a + (wp - w) / 2 - 1, bigEndBounds.y + b - (wp + w) / 2 - 1);
-                    var br = new Point(bigEndBounds.x + a + (wp + w) / 2 + 5, bigEndBounds.y + b - (wp - w) / 2 + 5);
+                    var ul = new Point((int) (bigEndBounds.x + a + (wp - w) / 2 - 1),
+                            (int) (bigEndBounds.y + b - (wp + w) / 2 - 1));
+                    var br = new Point((int) (bigEndBounds.x + a + (wp + w) / 2 + 5),
+                            (int) (bigEndBounds.y + b - (wp - w) / 2 + 5));
 
                     pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), ul.x, ul.y, br.x, br.y,
                             BLACK_COLOR, booleanValue ? 10 : 0, BLACK_COLOR, booleanValue ? 180 : 150);
@@ -402,6 +404,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                 }
                 graphics.setBackgroundPattern(pattern);
                 graphics.fillOval(bounds);
+                pattern.dispose();
 
                 if (booleanValue) {
                     if (horizontal) {
@@ -433,7 +436,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                     var image = new Image(Display.getCurrent(), bounds.width, bounds.height);
                     var gc = new GC(image);
 
-                    var p1 = new Point(bounds.x / 0.8, (int) ((55.0 / 95.0) * bounds.height));
+                    var p1 = new Point((int) (bounds.x / 0.8), (int) ((55.0 / 95.0) * bounds.height));
 
                     var p2 = new Point(p1.x + (int) ((23.0 * 1.5 / 95.0) * bounds.height),
                             p1.y + (int) ((23.0 / 95.0) * bounds.height));
@@ -473,7 +476,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                     var image = new Image(Display.getCurrent(), bounds.width, bounds.height);
                     var gc = new GC(image);
 
-                    var p1 = new Point(bounds.x + bounds.width * 0.8, (int) ((40.0 / 95.0) * bounds.height));
+                    var p1 = new Point((int) (bounds.x + bounds.width * 0.8), (int) ((40.0 / 95.0) * bounds.height));
 
                     var p2 = new Point(p1.x - (int) ((10.0 * Math.sqrt(3.0) / 95.0) * bounds.width),
                             p1.y + (int) ((40.0 / 95.0) * bounds.height));
@@ -555,7 +558,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                     var image = new Image(Display.getCurrent(), bounds.width, bounds.height);
                     var gc = new GC(image);
 
-                    var p1 = new Point((int) ((40.0 / 95.0) * bounds.width), bounds.y + bounds.height * 0.8);
+                    var p1 = new Point((int) ((40.0 / 95.0) * bounds.width), (int) (bounds.y + bounds.height * 0.8));
 
                     var p2 = new Point(p1.x + (int) ((40.0 / 95.0) * bounds.width),
                             p1.y - (int) ((10.0 * Math.sqrt(3.0) / 95.0) * bounds.width));

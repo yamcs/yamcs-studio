@@ -77,4 +77,12 @@ public class NativeButtonFigure extends AbstractSWTWidgetFigure<Button> implemen
     public String getText() {
         return button.getText();
     }
+
+    @Override
+    protected void dispose() {
+        if (image != null) {
+            image.dispose();
+        }
+        super.dispose();
+    }
 }

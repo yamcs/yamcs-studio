@@ -20,6 +20,7 @@ import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * The abstract action for executing script.
@@ -50,11 +51,10 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     }
 
     protected IPath getPath() {
-        return (IPath) getPropertyValue(PROP_PATH);
+        return Path.fromPortableString((String) getPropertyValue(PROP_PATH));
     }
 
     protected IPath getAbsolutePath() {
-        // read file
         var absolutePath = getPath();
         if (!absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
