@@ -9,9 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.wizards;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.ui.util.wizards.WizardNewFileCreationPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,13 +22,6 @@ public class NewPythonScriptWizardPage extends WizardNewFileCreationPage {
         super(pageName, selection);
         setTitle("Create a new Python script");
         setDescription("Create a new python script in the selected project or folder.");
-    }
-
-    @Override
-    protected InputStream getInitialContents() {
-        var s = ScriptService.DEFAULT_PYTHONSCRIPT_HEADER;
-        InputStream result = new ByteArrayInputStream(s.getBytes());
-        return result;
     }
 
     @Override

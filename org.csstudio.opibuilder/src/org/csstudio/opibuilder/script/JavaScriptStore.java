@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
 import javax.script.Bindings;
@@ -26,8 +25,7 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.yamcs.studio.data.IPV;
 
 /**
- * This is the implementation of {@link AbstractScriptStore} for the default javascript script engine embedded in Java.
- * (Nashorn since Java 8).
+ * This is the implementation of {@link AbstractScriptStore} using the Nashorn script engine.
  */
 public class JavaScriptStore extends AbstractScriptStore {
 
@@ -54,11 +52,20 @@ public class JavaScriptStore extends AbstractScriptStore {
     public static void bootstrapScriptEngine(ScriptEngine engine, Bindings bindings)
             throws IOException, ScriptException {
         var nashornBootstrap = "/org/csstudio/opibuilder/script/nashorn_bootstrap.js";
-        try (Reader in = new InputStreamReader(JavaScriptStore.class.getResourceAsStream(nashornBootstrap))) {
+        try (var in = new InputStreamReader(JavaScriptStore.class.getResourceAsStream(nashornBootstrap))) {
             engine.eval(in, bindings);
         }
-        engine.eval("importPackage(Packages.org.csstudio.opibuilder.scriptUtil);", bindings);
-        engine.eval("importPackage(Packages.org.yamcs.studio.script);", bindings);
+
+        // Auto-import standard utility libraries
+        var buf = new StringBuilder();
+        for (var lib : SCRIPT_LIBRARIES) {
+            buf.append("var ")
+                    .append(lib.getSimpleName())
+                    .append(" = Java.type(\"")
+                    .append(lib.getName())
+                    .append("\");\n");
+        }
+        engine.eval(buf.toString(), bindings);
     }
 
     @Override

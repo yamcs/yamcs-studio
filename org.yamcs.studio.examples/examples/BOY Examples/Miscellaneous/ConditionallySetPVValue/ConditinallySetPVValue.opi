@@ -34,9 +34,7 @@
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>updateSwitch</scriptName>
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-&#xD;
-var powerValue = PVUtil.getDouble(pvs[0]);&#xD;
+        <scriptText>var powerValue = PVUtil.getDouble(pvs[0]);&#xD;
 widget.getPV().setValue(powerValue);</scriptText>
         <pv trig="true">loc://realPower</pv>
       </path>
@@ -86,10 +84,7 @@ widget.getPV().setValue(powerValue);</scriptText>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>PowerOn.js</path>
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-importPackage(Packages.org.eclipse.jface.dialogs);&#xD;
-&#xD;
-var powerPV = display.getWidget("Power_LED").getPV();&#xD;
+        <scriptText>var powerPV = display.getWidget("Power_LED").getPV();&#xD;
 var switchPV = widget.getPV();&#xD;
 var allowedPV = display.getWidget("Allowed").getPV();&#xD;
 var allowed = PVUtil.getLong(allowedPV);&#xD;
@@ -98,18 +93,14 @@ if(allowed==1)&#xD;
 	powerPV.setValue(1);&#xD;
 else{&#xD;
 	switchPV.setValue(0);&#xD;
-	MessageDialog.openWarning(&#xD;
-				null, "Power on failed", "It is not allowed to power on!");&#xD;
+	GUIUtil.openWarningDialog("Power on failed: it is not allowed to power on!");&#xD;
 }</scriptText>
         <embedded>true</embedded>
         <description />
       </action>
       <action type="EXECUTE_JAVASCRIPT">
         <path>PowerOff.js</path>
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-importPackage(Packages.org.eclipse.jface.dialogs);&#xD;
-&#xD;
-var powerPV = display.getWidget("Power_LED").getPV();&#xD;
+        <scriptText>var powerPV = display.getWidget("Power_LED").getPV();&#xD;
 &#xD;
 powerPV.setValue(0);</scriptText>
         <embedded>true</embedded>

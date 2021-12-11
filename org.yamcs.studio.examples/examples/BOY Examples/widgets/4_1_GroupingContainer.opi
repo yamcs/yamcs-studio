@@ -555,8 +555,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>
@@ -759,8 +758,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/goHome.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description></description>
       </action>
@@ -973,14 +971,13 @@ $(pv_value)</tooltip>
       <actions hook="true" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path></path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var pv = widget.getPVByName("loc://switch");
+          <scriptText><![CDATA[var pv = widget.getPVByName("loc://switch");
 var value = PVUtil.getLong(pv);
-if(value==0)
+if (value==0) {
 	pv.setValue(1);
-else
+} else {
 	pv.setValue(0);
-
+}
 ]]></scriptText>
           <embedded>true</embedded>
           <description></description>
@@ -1656,14 +1653,13 @@ $(pv_value)</tooltip>
       <actions hook="true" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path></path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var pv = widget.getPVByName("loc://switch");
+          <scriptText><![CDATA[var pv = widget.getPVByName("loc://switch");
 var value = PVUtil.getLong(pv);
-if(value==0)
+if (value == 0) {
 	pv.setValue(1);
-else
+} else {
 	pv.setValue(0);
-
+}
 ]]></scriptText>
           <embedded>true</embedded>
           <description></description>

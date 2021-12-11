@@ -135,11 +135,11 @@ $(trace_0_y_pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>setMajorTickMarkStepHint</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var xAxis = widget.getFigure().getXYGraph().getAxisList().get(0);
+        <scriptText><![CDATA[var xAxis = widget.getFigure().getXYGraph().getAxisList().get(0);
 var yAxis = widget.getFigure().getXYGraph().getAxisList().get(1);
 xAxis.setMajorTickMarkStepHint(PVUtil.getDouble(pvs[0]));
-yAxis.setMajorTickMarkStepHint(PVUtil.getDouble(pvs[1]));]]></scriptText>
+yAxis.setMajorTickMarkStepHint(PVUtil.getDouble(pvs[1]));
+]]></scriptText>
         <pv trig="true">loc://$(DID)_x_stepHint(30)</pv>
         <pv trig="true">loc://$(DID)_y_stepHint(30)</pv>
       </path>

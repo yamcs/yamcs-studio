@@ -9,10 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.wizards;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.ui.util.wizards.WizardNewFileCreationPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -28,13 +24,6 @@ public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
     }
 
     @Override
-    protected InputStream getInitialContents() {
-        var s = ScriptService.DEFAULT_JS_HEADER;
-        InputStream result = new ByteArrayInputStream(s.getBytes());
-        return result;
-    }
-
-    @Override
     protected String getNewFileLabel() {
         return "Javascript File Name:";
     }
@@ -43,5 +32,4 @@ public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
     public String getFileExtension() {
         return "js";
     }
-
 }

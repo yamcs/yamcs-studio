@@ -280,8 +280,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>
@@ -466,8 +465,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/goHome.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description></description>
       </action>

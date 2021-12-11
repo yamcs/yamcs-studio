@@ -46,11 +46,6 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
     }
 
     @Override
-    protected String getScriptHeader() {
-        return ScriptService.DEFAULT_JS_HEADER;
-    }
-
-    @Override
     public void run() {
         if (scriptEngine == null) {
             try {

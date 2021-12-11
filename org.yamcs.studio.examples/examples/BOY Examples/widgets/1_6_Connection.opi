@@ -9,8 +9,7 @@
   <scripts>
     <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
       <scriptName>ChangeLineWidthScript</scriptName>
-      <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-display.getWidget("RTConnection").setPropertyValue("line_width", PVUtil.getLong(pvs[0]));]]></scriptText>
+      <scriptText><![CDATA[display.getWidget("RTConnection").setPropertyValue("line_width", PVUtil.getLong(pvs[0]));]]></scriptText>
       <pv trig="true">sim://ramp(1,10,1,0.2)</pv>
     </path>
   </scripts>
@@ -284,7 +283,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>
@@ -828,8 +827,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/goHome.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description></description>
       </action>

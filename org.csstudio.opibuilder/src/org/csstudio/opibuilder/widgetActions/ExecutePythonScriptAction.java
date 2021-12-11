@@ -138,11 +138,6 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
     }
 
     @Override
-    protected String getScriptHeader() {
-        return ScriptService.DEFAULT_PYTHONSCRIPT_HEADER;
-    }
-
-    @Override
     public void dispose() {
         if (interpreter != null) {
             var o = interpreter.getLocals();
@@ -162,5 +157,4 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
         }
         super.dispose();
     }
-
 }

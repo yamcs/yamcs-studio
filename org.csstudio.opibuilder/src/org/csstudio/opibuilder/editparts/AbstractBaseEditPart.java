@@ -24,8 +24,6 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.properties.WidgetPropertyChangeListener;
-import org.csstudio.opibuilder.script.PVTuple;
-import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.util.BOYPVFactory;
@@ -119,7 +117,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             initFigure(getFigure());
 
             // add listener to all properties.
-            for (String id : getWidgetModel().getAllPropertyIDs()) {
+            for (var id : getWidgetModel().getAllPropertyIDs()) {
 
                 var property = getWidgetModel().getProperty(id);
                 if (property != null) {
@@ -146,13 +144,13 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                 // script and rules execution
                 var scriptsInput = getWidgetModel().getScriptsInput();
                 scriptDataList = new ArrayList<>(scriptsInput.getScriptList());
-                for (RuleData rd : getWidgetModel().getRulesInput().getRuleDataList()) {
+                for (var rd : getWidgetModel().getRulesInput().getRuleDataList()) {
                     scriptDataList.add(rd.convertToScriptData());
                 }
-                for (ScriptData scriptData : scriptDataList) {
+                for (var scriptData : scriptDataList) {
                     var pvArray = new IPV[scriptData.getPVList().size()];
                     var i = 0;
-                    for (PVTuple pvTuple : scriptData.getPVList()) {
+                    for (var pvTuple : scriptData.getPVList()) {
                         var pvName = pvTuple.pvName;
                         if (pvMap.containsKey(pvName)) {
                             pvArray[i] = pvMap.get(pvName);
@@ -180,7 +178,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                             return;
                         }
                         hasStartedPVs = true;
-                        for (IPV pv : pvArray) {
+                        for (var pv : pvArray) {
                             if (pv != null && !pv.isStarted()) {
                                 try {
                                     pv.start();

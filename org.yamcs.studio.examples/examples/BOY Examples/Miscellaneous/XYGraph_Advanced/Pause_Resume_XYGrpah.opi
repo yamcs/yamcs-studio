@@ -193,22 +193,20 @@ $(trace_0_y_pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var pause = display.getVar("pause");
-var xygraph=display.getWidget("XYGraph3");
-if(pause == null || pause==false){
+        <scriptText><![CDATA[var pause = display.getVar("pause");
+var xygraph = display.getWidget("XYGraph3");
+if (pause == null || pause == false) {
 	display.setVar("pause", true);
 	display.setVar("trace_0_y_pv", xygraph.getPropertyValue("trace_0_y_pv"));
 	// xygraph.setPropertyValue("trace_0_y_pv", "");
 	xygraph.getPV("trace_0_y_pv").stop();
 	widget.setPropertyValue("text", "Resume");
-}else{
+} else {
 	display.setVar("pause", false);
 	xygraph.setPropertyValue("trace_0_y_pv", display.getVar("trace_0_y_pv"));
 	xygraph.getPV("trace_0_y_pv").start();
-       widget.setPropertyValue("text", "Pause");
+  widget.setPropertyValue("text", "Pause");
 }
-
 ]]></scriptText>
         <embedded>true</embedded>
         <description></description>

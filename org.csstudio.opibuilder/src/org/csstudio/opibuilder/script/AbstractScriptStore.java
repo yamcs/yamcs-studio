@@ -29,6 +29,16 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.osgi.util.NLS;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.script.ColorFontUtil;
+import org.yamcs.studio.script.ConsoleUtil;
+import org.yamcs.studio.script.CssEntityResolver;
+import org.yamcs.studio.script.DataUtil;
+import org.yamcs.studio.script.FileUtil;
+import org.yamcs.studio.script.GUIUtil;
+import org.yamcs.studio.script.PVUtil;
+import org.yamcs.studio.script.ScriptUtil;
+import org.yamcs.studio.script.WidgetUtil;
+import org.yamcs.studio.script.Yamcs;
 
 /**
  * The script store help to store the compiled script for afterward executions. This is the abstract script store
@@ -36,6 +46,19 @@ import org.yamcs.studio.data.IPVListener;
  * specific script engine. The store must be disposed manually when it is not needed.
  */
 public abstract class AbstractScriptStore implements IScriptStore {
+
+    protected static final Class<?>[] SCRIPT_LIBRARIES = new Class<?>[] {
+            ColorFontUtil.class,
+            ConsoleUtil.class,
+            CssEntityResolver.class,
+            DataUtil.class,
+            FileUtil.class,
+            GUIUtil.class,
+            PVUtil.class,
+            ScriptUtil.class,
+            WidgetUtil.class,
+            Yamcs.class,
+    };
 
     private IPath absoluteScriptPath;
 
@@ -289,5 +312,4 @@ public abstract class AbstractScriptStore implements IScriptStore {
     protected void dispose() {
 
     }
-
 }

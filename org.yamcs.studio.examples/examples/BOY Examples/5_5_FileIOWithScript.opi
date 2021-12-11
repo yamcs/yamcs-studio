@@ -411,7 +411,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>scripts/ReadFileExample.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Read</description>
       </action>
@@ -459,7 +459,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>scripts/WriteFileExample.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Write</description>
       </action>
@@ -507,13 +507,12 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-
-var isInWorkspace = display.getWidget("workspaceDialog").getValue();
+        <scriptText><![CDATA[var isInWorkspace = display.getWidget("workspaceDialog").getValue();
 
 var filePath = FileUtil.openFileDialog(isInWorkspace.booleanValue());
-if(filePath != null)
-	display.getWidget("dialogFilePath").setPropertyValue("text", filePath);]]></scriptText>
+if (filePath != null) {
+	display.getWidget("dialogFilePath").setPropertyValue("text", filePath);
+}]]></scriptText>
         <embedded>true</embedded>
         <description>Open File Dialog</description>
       </action>
@@ -1087,13 +1086,12 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-
-var isInWorkspace = display.getWidget("workspaceDialog").getValue();
+        <scriptText><![CDATA[var isInWorkspace = display.getWidget("workspaceDialog").getValue();
 
 var filePath = FileUtil.saveFileDialog(isInWorkspace.booleanValue());
-if(filePath != null)
-	display.getWidget("dialogFilePath").setPropertyValue("text", filePath);]]></scriptText>
+if (filePath != null) {
+	display.getWidget("dialogFilePath").setPropertyValue("text", filePath);
+}]]></scriptText>
         <embedded>true</embedded>
         <description>Open File Dialog</description>
       </action>

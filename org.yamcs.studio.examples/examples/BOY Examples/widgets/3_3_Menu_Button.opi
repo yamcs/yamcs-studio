@@ -378,8 +378,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/SimpleDialog.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open a simple dialog from Javascript</description>
       </action>
@@ -634,29 +633,25 @@ $(pv_value)</tooltip>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 1</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 2</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 3</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 4</description>
         </action>
@@ -706,29 +701,25 @@ $(pv_value)</tooltip>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 1</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 2</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 3</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 4</description>
         </action>
@@ -778,29 +769,25 @@ $(pv_value)</tooltip>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 1</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 2</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 3</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 4</description>
         </action>
@@ -850,29 +837,25 @@ $(pv_value)</tooltip>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 1</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 2</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 3</description>
         </action>
         <action type="EXECUTE_JAVASCRIPT">
           <path>../scripts/SimpleDialog.js</path>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+          <scriptText><![CDATA[]]></scriptText>
           <embedded>false</embedded>
           <description>Action 4</description>
         </action>
@@ -921,8 +904,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>
@@ -1119,8 +1101,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/goHome.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description></description>
       </action>

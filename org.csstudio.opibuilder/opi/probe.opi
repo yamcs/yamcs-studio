@@ -394,10 +394,10 @@ $(pv_value)</tooltip>
       <scripts>
         <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
           <scriptName>updatePVValue</scriptName>
-          <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var m= widget.getMacroValue("probe_pv");
-if(m!=null)
+          <scriptText><![CDATA[var m = widget.getMacroValue("probe_pv");
+if (m != null) {
 	widget.getPV().setValue(m);
+}
 ]]></scriptText>
           <pv trig="true">=1</pv>
         </path>
@@ -708,14 +708,13 @@ $(pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>TimeAxisScript</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil); 
-var pv0 = PVUtil.getDouble(pvs[0]);
+        <scriptText><![CDATA[var pv0 = PVUtil.getDouble(pvs[0]);
 widget.clearGraph();
-if(pv0==0)
-	widget.setPropertyValue("axis_0_time_format",0);	
-else
-	widget.setPropertyValue("axis_0_time_format",8);
-
+if (pv0 == 0) {
+	widget.setPropertyValue("axis_0_time_format", 0);
+} else {
+	widget.setPropertyValue("axis_0_time_format", 8);
+}
 ]]></scriptText>
         <pv trig="true">loc://$(DID)_TimeXAxis(1)</pv>
       </path>

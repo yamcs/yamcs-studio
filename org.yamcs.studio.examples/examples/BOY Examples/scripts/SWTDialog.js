@@ -2,30 +2,24 @@ importPackage(Packages.org.eclipse.swt);
 importPackage(Packages.org.eclipse.swt.widgets);
 importPackage(Packages.org.eclipse.swt.events);
 importPackage(Packages.org.eclipse.swt.layout);
-importPackage(Packages.org.eclipse.jface.dialogs);
 importPackage(Packages.java.lang);
-importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 
-if(PVUtil.getDouble(pvs[0]) == 100){
+if (PVUtil.getDouble(pvs[0]) == 100) {
 	execute();
 }
 
-function execute2(){
-	var op = MessageDialog.openWarning(
-			null, "Warning", "The temperature you set is too high!");
+function execute2() {
+	GUIUtil.openWarningDialog("The temperature you set is too high!");
 }
 
-
-
-function execute() {	
-		//The script will be executed in the UI thread, so it is not allowed to create a new display.
+function execute() {
+		// The script will be executed in the UI thread, so it is not allowed to create a new display.
 		var display = Display.getCurrent();
 		var shell = new Shell(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setSize(465, 200);
 		shell.setText("MessageDialog");
 		shell.setLayout(new GridLayout(5, false));
-		text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		text = new Text(shell, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		var data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 5;
 		text.setLayoutData(data);
@@ -47,8 +41,7 @@ function execute() {
 			widgetSelected:function(event) 
 			{
 				text.setText("hello");
-				var op = MessageDialog.openInformation(null, "Information", text.getText());
-
+				GUIUtil.openInformationDialog(text.getText());
 			}
 		};
 		alistener = new SelectionListener(listener);
@@ -56,5 +49,4 @@ function execute() {
 
 		shell.open();
 		shell.layout();
-		
 }

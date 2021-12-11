@@ -40,8 +40,7 @@
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>EmbeddedScript</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-widget.executeAction(0);]]></scriptText>
+        <scriptText><![CDATA[widget.executeAction(0);]]></scriptText>
         <pv trig="true">sim://ramp(0,10,1,0.2)</pv>
       </path>
     </scripts>

@@ -289,8 +289,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <widget_type>Label</widget_type>
     <enabled>true</enabled>
-    <text>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-var value0 = PVUtil.getDouble(pvs[0]);&#xD;
+    <text>var value0 = PVUtil.getDouble(pvs[0]);
 var value1 = PVUtil.getDouble(pvs[1]);</text>
     <font>
       <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
@@ -332,8 +331,7 @@ var value1 = PVUtil.getDouble(pvs[1]);</text>
     </foreground_color>
     <widget_type>Label</widget_type>
     <enabled>true</enabled>
-    <text>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-widget.setPropertyValue("foreground_color", ColorFontUtil.RED);</text>
+    <text>widget.setPropertyValue("foreground_color", ColorFontUtil.RED);</text>
     <font>
       <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
     </font>
@@ -497,9 +495,7 @@ widget.setPropertyValue("foreground_color", ColorFontUtil.RED);</text>
     </foreground_color>
     <widget_type>Label</widget_type>
     <enabled>true</enabled>
-    <text>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-display.getWidget("myLabel").setPropertyValue(&#xD;
-	"foreground_color", ColorFontUtil.RED);</text>
+    <text>display.getWidget("myLabel").setPropertyValue("foreground_color", ColorFontUtil.RED);</text>
     <font>
       <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
     </font>
@@ -935,8 +931,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>

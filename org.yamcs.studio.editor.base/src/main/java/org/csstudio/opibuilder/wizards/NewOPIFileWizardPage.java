@@ -34,8 +34,7 @@ public class NewOPIFileWizardPage extends WizardNewFileCreationPage {
         var displayModel = new DisplayModel();
         SchemaService.getInstance().applySchema(displayModel);
         var s = XMLUtil.widgetToXMLString(displayModel, true);
-        InputStream result = new ByteArrayInputStream(s.getBytes());
-        return result;
+        return new ByteArrayInputStream(s.getBytes());
     }
 
     @Override

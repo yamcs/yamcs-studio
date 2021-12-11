@@ -278,7 +278,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/openHelp.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description>Open Help</description>
       </action>
@@ -900,8 +900,7 @@ $(pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>updateArrayWidget</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-widget.setValue(PVUtil.getDoubleArray(pvs[0]));]]></scriptText>
+        <scriptText><![CDATA[widget.setValue(PVUtil.getDoubleArray(pvs[0]));]]></scriptText>
         <pv trig="true">loc://$(DID)_array(10,15,20,25,30,35,40,45,50,55,60,70,80,90,95)</pv>
       </path>
     </scripts>
@@ -1223,8 +1222,7 @@ $(pv_value)</tooltip>
     <actions hook="true" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path>../scripts/goHome.js</path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-]]></scriptText>
+        <scriptText><![CDATA[]]></scriptText>
         <embedded>false</embedded>
         <description></description>
       </action>
@@ -1276,9 +1274,9 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-var value = display.getWidget("textInputArray").getValue();
-widget.getPV().setValue(value);]]></scriptText>
+        <scriptText><![CDATA[var value = display.getWidget("textInputArray").getValue();
+widget.getPV().setValue(value);
+]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>

@@ -34,6 +34,7 @@ import org.eclipse.draw2d.Toggle;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -127,7 +128,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
     protected void fireManualValueChange(boolean newManualValue) {
         boolValue = newManualValue;
         updateValue();
-        for (IManualValueChangeListener l : boolControlListeners) {
+        for (var l : boolControlListeners) {
             l.manualValueChanged(value);
         }
 
@@ -151,9 +152,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         return selectedColor;
     }
 
-    /**
-     * @return the value
-     */
     public long getValue() {
         return value;
     }
@@ -163,17 +161,10 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         return false;
     }
 
-    /**
-     * @return the runMode
-     */
     public boolean isRunMode() {
         return runMode;
     }
 
-    /**
-     * @param bit
-     *            the bit to set
-     */
     public void setBit(int bit) {
         if (this.bit == bit) {
             return;
@@ -201,18 +192,10 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         repaint();
     }
 
-    /**
-     * @param value
-     *            the value to set
-     */
     public void setValue(double value) {
         setValue((long) value);
     }
 
-    /**
-     * @param value
-     *            the value to set
-     */
     public void setValue(long value) {
         if (this.value == value) {
             return;
@@ -312,14 +295,19 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
             var square = new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2 - BOX_SIZE / 2, BOX_SIZE,
                     BOX_SIZE);
             graphics.pushState();
+            Pattern pattern = null;
             if (support3d) {
-                graphics.setBackgroundPattern(GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), square.x,
+                pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), square.x,
                         square.y + 1, square.x, square.y + square.height, ColorConstants.white,
-                        graphics.getBackgroundColor()));
+                        graphics.getBackgroundColor());
+                graphics.setBackgroundPattern(pattern);
             }
             graphics.fillRoundRectangle(square, 4, 4);
             graphics.setForegroundColor(CustomMediaFactory.getInstance().getColor(130, 130, 130));
             graphics.drawRoundRectangle(square, 4, 4);
+            if (pattern != null) {
+                pattern.dispose();
+            }
 
             if (boolValue) {
                 graphics.translate(square.x, square.y);
@@ -342,7 +330,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
             graphics.drawText(text, square.getRight().getTranslated(GAP, -textSize.height / 2));
 
             super.paintClientArea(graphics);
-
         }
 
         @Override
@@ -369,5 +356,4 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
             return getPreferredSize().getCopy().expand(getInsets().getWidth(), getInsets().getHeight());
         }
     }
-
 }

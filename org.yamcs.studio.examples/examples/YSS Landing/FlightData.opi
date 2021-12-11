@@ -9017,8 +9017,7 @@ $(pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>EmbeddedScript</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-widget.setPropertyValue("text", Date.now());
+        <scriptText><![CDATA[widget.setPropertyValue("text", Date.now());
 ]]></scriptText>
         <pv trig="true">/YSS/SIMULATOR/ElapsedTime</pv>
       </path>
@@ -9385,8 +9384,7 @@ $(pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>EmbeddedScript</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-widget.setPropertyValue("text",PVUtil.getTimeString(pvs[0]));
+        <scriptText><![CDATA[widget.setPropertyValue("text", PVUtil.getTimeString(pvs[0]));
 ]]></scriptText>
         <pv trig="true">/YSS/SIMULATOR/ElapsedTime</pv>
       </path>

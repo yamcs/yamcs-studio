@@ -9,9 +9,7 @@
   <scripts>
     <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
       <scriptName>Initialize</scriptName>
-      <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-&#xD;
-display.getWidget("passok").getPV().setValue(0);&#xD;
+      <scriptText>display.getWidget("passok").getPV().setValue(0);&#xD;
 &#xD;
 display.getWidget("confirmok").getPV().setValue(0);</scriptText>
       <pv trig="true">1</pv>
@@ -108,9 +106,7 @@ display.getWidget("confirmok").getPV().setValue(0);</scriptText>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path />
-          <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-var r = GUIUtil.openPasswordDialog("Please input password (123456):", "123456");&#xD;
-&#xD;
+          <scriptText>var r = GUIUtil.openPasswordDialog("Please input password (123456):", "123456");&#xD;
 &#xD;
 display.getWidget("passok").getPV().setValue(r?1:0);</scriptText>
           <embedded>true</embedded>
@@ -241,9 +237,7 @@ $(pv_value)</tooltip>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
           <path />
-          <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-var r = GUIUtil.openConfirmDialog("Are you sure you want to do this?");&#xD;
-&#xD;
+          <scriptText>var r = GUIUtil.openConfirmDialog("Are you sure you want to do this?");&#xD;
 &#xD;
 display.getWidget("confirmok").getPV().setValue(r?1:0);</scriptText>
           <embedded>true</embedded>
@@ -340,8 +334,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path />
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-GUIUtil.fullScreen();</scriptText>
+        <scriptText>GUIUtil.fullScreen();</scriptText>
         <embedded>true</embedded>
         <description>Enter/Exit Full Screen (F11)</description>
       </action>

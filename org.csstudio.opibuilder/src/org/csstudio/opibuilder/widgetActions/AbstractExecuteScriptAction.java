@@ -37,7 +37,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { getFileExtension() }, false));
-        addProperty(new StringProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, getScriptHeader(),
+        addProperty(new StringProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, "",
                 true, true));
         var embeddedProperty = new BooleanProperty(PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
         embeddedProperty.addPropertyChangeListener(evt -> {
@@ -117,6 +117,4 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     }
 
     protected abstract String getFileExtension();
-
-    protected abstract String getScriptHeader();
 }

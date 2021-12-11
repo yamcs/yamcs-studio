@@ -31,12 +31,12 @@ public class RuleData implements IAdaptable {
     /**
      * The name of the rule.
      */
-    private String name;
+    private String name = "Rule";
 
     /**
      * Id of the property which the rule will apply to.
      */
-    private String propId;
+    private String propId = "name";
 
     private AbstractWidgetModel widgetModel;
 
@@ -45,50 +45,29 @@ public class RuleData implements IAdaptable {
      */
     private boolean outputExpValue;
 
-    /**
-     * List of expressions.
-     */
-    private List<Expression> expressionList;
+    private List<Expression> expressionList = new ArrayList<>();
 
     /**
      * The input PVs of the rule. Which can be accessed in the rule and trigger the rule execution.
      */
-    private List<PVTuple> pvList;
+    private List<PVTuple> pvList = new ArrayList<>();
 
     public RuleData(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        expressionList = new ArrayList<Expression>();
-        pvList = new ArrayList<PVTuple>();
-        name = "Rule";
-        propId = "name";
     }
 
-    /**
-     * @return the name
-     */
     public final String getName() {
         return name;
     }
 
-    /**
-     * @param name
-     *            the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the propId
-     */
     public final String getPropId() {
         return propId;
     }
 
-    /**
-     * @param propId
-     *            the propId to set
-     */
     public void setPropId(String propId) {
         this.propId = propId;
     }
@@ -117,8 +96,6 @@ public class RuleData implements IAdaptable {
 
     /**
      * Get the input PVs of the script
-     * 
-     * @return
      */
     public List<PVTuple> getPVList() {
         return pvList;
@@ -136,18 +113,18 @@ public class RuleData implements IAdaptable {
 
     /**
      * Generate the Javascript string for this rule.
-     * 
-     * @return the script string
      */
     public String generateScript() {
         if (expressionList.size() <= 0) {
             return "";
         }
-        var sb = new StringBuilder("importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n");
-
+        var sb = new StringBuilder();
         var property = widgetModel.getProperty(propId);
-        boolean needDbl = false, needInt = false, needStr = false, needSev = false;
-        for (Expression exp : expressionList) {
+        var needDbl = false;
+        var needInt = false;
+        var needStr = false;
+        var needSev = false;
+        for (var exp : expressionList) {
             if (!needDbl) {
                 needDbl = containRegex(exp.getBooleanExpression(), "pv\\d")
                         || (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d"));
@@ -180,31 +157,33 @@ public class RuleData implements IAdaptable {
         }
         for (var i = 0; i < pvList.size(); i++) {
             if (needDbl) {
-                sb.append("var pv" + i + " = PVUtil." + "getDouble(pvs[" + i + "]);\n");
+                sb.append("var pv" + i + " = PVUtil.getDouble(pvs[" + i + "]);\n");
             }
             if (needInt) {
-                sb.append("var pvInt" + i + " = PVUtil." + "getLong(pvs[" + i + "]);\n");
+                sb.append("var pvInt" + i + " = PVUtil.getLong(pvs[" + i + "]);\n");
             }
             if (needStr) {
-                sb.append("var pvStr" + i + " = PVUtil." + "getString(pvs[" + i + "]);\n");
+                sb.append("var pvStr" + i + " = PVUtil.getString(pvs[" + i + "]);\n");
             }
             if (needSev) {
                 sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");
             }
         }
         var i = 0;
-        for (Expression exp : expressionList) {
-            sb.append(i == 0 ? "if(" : "else if(");
+        for (var exp : expressionList) {
+            sb.append(i == 0 ? "if (" : "else if (");
             sb.append(expressionList.get(i++).getBooleanExpression());
-            sb.append(")\n");
+            sb.append(") {\n");
 
             sb.append("\twidget.setPropertyValue(\"" + propId + "\",");
 
             var propValue = generatePropValueString(property, exp);
             sb.append(propValue + ");\n");
+            sb.append("}\n");
         }
-        sb.append("else\n");
+        sb.append("else {\n");
         sb.append("\twidget.setPropertyValue(\"" + propId + "\"," + generatePropValueString(property, null) + ");\n");
+        sb.append("}");
 
         return sb.toString();
     }
@@ -214,21 +193,15 @@ public class RuleData implements IAdaptable {
         result.setName(name);
         result.setOutputExpValue(outputExpValue);
         result.setPropId(propId);
-        for (Expression expression : expressionList) {
+        for (var expression : expressionList) {
             result.addExpression(expression.getCopy());
         }
-        for (PVTuple pvTuple : pvList) {
+        for (var pvTuple : pvList) {
             result.addPV(pvTuple.getCopy());
         }
         return result;
     }
 
-    /**
-     * @param property
-     * @param exp
-     * @param propValue
-     * @return
-     */
     private String generatePropValueString(AbstractWidgetProperty property, Expression exp) {
         Object value;
         String propValue;
@@ -259,8 +232,6 @@ public class RuleData implements IAdaptable {
     /**
      * Convert this {@link RuleData} to {@link RuleScriptData} so that the scriptEngine code can be reused for running
      * rules.
-     * 
-     * @return
      */
     public RuleScriptData convertToScriptData() {
         var ruleScriptData = new RuleScriptData(this);

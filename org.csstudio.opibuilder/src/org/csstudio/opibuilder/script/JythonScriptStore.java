@@ -34,7 +34,6 @@ public class JythonScriptStore extends AbstractScriptStore {
 
     public JythonScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
         super(scriptData, editpart, pvArray);
-
     }
 
     @Override
@@ -55,6 +54,16 @@ public class JythonScriptStore extends AbstractScriptStore {
             }
         }
         interp = PythonInterpreter.threadLocalStateInterpreter(state.getDict());
+
+        // Auto-import standard utility libraries
+        var buf = new StringBuilder();
+        for (var lib : SCRIPT_LIBRARIES) {
+            buf.append("from ")
+                    .append(lib.getPackageName())
+                    .append(" import ")
+                    .append(lib.getSimpleName())
+                    .append("\n");
+        }
     }
 
     @Override

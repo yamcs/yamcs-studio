@@ -236,8 +236,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path />
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-importPackage(Packages.java.lang);&#xD;
+        <scriptText>importPackage(Packages.java.lang);&#xD;
 System.setProperty("UserName", display.getWidget("UserName").getValue());&#xD;
 System.setProperty("Password", display.getWidget("Password").getValue());&#xD;
 &#xD;
@@ -288,8 +287,7 @@ $(pv_value)</tooltip>
     <actions hook="false" hook_all="false">
       <action type="EXECUTE_JAVASCRIPT">
         <path />
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-ScriptUtil.closeCurrentOPI();</scriptText>
+        <scriptText>ScriptUtil.closeCurrentOPI();</scriptText>
         <embedded>true</embedded>
         <description />
       </action>

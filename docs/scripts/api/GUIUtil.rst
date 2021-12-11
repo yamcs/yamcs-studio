@@ -11,6 +11,15 @@ Helper methods for window-level operations on Yamcs Studio.
 
     Returns ``true`` if the user confirmed.
 
+**openInformationDialog(** message **)**
+    Open an information dialog with the given message.
+
+**openWarningDialog(** message **)**
+    Open a warning dialog with the given message.
+
+**openErrorDialog(** message **)**
+    Open an error dialog with the given message.
+
 **openPasswordDialog(** message, password **)**
     Open a password input dialog.
 

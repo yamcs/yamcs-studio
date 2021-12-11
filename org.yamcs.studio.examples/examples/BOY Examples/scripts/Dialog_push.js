@@ -1,5 +1,1 @@
-importPackage(Packages.org.eclipse.jface.dialogs);
-
-MessageDialog.openInformation(
-			null, "Dialog from JavaScript", "Button was pushed.");
-
+GUIUtil.openInformationDialog("Button was pushed.");

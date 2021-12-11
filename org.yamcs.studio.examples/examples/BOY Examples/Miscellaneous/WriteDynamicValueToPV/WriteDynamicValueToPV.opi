@@ -232,11 +232,11 @@ $(pv_value)</tooltip>
     <scripts>
       <path pathString="EmbeddedJs" checkConnect="true" sfe="false" seoe="false">
         <scriptName>SetWritePVActionValue</scriptName>
-        <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-if(PVUtil.getLong(pvs[0])==0)
-	widget.getHookedActions().get(0).setPropertyValue("value",1);
-else
-	widget.getHookedActions().get(0).setPropertyValue("value",0);
+        <scriptText><![CDATA[if (PVUtil.getLong(pvs[0]) == 0) {
+	widget.getHookedActions().get(0).setPropertyValue("value", 1);
+} else {
+	widget.getHookedActions().get(0).setPropertyValue("value", 0);
+}
 ]]></scriptText>
         <pv trig="true">loc://$(DID)_readback(0)</pv>
       </path>

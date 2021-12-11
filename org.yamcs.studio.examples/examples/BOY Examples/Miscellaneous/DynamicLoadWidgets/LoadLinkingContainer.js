@@ -1,5 +1,3 @@
-importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-
 var filePath = PVUtil.getString(pvs[1]);
 
 //root is a JDOM Element
@@ -9,17 +7,14 @@ var groups = root.getChildren();
 
 widget.removeAllChildren();
 
-for(var i=0; i<groups.size(); i++){
-	
+for (var i = 0; i < groups.size(); i++) {
+
 	//create linking container
 	var linkingContainer = WidgetUtil.createWidgetModel("org.csstudio.opibuilder.widgets.linkingContainer");	
 	linkingContainer.setPropertyValue("opi_file", "SubPanel.opi");
-    try
-    {  // Current API, 1 == "Size the container to fit the linked *.opi"
+    try { // Current API, 1 == "Size the container to fit the linked *.opi"
        linkingContainer.setPropertyValue("resize_behaviour", 1);
-    }
-    catch (err)
-    {   // Older LinkingContainer had these two properties:
+    } catch (err) { // Older LinkingContainer had these two properties:
         linkingContainer.setPropertyValue("auto_size", true);
         linkingContainer.setPropertyValue("zoom_to_fit", false);
     }
@@ -28,7 +23,7 @@ for(var i=0; i<groups.size(); i++){
 	//add macros
 	linkingContainer.addMacro("index", i);
 	var macros = groups.get(i).getChildren();
-	for(var j=0; j<macros.size(); j++){
+	for(var j = 0; j < macros.size(); j++){
 		var macro = macros.get(j);
 		linkingContainer.addMacro(macro.getName(), macro.getValue());
 	}	
@@ -38,4 +33,3 @@ for(var i=0; i<groups.size(); i++){
 }
 
 widget.performAutosize();
-

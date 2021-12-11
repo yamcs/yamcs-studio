@@ -11,6 +11,7 @@ package org.yamcs.studio.script;
 
 import org.csstudio.opibuilder.util.DisplayUtils;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -31,25 +32,21 @@ public class GUIUtil {
      * @return true if user has input the correct password and clicked OK button. false otherwise.
      */
     public static boolean openPasswordDialog(String dialogMessage, String password) {
-        InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Password Input Dialog", dialogMessage,
-                "", newText -> {
-                    if (newText.equals(password)) {
-                        return null;
-                    } else {
-                        return "Password error!";
-                    }
-                }) {
+        var shell = Display.getCurrent().getActiveShell();
+        var dlg = new InputDialog(shell, "Password Input Dialog", dialogMessage, "", newText -> {
+            if (newText.equals(password)) {
+                return null;
+            } else {
+                return "Password error!";
+            }
+        }) {
             @Override
             protected int getInputTextStyle() {
                 return SWT.SINGLE | SWT.PASSWORD;
             }
         };
         dlg.setBlockOnOpen(true);
-        var val = dlg.open();
-        if (val == Window.OK) {
-            return true;
-        }
-        return false;
+        return dlg.open() == Window.OK;
     }
 
     /**
@@ -64,10 +61,22 @@ public class GUIUtil {
         mb.setMessage(dialogMessage);
         mb.setText("Confirm Dialog");
         var val = mb.open();
-        if (val == SWT.YES) {
-            return true;
-        }
-        return false;
+        return val == SWT.YES;
+    }
+
+    public static void openInformationDialog(String dialogMessage) {
+        var shell = Display.getCurrent().getActiveShell();
+        MessageDialog.openInformation(shell, "Information", dialogMessage);
+    }
+
+    public static void openWarningDialog(String dialogMessage) {
+        var shell = Display.getCurrent().getActiveShell();
+        MessageDialog.openWarning(shell, "Warning", dialogMessage);
+    }
+
+    public static void openErrorDialog(String dialogMessage) {
+        var shell = Display.getCurrent().getActiveShell();
+        MessageDialog.openError(shell, "Error", dialogMessage);
     }
 
     /**
@@ -76,5 +85,4 @@ public class GUIUtil {
     public static void fullScreen() {
         ScriptUtil.executeEclipseCommand("org.csstudio.opibuilder.actions.fullscreen");
     }
-
 }
