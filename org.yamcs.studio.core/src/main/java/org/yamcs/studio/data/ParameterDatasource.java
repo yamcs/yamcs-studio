@@ -59,9 +59,10 @@ public class ParameterDatasource implements Datasource {
             if (id.hasNamespace()) {
                 parameterName = id.getNamespace() + "/" + parameterName;
             }
+            var fParameterName = parameterName;
             processor.setValue(parameterName, v).whenComplete((data, e) -> {
                 if (e != null) {
-                    log.log(Level.SEVERE, "Could not write to parameter", e);
+                    log.log(Level.SEVERE, "Could not write to parameter " + fParameterName, e);
                     if (e instanceof Exception) {
                         callback.dataWritten((Exception) e);
                     } else {

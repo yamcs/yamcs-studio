@@ -72,7 +72,6 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
             }
         }
         Job job = new Job("Execute JavaScript") {
-
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 var taskName = isEmbedded() ? "Execute JavaScript" : "Connecting to " + getAbsolutePath();

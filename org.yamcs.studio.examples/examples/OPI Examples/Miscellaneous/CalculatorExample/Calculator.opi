@@ -2,7 +2,7 @@
 <display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
   <actions hook="false" hook_all="false" />
   <auto_scale_widgets>
-    <auto_scale_widgets>true</auto_scale_widgets>
+    <auto_scale_widgets>false</auto_scale_widgets>
     <min_width>-1</min_width>
     <min_height>-1</min_height>
   </auto_scale_widgets>
@@ -19,10 +19,10 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <name>Calculator by BOY</name>
+  <name>Calculator</name>
   <rules />
   <scripts>
-    <path pathString="init.py" checkConnect="true" seoe="false">
+    <path pathString="Calculator.js" checkConnect="true" seoe="false">
       <pv trig="true">=1</pv>
     </path>
   </scripts>
@@ -38,9 +38,9 @@
   <y>-1</y>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").calc()]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").calc();]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -91,9 +91,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -144,9 +144,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -197,9 +197,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -250,9 +250,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").setOperator(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -303,9 +303,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -356,9 +356,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -409,9 +409,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -462,9 +462,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -515,9 +515,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -568,9 +568,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -621,9 +621,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -674,9 +674,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -727,9 +727,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -780,9 +780,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -833,9 +833,9 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
-      <action type="EXECUTE_PYTHONSCRIPT">
+      <action type="EXECUTE_JAVASCRIPT">
         <path></path>
-        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"))]]></scriptText>
+        <scriptText><![CDATA[display.getVar("calc").appendDigit(widget.getPropertyValue("text"));]]></scriptText>
         <embedded>true</embedded>
         <description></description>
       </action>
@@ -917,7 +917,7 @@ $(pv_value)</tooltip>
     <name>LCD</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>Actions</pv_name>
+    <pv_name></pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />

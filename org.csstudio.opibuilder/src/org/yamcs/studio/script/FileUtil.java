@@ -49,7 +49,7 @@ public class FileUtil {
      * 
      * @param filePath
      *            path of the file. It must be an absolute path which can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>. *
      * @return root element of the XML file.
@@ -66,7 +66,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @param widget
@@ -99,7 +99,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @param widget
@@ -123,7 +123,7 @@ public class FileUtil {
      * 
      * @param filePath
      *            path of the file. It must be an absolute path which can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @return a string of the text.
@@ -140,7 +140,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @param widget
@@ -173,7 +173,7 @@ public class FileUtil {
      * 
      * @param filePath
      *            path of the file. It must be an absolute path which can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            or a local file system path such as <code>C:\myfile.xml</code>.
      * @param inWorkspace
      *            true if the file path is a workspace file path. Otherwise, it will be recognized as a local file
@@ -196,7 +196,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @param inWorkspace
@@ -272,7 +272,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either a workspace path such as <br>
-     *            <code>/BOY Examples/Scripts/myfile.txt</code><br>
+     *            <code>/OPI Examples/Scripts/myfile.txt</code><br>
      *            or a local file system path such as <code>C:\myfile.txt</code>.
      * @param widget
      *            a widget in the OPI, which is used to provide relative path reference. It can be null if the path is
@@ -307,7 +307,7 @@ public class FileUtil {
      * @param filePath
      *            path of the file. It can be an absolute path or a relative path to the OPI that contains the specified
      *            widget. If it is an absolute path, it can be either<br>
-     *            a workspace path such as <code>/BOY Examples/Scripts/myfile.xml</code><br>
+     *            a workspace path such as <code>/OPI Examples/Scripts/myfile.xml</code><br>
      *            a local file system path such as <code>C:\myfile.xml</code><br>
      *            or an URL path such as <code>http://mysite.com/myfile.xml</code>.
      * @param widget

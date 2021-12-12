@@ -270,6 +270,7 @@ public class ResourceUtil {
     public static IPath workspacePathToSysPath(IPath path) {
         var workspace = ResourcesPlugin.getWorkspace();
         var root = workspace.getRoot();
+
         var resource = root.findMember(path);
         if (resource != null) {
             return resource.getLocation(); // existing resource
@@ -282,10 +283,8 @@ public class ResourceUtil {
     /**
      * If the file on path is an existing file in workspace, local file system or available URL.
      * 
-     * @param absolutePath
      * @param runInUIJob
      *            true if this method should run as an UI Job. If it is true, this method must be called in UI thread.
-     * @return
      */
     public static boolean isExsitingFile(IPath absolutePath, boolean runInUIJob) {
         if (isExistingWorkspaceFile(absolutePath)) {
@@ -300,8 +299,7 @@ public class ResourceUtil {
     public static IEditorInput editorInputFromPath(IPath path) {
         IEditorInput editorInput = null;
         var file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-        // Files outside the workspace are handled differently
-        // by Eclipse.
+        // Files outside the workspace are handled differently by Eclipse.
         if (!ResourceUtil.isExistingWorkspaceFile(path) && ResourceUtil.isExistingLocalFile(path)) {
             var fileStore = EFS.getLocalFileSystem().getStore(file.getFullPath());
             editorInput = new FileStoreEditorInput(fileStore);

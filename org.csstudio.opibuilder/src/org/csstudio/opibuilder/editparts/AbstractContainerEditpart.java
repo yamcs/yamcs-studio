@@ -23,11 +23,8 @@ import org.csstudio.opibuilder.editpolicies.WidgetContainerEditPolicy;
 import org.csstudio.opibuilder.editpolicies.WidgetXYLayoutEditPolicy;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
-import org.csstudio.opibuilder.scriptUtil.WidgetUtil;
 import org.csstudio.opibuilder.util.GeometryUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.CompoundSnapToHelper;
@@ -40,6 +37,7 @@ import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.osgi.util.NLS;
+import org.yamcs.studio.script.WidgetUtil;
 
 /**
  * The editpart for {@link AbstractContainerModel}
@@ -73,8 +71,8 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
      * @return the widgetController of the child. null if the child doesn't exist.
      */
     public AbstractBaseEditPart getChild(String name) {
-        List<?> children = getChildren();
-        for (Object o : children) {
+        var children = getChildren();
+        for (var o : children) {
             if (o instanceof AbstractBaseEditPart) {
                 if (((AbstractBaseEditPart) o).getWidgetModel().getName().equals(name)) {
                     return (AbstractBaseEditPart) o;
@@ -104,16 +102,13 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
 
     /**
      * Recursively search the widget
-     * 
-     * @param name
-     * @return
      */
     private AbstractBaseEditPart searchWidget(String name) {
         var child = getChild(name);
         if (child != null) {
             return child;
         } else {
-            for (Object obj : getChildren()) {
+            for (var obj : getChildren()) {
                 if (obj instanceof AbstractContainerEditpart) {
                     var containerChild = (AbstractContainerEditpart) obj;
                     var widget = containerChild.searchWidget(name);
@@ -130,12 +125,12 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
      * @return all pv names attached to this container and its children at runtime.
      */
     public Set<String> getAllRuntimePVNames() {
-        Set<String> result = new HashSet<String>();
+        var result = new HashSet<String>();
         var allPVs = getAllPVs();
         if (allPVs != null && !allPVs.isEmpty()) {
             result.addAll(getAllPVs().keySet());
         }
-        for (Object child : getChildren()) {
+        for (var child : getChildren()) {
             if (child instanceof AbstractContainerEditpart) {
                 result.addAll(((AbstractContainerEditpart) child).getAllRuntimePVNames());
             } else if (child instanceof AbstractBaseEditPart) {
@@ -202,29 +197,14 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         }
     }
 
-    /**
-     * Remove a child widget.
-     * 
-     * @param child
-     *            the child widget.
-     */
     public void removeChild(AbstractBaseEditPart child) {
         getWidgetModel().removeChild(child.getWidgetModel());
     }
 
-    /**
-     * Remove the child at index.
-     * 
-     * @param index
-     *            index of the child.
-     */
     public void removeChild(int index) {
         removeChild((AbstractBaseEditPart) getChildren().get(index));
     }
 
-    /**
-     * Remove all children.
-     */
     public void removeAllChildren() {
         getWidgetModel().removeAllChildren();
     }
@@ -241,46 +221,38 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
             macrosMap.putAll(getWidgetModel().getMacrosInput().getMacrosMap());
             getWidgetModel().setMacroMap(macrosMap);
         }
-
     }
 
     @Override
     protected void registerBasePropertyChangeHandlers() {
         super.registerBasePropertyChangeHandlers();
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                var macrosInput = (MacrosInput) newValue;
+        setPropertyChangeHandler(AbstractContainerModel.PROP_MACROS, (oldValue, newValue, figure) -> {
+            var macrosInput = (MacrosInput) newValue;
 
-                var macrosMap = new LinkedHashMap<String, String>();
-                if (macrosInput.isInclude_parent_macros()) {
-                    macrosMap.putAll(getWidgetModel().getParentMacroMap());
-                }
-                macrosMap.putAll(macrosInput.getMacrosMap());
-                getWidgetModel().setMacroMap(macrosMap);
-                return false;
+            var macrosMap = new LinkedHashMap<String, String>();
+            if (macrosInput.isInclude_parent_macros()) {
+                macrosMap.putAll(getWidgetModel().getParentMacroMap());
             }
-        };
-        setPropertyChangeHandler(AbstractContainerModel.PROP_MACROS, handler);
+            macrosMap.putAll(macrosInput.getMacrosMap());
+            getWidgetModel().setMacroMap(macrosMap);
+            return false;
+        });
 
         layout();
 
-        childrenPropertyChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+        childrenPropertyChangeListener = evt -> {
 
-                if (evt.getOldValue() instanceof Integer) {
-                    addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
+            if (evt.getOldValue() instanceof Integer) {
+                addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
+                layout();
+            } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
+                var child = (EditPart) getViewer().getEditPartRegistry().get(evt.getOldValue());
+                if (child != null) {
+                    removeChild(child);
                     layout();
-                } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
-                    var child = (EditPart) getViewer().getEditPartRegistry().get(evt.getOldValue());
-                    if (child != null) {
-                        removeChild(child);
-                        layout();
-                    }
-                } else {
-                    refreshChildren();
                 }
+            } else {
+                refreshChildren();
             }
         };
         getWidgetModel().getChildrenProperty().addPropertyChangeListener(childrenPropertyChangeListener);
@@ -291,8 +263,8 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     var widgets = (List<AbstractWidgetModel>) evt.getNewValue();
-                    List<EditPart> widgetEditparts = new ArrayList<EditPart>();
-                    for (AbstractWidgetModel w : widgets) {
+                    var widgetEditparts = new ArrayList<EditPart>();
+                    for (var w : widgets) {
                         var e = (EditPart) getViewer().getEditPartRegistry().get(w);
                         if (e != null) {
                             widgetEditparts.add(e);
@@ -302,7 +274,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
                     if (!(Boolean) evt.getOldValue()) { // append
                         getViewer().deselectAll();
                     }
-                    for (EditPart editpart : widgetEditparts) {
+                    for (var editpart : widgetEditparts) {
                         if (editpart.isSelectable()) {
                             getViewer().appendSelection(editpart);
                         }
@@ -312,7 +284,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
 
             getWidgetModel().getSelectionProperty().addPropertyChangeListener(selectionPropertyChangeListener);
         }
-
     }
 
     @Override
@@ -335,7 +306,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
     }
 
     public AbstractLayoutEditpart getLayoutWidget() {
-        for (Object child : getChildren()) {
+        for (var child : getChildren()) {
             if (child instanceof AbstractLayoutEditpart) {
                 return (AbstractLayoutEditpart) child;
             }
@@ -357,7 +328,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         }
         var layoutter = getLayoutWidget();
         if (layoutter != null && layoutter.getWidgetModel().isEnabled()) {
-            List<AbstractWidgetModel> modelChildren = new ArrayList<AbstractWidgetModel>();
+            var modelChildren = new ArrayList<AbstractWidgetModel>();
             modelChildren.addAll(getModelChildren());
             modelChildren.remove(layoutter.getWidgetModel());
             layoutter.layout(modelChildren, getFigure().getClientArea());
@@ -374,7 +345,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         getWidgetModel().setSize(new Dimension(childrenRange.width + figure.getInsets().left + figure.getInsets().right,
                 childrenRange.height + figure.getInsets().top + figure.getInsets().bottom));
 
-        for (Object editpart : getChildren()) {
+        for (var editpart : getChildren()) {
             var widget = ((AbstractBaseEditPart) editpart).getWidgetModel();
             widget.setLocation(widget.getLocation().translate(tranlateSize.getNegated()));
         }
@@ -413,7 +384,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
             if (a.length >= getChildren().size()) {
                 isArrayValue = true;
                 var i = 0;
-                for (Object child : getChildren()) {
+                for (var child : getChildren()) {
                     if (child instanceof AbstractBaseEditPart) {
                         ((AbstractBaseEditPart) child).setValue(a[i++]);
                     }
@@ -421,7 +392,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
             }
         } else { // Write None Array to a container will write every child the same value.
             isArrayValue = false;
-            for (Object child : getChildren()) {
+            for (var child : getChildren()) {
                 if (child instanceof AbstractBaseEditPart) {
                     ((AbstractBaseEditPart) child).setValue(value);
                 }
@@ -436,7 +407,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
     public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
         // make snap to G work
         if (adapter == SnapToHelper.class) {
-            List<SnapToHelper> snapStrategies = new ArrayList<SnapToHelper>();
+            var snapStrategies = new ArrayList<SnapToHelper>();
             var val = (Boolean) getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
             if (val != null && val.booleanValue()) {
                 snapStrategies.add(new SnapToGuides(this));
@@ -457,7 +428,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
                 return snapStrategies.get(0);
             }
 
-            SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
+            var ss = new SnapToHelper[snapStrategies.size()];
             for (var i = 0; i < snapStrategies.size(); i++) {
                 ss[i] = snapStrategies.get(i);
             }

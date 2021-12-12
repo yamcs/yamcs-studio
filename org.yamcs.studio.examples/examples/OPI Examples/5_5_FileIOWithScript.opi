@@ -90,7 +90,7 @@
     <selector_type>1</selector_type>
     <show_units>true</show_units>
     <style>0</style>
-    <text>/BOY Examples/scripts/myFile.txt</text>
+    <text>/OPI Examples/scripts/myFile.txt</text>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
     <transparent>false</transparent>

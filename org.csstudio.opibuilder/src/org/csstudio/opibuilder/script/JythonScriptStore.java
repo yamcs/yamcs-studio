@@ -54,7 +54,10 @@ public class JythonScriptStore extends AbstractScriptStore {
             }
         }
         interp = PythonInterpreter.threadLocalStateInterpreter(state.getDict());
+        bootstrapInterpreter(interp);
+    }
 
+    public static void bootstrapInterpreter(PythonInterpreter interpreter) {
         // Auto-import standard utility libraries
         var buf = new StringBuilder();
         for (var lib : SCRIPT_LIBRARIES) {
@@ -64,6 +67,7 @@ public class JythonScriptStore extends AbstractScriptStore {
                     .append(lib.getSimpleName())
                     .append("\n");
         }
+        interpreter.exec(buf.toString());
     }
 
     @Override

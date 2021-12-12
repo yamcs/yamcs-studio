@@ -413,7 +413,7 @@ $(pv_value)</tooltip>
           <keep_wh_ratio>false</keep_wh_ratio>
         </scale_options>
         <scripts>
-          <path pathString="../scripts/DisplayPVValuesInTable.py" checkConnect="false" seoe="false">
+          <path pathString="../scripts/DisplayPVValuesInTable.js" checkConnect="false" seoe="false">
             <pv trig="true">sim://noise</pv>
             <pv trig="true">sim://ramp</pv>
             <pv trig="true">sim://ramp(0,100,1,0.1)</pv>

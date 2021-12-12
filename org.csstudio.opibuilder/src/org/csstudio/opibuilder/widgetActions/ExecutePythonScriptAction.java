@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
+import org.csstudio.opibuilder.script.JythonScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
 import org.csstudio.opibuilder.util.ResourceUtil;
@@ -73,6 +74,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             }
 
             interpreter = new PythonInterpreter(null, state);
+            JythonScriptStore.bootstrapInterpreter(interpreter);
 
             var viewer = getWidgetModel().getRootDisplayModel().getViewer();
             if (viewer != null) {
@@ -85,7 +87,6 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
         }
 
         Job job = new Job("Execute Python Script") {
-
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 var taskName = isEmbedded() ? "Execute Python Script" : "Connecting to " + getAbsolutePath();

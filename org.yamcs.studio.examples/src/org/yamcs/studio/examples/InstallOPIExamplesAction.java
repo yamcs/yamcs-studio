@@ -68,7 +68,7 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
                     var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/BOY Examples"),
+                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/OPI Examples"),
                             null);
 
                     try {

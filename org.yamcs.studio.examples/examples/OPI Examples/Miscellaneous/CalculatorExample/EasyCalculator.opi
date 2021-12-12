@@ -22,14 +22,14 @@
   <name></name>
   <rules />
   <scripts>
-    <path pathString="EasyCalculatorLogic.py" checkConnect="true" seoe="false">
+    <path pathString="EasyCalculator.js" checkConnect="true" seoe="false">
       <pv trig="true">loc://op1</pv>
       <pv trig="true">loc://op2</pv>
       <pv trig="true">loc://operator</pv>
       <pv trig="false">loc://result</pv>
     </path>
   </scripts>
-  <show_close_button>true</show_close_button>
+  <show_close_button>false</show_close_button>
   <show_edit_range>true</show_edit_range>
   <show_grid>true</show_grid>
   <show_ruler>true</show_ruler>

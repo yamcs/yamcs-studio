@@ -73,7 +73,13 @@
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts>
-      <path pathString="AbsoluteWSPathToSysProp.py" checkConnect="true" seoe="false">
+      <path pathString="EmbeddedJs" checkConnect="true" seoe="false">
+        <scriptName>EmbeddedScript</scriptName>
+        <scriptText><![CDATA[var System = Java.type("java.lang.System");
+
+sysPath = FileUtil.workspacePathToSysPath("/OPI Examples/Miscellaneous/ExecuteShellScript");
+System.setProperty("shellScript.dir", sysPath);
+]]></scriptText>
         <pv trig="true">=1</pv>
       </path>
     </scripts>
@@ -118,7 +124,7 @@ $(pv_value)</tooltip>
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>Example1: Execute shell script in absolute workspace path.
+    <text>Execute shell script in absolute workspace path.
 
 Idea: an init script on the button set a system property "shellScript.dir" which points to the file system path of the shell script, then the execute command action using this system property as its command directory.
 </text>
@@ -132,104 +138,6 @@ Idea: an init script on the button set a system property "shellScript.dir" which
     <wuid>474be8bf:13973dccd53:-7b77</wuid>
     <x>36</x>
     <y>36</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <actions hook="false" hook_all="false" />
-    <auto_size>false</auto_size>
-    <background_color>
-      <color red="255" green="255" blue="217" />
-    </background_color>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
-    </font>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <height>55</height>
-    <horizontal_alignment>0</horizontal_alignment>
-    <name>Label_1</name>
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <show_scrollbar>false</show_scrollbar>
-    <text>Example2: Execute shell script in relative path of the OPI.</text>
-    <tooltip></tooltip>
-    <transparent>false</transparent>
-    <vertical_alignment>1</vertical_alignment>
-    <visible>true</visible>
-    <widget_type>Label</widget_type>
-    <width>619</width>
-    <wrap_words>true</wrap_words>
-    <wuid>474be8bf:13973dccd53:-7b73</wuid>
-    <x>36</x>
-    <y>210</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="false" hook_all="false">
-      <action type="EXECUTE_CMD">
-        <command>./Test.sh</command>
-        <command_directory>$(shellScript2.dir)</command_directory>
-        <wait_time>10</wait_time>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <height>43</height>
-    <image></image>
-    <name>Button_1</name>
-    <push_action_index>0</push_action_index>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts>
-      <path pathString="RelativePathToSysProp.py" checkConnect="true" seoe="false">
-        <pv trig="true">=1</pv>
-      </path>
-    </scripts>
-    <style>0</style>
-    <text>Execute</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <visible>true</visible>
-    <widget_type>Button</widget_type>
-    <width>91</width>
-    <wuid>474be8bf:13973dccd53:-7b6f</wuid>
-    <x>684</x>
-    <y>216</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -270,6 +178,6 @@ $(pv_value)</tooltip>
     <wrap_words>true</wrap_words>
     <wuid>-4db6da9a:13cb56cf490:-6fcf</wuid>
     <x>36</x>
-    <y>318</y>
+    <y>174</y>
   </widget>
 </display>

@@ -1,6 +1,3 @@
-var RED = ColorFontUtil.RED;
-var GREEN = ColorFontUtil.GREEN;
-
 var value = PVUtil.getDouble(pvs[0]);
 
 var width = 5 * value;

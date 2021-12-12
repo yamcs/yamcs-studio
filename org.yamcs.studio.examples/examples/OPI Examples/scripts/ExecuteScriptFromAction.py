@@ -8,8 +8,7 @@ else:
 	color = ColorFontUtil.RED
 	colorName = "red"
 
-import WidgetUtil
-WidgetUtil.setBackColor(display, "myIndicator", color)
-WidgetUtil.setMyForeColor(widget, color)
+display.getWidget("myIndicator").setPropertyValue("background_color", color)
+widget.setPropertyValue("foreground_color", color)
 
 GUIUtil.openInformationDialog("Python says: my color is " + colorName)

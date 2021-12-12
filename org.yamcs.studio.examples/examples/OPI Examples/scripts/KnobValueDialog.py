@@ -1,6 +1,3 @@
-#module in the same directory is visible to this script
-import WidgetUtil
-
 GREEN = ColorFontUtil.getColorFromRGB(0, 180, 0)
 RED = ColorFontUtil.RED
 
@@ -18,8 +15,8 @@ b = widget.getExternalObject(flagName);
 
 if PVUtil.getDouble(pvs[0]) > PVUtil.getDouble(pvs[1]):  
         s = "Temperature is too high!"
-        WidgetUtil.setText(display, labelName, s)
-        WidgetUtil.setForeColor(display, labelName, RED)
+        display.getWidget(labelName).setPropertyValue("text", s)
+        display.getWidget(labelName).setPropertyValue("foreground_color", RED)
         #If dialog has not been popped up, pop up the dialog
         if b == 0:
             #set popped flag to true
@@ -27,8 +24,8 @@ if PVUtil.getDouble(pvs[0]) > PVUtil.getDouble(pvs[1]):
             GUIUtil.showWarningDialog("The temperature you set is too high!")
 else:
     s = "Temperature is normal"
-    WidgetUtil.setText(display, "myLabel", s)
-    WidgetUtil.setForeColor(display, labelName, GREEN)
+    display.getWidget(labelName).setPropertyValue("text", s)
+    display.getWidget(labelName).setPropertyValue("foreground_color", GREEN)
     #reset popped flag to false
     if b != 0:
         widget.setExternalObject(flagName, 0)
