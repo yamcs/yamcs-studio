@@ -19,7 +19,6 @@ import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
 import org.csstudio.opibuilder.script.ScriptsInput;
-import org.csstudio.opibuilder.scriptUtil.FileUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.runtime.IPath;
@@ -47,6 +46,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.yamcs.studio.script.FileUtil;
 
 /**
  * The dialog for scripts input editing.
@@ -310,7 +310,7 @@ public class ScriptsInputDialog extends TrayDialog {
                 } else {
                     IPath path;
                     var rsd = new RelativePathSelectionDialog(Display.getCurrent().getActiveShell(), startPath,
-                            "Select a script file", new String[] { ScriptService.JS });
+                            "Select a script file", new String[] { ScriptService.JS, ScriptService.PY });
                     rsd.setSelectedResource("./");
                     if (rsd.open() == Window.OK) {
                         if (rsd.getSelectedResource() != null) {
@@ -347,7 +347,7 @@ public class ScriptsInputDialog extends TrayDialog {
                         }
                     } else {
                         var rsd = new RelativePathSelectionDialog(getShell(), startPath, "Select a script file",
-                                new String[] { ScriptService.JS });
+                                new String[] { ScriptService.JS, ScriptService.PY });
                         rsd.setSelectedResource(
                                 ((ScriptData) selection.getFirstElement()).getPath().toPortableString());
                         if (rsd.open() == Window.OK) {
