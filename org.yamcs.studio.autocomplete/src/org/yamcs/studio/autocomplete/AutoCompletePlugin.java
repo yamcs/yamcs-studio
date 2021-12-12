@@ -12,7 +12,6 @@ package org.yamcs.studio.autocomplete;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -92,7 +91,7 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
     public synchronized void saveSettings() {
         var ds = plugin.getDialogSettings();
         if (ds != null) {
-            for (Entry<String, LinkedList<String>> entry : fifos.entrySet()) {
+            for (var entry : fifos.entrySet()) {
                 var value_tag = entry.getKey();
                 var fifo = entry.getValue();
                 if (fifo != null && !fifo.isEmpty()) {
@@ -115,7 +114,7 @@ public class AutoCompletePlugin extends AbstractUIPlugin {
         if (fifos.get(type) == null) {
             var fifo = new LinkedList<String>();
             if (settings != null) {
-                String values[] = settings.getArray(type);
+                var values = settings.getArray(type);
                 if (values != null) {
                     for (var i = values.length - 1; i >= 0; i--) {
                         // Load as if they were entered, i.e. skip duplicates

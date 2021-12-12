@@ -44,7 +44,6 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -63,18 +62,14 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     protected IFigure doCreateFigure() {
         var f = new LinkingContainerFigure();
         f.setZoomToFitAll(getWidgetModel().isAutoFit());
-        f.getZoomManager().addZoomListener(new ZoomListener() {
-
-            @Override
-            public void zoomChanged(double arg0) {
-                if (getViewer() == null || getViewer().getControl() == null) {
-                    // depending on the OPI and the current zoom value, the event
-                    // can happen before the parent is set.
-                    return;
-                }
-                getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
-
+        f.getZoomManager().addZoomListener(arg0 -> {
+            if (getViewer() == null || getViewer().getControl() == null) {
+                // depending on the OPI and the current zoom value, the event
+                // can happen before the parent is set.
+                return;
             }
+            getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
+
         });
         return f;
     }
@@ -99,61 +94,51 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (newValue != null && newValue instanceof IPath) {
-                    var widgetModel = getWidgetModel();
-                    var absolutePath = (IPath) newValue;
-                    if (!absolutePath.isAbsolute()) {
-                        absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), absolutePath);
-                    }
-                    if (oldValue != null && oldValue instanceof IPath) {
-                        widgetModel.setDisplayModel(null);
-                    } else {
-                        var displayModel = new DisplayModel(resolveMacros(absolutePath));
-                        if (widgetModel.getMacroMap().equals(displayModel.getMacroMap())) {
-                            widgetModel.setDisplayModel(displayModel);
-                        } else {
-                            widgetModel.setDisplayModel(null);
-                        }
-                    }
-                    configureDisplayModel();
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+            if (newValue != null && newValue instanceof IPath) {
+                var widgetModel = getWidgetModel();
+                var absolutePath = (IPath) newValue;
+                if (!absolutePath.isAbsolute()) {
+                    absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), absolutePath);
                 }
-                return true;
+                if (oldValue != null && oldValue instanceof IPath) {
+                    widgetModel.setDisplayModel(null);
+                } else {
+                    var displayModel = new DisplayModel(resolveMacros(absolutePath));
+                    if (widgetModel.getMacroMap().equals(displayModel.getMacroMap())) {
+                        widgetModel.setDisplayModel(displayModel);
+                    } else {
+                        widgetModel.setDisplayModel(null);
+                    }
+                }
+                configureDisplayModel();
             }
+            return true;
         };
 
         setPropertyChangeHandler(LinkingContainerModel.PROP_OPI_FILE, handler);
 
         // load from group
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                // loadWidgets(getWidgetModel(),true);
-                configureDisplayModel();
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            // loadWidgets(getWidgetModel(),true);
+            configureDisplayModel();
+            return false;
         };
 
         setPropertyChangeHandler(LinkingContainerModel.PROP_GROUP_NAME, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()) {
-                    ((LinkingContainerFigure) figure).setZoomToFitAll(true);
-                } else {
-                    ((LinkingContainerFigure) figure).setZoomToFitAll(false);
-                }
-                ((LinkingContainerFigure) figure).updateZoom();
-
-                if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal()) {
-                    performAutosize();
-                }
-                return false;
+        handler = (oldValue, newValue, figure) -> {
+            if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()) {
+                ((LinkingContainerFigure) figure).setZoomToFitAll(true);
+            } else {
+                ((LinkingContainerFigure) figure).setZoomToFitAll(false);
             }
+            ((LinkingContainerFigure) figure).updateZoom();
+
+            if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal()) {
+                performAutosize();
+            }
+            return false;
         };
         setPropertyChangeHandler(LinkingContainerModel.PROP_RESIZE_BEHAVIOUR, handler);
         // loadWidgets(getWidgetModel(),true);
@@ -203,15 +188,10 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         return ResourceUtil.getPathFromString(path);
     }
 
-    /**
-     * @param path
-     *            the path of the OPI file
-     */
     private synchronized void configureDisplayModel() {
         // This need to be executed after GUI created.
         if (getWidgetModel().getDisplayModel() == null) {
             var path = resolveMacros(getWidgetModel().getOPIFilePath());
-            log.info(path.toString());
 
             var tempDisplayModel = new DisplayModel(path);
             getWidgetModel().setDisplayModel(tempDisplayModel);
@@ -230,13 +210,10 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         widgetModel.setDisplayModelViewer((GraphicalViewer) getViewer());
         widgetModel.setDisplayModelDisplayID(widgetModel.getRootDisplayModel(false).getDisplayID());
 
-        UIBundlingThread.getInstance().addRunnable(new Runnable() {
-            @Override
-            public void run() {
-                var widgetModel = getWidgetModel();
-                widgetModel.setDisplayModelExecutionMode(getExecutionMode());
-                widgetModel.setDisplayModelOpiRuntime(widgetModel.getRootDisplayModel(false).getOpiRuntime());
-            }
+        UIBundlingThread.getInstance().addRunnable(() -> {
+            var widgetModel1 = getWidgetModel();
+            widgetModel1.setDisplayModelExecutionMode(getExecutionMode());
+            widgetModel1.setDisplayModelOpiRuntime(widgetModel1.getRootDisplayModel(false).getOpiRuntime());
         });
 
         updateConnectionListForLinkedOpi(displayModel);
@@ -379,7 +356,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
             if (originalPoints != null) {
                 originalPoints.clear();
             } else {
-                originalPoints = new HashMap<ConnectionModel, PointList>();
+                originalPoints = new HashMap<>();
             }
         }
 
@@ -417,7 +394,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     public void layout() {
         var layoutter = getLayoutWidget();
         if (layoutter != null && layoutter.getWidgetModel().isEnabled()) {
-            List<AbstractWidgetModel> modelChildren = new ArrayList<AbstractWidgetModel>();
+            List<AbstractWidgetModel> modelChildren = new ArrayList<>();
             for (Object child : getChildren()) {
                 if (child instanceof AbstractBaseEditPart && !(child instanceof AbstractLayoutEditpart)) {
                     modelChildren.add(((AbstractBaseEditPart) child).getWidgetModel());

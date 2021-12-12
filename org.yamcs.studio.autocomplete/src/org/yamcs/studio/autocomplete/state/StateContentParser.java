@@ -22,12 +22,7 @@ public class StateContentParser implements IContentParser {
         if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
         }
-        if (desc.getValue().startsWith(STATE_SOURCE)
-                || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && STATE_SOURCE.equals(desc.getDefaultDataSource()))) {
-            return true;
-        }
-        return false;
+        return desc.getValue().startsWith(STATE_SOURCE);
     }
 
     @Override

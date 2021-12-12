@@ -27,10 +27,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
 
     @Override
     public boolean accept(ContentType type) {
-        if (type == SimContentType.SimFunction) {
-            return true;
-        }
-        return false;
+        return type == SimContentType.SimFunction;
     }
 
     @Override
@@ -70,9 +67,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
                     if (hasMandatoryArgument(function)) {
                         proposalStr += "(";
                     }
-                    if (desc.getDefaultDataSource() != SimContentParser.SIM_SOURCE) {
-                        proposalStr = SimContentParser.SIM_SOURCE + proposalStr;
-                    }
+                    proposalStr = SimContentParser.SIM_SOURCE + proposalStr;
                     var proposal = new Proposal(proposalStr, false);
                     var description = function.getDescription() + "\n\n" + generateSignature(function);
                     for (DSFunction poly : function.getPolymorphicFunctions()) {

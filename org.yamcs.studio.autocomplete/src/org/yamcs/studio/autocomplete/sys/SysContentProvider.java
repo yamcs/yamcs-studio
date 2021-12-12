@@ -82,9 +82,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
             var m = valuePattern.matcher(function);
             if (m.find()) {
                 var fctDisplay = function;
-                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
-                    fctDisplay = SysContentParser.SYS_SOURCE + function;
-                }
+                fctDisplay = SysContentParser.SYS_SOURCE + function;
                 if (function.equals(SYSTEM_FUNCTION)) {
                     fctDisplay += SYSTEM_SEPARATOR;
                 }
@@ -128,7 +126,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
             return result; // empty result
         }
 
-        List<String> matchingProperties = new ArrayList<String>();
+        List<String> matchingProperties = new ArrayList<>();
         var systemProperties = System.getProperties();
         Enumeration<?> enuProp = systemProperties.propertyNames();
         var offset = SysContentParser.SYS_SOURCE.length() + 7;
@@ -138,9 +136,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
             var m = valuePattern.matcher(propertyName);
             if (m.find()) {
                 var propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + propertyName;
-                if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
-                    propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
-                }
+                propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
                 var proposal = new Proposal(propDisplay, false);
                 proposal.setDescription(propertyValue);
                 proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));
@@ -156,9 +152,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
         var tpf = new TopProposalFinder(SYSTEM_SEPARATOR);
         for (Proposal tp : tpf.getTopProposals(propValue, matchingProperties)) {
             var propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + tp.getValue();
-            if (sysDesc.getDefaultDataSource() != SysContentParser.SYS_SOURCE) {
-                propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
-            }
+            propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
             var proposal = new Proposal(propDisplay, tp.isPartial());
             var propertyValue = systemProperties.getProperty(tp.getValue());
             proposal.setDescription(propertyValue);
@@ -175,5 +169,4 @@ public class SysContentProvider implements IAutoCompleteProvider {
     @Override
     public void cancel() {
     }
-
 }

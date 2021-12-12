@@ -40,5 +40,4 @@ public class ContentType {
     public String toString() {
         return value;
     }
-
 }

@@ -24,8 +24,6 @@ public class ContentDescriptor {
     private ContentType contentType = ContentType.Empty;
     /** Original content to complete */
     private String originalContent;
-    /** Default data source defined in CSS */
-    private String defaultDataSource;
     /** Parsed value start index in original content */
     private int startIndex = 0;
     /** Parsed value end index in original content */
@@ -65,14 +63,6 @@ public class ContentDescriptor {
         this.originalContent = originalContent;
     }
 
-    public String getDefaultDataSource() {
-        return defaultDataSource;
-    }
-
-    public void setDefaultDataSource(String defaultDataSource) {
-        this.defaultDataSource = defaultDataSource;
-    }
-
     public int getStartIndex() {
         return startIndex;
     }
@@ -100,8 +90,7 @@ public class ContentDescriptor {
     @Override
     public String toString() {
         return "ContentDescriptor [value=" + value + ", autoCompleteType=" + autoCompleteType + ", contentType="
-                + contentType + ", originalContent=" + originalContent + ", defaultDataSource=" + defaultDataSource
+                + contentType + ", originalContent=" + originalContent
                 + ", startIndex=" + startIndex + ", endIndex=" + endIndex + ", replay=" + replay + "]";
     }
-
 }

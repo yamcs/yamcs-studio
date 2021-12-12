@@ -25,12 +25,7 @@ public class SysContentParser implements IContentParser {
         if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
         }
-        if (desc.getValue().startsWith(SYS_SOURCE)
-                || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && SYS_SOURCE.equals(desc.getDefaultDataSource()))) {
-            return true;
-        }
-        return false;
+        return desc.getValue().startsWith(SYS_SOURCE);
     }
 
     @Override

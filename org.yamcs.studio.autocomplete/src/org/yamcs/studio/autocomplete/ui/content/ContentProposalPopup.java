@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 import org.yamcs.studio.autocomplete.proposals.Proposal;
-import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 import org.yamcs.studio.autocomplete.ui.util.SSTextLayout;
 
@@ -618,6 +617,8 @@ public class ContentProposalPopup extends PopupDialog {
     private Image partialContentImageSelected;
     private Image functionContentImage;
     private Image functionContentImageSelected;
+    private Font headerFont;
+    private Font noFont;
     private SSTextLayout[] textLayouts;
 
     private final int SWTMeasureItem = 41;
@@ -832,20 +833,32 @@ public class ContentProposalPopup extends PopupDialog {
         var fontName = defaultFontData.getName();
         var fontHeight = defaultFontData.getHeight();
 
-        var headerFont = new Font(display, new FontData(fontName, fontHeight, SWT.ITALIC | SWT.BOLD));
-        var noFont = new Font(display, new FontData(fontName, fontHeight, SWT.NORMAL));
+        if (headerFont != null) {
+            headerFont = new Font(display, new FontData(fontName, fontHeight, SWT.ITALIC | SWT.BOLD));
+        }
+        if (noFont != null) {
+            noFont = new Font(display, new FontData(fontName, fontHeight, SWT.NORMAL));
+        }
         var black = display.getSystemColor(SWT.COLOR_BLACK);
+
+        if (textLayouts != null) {
+            for (var textLayout : textLayouts) {
+                if (textLayout != null) {
+                    textLayout.dispose();
+                }
+            }
+        }
 
         var index = 0;
         textLayouts = new SSTextLayout[getTableLength()];
-        for (Proposal proposal : proposalList.getTopProposalList()) {
+        for (var proposal : proposalList.getTopProposalList()) {
             textLayouts[index] = new SSTextLayout();
 
             var text = getString(proposal);
             textLayouts[index].init(display, text);
             textLayouts[index].addStyle(noFont, black, 0, text.length());
             if (proposal.getStyles() != null && !proposal.getStyles().isEmpty()) {
-                for (ProposalStyle style : proposal.getStyles()) {
+                for (var style : proposal.getStyles()) {
                     var newFontData = new FontData(fontName, fontHeight, style.fontStyle);
                     var font = new Font(display, newFontData);
                     var color = display.getSystemColor(style.fontColor);
@@ -854,23 +867,23 @@ public class ContentProposalPopup extends PopupDialog {
             }
             index++;
         }
-        for (String provider : proposalList.getProviderList()) {
+        for (var provider : proposalList.getProviderList()) {
             textLayouts[index] = new SSTextLayout();
 
-            int count = proposalList.getCount(provider);
+            var count = proposalList.getCount(provider);
             var headerText = provider + " (" + count + " matching items)";
             textLayouts[index].init(display, headerText);
             textLayouts[index].addStyle(headerFont, black, 0, headerText.length());
             index++;
 
-            for (Proposal proposal : proposalList.getProposals(provider)) {
+            for (var proposal : proposalList.getProposals(provider)) {
                 textLayouts[index] = new SSTextLayout();
 
                 var text = getString(proposal);
                 textLayouts[index].init(display, text);
                 textLayouts[index].addStyle(noFont, black, 0, text.length());
                 if (proposal.getStyles() != null && !proposal.getStyles().isEmpty()) {
-                    for (ProposalStyle style : proposal.getStyles()) {
+                    for (var style : proposal.getStyles()) {
                         var newFontData = new FontData(fontName, fontHeight, style.fontStyle);
                         var font = new Font(display, newFontData);
                         var color = display.getSystemColor(style.fontColor);
@@ -880,7 +893,7 @@ public class ContentProposalPopup extends PopupDialog {
                 index++;
             }
         }
-        for (SSTextLayout sstl : textLayouts) {
+        for (var sstl : textLayouts) {
             if (sstl != null && sstl.getBounds() != null && sstl.getBounds().width > maxItemWidth) {
                 maxItemWidth = sstl.getBounds().width;
             }
@@ -898,14 +911,14 @@ public class ContentProposalPopup extends PopupDialog {
         var display = Display.getCurrent();
 
         var proposalIndex = 0;
-        for (Proposal proposal : proposalList.getTopProposalList()) {
+        for (var proposal : proposalList.getTopProposalList()) {
             if (index == proposalIndex) {
                 item.setData(proposal);
                 return;
             }
             proposalIndex++;
         }
-        for (String provider : proposalList.getProviderList()) {
+        for (var provider : proposalList.getProviderList()) {
             if (index == proposalIndex) {
                 // Data == null => not selectable
                 item.setData(null);
@@ -913,7 +926,7 @@ public class ContentProposalPopup extends PopupDialog {
                 return;
             }
             proposalIndex++;
-            for (Proposal proposal : proposalList.getProposals(provider)) {
+            for (var proposal : proposalList.getProposals(provider)) {
                 if (index == proposalIndex) {
                     item.setData(proposal);
                     return;
@@ -939,7 +952,7 @@ public class ContentProposalPopup extends PopupDialog {
         maxItemWidth = 0;
         nonSelectableItems.clear();
         var proposalIndex = proposalList.getTopProposalList().size();
-        for (String provider : proposalList.getProviderList()) {
+        for (var provider : proposalList.getProviderList()) {
             nonSelectableItems.add(proposalIndex);
             proposalIndex += proposalList.getProposals(provider).length + 1;
         }
@@ -959,14 +972,14 @@ public class ContentProposalPopup extends PopupDialog {
                 var items = proposalTable.getItems();
 
                 var index = 0;
-                for (Proposal proposal : newProposalList.getTopProposalList()) {
+                for (var proposal : newProposalList.getTopProposalList()) {
                     var item = items[index];
                     item.setText("  " + getString(proposal));
                     item.setImage(getImage(proposal, false));
                     item.setData(proposal);
                     index++;
                 }
-                for (String provider : newProposalList.getProviderList()) {
+                for (var provider : newProposalList.getProviderList()) {
                     var item = items[index];
                     int count = newProposalList.getCount(provider);
                     var text = provider + " (" + count + " matching items)";
@@ -1099,18 +1112,18 @@ public class ContentProposalPopup extends PopupDialog {
                 return null;
             }
             var proposalIndex = 0;
-            for (Proposal proposal : proposalList.getTopProposalList()) {
+            for (var proposal : proposalList.getTopProposalList()) {
                 if (index == proposalIndex) {
                     return proposal;
                 }
                 proposalIndex++;
             }
-            for (String provider : proposalList.getProviderList()) {
+            for (var provider : proposalList.getProviderList()) {
                 if (index == proposalIndex) {
                     return null;
                 }
                 proposalIndex++;
-                for (Proposal proposal : proposalList.getProposals(provider)) {
+                for (var proposal : proposalList.getProposals(provider)) {
                     if (index == proposalIndex) {
                         return proposal;
                     }
@@ -1167,6 +1180,19 @@ public class ContentProposalPopup extends PopupDialog {
         popupCloser.removeListeners();
         if (infoPopup != null) {
             infoPopup.close();
+        }
+        if (textLayouts != null) {
+            for (var textLayout : textLayouts) {
+                if (textLayout != null) {
+                    textLayout.dispose();
+                }
+            }
+        }
+        if (headerFont != null) {
+            headerFont.dispose();
+        }
+        if (noFont != null) {
+            noFont.dispose();
         }
         var ret = super.close();
         adapter.notifyPopupClosed();

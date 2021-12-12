@@ -27,12 +27,7 @@ public class SimContentParser implements IContentParser {
         if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
         }
-        if (desc.getValue().startsWith(SIM_SOURCE)
-                || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && SIM_SOURCE.equals(desc.getDefaultDataSource()))) {
-            return true;
-        }
-        return false;
+        return desc.getValue().startsWith(SIM_SOURCE);
     }
 
     @Override
@@ -56,5 +51,4 @@ public class SimContentParser implements IContentParser {
         currentDesc.setValue(contentToParse);
         return currentDesc;
     }
-
 }

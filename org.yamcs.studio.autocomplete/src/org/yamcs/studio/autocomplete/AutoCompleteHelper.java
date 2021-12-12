@@ -9,10 +9,6 @@
  ********************************************************************************/
 package org.yamcs.studio.autocomplete;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -38,13 +34,6 @@ public class AutoCompleteHelper {
         }
     }
 
-    public static String convertToSQL(String name) {
-        var sql = name.replaceAll(MULTI_REPLACE_CHAR, "%");
-        sql = sql.replaceAll(SINGLE_REPLACE_CHAR, "_");
-        sql = sql.replaceAll("'", "''"); // prevent SQL injection
-        return sql;
-    }
-
     /**
      * Remove all begining/ending wildcards.
      */
@@ -53,20 +42,4 @@ public class AutoCompleteHelper {
         cleaned = cleaned.replaceAll("[\\*\\?]+$", "");
         return cleaned;
     }
-
-    public static Set<String> retrievePVManagerSupported() {
-        Set<String> items = new HashSet<>();
-        try {
-            Class<?> clazz = Class.forName("org.csstudio.utility.pvmanager.ConfigurationHelper");
-            @SuppressWarnings("unchecked")
-            var parameters = (Map<String, Object>) clazz.getMethod("configuredDataSources").invoke(null);
-            items.addAll(parameters.keySet());
-            AutoCompletePlugin.getLogger().config("Loading PVManager supported types: " + items);
-            return items;
-        } catch (Exception ex) {
-            AutoCompletePlugin.getLogger().config("PVManager not found: " + ex.getMessage());
-            return Collections.emptySet();
-        }
-    }
-
 }

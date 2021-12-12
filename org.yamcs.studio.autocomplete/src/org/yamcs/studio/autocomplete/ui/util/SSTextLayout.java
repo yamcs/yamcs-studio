@@ -49,4 +49,15 @@ public class SSTextLayout {
         }
         return null;
     }
+
+    public void dispose() {
+        if (textLayout != null) {
+            for (var style : textLayout.getStyles()) {
+                if (style.font != null) {
+                    style.font.dispose();
+                }
+            }
+            textLayout.dispose();
+        }
+    }
 }

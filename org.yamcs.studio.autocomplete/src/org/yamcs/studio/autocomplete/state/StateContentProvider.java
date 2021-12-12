@@ -64,9 +64,7 @@ public class StateContentProvider implements IAutoCompleteProvider {
             var m = valuePattern.matcher(function);
             if (m.find()) {
                 var fctDisplay = function;
-                if (stateDesc.getDefaultDataSource() != StateContentParser.STATE_SOURCE) {
-                    fctDisplay = StateContentParser.STATE_SOURCE + function;
-                }
+                fctDisplay = StateContentParser.STATE_SOURCE + function;
                 var proposal = new Proposal(fctDisplay, false);
                 proposal.setDescription(StateContentDescriptor.getDescription(function));
                 proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));

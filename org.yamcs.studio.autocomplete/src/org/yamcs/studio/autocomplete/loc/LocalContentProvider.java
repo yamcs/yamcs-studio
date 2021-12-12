@@ -24,10 +24,7 @@ public class LocalContentProvider implements IAutoCompleteProvider {
 
     @Override
     public boolean accept(ContentType type) {
-        if (type == LocalContentType.LocalPV) {
-            return true;
-        }
-        return false;
+        return type == LocalContentType.LocalPV;
     }
 
     @Override
@@ -54,9 +51,7 @@ public class LocalContentProvider implements IAutoCompleteProvider {
             for (String vType : LocalContentDescriptor.listVTypes()) {
                 if (vType.startsWith(type)) {
                     var prefix = locDesc.getPvName() + LocalContentParser.VTYPE_START;
-                    if (desc.getDefaultDataSource() != LocalContentParser.LOCAL_SOURCE) {
-                        prefix = LocalContentParser.LOCAL_SOURCE + prefix;
-                    }
+                    prefix = LocalContentParser.LOCAL_SOURCE + prefix;
                     var offset = prefix.length();
                     var proposal = new Proposal(prefix + vType + LocalContentParser.VTYPE_END, false);
                     proposal.setDescription(LocalContentDescriptor.getVTypeDescription(vType));

@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.yamcs.studio.autocomplete;
 
+import java.util.Objects;
+
 import org.yamcs.studio.autocomplete.parser.IContentParser;
 
 /**
@@ -42,32 +44,14 @@ public class AutoCompleteType {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
+        return Objects.hash(value);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (obj == null || !(obj instanceof AutoCompleteType)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        var other = (AutoCompleteType) obj;
-        if (value == null) {
-            if (other.value != null) {
-                return false;
-            }
-        } else if (!value.equals(other.value)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(value, ((AutoCompleteType) obj).value);
     }
-
 }
