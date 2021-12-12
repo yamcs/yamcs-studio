@@ -264,7 +264,7 @@
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts>
-      <path pathString="../scripts/addAnnotations.py" checkConnect="true" seoe="false">
+      <path pathString="../scripts/addAnnotations.js" checkConnect="true" seoe="false">
         <pv trig="true">=1</pv>
         <pv trig="false">loc://$(DID)_left(2)</pv>
         <pv trig="false">loc://$(DID)_right(7)</pv>
@@ -440,7 +440,7 @@ $(trace_0_y_pv_value)</tooltip>
     <show_units>true</show_units>
     <style>0</style>
     <text>Example: Manipulate XYGraph from Script. &#xD;
-In this example, two annotations are added two reflect the values of two PVs.</text>
+In this example, two annotations are added to reflect the values of two PVs.</text>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
     <transparent>false</transparent>

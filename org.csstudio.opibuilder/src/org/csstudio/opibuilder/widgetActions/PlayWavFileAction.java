@@ -9,10 +9,12 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgetActions;
 
-import java.applet.Applet;
 import java.io.File;
 import java.net.URL;
 import java.util.logging.Level;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineEvent;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.properties.FilePathProperty;
@@ -22,6 +24,7 @@ import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
@@ -46,14 +49,12 @@ public class PlayWavFileAction extends AbstractWidgetAction {
 
     @Override
     public void run() {
-        Job job = new Job("Play wave file") {
-
+        var job = new Job("Play WAV file") {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 var path = getAbsolutePath();
                 monitor.beginTask("Connecting to " + path, IProgressMonitor.UNKNOWN);
                 try {
-                    // a better way to play wav.
                     URL url;
                     if (ResourceUtil.isExistingWorkspaceFile(path)) {
                         url = new File(ResourceUtil.workspacePathToSysPath(path).toOSString()).toURI().toURL();
@@ -62,57 +63,18 @@ public class PlayWavFileAction extends AbstractWidgetAction {
                     } else {
                         url = new URL(path.toString());
                     }
-                    Applet.newAudioClip(url).play();
-                    // final InputStream in = ResourceUtil.pathToInputStream(
-                    // getAbsolutePath(), false);
-                    //
-                    // UIJob playWavJob = new UIJob(getDescription()) {
-                    // @Override
-                    // public IStatus runInUIThread(IProgressMonitor monitor) {
-                    // try {
-                    // final BufferedInputStream bis;
-                    // if (!(in instanceof BufferedInputStream))
-                    // bis = new BufferedInputStream(in);
-                    // else
-                    // bis = (BufferedInputStream) in;
-                    //
-                    // final AudioInputStream stream = AudioSystem
-                    // .getAudioInputStream(bis);
-                    // Clip clip = AudioSystem.getClip();
-                    // clip.open(stream);
-                    //
-                    // clip.addLineListener(new LineListener() {
-                    // public void update(LineEvent event) {
-                    // if (event.getType() == LineEvent.Type.STOP) {
-                    // try {
-                    // stream.close();
-                    // bis.close();
-                    // if (in != bis)
-                    // in.close();
-                    // } catch (IOException e) {
-                    // OPIBuilderPlugin
-                    // .getLogger()
-                    // .log(Level.WARNING,
-                    // "audio close error", e);
-                    // }
-                    // }
-                    // }
-                    // });
-                    // clip.start();
-                    // } catch (Exception e) {
-                    // final String message = "Failed to play wave file " + getPath();
-                    // OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                    // message, e);
-                    // ConsoleService.getInstance().writeError(
-                    // message + "\n" + e.getMessage());
-                    // }
-                    // return Status.OK_STATUS;
-                    // }
-                    // };
-                    // playWavJob.schedule();
+
+                    var clip = AudioSystem.getClip();
+                    var in = AudioSystem.getAudioInputStream(url.openStream());
+                    clip.addLineListener(event -> {
+                        if (event.getType() == LineEvent.Type.STOP) {
+                            clip.close();
+                        }
+                    });
+                    clip.open(in);
+                    clip.start();
                 } catch (Exception e) {
-                    var message = "Failed to connect to wave file " + getPath();
-                    OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);
+                    OPIBuilderPlugin.getLogger().log(Level.SEVERE, "Failed to play WAV file " + getPath(), e);
                 } finally {
                     monitor.done();
                 }
@@ -125,7 +87,8 @@ public class PlayWavFileAction extends AbstractWidgetAction {
     }
 
     private IPath getPath() {
-        return (IPath) getPropertyValue(PROP_PATH);
+        var path = (String) getPropertyValue(PROP_PATH);
+        return path != null ? Path.fromPortableString(path) : null;
     }
 
     private IPath getAbsolutePath() {
@@ -141,5 +104,4 @@ public class PlayWavFileAction extends AbstractWidgetAction {
     public String getDefaultDescription() {
         return super.getDefaultDescription() + " " + getPath();
     }
-
 }

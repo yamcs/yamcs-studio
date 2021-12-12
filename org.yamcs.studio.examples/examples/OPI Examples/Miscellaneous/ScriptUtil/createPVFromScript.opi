@@ -60,19 +60,17 @@
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts>
-      <path pathString="EmbeddedPy" checkConnect="true" seoe="false">
+      <path pathString="EmbeddedJs" checkConnect="true" seoe="false">
         <scriptName>CreatePVExample</scriptName>
-        <scriptText><![CDATA[
-          from org.yamcs.studio.data import IPVListener
+        <scriptText><![CDATA[var IPVListener = Java.type("org.yamcs.studio.data.IPVListener");
 
-class MyPVListener(IPVListener):
-	def valueChanged(self, pv):
-		widget.setPropertyValue("text", PVUtil.getTimeString(pv) + "\n" + PVUtil.getString(pv))
-
-pv = PVUtil.createPV("sim://noise", widget)
-pv.addListener(MyPVListener())
-
-        ]]></scriptText>
+var pv = PVUtil.createPV("sim://noise", widget);
+pv.addListener(new IPVListener({
+	valueChanged: function(pv) {
+		widget.setPropertyValue("text", PVUtil.getTimeString(pv) + "\n" + PVUtil.getString(pv));
+	}
+}));
+]]></scriptText>
         <pv trig="true">=1</pv>
       </path>
     </scripts>
@@ -159,14 +157,15 @@ pv.addListener(MyPVListener())
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>from org.yamcs.studio.data import IPVListener&#xD;
-&#xD;
-class MyPVListener(IPVListener):&#xD;
-	def valueChanged(self, pv):&#xD;
-		widget.setPropertyValue("text", PVUtil.getTimeString(pv) + "\n" + PVUtil.getString(pv))&#xD;
-&#xD;
-pv = PVUtil.createPV("sim://noise", widget)&#xD;
-pv.addListener(MyPVListener())</text>
+    <text>var IPVListener = Java.type("org.yamcs.studio.data.IPVListener");
+
+var pv = PVUtil.createPV("sim://noise", widget);
+pv.addListener(new IPVListener({
+	valueChanged: function(pv) {
+		widget.setPropertyValue("text", PVUtil.getTimeString(pv) + "\n" + PVUtil.getString(pv));
+	}
+}));
+</text>
     <tooltip></tooltip>
     <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>

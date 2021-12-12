@@ -3,10 +3,9 @@ var Thread = Java.type("java.lang.Thread");
 
 new Thread(new Runnable({
 	run: function() {
-		display.getWidget("Start_Button_JS").setPropertyValue("visible", false);
-		display.getWidget("Start_Button_Py").setPropertyValue("visible", false);
+		display.getWidget("Start_Button").setPropertyValue("visible", false);
 		display.getWidget("Progress_Bar").setPropertyValue("visible", true);
-		for (var i = 100; i > 0; i--){
+		for (var i = 100; i > 0; i--) {
 			if (!display.isActive()) {
 				return;
 			}
@@ -18,8 +17,7 @@ new Thread(new Runnable({
 		}
 		pvs[1].setValue(100);
 		widget.setPropertyValue("text", "I'm done! Hit the button again to start me.");
-		display.getWidget("Start_Button_JS").setPropertyValue("visible", true);
-		display.getWidget("Start_Button_Py").setPropertyValue("visible", true);
+		display.getWidget("Start_Button").setPropertyValue("visible", true);
 		display.getWidget("Progress_Bar").setPropertyValue("visible", false);
 	}
 })).start();

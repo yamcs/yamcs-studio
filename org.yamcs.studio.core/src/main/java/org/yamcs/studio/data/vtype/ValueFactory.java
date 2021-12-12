@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.data.vtype;
 
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -27,14 +28,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VString.
-     *
-     * @param value
-     *            the string value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return the new value
      */
     public static VString newVString(String value, Alarm alarm, Time time) {
         return new IVString(value, alarm, time);
@@ -42,14 +35,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VBoolean.
-     *
-     * @param value
-     *            the boolean value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return the new value
      */
     public static VBoolean newVBoolean(boolean value, Alarm alarm, Time time) {
         return new IVBoolean(value, alarm, time);
@@ -57,16 +42,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VMultiDouble.
-     *
-     * @param values
-     *            the values
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VMultiDouble newVMultiDouble(List<VDouble> values, Alarm alarm, Time time, Display display) {
         return new IVMultiDouble(values, alarm, time, display);
@@ -74,16 +49,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VLong.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VLong newVLong(Long value, Alarm alarm, Time time, Display display) {
         return new IVLong(value, alarm, time, display);
@@ -91,16 +56,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VInt.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VInt newVInt(Integer value, Alarm alarm, Time time, Display display) {
         return new IVInt(value, alarm, time, display);
@@ -108,16 +63,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VShort.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VShort newVShort(Short value, Alarm alarm, Time time, Display display) {
         return new IVShort(value, alarm, time, display);
@@ -125,16 +70,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VByte.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VByte newVByte(Byte value, Alarm alarm, Time time, Display display) {
         return new IVByte(value, alarm, time, display);
@@ -142,12 +77,6 @@ public class ValueFactory {
 
     /**
      * New alarm with the given severity and status.
-     *
-     * @param alarmSeverity
-     *            the alarm severity
-     * @param alarmName
-     *            the alarm name
-     * @return the new alarm
      */
     public static Alarm newAlarm(AlarmSeverity alarmSeverity, String alarmName) {
         return new Alarm() {
@@ -185,12 +114,6 @@ public class ValueFactory {
 
     /**
      * Alarm based on the value and the display ranges.
-     *
-     * @param value
-     *            the value
-     * @param display
-     *            the display information
-     * @return the new alarm
      */
     public static Alarm newAlarm(Number value, Display display) {
         // Calculate new AlarmSeverity, using display ranges
@@ -215,14 +138,6 @@ public class ValueFactory {
 
     /**
      * Creates a new time.
-     *
-     * @param timestamp
-     *            the timestamp
-     * @param timeUserTag
-     *            the user tag
-     * @param timeValid
-     *            whether the time is valid
-     * @return the new time
      */
     public static Time newTime(Instant timestamp, Integer timeUserTag, boolean timeValid) {
         return new Time() {
@@ -246,10 +161,6 @@ public class ValueFactory {
 
     /**
      * New time, with no user tag and valid data.
-     *
-     * @param timestamp
-     *            the timestamp
-     * @return the new time
      */
     public static Time newTime(Instant timestamp) {
         return newTime(timestamp, null, true);
@@ -266,28 +177,6 @@ public class ValueFactory {
 
     /**
      * Creates a new display
-     *
-     * @param lowerDisplayLimit
-     *            lower display limit
-     * @param lowerAlarmLimit
-     *            lower alarm limit
-     * @param lowerWarningLimit
-     *            lower warning limit
-     * @param units
-     *            the units
-     * @param numberFormat
-     *            the formatter
-     * @param upperWarningLimit
-     *            the upper warning limit
-     * @param upperAlarmLimit
-     *            the upper alarm limit
-     * @param upperDisplayLimit
-     *            the upper display limit
-     * @param lowerCtrlLimit
-     *            the lower control limit
-     * @param upperCtrlLimit
-     *            the upper control limit
-     * @return the new display
      */
     public static Display newDisplay(Double lowerDisplayLimit, Double lowerAlarmLimit, double lowerWarningLimit,
             String units, NumberFormat numberFormat, Double upperWarningLimit, double upperAlarmLimit,
@@ -397,16 +286,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VNumber based on the type of the data
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new number
      */
     public static VNumber newVNumber(Number value, Alarm alarm, Time time, Display display) {
         if (value instanceof Double) {
@@ -415,6 +294,8 @@ public class ValueFactory {
             return newVFloat((Float) value, alarm, time, display);
         } else if (value instanceof Long) {
             return newVLong((Long) value, alarm, time, display);
+        } else if (value instanceof BigInteger) { // Can be generated by jython when a value is set
+            return newVLong(((BigInteger) value).longValue(), alarm, time, display);
         } else if (value instanceof Integer) {
             return newVInt((Integer) value, alarm, time, display);
         } else if (value instanceof Short) {
@@ -427,16 +308,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VDouble.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VDouble newVDouble(Double value, Alarm alarm, Time time, Display display) {
         return new IVDouble(value, alarm, time, display);
@@ -445,14 +316,6 @@ public class ValueFactory {
     /**
      * Creates a new VDouble using the given value, time, display and generating the alarm from the value and display
      * information.
-     *
-     * @param value
-     *            the new value
-     * @param time
-     *            the time
-     * @param display
-     *            the display information
-     * @return the new value
      */
     public static VDouble newVDouble(Double value, Time time, Display display) {
         return newVDouble(value, newAlarm(value, display), time, display);
@@ -461,12 +324,6 @@ public class ValueFactory {
     /**
      * Creates new immutable VDouble by using metadata from the old value, now as timestamp and computing alarm from the
      * metadata range.
-     *
-     * @param value
-     *            new numeric value
-     * @param display
-     *            metadata
-     * @return new value
      */
     public static VDouble newVDouble(Double value, Display display) {
         return newVDouble(value, timeNow(), display);
@@ -474,10 +331,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VDouble, no alarm, time now, no display.
-     *
-     * @param value
-     *            the value
-     * @return the new value
      */
     public static VDouble newVDouble(Double value) {
         return newVDouble(value, alarmNone(), timeNow(), displayNone());
@@ -485,12 +338,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VDouble, no alarm, no display.
-     *
-     * @param value
-     *            the value
-     * @param time
-     *            the time
-     * @return the new value
      */
     public static VDouble newVDouble(Double value, Time time) {
         return newVDouble(value, alarmNone(), time, displayNone());
@@ -498,16 +345,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VFloat.
-     *
-     * @param value
-     *            the value
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VFloat newVFloat(Float value, Alarm alarm, Time time, Display display) {
         return new IVFloat(value, alarm, time, display);
@@ -532,24 +369,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VStatistics.
-     *
-     * @param average
-     *            average
-     * @param stdDev
-     *            standard deviation
-     * @param min
-     *            minimum
-     * @param max
-     *            maximum
-     * @param nSamples
-     *            number of samples
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VStatistics newVStatistics(double average, double stdDev, double min, double max, int nSamples,
             Alarm alarm, Time time, Display display) {
@@ -558,16 +377,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VNumberArray based on the type of the data.
-     *
-     * @param data
-     *            the array data
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return a new value
      */
     public static VNumberArray newVNumberArray(ListNumber data, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(data.size());
@@ -632,16 +441,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VDoubleArray.
-     *
-     * @param data
-     *            array data
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VDoubleArray newVDoubleArray(ListDouble data, Alarm alarm, Time time, Display display) {
         return new IVDoubleArray(data, new ArrayInt(data.size()), alarm, time, display);
@@ -649,16 +448,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VFloatArray.
-     *
-     * @param data
-     *            array data
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VFloatArray newVFloatArray(ListFloat data, Alarm alarm, Time time, Display display) {
         return new IVFloatArray(data, new ArrayInt(data.size()), alarm, time, display);
@@ -666,14 +455,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VImage given the data and the size.
-     *
-     * @param height
-     *            the height
-     * @param width
-     *            the width
-     * @param data
-     *            the data
-     * @return a new object
      */
     public static VImage newVImage(int height, int width, byte[] data) {
         return newVImage(height, width, data, alarmNone(), timeNow());
@@ -681,18 +462,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VImage given the data and the size.
-     *
-     * @param height
-     *            the height
-     * @param width
-     *            the width
-     * @param data
-     *            the data
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return a new object
      */
     public static VImage newVImage(int height, int width, byte[] data, Alarm alarm, Time time) {
         return new IVImage(height, width, new ArrayByte(data), VImageDataType.pvByte, VImageType.TYPE_3BYTE_BGR, alarm,
@@ -701,20 +470,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VImage of type TYPE_3BYTE_BGR given the data and the size.
-     *
-     * @param height
-     *            the height
-     * @param width
-     *            the width
-     * @param data
-     *            the data {@link ListNumber}
-     * @param imageDataType
-     *            {@link VImageDataType}
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return a new object
      */
     public static VImage newVImage(int height, int width, ListNumber data, VImageDataType imageDataType, Alarm alarm,
             Time time) {
@@ -723,16 +478,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VLongArray.
-     *
-     * @param values
-     *            array values
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VLongArray newVLongArray(ListLong values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
@@ -741,16 +486,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VIntArray.
-     *
-     * @param values
-     *            array values
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VIntArray newVIntArray(ListInt values, Alarm alarm, Time time, Display display) {
         return new IVIntArray(values, new ArrayInt(values.size()), alarm, time, display);
@@ -758,16 +493,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VShortArray.
-     *
-     * @param values
-     *            array values
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VShortArray newVShortArray(ListShort values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
@@ -776,16 +501,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VByteArray.
-     *
-     * @param values
-     *            array values
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @param display
-     *            the display
-     * @return the new value
      */
     public static VByteArray newVByteArray(ListByte values, Alarm alarm, Time time, Display display) {
         ListInt sizes = new ArrayInt(values.size());
@@ -811,14 +526,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VBooleanArray.
-     *
-     * @param data
-     *            the strings
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return the new value
      */
     public static VBooleanArray newVBooleanArray(ListBoolean data, Alarm alarm, Time time) {
         return new IVBooleanArray(data, new ArrayInt(data.size()), alarm, time);
@@ -826,14 +533,6 @@ public class ValueFactory {
 
     /**
      * Creates a new VStringArray.
-     *
-     * @param data
-     *            the strings
-     * @param alarm
-     *            the alarm
-     * @param time
-     *            the time
-     * @return the new value
      */
     public static VStringArray newVStringArray(List<String> data, Alarm alarm, Time time) {
         return new IVStringArray(data, new ArrayInt(data.size()), alarm, time);
@@ -968,8 +667,8 @@ public class ValueFactory {
             return newVStringArray(Arrays.asList((String[]) javaObject), alarm, time);
         } else if (javaObject instanceof List) {
             var matches = true;
-            var list = (List) javaObject;
-            for (Object object : list) {
+            var list = (List<?>) javaObject;
+            for (var object : list) {
                 if (!(object instanceof String)) {
                     matches = false;
                 }

@@ -61,8 +61,7 @@
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>Intensity Graph&#xD;
-with Python script</text>
+    <text>Intensity Graph</text>
     <tooltip></tooltip>
     <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>
@@ -241,11 +240,11 @@ with Python script</text>
       <keep_wh_ratio>true</keep_wh_ratio>
     </scale_options>
     <scripts>
-      <path pathString="../scripts/SetIntensityGraphData.py" checkConnect="true" seoe="false">
+      <path pathString="../scripts/SetIntensityGraphData2.js" checkConnect="true" seoe="false">
         <pv trig="true">sim://ramp(0,10,0.2,1)</pv>
         <pv trig="true">loc://dataSource</pv>
       </path>
-      <path pathString="../scripts/addPixelInfoListener.py" checkConnect="true" seoe="false">
+      <path pathString="../scripts/addPixelInfoListener.js" checkConnect="true" seoe="false">
         <pv trig="true">=1</pv>
       </path>
     </scripts>
@@ -950,9 +949,11 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts>
-        <path pathString="EmbeddedPy" checkConnect="true" seoe="false">
+        <path pathString="EmbeddedJs" checkConnect="true" seoe="false">
           <scriptName>SetROIVisibility</scriptName>
-          <scriptText><![CDATA[display.getWidget("IntensityGraph").setPropertyValue("roi_0_visible", PVUtil.getLong(pvs[0])!=0);]]></scriptText>
+          <scriptText><![CDATA[var visible = (PVUtil.getLong(pvs[0]) != 0);
+display.getWidget("IntensityGraph").setPropertyValue("roi_0_visible", visible);
+]]></scriptText>
           <pv trig="true">$(pv_name)</pv>
         </path>
       </scripts>
@@ -999,11 +1000,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
-      <pv_name>loc://$(DID)_ROI0_X(0)</pv_name>
+      <pv_name>loc://$(DID)_ROI0_X(10)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1011,15 +1014,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7fa6</wuid>
       <x>18</x>
@@ -1056,11 +1058,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_1</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
-      <pv_name>loc://$(DID)_ROI0_Y(0)</pv_name>
+      <pv_name>loc://$(DID)_ROI0_Y(10)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1068,15 +1072,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f93</wuid>
       <x>18</x>
@@ -1113,11 +1116,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_2</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
-      <pv_name>loc://$(DID)_ROI0_W(50)</pv_name>
+      <pv_name>loc://$(DID)_ROI0_W(60)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1125,15 +1130,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f8d</wuid>
       <x>18</x>
@@ -1170,11 +1174,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_3</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
-      <pv_name>loc://$(DID)_ROI0_H(50)</pv_name>
+      <pv_name>loc://$(DID)_ROI0_H(60)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1182,15 +1188,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f87</wuid>
       <x>18</x>
@@ -1436,9 +1441,11 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts>
-        <path pathString="EmbeddedPy" checkConnect="true" seoe="false">
+        <path pathString="EmbeddedJs" checkConnect="true" seoe="false">
           <scriptName>SetROIVisibility</scriptName>
-          <scriptText><![CDATA[display.getWidget("IntensityGraph").setPropertyValue("roi_1_visible", PVUtil.getLong(pvs[0])!=0);]]></scriptText>
+          <scriptText><![CDATA[var visible = (PVUtil.getLong(pvs[0]) != 0);
+display.getWidget("IntensityGraph").setPropertyValue("roi_1_visible", visible);
+]]></scriptText>
           <pv trig="true">$(pv_name)</pv>
         </path>
       </scripts>
@@ -1485,11 +1492,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
       <pv_name>loc://$(DID)_ROI1_X(20)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1497,15 +1506,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7fa6</wuid>
       <x>18</x>
@@ -1542,11 +1550,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_1</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
       <pv_name>loc://$(DID)_ROI1_Y(20)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1554,15 +1564,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f93</wuid>
       <x>18</x>
@@ -1599,11 +1608,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_2</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
       <pv_name>loc://$(DID)_ROI1_W(80)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1611,15 +1622,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f8d</wuid>
       <x>18</x>
@@ -1656,11 +1666,13 @@ $(pv_value)</tooltip>
       <minimum>-1.7976931348623157E308</minimum>
       <multiline_input>false</multiline_input>
       <name>Text_3</name>
+      <next_focus>0</next_focus>
+      <password_input>false</password_input>
       <precision>0</precision>
       <precision_from_pv>false</precision_from_pv>
       <pv_name>loc://$(DID)_ROI1_H(80)</pv_name>
       <pv_value />
-      <rotation_angle>0.0</rotation_angle>
+      <read_only>false</read_only>
       <rules />
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -1668,15 +1680,14 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <selector_type>0</selector_type>
+      <show_native_border>true</show_native_border>
       <show_units>false</show_units>
-      <style>0</style>
+      <style>1</style>
       <text></text>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <transparent>false</transparent>
       <visible>true</visible>
-      <widget_type>Text</widget_type>
+      <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-301aedeb:1394fdf7917:-7f87</wuid>
       <x>18</x>
@@ -1735,59 +1746,5 @@ $(pv_value)</tooltip>
     <wuid>66d1507f:138820a85e5:-7cef</wuid>
     <x>16</x>
     <y>547</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="true" hook_all="false">
-      <action type="OPEN_DISPLAY">
-        <path>2_6_2_IntensityGraph_Javascript.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>0</mode>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="128" />
-    </foreground_color>
-    <height>28</height>
-    <image></image>
-    <name>Action Button_2</name>
-    <push_action_index>0</push_action_index>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <style>0</style>
-    <text>Back</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>Intensity Graph with Javascript</tooltip>
-    <visible>true</visible>
-    <widget_type>Action Button</widget_type>
-    <width>79</width>
-    <wuid>66d1507f:138820a85e5:-7cdd</wuid>
-    <x>708</x>
-    <y>552</y>
   </widget>
 </display>

@@ -345,7 +345,7 @@ $(pv_value)</tooltip>
       <show_scrollbar>true</show_scrollbar>
       <tooltip></tooltip>
       <transparent>true</transparent>
-      <visible>true</visible>
+      <visible>false</visible>
       <widget_type>Grouping Container</widget_type>
       <width>686</width>
       <wuid>-3cd731dc:13568229061:-7ada</wuid>
@@ -594,16 +594,15 @@ tooltip.</tooltip>
           <keep_wh_ratio>false</keep_wh_ratio>
         </scale_options>
         <scripts>
-          <path pathString="../scripts/TableContentMonitor.py" checkConnect="true" seoe="false">
+          <path pathString="../scripts/TableContentMonitor.js" checkConnect="true" seoe="false">
             <pv trig="true">=1</pv>
           </path>
-          <path pathString="EmbeddedPy" checkConnect="true" seoe="false">
+          <path pathString="EmbeddedJs" checkConnect="true" seoe="false">
             <scriptName>setDropDownItems</scriptName>
-            <scriptText><![CDATA[from array import array
-from java.lang import String
-
-table = widget.getTable()
-table.setColumnCellEditorData(2,array(String, ["apple","banana","orange"]))]]></scriptText>
+            <scriptText><![CDATA[var table = widget.getTable();
+var options = Java.to(["apple", "banana", "orange"], "java.lang.String[]");
+table.setColumnCellEditorData(2, options);
+]]></scriptText>
             <pv trig="true">=1</pv>
           </path>
         </scripts>
@@ -773,7 +772,7 @@ table.setColumnCellEditorData(2,array(String, ["apple","banana","orange"]))]]></
       <show_scrollbar>true</show_scrollbar>
       <tooltip></tooltip>
       <transparent>true</transparent>
-      <visible>false</visible>
+      <visible>true</visible>
       <widget_type>Grouping Container</widget_type>
       <width>686</width>
       <wuid>-3cd731dc:13568229061:-7ad9</wuid>
@@ -839,7 +838,7 @@ table.setColumnCellEditorData(2,array(String, ["apple","banana","orange"]))]]></
           <keep_wh_ratio>false</keep_wh_ratio>
         </scale_options>
         <scripts>
-          <path pathString="../scripts/TableSelectionMonitor.py" checkConnect="true" seoe="false">
+          <path pathString="../scripts/TableSelectionMonitor.js" checkConnect="true" seoe="false">
             <pv trig="true">=1</pv>
           </path>
         </scripts>

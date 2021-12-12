@@ -23,9 +23,9 @@ import org.eclipse.jface.viewers.Viewer;
  * @param <T>
  *            String or String[]
  */
-class StringTableContentProvider<T> implements IStructuredContentProvider {
+public class StringTableContentProvider<T> implements IStructuredContentProvider {
     /** Magic number for the final 'add' element */
-    final public static Integer ADD_ELEMENT = new Integer(-1);
+    public static final Integer ADD_ELEMENT = new Integer(-1);
     private List<T> items;
 
     @Override
@@ -37,7 +37,7 @@ class StringTableContentProvider<T> implements IStructuredContentProvider {
     @Override
     public Object[] getElements(Object arg0) {
         var N = items.size();
-        Integer result[] = new Integer[N + 1];
+        var result = new Integer[N + 1];
         for (var i = 0; i < N; ++i) {
             result[i] = i;
         }

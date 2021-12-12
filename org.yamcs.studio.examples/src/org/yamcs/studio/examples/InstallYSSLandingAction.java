@@ -58,17 +58,14 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
         }
 
         var job = new Job("Import YSS Landing") {
-
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    // copy the sample displays
                     var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    var url = FileLocator.find(Activator.getDefault().getBundle(), new Path("examples/YSS Landing"),
-                            null);
-
+                    var bundle = Activator.getDefault().getBundle();
+                    var url = FileLocator.find(bundle, new Path("examples/YSS Landing"), null);
                     try {
                         var directory = new File(FileLocator.toFileURL(url).getPath());
                         if (directory.isDirectory()) {
@@ -85,11 +82,8 @@ public class InstallYSSLandingAction extends Action implements IWorkbenchWindowA
 
                 return Status.OK_STATUS;
             }
-
         };
-
         job.schedule();
-
     }
 
     private int count(File[] files) {

@@ -106,7 +106,7 @@ Get Severity: pvSev{index}. It is an integer value, in which: 0: OK; -1: Invalid
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>Besides outputing a constant value to the property based on the boolean expression value, you can also output an expression value to the property. For example, if you want make the String value of a PV as the URL of a web browser widget, you can set the output expression to pvStr0. If you want to skip the boolean expression, simply set boolean expression to true.</text>
+    <text>Besides outputting a constant value to the property based on the boolean expression value, you can also output an expression value to the property. For example, if you want make the String value of a PV as the URL of a web browser widget, you can set the output expression to pvStr0. If you want to skip the boolean expression, simply set boolean expression to true.</text>
     <tooltip></tooltip>
     <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>
@@ -150,7 +150,7 @@ Get Severity: pvSev{index}. It is an integer value, in which: 0: OK; -1: Invalid
     <text>To obtain customized dynamic hehaviors than just setting from properties sheet, you can attach rules or scripts to widgets or OPI. With rules, you can make widget properties dynamically changeable without any programming. Widget property value will change along with the boolean expression status or input PV value. The execution of a rule is triggered by its input PV(s), so at least one trigger PV is needed for a rule. &#xD;
 &#xD;
 Steps to attach scripts to a widget:&#xD;
-Step1. Select Rules property in property sheet view. You will see "Attache Rules" dialog. &#xD;
+Step1. Select Rules property in property sheet view. You will see "Attach Rules" dialog. &#xD;
 Step2. In Attach Rules Dialog, you can add more than one rule.&#xD;
 Step3. Run OPI to see the result.</text>
     <tooltip></tooltip>
@@ -373,47 +373,6 @@ $(pv_value)</tooltip>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <actions hook="false" hook_all="false" />
-    <auto_size>true</auto_size>
-    <background_color>
-      <color red="255" green="255" blue="255" />
-    </background_color>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <fontdata fontName="Arial" height="12" style="0" pixels="false" />
-    </font>
-    <foreground_color>
-      <color red="0" green="0" blue="255" />
-    </foreground_color>
-    <height>14</height>
-    <horizontal_alignment>1</horizontal_alignment>
-    <name>Label_9</name>
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <show_scrollbar>false</show_scrollbar>
-    <text>The simple way to make properties dynamic</text>
-    <tooltip></tooltip>
-    <transparent>true</transparent>
-    <vertical_alignment>1</vertical_alignment>
-    <visible>true</visible>
-    <widget_type>Label</widget_type>
-    <width>235</width>
-    <wrap_words>true</wrap_words>
-    <wuid>6cc102d7:13895a319f6:-7d4b</wuid>
-    <x>30</x>
-    <y>62</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <actions hook="false" hook_all="false" />
     <auto_size>false</auto_size>
     <background_color>
       <color red="0" green="255" blue="128" />
@@ -508,60 +467,5 @@ $(pv_value)</tooltip>
     <wuid>6cc102d7:13895a319f6:-7d37</wuid>
     <x>17</x>
     <y>551</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="true" hook_all="false">
-      <action type="OPEN_DISPLAY">
-        <path>5_2_Script.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>0</mode>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <fontdata fontName="Arial" height="9" style="1" pixels="false" />
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="128" />
-    </foreground_color>
-    <height>28</height>
-    <image></image>
-    <name>Action Button_11</name>
-    <push_action_index>0</push_action_index>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <style>0</style>
-    <text>Next</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <visible>true</visible>
-    <widget_type>Action Button</widget_type>
-    <width>79</width>
-    <wuid>6cc102d7:13895a319f6:-7cfd</wuid>
-    <x>676</x>
-    <y>556</y>
   </widget>
 </display>

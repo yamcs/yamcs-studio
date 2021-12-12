@@ -61,7 +61,7 @@
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>OPI Editor provides most of the functions for a modern graphical editor: select, resize, copy, paste, clone, delete, undo, redo,  arrange multiple widgets, snap to grid or other widgets(geometry), ruler, guide, zoom in/out, change order, create group and so on.&#xD;
+    <text>Display Builder provides most of the functions for a modern graphical editor: select, resize, copy, paste, clone, delete, undo, redo,  arrange multiple widgets, snap to grid or other widgets(geometry), ruler, guide, zoom in/out, change order, create group and so on.&#xD;
 &#xD;
 All these functions can be easily access from toolbar or context menu.</text>
     <tooltip></tooltip>
@@ -608,7 +608,7 @@ $(pv_value)</tooltip>
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>Use OPI Editor</text>
+    <text>Use Display Builder</text>
     <tooltip></tooltip>
     <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>
@@ -812,20 +812,16 @@ $(pv_value)</tooltip>
     <line_style>0</line_style>
     <line_width>1</line_width>
     <name>connection</name>
-    <points>
-      <point x="340" y="272" />
-      <point x="340" y="328" />
-      <point x="400" y="328" />
-    </points>
-    <router>0</router>
+    <points />
+    <router>1</router>
     <src_path></src_path>
     <src_term>RIGHT</src_term>
-    <src_wuid>-60e24287:133c6b5d52b:-75b0</src_wuid>
+    <src_wuid>-60e24287:133c6b5d52b:-75b1</src_wuid>
     <tgt_path></tgt_path>
-    <tgt_term>BOTTOM</tgt_term>
-    <tgt_wuid>-60e24287:133c6b5d52b:-75ae</tgt_wuid>
+    <tgt_term>LEFT</tgt_term>
+    <tgt_wuid>-60e24287:133c6b5d52b:-75b0</tgt_wuid>
     <widget_type>connection</widget_type>
-    <wuid>-60e24287:133c6b5d52b:-759f</wuid>
+    <wuid>-60e24287:133c6b5d52b:-7587</wuid>
   </connection>
   <connection typeId="org.csstudio.opibuilder.connection" version="1.0.0">
     <anti_alias>true</anti_alias>
@@ -866,15 +862,19 @@ $(pv_value)</tooltip>
     <line_style>0</line_style>
     <line_width>1</line_width>
     <name>connection</name>
-    <points />
-    <router>1</router>
+    <points>
+      <point x="340" y="272" />
+      <point x="340" y="328" />
+      <point x="400" y="328" />
+    </points>
+    <router>0</router>
     <src_path></src_path>
     <src_term>RIGHT</src_term>
-    <src_wuid>-60e24287:133c6b5d52b:-75b1</src_wuid>
+    <src_wuid>-60e24287:133c6b5d52b:-75b0</src_wuid>
     <tgt_path></tgt_path>
-    <tgt_term>LEFT</tgt_term>
-    <tgt_wuid>-60e24287:133c6b5d52b:-75b0</tgt_wuid>
+    <tgt_term>BOTTOM</tgt_term>
+    <tgt_wuid>-60e24287:133c6b5d52b:-75ae</tgt_wuid>
     <widget_type>connection</widget_type>
-    <wuid>-60e24287:133c6b5d52b:-7587</wuid>
+    <wuid>-60e24287:133c6b5d52b:-759f</wuid>
   </connection>
 </display>

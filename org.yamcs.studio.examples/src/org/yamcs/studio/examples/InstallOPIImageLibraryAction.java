@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
@@ -38,9 +37,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 public class InstallOPIImageLibraryAction extends Action implements IWorkbenchWindowActionDelegate {
 
     public static final String PROJECT_NAME = "OPI Image Library";
-    private static final String SRC_FOLDER_TOCOPY = "./SymbolLibrary/";
-    private static final String JOB_NAME = "Import OPI image library";
-    private static final String TASK_NAME = "Copying OPI image library";
 
     @Override
     public void dispose() {
@@ -63,21 +59,20 @@ public class InstallOPIImageLibraryAction extends Action implements IWorkbenchWi
                             PROJECT_NAME));
             return;
         }
-        var job = new Job(JOB_NAME) {
+        var job = new Job("Import OPI Image Library") {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    // copy the sample displays
                     var project = root.getProject(PROJECT_NAME);
                     project.create(new NullProgressMonitor());
                     project.open(new NullProgressMonitor());
-                    var bundle = Platform.getBundle(Activator.PLUGIN_ID);
-                    var url = FileLocator.find(bundle, new Path(SRC_FOLDER_TOCOPY), null);
+                    var bundle = Activator.getDefault().getBundle();
+                    var url = FileLocator.find(bundle, new Path("examples/OPI Image Library"), null);
                     try {
                         var directory = new File(FileLocator.toFileURL(url).getPath());
                         if (directory.isDirectory()) {
                             var files = directory.listFiles();
-                            monitor.beginTask(TASK_NAME, count(files));
+                            monitor.beginTask("Copying Files", count(files));
                             copy(files, project, monitor);
                         }
                     } catch (IOException e) {

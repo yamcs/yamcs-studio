@@ -74,24 +74,28 @@
     <y>3</y>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
       <actions hook="false" hook_all="false">
-        <action type="EXECUTE_PYTHONSCRIPT">
+        <action type="EXECUTE_JAVASCRIPT">
           <path></path>
-          <scriptText><![CDATA[hourText = display.getWidget("hourText")
-minText = display.getWidget("minText")
-secText = display.getWidget("secText")
-timerLabel = display.getWidget("timerLabel")
+          <scriptText><![CDATA[var hourText = display.getWidget("hourText");
+var minText = display.getWidget("minText");
+var secText = display.getWidget("secText");
+var timerLabel = display.getWidget("timerLabel");
 
-if widget.getVar("hour") is not None:
-	hourText.getPV().setValue(widget.getVar("hour"))
-if widget.getVar("min") is not None:
-	minText.getPV().setValue(widget.getVar("min"))
-if widget.getVar("sec") is not None:
-	secText.getPV().setValue(widget.getVar("sec") )
+if (widget.getVar("hour") != null) {
+	hourText.getPV().setValue(widget.getVar("hour"));
+}
+if (widget.getVar("min") != null) {
+	minText.getPV().setValue(widget.getVar("min"));
+}
+if (widget.getVar("sec") != null) {
+	secText.getPV().setValue(widget.getVar("sec"));
+}
 
-widget.getPV().setValue(0)
+widget.getPV().setValue(0);
 
-timerLabel.setPropertyValue("text", "Timer")
-timerLabel.setPropertyValue("foreground_color", ColorFontUtil.BLACK)]]></scriptText>
+timerLabel.setPropertyValue("text", "Timer");
+timerLabel.setPropertyValue("foreground_color", ColorFontUtil.BLACK);
+]]></scriptText>
           <embedded>true</embedded>
           <description></description>
         </action>
@@ -213,7 +217,7 @@ timerLabel.setPropertyValue("foreground_color", ColorFontUtil.BLACK)]]></scriptT
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts>
-        <path pathString="../scripts/Timer.py" checkConnect="true" seoe="false">
+        <path pathString="../scripts/Timer.js" checkConnect="true" seoe="false">
           <pv trig="true">loc://$(DID)_start</pv>
           <pv trig="false">loc://$(DID)_progress</pv>
           <pv trig="false">loc://$(DID)_reset</pv>

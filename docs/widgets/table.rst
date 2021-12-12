@@ -88,7 +88,7 @@ Column Headers (``column_headers``)
 
     .. code-block:: javascript
 
-        table = widget.getTable();
+        var table = widget.getTable();
         var options = Java.to(["Abc", "Def", "Ghi"], "java.lang.String[]");
         table.setColumnCellEditorData(2, options);
     
@@ -97,9 +97,9 @@ Column Headers (``column_headers``)
 
     .. code-block:: javascript
 
-        table = widget.getTable();
+        var table = widget.getTable();
         var options = Java.to(["ON", "OFF"], "java.lang.String[]");
-        table.setColumnCellEditorData(2, ["ON", "OFF"]);
+        table.setColumnCellEditorData(2, options);
     
     In case of ``CUSTOMIZED`` you must provide a custom ``CellEditor``.
     This is an advanced use case and not further detailed.

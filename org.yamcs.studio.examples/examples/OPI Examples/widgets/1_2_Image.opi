@@ -61,7 +61,7 @@
     </scale_options>
     <scripts />
     <show_scrollbar>false</show_scrollbar>
-    <text>Support GIF, PNG, JPG, JPEG, BMP image file. Image file path can be URL. For exampe: http://neutrons.ornl.gov/images/sns_aerial.jpg</text>
+    <text>Support GIF, PNG, JPG, JPEG, BMP image file. Image file path can be URL.</text>
     <tooltip></tooltip>
     <transparent>false</transparent>
     <vertical_alignment>1</vertical_alignment>
@@ -508,13 +508,13 @@ $(pv_value)</tooltip>
     </permutation_matrix>
     <rules>
       <rule name="Dynamic Load Image" prop_id="image_file" out_exp="false">
-        <exp bool_exp="pv0==0">
-          <value>../pictures/snscontrol.jpg</value>
+        <exp bool_exp="pv0 == 0">
+          <value>../pictures/photo-a.jpeg</value>
         </exp>
-        <exp bool_exp="pv0==1">
-          <value>../pictures/snsBuilding.jpg</value>
+        <exp bool_exp="pv0 == 1">
+          <value>../pictures/photo-b.jpeg</value>
         </exp>
-        <exp bool_exp="pv0==2">
+        <exp bool_exp="pv0 == 2">
           <value>https://www.google.com/images/srpr/logo11w.png</value>
         </exp>
         <pv trig="true">sim://ramp(0,2,1,1)</pv>

@@ -734,11 +734,11 @@ $(pv_value)</tooltip>
     <selector_type>0</selector_type>
     <show_units>true</show_units>
     <style>0</style>
-    <text>Step1. Open the OPI Editor perspective from Menu: &#xD;
-Window-&gt;Open Perscpective-&gt;Other..-&gt;OPI Editor&#xD;
+    <text>Step1. Open the Display Builder from Menu: &#xD;
+Window-&gt;Display Builder
 &#xD;
 Step2. Create a new OPI file from Menu&#xD;
-File-&gt;new-&gt;Others...-&gt;BOY-&gt;OPI File&#xD;
+File-&gt;New-&gt;OPI File&#xD;
 &#xD;
 Step3. Click "Text Update" widget on the palette, then click or drag a rectangle in the editing area to place the widget on the editing area.  &#xD;
 &#xD;

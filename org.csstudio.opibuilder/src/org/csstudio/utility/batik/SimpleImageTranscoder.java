@@ -145,12 +145,12 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         }
         try {
             if (canvasWidth > 0) {
-                addTranscodingHint(ImageTranscoder.KEY_WIDTH, new Float(canvasWidth));
+                addTranscodingHint(ImageTranscoder.KEY_WIDTH, Float.valueOf(canvasWidth));
             } else {
                 removeTranscodingHint(ImageTranscoder.KEY_WIDTH);
             }
             if (canvasHeight > 0) {
-                addTranscodingHint(ImageTranscoder.KEY_HEIGHT, new Float(canvasHeight));
+                addTranscodingHint(ImageTranscoder.KEY_HEIGHT, Float.valueOf(canvasHeight));
             } else {
                 removeTranscodingHint(ImageTranscoder.KEY_HEIGHT);
             }
