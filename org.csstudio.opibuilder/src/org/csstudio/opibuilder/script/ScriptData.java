@@ -34,7 +34,7 @@ public class ScriptData implements IAdaptable {
     /**
      * The input PVs of the script. Which can be accessed in the script and trigger the script execution.
      */
-    protected List<PVTuple> pvList;
+    protected List<PVTuple> pvList = new ArrayList<>();
 
     /**
      * Check PVs connectivity before executing the script.
@@ -56,12 +56,10 @@ public class ScriptData implements IAdaptable {
 
     public ScriptData() {
         path = new Path("");
-        pvList = new ArrayList<>();
     }
 
     public ScriptData(IPath path) {
         this.path = path;
-        pvList = new ArrayList<>();
     }
 
     /**
@@ -81,8 +79,6 @@ public class ScriptData implements IAdaptable {
 
     /**
      * Get the path of the script.
-     * 
-     * @return the file path.
      */
     public IPath getPath() {
         return path;
@@ -90,8 +86,6 @@ public class ScriptData implements IAdaptable {
 
     /**
      * Get the input PVs of the script
-     * 
-     * @return
      */
     public List<PVTuple> getPVList() {
         return pvList;
@@ -124,7 +118,7 @@ public class ScriptData implements IAdaptable {
         copy.setScriptName(scriptName);
         copy.setScriptText(scriptText);
         copy.setScriptType(scriptType);
-        for (PVTuple pv : pvList) {
+        for (var pv : pvList) {
             copy.addPV(new PVTuple(pv.pvName, pv.trigger));
         }
         return copy;
@@ -191,64 +185,35 @@ public class ScriptData implements IAdaptable {
         return stopExecuteOnError;
     }
 
-    /**
-     * @return the scriptType
-     */
     public ScriptType getScriptType() {
         return scriptType;
     }
 
-    /**
-     * @param scriptType
-     *            the scriptType to set
-     */
     public void setScriptType(ScriptType scriptType) {
         this.scriptType = scriptType;
     }
 
-    /**
-     * @return the isEmbedded
-     */
     public boolean isEmbedded() {
         return isEmbedded;
     }
 
-    /**
-     * @param isEmbedded
-     *            the isEmbedded to set
-     */
     public void setEmbedded(boolean isEmbedded) {
         this.isEmbedded = isEmbedded;
     }
 
-    /**
-     * @return the scriptText
-     */
     public String getScriptText() {
         return scriptText;
     }
 
-    /**
-     * @param scriptText
-     *            the scriptText to set
-     */
     public void setScriptText(String scriptText) {
         this.scriptText = scriptText;
     }
 
-    /**
-     * @return the scriptName
-     */
     public String getScriptName() {
         return scriptName;
     }
 
-    /**
-     * @param scriptName
-     *            the scriptName to set
-     */
     public void setScriptName(String scriptName) {
         this.scriptName = scriptName;
     }
-
 }

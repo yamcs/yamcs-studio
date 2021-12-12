@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -68,7 +67,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
     private boolean errorInScript;
 
-    volatile boolean unRegistered = false;
+    private volatile boolean unRegistered = false;
 
     private boolean triggerSuppressed = false;
 
@@ -77,7 +76,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
     private IPV[] pvArray;
 
     public AbstractScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
-
         this.scriptData = scriptData;
         this.editPart = editpart;
         this.pvArray = pvArray;
@@ -153,18 +151,14 @@ public abstract class AbstractScriptStore implements IScriptStore {
         } else if (scriptData.isEmbedded()) {
             compileString(scriptData.getScriptText());
         } else {
-            // read file
             var inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath);
-
-            // compile
             compileInputStream(inputStream);
             inputStream.close();
         }
 
         pvListenerMap = new HashMap<>();
 
-        IPVListener suppressPVListener = new IPVListener() {
-
+        var suppressPVListener = new IPVListener() {
             @Override
             public synchronized void valueChanged(IPV pv) {
                 if (triggerSuppressed && checkPVsConnected(scriptData, pvArray)) {
@@ -172,13 +166,11 @@ public abstract class AbstractScriptStore implements IScriptStore {
                     triggerSuppressed = false;
                 }
             }
-
         };
 
-        IPVListener triggerPVListener = new IPVListener() {
+        var triggerPVListener = new IPVListener() {
             @Override
             public synchronized void valueChanged(IPV pv) {
-
                 // execute script only if all input pvs are connected
                 if (pvArray.length > 1) {
                     if (!checkPVsConnected(scriptData, pvArray)) {
@@ -187,18 +179,17 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
                     }
                 }
-
                 executeScriptInUIThread(pv);
             }
-
         };
+
         // register pv listener
-        var i = 0;
-        for (IPV pv : pvArray) {
+        for (var i = 0; i < pvArray.length; i++) {
+            var pv = pvArray[i];
             if (pv == null) {
                 continue;
             }
-            if (!scriptData.getPVList().get(i++).trigger) {
+            if (!scriptData.getPVList().get(i).trigger) {
                 // execute the script if it was suppressed.
                 pv.addListener(suppressPVListener);
                 pvListenerMap.put(pv, suppressPVListener);
@@ -254,8 +245,10 @@ public abstract class AbstractScriptStore implements IScriptStore {
         if (!scriptData.isCheckConnectivity()) {
             return true;
         }
-        for (IPV pv : pvArray) {
-            if (!pv.isConnected() || pv.getValue() == null) {
+        for (var i = 0; i < pvArray.length; i++) {
+            var pv = pvArray[i];
+            var isTrigger = scriptData.getPVList().get(i).trigger;
+            if (!pv.isConnected() || (isTrigger && pv.getValue() == null)) {
                 return false;
             }
         }
@@ -266,28 +259,19 @@ public abstract class AbstractScriptStore implements IScriptStore {
     @Override
     public void unRegister() {
         unRegistered = true;
-        for (Entry<IPV, IPVListener> entry : pvListenerMap.entrySet()) {
+        for (var entry : pvListenerMap.entrySet()) {
             entry.getKey().removeListener(entry.getValue());
         }
     }
 
-    /**
-     * @return the scriptData
-     */
     public ScriptData getScriptData() {
         return scriptData;
     }
 
-    /**
-     * @return the editPart
-     */
     public AbstractBaseEditPart getEditPart() {
         return editPart;
     }
 
-    /**
-     * @return the display editPart
-     */
     public DisplayEditpart getDisplayEditPart() {
         if (getEditPart().isActive()) {
             return (DisplayEditpart) (getEditPart().getViewer().getContents());
@@ -295,9 +279,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
         return null;
     }
 
-    /**
-     * @return the pvArray
-     */
     public IPV[] getPvArray() {
         return pvArray;
     }
@@ -310,6 +291,5 @@ public abstract class AbstractScriptStore implements IScriptStore {
      * Dispose of all resources allocated by this script store.
      */
     protected void dispose() {
-
     }
 }
