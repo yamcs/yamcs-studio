@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -23,7 +21,7 @@ import org.jdom.Element;
 /**
  * A property that can hold data with multiple properties.
  */
-public class ComplexDataProperty extends AbstractWidgetProperty {
+public class ComplexDataProperty extends AbstractWidgetProperty<AbstractComplexData> {
 
     public static final String XML_ATTRIBUTE_TYPE = "type";
 
@@ -50,7 +48,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public AbstractComplexData checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -70,10 +68,10 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     public AbstractComplexData readValueFromXML(Element propElement) {
-        var result = ((AbstractComplexData) getDefaultValue()).createInstance();
+        var result = getDefaultValue().createInstance();
 
-        List<?> children = propElement.getChildren();
-        Iterator<?> iterator = children.iterator();
+        var children = propElement.getChildren();
+        var iterator = children.iterator();
         var propIdSet = result.getAllPropertyIDs();
         while (iterator.hasNext()) {
             var subElement = (Element) iterator.next();
@@ -95,8 +93,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var data = (AbstractComplexData) getPropertyValue();
-        for (var property : data.getAllProperties()) {
+        for (var property : getPropertyValue().getAllProperties()) {
             var propEle = new Element(property.getPropertyID());
             property.writeToXML(propEle);
             propElement.addContent(propEle);
@@ -106,6 +103,6 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
     @Override
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         super.setWidgetModel(widgetModel);
-        ((AbstractComplexData) getPropertyValue()).setWidgetModel(widgetModel);
+        getPropertyValue().setWidgetModel(widgetModel);
     }
 }

@@ -38,9 +38,6 @@ public class PVNameProperty extends StringProperty {
 
     /**
      * Set detailed description to be displayed on tooltip and status line
-     *
-     * @param detailedDescription
-     *            the detailed description.
      */
     public void setDetailedDescription(String detailDescription) {
         this.detailDescription = detailDescription;

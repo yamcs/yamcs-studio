@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -25,7 +23,7 @@ import org.jdom.Element;
 /**
  * The widget property for actions.
  */
-public class ActionsProperty extends AbstractWidgetProperty {
+public class ActionsProperty extends AbstractWidgetProperty<ActionsInput> {
 
     /**
      * XML ELEMENT name <code>ACTION</code>.
@@ -80,7 +78,7 @@ public class ActionsProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public ActionsInput checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -112,8 +110,8 @@ public class ActionsProperty extends AbstractWidgetProperty {
             var action = WidgetActionFactory
                     .createWidgetAction(ActionType.parseAction(se.getAttributeValue(XML_ATTRIBUTE_ACTION_TYPE)));
             if (action != null) {
-                List<?> children = se.getChildren();
-                Iterator<?> iterator = children.iterator();
+                var children = se.getChildren();
+                var iterator = children.iterator();
                 var propIdSet = action.getAllPropertyIDs();
                 while (iterator.hasNext()) {
                     var subElement = (Element) iterator.next();
@@ -139,7 +137,7 @@ public class ActionsProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var actionsInput = (ActionsInput) getPropertyValue();
+        var actionsInput = getPropertyValue();
         propElement.setAttribute(XML_ATTRIBUTE_HOOK_FIRST, "" + actionsInput.isFirstActionHookedUpToWidget()); //
         propElement.setAttribute(XML_ATTRIBUTE_HOOK_ALL, "" + actionsInput.isHookUpAllActionsToWidget()); //
 
@@ -158,6 +156,6 @@ public class ActionsProperty extends AbstractWidgetProperty {
     @Override
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         super.setWidgetModel(widgetModel);
-        ((ActionsInput) getPropertyValue()).setWidgetModel(widgetModel);
+        getPropertyValue().setWidgetModel(widgetModel);
     }
 }

@@ -22,7 +22,7 @@ import org.jdom.Element;
 /**
  * The property for file path, which is represented as a String.
  */
-public class FilePathProperty extends AbstractWidgetProperty {
+public class FilePathProperty extends AbstractWidgetProperty<String> {
 
     /**
      * The file extension, which should be accepted.
@@ -75,11 +75,11 @@ public class FilePathProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public String checkValue(Object value) {
         if (value == null) {
             return null;
         }
-        Object acceptedValue = null;
+        String acceptedValue = null;
 
         if (value instanceof IPath || value instanceof String) {
             String path;
@@ -116,10 +116,10 @@ public class FilePathProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object getPropertyValue() {
+    public String getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE && propertyValue != null
-                && !((String) propertyValue).isEmpty()) {
-            var s = OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) propertyValue);
+                && !propertyValue.isEmpty()) {
+            var s = OPIBuilderMacroUtil.replaceMacros(widgetModel, propertyValue);
             if (s.contains("://")) {
                 return s;
             } else {
@@ -134,13 +134,13 @@ public class FilePathProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public String readValueFromXML(Element propElement) {
         return propElement.getText();
     }
 
     @Override
     public void writeToXML(Element propElement) {
-        var value = (String) getPropertyValue();
+        var value = getPropertyValue();
         if (value.contains("://")) {
             propElement.setText(value);
         } else {
@@ -155,7 +155,7 @@ public class FilePathProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public String toStringInRuleScript(Object propValue) {
+    public String toStringInRuleScript(String propValue) {
         return RuleData.QUOTE + super.toStringInRuleScript(propValue) + RuleData.QUOTE;
     }
 }

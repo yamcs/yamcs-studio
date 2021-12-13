@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-public class FontProperty extends AbstractWidgetProperty {
+public class FontProperty extends AbstractWidgetProperty<OPIFont> {
 
     /**
      * XML attribute name <code>font</code>.
@@ -80,17 +80,18 @@ public class FontProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public OPIFont checkValue(Object value) {
         if (value == null) {
             return null;
         }
 
-        var acceptedValue = value;
-
+        OPIFont acceptedValue;
         if (value instanceof OPIFont) {
             // Avoid getFontData() as this method can be called from off the UI thread.
             if (((OPIFont) value).getRawFontData() == null) {
                 acceptedValue = null;
+            } else {
+                acceptedValue = (OPIFont) value;
             }
         } else if (value instanceof FontData) {
             acceptedValue = new OPIFont((FontData) value);
@@ -130,7 +131,7 @@ public class FontProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public OPIFont readValueFromXML(Element propElement) {
         var fontElement = propElement.getChild(XML_ELEMENT_FONT);
         if (fontElement != null) {
             // Create the OPIFont with the raw font data from the XML.
@@ -177,8 +178,7 @@ public class FontProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public String toStringInRuleScript(Object propValue) {
-        var opiFont = (OPIFont) propValue;
+    public String toStringInRuleScript(OPIFont opiFont) {
         if (opiFont.isPreDefined()) {
             return QUOTE + opiFont.getFontMacroName() + QUOTE;
         } else {

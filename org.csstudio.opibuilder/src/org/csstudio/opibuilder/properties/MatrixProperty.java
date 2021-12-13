@@ -12,7 +12,7 @@ package org.csstudio.opibuilder.properties;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-public class MatrixProperty extends AbstractWidgetProperty {
+public class MatrixProperty extends AbstractWidgetProperty<double[][]> {
 
     /**
      * XML ELEMENT name for a row.
@@ -30,7 +30,7 @@ public class MatrixProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public double[][] checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -48,8 +48,7 @@ public class MatrixProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var data = (double[][]) propertyValue;
-        for (var row : data) {
+        for (var row : propertyValue) {
             var rowElement = new Element(XML_ELEMENT_ROW);
             for (var e : row) {
                 var colElement = new Element(XML_ELEMENT_COLUMN);

@@ -19,7 +19,7 @@ import org.jdom.Element;
 /**
  * The widget property for color.
  */
-public class ColorProperty extends AbstractWidgetProperty {
+public class ColorProperty extends AbstractWidgetProperty<OPIColor> {
 
     /**
      * XML attribute name <code>color</code>.
@@ -81,16 +81,17 @@ public class ColorProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public OPIColor checkValue(Object value) {
         if (value == null) {
             return null;
         }
 
-        var acceptedValue = value;
-
+        OPIColor acceptedValue;
         if (value instanceof OPIColor) {
             if (((OPIColor) value).getRGBValue() == null) {
                 acceptedValue = null;
+            } else {
+                acceptedValue = (OPIColor) value;
             }
         } else if (value instanceof RGB) {
             acceptedValue = new OPIColor((RGB) value);
@@ -110,7 +111,7 @@ public class ColorProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var opiColor = (OPIColor) getPropertyValue();
+        var opiColor = getPropertyValue();
         Element colorElement;
         colorElement = new Element(XML_ELEMENT_COLOR);
         if (opiColor.isPreDefined()) {
@@ -124,7 +125,7 @@ public class ColorProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public OPIColor readValueFromXML(Element propElement) {
         var colorElement = propElement.getChild(XML_ELEMENT_COLOR);
         var name = colorElement.getAttributeValue(XML_ATTRIBUTE_NAME);
         if (name == null) {
@@ -151,8 +152,7 @@ public class ColorProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public String toStringInRuleScript(Object propValue) {
-        var opiColor = (OPIColor) propValue;
+    public String toStringInRuleScript(OPIColor opiColor) {
         if (opiColor.isPreDefined()) {
             if (MediaService.getInstance().isColorNameDefined(opiColor.getColorName())) {
                 return QUOTE + opiColor.getColorName() + QUOTE;

@@ -22,7 +22,7 @@ import org.jdom.Element;
 /**
  * The property for string list.
  */
-public class StringListProperty extends AbstractWidgetProperty {
+public class StringListProperty extends AbstractWidgetProperty<List<String>> {
 
     /**
      * XML ELEMENT name <code>INCLUDE_PARENT_MACROS</code>.
@@ -43,12 +43,12 @@ public class StringListProperty extends AbstractWidgetProperty {
      */
     public StringListProperty(String prop_id, String description, WidgetPropertyCategory category,
             List<String> default_value) {
-        super(prop_id, description, category, default_value == null ? Collections.EMPTY_LIST : default_value);
+        super(prop_id, description, category, default_value == null ? Collections.emptyList() : default_value);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Object checkValue(Object value) {
+    @SuppressWarnings("unchecked")
+    public List<String> checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -62,12 +62,11 @@ public class StringListProperty extends AbstractWidgetProperty {
         return acceptableValue;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Object getPropertyValue() {
+    public List<String> getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            List<String> result = new ArrayList<>();
-            for (var item : (List<String>) super.getPropertyValue()) {
+            var result = new ArrayList<String>();
+            for (var item : super.getPropertyValue()) {
                 result.add(OPIBuilderMacroUtil.replaceMacros(widgetModel, item));
             }
             return result;
@@ -83,7 +82,7 @@ public class StringListProperty extends AbstractWidgetProperty {
 
     @Override
     public List<String> readValueFromXML(Element propElement) {
-        List<String> result = new ArrayList<>();
+        var result = new ArrayList<String>();
         for (var oe : propElement.getChildren()) {
             var se = (Element) oe;
             if (se.getName().equals(XML_ELEMENT_ITEM)) {
@@ -93,11 +92,9 @@ public class StringListProperty extends AbstractWidgetProperty {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void writeToXML(Element propElement) {
-        var data = (List<String>) propertyValue;
-        for (var item : data) {
+        for (var item : propertyValue) {
             var newElement = new Element(XML_ELEMENT_ITEM);
             newElement.setText(item);
             propElement.addContent(newElement);

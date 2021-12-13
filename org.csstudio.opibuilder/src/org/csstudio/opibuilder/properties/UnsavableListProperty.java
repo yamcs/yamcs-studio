@@ -18,7 +18,7 @@ import org.jdom.Element;
  * The widget property for list. This property is only used for property change communication between model and
  * editpart, so it is not savable and viewable in property sheet.
  */
-public class UnsavableListProperty extends AbstractWidgetProperty {
+public class UnsavableListProperty extends AbstractWidgetProperty<List<?>> {
 
     /**
      * String Property Constructor. The property value type is {@link List}.
@@ -38,9 +38,9 @@ public class UnsavableListProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public List<?> checkValue(Object value) {
         if (value instanceof List) {
-            return value;
+            return (List<?>) value;
         }
         return null;
     }
@@ -55,7 +55,7 @@ public class UnsavableListProperty extends AbstractWidgetProperty {
         /* NOP */ }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public List<?> readValueFromXML(Element propElement) {
         return null;
     }
 

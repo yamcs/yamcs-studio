@@ -21,7 +21,7 @@ import org.jdom.Element;
 /**
  * The property for macros.
  */
-public class MacrosProperty extends AbstractWidgetProperty {
+public class MacrosProperty extends AbstractWidgetProperty<MacrosInput> {
 
     /**
      * XML ELEMENT name <code>INCLUDE_PARENT_MACROS</code>.
@@ -46,7 +46,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public MacrosInput checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -59,9 +59,9 @@ public class MacrosProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object getPropertyValue() {
+    public MacrosInput getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
-            var value = ((MacrosInput) super.getPropertyValue()).getCopy();
+            var value = super.getPropertyValue().getCopy();
             for (var key : value.getMacrosMap().keySet()) {
                 var newS = OPIBuilderMacroUtil.replaceMacros(widgetModel, value.getMacrosMap().get(key));
                 if (!newS.equals(value.getMacrosMap().get(key))) {
@@ -96,7 +96,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var macros = (MacrosInput) propertyValue;
+        var macros = propertyValue;
         var be = new Element(XML_ELEMENT_INCLUDE_PARENT_MACROS);
         be.setText("" + macros.isInclude_parent_macros());
         propElement.addContent(be);

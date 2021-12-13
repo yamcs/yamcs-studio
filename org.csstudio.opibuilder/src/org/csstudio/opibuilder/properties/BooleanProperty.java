@@ -16,7 +16,7 @@ import org.jdom.Element;
 /**
  * A boolean widget property.
  */
-public final class BooleanProperty extends AbstractWidgetProperty {
+public final class BooleanProperty extends AbstractWidgetProperty<Boolean> {
 
     /**
      * Boolean Property Constructor
@@ -35,7 +35,7 @@ public final class BooleanProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public Boolean checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -61,7 +61,7 @@ public final class BooleanProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public Boolean readValueFromXML(Element propElement) {
         return Boolean.parseBoolean(propElement.getValue());
     }
 
@@ -71,7 +71,7 @@ public final class BooleanProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public String toStringInRuleScript(Object propValue) {
-        return (Boolean) propValue ? "true" : "false";
+    public String toStringInRuleScript(Boolean propValue) {
+        return propValue ? "true" : "false";
     }
 }

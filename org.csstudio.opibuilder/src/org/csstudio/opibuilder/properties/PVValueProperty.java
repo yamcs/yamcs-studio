@@ -17,7 +17,7 @@ import org.yamcs.studio.data.vtype.ValueFactory;
 /**
  * The property which contains a {@link IValue}. This property won't be shown in property view.
  */
-public class PVValueProperty extends AbstractWidgetProperty {
+public class PVValueProperty extends AbstractWidgetProperty<VType> {
 
     /**
      * The property is used to store pv values. The value type is {@link VType}.
@@ -33,7 +33,7 @@ public class PVValueProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public VType checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -80,7 +80,7 @@ public class PVValueProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public VType readValueFromXML(Element propElement) {
         return null;
     }
 

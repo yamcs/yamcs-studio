@@ -18,7 +18,7 @@ import org.jdom.Element;
 /**
  * A property, which is able to handle Double values.
  */
-public final class DoubleProperty extends AbstractWidgetProperty {
+public final class DoubleProperty extends AbstractWidgetProperty<Double> {
 
     /**
      * Lower border for the property value.
@@ -72,7 +72,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public Double checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -117,7 +117,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public Double readValueFromXML(Element propElement) {
         return Double.parseDouble(propElement.getValue());
     }
 

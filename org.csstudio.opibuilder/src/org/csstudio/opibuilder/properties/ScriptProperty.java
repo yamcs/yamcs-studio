@@ -24,7 +24,7 @@ import org.jdom.Element;
 /**
  * The property for script.
  */
-public class ScriptProperty extends AbstractWidgetProperty {
+public class ScriptProperty extends AbstractWidgetProperty<ScriptsInput> {
 
     /**
      * XML ELEMENT name <code>PATH</code>.
@@ -69,7 +69,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public ScriptsInput checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -82,9 +82,9 @@ public class ScriptProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object getPropertyValue() {
+    public ScriptsInput getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
-            var value = (ScriptsInput) super.getPropertyValue();
+            var value = super.getPropertyValue();
             for (var sd : value.getScriptList()) {
                 for (var pv : sd.getPVList().toArray()) {
                     var pvTuple = (PVTuple) pv;
@@ -148,7 +148,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        for (var scriptData : ((ScriptsInput) getPropertyValue()).getScriptList()) {
+        for (var scriptData : getPropertyValue().getScriptList()) {
             var pathElement = new Element(XML_ELEMENT_PATH);
             String pathString = null;
             if (scriptData.isEmbedded()) {

@@ -20,10 +20,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-/**
- * The property for script.
- */
-public class ColorMapProperty extends AbstractWidgetProperty {
+public class ColorMapProperty extends AbstractWidgetProperty<ColorMap> {
 
     /**
      * XML ELEMENT name <code>PREDEFINEDCOLOR</code>.
@@ -63,7 +60,7 @@ public class ColorMapProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public ColorMap checkValue(Object value) {
         if (value == null) {
             return null;
         }

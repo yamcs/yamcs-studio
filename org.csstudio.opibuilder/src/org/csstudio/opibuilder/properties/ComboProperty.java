@@ -14,7 +14,7 @@ import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-public class ComboProperty extends AbstractWidgetProperty {
+public class ComboProperty extends AbstractWidgetProperty<Integer> {
 
     private String[] labelsArray;
 
@@ -39,7 +39,7 @@ public class ComboProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public Integer checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -79,7 +79,7 @@ public class ComboProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public Integer readValueFromXML(Element propElement) {
         try {
             return Integer.parseInt(propElement.getValue());
         } catch (NumberFormatException e) {

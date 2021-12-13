@@ -17,7 +17,7 @@ import org.jdom.Element;
 /**
  * The integer property.
  */
-public class IntegerProperty extends AbstractWidgetProperty {
+public class IntegerProperty extends AbstractWidgetProperty<Integer> {
 
     /**
      * Lower border for the property value.
@@ -72,7 +72,7 @@ public class IntegerProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public Integer checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -117,7 +117,7 @@ public class IntegerProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public Integer readValueFromXML(Element propElement) {
         try {
             return Integer.parseInt(propElement.getValue());
         } catch (NumberFormatException e) {

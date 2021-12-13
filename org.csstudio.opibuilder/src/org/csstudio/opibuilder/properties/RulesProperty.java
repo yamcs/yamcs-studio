@@ -22,7 +22,7 @@ import org.jdom.Element;
 /**
  * The property for rules.
  */
-public class RulesProperty extends AbstractWidgetProperty {
+public class RulesProperty extends AbstractWidgetProperty<RulesInput> {
 
     /**
      * XML ELEMENT name <code>RULE</code>.
@@ -81,7 +81,7 @@ public class RulesProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public RulesInput checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -93,9 +93,9 @@ public class RulesProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object getPropertyValue() {
+    public RulesInput getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
-            var value = (RulesInput) super.getPropertyValue();
+            var value = super.getPropertyValue();
             for (var rd : value.getRuleDataList()) {
                 for (var pv : rd.getPVList().toArray()) {
                     var pvTuple = (PVTuple) pv;
@@ -158,7 +158,7 @@ public class RulesProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        for (var ruleData : ((RulesInput) getPropertyValue()).getRuleDataList()) {
+        for (var ruleData : getPropertyValue().getRuleDataList()) {
             var ruleElement = new Element(XML_ELEMENT_RULE);
             ruleElement.setAttribute(XML_ATTRIBUTE_NAME, ruleData.getName());
             ruleElement.setAttribute(XML_ATTRIBUTE_PROPID, ruleData.getPropId());

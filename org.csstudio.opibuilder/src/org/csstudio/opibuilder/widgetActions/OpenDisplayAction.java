@@ -59,7 +59,7 @@ public class OpenDisplayAction extends AbstractWidgetAction {
         addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { "opi" }, false) {
             @Override
-            public Object readValueFromXML(Element propElement) {
+            public String readValueFromXML(Element propElement) {
                 handleLegacySettings(propElement);
                 return super.readValueFromXML(propElement);
             }

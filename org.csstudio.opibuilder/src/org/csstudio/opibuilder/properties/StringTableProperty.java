@@ -19,7 +19,7 @@ import org.jdom.Element;
 /**
  * The property for string table.
  */
-public class StringTableProperty extends AbstractWidgetProperty {
+public class StringTableProperty extends AbstractWidgetProperty<String[][]> {
 
     public class TitlesProvider {
 
@@ -91,7 +91,7 @@ public class StringTableProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public String[][] checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -103,9 +103,9 @@ public class StringTableProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object getPropertyValue() {
+    public String[][] getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            var originValue = (String[][]) super.getPropertyValue();
+            var originValue = super.getPropertyValue();
             if (originValue.length <= 0) {
                 return originValue;
             }
@@ -158,8 +158,7 @@ public class StringTableProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var data = (String[][]) propertyValue;
-        for (var row : data) {
+        for (var row : propertyValue) {
             var rowElement = new Element(XML_ELEMENT_ROW);
             for (var e : row) {
                 var colElement = new Element(XML_ELEMENT_COLUMN);

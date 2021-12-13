@@ -21,7 +21,7 @@ import org.jdom.Element;
 /**
  * The widget property for string. It also accept macro string $(macro).
  */
-public class StringProperty extends AbstractWidgetProperty {
+public class StringProperty extends AbstractWidgetProperty<String> {
 
     private boolean multiLine, saveAsCDATA;
 
@@ -47,14 +47,14 @@ public class StringProperty extends AbstractWidgetProperty {
     }
 
     public StringProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
-            boolean multiLine, boolean saveAsCDATA) {
+            boolean multiline, boolean saveAsCDATA) {
         super(prop_id, description, category, defaultValue);
-        this.multiLine = multiLine;
+        this.multiLine = multiline;
         this.saveAsCDATA = saveAsCDATA;
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public String checkValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -91,14 +91,14 @@ public class StringProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object readValueFromXML(Element propElement) {
+    public String readValueFromXML(Element propElement) {
         return propElement.getValue();
     }
 
     @Override
-    public Object getPropertyValue() {
+    public String getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            return OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) super.getPropertyValue());
+            return OPIBuilderMacroUtil.replaceMacros(widgetModel, super.getPropertyValue());
         } else {
             return super.getPropertyValue();
         }
@@ -110,7 +110,7 @@ public class StringProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public String toStringInRuleScript(Object propValue) {
+    public String toStringInRuleScript(String propValue) {
         return RuleData.QUOTE + super.toStringInRuleScript(propValue) + RuleData.QUOTE;
     }
 }

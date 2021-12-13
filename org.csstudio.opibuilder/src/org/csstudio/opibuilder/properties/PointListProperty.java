@@ -17,7 +17,7 @@ import org.jdom.Element;
 /**
  * The property for script.
  */
-public class PointListProperty extends AbstractWidgetProperty {
+public class PointListProperty extends AbstractWidgetProperty<PointList> {
 
     /**
      * XML ELEMENT name <code>POINT</code>.
@@ -52,7 +52,7 @@ public class PointListProperty extends AbstractWidgetProperty {
     }
 
     @Override
-    public Object checkValue(Object value) {
+    public PointList checkValue(Object value) {
         if (value == null) {
             return new PointList();
         }
@@ -83,9 +83,9 @@ public class PointListProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        var size = ((PointList) getPropertyValue()).size();
+        var size = getPropertyValue().size();
         for (var i = 0; i < size; i++) {
-            var point = ((PointList) getPropertyValue()).getPoint(i);
+            var point = getPropertyValue().getPoint(i);
             var pointElement = new Element(XML_ELEMENT_POINT);
             pointElement.setAttribute(XML_ATTRIBUTE_X, "" + point.x);
             pointElement.setAttribute(XML_ATTRIBUTE_Y, "" + point.y);
