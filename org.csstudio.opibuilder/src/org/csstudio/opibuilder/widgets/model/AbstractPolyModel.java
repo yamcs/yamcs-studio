@@ -59,7 +59,7 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         if (points.size() > 0) {
             var copy = points.getCopy();
             if (rememberPoints) {
-                this.rememberZeroDegreePoints(copy);
+                rememberZeroDegreePoints(copy);
             }
 
             var bounds = copy.getBounds();
@@ -135,10 +135,10 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      *            The current {@link PointList}
      */
     protected void rememberZeroDegreePoints(PointList points) {
-        if (this.getRotationAngle() == 0) {
+        if (getRotationAngle() == 0) {
             zeroDegreePoints = points.getCopy();
         } else {
-            zeroDegreePoints = this.rotatePoints(points, -this.getRotationAngle());
+            zeroDegreePoints = rotatePoints(points, -getRotationAngle());
         }
     }
 
@@ -165,9 +165,9 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     public final synchronized void setPropertyValue(Object propertyID, Object value) {
         if (propertyID.equals(PROP_POINTS)) {
             if (value instanceof PointList) {
-                this.setPoints((PointList) value, true);
+                setPoints((PointList) value, true);
             } else if (value instanceof int[]) {
-                this.setPoints(new PointList((int[]) value), true);
+                setPoints(new PointList((int[]) value), true);
             }
         } else if (propertyID.equals(PROP_XPOS) || propertyID.equals(PROP_YPOS)
                 || propertyID.equals(PROP_WIDTH) || propertyID.equals(PROP_HEIGHT)) {

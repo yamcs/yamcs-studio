@@ -33,7 +33,7 @@ public class ConnectionDeleteCommand extends Command {
             throw new IllegalArgumentException();
         }
         setLabel("Delete Connection");
-        this.connection = conn;
+        connection = conn;
     }
 
     @Override

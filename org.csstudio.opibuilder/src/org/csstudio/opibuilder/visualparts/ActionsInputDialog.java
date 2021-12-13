@@ -73,7 +73,7 @@ public class ActionsInputDialog extends TrayDialog {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.actionsInput = actionsInput.getCopy();
-        this.actionsList = this.actionsInput.getActionsList();
+        actionsList = this.actionsInput.getActionsList();
         hookedUpFirstActionToWidget = actionsInput.isFirstActionHookedUpToWidget();
         hookedUpAllActionsToWidget = actionsInput.isHookUpAllActionsToWidget();
         title = dialogTitle;
@@ -356,9 +356,9 @@ public class ActionsInputDialog extends TrayDialog {
             public void run() {
                 var selection = (IStructuredSelection) actionsViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    actionsList.remove((AbstractWidgetAction) selection.getFirstElement());
+                    actionsList.remove(selection.getFirstElement());
                     refreshActionsViewer(null);
-                    this.setEnabled(false);
+                    setEnabled(false);
                 }
             }
         };
@@ -419,8 +419,8 @@ public class ActionsInputDialog extends TrayDialog {
 
         public MenuAction(ActionType type) {
             this.type = type;
-            this.setText("Add " + type.getDescription());
-            this.setImageDescriptor(type.getIconImage());
+            setText("Add " + type.getDescription());
+            setImageDescriptor(type.getIconImage());
         }
 
         @Override

@@ -77,7 +77,7 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
 
         if (widgets != null) {
             if (_cursorLocation == null) {
-                this.fetchCurrentCursorLocation();
+                fetchCurrentCursorLocation();
             }
             var cursorControl = Display.getCurrent().getCursorControl();
 
@@ -231,7 +231,7 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
 
         var upperLeftCorner = pointList.getBounds().getLocation();
 
-        List<Point> result = new ArrayList<Point>(widgets.size());
+        List<Point> result = new ArrayList<>(widgets.size());
         for (var i = 0; i < widgets.size(); i++) {
             result.add(pointList.getPoint(i).translate(-upperLeftCorner.x, -upperLeftCorner.y));
         }

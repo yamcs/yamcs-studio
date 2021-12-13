@@ -36,7 +36,7 @@ public class StackedCommand {
 
         private String text;
 
-        private StackedState(String text) {
+        StackedState(String text) {
             this.text = text;
         }
 
@@ -62,7 +62,7 @@ public class StackedCommand {
     }
 
     public void updateExecutionState(Command command) {
-        this.execution = command;
+        execution = command;
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
@@ -127,7 +127,7 @@ public class StackedCommand {
     }
 
     public int getDelayMs() {
-        return this.delayMs;
+        return delayMs;
     }
 
     public void setMetaCommand(CommandInfo meta) {

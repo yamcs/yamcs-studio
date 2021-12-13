@@ -82,8 +82,8 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
 
         this.name = name;
         this.description = description;
-        this.argumentTypes = Arrays.<Class<?>> asList(VNumber.class, VNumber.class);
-        this.argumentNames = Arrays.asList(arg1Name, arg2Name);
+        argumentTypes = Arrays.<Class<?>> asList(VNumber.class, VNumber.class);
+        argumentNames = Arrays.asList(arg1Name, arg2Name);
     }
 
     @Override

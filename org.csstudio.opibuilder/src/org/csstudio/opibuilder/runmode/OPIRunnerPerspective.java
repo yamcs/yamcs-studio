@@ -41,7 +41,7 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
         private String description;
         private String view_id;
 
-        private Position(String description, String view_id) {
+        Position(String description, String view_id) {
             this.description = description;
             this.view_id = view_id;
         }

@@ -31,10 +31,10 @@ public final class WidgetActionMenuAction extends Action {
      */
     public WidgetActionMenuAction(AbstractWidgetAction widgetAction) {
         _widgetAction = widgetAction;
-        this.setText(_widgetAction.getDescription());
+        setText(_widgetAction.getDescription());
         Object adapter = widgetAction.getAdapter(IWorkbenchAdapter.class);
         if (adapter != null && adapter instanceof IWorkbenchAdapter) {
-            this.setImageDescriptor(((IWorkbenchAdapter) adapter).getImageDescriptor(widgetAction));
+            setImageDescriptor(((IWorkbenchAdapter) adapter).getImageDescriptor(widgetAction));
         }
         setEnabled(widgetAction.isEnabled());
     }

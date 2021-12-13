@@ -23,7 +23,7 @@ public class ScrollLockHandler extends AbstractHandler {
         var part = HandlerUtil.getActivePartChecked(event);
         var view = (CommandHistoryView) part;
 
-        var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        var service = PlatformUI.getWorkbench().getService(ICommandService.class);
         var command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
         var oldState = HandlerUtil.toggleCommandState(command);
         view.enableScrollLock(!oldState);

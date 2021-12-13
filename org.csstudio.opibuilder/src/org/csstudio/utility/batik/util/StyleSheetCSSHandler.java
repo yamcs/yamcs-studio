@@ -29,7 +29,7 @@ public class StyleSheetCSSHandler implements ICSSHandler {
     private final Map<StyleRule, CloneableStyleDeclaration> originalStyles;
 
     public StyleSheetCSSHandler(SVGCSSEngine cssEngine, StyleSheet styleSheet) {
-        this.originalStyles = new HashMap<StyleRule, CloneableStyleDeclaration>();
+        originalStyles = new HashMap<>();
         var numRules = styleSheet.getSize();
         for (var ruleIndex = 0; ruleIndex < numRules; ruleIndex++) {
             var rule = styleSheet.getRule(ruleIndex);
@@ -47,9 +47,9 @@ public class StyleSheetCSSHandler implements ICSSHandler {
             return;
         }
 
-        var newRedValue = new FloatValue((short) 1, (float) newColor.getRed());
-        var newGreenValue = new FloatValue((short) 1, (float) newColor.getGreen());
-        var newBlueValue = new FloatValue((short) 1, (float) newColor.getBlue());
+        var newRedValue = new FloatValue((short) 1, newColor.getRed());
+        var newGreenValue = new FloatValue((short) 1, newColor.getGreen());
+        var newBlueValue = new FloatValue((short) 1, newColor.getBlue());
         var newRGBColorValue = new RGBColorValue(newRedValue, newGreenValue, newBlueValue);
 
         for (var entry : originalStyles.entrySet()) {
@@ -98,18 +98,18 @@ public class StyleSheetCSSHandler implements ICSSHandler {
     protected class CloneableStyleDeclaration extends StyleDeclaration {
 
         public CloneableStyleDeclaration(StyleDeclaration sd) {
-            this.count = sd.size();
-            this.values = new Value[count];
+            count = sd.size();
+            values = new Value[count];
             for (var idx = 0; idx < count; idx++) {
-                this.values[idx] = sd.getValue(idx);
+                values[idx] = sd.getValue(idx);
             }
-            this.indexes = new int[count];
+            indexes = new int[count];
             for (var idx = 0; idx < count; idx++) {
-                this.indexes[idx] = sd.getIndex(idx);
+                indexes[idx] = sd.getIndex(idx);
             }
-            this.priorities = new boolean[count];
+            priorities = new boolean[count];
             for (var idx = 0; idx < count; idx++) {
-                this.priorities[idx] = sd.getPriority(idx);
+                priorities[idx] = sd.getPriority(idx);
             }
         }
 

@@ -25,7 +25,7 @@ public interface IOPIRuntime extends IWorkbenchPart, IAdaptable {
      * 
      * @param name
      */
-    public void setWorkbenchPartName(String name);
+    void setWorkbenchPartName(String name);
 
     /**
      * Set the OPI input. The OPI Runtime will reload OPI from the input.
@@ -33,15 +33,15 @@ public interface IOPIRuntime extends IWorkbenchPart, IAdaptable {
      * @param input
      * @throws PartInitException
      */
-    public void setOPIInput(IEditorInput input) throws PartInitException;
+    void setOPIInput(IEditorInput input) throws PartInitException;
 
     /**
      * @return the OPI input of the runtime.
      */
-    public IEditorInput getOPIInput();
+    IEditorInput getOPIInput();
 
     /**
      * @return the display model in this runtime.
      */
-    public DisplayModel getDisplayModel();
+    DisplayModel getDisplayModel();
 }

@@ -12,9 +12,6 @@ package org.csstudio.ui.util.widgets;
 import java.text.NumberFormat;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
@@ -96,17 +93,14 @@ public class MeterWidget extends Canvas {
         // widget layout, so we don't use that option.
         // super(parent, style | SWT.NO_BACKGROUND);
         super(parent, SWT.NO_BACKGROUND);
-        addDisposeListener(new DisposeListener() {
-            @Override
-            public void widgetDisposed(DisposeEvent e) {
-                invalidateScale();
-                alarmColor.dispose();
-                warningColor.dispose();
-                okColor.dispose();
-                needleColor.dispose();
-                faceColor.dispose();
-                backgroundColor.dispose();
-            }
+        addDisposeListener(e -> {
+            invalidateScale();
+            alarmColor.dispose();
+            warningColor.dispose();
+            okColor.dispose();
+            needleColor.dispose();
+            faceColor.dispose();
+            backgroundColor.dispose();
         });
         addPaintListener(paintListener);
     }
@@ -239,46 +233,42 @@ public class MeterWidget extends Canvas {
         return endAngle + (startAngle - endAngle) * (max - value) / (max - min);
     }
 
-    private PaintListener paintListener = new PaintListener() {
+    private PaintListener paintListener = e -> {
+        // long start = System.nanoTime();
 
-        @Override
-        public void paintControl(PaintEvent e) {
-            // long start = System.nanoTime();
+        var gc = e.gc;
 
-            var gc = e.gc;
+        // Get the rectangle that exactly fills the 'inner' area
+        // such that drawRectangle() will match.
+        var displayArea = getClientArea();
 
-            // Get the rectangle that exactly fills the 'inner' area
-            // such that drawRectangle() will match.
-            var displayArea = getClientArea();
+        // paintScale(client_rect, gc);
 
-            // paintScale(client_rect, gc);
+        // Background and border
+        gc.setForeground(faceColor);
+        gc.setBackground(backgroundColor);
+        gc.setLineWidth(LINE_WIDTH);
+        gc.setLineCap(SWT.CAP_ROUND);
+        gc.setLineJoin(SWT.JOIN_ROUND);
 
-            // Background and border
-            gc.setForeground(faceColor);
-            gc.setBackground(backgroundColor);
-            gc.setLineWidth(LINE_WIDTH);
-            gc.setLineCap(SWT.CAP_ROUND);
-            gc.setLineJoin(SWT.JOIN_ROUND);
+        // To reduce flicker, the scale is drawn as a prepared image into
+        // the widget whose background has not been cleared.
+        createScaleImage(gc, displayArea);
+        if (getEnabled()) {
+            gc.drawImage(scaleImage, 0, 0);
 
-            // To reduce flicker, the scale is drawn as a prepared image into
-            // the widget whose background has not been cleared.
-            createScaleImage(gc, displayArea);
-            if (getEnabled()) {
-                gc.drawImage(scaleImage, 0, 0);
+            paintNeedle(gc);
+        } else { // Not enabled
+            var grayed = new Image(gc.getDevice(), scaleImage, SWT.IMAGE_DISABLE);
+            gc.drawImage(grayed, 0, 0);
+            grayed.dispose();
 
-                paintNeedle(gc);
-            } else { // Not enabled
-                var grayed = new Image(gc.getDevice(), scaleImage, SWT.IMAGE_DISABLE);
-                gc.drawImage(grayed, 0, 0);
-                grayed.dispose();
-
-                var message = "No numeric display info";
-                var size = gc.textExtent(message);
-                gc.drawString(message, (displayArea.width - size.x) / 2, (displayArea.height - size.y) / 2, true);
-            }
-
-            // System.out.println("MeterWidget paint: " + (System.nanoTime() - start));
+            var message = "No numeric display info";
+            var size = gc.textExtent(message);
+            gc.drawString(message, (displayArea.width - size.x) / 2, (displayArea.height - size.y) / 2, true);
         }
+
+        // System.out.println("MeterWidget paint: " + (System.nanoTime() - start));
     };
 
     private void paintNeedle(GC gc) {

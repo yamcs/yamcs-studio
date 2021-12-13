@@ -40,11 +40,11 @@ public class ExprVariable extends Expr {
     }
 
     public void setConstantValue(Expr value) {
-        this.constantValue = value;
+        constantValue = value;
     }
 
     public Expr getConstantValue() {
-        return this.constantValue;
+        return constantValue;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ExprVariable extends Expr {
     }
 
     public static ExprVariable[] findVariables(Expr expr) {
-        List<ExprVariable> vars = new ArrayList<ExprVariable>();
+        List<ExprVariable> vars = new ArrayList<>();
         findVariables(expr, vars);
         return vars.toArray(new ExprVariable[0]);
     }

@@ -14,7 +14,7 @@ package org.yamcs.studio.core.ui;
  */
 public interface XtceTreeNode<T> {
 
-    public String getName();
+    String getName();
 
-    public XtceTreeNode<T> getParent();
+    XtceTreeNode<T> getParent();
 }

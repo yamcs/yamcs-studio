@@ -31,7 +31,7 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
 
         private String description;
 
-        private Style(String description) {
+        Style(String description) {
             this.description = description;
         }
 

@@ -81,7 +81,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
             var doc = saxBuilder.build(new ByteArrayInputStream(bytes));
             var root = doc.getRootElement();
 
-            List<String> propIDList = new ArrayList<String>();
+            List<String> propIDList = new ArrayList<>();
             AbstractWidgetModel widgetModel = null;
             for (var o : root.getChildren()) {
                 if (o instanceof Element) {

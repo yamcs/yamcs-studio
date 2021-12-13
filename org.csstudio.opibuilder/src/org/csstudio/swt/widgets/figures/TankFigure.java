@@ -42,7 +42,6 @@ public class TankFigure extends AbstractLinearMarkedFigure {
     private Color fillBackgroundColor = GRAY_COLOR;
 
     public TankFigure() {
-        super();
         ((LinearScale) scale).setOrientation(Orientation.VERTICAL);
         scale.setScaleLineVisible(false);
 
@@ -127,7 +126,6 @@ public class TankFigure extends AbstractLinearMarkedFigure {
         private Boolean support3d;
 
         public Tank() {
-            super();
             setOutline(true);
         }
 

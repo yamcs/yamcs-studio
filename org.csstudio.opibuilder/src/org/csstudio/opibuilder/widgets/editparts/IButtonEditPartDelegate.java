@@ -13,17 +13,17 @@ import org.eclipse.draw2d.IFigure;
 
 public interface IButtonEditPartDelegate {
 
-    public abstract IFigure doCreateFigure();
+    IFigure doCreateFigure();
 
-    public abstract void hookMouseClickAction();
+    void hookMouseClickAction();
 
-    public abstract void deactivate();
+    void deactivate();
 
-    public abstract void registerPropertyChangeHandlers();
+    void registerPropertyChangeHandlers();
 
-    public abstract void setValue(Object value);
+    void setValue(Object value);
 
-    public abstract Object getValue();
+    Object getValue();
 
-    public abstract boolean isSelected();
+    boolean isSelected();
 }

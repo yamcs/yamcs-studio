@@ -15,5 +15,5 @@ import org.eclipse.draw2d.IFigure;
  * An interface that for figures that provide text.
  */
 public interface ITextFigure extends IFigure {
-    public String getText();
+    String getText();
 }

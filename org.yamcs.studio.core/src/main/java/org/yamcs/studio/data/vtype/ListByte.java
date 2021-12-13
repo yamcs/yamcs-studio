@@ -33,27 +33,27 @@ public abstract class ListByte implements ListNumber, CollectionByte {
 
     @Override
     public double getDouble(int index) {
-        return (float) getByte(index);
+        return getByte(index);
     }
 
     @Override
     public float getFloat(int index) {
-        return (float) getByte(index);
+        return getByte(index);
     }
 
     @Override
     public long getLong(int index) {
-        return (long) getByte(index);
+        return getByte(index);
     }
 
     @Override
     public int getInt(int index) {
-        return (int) getByte(index);
+        return getByte(index);
     }
 
     @Override
     public short getShort(int index) {
-        return (short) getByte(index);
+        return getByte(index);
     }
 
     @Override

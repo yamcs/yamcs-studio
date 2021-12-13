@@ -50,14 +50,14 @@ public class RCPUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T findSourceProvider(IServiceLocator locator, String sourceName, Class<T> expectedClass) {
-        var service = (ISourceProviderService) locator.getService(ISourceProviderService.class);
+        var service = locator.getService(ISourceProviderService.class);
         return (T) service.getSourceProvider(sourceName);
     }
 
     public static void runCommand(String commandId) {
         var window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        var commandService = (ICommandService) window.getService(ICommandService.class);
-        var evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+        var commandService = window.getService(ICommandService.class);
+        var evaluationService = window.getService(IEvaluationService.class);
         try {
             var cmd = commandService.getCommand(commandId);
             if (cmd.isEnabled()) {

@@ -25,7 +25,6 @@ public final class CreateGuideCommand extends Command {
     private GuideModel _guide;
 
     public CreateGuideCommand(RulerModel parent, int position) {
-        super();
         _parent = parent;
         _position = position;
     }

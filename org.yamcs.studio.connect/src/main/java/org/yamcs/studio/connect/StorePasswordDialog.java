@@ -90,7 +90,7 @@ public class StorePasswordDialog extends TitleAreaDialog {
         gd = new GridData();
         gd.widthHint = 200;
         passwordText.setLayoutData(gd);
-        passwordText.addListener(SWT.KeyUp, evt -> this.updateState());
+        passwordText.addListener(SWT.KeyUp, evt -> updateState());
         passwordText.setFocus();
         l = new Label(contentArea, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);

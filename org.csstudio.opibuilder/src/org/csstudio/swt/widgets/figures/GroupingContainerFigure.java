@@ -72,10 +72,10 @@ public class GroupingContainerFigure extends Figure implements Introspectable {
     }
 
     public void setShowScrollBar(boolean show) {
-        if (this.showScrollbar == show) {
+        if (showScrollbar == show) {
             return;
         }
-        this.showScrollbar = show;
+        showScrollbar = show;
         scrollPane.setScrollBarVisibility(show ? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
     }
 }

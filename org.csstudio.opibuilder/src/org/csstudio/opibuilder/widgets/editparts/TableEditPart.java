@@ -159,7 +159,7 @@ public class TableEditPart extends AbstractBaseEditPart {
      * title input.
      */
     public void setAllowedHeaders(String[] headers) {
-        this.allowedHeaders = headers;
+        allowedHeaders = headers;
     }
 
     public String[] getAllowedHeaders() {

@@ -21,7 +21,6 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.FocusEvent;
 import org.eclipse.draw2d.FocusListener;
@@ -88,7 +87,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
     public ScaledSliderFigure() {
 
-        super();
         scale.setScaleLineVisible(false);
         scale.setTickLabelSide(LabelSide.Secondary);
 
@@ -117,12 +115,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         add(thumb, XSliderLayout.THUMB);
         add(label, "label");
 
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                revalidate();
-            }
-        });
+        addFigureListener(source -> revalidate());
 
         addKeyListener(new KeyListener() {
             @Override
@@ -430,14 +423,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                             timer = new OPITimer();
                         }
                         if (timer.isDue()) {
-                            timer.start(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // This call is what finally sets the PV value to the
-                                    // latest cached value.
-                                    fireManualValueChange(value);
-                                }
-                            }, 100);
+                            timer.start(() -> fireManualValueChange(value), 100);
                         }
                     }
                     start = new Point(horizontal ? valuePosition : 0, horizontal ? 0 : valuePosition);
@@ -468,8 +454,8 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 double valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
                 start = new Point(horizontal ? valuePosition : 0, horizontal ? 0 : valuePosition);
                 label.setVisible(true);
-                if (!ScaledSliderFigure.this.hasFocus()) {
-                    ScaledSliderFigure.this.requestFocus();
+                if (!hasFocus()) {
+                    requestFocus();
                 }
                 me.consume();
 
@@ -498,7 +484,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         private Color temp;
 
         public Thumb() {
-            super();
             setOutline(true);
             setFill(true);
             setCursor(Cursors.HAND);
@@ -547,28 +532,23 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         private boolean pageUp;
 
         public Track() {
-            super();
-
             setOutline(false);
             setForegroundColor(GRAY_COLOR);
             setCursor(Cursors.HAND);
 
-            behavior.setRunTask(new Runnable() {
-                @Override
-                public void run() {
-                    if (pageUp) {
-                        if (getValue() >= pressedValue) {
-                            behavior.suspend();
-                        } else {
-                            pageUp();
-                        }
-
+            behavior.setRunTask(() -> {
+                if (pageUp) {
+                    if (getValue() >= pressedValue) {
+                        behavior.suspend();
                     } else {
-                        if (getValue() <= pressedValue) {
-                            behavior.suspend();
-                        } else {
-                            pageDown();
-                        }
+                        pageUp();
+                    }
+
+                } else {
+                    if (getValue() <= pressedValue) {
+                        behavior.suspend();
+                    } else {
+                        pageDown();
                     }
                 }
             });

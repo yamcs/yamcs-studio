@@ -30,7 +30,6 @@ public abstract class AbstractWidgetTargetAction implements IObjectActionDelegat
     protected IStructuredSelection selection;
 
     public AbstractWidgetTargetAction() {
-        super();
     }
 
     @Override

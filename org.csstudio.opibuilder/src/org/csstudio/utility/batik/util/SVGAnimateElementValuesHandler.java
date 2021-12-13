@@ -28,7 +28,7 @@ public class SVGAnimateElementValuesHandler implements ICSSHandler {
 
     public SVGAnimateElementValuesHandler(CSSEngine cssEngine, SVGAnimateElement element) {
         this.element = element;
-        this.originalValuesStr = element.getAttribute("values");
+        originalValuesStr = element.getAttribute("values");
     }
 
     @Override

@@ -49,7 +49,8 @@ public class StringConverter {
         case ENUMERATED:
             return rv.getStringValue();
         case ARRAY:
-            return "[" + rv.getArrayValueList().stream().map(value -> toString(value)).collect(Collectors.joining(", "))
+            return "["
+                    + rv.getArrayValueList().stream().map(StringConverter::toString).collect(Collectors.joining(", "))
                     + "]";
         case AGGREGATE:
             var agg = rv.getAggregateValue();
@@ -122,7 +123,6 @@ public class StringConverter {
         if ((s.length() & 1) == 1) {
             s = "0" + s;
         }
-        ;
         var b = new byte[s.length() >> 1];
         for (var i = 0; i < b.length; i++) {
             b[i] = (byte) (Integer.parseInt(s.substring(2 * i, 2 * i + 2), 16) & 0xFF);

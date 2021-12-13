@@ -106,7 +106,7 @@ public final class MediaService {
         return fontData == null || fontData.length == 0;
     }
 
-    public synchronized static final MediaService getInstance() {
+    public synchronized static MediaService getInstance() {
         if (instance == null) {
             instance = new MediaService();
         }

@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
@@ -50,21 +49,18 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
     public void activate() {
         super.activate();
 
-        childrenPropertyChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getOldValue() instanceof Integer) {
-                    addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
-                } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
-                    var child = (EditPart) getViewer().getEditPartRegistry().get(evt.getOldValue());
-                    if (child != null) {
-                        removeChild(child);
-                    }
-                } else {
-                    refreshChildren();
+        childrenPropertyChangeListener = evt -> {
+            if (evt.getOldValue() instanceof Integer) {
+                addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
+            } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
+                var child = (EditPart) getViewer().getEditPartRegistry().get(evt.getOldValue());
+                if (child != null) {
+                    removeChild(child);
                 }
-                refreshVisuals();
+            } else {
+                refreshChildren();
             }
+            refreshVisuals();
         };
         getWidgetModel().getChildrenProperty().addPropertyChangeListener(childrenPropertyChangeListener);
     }

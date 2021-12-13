@@ -25,7 +25,7 @@ public class ScriptService {
     public enum ScriptType {
         JAVASCRIPT("JavaScript"), PYTHON("Python/Jython Script");
 
-        private ScriptType(String description) {
+        ScriptType(String description) {
             this.description = description;
         }
 

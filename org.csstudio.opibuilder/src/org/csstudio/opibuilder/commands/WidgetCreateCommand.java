@@ -124,7 +124,7 @@ public class WidgetCreateCommand extends Command {
             }
         }
         if (autoName) {
-            Map<String, Integer> nameMap = new HashMap<String, Integer>();
+            Map<String, Integer> nameMap = new HashMap<>();
             for (var child : container.getChildren()) {
                 var key = child.getName();
                 var tailNo = 0;

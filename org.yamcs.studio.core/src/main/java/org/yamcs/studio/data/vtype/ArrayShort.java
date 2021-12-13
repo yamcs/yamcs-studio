@@ -43,7 +43,7 @@ public final class ArrayShort extends ListShort implements Serializable {
     }
 
     @Override
-    public final IteratorShort iterator() {
+    public IteratorShort iterator() {
         return new IteratorShort() {
             private int index;
 
@@ -60,7 +60,7 @@ public final class ArrayShort extends ListShort implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 

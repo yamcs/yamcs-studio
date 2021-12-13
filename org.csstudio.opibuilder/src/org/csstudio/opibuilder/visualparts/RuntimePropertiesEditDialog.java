@@ -140,7 +140,7 @@ class PropertyDataEditingSupport extends EditingSupport {
     }
 
     private PropertyData getSelectedProperty() {
-        var selection = (IStructuredSelection) this.getViewer().getSelection();
+        var selection = (IStructuredSelection) getViewer().getSelection();
         if (selection.getFirstElement() instanceof PropertyData) {
             var property = (PropertyData) selection.getFirstElement();
             return property;

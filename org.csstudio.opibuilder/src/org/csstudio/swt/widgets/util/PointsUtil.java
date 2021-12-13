@@ -83,7 +83,7 @@ public final class PointsUtil {
      *            The angle to rotate
      * @return The rotated PointList
      */
-    public static final PointList rotatePoints(PointList points, double angle) {
+    public static PointList rotatePoints(PointList points, double angle) {
         var pointBounds = points.getBounds();
         var rotationPoint = pointBounds.getCenter();
         var newPoints = rotatePoints(points, angle, rotationPoint);
@@ -104,7 +104,7 @@ public final class PointsUtil {
      *            The angle to rotate
      * @return The rotated PointList
      */
-    public static final PointList rotatePoints(PointList points, double angle, Point center) {
+    public static PointList rotatePoints(PointList points, double angle, Point center) {
         var newPoints = new PointList();
 
         for (var i = 0; i < points.size(); i++) {
@@ -123,7 +123,7 @@ public final class PointsUtil {
      *            the center point.
      * @return the point after flipping.
      */
-    public static final Point flipPointHorizontally(Point point, int center) {
+    public static Point flipPointHorizontally(Point point, int center) {
         var newX = 2 * center - point.x;
         return new Point(newX, point.y);
     }
@@ -137,7 +137,7 @@ public final class PointsUtil {
      *            the center point.
      * @return the point after flipping.
      */
-    public static final Point flipPointVertically(Point point, int center) {
+    public static Point flipPointVertically(Point point, int center) {
         var newY = 2 * center - point.y;
         return new Point(point.x, newY);
     }
@@ -149,7 +149,7 @@ public final class PointsUtil {
      *            the points to be flipped.
      * @return the flipped points.
      */
-    public static final PointList flipPointsHorizontally(PointList points) {
+    public static PointList flipPointsHorizontally(PointList points) {
 
         var centerX = points.getBounds().x + points.getBounds().width / 2;
 
@@ -165,7 +165,7 @@ public final class PointsUtil {
      *            the center X position
      * @return the flipped points.
      */
-    public static final PointList flipPointsHorizontally(PointList points, int centerX) {
+    public static PointList flipPointsHorizontally(PointList points, int centerX) {
 
         var newPointList = new PointList();
 
@@ -183,7 +183,7 @@ public final class PointsUtil {
      *            the points to be flipped.
      * @return the flipped points.
      */
-    public static final PointList flipPointsVertically(PointList points) {
+    public static PointList flipPointsVertically(PointList points) {
 
         var centerY = points.getBounds().y + points.getBounds().height / 2;
 
@@ -199,7 +199,7 @@ public final class PointsUtil {
      *            the center Y position.
      * @return the flipped points.
      */
-    public static final PointList flipPointsVertically(PointList points, int centerY) {
+    public static PointList flipPointsVertically(PointList points, int centerY) {
 
         var newPointList = new PointList();
 

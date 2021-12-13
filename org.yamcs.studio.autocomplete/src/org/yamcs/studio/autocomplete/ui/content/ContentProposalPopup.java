@@ -535,11 +535,11 @@ public class ContentProposalPopup extends PopupDialog {
             if (crIndex > 0) {
                 newContents = newContents.substring(0, crIndex);
             }
-            this.contents = newContents;
+            contents = newContents;
             if (text != null && !text.isDisposed()) {
                 text.setText(contents);
                 text.pack();
-                this.adjustBounds();
+                adjustBounds();
             }
         }
 
@@ -644,18 +644,18 @@ public class ContentProposalPopup extends PopupDialog {
         super(adapter.getControl().getShell(), SWT.RESIZE | SWT.ON_TOP | SWT.NO_FOCUS, false, false, false, false,
                 false, null, infoText);
         this.adapter = adapter;
-        this.control = adapter.getControl();
+        control = adapter.getControl();
 
         // this.labelProvider = adapter.getLabelProvider();
-        this.partialContentImage = AutoCompletePlugin.getDefault().getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
+        partialContentImage = AutoCompletePlugin.getDefault().getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                 "icons/mglass-16.png");
-        this.partialContentImageSelected = AutoCompletePlugin.getDefault()
+        partialContentImageSelected = AutoCompletePlugin.getDefault()
                 .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID, "icons/mglass-16-white.png");
-        this.functionContentImage = AutoCompletePlugin.getDefault().getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
+        functionContentImage = AutoCompletePlugin.getDefault().getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                 "icons/function-16.png");
-        this.functionContentImageSelected = AutoCompletePlugin.getDefault()
+        functionContentImageSelected = AutoCompletePlugin.getDefault()
                 .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID, "icons/function-16-white.png");
-        this.nonSelectableItems = new ArrayList<>();
+        nonSelectableItems = new ArrayList<>();
 
         this.proposalList = proposalList;
         // When the popup is opened & the content is not already completed, we
@@ -690,8 +690,7 @@ public class ContentProposalPopup extends PopupDialog {
         // Use virtual where appropriate (see flag definition).
         if (USE_VIRTUAL) {
             proposalTable = new Table(wrapper, SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL | SWT.NO_FOCUS);
-            Listener listener = event -> handleSetData(event);
-            proposalTable.addListener(SWT.SetData, listener);
+            proposalTable.addListener(SWT.SetData, this::handleSetData);
 
             proposalTable.addListener(SWTPaintItem, event -> {
                 var item = (TableItem) event.item;
@@ -941,7 +940,7 @@ public class ContentProposalPopup extends PopupDialog {
         if (newProposalList == null) {
             newProposalList = getEmptyProposalArray();
         }
-        this.proposalList = newProposalList;
+        proposalList = newProposalList;
         if (!isValid()) {
             return;
         }
@@ -1263,7 +1262,7 @@ public class ContentProposalPopup extends PopupDialog {
             newProposalList = getEmptyProposalArray();
         }
         if (newProposalList.fullLength() == 0 && newProposalList.allResponded()) {
-            this.proposalList = newProposalList;
+            proposalList = newProposalList;
             close();
         } else {
             setProposals(newProposalList);

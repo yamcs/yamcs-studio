@@ -62,7 +62,6 @@ public final class PointListCreationTool extends TargetingTool {
      * Default constructor.
      */
     public PointListCreationTool() {
-        super();
     }
 
     @Override
@@ -170,7 +169,7 @@ public final class PointListCreationTool extends TargetingTool {
 
         if (commonEditParts == null) {
             // This is the first point. Register all ancestors to the list.
-            commonEditParts = new ArrayList<EditPart>();
+            commonEditParts = new ArrayList<>();
             var ep = getTargetEditPart();
             while (ep != null) {
                 commonEditParts.add(ep);
@@ -342,23 +341,20 @@ public final class PointListCreationTool extends TargetingTool {
 
     @Override
     protected EditPartViewer.Conditional getTargetingConditional() {
-        return new EditPartViewer.Conditional() {
-            @Override
-            public boolean evaluate(EditPart editpart) {
-                var targetEditPart = editpart.getTargetEditPart(getTargetRequest());
-                if (targetEditPart == null) {
-                    return false;
-                }
-
-                // If there is no point, the EditPart under the mouse is the target.
-                if (commonEditParts == null) {
-                    return true;
-                }
-
-                // If the EditPart under the mouse is not listed in the list of EditPart,
-                // it cannot be the target.
-                return commonEditParts.contains(targetEditPart);
+        return editpart -> {
+            var targetEditPart = editpart.getTargetEditPart(getTargetRequest());
+            if (targetEditPart == null) {
+                return false;
             }
+
+            // If there is no point, the EditPart under the mouse is the target.
+            if (commonEditParts == null) {
+                return true;
+            }
+
+            // If the EditPart under the mouse is not listed in the list of EditPart,
+            // it cannot be the target.
+            return commonEditParts.contains(targetEditPart);
         };
     }
 }

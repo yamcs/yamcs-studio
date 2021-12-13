@@ -13,5 +13,5 @@ import org.eclipse.draw2d.IFigure;
 
 public interface IImageLoadedListener {
 
-    public void imageLoaded(IFigure figure);
+    void imageLoaded(IFigure figure);
 }

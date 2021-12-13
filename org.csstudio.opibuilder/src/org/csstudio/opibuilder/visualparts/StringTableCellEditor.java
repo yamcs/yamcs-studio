@@ -69,7 +69,7 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
     }
 
     private List<String[]> arrayToList(String[][] content) {
-        List<String[]> input = new ArrayList<String[]>();
+        List<String[]> input = new ArrayList<>();
         if (content.length <= 0) {
             return input;
         }

@@ -33,7 +33,7 @@ public final class DeleteGuideCommand extends Command {
 
     @Override
     public void execute() {
-        oldParts = new HashMap<AbstractWidgetModel, Integer>(guide.getMap());
+        oldParts = new HashMap<>(guide.getMap());
         var iter = oldParts.keySet().iterator();
         while (iter.hasNext()) {
             guide.detachPart(iter.next());
@@ -47,7 +47,7 @@ public final class DeleteGuideCommand extends Command {
         var iter = oldParts.keySet().iterator();
         while (iter.hasNext()) {
             var model = iter.next();
-            guide.attachPart(model, ((Integer) oldParts.get(model)).intValue());
+            guide.attachPart(model, oldParts.get(model).intValue());
         }
     }
 }

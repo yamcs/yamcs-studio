@@ -24,7 +24,7 @@ public class ExprError extends Expr {
 
     public ExprError(String type, String message) {
         super(ExprType.Error);
-        this.errType = type;
+        errType = type;
         this.message = message;
     }
 

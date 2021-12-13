@@ -32,7 +32,7 @@ public abstract class SysData {
             .upperWarningLimit(maxMemory()).build();
 
     protected static double bytesToMebiByte(long bytes) {
-        return ((double) bytes) / (1024.0 * 1024.0);
+        return (bytes) / (1024.0 * 1024.0);
     }
 
     private static double maxMemory() {
@@ -68,9 +68,9 @@ public abstract class SysData {
     private void createAndSaveValue() {
         var newValue = createValue();
         if (newValue != null) {
-            this.value = newValue;
+            value = newValue;
         }
-        pvs.forEach(pv -> pv.notifyValueChange());
+        pvs.forEach(IPV::notifyValueChange);
     }
 
     abstract VType createValue();

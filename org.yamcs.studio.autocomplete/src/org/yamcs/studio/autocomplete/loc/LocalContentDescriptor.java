@@ -20,7 +20,7 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 
 public class LocalContentDescriptor extends ContentDescriptor {
 
-    private static Map<String, String> vTypes = new TreeMap<String, String>();
+    private static Map<String, String> vTypes = new TreeMap<>();
     static {
         vTypes.put("VString", "Creates a text PV");
         vTypes.put("VStringArray", "Creates a text array PV");
@@ -32,8 +32,8 @@ public class LocalContentDescriptor extends ContentDescriptor {
 
     private String vType;
     private String pvName;
-    private List<String> initialValues = new LinkedList<String>();
-    private List<Class<?>> initialValuesTypes = new LinkedList<Class<?>>();
+    private List<String> initialValues = new LinkedList<>();
+    private List<Class<?>> initialValuesTypes = new LinkedList<>();
 
     private boolean completingVType = false;
     private boolean completingInitialValue = false;

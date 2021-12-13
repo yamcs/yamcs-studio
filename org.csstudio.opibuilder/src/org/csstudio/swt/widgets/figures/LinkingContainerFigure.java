@@ -17,7 +17,6 @@ import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
@@ -63,18 +62,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
             }
         };
 
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateZoom();
-                    }
-                });
-
-            }
-        });
+        addFigureListener(source -> Display.getDefault().asyncExec(this::updateZoom));
 
         updateZoom();
     }
@@ -90,22 +78,12 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
     @Override
     public void setBorder(Border border) {
         super.setBorder(border);
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                updateZoom();
-            }
-        });
+        Display.getDefault().asyncExec(this::updateZoom);
     }
 
     public void setZoomToFitAll(boolean zoomToFitAll) {
         this.zoomToFitAll = zoomToFitAll;
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                updateZoom();
-            }
-        });
+        Display.getDefault().asyncExec(this::updateZoom);
     }
 
     /**

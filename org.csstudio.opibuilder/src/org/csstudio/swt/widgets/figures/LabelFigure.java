@@ -188,7 +188,7 @@ public class LabelFigure extends Figure implements Introspectable {
     }
 
     public void setHorizontalAlignment(H_ALIGN hAlignment) {
-        if (this.horizontalAlignment == hAlignment) {
+        if (horizontalAlignment == hAlignment) {
             return;
         }
         horizontalAlignment = hAlignment;
@@ -226,7 +226,7 @@ public class LabelFigure extends Figure implements Introspectable {
     }
 
     public void setVerticalAlignment(V_ALIGN vAlignment) {
-        if (this.verticalAlignment == vAlignment) {
+        if (verticalAlignment == vAlignment) {
             return;
         }
         verticalAlignment = vAlignment;
@@ -249,7 +249,7 @@ public class LabelFigure extends Figure implements Introspectable {
         String descripion;
 
         H_ALIGN(String description) {
-            this.descripion = description;
+            descripion = description;
         }
 
         @Override
@@ -273,7 +273,7 @@ public class LabelFigure extends Figure implements Introspectable {
         String descripion;
 
         V_ALIGN(String description) {
-            this.descripion = description;
+            descripion = description;
         }
 
         @Override

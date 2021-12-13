@@ -66,7 +66,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
     public FilePathCellDialogEditorWithFilter(Composite parent, AbstractWidgetModel widgetModel,
             String[] fileExtensions) {
         super(parent, "Open File");
-        this.orgFileExtensions = fileExtensions;
+        orgFileExtensions = fileExtensions;
         this.widgetModel = widgetModel;
         convertFileExtensions();
         var service = Platform.getPreferencesService();
@@ -78,7 +78,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
      */
     private void convertFileExtensions() {
         if (onlyWorkSpace) {
-            this.filters = orgFileExtensions;
+            filters = orgFileExtensions;
         } else {
             if (orgFileExtensions.length > 0) {
                 filters = new String[orgFileExtensions.length];
@@ -121,7 +121,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
                     }
                 }
                 if (!listToFind.isEmpty()) {
-                    filters = (String[]) listToFind.toArray(new String[listToFind.size()]);
+                    filters = listToFind.toArray(new String[listToFind.size()]);
                 }
             } else {
                 filters = IMAGE_EXTENSIONS;

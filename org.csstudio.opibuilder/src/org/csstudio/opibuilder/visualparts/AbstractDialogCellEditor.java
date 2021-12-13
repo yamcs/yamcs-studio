@@ -52,8 +52,8 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
     public void activate() {
         if (!_dialogIsOpen) {
             _dialogIsOpen = true;
-            this.openDialog(_shell, _title);
-            if (this.shouldFireChanges()) {
+            openDialog(_shell, _title);
+            if (shouldFireChanges()) {
                 fireApplyEditorValue();
             }
             _dialogIsOpen = false;

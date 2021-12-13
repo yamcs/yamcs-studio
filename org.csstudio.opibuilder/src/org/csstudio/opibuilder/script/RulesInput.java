@@ -20,7 +20,7 @@ public class RulesInput {
     private List<RuleData> ruleDataList;
 
     public RulesInput() {
-        ruleDataList = new ArrayList<RuleData>();
+        ruleDataList = new ArrayList<>();
     }
 
     public RulesInput(List<RuleData> ruleDataList) {

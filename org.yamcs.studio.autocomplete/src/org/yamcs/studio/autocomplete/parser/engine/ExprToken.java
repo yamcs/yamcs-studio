@@ -50,21 +50,21 @@ public class ExprToken {
     public ExprToken(ExprTokenType type, String val) {
         this.type = type;
         this.val = val;
-        this.doubleValue = 0.;
-        this.integerValue = 0;
+        doubleValue = 0.;
+        integerValue = 0;
     }
 
     public ExprToken(String val, double doubleValue) {
-        this.type = ExprTokenType.Decimal;
+        type = ExprTokenType.Decimal;
         this.val = val;
         this.doubleValue = doubleValue;
-        this.integerValue = 0;
+        integerValue = 0;
     }
 
     public ExprToken(String val, int integerValue) {
-        this.type = ExprTokenType.Integer;
+        type = ExprTokenType.Integer;
         this.val = val;
-        this.doubleValue = 0.;
+        doubleValue = 0.;
         this.integerValue = integerValue;
     }
 

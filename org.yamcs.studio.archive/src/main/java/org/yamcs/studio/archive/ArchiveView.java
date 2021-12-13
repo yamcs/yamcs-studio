@@ -76,7 +76,7 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
         replayOptionsGridData = new GridData(GridData.FILL_HORIZONTAL);
         replayOptions.setLayoutData(replayOptionsGridData);
 
-        var service = (ISourceProviderService) getSite().getService(ISourceProviderService.class);
+        var service = getSite().getService(ISourceProviderService.class);
         processorState = (ProcessorStateProvider) service
                 .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         processorState.addSourceProviderListener(this);
@@ -87,7 +87,7 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
         viewportChangeDebouncer = new Debouncer();
         timeline.addViewportChangeListener(evt -> {
             viewportChangeDebouncer.debounce(() -> {
-                Display.getDefault().asyncExec(() -> refreshData());
+                Display.getDefault().asyncExec(this::refreshData);
             }, 400, TimeUnit.MILLISECONDS);
         });
 
@@ -136,7 +136,7 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
             refreshData();
 
             var window = getViewSite().getWorkbenchWindow();
-            var service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            var service = window.getService(ISourceProviderService.class);
             var commandState = (RefreshStateProvider) service.getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(instance != null);
         });

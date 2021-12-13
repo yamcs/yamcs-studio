@@ -359,7 +359,7 @@ public class StringTableEditor extends Composite {
             tableViewer.getTable().setEnabled(enabled);
             setButtonsEnable();
         } else {
-            for (var control : this.getChildren()) {
+            for (var control : getChildren()) {
                 control.setEnabled(enabled);
             }
         }

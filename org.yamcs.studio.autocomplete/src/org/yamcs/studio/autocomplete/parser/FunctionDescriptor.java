@@ -33,8 +33,7 @@ public class FunctionDescriptor extends ContentDescriptor {
     private int currentArgIndex = -1;
 
     public FunctionDescriptor() {
-        super();
-        args = new ArrayList<Object>();
+        args = new ArrayList<>();
     }
 
     public void addArgument(Object arg) {

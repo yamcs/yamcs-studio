@@ -198,7 +198,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     public void setShowRelativeTime(boolean enabled) {
-        this.showRelativeTime = enabled;
+        showRelativeTime = enabled;
     }
 
     public CommandHistoryRecord getPreviousRecord(CommandHistoryRecord rec) {

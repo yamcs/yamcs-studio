@@ -23,5 +23,5 @@ public interface CalendarWidgetListener {
      * @param calendar
      *            The current date and time.
      */
-    public void updatedCalendar(CalendarWidget source, Calendar calendar);
+    void updatedCalendar(CalendarWidget source, Calendar calendar);
 }

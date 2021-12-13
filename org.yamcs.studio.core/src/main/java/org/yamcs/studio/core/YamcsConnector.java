@@ -38,12 +38,12 @@ public class YamcsConnector implements IRunnableWithProgress {
 
     public YamcsConnector(Shell shell, YamcsConfiguration yprops) {
         this.shell = shell;
-        this.conf = yprops;
+        conf = yprops;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        YamcsPlugin.listeners().forEachRemaining(l -> l.onYamcsConnecting());
+        YamcsPlugin.listeners().forEachRemaining(YamcsAware::onYamcsConnecting);
 
         // All the things we want to fetch from Yamcs
         // (when the whole setup is successful, these get stored in YamcsPlugin
@@ -72,7 +72,7 @@ public class YamcsConnector implements IRunnableWithProgress {
             }
 
             YamcsPlugin.updateEntities(holder);
-            YamcsPlugin.listeners().forEachRemaining(l -> l.onYamcsConnected());
+            YamcsPlugin.listeners().forEachRemaining(YamcsAware::onYamcsConnected);
         } catch (BootstrapException e) {
             if (holder.yamcsClient != null) {
                 holder.yamcsClient.close();

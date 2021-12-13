@@ -178,7 +178,7 @@ public final class ImageUtils {
         // we need to adjust the gradient depending on the luminance unless
         // bright colors will appear in white
         int gradientWidth = 512, gradientHeight = 10;
-        var average = (int) sum / count;
+        var average = sum / count;
         var start = average - 32;
         if (start < 0) {
             start = 0;
@@ -367,9 +367,9 @@ public final class ImageUtils {
         var r = (pixelToShade & redMask) >> redShift;
         var g = (pixelToShade & greenMask) >> greenShift;
         var b = (pixelToShade & blueMask) >> blueShift;
-        r = (int) Math.round(r * ratioR);
-        g = (int) Math.round(g * ratioG);
-        b = (int) Math.round(b * ratioB);
+        r = Math.round(r * ratioR);
+        g = Math.round(g * ratioG);
+        b = Math.round(b * ratioB);
         if (r < 0) {
             r = 0;
         } else if (r > 255) {

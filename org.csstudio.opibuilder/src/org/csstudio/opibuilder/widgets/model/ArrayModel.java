@@ -41,7 +41,7 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
 
         private String description;
 
-        private ArrayDataType(String description) {
+        ArrayDataType(String description) {
             this.description = description;
         }
 

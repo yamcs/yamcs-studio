@@ -298,7 +298,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
     // ************************************************************
 
     public void setImageLoadedListener(IImageListener listener) {
-        this.imageListener = listener;
+        imageListener = listener;
     }
 
     @Override

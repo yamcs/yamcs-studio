@@ -36,9 +36,9 @@ public class DSFunctionSet {
      *            the description of the function set
      */
     public DSFunctionSet(DSFunctionSetDescription functionSetDescription) {
-        this.name = functionSetDescription.name;
-        this.description = functionSetDescription.description;
-        this.functions = Collections.unmodifiableSet(new TreeSet<>(functionSetDescription.functions));
+        name = functionSetDescription.name;
+        description = functionSetDescription.description;
+        functions = Collections.unmodifiableSet(new TreeSet<>(functionSetDescription.functions));
     }
 
     /**

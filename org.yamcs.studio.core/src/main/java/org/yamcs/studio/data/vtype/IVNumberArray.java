@@ -21,9 +21,9 @@ public abstract class IVNumberArray extends IVNumeric implements VNumberArray {
         super(alarm, time, display);
         this.sizes = sizes;
         if (dimDisplay == null) {
-            this.dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
+            dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
         } else {
-            this.dimensionDisplay = dimDisplay;
+            dimensionDisplay = dimDisplay;
         }
     }
 

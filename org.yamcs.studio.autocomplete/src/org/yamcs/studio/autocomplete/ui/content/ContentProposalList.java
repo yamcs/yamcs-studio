@@ -48,24 +48,24 @@ public class ContentProposalList {
     private boolean hasContentMatchingProposal = false;
 
     public ContentProposalList() {
-        topProposalList = new ArrayList<Proposal>();
-        proposalMap = new HashMap<String, Proposal[]>();
-        countMap = new HashMap<String, Integer>();
-        providerMap = new TreeMap<Integer, String>();
+        topProposalList = new ArrayList<>();
+        proposalMap = new HashMap<>();
+        countMap = new HashMap<>();
+        providerMap = new TreeMap<>();
         maxTopProposals = Preferences.getMaxTopResults();
     }
 
     public ContentProposalList(ContentProposalList list) {
-        this.originalValue = list.originalValue;
-        this.topProposalList = new ArrayList<Proposal>(list.topProposalList);
-        this.proposalMap = new HashMap<String, Proposal[]>(list.proposalMap);
-        this.countMap = new HashMap<String, Integer>(list.countMap);
-        this.providerMap = new TreeMap<Integer, String>(list.providerMap);
-        this.length = list.length;
-        this.expected = list.expected;
-        this.responded = list.responded;
-        this.maxTopProposals = list.maxTopProposals;
-        this.hasContentMatchingProposal = list.hasContentMatchingProposal;
+        originalValue = list.originalValue;
+        topProposalList = new ArrayList<>(list.topProposalList);
+        proposalMap = new HashMap<>(list.proposalMap);
+        countMap = new HashMap<>(list.countMap);
+        providerMap = new TreeMap<>(list.providerMap);
+        length = list.length;
+        expected = list.expected;
+        responded = list.responded;
+        maxTopProposals = list.maxTopProposals;
+        hasContentMatchingProposal = list.hasContentMatchingProposal;
     }
 
     public String getOriginalValue() {
@@ -120,7 +120,7 @@ public class ContentProposalList {
     }
 
     public List<Proposal> getTopProposalList() {
-        List<Proposal> list = new ArrayList<Proposal>();
+        List<Proposal> list = new ArrayList<>();
         if (topProposalList.size() == 0) {
             return list;
         }
@@ -129,7 +129,7 @@ public class ContentProposalList {
         originalTopProposal.addStyle(ProposalStyle.getDefault(0, originalValue.length()));
 
         if (topProposalList.size() == 1 && !originalValue.contains("*")
-                && topProposalList.get(0).getStartWithContent() == true) {
+                && topProposalList.get(0).getStartWithContent()) {
             list.add(topProposalList.get(0));
             list.add(originalTopProposal);
         } else {
@@ -182,7 +182,7 @@ public class ContentProposalList {
     }
 
     public List<String> getProviderList() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (var provider : providerMap.values()) {
             if (provider != null && !provider.isEmpty()) {
                 list.add(provider);

@@ -11,6 +11,7 @@ package org.yamcs.studio.autocomplete.proposals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.core.runtime.Assert;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
@@ -70,9 +71,9 @@ public class Proposal implements Comparable<Proposal> {
         Assert.isNotNull(isPartial);
         this.value = value;
         this.isPartial = isPartial;
-        this.occurrence = 1;
-        this.styles = new ArrayList<ProposalStyle>();
-        this.tooltips = new ArrayList<TooltipData>();
+        occurrence = 1;
+        styles = new ArrayList<>();
+        tooltips = new ArrayList<>();
     }
 
     public int getInsertionPos() {
@@ -92,7 +93,7 @@ public class Proposal implements Comparable<Proposal> {
     }
 
     public void addStyle(ProposalStyle style) {
-        this.styles.add(style);
+        styles.add(style);
     }
 
     public void addTooltipData(TooltipData td) {
@@ -153,10 +154,7 @@ public class Proposal implements Comparable<Proposal> {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
+        return Objects.hash(value);
     }
 
     @Override
@@ -171,11 +169,7 @@ public class Proposal implements Comparable<Proposal> {
             return false;
         }
         var other = (Proposal) obj;
-        if (value == null) {
-            if (other.value != null) {
-                return false;
-            }
-        } else if (!value.equals(other.value)) {
+        if (!Objects.equals(value, other.value)) {
             return false;
         }
         return true;
@@ -183,17 +177,17 @@ public class Proposal implements Comparable<Proposal> {
 
     @Override
     public int compareTo(Proposal arg0) {
-        if (this.startWithContent && !arg0.getStartWithContent()) {
+        if (startWithContent && !arg0.getStartWithContent()) {
             return -1;
-        } else if (!this.startWithContent && arg0.getStartWithContent()) {
+        } else if (!startWithContent && arg0.getStartWithContent()) {
             return 1;
         } else {
-            if (this.occurrence > arg0.getOccurrence()) {
+            if (occurrence > arg0.getOccurrence()) {
                 return -1;
-            } else if (this.occurrence < arg0.getOccurrence()) {
+            } else if (occurrence < arg0.getOccurrence()) {
                 return 1;
             } else {
-                return this.value.compareTo(arg0.value);
+                return value.compareTo(arg0.value);
             }
         }
     }

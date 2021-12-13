@@ -34,13 +34,13 @@ import org.eclipse.gef.handles.HandleBounds;
  */
 public final class PolylineFigure extends Polyline implements HandleBounds, Introspectable {
 
-    public static enum ArrowType {
+    public enum ArrowType {
         None("None"), From("From"), To("To"), Both("Both");
 
         String description;
 
-        private ArrowType(String desc) {
-            this.description = desc;
+        ArrowType(String desc) {
+            description = desc;
         }
 
         public static String[] stringValues() {
@@ -376,7 +376,7 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
      * Sets the orientation (horizontal==true | vertical==false).
      */
     public void setHorizontalFill(boolean horizontal) {
-        if (this.horizontalFill == horizontal) {
+        if (horizontalFill == horizontal) {
             return;
         }
         horizontalFill = horizontal;

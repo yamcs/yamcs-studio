@@ -87,7 +87,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected Object doGetValue() {
-        return this.listToPointList(_pointList);
+        return listToPointList(_pointList);
     }
 
     /**
@@ -310,7 +310,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             if (selectedIndices.length > 0) {
                 index = selectedIndices[0];
             }
-            var dialog = new PointDialog(this.getParentShell(), "Point", null, index, isNew);
+            var dialog = new PointDialog(getParentShell(), "Point", null, index, isNew);
             if (dialog.open() == Window.OK) {
                 setInput();
             }
@@ -491,7 +491,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         @Override
         protected void okPressed() {
-            this.getButton(IDialogConstants.OK_ID).setFocus();
+            getButton(IDialogConstants.OK_ID).setFocus();
             if (_index >= 0) {
                 if (!_isNew) {
                     _pointList.remove(_index);

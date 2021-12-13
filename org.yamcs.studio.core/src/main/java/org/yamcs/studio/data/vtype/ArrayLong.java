@@ -43,7 +43,7 @@ public final class ArrayLong extends ListLong implements Serializable {
     }
 
     @Override
-    public final IteratorLong iterator() {
+    public IteratorLong iterator() {
         return new IteratorLong() {
             private int index;
 
@@ -60,7 +60,7 @@ public final class ArrayLong extends ListLong implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 

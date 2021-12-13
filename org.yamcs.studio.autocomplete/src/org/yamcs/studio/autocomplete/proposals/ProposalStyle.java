@@ -33,10 +33,10 @@ public class ProposalStyle {
     }
 
     public ProposalStyle(ProposalStyle ps) {
-        this.from = ps.from;
-        this.to = ps.to;
-        this.fontStyle = ps.fontStyle;
-        this.fontColor = ps.fontColor;
+        from = ps.from;
+        to = ps.to;
+        fontStyle = ps.fontStyle;
+        fontColor = ps.fontColor;
     }
 
     public static ProposalStyle getDefault(int from, int to) {

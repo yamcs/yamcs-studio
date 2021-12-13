@@ -52,9 +52,9 @@ public abstract class StateData {
     private void createAndSaveValue() {
         var newValue = createValue();
         if (newValue != null) {
-            this.value = newValue;
+            value = newValue;
         }
-        pvs.forEach(pv -> pv.notifyValueChange());
+        pvs.forEach(IPV::notifyValueChange);
     }
 
     abstract VType createValue();

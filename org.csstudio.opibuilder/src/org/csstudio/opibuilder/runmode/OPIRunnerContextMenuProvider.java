@@ -48,7 +48,7 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
         addWidgetActionToMenu(menu);
         GEFActionConstants.addStandardActionGroups(menu);
 
-        var actionRegistry = (ActionRegistry) opiRuntime.getAdapter(ActionRegistry.class);
+        var actionRegistry = opiRuntime.getAdapter(ActionRegistry.class);
         var action = actionRegistry.getAction(ActionFactory.REFRESH.getId());
         if (action != null) {
             menu.appendToGroup(GEFActionConstants.GROUP_PRINT, action);

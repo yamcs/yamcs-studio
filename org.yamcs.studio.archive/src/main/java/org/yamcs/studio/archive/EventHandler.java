@@ -20,7 +20,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 
 public class EventHandler implements MouseListener, MouseMoveListener {
 
-    private static enum Tool {
+    private enum Tool {
         HAND, RANGE_SELECT,
     }
 

@@ -24,13 +24,13 @@ public class SortedListView extends ListDouble {
         for (var i = 0; i < indexArray.length; i++) {
             indexArray[i] = i;
         }
-        this.indexes = new ArrayInt(indexArray);
+        indexes = new ArrayInt(indexArray);
     }
 
     SortedListView(ListNumber values, ListInt indexes) {
         this.values = values;
         this.indexes = indexes;
-        this.indexArray = null;
+        indexArray = null;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class SortedListView extends ListDouble {
         var j = right;
         while (true) {
             while (less(list.getDouble(++i), list.getDouble(right))) {
-                ; // a[right] acts as sentinel
+                // a[right] acts as sentinel
             }
             while (less(list.getDouble(right), list.getDouble(--j))) // find item on right to swap
             {

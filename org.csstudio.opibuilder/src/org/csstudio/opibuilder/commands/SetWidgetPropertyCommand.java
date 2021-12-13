@@ -46,7 +46,7 @@ public class SetWidgetPropertyCommand extends Command {
      *            The new value for the property
      */
     public SetWidgetPropertyCommand(AbstractWidgetModel widget, String prop_id, Object newValue) {
-        this.widgetModel = widget;
+        widgetModel = widget;
         this.prop_id = prop_id;
         this.newValue = newValue;
         setLabel("Set " + prop_id);

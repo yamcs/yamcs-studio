@@ -30,10 +30,10 @@ public class TopProposalFinder {
     }
 
     public List<Proposal> getTopProposals(String name, Collection<String> proposals) {
-        Set<Proposal> set = new LinkedHashSet<Proposal>();
+        Set<Proposal> set = new LinkedHashSet<>();
 
         if (delimiters == null || delimiters.isEmpty()) {
-            return new ArrayList<Proposal>(set); // empty result
+            return new ArrayList<>(set); // empty result
         }
 
         var cleanedName = AutoCompleteHelper.trimWildcards(name);
@@ -54,7 +54,7 @@ public class TopProposalFinder {
                 }
             }
         }
-        return new ArrayList<Proposal>(set);
+        return new ArrayList<>(set);
     }
 
     private Proposal findToken(String s, int fromIndex) {

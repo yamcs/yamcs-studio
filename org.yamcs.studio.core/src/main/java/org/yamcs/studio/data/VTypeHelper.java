@@ -451,7 +451,7 @@ public class VTypeHelper {
     }
 
     private static String formatNumberArray(FormatEnum formatEnum, VNumberArray pmArray, int precision) {
-        var data = ((VNumberArray) pmArray).getData();
+        var data = pmArray.getData();
         if (formatEnum == FormatEnum.STRING) {
             var bytes = new byte[data.size()];
             // Copy bytes until end _or_ '\0'
@@ -563,12 +563,12 @@ public class VTypeHelper {
                 if (pmValue instanceof Display && ((Display) pmValue).getFormat() != null) {
                     if (numValue instanceof Float) {
                         // Use boxed float, to avoid the upcast to double
-                        return ((Display) pmValue).getFormat().format((Float) numValue);
+                        return ((Display) pmValue).getFormat().format(numValue);
                     } else if (numValue instanceof Byte || numValue instanceof Short || numValue instanceof Integer
                             || numValue instanceof Long) {
                         return ((Display) pmValue).getFormat().format(numValue);
                     } else {
-                        return ((Display) pmValue).getFormat().format(((Number) numValue).doubleValue());
+                        return ((Display) pmValue).getFormat().format(numValue.doubleValue());
                     }
                 } else {
                     return formatScalarNumber(FormatEnum.COMPACT, numValue, displayPrecision);
@@ -591,7 +591,7 @@ public class VTypeHelper {
                         return Float.toString(numValue.floatValue());
                     }
                     numberFormat = getDecimalFormat(precision);
-                    return numberFormat.format((Float) numValue); // Use boxed Float, to avoid the upcast to double
+                    return numberFormat.format(numValue); // Use boxed Float, to avoid the upcast to double
                 } else {
                     // Sun's implementation of the JDK returns the Unicode replacement
                     // character, U+FFFD, when asked to parse a NaN. This is more

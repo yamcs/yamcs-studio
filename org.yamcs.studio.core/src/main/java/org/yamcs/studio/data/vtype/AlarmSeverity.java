@@ -59,7 +59,7 @@ public enum AlarmSeverity {
      */
     UNDEFINED;
 
-    private static final List<String> labels = new AbstractList<String>() {
+    private static final List<String> labels = new AbstractList<>() {
         @Override
         public String get(int index) {
             return AlarmSeverity.values()[index].name();

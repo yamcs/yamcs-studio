@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
+import java.util.Objects;
+
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -27,7 +29,7 @@ public class ColorTuple implements Comparable<ColorTuple> {
     public int compareTo(ColorTuple o) {
         if (value < o.value) {
             return -1;
-        } else if (this.equals(o)) {
+        } else if (equals(o)) {
             return 0;
         } else {
             return 1;
@@ -36,13 +38,7 @@ public class ColorTuple implements Comparable<ColorTuple> {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((rgb == null) ? 0 : rgb.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(value);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hash(rgb, value);
     }
 
     @Override
@@ -57,11 +53,7 @@ public class ColorTuple implements Comparable<ColorTuple> {
             return false;
         }
         var other = (ColorTuple) obj;
-        if (rgb == null) {
-            if (other.rgb != null) {
-                return false;
-            }
-        } else if (!rgb.equals(other.rgb)) {
+        if (!Objects.equals(rgb, other.rgb)) {
             return false;
         }
         if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {

@@ -68,7 +68,7 @@ public class AddCommentHandler extends AbstractHandler {
                 @Override
                 protected Control createDialogArea(Composite parent) {
                     var res = super.createDialogArea(parent);
-                    ((GridData) this.getText().getLayoutData()).heightHint = 4 * this.getText().getLineHeight();
+                    ((GridData) getText().getLayoutData()).heightHint = 4 * getText().getLineHeight();
                     return res;
                 }
             };

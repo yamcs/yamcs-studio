@@ -33,12 +33,12 @@ public abstract class ListLong implements ListNumber, CollectionLong {
 
     @Override
     public double getDouble(int index) {
-        return (float) getLong(index);
+        return getLong(index);
     }
 
     @Override
     public float getFloat(int index) {
-        return (float) getLong(index);
+        return getLong(index);
     }
 
     @Override
@@ -73,17 +73,17 @@ public abstract class ListLong implements ListNumber, CollectionLong {
 
     @Override
     public void setInt(int index, int value) {
-        setLong(index, (long) value);
+        setLong(index, value);
     }
 
     @Override
     public void setShort(int index, short value) {
-        setLong(index, (long) value);
+        setLong(index, value);
     }
 
     @Override
     public void setByte(int index, byte value) {
-        setLong(index, (long) value);
+        setLong(index, value);
     }
 
     @Override

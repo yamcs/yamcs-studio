@@ -26,10 +26,10 @@ public class DuplicateTabCommand extends Command {
     private TabItem tabItem;
 
     public DuplicateTabCommand(TabEditPart tabEditPart) {
-        this.tabModel = tabEditPart.getWidgetModel();
-        this.tabIndex = tabEditPart.getActiveTabIndex() + 1;
+        tabModel = tabEditPart.getWidgetModel();
+        tabIndex = tabEditPart.getActiveTabIndex() + 1;
         try {
-            this.tabItem = tabEditPart.getTabItem(tabIndex - 1).getCopy();
+            tabItem = tabEditPart.getTabItem(tabIndex - 1).getCopy();
         } catch (Exception e) {
             var message = "Failed to duplicate tab";
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);

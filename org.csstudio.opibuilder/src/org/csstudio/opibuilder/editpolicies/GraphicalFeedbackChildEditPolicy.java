@@ -107,7 +107,7 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
 
         if (hostEP.getModel() instanceof IPVWidgetModel && ((AbstractWidgetModel) (hostEP.getModel()))
                 .getProperty(IPVWidgetModel.PROP_PVNAME).isVisibleInPropSheet()) {
-            handleList.add(new PVWidgetSelectionHandle((GraphicalEditPart) hostEP));
+            handleList.add(new PVWidgetSelectionHandle(hostEP));
         }
         return handleList;
     }

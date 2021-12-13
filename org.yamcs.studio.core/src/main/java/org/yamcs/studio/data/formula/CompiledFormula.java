@@ -26,7 +26,7 @@ public class CompiledFormula {
     private FormulaRegistry registry = FormulaRegistry.getDefault();
 
     public CompiledFormula(String formulaString) {
-        this.rootNode = FormulaAst.formula(formulaString);
+        rootNode = FormulaAst.formula(formulaString);
     }
 
     public void updateInput(String pvName, VType value) {
@@ -67,7 +67,7 @@ public class CompiledFormula {
         var cardinality = argNodes.size();
         var functions = registry.findFunctions(func, cardinality);
 
-        var argumentValues = new ArrayList<Object>(cardinality);
+        var argumentValues = new ArrayList<>(cardinality);
         for (var argNode : argNodes) {
             argumentValues.add(executeExpression(argNode));
         }

@@ -25,14 +25,14 @@ public interface IAutoCompleteProposalProvider {
      * @param handler
      *            see {@link IContentProposalSearchHandler}.
      */
-    public void getProposals(String contents, IContentProposalSearchHandler handler);
+    void getProposals(String contents, IContentProposalSearchHandler handler);
 
     /** @return <code>true</code> if at least one provider is defined. */
-    public boolean hasProviders();
+    boolean hasProviders();
 
     /** Cancel the current request. */
-    public void cancel();
+    void cancel();
 
     /** @return current type, see {@link AutoCompleteTypes}. */
-    public String getType();
+    String getType();
 }

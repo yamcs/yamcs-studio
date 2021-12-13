@@ -317,9 +317,9 @@ public class AnimatedSVGCache {
         private float waitTimeSum = 0f;
 
         public TimedElementHandler(TimedElement te) {
-            this.simpleDur = te.getSimpleDur();
-            this.previousTime = te.getSimpleTime();
-            this.lastTime = te.getSimpleTime();
+            simpleDur = te.getSimpleDur();
+            previousTime = te.getSimpleTime();
+            lastTime = te.getSimpleTime();
         }
 
         public boolean update(TimedElement te) {

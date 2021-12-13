@@ -92,7 +92,6 @@ public class RoundScaleTickMarks extends Figure {
 
         minorTicksNumber = 2;
         minorGridStepInRadians = scale.getScaleTickLabels().getGridStepInRadians() / 2.0;
-        return;
     }
 
     /**

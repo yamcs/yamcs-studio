@@ -33,7 +33,7 @@ public class MacrosInput {
     private static final char QUOTE = '\"';
 
     public MacrosInput(LinkedHashMap<String, String> macros, boolean include_parent_macros) {
-        this.macrosMap = macros;
+        macrosMap = macros;
         this.include_parent_macros = include_parent_macros;
     }
 

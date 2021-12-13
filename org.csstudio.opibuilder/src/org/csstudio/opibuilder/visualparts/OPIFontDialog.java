@@ -92,8 +92,8 @@ public class OPIFontDialog extends TrayDialog {
     protected OPIFontDialog(Shell parentShell, OPIFont font, String dialogTitle) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        this.title = dialogTitle;
-        this.opiFont = new OPIFont(font);
+        title = dialogTitle;
+        opiFont = new OPIFont(font);
     }
 
     @Override

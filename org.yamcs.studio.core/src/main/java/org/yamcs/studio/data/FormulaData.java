@@ -84,7 +84,7 @@ public class FormulaData implements IPVListener {
 
     @Override
     public void connectionChanged(IPV input) {
-        pvs.forEach(pv -> pv.notifyConnectionChange());
+        pvs.forEach(IPV::notifyConnectionChange);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class FormulaData implements IPVListener {
     @Override
     public void valueChanged(IPV input) {
         formula.updateInput(input.getName(), input.getValue());
-        pvs.forEach(pv -> pv.notifyValueChange());
+        pvs.forEach(IPV::notifyValueChange);
     }
 
     @Override

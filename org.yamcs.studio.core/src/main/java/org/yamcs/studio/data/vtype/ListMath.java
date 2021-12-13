@@ -352,7 +352,7 @@ public class ListMath {
         double size = x.size();
 
         for (var i = 0; i < x.size(); i++) {
-            var arg = -direction * 2.0 * Math.PI * (double) i / size;
+            var arg = -direction * 2.0 * Math.PI * i / size;
             for (var k = 0; k < x.size(); k++) {
                 cosarg = Math.cos(k * arg);
                 sinarg = Math.sin(k * arg);

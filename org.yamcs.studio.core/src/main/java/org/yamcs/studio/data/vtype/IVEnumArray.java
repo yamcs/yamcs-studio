@@ -29,7 +29,7 @@ public class IVEnumArray extends IVMetadata implements VEnumArray {
             }
             tempArray.add(labels.get(index));
         }
-        this.array = tempArray;
+        array = tempArray;
         this.indexes = indexes;
         this.labels = labels;
         this.sizes = sizes;

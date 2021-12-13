@@ -20,6 +20,6 @@ public class PropertyData {
 
     public PropertyData(AbstractWidgetProperty property, Object value) {
         this.property = property;
-        this.tmpValue = value;
+        tmpValue = value;
     }
 }

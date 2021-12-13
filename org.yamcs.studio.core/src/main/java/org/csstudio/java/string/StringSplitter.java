@@ -74,8 +74,8 @@ public class StringSplitter {
         }
 
         return Pattern.compile(fullRegex).splitAsStream(escapedSource).filter(item -> !item.isEmpty())
-                .map(item -> item.trim()).map(item -> deleteHeadTailQuotes ? removeQuotes(item) : item)
-                .map(item -> revertQuoteSubsitutions(item)).toArray(size -> new String[size]);
+                .map(String::trim).map(item -> deleteHeadTailQuotes ? removeQuotes(item) : item)
+                .map(StringSplitter::revertQuoteSubsitutions).toArray(size -> new String[size]);
     }
 
     /**

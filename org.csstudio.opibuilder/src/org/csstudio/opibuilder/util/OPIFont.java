@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.util;
 
+import java.util.Objects;
+
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -42,21 +44,21 @@ public class OPIFont {
     private boolean sizeInPixels = false;
 
     public OPIFont(String name, FontData fontData) {
-        this.fontName = name;
-        this.rawFontData = fontData;
+        fontName = name;
+        rawFontData = fontData;
         preDefined = true;
     }
 
     public OPIFont(FontData fontData) {
-        this.fontName = fontData.toString();
-        this.rawFontData = fontData;
+        fontName = fontData.toString();
+        rawFontData = fontData;
         preDefined = false;
     }
 
     public OPIFont(OPIFont opiFont) {
         this(opiFont.getFontMacroName(), opiFont.rawFontData);
-        this.preDefined = opiFont.isPreDefined();
-        this.sizeInPixels = opiFont.isSizeInPixels();
+        preDefined = opiFont.isPreDefined();
+        sizeInPixels = opiFont.isSizeInPixels();
     }
 
     private int pixelsToPoints(int pixels) {
@@ -113,7 +115,7 @@ public class OPIFont {
      */
     public FontData getFontData() {
         var rawSize = rawFontData.getHeight();
-        if (this.sizeInPixels) {
+        if (sizeInPixels) {
             rawSize = pixelsToPoints(rawSize);
         }
         return new FontData(rawFontData.getName(), rawSize, rawFontData.getStyle());
@@ -125,7 +127,7 @@ public class OPIFont {
      * @return the raw FontData.
      */
     public FontData getRawFontData() {
-        return this.rawFontData;
+        return rawFontData;
     }
 
     /**
@@ -155,7 +157,7 @@ public class OPIFont {
         var result = 1;
         result = prime * result + ((rawFontData == null) ? 0 : rawFontData.hashCode());
         result = prime * result + ((fontName == null) ? 0 : fontName.hashCode());
-        result = prime * result + ((this.sizeInPixels) ? 0 : 1);
+        result = prime * result + ((sizeInPixels) ? 0 : 1);
         return result;
     }
 
@@ -174,18 +176,10 @@ public class OPIFont {
         if (other.sizeInPixels != sizeInPixels) {
             return false;
         }
-        if (rawFontData == null) {
-            if (other.rawFontData != null) {
-                return false;
-            }
-        } else if (!rawFontData.equals(other.rawFontData)) {
+        if (!Objects.equals(rawFontData, other.rawFontData)) {
             return false;
         }
-        if (fontName == null) {
-            if (other.fontName != null) {
-                return false;
-            }
-        } else if (!fontName.equals(other.fontName)) {
+        if (!Objects.equals(fontName, other.fontName)) {
             return false;
         }
         return true;

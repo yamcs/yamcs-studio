@@ -30,8 +30,8 @@ public class StringListSelectionDialog extends Dialog {
     protected Shell dialogShell;
     private StringListSelectionWidget stringListSelectionWidget;
 
-    private List<String> initialPossibleValues = new ArrayList<String>();
-    private List<String> initialSelectedValues = new ArrayList<String>();
+    private List<String> initialPossibleValues = new ArrayList<>();
+    private List<String> initialSelectedValues = new ArrayList<>();
 
     private final String title;
 
@@ -49,8 +49,8 @@ public class StringListSelectionDialog extends Dialog {
             String title) {
         super(parent);
         setShellStyle(SWT.RESIZE | SWT.DIALOG_TRIM);
-        this.initialPossibleValues = possibleValues;
-        this.initialSelectedValues = selectedValues;
+        initialPossibleValues = possibleValues;
+        initialSelectedValues = selectedValues;
         this.title = title;
     }
 

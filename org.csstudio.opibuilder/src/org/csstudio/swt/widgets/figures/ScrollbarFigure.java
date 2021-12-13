@@ -22,13 +22,9 @@ import org.csstudio.swt.widgets.util.OPITimer;
 import org.csstudio.ui.util.CSSButtonBorder;
 import org.csstudio.ui.util.CSSSchemeBorder;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.draw2d.ActionEvent;
-import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.ArrowButton;
 import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.ButtonBorder;
-import org.eclipse.draw2d.ChangeEvent;
-import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -227,14 +223,11 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         var clickable = new Clickable();
         clickable.setOpaque(true);
         clickable.setBackgroundColor(COLOR_TRACK);
-        clickable.addChangeListener(new ChangeListener() {
-            @Override
-            public void handleStateChanged(ChangeEvent evt) {
-                if (clickable.getModel().isArmed()) {
-                    clickable.setBackgroundColor(ColorConstants.black);
-                } else {
-                    clickable.setBackgroundColor(COLOR_TRACK);
-                }
+        clickable.addChangeListener(evt -> {
+            if (clickable.getModel().isArmed()) {
+                clickable.setBackgroundColor(ColorConstants.black);
+            } else {
+                clickable.setBackgroundColor(COLOR_TRACK);
             }
         });
         return clickable;
@@ -291,12 +284,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     }
 
     private void hookFocusListener(Clickable up) {
-        up.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                if (!hasFocus()) {
-                    requestFocus();
-                }
+        up.addActionListener(event -> {
+            if (!hasFocus()) {
+                requestFocus();
             }
         });
     }
@@ -360,17 +350,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         if (labelTimer == null) {
             var display = Display.getCurrent();
             labelTimer = new OPITimer();
-            timerTask = new Runnable() {
-                @Override
-                public void run() {
-                    display.asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            label.setVisible(false);
-                        }
-                    });
-                }
-            };
+            timerTask = () -> display.asyncExec(() -> label.setVisible(false));
         }
     }
 
@@ -473,12 +453,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
                 ((Orientable) buttonDown).setDirection(isHorizontal() ? Orientable.EAST : Orientable.SOUTH);
             }
             buttonDown.setFiringMethod(Clickable.REPEAT_FIRING);
-            buttonDown.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    stepDown();
-                }
-            });
+            buttonDown.addActionListener(e -> stepDown());
             add(buttonDown, ScrollBarLayout.DOWN_ARROW);
         }
     }
@@ -560,12 +535,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         pageDown = down;
         if (pageDown != null) {
             pageDown.setFiringMethod(Clickable.REPEAT_FIRING);
-            pageDown.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    pageDown();
-                }
-            });
+            pageDown.addActionListener(event -> pageDown());
             add(down, ScrollBarLayout.PAGE_DOWN);
         }
     }
@@ -587,12 +557,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         pageUp = up;
         if (pageUp != null) {
             pageUp.setFiringMethod(Clickable.REPEAT_FIRING);
-            pageUp.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    pageUp();
-                }
-            });
+            pageUp.addActionListener(event -> pageUp());
             add(pageUp, ScrollBarLayout.PAGE_UP);
         }
     }
@@ -656,12 +621,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
                 ((Orientable) up).setDirection(isHorizontal() ? Orientable.WEST : Orientable.NORTH);
             }
             buttonUp.setFiringMethod(Clickable.REPEAT_FIRING);
-            buttonUp.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    stepUp();
-                }
-            });
+            buttonUp.addActionListener(e -> stepUp());
             add(buttonUp, ScrollBarLayout.UP_ARROW);
         }
     }
@@ -684,7 +644,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     }
 
     private void updateFormat() {
-        if (this.formatPattern != null) {
+        if (formatPattern != null) {
             return;
         }
         String tempPattern;

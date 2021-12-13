@@ -12,10 +12,8 @@ package org.yamcs.studio.autocomplete.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.yamcs.studio.autocomplete.AutoCompleteResult;
 import org.yamcs.studio.autocomplete.AutoCompleteService;
 import org.yamcs.studio.autocomplete.AutoCompleteType;
-import org.yamcs.studio.autocomplete.IAutoCompleteResultListener;
 import org.yamcs.studio.autocomplete.proposals.Proposal;
 import org.yamcs.studio.autocomplete.ui.content.ContentProposalList;
 import org.yamcs.studio.autocomplete.ui.content.IContentProposalSearchHandler;
@@ -32,7 +30,7 @@ public class AutoCompleteProposalProvider implements IAutoCompleteProposalProvid
 
     public AutoCompleteProposalProvider(String type) {
         this.type = type;
-        this.currentList = new ContentProposalList();
+        currentList = new ContentProposalList();
     }
 
     @Override
@@ -43,45 +41,38 @@ public class AutoCompleteProposalProvider implements IAutoCompleteProposalProvid
             currentList.setOriginalValue(contents);
         }
         var cns = AutoCompleteService.getInstance();
-        var expected = cns.get(currentId, AutoCompleteType.valueOf(type), contents, new IAutoCompleteResultListener() {
-            @Override
-            public void handleResult(Long uniqueId, Integer index, AutoCompleteResult result) {
-                if (uniqueId == currentId) {
-                    synchronized (currentList) {
-                        currentList.responseReceived();
-                    }
-                    if (result == null) {
-                        return;
-                    }
-
-                    List<Proposal> contentProposals = new ArrayList<Proposal>();
-                    if (result.getProposals() != null) {
-                        for (var proposal : result.getProposals()) {
-                            contentProposals.add(proposal);
-                        }
-                    }
-                    var contentProposalsArray = contentProposals.toArray(new Proposal[contentProposals.size()]);
-
-                    List<Proposal> topContentProposals = new ArrayList<Proposal>();
-                    if (result.getTopProposals() != null) {
-                        for (var proposal : result.getTopProposals()) {
-                            topContentProposals.add(proposal);
-                        }
-                    }
-
-                    ContentProposalList cpl = null;
-                    synchronized (currentList) {
-                        if (result.getProvider() != null) {
-                            currentList.addProposals(result.getProvider(), contentProposalsArray, result.getCount(),
-                                    index);
-                        }
-                        currentList.addTopProposals(topContentProposals);
-                        cpl = currentList.clone();
-                    }
-                    handler.handleResult(cpl);
-                    handler.handleTooltips(result.getTooltips());
-                    // System.out.println("PROCESSED: " + uniqueId + ", " + index);
+        var expected = cns.get(currentId, AutoCompleteType.valueOf(type), contents, (uniqueId, index, result) -> {
+            if (uniqueId == currentId) {
+                synchronized (currentList) {
+                    currentList.responseReceived();
                 }
+                if (result == null) {
+                    return;
+                }
+
+                List<Proposal> contentProposals = new ArrayList<>();
+                if (result.getProposals() != null) {
+                    contentProposals.addAll(result.getProposals());
+                }
+                var contentProposalsArray = contentProposals.toArray(new Proposal[contentProposals.size()]);
+
+                List<Proposal> topContentProposals = new ArrayList<>();
+                if (result.getTopProposals() != null) {
+                    topContentProposals.addAll(result.getTopProposals());
+                }
+
+                ContentProposalList cpl = null;
+                synchronized (currentList) {
+                    if (result.getProvider() != null) {
+                        currentList.addProposals(result.getProvider(), contentProposalsArray, result.getCount(),
+                                index);
+                    }
+                    currentList.addTopProposals(topContentProposals);
+                    cpl = currentList.clone();
+                }
+                handler.handleResult(cpl);
+                handler.handleTooltips(result.getTooltips());
+                // System.out.println("PROCESSED: " + uniqueId + ", " + index);
             }
         });
         currentList.setExpected(expected);

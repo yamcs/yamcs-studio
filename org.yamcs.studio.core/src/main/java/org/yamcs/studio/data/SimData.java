@@ -41,7 +41,7 @@ public class SimData {
                 if (newValue != null) {
                     value = newValue;
                 }
-                pvs.forEach(pv -> pv.notifyValueChange());
+                pvs.forEach(IPV::notifyValueChange);
             }
         } catch (Exception ex) {
             log.log(Level.WARNING, "Data simulation problem", ex);

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.commands.ChangeOrderCommand;
@@ -42,7 +43,7 @@ public class ChangeOrderAction extends SelectionAction {
         private String label;
         private String iconPath;
 
-        private OrderType(String label, String iconPath) {
+        OrderType(String label, String iconPath) {
             this.label = label;
             this.iconPath = iconPath;
         }
@@ -92,10 +93,7 @@ public class ChangeOrderAction extends SelectionAction {
 
         @Override
         public int hashCode() {
-            var prime = 31;
-            var result = 1;
-            result = prime * result + ((index == null) ? 0 : index.hashCode());
-            return result;
+            return Objects.hash(index);
         }
 
         @Override
@@ -110,11 +108,7 @@ public class ChangeOrderAction extends SelectionAction {
                 return false;
             }
             var other = (IndexedWidget) obj;
-            if (index == null) {
-                if (other.index != null) {
-                    return false;
-                }
-            } else if (!index.equals(other.index)) {
+            if (!Objects.equals(index, other.index)) {
                 return false;
             }
             return true;
@@ -139,7 +133,7 @@ public class ChangeOrderAction extends SelectionAction {
                         && ((EditPart) getSelectedObjects().get(0)).getModel() instanceof DisplayModel) {
             return false;
         }
-        Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<AbstractContainerModel, List<IndexedWidget>>();
+        Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<>();
         fillWidgetMap(widgetMap);
 
         // create compound command
@@ -179,7 +173,7 @@ public class ChangeOrderAction extends SelectionAction {
 
     @Override
     public void run() {
-        Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<AbstractContainerModel, List<IndexedWidget>>();
+        Map<AbstractContainerModel, List<IndexedWidget>> widgetMap = new HashMap<>();
         fillWidgetMap(widgetMap);
 
         var compoundCommand = new CompoundCommand(orderType.getLabel());

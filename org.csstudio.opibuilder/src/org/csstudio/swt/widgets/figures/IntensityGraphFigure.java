@@ -66,7 +66,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
      * Color depth of the image data in RGB1 mode, since SWT only support 8 bit color depth, it has to convert all data
      * to [0,255].
      */
-    public static enum ColorDepth {
+    public enum ColorDepth {
         BIT8("8 bit"), // No need to convert
         BIT16("16 bit"), // Convert by >>8
         BIT24("24 bit"), // Convert by >>16
@@ -74,7 +74,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         SCALE("Scaled to [Max, Min]"), // Convert by (x-min)/(max-min)*255
         LOWER8BIT("Use only lower 8 bits"); // Convert by &0xFF
 
-        private ColorDepth(String description) {
+        ColorDepth(String description) {
             this.description = description;
         }
 
@@ -125,7 +125,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          * @param selected
          *            Was mouse button clicked to select this location, or mouse simply moved?
          */
-        public void pixelInfoChanged(PixelInfo pixel_info, boolean selected);
+        void pixelInfoChanged(PixelInfo pixel_info, boolean selected);
     }
 
     /**
@@ -144,7 +144,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          * @param height
          *            height of ROI
          */
-        public void roiUpdated(int xIndex, int yIndex, int width, int height);
+        void roiUpdated(int xIndex, int yIndex, int width, int height);
     }
 
     /**
@@ -163,7 +163,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          * @param height
          *            height of ROI
          */
-        public String getROIInfo(int xIndex, int yIndex, int width, int height);
+        String getROIInfo(int xIndex, int yIndex, int width, int height);
     }
 
     class SinglePixelProfileCrossHair extends Figure {
@@ -390,8 +390,8 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          */
         public PrecisionPoint getDataLocation(double x, double y) {
             var clientArea = getClientArea();
-            var hIndex = croppedDataWidth * (x - clientArea.x) / (double) clientArea.width;
-            var vIndex = croppedDataHeight * (y - clientArea.y) / (double) clientArea.height;
+            var hIndex = croppedDataWidth * (x - clientArea.x) / clientArea.width;
+            var vIndex = croppedDataHeight * (y - clientArea.y) / clientArea.height;
             return new PrecisionPoint(hIndex, vIndex);
         }
 
@@ -408,8 +408,8 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             if (croppedDataHeight == 0 || croppedDataWidth == 0) {
                 return new PrecisionPoint(clientArea.x, clientArea.y);
             }
-            var x = (xIndex * clientArea.width) / (double) croppedDataWidth + clientArea.x;
-            var y = (yIndex * clientArea.height) / (double) croppedDataHeight + clientArea.y;
+            var x = (xIndex * clientArea.width) / croppedDataWidth + clientArea.x;
+            var y = (yIndex * clientArea.height) / croppedDataHeight + clientArea.y;
             return new PrecisionPoint(x, y);
         }
 
@@ -697,7 +697,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          *            value of the pixel
          * @return the information about this pixel.
          */
-        public String getPixelInfo(int xIndex, int yIndex, double xCoordinate, double yCoordinate, double pixelValue);
+        String getPixelInfo(int xIndex, int yIndex, double xCoordinate, double yCoordinate, double pixelValue);
     }
 
     private int dataWidth, dataHeight;
@@ -938,8 +938,8 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             var height = imageData.height;
             var width = imageData.width;
             // EDIT: added +1 to account for an early rounding problem
-            var x_ratio = (int) ((dataWidth << 16) / width) + 1;
-            var y_ratio = (int) ((dataHeight << 16) / height) + 1;
+            var x_ratio = (dataWidth << 16) / width + 1;
+            var y_ratio = (dataHeight << 16) / height + 1;
             // int x_ratio = (int)((w1<<16)/w2) ;
             // int y_ratio = (int)((h1<<16)/h2) ;
             int x2, y2;
@@ -1479,7 +1479,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
     public Color getRoiColor() {
         return roiColor;
-    };
+    }
 
     public void setROIDataBounds(String name, int xIndex, int yIndex, int width, int height) {
         if (roiMap.containsKey(name)) {

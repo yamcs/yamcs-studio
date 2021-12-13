@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.client.Acknowledgment;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
@@ -330,7 +331,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         }
 
         List<AckTableRecord> localAcks = rec.getCommand().getAcknowledgments().values().stream()
-                .filter(ack -> ack.isLocal()).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
+                .filter(Acknowledgment::isLocal).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
         localAckTableViewer.setInput(localAcks.toArray());
 
         List<AckTableRecord> extraAcks = rec.getCommand().getAcknowledgments().values().stream()

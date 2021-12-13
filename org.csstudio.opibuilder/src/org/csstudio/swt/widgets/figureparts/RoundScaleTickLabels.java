@@ -105,7 +105,7 @@ public class RoundScaleTickLabels extends Figure {
         // draw tick labels
         graphics.setFont(scale.getFont());
         for (var i = 0; i < tickLabelPositions.size(); i++) {
-            if (tickLabelVisibilities.get(i) == true) {
+            if (tickLabelVisibilities.get(i)) {
                 var text = tickLabels.get(i);
                 graphics.drawText(text, tickLabelAreas.get(i).x, tickLabelAreas.get(i).y);
             }
@@ -153,19 +153,19 @@ public class RoundScaleTickLabels extends Figure {
 
         if (scale.isDateEnabled()) {
             // by default, make the least step to be minutes
-            var timeStep = 60000l;
+            var timeStep = 60000L;
             if (scale.getTimeUnit() == Calendar.SECOND) {
-                timeStep = 1000l;
+                timeStep = 1000L;
             } else if (scale.getTimeUnit() == Calendar.MINUTE) {
-                timeStep = 60000l;
+                timeStep = 60000L;
             } else if (scale.getTimeUnit() == Calendar.HOUR_OF_DAY) {
-                timeStep = 3600000l;
+                timeStep = 3600000L;
             } else if (scale.getTimeUnit() == Calendar.DATE) {
-                timeStep = 86400000l;
+                timeStep = 86400000L;
             } else if (scale.getTimeUnit() == Calendar.MONTH) {
-                timeStep = 30l * 86400000l;
+                timeStep = 30L * 86400000L;
             } else if (scale.getTimeUnit() == Calendar.YEAR) {
-                timeStep = 365l * 86400000l;
+                timeStep = 365L * 86400000L;
             }
             var temp = gridStepHint + (timeStep - gridStepHint % timeStep);
             return temp;
@@ -443,7 +443,7 @@ public class RoundScaleTickLabels extends Figure {
             }
             tickLabelPositions.add(scale.getEndAngle() * Math.PI / 180);
         }
-    };
+    }
 
     /**
      * Gets max out length of tick label.

@@ -42,7 +42,7 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
             TextInputFigure superFigure) {
         this.editpart = editpart;
         this.model = model;
-        this.textInputFigure = superFigure;
+        textInputFigure = superFigure;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         textInputFigure.setFileSource(model.getFileSource());
         textInputFigure.setFileReturnPart(model.getFileReturnPart());
 
-        textInputFigure.addManualValueChangeListener(newValue -> outputText(newValue));
+        textInputFigure.addManualValueChangeListener(this::outputText);
 
         return textInputFigure;
     }

@@ -354,7 +354,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
     protected void createActions() {
         super.createActions();
 
-        ((IContextService) getEditorSite().getService(IContextService.class))
+        getEditorSite().getService(IContextService.class)
                 .activateContext("org.csstudio.opibuilder.opiEditor");
 
         var registry = getActionRegistry();
@@ -431,13 +431,13 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         getSelectionActions().add(action.getId());
 
         for (var dt : DistributeType.values()) {
-            action = new DistributeWidgetsAction((IWorkbenchPart) this, dt);
+            action = new DistributeWidgetsAction(this, dt);
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
         }
 
         for (var orderType : OrderType.values()) {
-            action = new ChangeOrderAction((IWorkbenchPart) this, orderType);
+            action = new ChangeOrderAction(this, orderType);
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
         }
@@ -780,7 +780,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                         return editPart;
                     }
                     return null;
-                };
+                }
             };
         }
         return synchronizer;
@@ -1010,7 +1010,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 thumbnail = null;
             }
             super.dispose();
-            OPIEditor.this.outlinePage = null;
+            outlinePage = null;
             outlinePage = null;
         }
 

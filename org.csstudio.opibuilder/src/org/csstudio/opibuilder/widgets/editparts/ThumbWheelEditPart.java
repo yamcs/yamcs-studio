@@ -49,7 +49,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        model = (ThumbWheelModel) getWidgetModel();
+        model = getWidgetModel();
 
         logic = new ThumbWheelLogic(0, model.getWholePartDigits(), model.getDecimalPartDigits());
 
@@ -57,7 +57,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
         logic.setMin(model.getMinimum());
 
         figure = new ThumbWheelFigure(logic.getIntegerWheels(), logic.getDecimalWheels(),
-                this.getExecutionMode() == ExecutionMode.RUN_MODE);
+                getExecutionMode() == ExecutionMode.RUN_MODE);
         model.setWholePartDigits(logic.getIntegerWheels());
         model.setDecimalPartDigits(logic.getDecimalWheels());
         var fontData = model.getFont().getFontData();

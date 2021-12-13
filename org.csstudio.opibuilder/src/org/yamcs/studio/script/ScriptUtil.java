@@ -125,7 +125,7 @@ public class ScriptUtil {
      *            "pvalue"])
      */
     public final static void executeEclipseCommand(String commandId, String[] parameters) {
-        var handlerService = (IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+        var handlerService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                 .getService(IHandlerService.class);
         try {
             if (parameters.length % 2 != 0) {
@@ -136,7 +136,7 @@ public class ScriptUtil {
             if (parameters.length == 0) {
                 handlerService.executeCommand(commandId, null);
             } else {
-                var commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                var commandService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                         .getService(ICommandService.class);
                 var params = new Parameterization[parameters.length / 2];
                 var c = commandService.getCommand(commandId);

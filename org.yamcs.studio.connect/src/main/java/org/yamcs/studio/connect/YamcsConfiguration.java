@@ -89,7 +89,7 @@ public class YamcsConfiguration {
     }
 
     public void setComment(String comment) {
-        this.name = comment;
+        name = comment;
     }
 
     public void setUser(String user) {
@@ -129,7 +129,7 @@ public class YamcsConfiguration {
     }
 
     public void setTransientPassword(String password) {
-        this.transientPassword = password;
+        transientPassword = password;
     }
 
     public String getTransientPassword() {

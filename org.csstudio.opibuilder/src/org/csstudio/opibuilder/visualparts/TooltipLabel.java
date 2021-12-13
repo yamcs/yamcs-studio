@@ -31,7 +31,7 @@ public class TooltipLabel extends Figure {
     }
 
     public TooltipLabel(AbstractBaseEditPart editPart) {
-        this.widgetModel = editPart.getWidgetModel();
+        widgetModel = editPart.getWidgetModel();
         this.editPart = editPart;
     }
 

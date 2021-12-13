@@ -34,13 +34,13 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
     private Map<String, List<FormulaFunction>> functions;
 
     public FormulaFunctionProvider() {
-        functions = new TreeMap<String, List<FormulaFunction>>();
+        functions = new TreeMap<>();
         for (var setName : FormulaRegistry.getDefault().listFunctionSets()) {
             var set = FormulaRegistry.getDefault().findFunctionSet(setName);
             for (var function : set.getFunctions()) {
                 var functionList = functions.get(function.getName());
                 if (functionList == null) {
-                    functionList = new ArrayList<FormulaFunction>();
+                    functionList = new ArrayList<>();
                     functions.put(function.getName(), functionList);
                 }
                 functionList.add(function);

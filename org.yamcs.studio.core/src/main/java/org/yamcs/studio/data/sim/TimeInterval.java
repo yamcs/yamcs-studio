@@ -139,8 +139,8 @@ public class TimeInterval {
     @Override
     public int hashCode() {
         var hash = 5;
-        hash = 29 * hash + (this.start != null ? this.start.hashCode() : 0);
-        hash = 29 * hash + (this.end != null ? this.end.hashCode() : 0);
+        hash = 29 * hash + (start != null ? start.hashCode() : 0);
+        hash = 29 * hash + (end != null ? end.hashCode() : 0);
         return hash;
     }
 }

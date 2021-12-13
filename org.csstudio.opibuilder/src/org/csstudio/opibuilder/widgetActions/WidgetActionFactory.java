@@ -31,7 +31,7 @@ public class WidgetActionFactory {
         private ImageDescriptor iconImage;
         private String description;
 
-        private ActionType(String description, ImageDescriptor iconImage) {
+        ActionType(String description, ImageDescriptor iconImage) {
             this.description = description;
             this.iconImage = iconImage;
         }

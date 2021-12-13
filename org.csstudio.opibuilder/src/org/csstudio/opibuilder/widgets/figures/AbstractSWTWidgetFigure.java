@@ -62,7 +62,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         @Override
         public void mouseEnter(MouseEvent e) {
             control.setToolTipText(getConnectionText() + editPart.getWidgetModel().getTooltip());
-        };
+        }
 
         private String getConnectionText() {
             if (editPart == null || editPart.getConnectionHandler() == null
@@ -115,7 +115,6 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      *            style of the SWT widget, which will be passed to {@link #createSWTWidget(Composite, int)}.
      */
     public AbstractSWTWidgetFigure(AbstractBaseEditPart editpart, int style) {
-        super();
         this.editPart = editpart;
         this.composite = (Composite) editpart.getViewer().getControl();
         // Disable tab traversal

@@ -17,11 +17,7 @@ import org.csstudio.opibuilder.util.WidgetsService;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -89,7 +85,7 @@ public class WidgetsSelectDialog extends Dialog {
         rightComposite.setLayoutData(gd);
 
         widgetsViewer = createWidgetsViewer(rightComposite);
-        List<String> widgetsList = new ArrayList<String>();
+        List<String> widgetsList = new ArrayList<>();
         for (var typeID : WidgetsService.getInstance().getAllWidgetTypeIDs()) {
             if (onlyPVWidgets && WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel()
                     .getProperty(AbstractPVWidgetModel.PROP_PVNAME) == null) {
@@ -137,19 +133,10 @@ public class WidgetsSelectDialog extends Dialog {
         viewer.setLabelProvider(new WidgetsListLableProvider());
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectedWidget = (String) ((StructuredSelection) viewer.getSelection()).getFirstElement();
-            }
-        });
+        viewer.addSelectionChangedListener(
+                event -> selectedWidget = (String) ((StructuredSelection) viewer.getSelection()).getFirstElement());
 
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                okPressed();
-            }
-        });
+        viewer.addDoubleClickListener(event -> okPressed());
 
         return viewer;
     }

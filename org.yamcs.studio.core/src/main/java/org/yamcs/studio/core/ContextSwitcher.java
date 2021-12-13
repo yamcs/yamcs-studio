@@ -43,9 +43,9 @@ public class ContextSwitcher implements IRunnableWithProgress {
      * Switch context to a new instance, using a specific processor.
      */
     public ContextSwitcher(String instance, String processor) {
-        this.yamcsClient = Objects.requireNonNull(YamcsPlugin.getYamcsClient());
-        this.serverInfo = Objects.requireNonNull(YamcsPlugin.getServerInfo());
-        this.userInfo = Objects.requireNonNull(YamcsPlugin.getUser());
+        yamcsClient = Objects.requireNonNull(YamcsPlugin.getYamcsClient());
+        serverInfo = Objects.requireNonNull(YamcsPlugin.getServerInfo());
+        userInfo = Objects.requireNonNull(YamcsPlugin.getUser());
         this.instance = instance;
         this.processor = processor;
     }

@@ -41,7 +41,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
     final private int typeId;
 
     /** Cache of types to the SerializableItemTransfer for that type */
-    final private static Map<String, SerializableItemTransfer> instances = new HashMap<String, SerializableItemTransfer>();
+    final private static Map<String, SerializableItemTransfer> instances = new HashMap<>();
 
     /**
      * @param classes

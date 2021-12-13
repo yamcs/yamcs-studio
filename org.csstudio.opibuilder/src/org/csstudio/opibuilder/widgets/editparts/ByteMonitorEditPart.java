@@ -65,7 +65,7 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        var model = (ByteMonitorModel) getWidgetModel();
+        var model = getWidgetModel();
 
         var fig = new ByteMonitorFigure();
         setModel(model);

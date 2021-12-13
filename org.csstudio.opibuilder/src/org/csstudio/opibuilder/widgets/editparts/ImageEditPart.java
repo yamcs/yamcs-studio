@@ -239,7 +239,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(PROP_DEGREE, (Integer) newValue);
+            setPropertyValue(PROP_DEGREE, newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
 
@@ -263,7 +263,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(PROP_FLIP_HORIZONTAL, (Boolean) newValue);
+            setPropertyValue(PROP_FLIP_HORIZONTAL, newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
             return false;
@@ -286,7 +286,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(PROP_FLIP_VERTICAL, (Boolean) newValue);
+            setPropertyValue(PROP_FLIP_VERTICAL, newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
             return false;

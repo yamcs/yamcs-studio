@@ -68,9 +68,9 @@ public class Colorizer {
 
             var color = new Color(Color.HSBtoRGB((float) temp_hue, (float) temp_sat, (float) temp_light));
 
-            final_red_lookup[i] = (int) (color.getRed());
-            final_green_lookup[i] = (int) (color.getGreen());
-            final_blue_lookup[i] = (int) (color.getBlue());
+            final_red_lookup[i] = (color.getRed());
+            final_green_lookup[i] = (color.getGreen());
+            final_blue_lookup[i] = (color.getBlue());
         }
     }
 
@@ -99,10 +99,10 @@ public class Colorizer {
                                 + lum_blue_lookup[color.getBlue()];
 
                         if (lightness > 0) {
-                            lum = (int) ((double) lum * (100f - lightness) / 100f);
+                            lum = (int) (lum * (100f - lightness) / 100f);
                             lum += 255f - (100f - lightness) * 255f / 100f;
                         } else if (lightness < 0) {
-                            lum = (int) (((double) lum * (lightness + 100f)) / 100f);
+                            lum = (int) ((lum * (lightness + 100f)) / 100f);
                         }
                         var final_color = new Color(final_red_lookup[lum], final_green_lookup[lum],
                                 final_blue_lookup[lum]);

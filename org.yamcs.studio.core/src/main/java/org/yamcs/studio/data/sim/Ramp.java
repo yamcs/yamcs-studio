@@ -55,9 +55,9 @@ public class Ramp extends SimFunction<VDouble> {
         this.min = min;
         this.max = max;
         if (step >= 0) {
-            this.currentValue = min - step;
+            currentValue = min - step;
         } else {
-            this.currentValue = max - step;
+            currentValue = max - step;
         }
         this.step = step;
         range = max - min;

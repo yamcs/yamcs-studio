@@ -23,7 +23,6 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
     final private boolean editable;
 
     public StringMultiColumnsLabelProvider(TableViewer tableViewer, boolean editable) {
-        super();
         this.tableViewer = tableViewer;
         this.editable = editable;
     }

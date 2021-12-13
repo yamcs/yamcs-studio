@@ -33,22 +33,22 @@ public abstract class ListShort implements ListNumber, CollectionShort {
 
     @Override
     public double getDouble(int index) {
-        return (float) getShort(index);
+        return getShort(index);
     }
 
     @Override
     public float getFloat(int index) {
-        return (float) getShort(index);
+        return getShort(index);
     }
 
     @Override
     public long getLong(int index) {
-        return (long) getShort(index);
+        return getShort(index);
     }
 
     @Override
     public int getInt(int index) {
-        return (int) getShort(index);
+        return getShort(index);
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class ListShort implements ListNumber, CollectionShort {
 
     @Override
     public void setByte(int index, byte value) {
-        setShort(index, (short) value);
+        setShort(index, value);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class IVTable implements VTable {
         for (var array : values) {
             maxCount = Math.max(maxCount, getDataSize(array));
         }
-        this.rowCount = maxCount;
+        rowCount = maxCount;
     }
 
     private static int getDataSize(Object data) {

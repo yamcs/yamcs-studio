@@ -123,7 +123,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     public ExceptionDetailsErrorDialog(Shell parentShell, String dialogTitle, String message, IStatus status,
             int displayMask) {
         super(parentShell);
-        this.title = dialogTitle == null ? JFaceResources.getString("Problem_Occurred") : dialogTitle;
+        title = dialogTitle == null ? JFaceResources.getString("Problem_Occurred") : dialogTitle;
         this.message = message == null ? status.getMessage()
                 : JFaceResources.format("Reason", new Object[] { message, status.getMessage() });
         this.status = status;
@@ -203,7 +203,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     @Override
     protected void createDialogAndButtonArea(Composite parent) {
         super.createDialogAndButtonArea(parent);
-        if (this.dialogArea instanceof Composite) {
+        if (dialogArea instanceof Composite) {
             // Create a label if there are no children to force a smaller layout
             var dialogComposite = (Composite) dialogArea;
             if (dialogComposite.getChildren().length == 0) {

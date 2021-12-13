@@ -13,12 +13,12 @@ public abstract class IteratorShort implements IteratorNumber {
 
     @Override
     public float nextFloat() {
-        return (float) nextShort();
+        return nextShort();
     }
 
     @Override
     public double nextDouble() {
-        return (double) nextShort();
+        return nextShort();
     }
 
     @Override
@@ -28,11 +28,11 @@ public abstract class IteratorShort implements IteratorNumber {
 
     @Override
     public int nextInt() {
-        return (int) nextShort();
+        return nextShort();
     }
 
     @Override
     public long nextLong() {
-        return (long) nextShort();
+        return nextShort();
     }
 }

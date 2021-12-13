@@ -64,7 +64,7 @@ public class LocalDatasource implements Datasource {
         var tokens = tokenize(pv.getName());
         var localName = tokens.get(0).toString();
 
-        var localData = name2data.computeIfAbsent(localName, x -> new LocalData(x));
+        var localData = name2data.computeIfAbsent(localName, LocalData::new);
         localData.setType((String) tokens.get(1));
         if (tokens.size() > 2) {
             localData.setInitialValue(tokens.get(2));

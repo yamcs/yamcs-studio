@@ -600,7 +600,7 @@ public class ValueFactory {
             }
             if (matches) {
                 @SuppressWarnings("unchecked")
-                var newList = (List<String>) list;
+                var newList = list;
                 return newVStringArray(Collections.unmodifiableList(newList), alarm, timeNow());
             } else {
                 throw new UnsupportedOperationException("Type " + value.getClass().getName() + " contains non Strings");

@@ -37,7 +37,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
 
     public SelectWorkspaceDialog() {
         super(null);
-        this.recentWorkspaces = UserPreferences.readWorkspaceHistory();
+        recentWorkspaces = UserPreferences.readWorkspaceHistory();
 
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }

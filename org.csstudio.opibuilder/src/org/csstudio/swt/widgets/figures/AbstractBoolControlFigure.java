@@ -17,7 +17,6 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -35,8 +34,8 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
         String description;
 
-        private ShowConfirmDialog(String desc) {
-            this.description = desc;
+        ShowConfirmDialog(String desc) {
+            description = desc;
         }
 
         public static String[] stringValues() {
@@ -104,12 +103,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
                         canceled = false;
                         fireManualValueChange(true);
                         if (isOpen) {
-                            Display.getCurrent().timerExec(100, new Runnable() {
-                                @Override
-                                public void run() {
-                                    fireManualValueChange(false);
-                                }
-                            });
+                            Display.getCurrent().timerExec(100, () -> fireManualValueChange(false));
                         }
                     } else {
                         canceled = true;
@@ -153,10 +147,9 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     /**
      * Listeners that react on manual boolean value change events.
      */
-    private List<IManualValueChangeListener> boolControlListeners = new ArrayList<IManualValueChangeListener>();
+    private List<IManualValueChangeListener> boolControlListeners = new ArrayList<>();
 
     public AbstractBoolControlFigure() {
-        super();
         buttonPresser = new ButtonPresser();
     }
 
@@ -246,14 +239,11 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
             }
         } else {
             InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "Password Input Dialog",
-                    "Please input the password", "", new IInputValidator() {
-                        @Override
-                        public String isValid(String newText) {
-                            if (newText.equals(password)) {
-                                return null;
-                            } else {
-                                return "Password error!";
-                            }
+                    "Please input the password", "", newText -> {
+                        if (newText.equals(password)) {
+                            return null;
+                        } else {
+                            return "Password error!";
                         }
                     }) {
                 @Override
@@ -306,7 +296,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     }
 
     public void setShowConfirmDialog(ShowConfirmDialog showConfirm) {
-        this.showConfirmDialog = showConfirm;
+        showConfirmDialog = showConfirm;
     }
 
     /**

@@ -51,12 +51,12 @@ public class TextEditManager extends DirectEditManager {
     private Font scaledFont;
     private boolean multiLine = true;
     private AbstractBaseEditPart editPart;
-    private ZoomListener zoomListener = newZoom -> updateScaledFont(newZoom);
+    private ZoomListener zoomListener = this::updateScaledFont;
 
     public TextEditManager(AbstractBaseEditPart source, CellEditorLocator locator, boolean multiline) {
         super(source, null, locator);
-        this.editPart = source;
-        this.multiLine = multiline;
+        editPart = source;
+        multiLine = multiline;
     }
 
     public TextEditManager(AbstractBaseEditPart source, CellEditorLocator locator) {

@@ -40,7 +40,7 @@ public class PolylineJumpConnection extends PolylineConnection {
     public PolylineJumpConnection(WidgetConnectionEditPart widgetConnectionEditPart) {
         this.widgetConnectionEditPart = widgetConnectionEditPart;
 
-        setClippingStrategy((childFigure) -> {
+        setClippingStrategy(childFigure -> {
             var bounds = childFigure.getBounds();
             if ((intersectionMap != null) && (lineJumpAdd != LineJumpAdd.NONE)) {
                 bounds.expand(lineJumpSize * 2, lineJumpSize * 2);
@@ -66,8 +66,8 @@ public class PolylineJumpConnection extends PolylineConnection {
 
     @Override
     public void paintFigure(Graphics graphics) {
-        pointsWithIntersection = this.widgetConnectionEditPart.getIntersectionPoints(this);
-        intersectionMap = this.widgetConnectionEditPart.getIntersectionMap();
+        pointsWithIntersection = widgetConnectionEditPart.getIntersectionPoints(this);
+        intersectionMap = widgetConnectionEditPart.getIntersectionMap();
 
         var previousPoint = getStart();
         for (var i = 1; i < pointsWithIntersection.size(); i++) {
@@ -83,7 +83,7 @@ public class PolylineJumpConnection extends PolylineConnection {
 
             var line = getPolyLine(previousPoint, point);
             line.paint(graphics);
-            this.setBounds(getBounds().union(line.getBounds()));
+            setBounds(getBounds().union(line.getBounds()));
 
             previousPoint = point;
         }
@@ -124,7 +124,7 @@ public class PolylineJumpConnection extends PolylineConnection {
 
         var arc = new Arc(intersectionPoint.x() - lineJumpSize, intersectionPoint.y() - lineJumpSize, lineJumpSize * 2,
                 lineJumpSize * 2, angle, 180);
-        this.setBounds(getBounds().union(arc.getBounds()));
+        setBounds(getBounds().union(arc.getBounds()));
         arc.paint(graphics);
     }
 
@@ -138,10 +138,10 @@ public class PolylineJumpConnection extends PolylineConnection {
         }
 
         var triangleLine1 = getPolyLine(intersectionEdges.getFirstPoint(), tipPoint);
-        this.setBounds(getBounds().union(triangleLine1.getBounds()));
+        setBounds(getBounds().union(triangleLine1.getBounds()));
 
         var triangleLine2 = getPolyLine(intersectionEdges.getLastPoint(), tipPoint);
-        this.setBounds(getBounds().union(triangleLine2.getBounds()));
+        setBounds(getBounds().union(triangleLine2.getBounds()));
         triangleLine1.paint(graphics);
         triangleLine2.paint(graphics);
     }
@@ -200,13 +200,13 @@ public class PolylineJumpConnection extends PolylineConnection {
         }
 
         var squareLine1 = getPolyLine(intersectionEdges.getFirstPoint(), squareCorner1);
-        this.setBounds(getBounds().union(squareLine1.getBounds()));
+        setBounds(getBounds().union(squareLine1.getBounds()));
 
         var squareLine2 = getPolyLine(squareCorner1, squareCorner2);
-        this.setBounds(getBounds().union(squareLine2.getBounds()));
+        setBounds(getBounds().union(squareLine2.getBounds()));
 
         var squareLine3 = getPolyLine(squareCorner2, intersectionEdges.getLastPoint());
-        this.setBounds(getBounds().union(squareLine3.getBounds()));
+        setBounds(getBounds().union(squareLine3.getBounds()));
 
         squareLine1.paint(graphics);
         squareLine2.paint(graphics);
@@ -276,15 +276,15 @@ public class PolylineJumpConnection extends PolylineConnection {
     }
 
     public void setLineJumpAdd(LineJumpAdd lineJumpAdd_) {
-        this.lineJumpAdd = lineJumpAdd_;
+        lineJumpAdd = lineJumpAdd_;
     }
 
     public void setLineJumpSize(int lineJumpSize_) {
-        this.lineJumpSize = lineJumpSize_;
+        lineJumpSize = lineJumpSize_;
     }
 
     public void setLineJumpStyle(LineJumpStyle lineJumpStyle_) {
-        this.lineJumpStyle = lineJumpStyle_;
+        lineJumpStyle = lineJumpStyle_;
     }
 
     public int getLineJumpSize() {

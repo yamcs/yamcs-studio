@@ -50,7 +50,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
 
         private String name, unitString;
 
-        private TemperatureUnit(String name, String unitString) {
+        TemperatureUnit(String name, String unitString) {
             this.name = name;
             this.unitString = unitString;
         }
@@ -89,7 +89,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
 
     public ThermometerFigure() {
 
-        super();
         ((LinearScale) scale).setOrientation(Orientation.VERTICAL);
         scale.setScaleLineVisible(false);
         pipe = new Pipe();
@@ -178,7 +177,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         var blue = 255 - fillColor.getBlue();
         var green = 255 - fillColor.getGreen();
         var red = fillColor.getRed();
-        this.contrastFillColor = CustomMediaFactory.getInstance().getColor(new RGB(red, green, blue));
+        contrastFillColor = CustomMediaFactory.getInstance().getColor(new RGB(red, green, blue));
         repaint();
     }
 
@@ -212,7 +211,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         private final Color EFFECT3D_BULB_COLOR = CustomMediaFactory.getInstance().getColor(new RGB(140, 140, 140));
 
         public Bulb() {
-            super();
             setOutline(true);
         }
 
@@ -297,7 +295,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         private final Color EFFECT3D_PIPE_COLOR = CustomMediaFactory.getInstance().getColor(new RGB(160, 160, 160));
 
         public Pipe() {
-            super();
             setOutline(true);
         }
 

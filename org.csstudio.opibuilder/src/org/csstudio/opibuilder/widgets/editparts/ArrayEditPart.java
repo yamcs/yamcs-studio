@@ -140,7 +140,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
                 elementDefaultValue = ((AbstractBaseEditPart) getChildren().get(0)).getValue();
                 initValueArray();
                 setValue(getValue());
-                var provider = (IWidgetInfoProvider) getWidgetModel().getChildren().get(0)
+                var provider = getWidgetModel().getChildren().get(0)
                         .getAdapter(IWidgetInfoProvider.class);
                 if (provider != null) {
                     var info = provider.getInfo(ArrayModel.ARRAY_UNIQUEPROP_ID);
@@ -633,7 +633,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             var value = (VType) newValue;
 
             if (value instanceof VNumberArray) {
-                var wrappedArray = VTypeHelper.getWrappedArray(((VNumberArray) value));
+                var wrappedArray = VTypeHelper.getWrappedArray((value));
                 if (wrappedArray != null) {
                     setValue(wrappedArray);
                 } else {
@@ -776,7 +776,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         }
         if (value.getClass().isArray()) {
             var index = getArrayFigure().getIndex();
-            this.valueArray = value;
+            valueArray = value;
             if (value instanceof String[]) {
                 var a = (String[]) value;
                 setChildrenValue(index, asList(a), ArrayDataType.STRING_ARRAY);

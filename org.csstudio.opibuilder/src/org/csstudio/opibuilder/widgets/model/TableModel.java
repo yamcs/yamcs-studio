@@ -10,8 +10,6 @@
 
 package org.csstudio.opibuilder.widgets.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -91,19 +89,9 @@ public class TableModel extends AbstractWidgetModel {
         addProperty(new BooleanProperty(PROP_COLUMN_HEADER_VISIBLE, "Column Header Visible",
                 WidgetPropertyCategory.Display, true));
 
-        headersProperty.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                updateContentPropertyTitles();
-            }
-        });
+        headersProperty.addPropertyChangeListener(evt -> updateContentPropertyTitles());
 
-        columnsCountProperty.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                updateContentPropertyTitles();
-            }
-        });
+        columnsCountProperty.addPropertyChangeListener(evt -> updateContentPropertyTitles());
     }
 
     public void updateContentPropertyTitles() {

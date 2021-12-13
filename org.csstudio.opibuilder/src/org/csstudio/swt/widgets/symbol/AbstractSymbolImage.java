@@ -56,8 +56,8 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     public AbstractSymbolImage(SymbolImageProperties sip, boolean runMode) {
         this.runMode = runMode;
-        this.currentColor = new Color(Display.getCurrent(), new RGB(0, 0, 0));
-        this.colorToChange = new Color(Display.getCurrent(), new RGB(0, 0, 0));
+        currentColor = new Color(Display.getCurrent(), new RGB(0, 0, 0));
+        colorToChange = new Color(Display.getCurrent(), new RGB(0, 0, 0));
         fillProperties(sip);
     }
 
@@ -65,18 +65,18 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         if (sip == null) {
             return;
         }
-        this.topCrop = sip.getTopCrop();
-        this.bottomCrop = sip.getBottomCrop();
-        this.leftCrop = sip.getLeftCrop();
-        this.rightCrop = sip.getRightCrop();
-        this.permutationMatrix = sip.getMatrix();
-        this.stretch = sip.isStretch();
-        this.autoSize = sip.isAutoSize();
-        this.animationDisabled = sip.isAnimationDisabled();
-        this.alignedToNearestSecond = sip.isAlignedToNearestSecond();
-        this.backgroundColor = sip.getBackgroundColor() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
+        topCrop = sip.getTopCrop();
+        bottomCrop = sip.getBottomCrop();
+        leftCrop = sip.getLeftCrop();
+        rightCrop = sip.getRightCrop();
+        permutationMatrix = sip.getMatrix();
+        stretch = sip.isStretch();
+        autoSize = sip.isAutoSize();
+        animationDisabled = sip.isAnimationDisabled();
+        alignedToNearestSecond = sip.isAlignedToNearestSecond();
+        backgroundColor = sip.getBackgroundColor() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
                 : sip.getBackgroundColor();
-        this.colorToChange = sip.getColorToChange() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
+        colorToChange = sip.getColorToChange() == null ? new Color(Display.getCurrent(), new RGB(0, 0, 0))
                 : sip.getColorToChange();
     }
 
@@ -134,7 +134,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         if (newColor == null || (currentColor != null && currentColor.equals(newColor))) {
             return;
         }
-        this.currentColor = newColor;
+        currentColor = newColor;
         resetData();
     }
 
@@ -146,17 +146,17 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         if (newColor == null || (colorToChange != null && colorToChange.equals(newColor))) {
             return;
         }
-        this.colorToChange = newColor;
+        colorToChange = newColor;
         resetData();
     }
 
     @Override
     public void setBackgroundColor(Color newColor) {
-        if ((this.backgroundColor == null && newColor == null)
-                || (this.backgroundColor != null && this.backgroundColor.equals(newColor))) {
+        if ((backgroundColor == null && newColor == null)
+                || (backgroundColor != null && backgroundColor.equals(newColor))) {
             return;
         }
-        this.backgroundColor = newColor;
+        backgroundColor = newColor;
     }
 
     @Override
@@ -169,16 +169,16 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     @Override
     public void setBounds(Rectangle newBounds) {
-        if (newBounds == null || newBounds.equals(this.bounds) || newBounds.width <= 0 || newBounds.height <= 0) {
+        if (newBounds == null || newBounds.equals(bounds) || newBounds.width <= 0 || newBounds.height <= 0) {
             return;
         }
-        if (this.bounds == null) {
-            this.bounds = newBounds.getCopy();
+        if (bounds == null) {
+            bounds = newBounds.getCopy();
             resizeImage();
             return;
         }
-        var oldBounds = this.bounds.getCopy();
-        this.bounds = newBounds.getCopy();
+        var oldBounds = bounds.getCopy();
+        bounds = newBounds.getCopy();
         if (autoSize) {
             var dim = getAutoSizedDimension();
             if (dim == null) {
@@ -196,10 +196,10 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     @Override
     public void setAbsoluteScale(double newScale) {
-        if (this.scale == newScale) {
+        if (scale == newScale) {
             return;
         }
-        this.scale = newScale;
+        scale = newScale;
     }
 
     @Override
@@ -260,7 +260,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     @Override
     public void setPermutationMatrix(PermutationMatrix permutationMatrix) {
-        this.oldPermutationMatrix = this.permutationMatrix;
+        oldPermutationMatrix = this.permutationMatrix;
         this.permutationMatrix = permutationMatrix;
         if (permutationMatrix == null
                 || (oldPermutationMatrix != null && oldPermutationMatrix.equals(permutationMatrix))) {
@@ -284,7 +284,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     @Override
     public void setAlignedToNearestSecond(boolean aligned) {
-        this.alignedToNearestSecond = aligned;
+        alignedToNearestSecond = aligned;
     }
 
     @Override

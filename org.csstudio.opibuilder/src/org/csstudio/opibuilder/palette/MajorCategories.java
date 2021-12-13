@@ -24,7 +24,7 @@ public enum MajorCategories {
 
     private String description;
 
-    private MajorCategories(String description) {
+    MajorCategories(String description) {
         this.description = description;
     }
 

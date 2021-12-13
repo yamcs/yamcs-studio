@@ -76,7 +76,6 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
      *            the index of the poly point, which should be dragged
      */
     public PolyPointDragTracker(GraphicalEditPart owner, int pointIndex) {
-        super();
         setDisabledCursor(Cursors.NO);
         assert owner != null;
         assert owner.getFigure() instanceof Polyline : "owner.getFigure() instanceof Polyline";

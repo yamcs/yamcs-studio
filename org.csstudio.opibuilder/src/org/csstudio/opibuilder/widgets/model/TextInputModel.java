@@ -39,7 +39,7 @@ public class TextInputModel extends TextUpdateModel {
 
         private String description;
 
-        private FOCUS_TRAVERSE(String description) {
+        FOCUS_TRAVERSE(String description) {
             this.description = description;
         }
 

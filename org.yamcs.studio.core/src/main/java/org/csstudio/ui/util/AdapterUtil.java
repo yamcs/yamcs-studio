@@ -131,7 +131,7 @@ public class AdapterUtil {
             }
 
             // Target class is an array
-            List<Object> adaptedElements = new ArrayList<Object>();
+            List<Object> adaptedElements = new ArrayList<>();
             var adaptedElementType = getComponentType(targetClass);
             Object[] savedArrayToGetType = null;
             for (var element : elementsToAdapt) {

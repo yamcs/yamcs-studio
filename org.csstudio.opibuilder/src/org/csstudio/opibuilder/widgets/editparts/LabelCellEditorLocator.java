@@ -56,6 +56,6 @@ public class LabelCellEditorLocator implements CellEditorLocator {
      *            The stickyNote to set
      */
     protected void setLabel(IFigure stickyNote) {
-        this.labelFigure = stickyNote;
+        labelFigure = stickyNote;
     }
 }

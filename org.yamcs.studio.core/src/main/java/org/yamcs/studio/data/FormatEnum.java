@@ -65,7 +65,7 @@ public enum FormatEnum {
 
     private String description;
 
-    private FormatEnum(String description) {
+    FormatEnum(String description) {
         this.description = description;
     }
 

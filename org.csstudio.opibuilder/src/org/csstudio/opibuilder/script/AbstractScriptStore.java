@@ -77,7 +77,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
     public AbstractScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
         this.scriptData = scriptData;
-        this.editPart = editpart;
+        editPart = editpart;
         this.pvArray = pvArray;
 
         editPart.addEditPartListener(new EditPartListener.Stub() {

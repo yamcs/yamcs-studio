@@ -57,8 +57,8 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         public String propIDPre;
         public String description;
 
-        private AxisProperty(String propertyIDPrefix, String description) {
-            this.propIDPre = propertyIDPrefix;
+        AxisProperty(String propertyIDPrefix, String description) {
+            propIDPre = propertyIDPrefix;
             this.description = description;
         }
 
@@ -83,8 +83,8 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         public String propIDPre;
         public String description;
 
-        private ROIProperty(String propertyIDPrefix, String description) {
-            this.propIDPre = propertyIDPrefix;
+        ROIProperty(String propertyIDPrefix, String description) {
+            propIDPre = propertyIDPrefix;
             this.description = description;
         }
 

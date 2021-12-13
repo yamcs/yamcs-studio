@@ -202,7 +202,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
     /**
      * style of the sash.
      */
-    public static enum SashStyle {
+    public enum SashStyle {
 
         /**
          * Invisible.
@@ -238,7 +238,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
 
         private String description;
 
-        private SashStyle(String description) {
+        SashStyle(String description) {
             this.description = description;
         }
 
@@ -344,7 +344,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
             boundsA.y = 0;
             boundsA.width = clietArea.width;
             boundsA.height = (int) (sashPosition * clietArea.height - sashWidth / 2);
-            ;
+
             boundsB.x = 0;
             boundsB.y = (int) (sashPosition * clietArea.height + sashWidth / 2);
             boundsB.width = clietArea.width;

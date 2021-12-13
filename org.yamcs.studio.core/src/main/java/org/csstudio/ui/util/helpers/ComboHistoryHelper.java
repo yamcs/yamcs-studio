@@ -10,8 +10,6 @@
 package org.csstudio.ui.util.helpers;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
@@ -96,12 +94,7 @@ public class ComboHistoryHelper {
 
         // Register saving on dispose
         if (saveOnDispose) {
-            combo.addDisposeListener(new DisposeListener() {
-                @Override
-                public void widgetDisposed(DisposeEvent e) {
-                    saveSettings();
-                }
-            });
+            combo.addDisposeListener(e -> saveSettings());
         }
     }
 

@@ -172,8 +172,8 @@ public class ContentHelperPopup extends PopupDialog {
     public ContentHelperPopup(ContentProposalAdapter adapter) {
         super(adapter.getControl().getShell(), SWT.NO_TRIM | SWT.ON_TOP, false, false, false, false, false, null, null);
         this.adapter = adapter;
-        this.control = adapter.getControl();
-        this.dataHandler = new TooltipDataHandler();
+        control = adapter.getControl();
+        dataHandler = new TooltipDataHandler();
     }
 
     /*

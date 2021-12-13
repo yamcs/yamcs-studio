@@ -41,14 +41,13 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     final private AbstractWidgetProperty selectionProperty;
 
-    final private List<AbstractWidgetModel> childrenList = new LinkedList<AbstractWidgetModel>();
+    final private List<AbstractWidgetModel> childrenList = new LinkedList<>();
 
-    private LinkedHashMap<String, String> macroMap = new LinkedHashMap<String, String>();
+    private LinkedHashMap<String, String> macroMap = new LinkedHashMap<>();
 
     private AbstractLayoutModel layoutWidget;
 
     public AbstractContainerModel() {
-        super();
         childrenProperty = new UnsavableListProperty(PROP_CHILDREN, "children", WidgetPropertyCategory.Behavior,
                 childrenList);
 
@@ -84,7 +83,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     }
 
     public synchronized void addChildren(List<AbstractWidgetModel> children, boolean changeParent) {
-        var oldList = new ArrayList<AbstractWidgetModel>(childrenList);
+        var oldList = new ArrayList<>(childrenList);
         for (var child : children) {
             if (child != null && !childrenList.contains(child)) {
                 var newIndex = -1;
@@ -162,7 +161,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      * @return all descendants of this container.
      */
     public List<AbstractWidgetModel> getAllDescendants() {
-        List<AbstractWidgetModel> allDescendants = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> allDescendants = new ArrayList<>();
         allDescendants.addAll(getChildren());
         for (var widget : getChildren()) {
             if (widget instanceof AbstractContainerModel) {

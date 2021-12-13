@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
@@ -40,11 +39,11 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
         switch (model.getStyle()) {
         case NATIVE:
-            this.delegate = new NativeButtonEditPartDelegate(this);
+            delegate = new NativeButtonEditPartDelegate(this);
             break;
         case CLASSIC:
         default:
-            this.delegate = new Draw2DButtonEditPartDelegate(this);
+            delegate = new Draw2DButtonEditPartDelegate(this);
             break;
         }
         updatePropSheet();
@@ -134,19 +133,16 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
     @Override
     protected void registerPropertyChangeHandlers() {
 
-        PropertyChangeListener styleListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                AbstractWidgetModel model = getWidgetModel();
-                var descriptor = WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
-                var type = descriptor == null ? model.getTypeID().substring(model.getTypeID().lastIndexOf(".") + 1)
-                        : descriptor.getName();
-                model.setPropertyValue(AbstractWidgetModel.PROP_WIDGET_TYPE, type);
-                var parent = model.getParent();
-                parent.removeChild(model);
-                parent.addChild(model);
-                parent.selectWidget(model, true);
-            }
+        PropertyChangeListener styleListener = evt -> {
+            AbstractWidgetModel model = getWidgetModel();
+            var descriptor = WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
+            var type = descriptor == null ? model.getTypeID().substring(model.getTypeID().lastIndexOf(".") + 1)
+                    : descriptor.getName();
+            model.setPropertyValue(AbstractWidgetModel.PROP_WIDGET_TYPE, type);
+            var parent = model.getParent();
+            parent.removeChild(model);
+            parent.addChild(model);
+            parent.selectWidget(model, true);
         };
         getWidgetModel().getProperty(ActionButtonModel.PROP_STYLE).addPropertyChangeListener(styleListener);
         updatePropSheet();

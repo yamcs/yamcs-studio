@@ -23,11 +23,11 @@ public class ChangeTabIndexCommand extends Command {
     private TabItem tabItem;
 
     public ChangeTabIndexCommand(TabEditPart tabEditPart, int newIndex) {
-        this.tabModel = tabEditPart.getWidgetModel();
-        this.oldIndex = tabEditPart.getActiveTabIndex();
+        tabModel = tabEditPart.getWidgetModel();
+        oldIndex = tabEditPart.getActiveTabIndex();
         this.newIndex = newIndex;
 
-        this.tabItem = tabEditPart.getTabItem(oldIndex);
+        tabItem = tabEditPart.getTabItem(oldIndex);
 
         setLabel("Change Tab Index");
     }

@@ -18,7 +18,7 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 
 public class SysContentDescriptor extends ContentDescriptor {
 
-    private static Map<String, String> functions = new TreeMap<String, String>();
+    private static Map<String, String> functions = new TreeMap<>();
     static {
         functions.put("time", "Local date and time");
         functions.put("free_mb", "Free Java VM memory in MB");

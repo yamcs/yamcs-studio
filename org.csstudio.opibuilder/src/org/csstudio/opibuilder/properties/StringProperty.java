@@ -49,7 +49,7 @@ public class StringProperty extends AbstractWidgetProperty<String> {
     public StringProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
             boolean multiline, boolean saveAsCDATA) {
         super(prop_id, description, category, defaultValue);
-        this.multiLine = multiline;
+        multiLine = multiline;
         this.saveAsCDATA = saveAsCDATA;
     }
 

@@ -16,12 +16,12 @@ public abstract class IteratorInt implements IteratorNumber {
 
     @Override
     public float nextFloat() {
-        return (float) nextInt();
+        return nextInt();
     }
 
     @Override
     public double nextDouble() {
-        return (double) nextInt();
+        return nextInt();
     }
 
     @Override
@@ -36,6 +36,6 @@ public abstract class IteratorInt implements IteratorNumber {
 
     @Override
     public long nextLong() {
-        return (long) nextInt();
+        return nextInt();
     }
 }

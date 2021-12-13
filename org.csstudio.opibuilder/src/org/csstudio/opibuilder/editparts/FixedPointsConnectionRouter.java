@@ -30,7 +30,7 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
 
     private static final Logger LOGGER = Logger.getLogger(FixedPointsConnectionRouter.class.getCanonicalName());
 
-    private Map<Connection, Object> constraints = new HashMap<Connection, Object>(2);
+    private Map<Connection, Object> constraints = new HashMap<>(2);
 
     private ConnectionModel connectionModel;
 

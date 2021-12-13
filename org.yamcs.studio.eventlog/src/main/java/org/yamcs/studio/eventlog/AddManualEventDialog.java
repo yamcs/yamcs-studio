@@ -140,7 +140,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
         client.createEvent(requestb.build()).whenComplete((data, exc) -> {
             if (exc == null) {
-                Display.getDefault().asyncExec(() -> close());
+                Display.getDefault().asyncExec(this::close);
             } else {
                 Display.getDefault().asyncExec(() -> {
                     var m = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);

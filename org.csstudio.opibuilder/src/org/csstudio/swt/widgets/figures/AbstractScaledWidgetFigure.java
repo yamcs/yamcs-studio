@@ -167,9 +167,9 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     @Override
     public void paintFigure(Graphics graphics) {
         if (!transparent) {
-            graphics.setBackgroundColor(this.getBackgroundColor());
-            var bounds = this.getBounds().getCopy();
-            bounds.crop(this.getInsets());
+            graphics.setBackgroundColor(getBackgroundColor());
+            var bounds = getBounds().getCopy();
+            bounds.crop(getInsets());
             graphics.fillRectangle(bounds);
         }
         super.paintFigure(graphics);
@@ -210,8 +210,8 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      */
     public void setRange(double min, double max) {
         scale.setRange(min, max);
-        this.maximum = scale.getRange().getUpper();
-        this.minimum = scale.getRange().getLower();
+        maximum = scale.getRange().getUpper();
+        minimum = scale.getRange().getLower();
         repaint();
     }
 

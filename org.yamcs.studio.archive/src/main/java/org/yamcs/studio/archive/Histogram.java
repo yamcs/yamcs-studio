@@ -24,7 +24,7 @@ import org.yamcs.protobuf.IndexEntry;
 
 public class Histogram extends Line {
 
-    public static enum HistogramKind {
+    public enum HistogramKind {
         COMPLETENESS, TM, PP, CMDHIST, EVENT,
     }
 

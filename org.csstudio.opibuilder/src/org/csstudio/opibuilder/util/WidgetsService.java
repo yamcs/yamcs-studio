@@ -38,7 +38,7 @@ public final class WidgetsService {
     private Map<String, List<String>> allCategoriesMap;
     private Map<String, IGraphicalFeedbackFactory> feedbackFactoriesMap;
 
-    public synchronized static final WidgetsService getInstance() {
+    public synchronized static WidgetsService getInstance() {
         if (instance == null) {
             instance = new WidgetsService();
         }
@@ -128,19 +128,19 @@ public final class WidgetsService {
      * @return map which contains all the name of the categories and the widgets under them. The widgets list has been
      *         sorted by string.
      */
-    public final Map<String, List<String>> getAllCategoriesMap() {
+    public Map<String, List<String>> getAllCategoriesMap() {
         return allCategoriesMap;
     }
 
-    public final WidgetDescriptor getWidgetDescriptor(String typeId) {
+    public WidgetDescriptor getWidgetDescriptor(String typeId) {
         return allWidgetDescriptorsMap.get(typeId);
     }
 
-    public final String[] getAllWidgetTypeIDs() {
+    public String[] getAllWidgetTypeIDs() {
         return allWidgetDescriptorsMap.keySet().toArray(new String[0]);
     }
 
-    public final IGraphicalFeedbackFactory getWidgetFeedbackFactory(String typeId) {
+    public IGraphicalFeedbackFactory getWidgetFeedbackFactory(String typeId) {
         return feedbackFactoriesMap.get(typeId);
     }
 }

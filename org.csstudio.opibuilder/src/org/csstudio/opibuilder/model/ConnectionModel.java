@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,8 +63,8 @@ public class ConnectionModel extends AbstractWidgetModel {
 
         String description;
 
-        private ArrowType(String desc) {
-            this.description = desc;
+        ArrowType(String desc) {
+            description = desc;
         }
 
         public static String[] stringValues() {
@@ -275,54 +273,48 @@ public class ConnectionModel extends AbstractWidgetModel {
         AbstractWidgetProperty srcWUIDProp = new StringProperty(PROP_SRC_WUID, "Source WUID",
                 WidgetPropertyCategory.Display, "");
         addProperty(srcWUIDProp);
-        srcWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (displayModel == null) {
-                    return;
-                }
-                var wuid = evt.getNewValue().toString();
-                var path = getPropertyValue(PROP_SRC_PATH).toString();
+        srcWUIDProp.addPropertyChangeListener(evt -> {
+            if (displayModel == null) {
+                return;
+            }
+            var wuid = evt.getNewValue().toString();
+            var path = getPropertyValue(PROP_SRC_PATH).toString();
 
-                AbstractWidgetModel w = null;
-                if (path == null || path.equals("")) {
-                    w = getTerminal(displayModel, null, wuid);
-                } else {
-                    List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
-                    w = getTerminal(displayModel, paths, wuid);
-                }
-                if (w != null) {
-                    source = w;
-                    reconnect();
-                } else {
-                    throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
-                }
+            AbstractWidgetModel w = null;
+            if (path == null || path.equals("")) {
+                w = getTerminal(displayModel, null, wuid);
+            } else {
+                List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
+                w = getTerminal(displayModel, paths, wuid);
+            }
+            if (w != null) {
+                source = w;
+                reconnect();
+            } else {
+                throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
             }
         });
         AbstractWidgetProperty tgtWUIDProp = new StringProperty(PROP_TGT_WUID, "Target WUID",
                 WidgetPropertyCategory.Display, "");
         addProperty(tgtWUIDProp);
-        tgtWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (displayModel == null) {
-                    return;
-                }
-                var wuid = evt.getNewValue().toString();
-                var path = getPropertyValue(PROP_TGT_PATH).toString();
-                AbstractWidgetModel w = null;
-                if (path == null || path.equals("")) {
-                    w = getTerminal(displayModel, null, wuid);
-                } else {
-                    List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
-                    w = getTerminal(displayModel, paths, wuid);
-                }
-                if (w != null) {
-                    target = w;
-                    reconnect();
-                } else {
-                    throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
-                }
+        tgtWUIDProp.addPropertyChangeListener(evt -> {
+            if (displayModel == null) {
+                return;
+            }
+            var wuid = evt.getNewValue().toString();
+            var path = getPropertyValue(PROP_TGT_PATH).toString();
+            AbstractWidgetModel w = null;
+            if (path == null || path.equals("")) {
+                w = getTerminal(displayModel, null, wuid);
+            } else {
+                List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
+                w = getTerminal(displayModel, paths, wuid);
+            }
+            if (w != null) {
+                target = w;
+                reconnect();
+            } else {
+                throw new IllegalArgumentException("Non exist widget PATH:[" + path + "],\nWUID:[" + wuid + "]");
             }
         });
 
@@ -617,7 +609,7 @@ public class ConnectionModel extends AbstractWidgetModel {
      * @return true if the connection was loaded from linked opi file in LinkingContainer
      */
     public boolean isLoadedFromLinkedOpi() {
-        return this.loadedFromLinkedOpi;
+        return loadedFromLinkedOpi;
     }
 
     private String buildTerminalPathFromModel(AbstractWidgetModel model) {

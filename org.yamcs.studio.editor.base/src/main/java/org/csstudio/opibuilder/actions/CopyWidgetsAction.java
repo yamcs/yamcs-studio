@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
@@ -78,16 +77,13 @@ public class CopyWidgetsAction extends SelectionAction {
 
         ((OPIEditor) getWorkbenchPart()).getClipboard().setContents(new Object[] { xml },
                 new Transfer[] { OPIWidgetsTransfer.getInstance() });
-        Display.getCurrent().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                var pasteAction = ((ActionRegistry) ((OPIEditor) getWorkbenchPart()).getAdapter(ActionRegistry.class))
-                        .getAction(ActionFactory.PASTE.getId());
-                if (pasteAction != null) {
-                    ((PasteWidgetsAction) pasteAction).refreshEnable();
-                }
-
+        Display.getCurrent().asyncExec(() -> {
+            var pasteAction = ((ActionRegistry) ((OPIEditor) getWorkbenchPart()).getAdapter(ActionRegistry.class))
+                    .getAction(ActionFactory.PASTE.getId());
+            if (pasteAction != null) {
+                ((PasteWidgetsAction) pasteAction).refreshEnable();
             }
+
         });
     }
 
@@ -99,9 +95,9 @@ public class CopyWidgetsAction extends SelectionAction {
     protected final List<AbstractWidgetModel> getSelectedWidgetModels() {
         List<?> selection = getSelectedObjects();
 
-        List<AbstractWidgetModel> sameParentModels = new ArrayList<AbstractWidgetModel>();
-        List<AbstractWidgetModel> differentParentModels = new ArrayList<AbstractWidgetModel>();
-        List<AbstractWidgetModel> result = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> sameParentModels = new ArrayList<>();
+        List<AbstractWidgetModel> differentParentModels = new ArrayList<>();
+        List<AbstractWidgetModel> result = new ArrayList<>();
         AbstractContainerModel parent = null;
         for (var o : selection) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
@@ -120,16 +116,12 @@ public class CopyWidgetsAction extends SelectionAction {
         if (sameParentModels.size() > 1) {
             var modelArray = sameParentModels.toArray(new AbstractWidgetModel[0]);
 
-            Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
-                @Override
-                public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
-                    if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2)) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+            Arrays.sort(modelArray, (o1, o2) -> {
+                if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2)) {
+                    return 1;
+                } else {
+                    return -1;
                 }
-
             });
             result.addAll(Arrays.asList(modelArray));
             if (differentParentModels.size() > 0) {

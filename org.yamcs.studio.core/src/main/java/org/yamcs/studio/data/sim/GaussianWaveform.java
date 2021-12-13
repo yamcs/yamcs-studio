@@ -72,7 +72,7 @@ public class GaussianWaveform extends SimFunction<VDoubleArray> {
 
     private double[] generateNewValue(double omega, double t) {
         var x = t * omega / (2 * Math.PI);
-        var normalizedX = x - (double) (long) x;
+        var normalizedX = x - (long) x;
         var offset = (int) (normalizedX * buffer.length);
         if (offset == buffer.length) {
             offset = 0;

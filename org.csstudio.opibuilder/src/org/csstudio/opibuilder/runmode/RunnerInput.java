@@ -10,6 +10,7 @@
 package org.csstudio.opibuilder.runmode;
 
 import java.io.InputStream;
+import java.util.Objects;
 
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
@@ -29,7 +30,7 @@ public class RunnerInput implements IRunnerInput {
 
     public RunnerInput(IPath path, DisplayOpenManager displayOpenManager, MacrosInput macrosInput) {
         this.path = path;
-        this.setDisplayOpenManager(displayOpenManager);
+        setDisplayOpenManager(displayOpenManager);
         this.macrosInput = macrosInput;
     }
 
@@ -49,11 +50,7 @@ public class RunnerInput implements IRunnerInput {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((macrosInput == null) ? 0 : macrosInput.hashCode());
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        return result;
+        return Objects.hash(macrosInput, path);
     }
 
     @Override
@@ -68,18 +65,10 @@ public class RunnerInput implements IRunnerInput {
             return false;
         }
         var other = (RunnerInput) obj;
-        if (macrosInput == null) {
-            if (other.macrosInput != null) {
-                return false;
-            }
-        } else if (!macrosInput.equals(other.macrosInput)) {
+        if (!Objects.equals(macrosInput, other.macrosInput)) {
             return false;
         }
-        if (path == null) {
-            if (other.path != null) {
-                return false;
-            }
-        } else if (!path.equals(other.path)) {
+        if (!Objects.equals(path, other.path)) {
             return false;
         }
         return true;

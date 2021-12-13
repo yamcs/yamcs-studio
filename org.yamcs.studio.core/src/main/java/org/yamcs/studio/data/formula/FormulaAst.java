@@ -75,7 +75,7 @@ public class FormulaAst {
          * An id node
          */
         ID
-    };
+    }
 
     private final Type type;
     private final List<FormulaAst> children;
@@ -350,7 +350,7 @@ public class FormulaAst {
     public FormulaAst substituteChannels(Map<String, FormulaAst> substitutions) {
         switch (getType()) {
         case CHANNEL:
-            var sub = substitutions.get((String) getValue());
+            var sub = substitutions.get(getValue());
             if (sub == null) {
                 sub = this;
             }
@@ -404,9 +404,9 @@ public class FormulaAst {
     @Override
     public int hashCode() {
         var hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.type);
-        hash = 89 * hash + Objects.hashCode(this.children);
-        hash = 89 * hash + Objects.hashCode(this.value);
+        hash = 89 * hash + Objects.hashCode(type);
+        hash = 89 * hash + Objects.hashCode(children);
+        hash = 89 * hash + Objects.hashCode(value);
         return hash;
     }
 

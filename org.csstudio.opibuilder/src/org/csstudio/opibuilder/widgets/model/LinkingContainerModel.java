@@ -173,7 +173,7 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
         // setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SCROLL_OPI.ordinal());
         // }
         // }
-    };
+    }
 
     /**
      * Scale its children.

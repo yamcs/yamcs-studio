@@ -46,7 +46,7 @@ public final class ArrayDouble extends ListDouble implements Serializable {
     }
 
     @Override
-    public final IteratorDouble iterator() {
+    public IteratorDouble iterator() {
         return new IteratorDouble() {
             private int index;
 
@@ -63,7 +63,7 @@ public final class ArrayDouble extends ListDouble implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 

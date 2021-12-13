@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
@@ -77,7 +76,7 @@ public class SpreadSheetTable extends Composite {
          * @param newValue
          *            new value in the cell.
          */
-        public void cellValueChanged(int row, int col, String oldValue, String newValue);
+        void cellValueChanged(int row, int col, String oldValue, String newValue);
     }
 
     /**
@@ -92,7 +91,7 @@ public class SpreadSheetTable extends Composite {
          * @param content
          *            of the table.
          */
-        public void modified(String[][] content);
+        void modified(String[][] content);
     }
 
     /**
@@ -107,7 +106,7 @@ public class SpreadSheetTable extends Composite {
          * @param selection
          *            a 2D string array which represents the selected rows.
          */
-        public void selectionChanged(String[][] selection);
+        void selectionChanged(String[][] selection);
     }
 
     private class TextEditingSupport extends EditingSupport {
@@ -155,7 +154,7 @@ public class SpreadSheetTable extends Composite {
                         protected Object doGetValue() {
                             return ((Boolean) super.doGetValue()) ? ((String[]) cellEditorData)[1]
                                     : ((String[]) cellEditorData)[0];
-                        };
+                        }
 
                         @Override
                         protected void doSetValue(Object value) {
@@ -198,7 +197,7 @@ public class SpreadSheetTable extends Composite {
 
         @Override
         protected void initializeCellEditorValue(CellEditor cellEditor, ViewerCell cell) {
-            this.viewerCell = cell;
+            viewerCell = cell;
             super.initializeCellEditorValue(cellEditor, cell);
         }
 
@@ -246,7 +245,7 @@ public class SpreadSheetTable extends Composite {
         }
 
         public void setCellEditorData(Object data) {
-            this.cellEditorData = data;
+            cellEditorData = data;
         }
 
         public void setCellEditorStyle(int cellEditorStyle) {

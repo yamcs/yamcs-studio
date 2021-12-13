@@ -165,7 +165,6 @@ public class ContentProposalAdapter {
      */
     public ContentProposalAdapter(Control control, IControlContentAdapter controlContentAdapter,
             IAutoCompleteProposalProvider proposalProvider, KeyStroke keyStroke, char[] autoActivationCharacters) {
-        super();
         // We always assume the control and content adapter are valid.
         Assert.isNotNull(control);
         Assert.isNotNull(controlContentAdapter);
@@ -174,9 +173,9 @@ public class ContentProposalAdapter {
 
         // The rest of these may be null
         this.proposalProvider = proposalProvider;
-        this.triggerKeyStroke = keyStroke;
+        triggerKeyStroke = keyStroke;
         if (autoActivationCharacters != null) {
-            this.autoActivateString = new String(autoActivationCharacters);
+            autoActivateString = new String(autoActivationCharacters);
         }
         addControlListener(control);
 
@@ -545,7 +544,7 @@ public class ContentProposalAdapter {
         recordCursorPosition();
         var contents = getControlContentAdapter().getControlContents(getControl());
         var contentToParse = contents.substring(0, cursorPos);
-        this.insertionRange = new Point(cursorPos, cursorPos);
+        insertionRange = new Point(cursorPos, cursorPos);
         hasSelectedTopProposal = false;
 
         // clear the helper before requesting proposals to providers
@@ -668,12 +667,12 @@ public class ContentProposalAdapter {
                 after = content.substring(insertionRange.y);
             }
             var insertionLength = value.length();
-            this.insertionRange.y = insertionPos + insertionLength;
+            insertionRange.y = insertionPos + insertionLength;
 
             if ((!after.isEmpty() && !accepted) || hasSelectedTopProposal) {
-                this.selectionRange = new Point(this.insertionRange.x, this.insertionRange.y);
+                selectionRange = new Point(insertionRange.x, insertionRange.y);
             } else {
-                this.selectionRange = new Point(-1, -1);
+                selectionRange = new Point(-1, -1);
             }
 
             var text = before + value + after;
@@ -887,9 +886,9 @@ public class ContentProposalAdapter {
      */
     public void setAutoActivationCharacters(char[] autoActivationCharacters) {
         if (autoActivationCharacters == null) {
-            this.autoActivateString = null;
+            autoActivateString = null;
         } else {
-            this.autoActivateString = new String(autoActivationCharacters);
+            autoActivateString = new String(autoActivationCharacters);
         }
     }
 

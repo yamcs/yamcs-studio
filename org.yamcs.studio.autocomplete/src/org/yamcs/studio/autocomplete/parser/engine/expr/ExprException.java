@@ -14,7 +14,6 @@ public class ExprException extends Exception {
     private static final long serialVersionUID = -1998822947453924659L;
 
     public ExprException() {
-        super();
     }
 
     public ExprException(String message, Throwable cause) {

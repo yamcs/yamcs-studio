@@ -26,7 +26,7 @@ public class CacheStats {
         this.hits = hits;
         this.misses = misses;
         this.expirations = expirations;
-        this.total = hits + misses + expirations;
+        total = hits + misses + expirations;
     }
 
     /** @return hits */

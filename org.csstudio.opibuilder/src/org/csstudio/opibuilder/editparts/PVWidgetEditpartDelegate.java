@@ -179,20 +179,20 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
             var pvPropertyMap = editpart.getWidgetModel().getPVMap();
 
             for (var sp : pvPropertyMap.keySet()) {
-                if (sp.getPropertyValue() == null || ((String) sp.getPropertyValue()).trim().length() <= 0) {
+                if (sp.getPropertyValue() == null || sp.getPropertyValue().trim().length() <= 0) {
                     continue;
                 }
 
                 try {
-                    var pv = BOYPVFactory.createPV((String) sp.getPropertyValue());
+                    var pv = BOYPVFactory.createPV(sp.getPropertyValue());
                     pvMap.put(sp.getPropertyID(), pv);
-                    editpart.addToConnectionHandler((String) sp.getPropertyValue(), pv);
+                    editpart.addToConnectionHandler(sp.getPropertyValue(), pv);
                     var pvListener = new WidgetPVListener(sp.getPropertyID());
                     pv.addListener(pvListener);
                     pvListenerMap.put(sp.getPropertyID(), pvListener);
                 } catch (Exception e) {
                     OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                            "Unable to connect to PV:" + (String) sp.getPropertyValue(), e);
+                            "Unable to connect to PV:" + sp.getPropertyValue(), e);
                 }
             }
         }
@@ -646,7 +646,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     }
 
     public void setIgnoreOldPVValue(boolean ignoreOldValue) {
-        this.ignoreOldPVValue = ignoreOldValue;
+        ignoreOldPVValue = ignoreOldValue;
     }
 
     @Override
@@ -657,8 +657,8 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         var result = new HashSet<String>();
 
         for (var sp : editpart.getWidgetModel().getPVMap().keySet()) {
-            if (sp.isVisibleInPropSheet() && !((String) sp.getPropertyValue()).trim().isEmpty()) {
-                result.add((String) sp.getPropertyValue());
+            if (sp.isVisibleInPropSheet() && !sp.getPropertyValue().trim().isEmpty()) {
+                result.add(sp.getPropertyValue());
             }
         }
         return result.toArray(new String[result.size()]);

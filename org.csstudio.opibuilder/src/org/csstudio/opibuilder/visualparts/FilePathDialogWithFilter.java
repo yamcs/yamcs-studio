@@ -101,8 +101,8 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
      */
     public FilePathDialogWithFilter(Shell parentShell, IPath refPath, String dialogMessage, String[] filters) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
-        this.message = dialogMessage;
+        setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
+        message = dialogMessage;
         this.refPath = refPath;
         relative = true;
         filtered = true;
@@ -251,10 +251,10 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
                 var ratio = (float) tmpData.width / tmpData.height;
                 if (ratio >= 1 && tmpData.width > MAX_ICON_WIDTH) {
                     var ratio2 = (float) MAX_ICON_WIDTH / tmpData.width;
-                    data = tmpData.scaledTo(MAX_ICON_WIDTH, Math.round((float) tmpData.height * ratio2));
+                    data = tmpData.scaledTo(MAX_ICON_WIDTH, Math.round(tmpData.height * ratio2));
                 } else if (ratio < 1 && tmpData.height > MAX_ICON_HEIGHT) {
                     var ratio2 = (float) MAX_ICON_HEIGHT / tmpData.height;
-                    data = tmpData.scaledTo(Math.round((float) tmpData.width * ratio2), MAX_ICON_HEIGHT);
+                    data = tmpData.scaledTo(Math.round(tmpData.width * ratio2), MAX_ICON_HEIGHT);
                 } else {
                     data = tmpData;
                 }

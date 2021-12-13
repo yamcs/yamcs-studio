@@ -72,7 +72,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
                 // can happen before the parent is set.
                 return;
             }
-            getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
+            getViewer().getControl().getDisplay().asyncExec(this::updateConnectionList);
         });
         return f;
     }
@@ -218,7 +218,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         updateConnectionListForLinkedOpi(displayModel);
         if (originalPoints != null && !originalPoints.isEmpty()) {
             // update connections after the figure is repainted.
-            getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
+            getViewer().getControl().getDisplay().asyncExec(this::updateConnectionList);
         }
 
         UIBundlingThread.getInstance().addRunnable(() -> {
@@ -407,7 +407,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     protected synchronized void doRefreshVisuals(IFigure refreshableFigure) {
         super.doRefreshVisuals(refreshableFigure);
         // update connections after the figure is repainted.
-        getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
+        getViewer().getControl().getDisplay().asyncExec(this::updateConnectionList);
     }
 
     @Override

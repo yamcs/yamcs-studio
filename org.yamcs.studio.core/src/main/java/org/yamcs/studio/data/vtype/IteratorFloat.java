@@ -16,7 +16,7 @@ public abstract class IteratorFloat implements IteratorNumber {
 
     @Override
     public double nextDouble() {
-        return (double) nextFloat();
+        return nextFloat();
     }
 
     @Override

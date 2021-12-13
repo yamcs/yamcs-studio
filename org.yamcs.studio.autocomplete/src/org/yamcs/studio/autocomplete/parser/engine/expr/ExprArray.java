@@ -19,7 +19,7 @@ public class ExprArray extends Expr {
 
     public ExprArray(int rows, int columns) {
         super(ExprType.Array);
-        this.array = new Expr[rows * columns];
+        array = new Expr[rows * columns];
         this.columns = columns;
         this.rows = rows;
     }

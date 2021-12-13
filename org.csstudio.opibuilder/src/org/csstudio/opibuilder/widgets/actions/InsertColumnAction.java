@@ -15,8 +15,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -89,12 +87,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
             title.setText("Header");
             if (allowedHeaders == null) {
                 var text = new Text(grpPosition, SWT.SINGLE | SWT.BORDER);
-                text.addModifyListener(new ModifyListener() {
-                    @Override
-                    public void modifyText(ModifyEvent e) {
-                        columnTitle = text.getText();
-                    }
-                });
+                text.addModifyListener(e -> columnTitle = text.getText());
             } else {
                 var combo = new Combo(grpPosition, SWT.READ_ONLY);
                 combo.setItems(allowedHeaders);

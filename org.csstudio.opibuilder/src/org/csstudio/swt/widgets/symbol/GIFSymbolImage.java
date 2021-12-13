@@ -444,7 +444,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         };
         ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading GIF Image...", e -> {
             loadingImage = false;
-            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            Display.getDefault().syncExec(this::fireSymbolImageLoaded);
             log.log(Level.WARNING, "ERROR in loading GIF image " + imagePath, e);
         });
     }

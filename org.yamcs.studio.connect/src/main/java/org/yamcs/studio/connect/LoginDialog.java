@@ -70,7 +70,7 @@ public class LoginDialog extends TitleAreaDialog {
         gd.widthHint = 200;
         userText.setLayoutData(gd);
         userText.setText(username);
-        userText.addListener(SWT.KeyUp, evt -> this.updateState());
+        userText.addListener(SWT.KeyUp, evt -> updateState());
 
         l = new Label(contentArea, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -84,7 +84,7 @@ public class LoginDialog extends TitleAreaDialog {
         gd = new GridData();
         gd.widthHint = 200;
         passwordText.setLayoutData(gd);
-        passwordText.addListener(SWT.KeyUp, evt -> this.updateState());
+        passwordText.addListener(SWT.KeyUp, evt -> updateState());
 
         l = new Label(contentArea, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);

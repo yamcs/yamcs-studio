@@ -117,7 +117,7 @@ public class Square2DWaveform extends SimFunction<VDoubleArray> {
                 var x = index % xSamples;
                 var y = index / xSamples;
                 var length = (omega * t + kx * x + ky * y) / (2 * Math.PI);
-                var normalizedPositionInPeriod = length - (double) (long) length;
+                var normalizedPositionInPeriod = length - (long) length;
                 if (normalizedPositionInPeriod < 0.5) {
                     return 1.0;
                 } else if (normalizedPositionInPeriod < 1.0) {

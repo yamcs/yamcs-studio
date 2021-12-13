@@ -138,8 +138,8 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     protected Shape getSizeOnDropFeedback() {
         if (sizeOnDropFeedback == null) {
             sizeOnDropFeedback = new RectangleFigure();
-            FigureUtilities.makeGhostShape((Shape) sizeOnDropFeedback);
-            ((Shape) sizeOnDropFeedback).setLineStyle(Graphics.LINE_DASHDOT);
+            FigureUtilities.makeGhostShape(sizeOnDropFeedback);
+            sizeOnDropFeedback.setLineStyle(Graphics.LINE_DASHDOT);
             sizeOnDropFeedback.setForegroundColor(ColorConstants.white);
         }
         return sizeOnDropFeedback;
@@ -187,7 +187,7 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             if (widgetModel == null || newBounds == null) {
                 throw new IllegalArgumentException();
             }
-            this.widget = widgetModel;
+            widget = widgetModel;
             this.newBounds = newBounds;
         }
 
@@ -237,7 +237,7 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             if (widgetModel == null || newBounds == null) {
                 throw new IllegalArgumentException();
             }
-            this.widget = widgetModel;
+            widget = widgetModel;
             this.newBounds = newBounds;
         }
 

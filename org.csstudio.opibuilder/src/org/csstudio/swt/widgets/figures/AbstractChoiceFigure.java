@@ -18,8 +18,6 @@ import java.util.List;
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.eclipse.draw2d.ButtonGroup;
-import org.eclipse.draw2d.ChangeEvent;
-import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -42,7 +40,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
          * @param value
          *            the string value of the state.
          */
-        public void buttonPressed(int index, String value);
+        void buttonPressed(int index, String value);
     }
 
     private ButtonGroup buttonGroup;
@@ -146,7 +144,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     }
 
     public void setHorizontal(boolean newValue) {
-        if (this.isHorizontal == newValue) {
+        if (isHorizontal == newValue) {
             return;
         }
         isHorizontal = newValue;
@@ -154,10 +152,10 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     }
 
     public void setSelectedColor(Color checkedColor) {
-        if (this.selectedColor != null && this.selectedColor.equals(checkedColor)) {
+        if (selectedColor != null && selectedColor.equals(checkedColor)) {
             return;
         }
-        this.selectedColor = checkedColor;
+        selectedColor = checkedColor;
         repaint();
     }
 
@@ -198,15 +196,12 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
             if (!runMode) {
                 toggle.setEventHandler(null);
             }
-            toggleModel.addChangeListener(new ChangeListener() {
-                @Override
-                public void handleStateChanged(ChangeEvent event) {
-                    if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) && toggle.isSelected()) {
-                        if (fromSetState) {
-                            fromSetState = false;
-                        } else {
-                            fireButtonPressed(index, state);
-                        }
+            toggleModel.addChangeListener(event -> {
+                if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) && toggle.isSelected()) {
+                    if (fromSetState) {
+                        fromSetState = false;
+                    } else {
+                        fireButtonPressed(index, state);
                     }
                 }
             });

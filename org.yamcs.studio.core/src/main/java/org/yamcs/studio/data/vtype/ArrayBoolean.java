@@ -46,7 +46,7 @@ public final class ArrayBoolean extends ListBoolean implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 

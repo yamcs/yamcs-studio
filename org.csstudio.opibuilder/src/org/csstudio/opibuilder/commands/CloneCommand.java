@@ -76,7 +76,7 @@ public final class CloneCommand extends Command {
      */
     public CloneCommand(AbstractContainerModel parent) {
         super("Clone Widgets");
-        _models = new LinkedList<AbstractWidgetModel>();
+        _models = new LinkedList<>();
         _parent = parent;
     }
 
@@ -90,7 +90,7 @@ public final class CloneCommand extends Command {
      */
     public void addPart(AbstractWidgetModel model, Rectangle newBounds) {
         _models.add(model);
-        _difference = this.calculateDifference(model, newBounds);
+        _difference = calculateDifference(model, newBounds);
     }
 
     /**

@@ -11,11 +11,11 @@ package org.yamcs.studio.autocomplete.parser.engine.expr;
 
 public interface IBinaryOperator {
 
-    public Expr getLHS();
+    Expr getLHS();
 
-    public void setLHS(Expr lhs);
+    void setLHS(Expr lhs);
 
-    public Expr getRHS();
+    Expr getRHS();
 
-    public void setRHS(Expr rhs);
+    void setRHS(Expr rhs);
 }

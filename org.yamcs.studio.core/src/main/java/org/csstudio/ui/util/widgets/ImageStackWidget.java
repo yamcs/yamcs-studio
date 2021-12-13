@@ -235,7 +235,7 @@ public class ImageStackWidget extends Composite {
         fd_imagePreview.top = new FormAttachment(0, 5);
         fd_imagePreview.left = new FormAttachment(0, 5);
         imagePreview.setLayoutData(fd_imagePreview);
-        this.addPropertyChangeListener(evt -> {
+        addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
             case "editable":
                 break;
@@ -321,9 +321,9 @@ public class ImageStackWidget extends Composite {
      * @throws IOException
      */
     public void addImage(String name, InputStream imageInputStream) throws IOException {
-        var oldValue = new HashMap<>(this.imageInputStreamsMap);
-        this.imageInputStreamsMap.put(name, read2byteArray(imageInputStream));
-        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
+        var oldValue = new HashMap<>(imageInputStreamsMap);
+        imageInputStreamsMap.put(name, read2byteArray(imageInputStream));
+        changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, imageInputStreamsMap);
     }
 
     /**
@@ -335,9 +335,9 @@ public class ImageStackWidget extends Composite {
      */
     public void removeImage(String name) throws IOException {
         if (imageInputStreamsMap.containsKey(name)) {
-            Map<String, byte[]> oldValue = new HashMap<>(this.imageInputStreamsMap);
-            this.imageInputStreamsMap.remove(name);
-            changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
+            Map<String, byte[]> oldValue = new HashMap<>(imageInputStreamsMap);
+            imageInputStreamsMap.remove(name);
+            changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, imageInputStreamsMap);
         }
     }
 

@@ -261,7 +261,7 @@ public class SVGHandler {
     }
 
     public void setRenderListener(SVGHandlerListener renderListener) {
-        this.handlerListener = renderListener;
+        handlerListener = renderListener;
     }
 
     public void setRenderingHint(Object key, Object value) {
@@ -275,40 +275,40 @@ public class SVGHandler {
     }
 
     public void setCanvasSize(int width, int height) {
-        if (this.canvasWidth == width && this.canvasHeight == height) {
+        if (canvasWidth == width && canvasHeight == height) {
             return;
         }
-        this.canvasWidth = width;
-        this.canvasHeight = height;
+        canvasWidth = width;
+        canvasHeight = height;
         refreshContent();
     }
 
     public void setColorToApply(Color newColor) {
-        if ((newColor == null && this.colorToApply == null)
-                || (this.colorToApply != null && this.colorToApply.equals(newColor))) {
+        if ((newColor == null && colorToApply == null)
+                || (colorToApply != null && colorToApply.equals(newColor))) {
             return;
         }
-        this.colorToApply = newColor;
+        colorToApply = newColor;
         refreshContent();
     }
 
     public void setColorToChange(Color newColor) {
-        if ((newColor == null && this.colorToChange == null)
-                || (this.colorToChange != null && this.colorToChange.equals(newColor))) {
+        if ((newColor == null && colorToChange == null)
+                || (colorToChange != null && colorToChange.equals(newColor))) {
             return;
         }
-        this.colorToChange = newColor;
+        colorToChange = newColor;
         refreshContent();
     }
 
     public void setTransformMatrix(double[][] newMatrix) {
-        if ((newMatrix == null && this.matrix == null) || (this.matrix != null && this.matrix.equals(newMatrix))) {
+        if ((newMatrix == null && matrix == null) || (matrix != null && matrix.equals(newMatrix))) {
             return;
         }
-        this.matrix = newMatrix;
+        matrix = newMatrix;
         if (newMatrix == null) {
             // set identity matrix
-            this.matrix = new double[][] { { 1, 0 }, { 0, 1 } };
+            matrix = new double[][] { { 1, 0 }, { 0, 1 } };
         }
         refreshContent();
     }
@@ -715,7 +715,7 @@ public class SVGHandler {
         synchronized (this) {
             copy = cache;
             cache = new AnimatedSVGCache(swtDisplay, timedDocumentRoot,
-                    newImage -> notifyNewImage(newImage), cacheMaxSize);
+                    this::notifyNewImage, cacheMaxSize);
         }
         if (copy != null && !copy.isDisposed()) {
             copy.dispose();

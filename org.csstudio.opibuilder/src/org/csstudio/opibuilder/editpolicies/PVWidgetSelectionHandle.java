@@ -18,10 +18,8 @@ import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
@@ -58,22 +56,19 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
     private String pvName = "";
 
     public PVWidgetSelectionHandle(GraphicalEditPart owner) {
-        super(owner, new Locator() {
-            @Override
-            public void relocate(IFigure target) {
-                var ownerFigure = owner.getFigure();
-                var preferedSize = target.getPreferredSize();
-                var targetLocation = ownerFigure.getBounds().getLocation();
-                ownerFigure.translateToAbsolute(targetLocation);
-                target.translateToRelative(targetLocation);
-                targetLocation.translate(-3, -preferedSize.height - 2);
-                target.setBounds(new Rectangle(targetLocation, preferedSize));
-            }
+        super(owner, target -> {
+            var ownerFigure = owner.getFigure();
+            var preferedSize = target.getPreferredSize();
+            var targetLocation = ownerFigure.getBounds().getLocation();
+            ownerFigure.translateToAbsolute(targetLocation);
+            target.translateToRelative(targetLocation);
+            targetLocation.translate(-3, -preferedSize.height - 2);
+            target.setBounds(new Rectangle(targetLocation, preferedSize));
         });
         setCursor(Cursors.HAND);
 
         if (owner.getModel() instanceof AbstractWidgetModel) {
-            this.widgetModel = (AbstractWidgetModel) owner.getModel();
+            widgetModel = (AbstractWidgetModel) owner.getModel();
         }
 
         if (widgetModel instanceof IPVWidgetModel) {
@@ -100,26 +95,23 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
             protected boolean handleButtonDown(int button) {
                 if ((button == 1 || button == 3) && widgetModel instanceof IPVWidgetModel) {
                     DirectEditManager directEditManager = new PVNameDirectEditManager(getOwner(),
-                            new CellEditorLocator() {
-                                @Override
-                                public void relocate(CellEditor celleditor) {
-                                    Rectangle rect;
-                                    var width = 120;
-                                    if (!pvName.isEmpty() && getTextExtent().width > 120) {
-                                        width = getTextExtent().width + 4;
-                                    }
-
-                                    rect = new Rectangle(PVWidgetSelectionHandle.this.getLocation(),
-                                            new Dimension(width, getTextExtent().height));
-
-                                    translateToAbsolute(rect);
-                                    var control = (Text) celleditor.getControl();
-                                    var trim = control.computeTrim(0, 0, 0, 0);
-                                    rect.translate(trim.x, trim.y);
-                                    rect.width += trim.width;
-                                    rect.height += trim.height;
-                                    control.setBounds(rect.x, rect.y, rect.width, rect.height);
+                            celleditor -> {
+                                Rectangle rect;
+                                var width = 120;
+                                if (!pvName.isEmpty() && getTextExtent().width > 120) {
+                                    width = getTextExtent().width + 4;
                                 }
+
+                                rect = new Rectangle(PVWidgetSelectionHandle.this.getLocation(),
+                                        new Dimension(width, getTextExtent().height));
+
+                                translateToAbsolute(rect);
+                                var control = (Text) celleditor.getControl();
+                                var trim = control.computeTrim(0, 0, 0, 0);
+                                rect.translate(trim.x, trim.y);
+                                rect.width += trim.width;
+                                rect.height += trim.height;
+                                control.setBounds(rect.x, rect.y, rect.width, rect.height);
                             });
                     directEditManager.show();
 
@@ -162,7 +154,7 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
         protected CellEditor createCellEditorOn(Composite composite) {
             var cellEditor = new PVNameTextCellEditor((Composite) getEditPart().getViewer().getControl());
             return cellEditor;
-        };
+        }
 
         @Override
         protected void initCellEditor() {
@@ -201,12 +193,7 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
                 }
             } finally {
                 // work around to make sure autocomplete widget get notified before bringdown
-                Display.getCurrent().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        bringDown();
-                    }
-                });
+                Display.getCurrent().asyncExec(this::bringDown);
                 committing = false;
             }
         }

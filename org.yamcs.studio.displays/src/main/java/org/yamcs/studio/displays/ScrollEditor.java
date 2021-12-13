@@ -80,7 +80,7 @@ public class ScrollEditor extends EditorPart {
         setPartName(input.getName());
         setSite(site);
 
-        this.getEditorSite().getActionBarContributor();
+        getEditorSite().getActionBarContributor();
     }
 
     private List<ParameterInfo> loadData() {
@@ -132,7 +132,6 @@ public class ScrollEditor extends EditorPart {
     }
 
     public ScrollEditor() {
-        super();
     }
 
     @Override
@@ -140,7 +139,7 @@ public class ScrollEditor extends EditorPart {
         var input = getEditorInput();
         try {
             if (input.exists()) {
-                var file = (IFile) input.getAdapter(IFile.class);
+                var file = input.getAdapter(IFile.class);
                 var out = new ByteArrayOutputStream();
                 saveToStream(monitor, parameterTable.getParameters(), out);
                 loadData();

@@ -52,7 +52,7 @@ public class Sine extends SimFunction<VDouble> {
         super(secondsBetweenSamples);
         this.min = min;
         this.max = max;
-        this.currentValue = 0;
+        currentValue = 0;
         this.samplesPerCycle = samplesPerCycle;
         range = this.max - this.min;
         lastValue = newVDouble(0.0, alarmNone(), timeNow(), newDisplay(min, min + range * 0.1, min + range * 0.2, "x",

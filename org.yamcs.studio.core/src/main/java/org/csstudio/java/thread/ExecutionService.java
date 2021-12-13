@@ -42,9 +42,9 @@ public class ExecutionService {
     private ExecutorService _highPriorityExecutorService;
 
     private ExecutionService() {
-        _lowPriorityQueue = new LinkedBlockingQueue<Runnable>();
-        _normalPriorityQueue = new LinkedBlockingQueue<Runnable>();
-        _highPriorityQueue = new LinkedBlockingQueue<Runnable>();
+        _lowPriorityQueue = new LinkedBlockingQueue<>();
+        _normalPriorityQueue = new LinkedBlockingQueue<>();
+        _highPriorityQueue = new LinkedBlockingQueue<>();
 
         _lowPriorityExectorService = new ThreadPoolExecutor(LOW_PRIORITY_THREADS, LOW_PRIORITY_THREADS, 0L,
                 TimeUnit.MILLISECONDS, _lowPriorityQueue, new CssThreadFactory(Thread.MIN_PRIORITY));
@@ -123,14 +123,11 @@ public class ExecutionService {
     }
 
     private void doRun(ExecutorService service, Runnable runnable) {
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Throwable t) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(), t);
-                }
+        service.execute(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(), t);
             }
         });
     }

@@ -18,7 +18,6 @@ import org.csstudio.swt.widgets.introspection.MeterIntrospector;
 import org.csstudio.swt.widgets.util.PointsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -55,7 +54,6 @@ public class MeterFigure extends AbstractRoundRampedFigure {
     public final static double HW_RATIO = (1 - Math.sin(ALPHA) / 2) / (2 * Math.cos(ALPHA));
 
     public MeterFigure() {
-        super();
         setTransparent(false);
         scale.setScaleLineVisible(false);
 
@@ -81,12 +79,9 @@ public class MeterFigure extends AbstractRoundRampedFigure {
         // add(needleCenter, XMeterLayout.NEEDLE_CENTER);
         add(valueLabel, XMeterLayout.VALUE_LABEL);
 
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                ramp.setDirty(true);
-                revalidate();
-            }
+        addFigureListener(source -> {
+            ramp.setDirty(true);
+            revalidate();
         });
     }
 

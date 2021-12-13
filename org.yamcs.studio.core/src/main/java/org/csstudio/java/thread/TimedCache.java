@@ -20,7 +20,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * Map KEY to { VALUE, Date when put into map } KEYTYPE can be any type, VALUETYPE can be any type (types determined
      * when class instance created)
      */
-    final private Map<KEYTYPE, TimedCacheEntry<VALUETYPE>> map = new HashMap<KEYTYPE, TimedCacheEntry<VALUETYPE>>();
+    final private Map<KEYTYPE, TimedCacheEntry<VALUETYPE>> map = new HashMap<>();
 
     /** How long items are considered 'valid' in seconds */
     final private long timeout_secs;
@@ -95,7 +95,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
      * @return Cache entry
      */
     public synchronized TimedCacheEntry<VALUETYPE> remember(KEYTYPE key, VALUETYPE value) {
-        var entry = new TimedCacheEntry<VALUETYPE>(value, timeout_secs);
+        var entry = new TimedCacheEntry<>(value, timeout_secs);
         map.put(key, entry);
         return entry;
     }

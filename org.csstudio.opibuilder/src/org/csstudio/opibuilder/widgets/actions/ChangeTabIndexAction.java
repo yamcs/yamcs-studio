@@ -13,7 +13,6 @@ import org.csstudio.opibuilder.actions.AbstractWidgetTargetAction;
 import org.csstudio.opibuilder.widgets.editparts.TabEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
@@ -27,20 +26,17 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
     public void run(IAction action) {
         var activeTabIndex = getSelectedTabWidget().getActiveTabIndex();
         var newIndexDialog = new InputDialog(null, "Change Tab Index", "New Index", "" + activeTabIndex,
-                new IInputValidator() {
-                    @Override
-                    public String isValid(String newText) {
-                        try {
-                            var newIndex = Integer.parseInt(newText);
-                            var itemCount = getSelectedTabWidget().getTabItemCount();
-                            if (newIndex < 0 || newIndex >= itemCount) {
-                                return NLS.bind("Invalid Tab Index! It must be between [0, {0}]", itemCount - 1);
-                            }
-                        } catch (Exception e) {
-                            return "It must be an integer!";
+                newText -> {
+                    try {
+                        var newIndex = Integer.parseInt(newText);
+                        var itemCount = getSelectedTabWidget().getTabItemCount();
+                        if (newIndex < 0 || newIndex >= itemCount) {
+                            return NLS.bind("Invalid Tab Index! It must be between [0, {0}]", itemCount - 1);
                         }
-                        return null;
+                    } catch (Exception e) {
+                        return "It must be an integer!";
                     }
+                    return null;
                 });
         if (newIndexDialog.open() == Window.OK) {
             var newIndex = Integer.parseInt(newIndexDialog.getValue());

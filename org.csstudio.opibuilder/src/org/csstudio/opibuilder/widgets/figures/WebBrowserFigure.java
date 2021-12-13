@@ -77,7 +77,7 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
             browser = browserViewer.getBrowser();
         } catch (Exception e) {
             errorMassage = "Failed to create web browser widget.\n" + "It may not available on your platform.\n" + e;
-            ;
+
             ErrorHandlerUtil.handleError(errorMassage, e);
         }
         return browserViewer;

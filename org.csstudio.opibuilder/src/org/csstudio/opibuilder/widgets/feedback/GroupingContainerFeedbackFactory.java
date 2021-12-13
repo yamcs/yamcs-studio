@@ -19,9 +19,7 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.DragTracker;
@@ -58,17 +56,14 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
         private Dimension textExtents;
 
         public LockIndicatorHandle(GraphicalEditPart owner) {
-            super(owner, new Locator() {
-                @Override
-                public void relocate(IFigure target) {
-                    var ownerFigure = owner.getFigure();
-                    var preferedSize = target.getPreferredSize();
-                    var targetBounds = ownerFigure.getBounds().getCopy();
-                    ownerFigure.translateToAbsolute(targetBounds);
-                    target.translateToRelative(targetBounds);
-                    targetBounds.expand(preferedSize.height, preferedSize.height);
-                    target.setBounds(targetBounds);
-                }
+            super(owner, target -> {
+                var ownerFigure = owner.getFigure();
+                var preferedSize = target.getPreferredSize();
+                var targetBounds = ownerFigure.getBounds().getCopy();
+                ownerFigure.translateToAbsolute(targetBounds);
+                target.translateToRelative(targetBounds);
+                targetBounds.expand(preferedSize.height, preferedSize.height);
+                target.setBounds(targetBounds);
             });
             setCursor(Cursors.HAND);
             setToolTip(new Label("Click to Lock/Unlock"));

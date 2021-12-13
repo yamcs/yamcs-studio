@@ -36,8 +36,6 @@ public final class PolyPointHandle extends SquareHandle {
      *            index of the polygon point, that should be moved
      */
     public PolyPointHandle(GraphicalEditPart owner, int pointIndex) {
-        super();
-
         _pointIndex = pointIndex;
         setOwner(owner);
 

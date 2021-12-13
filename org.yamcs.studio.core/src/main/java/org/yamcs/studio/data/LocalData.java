@@ -99,7 +99,7 @@ public class LocalData {
                 if (newValue instanceof Number) {
                     newIndex = ((Number) newValue).intValue();
                 } else if (newValue instanceof String) {
-                    newIndex = labels.indexOf((String) newValue);
+                    newIndex = labels.indexOf(newValue);
                     // Only if the String is not in the labels, try and
                     // parse a number.
                     if (newIndex == -1) {
@@ -140,7 +140,7 @@ public class LocalData {
 
     private void processValue(VType value) {
         this.value = value;
-        pvs.forEach(pv -> pv.notifyValueChange());
+        pvs.forEach(IPV::notifyValueChange);
     }
 
     private VType checkValue(VType value) {

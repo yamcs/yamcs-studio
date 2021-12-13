@@ -36,8 +36,8 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
      */
     public WidgetPropertyChangeListener(AbstractBaseEditPart editpart, AbstractWidgetProperty property) {
         this.editpart = editpart;
-        this.widgetProperty = property;
-        handlers = new ArrayList<IWidgetPropertyChangeHandler>();
+        widgetProperty = property;
+        handlers = new ArrayList<>();
     }
 
     @Override

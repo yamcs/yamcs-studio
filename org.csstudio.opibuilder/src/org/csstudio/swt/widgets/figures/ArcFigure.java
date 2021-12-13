@@ -53,18 +53,18 @@ public class ArcFigure extends Shape implements Introspectable {
     }
 
     public void setStartAngle(int start_angle) {
-        if (this.startAngle == start_angle) {
+        if (startAngle == start_angle) {
             return;
         }
-        this.startAngle = start_angle;
+        startAngle = start_angle;
         repaint();
     }
 
     public void setTotalAngle(int total_angle) {
-        if (this.totalAngle == total_angle) {
+        if (totalAngle == total_angle) {
             return;
         }
-        this.totalAngle = total_angle;
+        totalAngle = total_angle;
         repaint();
     }
 

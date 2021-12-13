@@ -41,7 +41,7 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
             CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(id, displayName);
         this.displayName = displayName;
-        this.columnTitles = tilesProvider;
+        columnTitles = tilesProvider;
         this.cellEditorTypes = cellEditorTypes;
         this.cellEditorDatas = cellEditorDatas;
         setLabelProvider(new LabelProvider() {

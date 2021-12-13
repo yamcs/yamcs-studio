@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
  * A stack with limited size. If the stack is full, the oldest element will be removed when new element was pushed.
  */
 public class SizeLimitedStack<T> {
-    private LinkedList<T> list = new LinkedList<T>();
+    private LinkedList<T> list = new LinkedList<>();
     private int sizeLimit;
 
     /**

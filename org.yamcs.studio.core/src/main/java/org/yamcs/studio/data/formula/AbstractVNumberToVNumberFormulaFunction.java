@@ -72,8 +72,8 @@ public abstract class AbstractVNumberToVNumberFormulaFunction implements Formula
 
         this.name = name;
         this.description = description;
-        this.argumentTypes = Arrays.<Class<?>> asList(VNumber.class);
-        this.argumentNames = Arrays.asList(argName);
+        argumentTypes = Arrays.<Class<?>> asList(VNumber.class);
+        argumentNames = Arrays.asList(argName);
     }
 
     @Override

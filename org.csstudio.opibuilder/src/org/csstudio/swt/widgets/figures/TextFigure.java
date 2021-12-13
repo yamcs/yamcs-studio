@@ -114,16 +114,16 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
             case CENTER:
                 if (getRotate() <= 90) {
                     var w = textSize.width * Math.cos(theta) + textSize.height * Math.sin(theta);
-                    x = (int) (((double) textArea.width - w) / 2.0 + textSize.height * Math.sin(theta));
+                    x = (int) ((textArea.width - w) / 2.0 + textSize.height * Math.sin(theta));
                 } else if (getRotate() <= 180) {
                     var w = textSize.height * Math.sin(theta) - textSize.width * Math.cos(theta);
-                    x = (int) ((double) textArea.width - ((double) textArea.width - w) / 2.0);
+                    x = (int) (textArea.width - (textArea.width - w) / 2.0);
                 } else if (getRotate() <= 270) {
                     var w = -textSize.width * Math.cos(theta) - textSize.height * Math.sin(theta);
-                    x = (int) (((double) textArea.width - w) / 2.0 - textSize.width * Math.cos(theta));
+                    x = (int) ((textArea.width - w) / 2.0 - textSize.width * Math.cos(theta));
                 } else {
                     var w = textSize.width * Math.cos(theta) - textSize.height * Math.sin(theta);
-                    x = (int) (((double) textArea.width - w) / 2.0);
+                    x = (int) ((textArea.width - w) / 2.0);
                 }
                 break;
             case RIGHT:
@@ -155,16 +155,16 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
             case MIDDLE:
                 if (getRotate() <= 90) {
                     var h = textSize.width * Math.sin(theta) + textSize.height * Math.cos(theta);
-                    y = (int) (((double) textArea.height - h) / 2.0);
+                    y = (int) ((textArea.height - h) / 2.0);
                 } else if (getRotate() <= 180) {
                     var h = textSize.width * Math.sin(theta) - textSize.height * Math.cos(theta);
-                    y = (int) (((double) textArea.height - h) / 2.0 - textSize.height * Math.cos(theta));
+                    y = (int) ((textArea.height - h) / 2.0 - textSize.height * Math.cos(theta));
                 } else if (getRotate() <= 270) {
                     var h = -textSize.width * Math.sin(theta) - textSize.height * Math.cos(theta);
-                    y = (int) ((double) textArea.height - ((double) textArea.height - h) / 2.0);
+                    y = (int) (textArea.height - (textArea.height - h) / 2.0);
                 } else {
                     var h = textSize.height * Math.cos(theta) - textSize.width * Math.sin(theta);
-                    y = (int) (((double) textArea.height - h) / 2.0 - textSize.height * Math.sin(theta));
+                    y = (int) ((textArea.height - h) / 2.0 - textSize.height * Math.sin(theta));
                 }
                 break;
             case BOTTOM:
@@ -349,10 +349,10 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
     }
 
     public void setFontPixels(boolean fontPixels) {
-        if (this.fontHeightInPixels == fontPixels) {
+        if (fontHeightInPixels == fontPixels) {
             return;
         }
-        this.fontHeightInPixels = fontPixels;
+        fontHeightInPixels = fontPixels;
         revalidate();
         repaint();
     }
@@ -364,7 +364,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
     }
 
     public void setHorizontalAlignment(H_ALIGN hAlignment) {
-        if (this.horizontalAlignment == hAlignment) {
+        if (horizontalAlignment == hAlignment) {
             return;
         }
         horizontalAlignment = hAlignment;
@@ -403,7 +403,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
     }
 
     public void setVerticalAlignment(V_ALIGN vAlignment) {
-        if (this.verticalAlignment == vAlignment) {
+        if (verticalAlignment == vAlignment) {
             return;
         }
         verticalAlignment = vAlignment;
@@ -436,7 +436,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
         String descripion;
 
         H_ALIGN(String description) {
-            this.descripion = description;
+            descripion = description;
         }
 
         @Override
@@ -460,7 +460,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
         String descripion;
 
         V_ALIGN(String description) {
-            this.descripion = description;
+            descripion = description;
         }
 
         @Override

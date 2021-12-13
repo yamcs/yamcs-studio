@@ -51,7 +51,7 @@ public final class CommandExecutor {
         this.command = command;
         this.dir_name = dir_name;
         this.wait = wait;
-        var t = new Thread((Runnable) () -> runAndCheckCommand(), "CommandExecutor");
+        var t = new Thread((Runnable) this::runAndCheckCommand, "CommandExecutor");
         t.start();
     }
 
@@ -122,7 +122,6 @@ public final class CommandExecutor {
 
         // Process ended
         if (exit_code == 0) {
-            return;
         }
     }
 }

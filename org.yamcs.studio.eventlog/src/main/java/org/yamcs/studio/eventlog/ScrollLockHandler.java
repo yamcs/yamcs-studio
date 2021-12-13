@@ -23,7 +23,7 @@ public class ScrollLockHandler extends AbstractHandler {
         var part = HandlerUtil.getActivePartChecked(event);
         var view = (EventLogView) part;
 
-        var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        var service = PlatformUI.getWorkbench().getService(ICommandService.class);
         var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
         var oldState = HandlerUtil.toggleCommandState(command);
         view.getEventLog().enableScrollLock(!oldState);

@@ -246,9 +246,9 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
         private void horizontalLayout(IFigure container) {
             var area = container.getClientArea().getCopy();
             if (area.height > area.width / 2) {
-                area.height = (int) (area.width / 2);
+                area.height = area.width / 2;
             } else {
-                area.width = (int) (2 * area.height);
+                area.width = 2 * area.height;
             }
             var W = area.width;
             var H = area.height;
@@ -321,9 +321,9 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
         private void verticalLayout(IFigure container) {
             var area = container.getClientArea().getCopy();
             if (area.width > area.height / 2) {
-                area.width = (int) (area.height / 2);
+                area.width = area.height / 2;
             } else {
-                area.height = (int) (2 * area.width);
+                area.height = 2 * area.width;
             }
             var W = area.width;
             var H = area.height;
@@ -451,7 +451,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
 
                     // draw cap
                     var a = (int) Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
-                    var b = (int) (a);
+                    var b = (a);
 
                     tr.translate(p1.x, p1.y);
                     tr.rotate((float) (Math.atan((double) (p2.y - p1.y) / (p2.x - p1.x)) * 180.0 / Math.PI));
@@ -492,7 +492,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
 
                     // draw cap
                     var a = (int) Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
-                    var b = (int) (a / 1);
+                    var b = a / 1;
 
                     tr.translate(p1.x, p1.y);
                     tr.rotate((float) (Math.atan((double) (p1.x - p2.x) / (p2.y - p1.y)) * 180.0 / Math.PI));
@@ -574,7 +574,7 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
 
                     // draw cap
                     var a = (int) Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
-                    var b = (int) (a / 1);
+                    var b = a / 1;
 
                     tr.translate(p1.x, p1.y);
                     tr.rotate(-(float) (Math.atan((double) (p1.y - p2.y) / (p2.x - p1.x)) * 180.0 / Math.PI));
@@ -614,7 +614,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
     Cursor cursor;
 
     public BoolSwitchFigure() {
-        super();
         pedestal = new Pedestal();
         shadow = new Shadow();
         bar = new Bar();

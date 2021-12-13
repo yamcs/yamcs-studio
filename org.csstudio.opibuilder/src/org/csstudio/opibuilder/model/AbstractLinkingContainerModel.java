@@ -88,18 +88,18 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
     }
 
     public synchronized void setDisplayModelViewer(GraphicalViewer viewer) {
-        this.displayModel.setViewer(viewer);
+        displayModel.setViewer(viewer);
     }
 
     public synchronized void setDisplayModelDisplayID(int displayID) {
-        this.displayModel.setDisplayID(displayID);
+        displayModel.setDisplayID(displayID);
     }
 
     public synchronized void setDisplayModelExecutionMode(ExecutionMode executionMode) {
-        this.displayModel.setExecutionMode(executionMode);
+        displayModel.setExecutionMode(executionMode);
     }
 
     public synchronized void setDisplayModelOpiRuntime(IOPIRuntime opiRuntime) {
-        this.displayModel.setOpiRuntime(opiRuntime);
+        displayModel.setOpiRuntime(opiRuntime);
     }
 }

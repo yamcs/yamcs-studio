@@ -187,7 +187,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 if (getPV() == null) {
                     setFigureText(text);
                     if (getWidgetModel().isAutoSize()) {
-                        Display.getCurrent().timerExec(10, () -> performAutoSize());
+                        Display.getCurrent().timerExec(10, this::performAutoSize);
                     }
                 }
                 // Output pv value even if pv name is empty, so setPVValuelistener can be triggered.

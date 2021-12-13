@@ -36,11 +36,11 @@ class StringMultiColumnsEditor extends EditingSupport {
     public StringMultiColumnsEditor(TableViewer viewer, int numOfColumns, int columnNo,
             CellEditorType cellEditorType, Object cellData) {
         super(viewer);
-        this.table_viewer = viewer;
+        table_viewer = viewer;
         this.columnNo = columnNo;
         this.numOfColumns = numOfColumns;
         this.cellEditorType = cellEditorType;
-        this.cellEditorData = cellData;
+        cellEditorData = cellData;
         if (cellEditorType == CellEditorType.CHECKBOX) {
             if (cellEditorData == null || !(cellEditorData instanceof String[])
                     || ((String[]) cellEditorData).length < 2) {
@@ -64,7 +64,7 @@ class StringMultiColumnsEditor extends EditingSupport {
                 protected Object doGetValue() {
                     return (Boolean) super.doGetValue() ? ((String[]) cellEditorData)[1]
                             : ((String[]) cellEditorData)[0];
-                };
+                }
 
                 @Override
                 protected void doSetValue(Object value) {

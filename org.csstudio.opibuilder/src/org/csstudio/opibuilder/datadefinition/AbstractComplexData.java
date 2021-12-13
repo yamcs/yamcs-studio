@@ -27,7 +27,7 @@ public abstract class AbstractComplexData {
 
     public AbstractComplexData(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
+        propertyMap = new LinkedHashMap<>();
         configureProperties();
     }
 

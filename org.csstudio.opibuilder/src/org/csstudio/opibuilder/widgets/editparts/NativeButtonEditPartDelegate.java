@@ -31,7 +31,7 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
     private boolean skipTraverse;
 
     public NativeButtonEditPartDelegate(ActionButtonEditPart editPart) {
-        this.editpart = editPart;
+        editpart = editPart;
     }
 
     @Override

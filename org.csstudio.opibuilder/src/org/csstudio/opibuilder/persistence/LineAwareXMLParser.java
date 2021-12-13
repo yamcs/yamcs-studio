@@ -43,7 +43,7 @@ public class LineAwareXMLParser {
 
         @Override
         public int compareTo(LineAwareElement o) {
-            return this.lineNumber - o.lineNumber;
+            return lineNumber - o.lineNumber;
         }
     }
 
@@ -52,7 +52,6 @@ public class LineAwareXMLParser {
         private LineAwareFactory factory = new LineAwareFactory();
 
         public XMLLineAwareBuilder() {
-            super();
             setFactory(factory);
         }
 
@@ -67,7 +66,7 @@ public class LineAwareXMLParser {
         private SAXHandler saxHandler;
 
         public void setSAXHandler(SAXHandler sh) {
-            this.saxHandler = sh;
+            saxHandler = sh;
         }
 
         @Override

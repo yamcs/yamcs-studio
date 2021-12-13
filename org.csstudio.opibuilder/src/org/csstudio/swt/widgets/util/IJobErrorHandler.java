@@ -21,5 +21,5 @@ public interface IJobErrorHandler {
      * @param exception
      *            the exception to be handled
      */
-    public void handleError(Throwable exception);
+    void handleError(Throwable exception);
 }

@@ -74,10 +74,10 @@ public class ConnectionHandler {
      *            the widget editpart to be handled.
      */
     public ConnectionHandler(AbstractBaseEditPart editpart) {
-        this.editPart = editpart;
+        editPart = editpart;
         figure = editpart.getFigure();
         widgetModel = editpart.getWidgetModel();
-        this.display = editpart.getViewer().getControl().getDisplay();
+        display = editpart.getViewer().getControl().getDisplay();
         pvMap = new ConcurrentHashMap<>();
         connected = true;
     }

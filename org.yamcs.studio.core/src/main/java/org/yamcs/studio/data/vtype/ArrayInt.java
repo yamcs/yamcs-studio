@@ -46,7 +46,7 @@ public final class ArrayInt extends ListInt implements Serializable {
     }
 
     @Override
-    public final IteratorInt iterator() {
+    public IteratorInt iterator() {
         return new IteratorInt() {
             private int index;
 
@@ -63,7 +63,7 @@ public final class ArrayInt extends ListInt implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 

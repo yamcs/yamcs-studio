@@ -68,9 +68,7 @@ public class CommandClipboard {
         // first compute the stack delays from the cmd history generation times
         var sortedRecords = new ArrayList<CommandHistoryRecord>();
         var commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
-        for (var chr : copiedCommandHistoryRecords) {
-            sortedRecords.add(chr);
-        }
+        sortedRecords.addAll(copiedCommandHistoryRecords);
         Collections.sort(sortedRecords, new SortByGenerationTime());
         var lastTime = 0L;
         for (var chr : sortedRecords) {

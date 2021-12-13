@@ -81,7 +81,7 @@ public class DumpPVListAction implements IObjectActionDelegate {
 
         protected PVListDialog(Shell parentShell, Object[] allRuntimePVNames) {
             super(parentShell);
-            this.allPVNames = allRuntimePVNames;
+            allPVNames = allRuntimePVNames;
             setShellStyle(getShellStyle() | SWT.RESIZE);
             var sb = new StringBuilder();
             var i = 0;

@@ -111,7 +111,7 @@ public class FontProperty extends AbstractWidgetProperty<OPIFont> {
 
     @Override
     public void writeToXML(Element propElement) {
-        var opiFont = (OPIFont) getPropertyValue();
+        var opiFont = getPropertyValue();
 
         Element fontElement;
 

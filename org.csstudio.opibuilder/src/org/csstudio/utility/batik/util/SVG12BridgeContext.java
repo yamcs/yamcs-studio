@@ -40,6 +40,6 @@ public class SVG12BridgeContext extends org.apache.batik.bridge.svg12.SVG12Bridg
             animationEngine = new SVGAnimationEngine(document, this);
             setAnimationLimitingMode();
         }
-        return (org.apache.batik.bridge.SVGAnimationEngine) animationEngine;
+        return animationEngine;
     }
 }

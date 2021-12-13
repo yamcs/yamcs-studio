@@ -43,7 +43,7 @@ public final class SchemaService {
         reload();
     }
 
-    public static final synchronized SchemaService getInstance() {
+    public static synchronized SchemaService getInstance() {
         if (instance == null) {
             instance = new SchemaService();
         }

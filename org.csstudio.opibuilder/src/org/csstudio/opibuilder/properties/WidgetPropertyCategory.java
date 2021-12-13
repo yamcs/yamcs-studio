@@ -15,49 +15,49 @@ package org.csstudio.opibuilder.properties;
  */
 public interface WidgetPropertyCategory {
 
-    public final static WidgetPropertyCategory Image = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Image = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Image";
         }
     };
 
-    public final static WidgetPropertyCategory Behavior = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Behavior = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Behavior";
         }
     };
 
-    public final static WidgetPropertyCategory Display = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Display = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Display";
         }
     };
 
-    public final static WidgetPropertyCategory Position = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Position = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Position";
         }
     };
 
-    public final static WidgetPropertyCategory Misc = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Misc = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Misc";
         }
     };
 
-    public final static WidgetPropertyCategory Border = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Border = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Border";
         }
     };
 
-    public final static WidgetPropertyCategory Basic = new WidgetPropertyCategory() {
+    WidgetPropertyCategory Basic = new WidgetPropertyCategory() {
         @Override
         public String toString() {
             return "Basic";

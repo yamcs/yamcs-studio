@@ -114,7 +114,7 @@ public class PVTupleTableEditor extends Composite {
     }
 
     public void updateInput(List<PVTuple> new_items) {
-        this.pvTupleList = new_items;
+        pvTupleList = new_items;
         pvTupleListTableViewer.setInput(new_items);
         pvTupleListTableViewer.setLabelProvider(new PVTupleLabelProvider(pvTupleList));
     }

@@ -45,10 +45,10 @@ public class AutoCompleteResult {
     private String provider;
 
     public AutoCompleteResult() {
-        this.proposals = new LinkedList<Proposal>();
-        this.topProposals = new LinkedList<Proposal>();
-        this.tooltips = new LinkedList<TooltipData>();
-        this.count = 0;
+        proposals = new LinkedList<>();
+        topProposals = new LinkedList<>();
+        tooltips = new LinkedList<>();
+        count = 0;
     }
 
     public void addProposal(Proposal p) {

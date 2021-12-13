@@ -50,15 +50,8 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
 
             private void selectWidgets() {
                 // must be queued so it is executed after property has been changed.
-                GUIRefreshThread.getInstance(false).addIgnorableTask(new WidgetIgnorableUITask(this, new Runnable() {
-                    @Override
-                    public void run() {
-                        // if(!containerModel.isLocked())
-                        // containerModel.selectWidgets(containerModel.getChildren(), false);
-                        // else
-                        containerModel.getParent().selectWidget(containerModel, false);
-                    }
-                }, Display.getCurrent()));
+                GUIRefreshThread.getInstance(false).addIgnorableTask(new WidgetIgnorableUITask(this,
+                        () -> containerModel.getParent().selectWidget(containerModel, false), Display.getCurrent()));
 
             }
         };

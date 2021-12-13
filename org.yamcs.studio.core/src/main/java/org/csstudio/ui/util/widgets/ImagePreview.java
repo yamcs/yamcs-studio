@@ -146,7 +146,6 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
             var x = (bounds.width - extend.x) / 2;
             var y = (bounds.height - extend.y) / 2;
             gc.drawText(message, x, y, SWT.DRAW_DELIMITER | SWT.DRAW_TRANSPARENT);
-            return;
         }
     }
 

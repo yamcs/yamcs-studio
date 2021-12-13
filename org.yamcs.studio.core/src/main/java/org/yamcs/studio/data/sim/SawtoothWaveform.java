@@ -85,7 +85,7 @@ public class SawtoothWaveform extends SimFunction<VDoubleArray> {
         var newArray = new double[nSamples];
         for (var i = 0; i < newArray.length; i++) {
             var x = (omega * t + k * i) / (2 * Math.PI);
-            var normalizedPositionInPeriod = x - (double) (long) x;
+            var normalizedPositionInPeriod = x - (long) x;
             newArray[i] = -1.0 + 2 * normalizedPositionInPeriod;
         }
         return new ArrayDouble(newArray);

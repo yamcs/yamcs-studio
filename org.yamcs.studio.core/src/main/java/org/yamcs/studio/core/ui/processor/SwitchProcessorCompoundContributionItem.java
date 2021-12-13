@@ -84,7 +84,7 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
 
     private void updateSelection() {
         var workbench = PlatformUI.getWorkbench();
-        var commandService = (ICommandService) workbench.getService(ICommandService.class);
+        var commandService = workbench.getService(ICommandService.class);
         var command = commandService.getCommand(SWITCH_PROCESSOR_COMMAND);
         try {
             var currentProcessor = YamcsPlugin.getProcessor();

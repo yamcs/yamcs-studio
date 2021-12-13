@@ -84,7 +84,7 @@ public class ReplaceWidgetsAction extends SelectionAction {
     protected final List<AbstractWidgetModel> getSelectedWidgetModels() {
         List<?> selection = getSelectedObjects();
 
-        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<>();
 
         for (var o : selection) {
             if (o instanceof EditPart) {

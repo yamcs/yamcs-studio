@@ -130,7 +130,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
             setFigureText((String) newValue);
 
             if (isAutoSize) {
-                Display.getCurrent().timerExec(10, () -> performAutoSize());
+                Display.getCurrent().timerExec(10, this::performAutoSize);
             }
             return true;
         });
@@ -237,7 +237,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     }
 
     protected void performDirectEdit() {
-        new TextEditManager(this, new LabelCellEditorLocator((TextFigure) getFigure())).show();
+        new TextEditManager(this, new LabelCellEditorLocator(getFigure())).show();
     }
 
     @Override

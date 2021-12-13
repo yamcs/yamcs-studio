@@ -225,7 +225,7 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void addNewFont() {
-        List<String> existingNames = getTableViewerInput().stream().map(c -> c.getFontName())
+        List<String> existingNames = getTableViewerInput().stream().map(OPIFont::getFontName)
                 .collect(Collectors.toList());
 
         var shell = tableViewer.getTable().getShell();
@@ -240,7 +240,7 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void editFont(OPIFont selectedFont) {
-        List<String> existingNames = getTableViewerInput().stream().map(c -> c.getFontName())
+        List<String> existingNames = getTableViewerInput().stream().map(OPIFont::getFontName)
                 .collect(Collectors.toList());
 
         var shell = tableViewer.getTable().getShell();

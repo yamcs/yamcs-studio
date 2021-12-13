@@ -68,7 +68,7 @@ public class SimDatasource implements Datasource {
                 var constantValue = ValueFactory.toVTypeChecked(tokens.get(1));
                 return new SimData(constantValue);
             } else {
-                SimFunction<?> function = (SimFunction<?>) NameParser.createFunction(basename);
+                SimFunction<?> function = NameParser.createFunction(basename);
                 return new SimData(function, exec);
             }
         });

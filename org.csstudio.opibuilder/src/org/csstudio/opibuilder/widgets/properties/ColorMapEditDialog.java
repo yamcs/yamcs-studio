@@ -402,7 +402,7 @@ public class ColorMapEditDialog extends TrayDialog {
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof ColorTuple) {
                     colorList.remove(selection.getFirstElement());
                     refreshColorListViewerForAction(null);
-                    this.setEnabled(false);
+                    setEnabled(false);
                 }
             }
         };

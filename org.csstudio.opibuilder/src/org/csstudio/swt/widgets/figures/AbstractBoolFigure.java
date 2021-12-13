@@ -60,7 +60,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
         String descripion;
 
         BoolLabelPosition(String description) {
-            this.descripion = description;
+            descripion = description;
         }
 
         @Override
@@ -252,10 +252,10 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
     }
 
     public void setBooleanValue(boolean value) {
-        if (this.booleanValue == value) {
+        if (booleanValue == value) {
             return;
         }
-        this.booleanValue = value;
+        booleanValue = value;
         updateValue();
     }
 
@@ -273,7 +273,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
     }
 
     public void setBoolLabelPosition(BoolLabelPosition labelPosition) {
-        this.boolLabelPosition = labelPosition;
+        boolLabelPosition = labelPosition;
         labelPosition = null;
         revalidate();
         repaint();
@@ -364,7 +364,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
     protected void updateBoolValue() {
         // get boolValue
         if (bit < 0) {
-            booleanValue = (this.value != 0);
+            booleanValue = (value != 0);
         } else if (bit >= 0) {
             booleanValue = ((value >> bit) & 1L) > 0;
         }
@@ -393,7 +393,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
                     setValue(booleanValue ? value | ((short) 1 << bit) : value & ~((short) 1 << bit));
                     break;
                 case BITS_32:
-                    setValue(booleanValue ? value | ((int) 1 << bit) : value & ~((int) 1 << bit));
+                    setValue(booleanValue ? value | (1 << bit) : value & ~(1 << bit));
                     break;
                 default:
                     setValue(booleanValue ? value | (1L << bit) : value & ~(1L << bit));

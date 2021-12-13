@@ -30,8 +30,8 @@ public class SpinnerTextEditManager extends TextEditManager {
     public SpinnerTextEditManager(AbstractBaseEditPart source, CellEditorLocator locator, boolean multiline,
             double step_increment, double page_increment) {
         super(source, locator, multiline);
-        this.editPart = source;
-        this.multiLine = multiline;
+        editPart = source;
+        multiLine = multiline;
         this.step_increment = step_increment;
         this.page_increment = page_increment;
     }

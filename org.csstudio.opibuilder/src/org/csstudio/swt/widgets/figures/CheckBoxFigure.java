@@ -210,7 +210,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
     protected void updateBoolValue() {
         // get boolValue
         if (bit < 0) {
-            boolValue = (this.value != 0);
+            boolValue = (value != 0);
         } else if (bit >= 0) {
             boolValue = ((value >> bit) & 1L) > 0;
         }
@@ -234,7 +234,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
                     setValue(boolValue ? value | ((short) 1 << bit) : value & ~((short) 1 << bit));
                     break;
                 case BITS_32:
-                    setValue(boolValue ? value | ((int) 1 << bit) : value & ~((int) 1 << bit));
+                    setValue(boolValue ? value | (1 << bit) : value & ~(1 << bit));
                     break;
                 default:
                     setValue(boolValue ? value | (1L << bit) : value & ~(1L << bit));

@@ -66,7 +66,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         if (newval == null) {
             return;
         }
-        this.filePath = newval;
+        filePath = newval;
         if (image != null) {
             image.dispose();
             image = null;
@@ -90,7 +90,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
         if (isLoadingImage()) {
             return;
         }
-        ImageUtils.crop(bounds, this.getInsets());
+        ImageUtils.crop(bounds, getInsets());
         if (bounds.width <= 0 || bounds.height <= 0) {
             return;
         }
@@ -267,7 +267,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
     }
 
     public void setImageLoadedListener(IImageListener listener) {
-        this.imageListener = listener;
+        imageListener = listener;
     }
 
     @Override

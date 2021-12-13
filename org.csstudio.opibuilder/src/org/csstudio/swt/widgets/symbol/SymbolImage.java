@@ -19,35 +19,35 @@ import org.eclipse.swt.graphics.ImageData;
 
 public interface SymbolImage {
 
-    public final static Color DISABLE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
+    Color DISABLE_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_GRAY);
 
     /** The alpha (0 is transparency and 255 is opaque) for disabled paint */
-    public static final int DISABLED_ALPHA = 100;
+    int DISABLED_ALPHA = 100;
 
-    public void setImagePath(String imagePath);
+    void setImagePath(String imagePath);
 
-    public String getImagePath();
+    String getImagePath();
 
-    public ImageData getOriginalImageData();
+    ImageData getOriginalImageData();
 
     /**
      * Dispose the resource used by this figure
      */
-    public void dispose();
+    void dispose();
 
-    public void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
-    public boolean isDisposed();
+    boolean isDisposed();
 
-    public boolean isEditMode();
+    boolean isEditMode();
 
-    public boolean isEmpty();
+    boolean isEmpty();
 
-    public void setCurrentColor(Color newColor);
+    void setCurrentColor(Color newColor);
 
-    public void setColorToChange(Color newColor);
+    void setColorToChange(Color newColor);
 
-    public void setBackgroundColor(Color newColor);
+    void setBackgroundColor(Color newColor);
 
     /**
      * The main drawing routine.
@@ -55,23 +55,23 @@ public interface SymbolImage {
      * @param gfx
      *            The {@link Graphics} to use
      */
-    public void paintFigure(Graphics gfx);
+    void paintFigure(Graphics gfx);
 
-    public void setBounds(Rectangle newArea);
+    void setBounds(Rectangle newArea);
 
-    public void setAbsoluteScale(double newScale);
+    void setAbsoluteScale(double newScale);
 
     /**
      * Resizes the image.
      */
-    public void resizeImage();
+    void resizeImage();
 
     /**
      * Automatically adjust the widget bounds to fit the size of the static image
      *
      * @param autoSize
      */
-    public void setAutoSize(boolean autoSize);
+    void setAutoSize(boolean autoSize);
 
     /**
      * Set the stretch state for the image.
@@ -79,46 +79,46 @@ public interface SymbolImage {
      * @param newval
      *            true, if it should be stretched, false otherwise)
      */
-    public void setStretch(boolean newval);
+    void setStretch(boolean newval);
 
     /**
      * Get the auto sized widget dimension according to the static image size.
      *
      * @return The auto sized widget dimension.
      */
-    public Dimension getAutoSizedDimension();
+    Dimension getAutoSizedDimension();
 
     /**
      * Sets the amount of pixels, which are cropped from the left.
      */
-    public void setLeftCrop(int newval);
+    void setLeftCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the right.
      */
-    public void setRightCrop(int newval);
+    void setRightCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the bottom.
      */
-    public void setBottomCrop(int newval);
+    void setBottomCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the top.
      */
-    public void setTopCrop(int newval);
+    void setTopCrop(int newval);
 
-    public void setPermutationMatrix(PermutationMatrix permutationMatrix);
+    void setPermutationMatrix(PermutationMatrix permutationMatrix);
 
-    public PermutationMatrix getPermutationMatrix();
+    PermutationMatrix getPermutationMatrix();
 
-    public void setAnimationDisabled(boolean stop);
+    void setAnimationDisabled(boolean stop);
 
-    public void setListener(SymbolImageListener listener);
+    void setListener(SymbolImageListener listener);
 
-    public void syncLoadImage();
+    void syncLoadImage();
 
-    public void asyncLoadImage();
+    void asyncLoadImage();
 
-    public void setAlignedToNearestSecond(boolean aligned);
+    void setAlignedToNearestSecond(boolean aligned);
 }

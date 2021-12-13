@@ -26,7 +26,7 @@ public class ScriptsInput {
     }
 
     public ScriptsInput() {
-        scriptList = new ArrayList<ScriptData>();
+        scriptList = new ArrayList<>();
     }
 
     /**

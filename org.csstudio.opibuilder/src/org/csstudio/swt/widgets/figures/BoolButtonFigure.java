@@ -336,7 +336,6 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
     Cursor cursor;
 
     public BoolButtonFigure() {
-        super();
         squareButtonFigure = new SquareButton();
         ellipseButton = new EllipseButton();
         setLayoutManager(new XYLayout());

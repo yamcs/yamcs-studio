@@ -175,22 +175,9 @@ public class ArrayFigure extends Figure implements Introspectable {
 
         setArrayLength(100);
         setHorizontal(false);
-        spinner.addManualValueChangeListener(new IManualValueChangeListener() {
-            @Override
-            public void manualValueChanged(double newValue) {
-                setIndex((int) newValue);
-                // scrollbar.setValue((int) newValue);
-            }
-        });
+        spinner.addManualValueChangeListener(newValue -> setIndex((int) newValue));
 
-        scrollbar.addManualValueChangeListener(new IManualValueChangeListener() {
-            @Override
-            public void manualValueChanged(double newValue) {
-                setIndex((int) newValue);
-
-                // spinner.setValue((int) newValue);
-            }
-        });
+        scrollbar.addManualValueChangeListener(newValue -> setIndex((int) newValue));
     }
 
     public void addIndexChangeListener(IManualValueChangeListener listener) {
@@ -425,7 +412,7 @@ public class ArrayFigure extends Figure implements Introspectable {
         if (elementsCount <= 0) {
             return;
         }
-        var grayElementsCount = this.index + elementsCount - getArrayLength();
+        var grayElementsCount = index + elementsCount - getArrayLength();
 
         for (var i = 0; i < elementsCount; i++) {
             var child = (IFigure) pane.getChildren().get(i);

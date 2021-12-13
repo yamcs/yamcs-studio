@@ -266,7 +266,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         };
         ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading SVG Image...", exception -> {
             loadingImage = false;
-            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            Display.getDefault().syncExec(this::fireSymbolImageLoaded);
             log.log(Level.WARNING, "ERROR in loading SVG image " + imagePath, exception);
         });
     }
@@ -288,7 +288,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             initRenderingHints();
             var awtImage = svgHandler.getOffScreen();
             if (awtImage != null) {
-                this.originalImageData = SVGUtils.toSWT(Display.getCurrent(), awtImage);
+                originalImageData = SVGUtils.toSWT(Display.getCurrent(), awtImage);
                 resetData();
             }
             svgHandler.setRenderListener(image -> {

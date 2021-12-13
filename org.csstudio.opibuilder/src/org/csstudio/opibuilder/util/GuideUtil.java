@@ -24,11 +24,11 @@ public final class GuideUtil {
     /**
      * A Map which contains the vertical guide of the AbstractWidgetModels.
      */
-    private Map<AbstractWidgetModel, GuideModel> _verticalGuides = new HashMap<AbstractWidgetModel, GuideModel>();
+    private Map<AbstractWidgetModel, GuideModel> _verticalGuides = new HashMap<>();
     /**
      * A Map which contains the horizontal guide of the AbstractWidgetModels.
      */
-    private Map<AbstractWidgetModel, GuideModel> _horizontalGuides = new HashMap<AbstractWidgetModel, GuideModel>();
+    private Map<AbstractWidgetModel, GuideModel> _horizontalGuides = new HashMap<>();
 
     /**
      * The instance of the GuideUtil.

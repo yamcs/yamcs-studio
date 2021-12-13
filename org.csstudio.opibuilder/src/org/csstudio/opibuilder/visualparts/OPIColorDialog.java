@@ -62,8 +62,8 @@ public class OPIColorDialog extends TrayDialog {
     protected OPIColorDialog(Shell parentShell, OPIColor color, String dialogTitle) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        this.title = dialogTitle;
-        this.opiColor = color.getCopy();
+        title = dialogTitle;
+        opiColor = color.getCopy();
     }
 
     @Override

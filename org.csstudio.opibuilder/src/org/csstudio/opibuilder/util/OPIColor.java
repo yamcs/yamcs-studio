@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.util;
 
+import java.util.Objects;
+
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -42,7 +44,7 @@ public class OPIColor implements IAdaptable {
 
     public OPIColor(String colorName) {
         this.colorName = colorName;
-        this.colorValue = MediaService.getInstance().getColor(colorName);
+        colorValue = MediaService.getInstance().getColor(colorName);
         preDefined = true;
     }
 
@@ -55,9 +57,9 @@ public class OPIColor implements IAdaptable {
     }
 
     public OPIColor(String name, RGB rgb, boolean predefined) {
-        this.colorName = name;
-        this.colorValue = rgb;
-        this.preDefined = predefined;
+        colorName = name;
+        colorValue = rgb;
+        preDefined = predefined;
     }
 
     /**
@@ -90,13 +92,13 @@ public class OPIColor implements IAdaptable {
 
     public void setColorName(String colorName) {
         this.colorName = colorName;
-        this.colorValue = MediaService.getInstance().getColor(colorName);
+        colorValue = MediaService.getInstance().getColor(colorName);
         preDefined = true;
     }
 
     public void setColorValue(RGB rgb) {
-        this.colorName = "(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
-        this.colorValue = rgb;
+        colorName = "(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+        colorValue = rgb;
         preDefined = false;
     }
 
@@ -217,18 +219,10 @@ public class OPIColor implements IAdaptable {
             return false;
         }
         var other = (OPIColor) obj;
-        if (colorName == null) {
-            if (other.colorName != null) {
-                return false;
-            }
-        } else if (!colorName.equals(other.colorName)) {
+        if (!Objects.equals(colorName, other.colorName)) {
             return false;
         }
-        if (colorValue == null) {
-            if (other.colorValue != null) {
-                return false;
-            }
-        } else if (!colorValue.equals(other.colorValue)) {
+        if (!Objects.equals(colorValue, other.colorValue)) {
             return false;
         }
         return true;
@@ -246,11 +240,7 @@ public class OPIColor implements IAdaptable {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((colorName == null) ? 0 : colorName.hashCode());
-        result = prime * result + ((colorValue == null) ? 0 : colorValue.hashCode());
-        return result;
+        return Objects.hash(colorName, colorValue);
     }
 
     public OPIColor getCopy() {

@@ -22,7 +22,6 @@ public class CommandTreeViewerFilter extends ViewerFilter {
     private CommandTreeContentProvider contentProvider;
 
     public CommandTreeViewerFilter(CommandTreeContentProvider contentProvider) {
-        super();
         this.contentProvider = contentProvider;
     }
 

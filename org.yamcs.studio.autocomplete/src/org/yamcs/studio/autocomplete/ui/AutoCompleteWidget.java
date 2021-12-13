@@ -77,7 +77,7 @@ public class AutoCompleteWidget {
      */
     public AutoCompleteWidget(CellEditor cellEditor, String type) {
         Assert.isNotNull(type);
-        this.control = cellEditor.getControl();
+        control = cellEditor.getControl();
         this.type = type;
         enableContentProposal();
     }

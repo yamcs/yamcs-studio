@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.editpolicies;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -98,7 +97,7 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
             cmd = new WidgetSetConstraintCommand(widgetModel, request, (Rectangle) constraint);
         }
 
-        List<ConnectionModel> allConnections = new ArrayList<ConnectionModel>(
+        List<ConnectionModel> allConnections = new ArrayList<>(
                 part.getWidgetModel().getSourceConnections());
         allConnections.addAll(part.getWidgetModel().getTargetConnections());
         if (part.getWidgetModel() instanceof AbstractContainerModel) {
@@ -387,9 +386,9 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
      * @return a list with all widget editpart that are currently selected
      */
     private final List<AbstractBaseEditPart> sortSelectedWidgets(List<?> selection) {
-        List<AbstractBaseEditPart> sameParentWidgets = new ArrayList<AbstractBaseEditPart>();
-        List<AbstractBaseEditPart> differentParentWidgets = new ArrayList<AbstractBaseEditPart>();
-        List<AbstractBaseEditPart> result = new ArrayList<AbstractBaseEditPart>();
+        List<AbstractBaseEditPart> sameParentWidgets = new ArrayList<>();
+        List<AbstractBaseEditPart> differentParentWidgets = new ArrayList<>();
+        List<AbstractBaseEditPart> result = new ArrayList<>();
         AbstractContainerModel parent = null;
         for (var o : selection) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
@@ -408,17 +407,13 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         if (sameParentWidgets.size() > 1) {
             var modelArray = sameParentWidgets.toArray(new AbstractBaseEditPart[0]);
 
-            Arrays.sort(modelArray, new Comparator<AbstractBaseEditPart>() {
-                @Override
-                public int compare(AbstractBaseEditPart o1, AbstractBaseEditPart o2) {
-                    if (o1.getWidgetModel().getParent().getChildren().indexOf(o1.getWidgetModel()) > o2.getWidgetModel()
-                            .getParent().getChildren().indexOf(o2.getWidgetModel())) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+            Arrays.sort(modelArray, (o1, o2) -> {
+                if (o1.getWidgetModel().getParent().getChildren().indexOf(o1.getWidgetModel()) > o2.getWidgetModel()
+                        .getParent().getChildren().indexOf(o2.getWidgetModel())) {
+                    return 1;
+                } else {
+                    return -1;
                 }
-
             });
             result.addAll(Arrays.asList(modelArray));
             if (differentParentWidgets.size() > 0) {

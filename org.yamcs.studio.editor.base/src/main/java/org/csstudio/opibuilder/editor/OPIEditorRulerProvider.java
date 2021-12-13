@@ -10,7 +10,6 @@
 
 package org.csstudio.opibuilder.editor;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +32,16 @@ public final class OPIEditorRulerProvider extends RulerProvider {
     /**
      * A PropertyChangeListener for rulers.
      */
-    private PropertyChangeListener rulerListener = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(RulerModel.PROPERTY_CHILDREN_CHANGED)) {
-                var guide = (GuideModel) evt.getNewValue();
-                if (getGuides().contains(guide)) {
-                    guide.addPropertyChangeListener(guideListener);
-                } else {
-                    guide.removePropertyChangeListener(guideListener);
-                }
-                for (var i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i)).notifyGuideReparented(guide);
-                }
+    private PropertyChangeListener rulerListener = evt -> {
+        if (evt.getPropertyName().equals(RulerModel.PROPERTY_CHILDREN_CHANGED)) {
+            var guide = (GuideModel) evt.getNewValue();
+            if (getGuides().contains(guide)) {
+                guide.addPropertyChangeListener(this.guideListener);
+            } else {
+                guide.removePropertyChangeListener(this.guideListener);
+            }
+            for (var i = 0; i < listeners.size(); i++) {
+                ((RulerChangeListener) listeners.get(i)).notifyGuideReparented(guide);
             }
         }
     };
@@ -53,18 +49,15 @@ public final class OPIEditorRulerProvider extends RulerProvider {
     /**
      * A PropertyChangeListener for guides.
      */
-    private PropertyChangeListener guideListener = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(GuideModel.PROPERTY_CHILDREN_CHANGED)) {
-                for (var i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i)).notifyPartAttachmentChanged(evt.getNewValue(),
-                            evt.getSource());
-                }
-            } else {
-                for (var i = 0; i < listeners.size(); i++) {
-                    ((RulerChangeListener) listeners.get(i)).notifyGuideMoved(evt.getSource());
-                }
+    private PropertyChangeListener guideListener = evt -> {
+        if (evt.getPropertyName().equals(GuideModel.PROPERTY_CHILDREN_CHANGED)) {
+            for (var i1 = 0; i1 < listeners.size(); i1++) {
+                ((RulerChangeListener) listeners.get(i1)).notifyPartAttachmentChanged(evt.getNewValue(),
+                        evt.getSource());
+            }
+        } else {
+            for (var i2 = 0; i2 < listeners.size(); i2++) {
+                ((RulerChangeListener) listeners.get(i2)).notifyGuideMoved(evt.getSource());
             }
         }
     };
@@ -85,7 +78,7 @@ public final class OPIEditorRulerProvider extends RulerProvider {
         this.ruler.addPropertyChangeListener(rulerListener);
         var guides = getGuides();
         for (var i = 0; i < guides.size(); i++) {
-            ((GuideModel) guides.get(i)).addPropertyChangeListener(guideListener);
+            guides.get(i).addPropertyChangeListener(guideListener);
         }
     }
 
@@ -101,7 +94,7 @@ public final class OPIEditorRulerProvider extends RulerProvider {
 
     @Override
     public List<AbstractWidgetModel> getAttachedModelObjects(Object guide) {
-        return new ArrayList<AbstractWidgetModel>(((GuideModel) guide).getAttachedModels());
+        return new ArrayList<>(((GuideModel) guide).getAttachedModels());
     }
 
     @Override
@@ -124,7 +117,7 @@ public final class OPIEditorRulerProvider extends RulerProvider {
         var guides = getGuides();
         var result = new int[guides.size()];
         for (var i = 0; i < guides.size(); i++) {
-            result[i] = ((GuideModel) guides.get(i)).getPosition();
+            result[i] = guides.get(i).getPosition();
         }
         return result;
     }

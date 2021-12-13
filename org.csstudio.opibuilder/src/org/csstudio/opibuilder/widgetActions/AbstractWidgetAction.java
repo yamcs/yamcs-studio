@@ -36,7 +36,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     public static final String PROP_DESCRIPTION = "description";
 
     public AbstractWidgetAction() {
-        propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
+        propertyMap = new LinkedHashMap<>();
         configureProperties();
         addProperty(new StringProperty(PROP_DESCRIPTION, "Description", WidgetPropertyCategory.Basic, ""));
     }

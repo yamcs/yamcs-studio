@@ -110,7 +110,7 @@ public class VTableFactory {
 
         var columnNames = new ArrayList<String>();
         var columnTypes = new ArrayList<Class<?>>();
-        var columnData = new ArrayList<Object>();
+        var columnData = new ArrayList<>();
         for (var nColumn = 0; nColumn < tables[0].getColumnCount(); nColumn++) {
             columnNames.add(tables[0].getColumnName(nColumn));
             Class<?> type = tables[0].getColumnType(nColumn);
@@ -188,7 +188,7 @@ public class VTableFactory {
         var rowCount = currentOffset;
         ListInt offsets = new ArrayInt(tableOffsets);
 
-        var columnData = new ArrayList<Object>();
+        var columnData = new ArrayList<>();
         if (extraColumnName != null) {
             columnData.add(new AbstractList<String>() {
                 @Override
@@ -226,7 +226,7 @@ public class VTableFactory {
     }
 
     private static <T> List<T> createView(List<T> list, ListInt indexes) {
-        return new AbstractList<T>() {
+        return new AbstractList<>() {
             @Override
             public T get(int index) {
                 return list.get(indexes.getInt(index));
@@ -253,7 +253,7 @@ public class VTableFactory {
     public static VTable select(VTable table, ListInt indexes) {
         var names = columnNames(table);
         var types = columnTypes(table);
-        var data = new AbstractList<Object>() {
+        var data = new AbstractList<>() {
             @Override
             public Object get(int index) {
                 return selectColumnData(table, index, indexes);
@@ -394,7 +394,7 @@ public class VTableFactory {
         public ListNumber createListNumber(int size) {
             return ListNumbers.linearListFromRange(min, max, size);
         }
-    };
+    }
 
     public static ListNumberProvider step(double initialValue, double increment) {
         return new Step(initialValue, increment);
@@ -415,7 +415,7 @@ public class VTableFactory {
         public ListNumber createListNumber(int size) {
             return ListNumbers.linearList(initialValue, increment, size);
         }
-    };
+    }
 
     public static VTable extractRow(VTable vTable, int row) {
         if (vTable == null || row >= vTable.getRowCount() || row < 0) {
@@ -423,7 +423,7 @@ public class VTableFactory {
         }
         var columnNames = new ArrayList<String>(vTable.getColumnCount());
         var columnTypes = new ArrayList<Class<?>>(vTable.getColumnCount());
-        var columnData = new ArrayList<Object>(vTable.getColumnCount());
+        var columnData = new ArrayList<>(vTable.getColumnCount());
         for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
@@ -438,7 +438,7 @@ public class VTableFactory {
         }
         var columnNames = new ArrayList<String>(vTable.getColumnCount());
         var columnTypes = new ArrayList<Class<?>>(vTable.getColumnCount());
-        var columnData = new ArrayList<Object>(vTable.getColumnCount());
+        var columnData = new ArrayList<>(vTable.getColumnCount());
         for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
@@ -449,7 +449,7 @@ public class VTableFactory {
 
     private static Object extractColumnData(Object columnData, int... rows) {
         if (columnData instanceof List) {
-            var data = new ArrayList<Object>(rows.length);
+            var data = new ArrayList<>(rows.length);
             for (var i = 0; i < rows.length; i++) {
                 var j = rows[i];
                 data.add(((List<?>) columnData).get(j));
@@ -467,7 +467,7 @@ public class VTableFactory {
     }
 
     public static List<String> columnNames(VTable vTable) {
-        return new AbstractList<String>() {
+        return new AbstractList<>() {
             @Override
             public String get(int index) {
                 return vTable.getColumnName(index);
@@ -481,7 +481,7 @@ public class VTableFactory {
     }
 
     public static List<Class<?>> columnTypes(VTable vTable) {
-        return new AbstractList<Class<?>>() {
+        return new AbstractList<>() {
             @Override
             public Class<?> get(int index) {
                 return vTable.getColumnType(index);

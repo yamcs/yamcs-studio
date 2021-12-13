@@ -24,7 +24,7 @@ public class PVDescriptor extends ContentDescriptor {
     private Map<String, String> params;
 
     public PVDescriptor() {
-        params = new HashMap<String, String>();
+        params = new HashMap<>();
     }
 
     public void addParam(String name, String value) {

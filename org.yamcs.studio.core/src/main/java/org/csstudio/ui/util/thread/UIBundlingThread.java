@@ -42,7 +42,7 @@ public final class UIBundlingThread implements Runnable {
      * Standard constructor.
      */
     private UIBundlingThread() {
-        tasksQueue = new ConcurrentLinkedQueue<Runnable>();
+        tasksQueue = new ConcurrentLinkedQueue<>();
         display = Display.getCurrent();
         if (display == null) {
             if (PlatformUI.getWorkbench() != null) {

@@ -33,7 +33,7 @@ public abstract class ListFloat implements ListNumber, CollectionFloat {
 
     @Override
     public double getDouble(int index) {
-        return (double) getFloat(index);
+        return getFloat(index);
     }
 
     @Override
@@ -68,22 +68,22 @@ public abstract class ListFloat implements ListNumber, CollectionFloat {
 
     @Override
     public void setLong(int index, long value) {
-        setFloat(index, (float) value);
+        setFloat(index, value);
     }
 
     @Override
     public void setInt(int index, int value) {
-        setFloat(index, (float) value);
+        setFloat(index, value);
     }
 
     @Override
     public void setShort(int index, short value) {
-        setFloat(index, (float) value);
+        setFloat(index, value);
     }
 
     @Override
     public void setByte(int index, byte value) {
-        setFloat(index, (float) value);
+        setFloat(index, value);
     }
 
     @Override

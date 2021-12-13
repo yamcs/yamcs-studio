@@ -139,7 +139,7 @@ public class ImportEventsHandler extends AbstractHandler {
     /**
      * Reports on a batches of events. Useful for limiting GUI updates.
      */
-    private static interface BulkEventListener {
+    private interface BulkEventListener {
         void processEvents(List<Event> events);
     }
 }

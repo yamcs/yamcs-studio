@@ -52,7 +52,7 @@ public class TokenReader extends Reader {
             var ret = (char) peek;
             peek = -1;
             currentIndex++;
-            return (char) ret;
+            return ret;
         }
         while (true) {
             var c = (char) r.read();

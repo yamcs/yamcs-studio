@@ -32,7 +32,7 @@ public final class WorkbenchWindowService {
         fullScreenRegistry = new HashMap<>();
     }
 
-    public synchronized static final WorkbenchWindowService getInstance() {
+    public synchronized static WorkbenchWindowService getInstance() {
         if (instance == null) {
             instance = new WorkbenchWindowService();
         }

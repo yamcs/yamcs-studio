@@ -27,9 +27,9 @@ public class RemoveTabCommand extends Command {
     private boolean executed = false;
 
     public RemoveTabCommand(TabEditPart tabEditPart) {
-        this.tabModel = tabEditPart.getWidgetModel();
-        this.tabIndex = tabEditPart.getActiveTabIndex();
-        this.tabItem = tabEditPart.getTabItem(tabIndex);
+        tabModel = tabEditPart.getWidgetModel();
+        tabIndex = tabEditPart.getActiveTabIndex();
+        tabItem = tabEditPart.getTabItem(tabIndex);
         setLabel("Remove Tab");
     }
 

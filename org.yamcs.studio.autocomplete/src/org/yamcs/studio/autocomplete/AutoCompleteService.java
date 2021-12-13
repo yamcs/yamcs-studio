@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -91,18 +92,10 @@ public class AutoCompleteService {
             if (!getOuterType().equals(other.getOuterType())) {
                 return false;
             }
-            if (index == null) {
-                if (other.index != null) {
-                    return false;
-                }
-            } else if (!index.equals(other.index)) {
+            if (!Objects.equals(index, other.index)) {
                 return false;
             }
-            if (uniqueId == null) {
-                if (other.uniqueId != null) {
-                    return false;
-                }
-            } else if (!uniqueId.equals(other.uniqueId)) {
+            if (!Objects.equals(uniqueId, other.uniqueId)) {
                 return false;
             }
             return true;
@@ -130,7 +123,7 @@ public class AutoCompleteService {
 
         @Override
         public int compareTo(ScheduledContent sc) {
-            return this.settings.compareTo(sc.settings);
+            return settings.compareTo(sc.settings);
         }
     }
 
@@ -219,7 +212,7 @@ public class AutoCompleteService {
         var context = AutoCompletePlugin.getBundleContext();
         var references = context.getServiceReferences(IAutoCompleteProvider.class, null);
         for (var ref : references) {
-            var provider = (IAutoCompleteProvider) context.getService(ref);
+            var provider = context.getService(ref);
             var name = (String) ref.getProperty("component.name");
             var highLevelProvider = false;
             var prop = (String) ref.getProperty("highLevelProvider");
@@ -238,7 +231,7 @@ public class AutoCompleteService {
         var context = AutoCompletePlugin.getBundleContext();
         var references = context.getServiceReferences(IContentParser.class, null);
         for (var ref : references) {
-            var parser = (IContentParser) context.getService(ref);
+            var parser = context.getService(ref);
             list.add(parser);
         }
         return list;

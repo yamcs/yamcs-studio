@@ -214,7 +214,7 @@ abstract public class ControlSystemDragSource {
             arrayClass = Array.newInstance(selection.getClass(), 0).getClass();
         }
 
-        Set<Transfer> supportedTransfers = new HashSet<Transfer>();
+        Set<Transfer> supportedTransfers = new HashSet<>();
         // Add single type support, if needed
         if (singleClass != null) {
             supportedTransfers.addAll(supportedSingleTransfers(singleClass));

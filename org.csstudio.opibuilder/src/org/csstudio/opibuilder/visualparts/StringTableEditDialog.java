@@ -38,14 +38,12 @@ public class StringTableEditDialog extends Dialog {
     public StringTableEditDialog(Shell parentShell, List<String[]> inputData, String dialogTitle, String[] columnTitles,
             CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(parentShell);
-        this.title = dialogTitle;
+        title = dialogTitle;
         this.columnTitles = columnTitles;
         this.cellEditorTypes = cellEditorTypes;
         this.cellEditorDatas = cellEditorDatas;
-        this.contents = new ArrayList<String[]>();
-        for (var item : inputData) {
-            this.contents.add(item);
-        }
+        contents = new ArrayList<>();
+        contents.addAll(inputData);
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }

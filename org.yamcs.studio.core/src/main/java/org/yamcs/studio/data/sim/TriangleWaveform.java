@@ -85,7 +85,7 @@ public class TriangleWaveform extends SimFunction<VDoubleArray> {
         var newArray = new double[nSamples];
         for (var i = 0; i < newArray.length; i++) {
             var x = (omega * t + k * i) / (2 * Math.PI);
-            var normalizedPositionInPeriod = x - (double) (long) x;
+            var normalizedPositionInPeriod = x - (long) x;
             if (normalizedPositionInPeriod < 0.5) {
                 newArray[i] = 1.0 - 4 * normalizedPositionInPeriod;
             } else if (normalizedPositionInPeriod < 1.0) {

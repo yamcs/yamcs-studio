@@ -33,7 +33,7 @@ public final class RulerModel implements Serializable {
     /**
      * The guides of this ruler.
      */
-    private List<GuideModel> _guides = new LinkedList<GuideModel>();
+    private List<GuideModel> _guides = new LinkedList<>();
     /**
      * The orientation of this ruler.
      */

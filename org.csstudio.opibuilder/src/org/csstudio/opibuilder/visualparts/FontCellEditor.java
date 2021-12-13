@@ -81,6 +81,6 @@ public final class FontCellEditor extends CellEditor {
     @Override
     protected void doSetValue(Object value) {
         Assert.isTrue(value instanceof FontData);
-        this._value = (FontData) value;
+        _value = (FontData) value;
     }
 }

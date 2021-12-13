@@ -21,17 +21,17 @@ public interface IRunnerInput extends IPathEditorInput, IPersistableElement {
      * @param displayOpenManager
      *            the displayOpenManager to set
      */
-    public void setDisplayOpenManager(DisplayOpenManager displayOpenManager);
+    void setDisplayOpenManager(DisplayOpenManager displayOpenManager);
 
     /**
      * @return the displayOpenManager
      */
-    public DisplayOpenManager getDisplayOpenManager();
+    DisplayOpenManager getDisplayOpenManager();
 
     /**
      * @return the macrosInput
      */
-    public MacrosInput getMacrosInput();
+    MacrosInput getMacrosInput();
 
-    public InputStream getInputStream() throws Exception;
+    InputStream getInputStream() throws Exception;
 }

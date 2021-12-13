@@ -80,7 +80,7 @@ public class RuleDataEditDialog extends TrayDialog {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.ruleData = ruleData.getCopy();
-        this.expressionList = this.ruleData.getExpressionList();
+        expressionList = this.ruleData.getExpressionList();
 
         var propIDSet = ruleData.getWidgetModel().getAllPropertyIDs();
 
@@ -272,7 +272,7 @@ public class RuleDataEditDialog extends TrayDialog {
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.minimumWidth = 250; // Account for the StringTableEditor's minimum size
         rightComposite.setLayoutData(gd);
-        this.createLabel(rightComposite, "Input PVs");
+        createLabel(rightComposite, "Input PVs");
 
         pvsEditor = new PVTupleTableEditor(rightComposite, ruleData.getPVList(), SWT.NONE);
         pvsEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -461,9 +461,9 @@ public class RuleDataEditDialog extends TrayDialog {
             public void run() {
                 var selection = (IStructuredSelection) expressionViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof Expression) {
-                    expressionList.remove((Expression) selection.getFirstElement());
+                    expressionList.remove(selection.getFirstElement());
                     setExpressionViewerSelection(null);
-                    this.setEnabled(false);
+                    setEnabled(false);
                 }
             }
         };

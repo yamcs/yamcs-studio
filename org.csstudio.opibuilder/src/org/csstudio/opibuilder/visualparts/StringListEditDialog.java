@@ -32,11 +32,9 @@ public class StringListEditDialog extends Dialog {
 
     public StringListEditDialog(Shell parentShell, List<String> inputData, String dialogTitle) {
         super(parentShell);
-        this.title = dialogTitle;
-        this.contents = new ArrayList<String>();
-        for (var item : inputData) {
-            this.contents.add(item);
-        }
+        title = dialogTitle;
+        contents = new ArrayList<>();
+        contents.addAll(inputData);
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }

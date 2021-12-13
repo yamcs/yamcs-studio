@@ -27,7 +27,7 @@ public class LayoutWidgetsImp {
 
         var container = layoutWidget.getWidgetModel().getParent();
 
-        List<AbstractWidgetModel> modelChildren = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> modelChildren = new ArrayList<>();
         modelChildren.addAll(container.getChildren());
         modelChildren.remove(layoutWidget.getWidgetModel());
 

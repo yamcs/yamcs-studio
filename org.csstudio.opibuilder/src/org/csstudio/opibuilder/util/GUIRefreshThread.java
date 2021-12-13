@@ -61,12 +61,7 @@ public final class GUIRefreshThread implements Runnable {
         // tasksQueue = new ConcurrentLinkedQueue<WidgetIgnorableUITask>();
         rcpDisplay = DisplayUtils.getDisplay();
         tasksQueue = new LinkedHashSet<>();
-        resetAsyncEmpty = new Runnable() {
-            @Override
-            public void run() {
-                asyncEmpty = true;
-            }
-        };
+        resetAsyncEmpty = () -> asyncEmpty = true;
         reLoadGUIRefreshCycle();
         thread = new Thread(this, "OPI GUI Refresh Thread");
         thread.start();

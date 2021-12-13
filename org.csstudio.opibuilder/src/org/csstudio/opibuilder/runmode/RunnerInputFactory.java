@@ -81,9 +81,9 @@ public class RunnerInputFactory implements IElementFactory {
      *            the opi runner input
      */
     public static void saveState(IMemento memento, IRunnerInput input) {
-        var path = ((IRunnerInput) input).getPath();
+        var path = input.getPath();
         memento.putString(TAG_PATH, path.toString());
-        var macros = ((IRunnerInput) input).getMacrosInput();
+        var macros = input.getMacrosInput();
         if (macros != null) {
             memento.putString(TAG_MACRO, macros.toPersistenceString());
         }

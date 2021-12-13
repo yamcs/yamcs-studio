@@ -116,7 +116,7 @@ public class ExprParser {
                 args.add(current == null ? new ExprMissing() : current);
             }
         }
-        var f = new ExprFunction(token.val, (Expr[]) args.toArray(new Expr[0]));
+        var f = new ExprFunction(token.val, args.toArray(new Expr[0]));
         f.setComplete(complete);
 
         setValue(f);
@@ -177,7 +177,7 @@ public class ExprParser {
                 }
                 var a = new ExprArray(rows, cols);
                 for (var i = 0; i < args.size(); i++) {
-                    a.set(0, i, (Expr) args.get(i));
+                    a.set(0, i, args.get(i));
                 }
                 setValue(a);
                 break;

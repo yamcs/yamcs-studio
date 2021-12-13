@@ -64,7 +64,7 @@ public class WrappableTextFigure extends TextFigure {
             @Override
             public boolean isOpaque() {
                 return !transparent;
-            };
+            }
         };
         viewport = new Viewport();
         viewport.setContentsTracksWidth(true);

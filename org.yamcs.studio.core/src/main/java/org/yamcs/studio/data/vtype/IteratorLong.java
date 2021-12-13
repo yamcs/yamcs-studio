@@ -16,12 +16,12 @@ public abstract class IteratorLong implements IteratorNumber {
 
     @Override
     public float nextFloat() {
-        return (float) nextLong();
+        return nextLong();
     }
 
     @Override
     public double nextDouble() {
-        return (double) nextLong();
+        return nextLong();
     }
 
     @Override

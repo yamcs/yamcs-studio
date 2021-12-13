@@ -95,7 +95,7 @@ public class ErrorBar extends Composite {
 
     public void setException(Exception ex) {
         if (!isDisposed()) {
-            this.exception = ex;
+            exception = ex;
             if (ex == null) {
                 errorLabel.setToolTipText("");
                 errorLabel.setText("");

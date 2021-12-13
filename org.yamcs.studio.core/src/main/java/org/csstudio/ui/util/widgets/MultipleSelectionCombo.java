@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.ui.util.widgets;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -21,8 +20,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -76,10 +73,10 @@ public class MultipleSelectionCombo<T> extends Composite {
     private org.eclipse.swt.widgets.List list;
 
     /** Items to show in list */
-    private List<T> items = new ArrayList<T>();
+    private List<T> items = new ArrayList<>();
 
     /** Selection indices */
-    private List<Integer> selectionIndex = new ArrayList<Integer>();
+    private List<Integer> selectionIndex = new ArrayList<>();
 
     private String tool_tip = null;
     private Color text_color = null;
@@ -115,38 +112,32 @@ public class MultipleSelectionCombo<T> extends Composite {
         layout.marginWidth = 0;
         setLayout(layout);
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                switch (e.getPropertyName()) {
-                case "selection":
-                    if (modify) {
-                        break;
-                    } else {
-                        updateText();
-                        break;
-                    }
-                case "items":
-                    setSelection(Collections.<T> emptyList());
+        addPropertyChangeListener(e -> {
+            switch (e.getPropertyName()) {
+            case "selection":
+                if (modify) {
                     break;
-                default:
+                } else {
+                    updateText();
                     break;
                 }
+            case "items":
+                setSelection(Collections.<T> emptyList());
+                break;
+            default:
+                break;
             }
         });
 
         text = new Text(this, SWT.BORDER);
         var gd = new GridData(SWT.FILL, 0, true, false);
         text.setLayoutData(gd);
-        text.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                // Analyze text, update selection
-                var items_text = text.getText();
-                modify = true;
-                setSelection(items_text);
-                modify = false;
-            }
+        text.addModifyListener(e -> {
+            // Analyze text, update selection
+            var items_text = text.getText();
+            modify = true;
+            setSelection(items_text);
+            modify = false;
         });
         text.addKeyListener(new KeyAdapter() {
             @Override
@@ -265,7 +256,7 @@ public class MultipleSelectionCombo<T> extends Composite {
         var oldValue = this.selectionIndex;
         List<Integer> newSelectionIndex;
         if (selections.length > 0) {
-            newSelectionIndex = new ArrayList<Integer>(selections.length);
+            newSelectionIndex = new ArrayList<>(selections.length);
             // Locate index for each item
             for (var item : selections) {
                 int index = getIndex(item);

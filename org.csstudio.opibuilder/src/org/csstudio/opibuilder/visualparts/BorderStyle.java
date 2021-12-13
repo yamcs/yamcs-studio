@@ -73,7 +73,7 @@ public enum BorderStyle {
 
     private String description;
 
-    private BorderStyle(String description) {
+    BorderStyle(String description) {
         this.description = description;
     }
 

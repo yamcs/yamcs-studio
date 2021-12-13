@@ -17,7 +17,6 @@ import org.csstudio.swt.widgets.util.PointsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Ellipse;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -58,7 +57,6 @@ public class GaugeFigure extends AbstractRoundRampedFigure {
     private Boolean support3D;
 
     public GaugeFigure() {
-        super();
         transparent = true;
         scale.setScaleLineVisible(false);
         scale.setTickLabelSide(LabelSide.Secondary);
@@ -80,12 +78,9 @@ public class GaugeFigure extends AbstractRoundRampedFigure {
         add(valueLabel, GaugeLayout.VALUE_LABEL);
         add(needle, GaugeLayout.NEEDLE);
         add(needleCenter, GaugeLayout.NEEDLE_CENTER);
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                ramp.setDirty(true);
-                revalidate();
-            }
+        addFigureListener(source -> {
+            ramp.setDirty(true);
+            revalidate();
         });
     }
 

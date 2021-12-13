@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.yamcs.studio.autocomplete;
 
+import java.util.Objects;
+
 import org.yamcs.studio.autocomplete.preferences.Preferences;
 
 /**
@@ -43,15 +45,15 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
         this.name = name;
         this.provider = provider;
         this.highLevelProvider = highLevelProvider;
-        this.maxResults = Preferences.getDefaultMaxResults();
+        maxResults = Preferences.getDefaultMaxResults();
     }
 
     public ProviderSettings(ProviderSettings ps) {
-        this.name = ps.name;
-        this.provider = ps.provider;
-        this.highLevelProvider = ps.highLevelProvider;
-        this.maxResults = ps.maxResults;
-        this.index = ps.index;
+        name = ps.name;
+        provider = ps.provider;
+        highLevelProvider = ps.highLevelProvider;
+        maxResults = ps.maxResults;
+        index = ps.index;
     }
 
     public ProviderSettings(ProviderSettings ps, Integer index) {
@@ -95,10 +97,7 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return Objects.hash(name);
     }
 
     @Override
@@ -113,11 +112,7 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
             return false;
         }
         var other = (ProviderSettings) obj;
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
+        if (!Objects.equals(name, other.name)) {
             return false;
         }
         return true;
@@ -128,19 +123,19 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
         if (ps == null) {
             return -1;
         }
-        if (this.isHighLevelProvider() && ps.isHighLevelProvider()) {
-            return this.name.compareTo(ps.getName());
+        if (isHighLevelProvider() && ps.isHighLevelProvider()) {
+            return name.compareTo(ps.getName());
         }
-        if (this.isHighLevelProvider() && !ps.isHighLevelProvider()) {
+        if (isHighLevelProvider() && !ps.isHighLevelProvider()) {
             return -1;
         }
-        if (!this.isHighLevelProvider() && ps.isHighLevelProvider()) {
+        if (!isHighLevelProvider() && ps.isHighLevelProvider()) {
             return 1;
         }
-        if (this.index == ps.getIndex()) {
-            return this.name.compareTo(ps.getName());
+        if (index == ps.getIndex()) {
+            return name.compareTo(ps.getName());
         }
-        return this.index.compareTo(ps.getIndex());
+        return index.compareTo(ps.getIndex());
     }
 
     @Override

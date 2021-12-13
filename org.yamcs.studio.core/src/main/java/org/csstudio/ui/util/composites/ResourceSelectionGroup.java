@@ -70,9 +70,9 @@ public final class ResourceSelectionGroup extends Composite {
          */
         public NewFolderAction(Shell shell) {
             _shell = shell;
-            this.setText("Create new folder");
-            this.setToolTipText("Creates a new folder");
-            this.setImageDescriptor(
+            setText("Create new folder");
+            setToolTipText("Creates a new folder");
+            setImageDescriptor(
                     ImageUtil.getInstance().getImageDescriptor(YamcsPlugin.PLUGIN_ID, "icons/new_folder.png"));
         }
 
@@ -108,9 +108,9 @@ public final class ResourceSelectionGroup extends Composite {
 
         public NewProjectAction(Shell shell) {
             _shell = shell;
-            this.setText("Create new project");
-            this.setToolTipText("Creates a new project");
-            this.setImageDescriptor(
+            setText("Create new project");
+            setToolTipText("Creates a new project");
+            setImageDescriptor(
                     ImageUtil.getInstance().getImageDescriptor(YamcsPlugin.PLUGIN_ID, "icons/new_project.png"));
         }
 
@@ -383,10 +383,10 @@ public final class ResourceSelectionGroup extends Composite {
 
         // This has to be done after the viewer has been laid out
         _treeViewer.setInput(ResourcesPlugin.getWorkspace());
-        this.addNewContainerActions(drillDown.getToolBarManager());
-        this.addPopupMenu(_treeViewer);
+        addNewContainerActions(drillDown.getToolBarManager());
+        addPopupMenu(_treeViewer);
 
-        this.setDefaultSelection(_treeViewer);
+        setDefaultSelection(_treeViewer);
     }
 
     /**
@@ -410,9 +410,9 @@ public final class ResourceSelectionGroup extends Composite {
      */
     private void addNewContainerActions(ToolBarManager manager) {
         if (_showNewContainerActions) {
-            _newFolderAction = new NewFolderAction(this.getShell());
+            _newFolderAction = new NewFolderAction(getShell());
             _newFolderAction.setEnabled(false);
-            _newProjectAction = new NewProjectAction(this.getShell());
+            _newProjectAction = new NewProjectAction(getShell());
             manager.add(new Separator());
             manager.add(_newFolderAction);
             manager.add(_newProjectAction);

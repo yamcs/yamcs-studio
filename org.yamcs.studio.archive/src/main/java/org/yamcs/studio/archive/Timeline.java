@@ -144,7 +144,7 @@ public class Timeline extends Composite {
     void add(Drawable drawable) {
         if (!drawables.contains(drawable)) {
             drawables.add(drawable);
-            this.requestRepaint();
+            requestRepaint();
         }
     }
 

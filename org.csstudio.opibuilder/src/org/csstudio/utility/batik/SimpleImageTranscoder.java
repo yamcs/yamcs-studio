@@ -49,7 +49,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 
     public SimpleImageTranscoder(Document document) {
         this.document = document;
-        this.originalDocument = document;
+        originalDocument = document;
         renderingHints = new RenderingHints(null);
     }
 
@@ -70,11 +70,11 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     public void setCanvasSize(int width, int height) {
-        if (this.canvasWidth == width && this.canvasHeight == height) {
+        if (canvasWidth == width && canvasHeight == height) {
             return;
         }
-        this.canvasWidth = width;
-        this.canvasHeight = height;
+        canvasWidth = width;
+        canvasHeight = height;
         contentChanged();
     }
 
@@ -109,10 +109,10 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
      * to dispose bridge context if it was returned by this method.
      */
     public BridgeContext initCSSEngine() {
-        if (this.document == null) {
+        if (document == null) {
             return null;
         }
-        var sd = (SVGOMDocument) this.document;
+        var sd = (SVGOMDocument) document;
         if (sd.getCSSEngine() != null) {
             return null;
         }
@@ -137,7 +137,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         if (colorToApply != null) {
             if (appliedColor == null) {
                 appliedColor = colorToChange != null ? colorToChange
-                        : new Color(Display.getCurrent(), (int) 0, (int) 0, (int) 0);
+                        : new Color(Display.getCurrent(), 0, 0, 0);
             }
             changeColor(document, appliedColor, colorToApply);
             appliedColor = colorToApply;
@@ -166,14 +166,14 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     @Override
     protected void transcode(Document document, String uri, TranscoderOutput output) throws TranscoderException {
         super.transcode(document, uri, output);
-        var w = (int) (this.width + 0.5);
-        var h = (int) (this.height + 0.5);
+        var w = (int) (width + 0.5);
+        var h = (int) (height + 0.5);
         var renderer = createImageRenderer();
         renderer.updateOffScreen(w, h);
         // curTxf.translate(0.5, 0.5);
         renderer.setTransform(curTxf);
-        renderer.setTree(this.root);
-        this.root = null; // We're done with it...
+        renderer.setTree(root);
+        root = null; // We're done with it...
         try {
             Shape raoi = new Rectangle2D.Float(0, 0, width, height);
             // Warning: the renderer's AOI must be in user space
@@ -202,18 +202,18 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     public void setColor(Color newColor) {
-        if (newColor == null || (this.colorToApply != null && newColor.equals(this.colorToApply))) {
+        if (newColor == null || (colorToApply != null && newColor.equals(colorToApply))) {
             return;
         }
-        this.colorToApply = newColor;
+        colorToApply = newColor;
         contentChanged();
     }
 
     public void setColorToChange(Color newColor) {
-        if (newColor == null || (this.colorToChange != null && newColor.equals(this.colorToChange))) {
+        if (newColor == null || (colorToChange != null && newColor.equals(colorToChange))) {
             return;
         }
-        this.colorToChange = newColor;
+        colorToChange = newColor;
     }
 
     public double[][] getTransformMatrix() {
@@ -224,10 +224,10 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         if (newMatrix == null) {
             return;
         }
-        this.matrix = newMatrix;
-        this.document = applyMatrix(matrix);
+        matrix = newMatrix;
+        document = applyMatrix(matrix);
         // Transformed document is based on original => reset color
-        this.appliedColor = null;
+        appliedColor = null;
         contentChanged();
     }
 

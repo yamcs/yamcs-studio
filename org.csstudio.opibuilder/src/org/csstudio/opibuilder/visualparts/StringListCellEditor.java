@@ -50,7 +50,7 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void doSetValue(Object value) {
         if (value == null || !(value instanceof List)) {
-            data = new ArrayList<String>();
+            data = new ArrayList<>();
         } else {
             data = (List<String>) value;
         }

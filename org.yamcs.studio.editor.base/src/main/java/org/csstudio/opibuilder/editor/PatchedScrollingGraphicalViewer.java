@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.editor;
 import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -46,12 +45,7 @@ public class PatchedScrollingGraphicalViewer extends ScrollingGraphicalViewer {
 
         // ... and rewritten here
         if (contextMenu != null) {
-            IMenuListener menuListener = new IMenuListener() {
-                @Override
-                public void menuAboutToShow(IMenuManager manager) {
-                    flush();
-                }
-            };
+            IMenuListener menuListener = manager1 -> flush();
 
             contextMenu.addMenuListener(menuListener);
 

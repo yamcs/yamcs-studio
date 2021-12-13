@@ -18,7 +18,7 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 
 public class StateContentDescriptor extends ContentDescriptor {
 
-    private static Map<String, String> functions = new TreeMap<String, String>();
+    private static Map<String, String> functions = new TreeMap<>();
     static {
         functions.put("yamcs.host", "Hostname used for connecting to Yamcs");
         functions.put("yamcs.instance", "Connected Yamcs instance");

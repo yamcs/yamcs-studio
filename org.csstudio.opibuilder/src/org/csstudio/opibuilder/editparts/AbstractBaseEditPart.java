@@ -210,7 +210,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         }
 
         // Rap specified code
-        displayDisposeListener = () -> deactivate();
+        displayDisposeListener = this::deactivate;
     }
 
     /**

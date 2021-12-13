@@ -13,5 +13,5 @@ package org.csstudio.opibuilder.runmode;
  * The listener on a operations manager.
  */
 public interface IDisplayOpenManagerListener {
-    public void displayOpenHistoryChanged(DisplayOpenManager manager);
+    void displayOpenHistoryChanged(DisplayOpenManager manager);
 }

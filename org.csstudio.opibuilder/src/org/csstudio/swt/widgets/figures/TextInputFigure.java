@@ -45,7 +45,7 @@ public class TextInputFigure extends TextFigure {
 
         public Image icon;
 
-        private SelectorType(String description, Image icon) {
+        SelectorType(String description, Image icon) {
             this.description = description;
             this.icon = icon;
         }
@@ -70,7 +70,7 @@ public class TextInputFigure extends TextFigure {
 
         public String description;
 
-        private FileSource(String description) {
+        FileSource(String description) {
             this.description = description;
         }
 
@@ -94,7 +94,7 @@ public class TextInputFigure extends TextFigure {
 
         public String description;
 
-        private FileReturnPart(String description) {
+        FileReturnPart(String description) {
             this.description = description;
         }
 
@@ -390,7 +390,7 @@ public class TextInputFigure extends TextFigure {
             } else {
                 var fileDialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.MULTI);
                 if (currentPath != null) {
-                    ((FileDialog) fileDialog).setFileName(currentPath);
+                    fileDialog.setFileName(currentPath);
                 }
                 var firstPath = fileDialog.open();
                 if (firstPath != null) {

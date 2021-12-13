@@ -22,12 +22,12 @@ public interface IPrimaryArrayWrapper {
      *            index
      * @return the value at index i.
      */
-    public double get(int i);
+    double get(int i);
 
     /**
      * Get size of the array.
      * 
      * @return size of the array.
      */
-    public int getSize();
+    int getSize();
 }

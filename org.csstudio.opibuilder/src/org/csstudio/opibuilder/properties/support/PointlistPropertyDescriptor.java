@@ -56,10 +56,10 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
                 var list = (PointList) element;
                 var buffer = new StringBuffer();
                 if (list.size() > 0) {
-                    this.addPointText(buffer, list.getPoint(0));
+                    addPointText(buffer, list.getPoint(0));
                     for (var i = 1; i < list.size(); i++) {
                         buffer.append("; ");
-                        this.addPointText(buffer, list.getPoint(i));
+                        addPointText(buffer, list.getPoint(i));
                     }
                 }
                 return buffer.toString();

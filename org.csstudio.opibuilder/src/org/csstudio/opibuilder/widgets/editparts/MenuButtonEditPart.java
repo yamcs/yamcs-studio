@@ -58,7 +58,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
-        var model = (MenuButtonModel) getWidgetModel();
+        var model = getWidgetModel();
         updatePropSheet(model.isActionsFromPV());
         var figure = new MenuButtonFigure();
         figure.setOpaque(!model.isTransparent());

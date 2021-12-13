@@ -11,7 +11,6 @@ package org.csstudio.swt.widgets.figureparts;
 
 import org.csstudio.swt.widgets.figures.IntensityGraphFigure;
 import org.csstudio.swt.widgets.figures.IntensityGraphFigure.GraphArea;
-import org.csstudio.swt.widgets.figures.IntensityGraphFigure.ICroppedDataSizeListener;
 import org.csstudio.swt.widgets.figures.IntensityGraphFigure.IROIInfoProvider;
 import org.csstudio.swt.widgets.figures.IntensityGraphFigure.IROIListener;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
@@ -113,7 +112,6 @@ public class ROIFigure extends Figure {
          *            index of the handler. Count from 0 on clockwise.
          */
         public ResizeHandler(int index) {
-            super();
             setFill(true);
             setBackgroundColor(ColorConstants.black);
             setOutline(true);
@@ -353,12 +351,9 @@ public class ROIFigure extends Figure {
                 }
             }
         });
-        intensityGraphFigure.addCroppedDataSizeListener(new ICroppedDataSizeListener() {
-            @Override
-            public void croppedDataSizeChanged(int croppedDataWidth, int croppedDataHeight) {
-                updateROIGeoBounds();
-                updateChildrenBounds();
-            }
+        intensityGraphFigure.addCroppedDataSizeListener((croppedDataWidth, croppedDataHeight) -> {
+            updateROIGeoBounds();
+            updateChildrenBounds();
         });
     }
 

@@ -25,7 +25,7 @@ class StringColumnEditor extends EditingSupport {
 
     public StringColumnEditor(TableViewer viewer) {
         super(viewer);
-        this.table_viewer = viewer;
+        table_viewer = viewer;
     }
 
     @Override

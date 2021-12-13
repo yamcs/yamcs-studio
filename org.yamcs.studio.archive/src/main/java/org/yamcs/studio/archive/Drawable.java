@@ -21,7 +21,7 @@ public abstract class Drawable {
     }
 
     protected void reportMutation() {
-        this.timeline.requestRepaint();
+        timeline.requestRepaint();
     }
 
     void beforeDraw(GC gc) {

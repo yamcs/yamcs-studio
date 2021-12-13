@@ -55,57 +55,54 @@ public class PrintDisplayAction extends WorkbenchPartAction {
     public void run() {
         var viewer = getWorkbenchPart().getAdapter(GraphicalViewer.class);
 
-        viewer.getControl().getDisplay().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                var loader = new ImageLoader();
-                ImageData[] imageData;
-                try {
-                    imageData = loader.load(ResourceUtil.getScreenshotFile(viewer));
+        viewer.getControl().getDisplay().asyncExec(() -> {
+            var loader = new ImageLoader();
+            ImageData[] imageData;
+            try {
+                imageData = loader.load(ResourceUtil.getScreenshotFile(viewer));
 
-                    if (imageData.length > 0) {
-                        var dialog = new PrintDialog(viewer.getControl().getShell(), SWT.NULL);
-                        var data = dialog.open();
-                        if (data != null) {
-                            var printer = new Printer(data);
+                if (imageData.length > 0) {
+                    var dialog = new PrintDialog(viewer.getControl().getShell(), SWT.NULL);
+                    var data = dialog.open();
+                    if (data != null) {
+                        var printer = new Printer(data);
 
-                            // Calculate the scale factor between the screen resolution
-                            // and printer
-                            // resolution in order to correctly size the image for the
-                            // printer
-                            var screenDPI = viewer.getControl().getDisplay().getDPI();
-                            var printerDPI = printer.getDPI();
-                            var scaleFactor = printerDPI.x / screenDPI.x;
+                        // Calculate the scale factor between the screen resolution
+                        // and printer
+                        // resolution in order to correctly size the image for the
+                        // printer
+                        var screenDPI = viewer.getControl().getDisplay().getDPI();
+                        var printerDPI = printer.getDPI();
+                        var scaleFactor = printerDPI.x / screenDPI.x;
 
-                            // Determine the bounds of the entire area of the printer
-                            var trim = printer.computeTrim(0, 0, 0, 0);
-                            var printerImage = new Image(printer, imageData[0]);
-                            if (printer.startJob("Printing OPI")) {
-                                if (printer.startPage()) {
-                                    var gc = new GC(printer);
-                                    var printArea = printer.getClientArea();
+                        // Determine the bounds of the entire area of the printer
+                        var trim = printer.computeTrim(0, 0, 0, 0);
+                        var printerImage = new Image(printer, imageData[0]);
+                        if (printer.startJob("Printing OPI")) {
+                            if (printer.startPage()) {
+                                var gc = new GC(printer);
+                                var printArea = printer.getClientArea();
 
-                                    if (imageData[0].width * scaleFactor <= printArea.width) {
-                                        printArea.width = imageData[0].width * scaleFactor;
-                                        printArea.height = imageData[0].height * scaleFactor;
-                                    } else {
-                                        printArea.height = printArea.width * imageData[0].height / imageData[0].width;
-                                    }
-                                    gc.drawImage(printerImage, 0, 0, imageData[0].width, imageData[0].height, -trim.x,
-                                            -trim.y, printArea.width, printArea.height);
-                                    gc.dispose();
-                                    printer.endPage();
+                                if (imageData[0].width * scaleFactor <= printArea.width) {
+                                    printArea.width = imageData[0].width * scaleFactor;
+                                    printArea.height = imageData[0].height * scaleFactor;
+                                } else {
+                                    printArea.height = printArea.width * imageData[0].height / imageData[0].width;
                                 }
+                                gc.drawImage(printerImage, 0, 0, imageData[0].width, imageData[0].height, -trim.x,
+                                        -trim.y, printArea.width, printArea.height);
+                                gc.dispose();
+                                printer.endPage();
                             }
-                            printer.endJob();
-                            printer.dispose();
-                            printerImage.dispose();
                         }
+                        printer.endJob();
+                        printer.dispose();
+                        printerImage.dispose();
                     }
-                } catch (Exception e) {
-                    ErrorHandlerUtil.handleError("Failed to print OPI", e);
-                    return;
                 }
+            } catch (Exception e) {
+                ErrorHandlerUtil.handleError("Failed to print OPI", e);
+                return;
             }
         });
     }

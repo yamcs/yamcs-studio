@@ -79,8 +79,8 @@ public abstract class AbstractVBooleanVBooleanToVBooleanFormulaFunction implemen
 
         this.name = name;
         this.description = description;
-        this.argumentTypes = Arrays.<Class<?>> asList(VBoolean.class, VBoolean.class);
-        this.argumentNames = Arrays.asList(arg1Name, arg2Name);
+        argumentTypes = Arrays.<Class<?>> asList(VBoolean.class, VBoolean.class);
+        argumentNames = Arrays.asList(arg1Name, arg2Name);
     }
 
     @Override

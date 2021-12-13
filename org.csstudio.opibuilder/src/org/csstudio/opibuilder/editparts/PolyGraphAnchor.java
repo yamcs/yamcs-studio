@@ -35,7 +35,7 @@ public class PolyGraphAnchor extends AbstractOpiBuilderAnchor {
 
     public PolyGraphAnchor(Polyline owner, int pointIndex) {
         super(owner);
-        this.polyline = owner;
+        polyline = owner;
         this.pointIndex = pointIndex;
     }
 

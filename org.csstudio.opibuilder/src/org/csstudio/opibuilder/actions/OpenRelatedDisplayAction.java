@@ -31,7 +31,7 @@ public class OpenRelatedDisplayAction extends Action {
 
         private String description;
 
-        private OpenDisplayTarget(String desc) {
+        OpenDisplayTarget(String desc) {
             description = desc;
         }
 

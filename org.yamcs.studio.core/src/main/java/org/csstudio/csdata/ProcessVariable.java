@@ -10,6 +10,7 @@
 package org.csstudio.csdata;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Control System Process Variable Name
@@ -43,10 +44,7 @@ public class ProcessVariable implements Serializable {
      */
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return Objects.hash(name);
     }
 
     /**

@@ -184,18 +184,18 @@ public class DisplayEditpart extends AbstractContainerEditpart {
             });
 
             setPropertyChangeHandler(PROP_SHOW_GRID, (oldValue, newValue, figure) -> {
-                getViewer().setProperty(PROPERTY_GRID_VISIBLE, (Boolean) newValue);
-                getViewer().setProperty(PROPERTY_GRID_ENABLED, (Boolean) newValue);
+                getViewer().setProperty(PROPERTY_GRID_VISIBLE, newValue);
+                getViewer().setProperty(PROPERTY_GRID_ENABLED, newValue);
                 return false;
             });
 
             setPropertyChangeHandler(PROP_SHOW_RULER, (oldValue, newValue, figure) -> {
-                getViewer().setProperty(PROPERTY_RULER_VISIBILITY, (Boolean) newValue);
+                getViewer().setProperty(PROPERTY_RULER_VISIBILITY, newValue);
                 return false;
             });
 
             setPropertyChangeHandler(PROP_SNAP_GEOMETRY, (oldValue, newValue, figure) -> {
-                getViewer().setProperty(PROPERTY_SNAP_ENABLED, (Boolean) newValue);
+                getViewer().setProperty(PROPERTY_SNAP_ENABLED, newValue);
                 return false;
             });
 

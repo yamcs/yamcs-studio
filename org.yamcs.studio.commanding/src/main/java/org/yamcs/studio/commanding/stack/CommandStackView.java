@@ -367,8 +367,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         armButton.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
             if (armButton.getSelection()) {
-                var commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-                var evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
+                var commandService = getViewSite().getService(ICommandService.class);
+                var evaluationService = getViewSite().getService(IEvaluationService.class);
 
                 if (stack.stackMode == StackMode.AUTOMATIC) {
                     // automatic stack, arm all commands
@@ -405,8 +405,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         issueButton.setEnabled(false);
         issueButton.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
-            var commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-            var evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
+            var commandService = getViewSite().getService(ICommandService.class);
+            var evaluationService = getViewSite().getService(IEvaluationService.class);
 
             org.eclipse.core.commands.Command cmd = null;
             if (stack.stackMode == StackMode.AUTOMATIC) {

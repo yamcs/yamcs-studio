@@ -65,7 +65,6 @@ public class LEDFigure extends AbstractBoolFigure {
     private Color borderColor = DEFAULT_BULB_BORDER_COLOR;
 
     public LEDFigure() {
-        super();
         bulb = new Bulb();
         setLayoutManager(new XYLayout());
         add(bulb);
@@ -330,8 +329,8 @@ public class LEDFigure extends AbstractBoolFigure {
     public void setValue(double value) {
         if (nStates <= 2) {
             super.setValue(value);
-        } else if (this.stateValue != value) {
-            this.stateValue = value;
+        } else if (stateValue != value) {
+            stateValue = value;
             updateStateValue();
         }
     }

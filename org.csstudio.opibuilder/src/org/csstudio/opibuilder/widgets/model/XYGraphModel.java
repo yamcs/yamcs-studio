@@ -60,8 +60,8 @@ public class XYGraphModel extends AbstractPVWidgetModel {
         public String propIDPre;
         public String description;
 
-        private AxisProperty(String propertyIDPrefix, String description) {
-            this.propIDPre = propertyIDPrefix;
+        AxisProperty(String propertyIDPrefix, String description) {
+            propIDPre = propertyIDPrefix;
             this.description = description;
         }
 
@@ -98,8 +98,8 @@ public class XYGraphModel extends AbstractPVWidgetModel {
         public String propIDPre;
         public String description;
 
-        private TraceProperty(String propertyIDPrefix, String description) {
-            this.propIDPre = propertyIDPrefix;
+        TraceProperty(String propertyIDPrefix, String description) {
+            propIDPre = propertyIDPrefix;
             this.description = description;
         }
 

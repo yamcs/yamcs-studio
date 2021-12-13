@@ -54,7 +54,6 @@ public final class ChangeGuideCommand extends Command {
      *            The horizontal guide
      */
     public ChangeGuideCommand(AbstractWidgetModel model, boolean horizontalGuide) {
-        super();
         _model = model;
         _horizontal = horizontalGuide;
     }

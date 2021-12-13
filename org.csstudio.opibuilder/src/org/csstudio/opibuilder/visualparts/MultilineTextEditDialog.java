@@ -30,8 +30,8 @@ public class MultilineTextEditDialog extends Dialog {
 
     protected MultilineTextEditDialog(Shell parentShell, String stringValue, String dialogTitle) {
         super(parentShell);
-        this.title = dialogTitle;
-        this.contents = stringValue;
+        title = dialogTitle;
+        contents = stringValue;
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
@@ -62,7 +62,6 @@ public class MultilineTextEditDialog extends Dialog {
                         okPressed();
                     }
                 }
-                return;
             }
         });
         return container;

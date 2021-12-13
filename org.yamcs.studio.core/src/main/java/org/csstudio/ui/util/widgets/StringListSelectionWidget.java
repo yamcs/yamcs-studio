@@ -57,7 +57,7 @@ public class StringListSelectionWidget extends Composite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (unselected.getSelectionCount() != 0) {
-                    List<String> newSelection = new ArrayList<String>(selectedValues);
+                    List<String> newSelection = new ArrayList<>(selectedValues);
                     newSelection.addAll(Arrays.asList(unselected.getSelection()));
                     setSelectedValues(newSelection);
                     selected.setSelection(selectedValues.size() - 1);
@@ -74,7 +74,7 @@ public class StringListSelectionWidget extends Composite {
                 if (selected.getSelectionCount() != 0) {
                     var oldIndex = selected.getSelectionIndex();
                     if (oldIndex != 0) {
-                        List<String> newSelection = new ArrayList<String>(selectedValues);
+                        List<String> newSelection = new ArrayList<>(selectedValues);
                         newSelection.set(oldIndex - 1, selectedValues.get(oldIndex));
                         newSelection.set(oldIndex, selectedValues.get(oldIndex - 1));
                         setSelectedValues(newSelection);
@@ -93,7 +93,7 @@ public class StringListSelectionWidget extends Composite {
                 if (selected.getSelectionCount() != 0) {
                     var oldIndex = selected.getSelectionIndex();
                     if (oldIndex != selectedValues.size() - 1) {
-                        List<String> newSelection = new ArrayList<String>(selectedValues);
+                        List<String> newSelection = new ArrayList<>(selectedValues);
                         newSelection.set(oldIndex + 1, selectedValues.get(oldIndex));
                         newSelection.set(oldIndex, selectedValues.get(oldIndex + 1));
                         setSelectedValues(newSelection);
@@ -110,7 +110,7 @@ public class StringListSelectionWidget extends Composite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (selected.getSelectionCount() != 0) {
-                    List<String> newSelection = new ArrayList<String>(selectedValues);
+                    List<String> newSelection = new ArrayList<>(selectedValues);
                     newSelection.removeAll(Arrays.asList(selected.getSelection()));
                     setSelectedValues(newSelection);
                 }
@@ -127,7 +127,7 @@ public class StringListSelectionWidget extends Composite {
             @Override
             public void mouseDoubleClick(MouseEvent e) {
                 if (unselected.getSelectionCount() != 0) {
-                    List<String> newSelection = new ArrayList<String>(selectedValues);
+                    List<String> newSelection = new ArrayList<>(selectedValues);
                     newSelection.addAll(Arrays.asList(unselected.getSelection()));
                     setSelectedValues(newSelection);
                     selected.setSelection(selectedValues.size() - 1);
@@ -146,7 +146,7 @@ public class StringListSelectionWidget extends Composite {
             @Override
             public void mouseDoubleClick(MouseEvent e) {
                 if (selected.getSelectionCount() != 0) {
-                    List<String> newSelection = new ArrayList<String>(selectedValues);
+                    List<String> newSelection = new ArrayList<>(selectedValues);
                     newSelection.removeAll(Arrays.asList(selected.getSelection()));
                     setSelectedValues(newSelection);
                 }
@@ -182,15 +182,15 @@ public class StringListSelectionWidget extends Composite {
         changeSupport.removePropertyChangeListener(listener);
     }
 
-    private List<String> possibleValues = new ArrayList<String>();
-    private List<String> selectedValues = new ArrayList<String>();
+    private List<String> possibleValues = new ArrayList<>();
+    private List<String> selectedValues = new ArrayList<>();
 
     public List<String> getPossibleValues() {
         return possibleValues;
     }
 
     public void setPossibleValues(Collection<String> possibleValues) {
-        this.possibleValues = new ArrayList<String>(possibleValues);
+        this.possibleValues = new ArrayList<>(possibleValues);
         Collections.sort(this.possibleValues);
     }
 
@@ -202,12 +202,12 @@ public class StringListSelectionWidget extends Composite {
         // Make a copy of the old properties, make sure the new ones are in the
         // list
         var oldSelectedValues = this.selectedValues;
-        this.selectedValues = new ArrayList<String>(selectedValues);
+        this.selectedValues = new ArrayList<>(selectedValues);
         this.selectedValues.retainAll(possibleValues);
 
         // Change the lists accordingly
         selected.setItems(selectedValues.toArray(new String[selectedValues.size()]));
-        List<String> unselectedValues = new ArrayList<String>(possibleValues);
+        List<String> unselectedValues = new ArrayList<>(possibleValues);
         unselectedValues.removeAll(this.selectedValues);
         unselected.setItems(unselectedValues.toArray(new String[unselectedValues.size()]));
         changeSupport.firePropertyChange("selectedValues", oldSelectedValues, this.selectedValues);

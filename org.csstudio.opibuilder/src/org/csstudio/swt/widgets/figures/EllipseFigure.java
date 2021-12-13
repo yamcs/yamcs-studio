@@ -221,7 +221,7 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
     }
 
     public void setBackGradientStartColor(Color gradientStartColor) {
-        this.backGradientStartColor = gradientStartColor;
+        backGradientStartColor = gradientStartColor;
         repaint();
     }
 
@@ -237,10 +237,10 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
      *            The orientation.
      */
     public void setHorizontalFill(boolean horizontal) {
-        if (this.horizontalFill == horizontal) {
+        if (horizontalFill == horizontal) {
             return;
         }
-        this.horizontalFill = horizontal;
+        horizontalFill = horizontal;
         repaint();
     }
 

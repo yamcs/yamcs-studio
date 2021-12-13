@@ -66,7 +66,7 @@ public class ActionsInput {
      *            the hookWithWidget to set
      */
     public void setHookUpFirstActionToWidget(boolean hookWithWidget) {
-        this.hookUpFirstActionToWidget = hookWithWidget;
+        hookUpFirstActionToWidget = hookWithWidget;
     }
 
     /**

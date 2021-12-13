@@ -162,7 +162,7 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
      *            The orientation.
      */
     public void setHorizontalFill(boolean horizontal) {
-        if (this.horizontalFill == horizontal) {
+        if (horizontalFill == horizontal) {
             return;
         }
         horizontalFill = horizontal;

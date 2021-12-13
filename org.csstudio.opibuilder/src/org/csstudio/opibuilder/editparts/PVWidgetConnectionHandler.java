@@ -32,12 +32,7 @@ public class PVWidgetConnectionHandler extends ConnectionHandler {
         var controlPV = pvWidgetEditpart.getControlPV();
         if (controlPV != null && controlPV == pv) {
             UIBundlingThread.getInstance().addRunnable(editPart.getRoot().getViewer().getControl().getDisplay(),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            pvWidgetEditpart.setControlEnabled(false);
-                        }
-                    });
+                    () -> pvWidgetEditpart.setControlEnabled(false));
         }
     }
 

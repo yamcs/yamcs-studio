@@ -55,7 +55,7 @@ public class RulesInputDialog extends TrayDialog {
             String dialogTitle) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        this.ruleDataList = scriptsInput.getCopy().getRuleDataList();
+        ruleDataList = scriptsInput.getCopy().getRuleDataList();
         title = dialogTitle;
         this.widgetModel = widgetModel;
     }
@@ -215,9 +215,9 @@ public class RulesInputDialog extends TrayDialog {
             public void run() {
                 var selection = (IStructuredSelection) rulesViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
-                    ruleDataList.remove((RuleData) selection.getFirstElement());
+                    ruleDataList.remove(selection.getFirstElement());
                     setRulesViewerSelection(null);
-                    this.setEnabled(false);
+                    setEnabled(false);
                 }
             }
         };

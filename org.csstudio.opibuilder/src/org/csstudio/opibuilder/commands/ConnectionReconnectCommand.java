@@ -40,11 +40,11 @@ public class ConnectionReconnectCommand extends Command {
             throw new IllegalArgumentException();
         }
         setLabel("Reconnect");
-        this.connection = conn;
-        this.oldSource = conn.getSource();
-        this.oldTarget = conn.getTarget();
-        this.oldSourceTerminal = conn.getSourceTerminal();
-        this.oldTargetTerminal = conn.getTargetTerminal();
+        connection = conn;
+        oldSource = conn.getSource();
+        oldTarget = conn.getTarget();
+        oldSourceTerminal = conn.getSourceTerminal();
+        oldTargetTerminal = conn.getTargetTerminal();
     }
 
     @Override

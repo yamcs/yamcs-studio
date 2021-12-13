@@ -76,10 +76,10 @@ public class ScriptsInputDialog extends TrayDialog {
             AbstractWidgetModel widgetModel) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        this.scriptDataList = scriptsInput.getCopy().getScriptList();
+        scriptDataList = scriptsInput.getCopy().getScriptList();
         title = dialogTitle;
         this.widgetModel = widgetModel;
-        this.startPath = widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1);
+        startPath = widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1);
     }
 
     @Override
@@ -371,9 +371,9 @@ public class ScriptsInputDialog extends TrayDialog {
             public void run() {
                 var selection = (IStructuredSelection) scriptsViewer.getSelection();
                 if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
-                    scriptDataList.remove((ScriptData) selection.getFirstElement());
+                    scriptDataList.remove(selection.getFirstElement());
                     setScriptsViewerSelection(null);
-                    this.setEnabled(false);
+                    setEnabled(false);
                 }
             }
         };

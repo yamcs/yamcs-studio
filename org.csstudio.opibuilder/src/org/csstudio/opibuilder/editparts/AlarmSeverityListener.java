@@ -26,5 +26,5 @@ public interface AlarmSeverityListener {
      *            Figure related to the subjected PV.
      * @return True if some actions are performed.
      */
-    public boolean severityChanged(AlarmSeverity severity, IFigure figure);
+    boolean severityChanged(AlarmSeverity severity, IFigure figure);
 }

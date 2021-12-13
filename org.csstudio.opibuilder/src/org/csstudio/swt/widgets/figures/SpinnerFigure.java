@@ -18,8 +18,6 @@ import java.util.List;
 import org.csstudio.swt.widgets.datadefinition.IManualValueChangeListener;
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
-import org.eclipse.draw2d.ActionEvent;
-import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.ArrowButton;
 import org.eclipse.draw2d.ButtonBorder;
 import org.eclipse.draw2d.ButtonBorder.ButtonScheme;
@@ -43,7 +41,7 @@ import org.eclipse.swt.graphics.Color;
  */
 public class SpinnerFigure extends Figure implements Introspectable {
 
-    public static enum NumericFormatType {
+    public enum NumericFormatType {
         DECIMAL("Decimal"), EXP("Exponential"), HEX("Hex");
 
         private String description;
@@ -57,7 +55,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
             return result;
         }
 
-        private NumericFormatType(String description) {
+        NumericFormatType(String description) {
             this.description = description;
         }
 
@@ -161,13 +159,10 @@ public class SpinnerFigure extends Figure implements Introspectable {
         buttonUp.setBorder(buttonBorder);
         buttonUp.setDirection(Orientable.NORTH);
         buttonUp.setFiringMethod(Clickable.REPEAT_FIRING);
-        buttonUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                stepUp();
-                if (!hasFocus()) {
-                    requestFocus();
-                }
+        buttonUp.addActionListener(event -> {
+            stepUp();
+            if (!hasFocus()) {
+                requestFocus();
             }
         });
         add(buttonUp);
@@ -176,13 +171,10 @@ public class SpinnerFigure extends Figure implements Introspectable {
         buttonDown.setBorder(buttonBorder);
         buttonDown.setDirection(Orientable.SOUTH);
         buttonDown.setFiringMethod(Clickable.REPEAT_FIRING);
-        buttonDown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                stepDown();
-                if (!hasFocus()) {
-                    requestFocus();
-                }
+        buttonDown.addActionListener(event -> {
+            stepDown();
+            if (!hasFocus()) {
+                requestFocus();
             }
         });
         add(buttonDown);

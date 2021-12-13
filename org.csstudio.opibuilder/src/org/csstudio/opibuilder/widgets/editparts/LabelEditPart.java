@@ -166,7 +166,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     }
 
     private void performDirectEdit() {
-        new TextEditManager(this, new LabelCellEditorLocator((TextFigure) getFigure())).show();
+        new TextEditManager(this, new LabelCellEditorLocator(getFigure())).show();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class LabelEditPart extends AbstractWidgetEditPart {
     @SuppressWarnings("rawtypes")
     public Object getAdapter(Class key) {
         if (key == ITextFigure.class) {
-            return ((TextFigure) getFigure());
+            return (getFigure());
         }
 
         return super.getAdapter(key);

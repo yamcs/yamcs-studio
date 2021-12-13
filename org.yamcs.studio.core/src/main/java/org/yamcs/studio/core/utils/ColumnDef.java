@@ -24,7 +24,7 @@ public class ColumnDef {
 
     public ColumnDef(String name, int currIndex) {
         this.name = name;
-        this.keyIndex = currIndex;
+        keyIndex = currIndex;
     }
 
     @Override

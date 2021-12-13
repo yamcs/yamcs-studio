@@ -99,14 +99,14 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         bttArea.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, true));
         upButton = new Button(bttArea, SWT.PUSH);
         upButton.setText("&Up");
-        upButton.addListener(SWT.Selection, event -> handleUpButton(event));
+        upButton.addListener(SWT.Selection, this::handleUpButton);
         setButtonLayoutData(upButton);
         ((GridData) upButton.getLayoutData()).verticalIndent = tableLabelSize.y;
         upButton.setEnabled(false);
 
         downButton = new Button(bttArea, SWT.PUSH);
         downButton.setText("Dow&n");
-        downButton.addListener(SWT.Selection, event -> handleDownButton(event));
+        downButton.addListener(SWT.Selection, this::handleDownButton);
         setButtonLayoutData(downButton);
         downButton.setEnabled(false);
         return bttArea;
@@ -178,7 +178,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         visibleViewer.setLabelProvider(new TableLabelProvider());
         visibleViewer.setContentProvider(ArrayContentProvider.getInstance());
         visibleViewer.addSelectionChangedListener(event -> handleVisibleSelection(event.getSelection()));
-        table.addListener(SWT.MouseDoubleClick, event -> handleToNonVisibleButton(event));
+        table.addListener(SWT.MouseDoubleClick, this::handleToNonVisibleButton);
         visibleViewer.setInput(visible);
         return table;
     }
@@ -211,7 +211,7 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         nonVisibleViewer.setLabelProvider(new TableLabelProvider());
         nonVisibleViewer.setContentProvider(ArrayContentProvider.getInstance());
         nonVisibleViewer.addSelectionChangedListener(event -> handleNonVisibleSelection(event.getSelection()));
-        table.addListener(SWT.MouseDoubleClick, event -> handleToVisibleButton(event));
+        table.addListener(SWT.MouseDoubleClick, this::handleToVisibleButton);
         nonVisibleViewer.setInput(nonVisible);
         return table;
     }
@@ -234,14 +234,14 @@ public class ViewerColumnsDialog extends ViewerSettingsAndStatusDialog {
         toVisibleButton.setText("&Show ->");
         setButtonLayoutData(toVisibleButton);
         ((GridData) toVisibleButton.getLayoutData()).verticalIndent = tableLabelSize.y;
-        toVisibleButton.addListener(SWT.Selection, event -> handleToVisibleButton(event));
+        toVisibleButton.addListener(SWT.Selection, this::handleToVisibleButton);
         toVisibleButton.setEnabled(false);
 
         toNonVisibleButton = new Button(bttArea, SWT.PUSH);
         toNonVisibleButton.setText("<- &Hide");
         setButtonLayoutData(toNonVisibleButton);
 
-        toNonVisibleButton.addListener(SWT.Selection, event -> handleToNonVisibleButton(event));
+        toNonVisibleButton.addListener(SWT.Selection, this::handleToNonVisibleButton);
         toNonVisibleButton.setEnabled(false);
 
         return bttArea;

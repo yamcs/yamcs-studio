@@ -16,26 +16,26 @@ public abstract class IteratorByte implements IteratorNumber {
 
     @Override
     public float nextFloat() {
-        return (float) nextByte();
+        return nextByte();
     }
 
     @Override
     public double nextDouble() {
-        return (double) nextByte();
+        return nextByte();
     }
 
     @Override
     public short nextShort() {
-        return (short) nextByte();
+        return nextByte();
     }
 
     @Override
     public int nextInt() {
-        return (int) nextByte();
+        return nextByte();
     }
 
     @Override
     public long nextLong() {
-        return (long) nextByte();
+        return nextByte();
     }
 }

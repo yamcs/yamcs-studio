@@ -31,15 +31,14 @@ public class TabItem {
      * The tab item will be initialized with the corresponding tab properties value in tab model.
      */
     public TabItem(TabModel tabModel, int index, GroupingContainerModel groupingContainerModel) {
-        super();
         this.groupingContainerModel = groupingContainerModel;
-        propertyMap = new HashMap<TabProperty, Object>();
+        propertyMap = new HashMap<>();
         injectPropertiesValue(tabModel, index);
     }
 
     public TabItem(TabModel tabModel, int tabIndex) {
-        this.groupingContainerModel = TabEditPart.createGroupingContainer();
-        propertyMap = new HashMap<TabProperty, Object>();
+        groupingContainerModel = TabEditPart.createGroupingContainer();
+        propertyMap = new HashMap<>();
         injectPropertiesValue(tabModel, 0);
         setPropertyValue(TabProperty.TITLE, NLS.bind("Tab {0}", tabIndex));
     }

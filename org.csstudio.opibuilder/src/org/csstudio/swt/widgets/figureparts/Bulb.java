@@ -82,10 +82,10 @@ public class Bulb extends Figure {
      *            the bulbColor to set
      */
     public void setBulbColor(Color color) {
-        if (this.bulbColor != null && this.bulbColor.equals(color)) {
+        if (bulbColor != null && bulbColor.equals(color)) {
             return;
         }
-        this.bulbColor = color;
+        bulbColor = color;
         repaint();
     }
 

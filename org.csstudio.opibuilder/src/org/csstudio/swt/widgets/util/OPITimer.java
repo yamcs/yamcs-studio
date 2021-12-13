@@ -33,13 +33,7 @@ public class OPITimer {
 
     private ScheduledFuture<?> dueTaskFuture, scheduledTaskFuture;
 
-    private final Runnable dueTask = new Runnable() {
-
-        @Override
-        public void run() {
-            due = true;
-        }
-    };
+    private final Runnable dueTask = () -> due = true;
 
     /**
      * Schedules the specified task for execution after the specified delay.

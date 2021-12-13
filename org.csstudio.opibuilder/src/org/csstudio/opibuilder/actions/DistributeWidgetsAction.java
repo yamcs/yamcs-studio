@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.actions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -41,7 +40,7 @@ public class DistributeWidgetsAction extends SelectionAction {
         private String label;
         private String iconPath;
 
-        private DistributeType(String label, String iconPath) {
+        DistributeType(String label, String iconPath) {
             this.label = label;
             this.iconPath = iconPath;
         }
@@ -223,24 +222,21 @@ public class DistributeWidgetsAction extends SelectionAction {
         for (var model : getSelectedWidgetModels()) {
             modelArray[i++] = model;
         }
-        Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
-            @Override
-            public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
-                int o1loc, o2loc;
-                if (byHorizontal) {
-                    o1loc = o1.getLocation().x;
-                    o2loc = o2.getLocation().x;
-                } else {
-                    o1loc = o1.getLocation().y;
-                    o2loc = o2.getLocation().y;
-                }
-                if (o1loc < o2loc) {
-                    return -1;
-                } else if (o1loc > o2loc) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+        Arrays.sort(modelArray, (o1, o2) -> {
+            int o1loc, o2loc;
+            if (byHorizontal) {
+                o1loc = o1.getLocation().x;
+                o2loc = o2.getLocation().x;
+            } else {
+                o1loc = o1.getLocation().y;
+                o2loc = o2.getLocation().y;
+            }
+            if (o1loc < o2loc) {
+                return -1;
+            } else if (o1loc > o2loc) {
+                return 1;
+            } else {
+                return 0;
             }
         });
         return modelArray;
@@ -254,7 +250,7 @@ public class DistributeWidgetsAction extends SelectionAction {
     protected final List<AbstractWidgetModel> getSelectedWidgetModels() {
         List<?> selection = getSelectedObjects();
 
-        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<>();
 
         for (var o : selection) {
             if (o instanceof AbstractBaseEditPart) {

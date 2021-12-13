@@ -12,6 +12,7 @@ package org.csstudio.swt.widgets.symbol.util;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Permuation matrix used to flip/rotate images
@@ -113,10 +114,7 @@ public class PermutationMatrix {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + Arrays.hashCode(matrix);
-        return result;
+        return Objects.hash(Arrays.hashCode(matrix));
     }
 
     @Override

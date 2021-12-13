@@ -40,13 +40,10 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
         registerCommonPropertyChangeHandlers();
 
         // effect 3D
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var boolSwitch = (BoolSwitchFigure) refreshableFigure;
-                boolSwitch.setEffect3D((Boolean) newValue);
-                return true;
-            }
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            var boolSwitch = (BoolSwitchFigure) refreshableFigure;
+            boolSwitch.setEffect3D((Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(BoolSwitchModel.PROP_EFFECT3D, handler);
     }

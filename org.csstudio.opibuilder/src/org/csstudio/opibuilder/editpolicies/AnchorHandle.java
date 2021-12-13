@@ -11,8 +11,6 @@ package org.csstudio.opibuilder.editpolicies;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
@@ -27,14 +25,11 @@ public class AnchorHandle extends SquareHandle {
     public AnchorHandle(GraphicalEditPart owner, ConnectionAnchor anchor) {
 
         setOwner(owner);
-        setLocator(new Locator() {
-            @Override
-            public void relocate(IFigure target) {
-                var center = anchor.getLocation(null);
-                target.translateToRelative(center);
-                target.setBounds(new Rectangle(center.x - DEFAULT_HANDLE_SIZE / 2, center.y - DEFAULT_HANDLE_SIZE / 2,
-                        DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE));
-            }
+        setLocator(target -> {
+            var center = anchor.getLocation(null);
+            target.translateToRelative(center);
+            target.setBounds(new Rectangle(center.x - DEFAULT_HANDLE_SIZE / 2, center.y - DEFAULT_HANDLE_SIZE / 2,
+                    DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE));
         });
     }
 

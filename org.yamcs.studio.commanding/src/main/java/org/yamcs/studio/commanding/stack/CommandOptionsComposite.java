@@ -65,12 +65,16 @@ public class CommandOptionsComposite extends ScrolledComposite {
 
         var allArguments = command.getEffectiveAssignments();
 
-        List<TelecommandArgument> customArguments = allArguments.stream().filter(arg -> arg.isEditable()).filter(
-                arg -> !arg.getArgumentInfo().hasInitialValue() || command.isDefaultChanged(arg.getArgumentInfo()))
+        List<TelecommandArgument> customArguments = allArguments
+                .stream().filter(TelecommandArgument::isEditable).filter(
+                        arg -> !arg.getArgumentInfo().hasInitialValue()
+                                || command.isDefaultChanged(arg.getArgumentInfo()))
                 .collect(Collectors.toList());
 
-        List<TelecommandArgument> defaultArguments = allArguments.stream().filter(arg -> arg.isEditable()).filter(
-                arg -> arg.getArgumentInfo().hasInitialValue() && !command.isDefaultChanged(arg.getArgumentInfo()))
+        List<TelecommandArgument> defaultArguments = allArguments
+                .stream().filter(TelecommandArgument::isEditable).filter(
+                        arg -> arg.getArgumentInfo().hasInitialValue()
+                                && !command.isDefaultChanged(arg.getArgumentInfo()))
                 .collect(Collectors.toList());
 
         if (customArguments.isEmpty()) {

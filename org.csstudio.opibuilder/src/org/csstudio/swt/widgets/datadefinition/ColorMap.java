@@ -11,6 +11,7 @@ package org.csstudio.swt.widgets.datadefinition;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -41,7 +42,7 @@ public class ColorMap {
         double[] values;
         RGB[] colors;
 
-        private PredefinedColorMap(String name, double[] values, RGB[] colors) {
+        PredefinedColorMap(String name, double[] values, RGB[] colors) {
             this.name = name;
             this.values = values;
             this.colors = colors;
@@ -89,7 +90,7 @@ public class ColorMap {
     private double colorMapMax;
 
     public ColorMap() {
-        colorMap = new LinkedHashMap<Double, RGB>();
+        colorMap = new LinkedHashMap<>();
         setAutoScale(true);
         setInterpolate(true);
         predefinedColorMap = PredefinedColorMap.None;
@@ -116,7 +117,7 @@ public class ColorMap {
      */
     public void setColorMap(LinkedHashMap<Double, RGB> colorMap) {
         this.colorMap = colorMap;
-        this.predefinedColorMap = PredefinedColorMap.None;
+        predefinedColorMap = PredefinedColorMap.None;
         colorsLookupTable = null;
     }
 
@@ -221,8 +222,8 @@ public class ColorMap {
             var height = imageData.height;
             var width = imageData.width;
             // EDIT: added +1 to account for an early rounding problem
-            var x_ratio = (int) ((dataWidth << 16) / width) + 1;
-            var y_ratio = (int) ((dataHeight << 16) / height) + 1;
+            var x_ratio = (dataWidth << 16) / width + 1;
+            var y_ratio = (dataHeight << 16) / height + 1;
             // int x_ratio = (int)((w1<<16)/w2) ;
             // int y_ratio = (int)((h1<<16)/h2) ;
             int x2, y2;
@@ -238,7 +239,7 @@ public class ColorMap {
                     }
                     var pixel = pixelLookupTable[index];
                     imageData.setPixel(j, i, pixel);
-                    ;
+
                 }
             }
         } else {
@@ -398,11 +399,7 @@ public class ColorMap {
         if (autoScale != other.autoScale) {
             return false;
         }
-        if (colorMap == null) {
-            if (other.colorMap != null) {
-                return false;
-            }
-        } else if (!colorMap.equals(other.colorMap)) {
+        if (!Objects.equals(colorMap, other.colorMap)) {
             return false;
         }
         if (interpolate != other.interpolate) {

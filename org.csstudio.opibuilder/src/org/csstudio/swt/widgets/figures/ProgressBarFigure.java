@@ -12,7 +12,6 @@ package org.csstudio.swt.widgets.figures;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -60,7 +59,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
 
     public ProgressBarFigure() {
 
-        super();
         scale.setScaleLineVisible(false);
         scale.setTickLabelSide(LabelSide.Secondary);
 
@@ -89,12 +87,7 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
         add(thumb, ProgressBarLayout.THUMB);
         add(label, ProgressBarLayout.LABEL);
 
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                revalidate();
-            }
-        });
+        addFigureListener(source -> revalidate());
     }
 
     /**
@@ -274,7 +267,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
                 new int[] { 0, 0, 0, LENGTH * 4 / 5, BREADTH / 2, LENGTH, BREADTH, LENGTH * 4 / 5, BREADTH, 0 });
 
         public Thumb() {
-            super();
             // setOutline(true);
             setFill(true);
             setForegroundColor(GRAY_COLOR);
@@ -314,7 +306,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
 
     class Track extends RectangleFigure {
         public Track() {
-            super();
             setForegroundColor(GRAY_COLOR);
             setOutline(false);
         }

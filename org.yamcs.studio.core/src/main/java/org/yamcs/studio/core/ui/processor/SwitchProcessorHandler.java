@@ -63,7 +63,7 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
      */
     @Override
     public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
-        var service = (ICommandService) element.getServiceLocator().getService(ICommandService.class);
+        var service = element.getServiceLocator().getService(ICommandService.class);
         var state = (String) parameters.get(RadioState.PARAMETER_ID);
         var command = service.getCommand(SwitchProcessorCompoundContributionItem.SWITCH_PROCESSOR_COMMAND);
         var commandState = command.getState(RadioState.STATE_ID);

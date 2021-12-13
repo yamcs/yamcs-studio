@@ -69,7 +69,7 @@ public class OpenWithMenu extends ContributionItem {
      */
     private static final int MATCH_BOTH = IWorkbenchPage.MATCH_INPUT | IWorkbenchPage.MATCH_ID;
 
-    private static final Comparator<IEditorDescriptor> comparer = new Comparator<IEditorDescriptor>() {
+    private static final Comparator<IEditorDescriptor> comparer = new Comparator<>() {
         private Collator collator = Collator.getInstance();
 
         @Override
@@ -230,10 +230,10 @@ public class OpenWithMenu extends ContributionItem {
      * Converts the IAdaptable file to IFile or null.
      */
     private IFile getFileResource() {
-        if (this.file instanceof IFile) {
-            return (IFile) this.file;
+        if (file instanceof IFile) {
+            return (IFile) file;
         }
-        var resource = (IResource) this.file.getAdapter(IResource.class);
+        var resource = file.getAdapter(IResource.class);
         if (resource instanceof IFile) {
             return (IFile) resource;
         }

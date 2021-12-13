@@ -43,7 +43,7 @@ public class PropertiesEditingSupport extends EditingSupport {
     }
 
     private AbstractWidgetProperty getSelectedProperty() {
-        var selection = (IStructuredSelection) this.getViewer().getSelection();
+        var selection = (IStructuredSelection) getViewer().getSelection();
         if (selection.getFirstElement() instanceof AbstractWidgetProperty) {
             var property = (AbstractWidgetProperty) selection.getFirstElement();
             return property;

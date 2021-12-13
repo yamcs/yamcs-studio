@@ -152,7 +152,7 @@ public final class GuideModel implements Serializable {
     public void detachPart(AbstractWidgetModel model) {
         if (getMap().containsKey(model)) {
             getMap().remove(model);
-            GuideUtil.getInstance().removeGuide(model, this.isHorizontal());
+            GuideUtil.getInstance().removeGuide(model, isHorizontal());
             // if (this.isHorizontal()) {
             // model.setHorizontalGuide(null);
             // } else {
@@ -173,7 +173,7 @@ public final class GuideModel implements Serializable {
      */
     public int getAlignment(AbstractWidgetModel model) {
         if (getMap().get(model) != null) {
-            return ((Integer) getMap().get(model)).intValue();
+            return getMap().get(model).intValue();
         }
         return -2;
     }
@@ -184,7 +184,7 @@ public final class GuideModel implements Serializable {
      */
     public Map<AbstractWidgetModel, Integer> getMap() {
         if (_map == null) {
-            _map = new HashMap<AbstractWidgetModel, Integer>();
+            _map = new HashMap<>();
         }
         return _map;
     }

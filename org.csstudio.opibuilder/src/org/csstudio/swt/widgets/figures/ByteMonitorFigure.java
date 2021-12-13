@@ -304,12 +304,12 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            boolean true if 3D, false if not
      */
     public void setEffect3D(boolean newValue) {
-        if (this.effect3D == newValue) {
+        if (effect3D == newValue) {
             return;
         }
-        this.effect3D = newValue;
+        effect3D = newValue;
         for (var bulb : ledFigures) {
-            bulb.setEffect3D(this.effect3D);
+            bulb.setEffect3D(effect3D);
         }
         repaint();
     }
@@ -368,10 +368,10 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the offColor to set
      */
     public void setOffColor(Color rgb) {
-        if (this.offColor != null && this.offColor.equals(rgb)) {
+        if (offColor != null && offColor.equals(rgb)) {
             return;
         }
-        this.offColor = rgb;
+        offColor = rgb;
         for (var led : ledFigures) {
             led.setOffColor(rgb);
         }
@@ -384,10 +384,10 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
      *            the onColor to set
      */
     public void setOnColor(Color rgb) {
-        if (this.onColor != null && this.onColor.equals(rgb)) {
+        if (onColor != null && onColor.equals(rgb)) {
             return;
         }
-        this.onColor = rgb;
+        onColor = rgb;
         for (var led : ledFigures) {
             led.setOnColor(rgb);
         }
@@ -548,11 +548,11 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
     }
 
     public void setPackedLEDs(boolean packLEDs) {
-        if (this.hasPackedLEDs == packLEDs) {
+        if (hasPackedLEDs == packLEDs) {
             return;
         }
 
-        this.hasPackedLEDs = packLEDs;
+        hasPackedLEDs = packLEDs;
         revalidate();
         repaint();
     }

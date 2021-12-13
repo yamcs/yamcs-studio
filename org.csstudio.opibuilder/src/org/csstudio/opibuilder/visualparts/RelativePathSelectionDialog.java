@@ -80,7 +80,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     public RelativePathSelectionDialog(Shell parentShell, IPath refPath, String dialogMessage,
             String[] fileExtensions) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
+        setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
         _message = dialogMessage;
         this.refPath = refPath;
         relative = true;

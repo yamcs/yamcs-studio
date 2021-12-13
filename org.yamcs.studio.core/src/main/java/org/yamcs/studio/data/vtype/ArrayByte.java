@@ -46,7 +46,7 @@ public final class ArrayByte extends ListByte implements Serializable {
     }
 
     @Override
-    public final IteratorByte iterator() {
+    public IteratorByte iterator() {
         return new IteratorByte() {
             private int index;
 
@@ -63,12 +63,12 @@ public final class ArrayByte extends ListByte implements Serializable {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return array.length;
     }
 
     @Override
-    public final byte getByte(int index) {
+    public byte getByte(int index) {
         return array[index];
     }
 

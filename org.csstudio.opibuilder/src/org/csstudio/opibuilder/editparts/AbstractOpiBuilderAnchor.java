@@ -23,7 +23,7 @@ abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor 
     /**
      * This enum tells in which direction a connector is connected to the widget
      */
-    public static enum ConnectorOrientation {
+    public enum ConnectorOrientation {
         HORIZONTAL, VERTICAL
     }
 

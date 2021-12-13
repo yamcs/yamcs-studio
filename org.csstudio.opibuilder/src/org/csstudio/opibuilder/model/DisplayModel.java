@@ -114,7 +114,6 @@ public class DisplayModel extends AbstractContainerModel {
      *            path of the OPI. It can only be null if this model doesn't relate to any real opi file.
      */
     public DisplayModel(IPath opiFilePath) {
-        super();
         setLocation(NULL_LOCATION);
         setSize(800, 600);
         setOpiFilePath(opiFilePath);
@@ -295,7 +294,7 @@ public class DisplayModel extends AbstractContainerModel {
     }
 
     private List<ConnectionModel> getConnectionList(AbstractContainerModel container) {
-        Set<ConnectionModel> connectionModels = new HashSet<ConnectionModel>();
+        Set<ConnectionModel> connectionModels = new HashSet<>();
         var allDescendants = getAllDescendants();
         for (var widget : allDescendants) {
             if (!widget.getSourceConnections().isEmpty()) {
@@ -376,7 +375,7 @@ public class DisplayModel extends AbstractContainerModel {
     }
 
     public void setParentDisplayModel(DisplayModel rootDisplayModel) {
-        this.parentDisplayModel = rootDisplayModel;
+        parentDisplayModel = rootDisplayModel;
     }
 
     public DisplayModel getParentDisplayModel() {

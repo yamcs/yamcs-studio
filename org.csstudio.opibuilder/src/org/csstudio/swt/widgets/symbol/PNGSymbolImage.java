@@ -182,7 +182,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         };
         ResourceUtil.pathToInputStreamInJob(imagePath, uiTask, "Loading Image...", e -> {
             loadingImage = false;
-            Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
+            Display.getDefault().syncExec(this::fireSymbolImageLoaded);
             log.log(Level.WARNING, "ERROR loading image " + imagePath, e);
         });
     }

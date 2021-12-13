@@ -39,8 +39,8 @@ class LogicalNotFormulaFunction implements FormulaFunction {
     private final List<String> argumentNames;
 
     public LogicalNotFormulaFunction() {
-        this.argumentTypes = Arrays.<Class<?>> asList(VBoolean.class);
-        this.argumentNames = Arrays.asList("arg");
+        argumentTypes = Arrays.<Class<?>> asList(VBoolean.class);
+        argumentNames = Arrays.asList("arg");
     }
 
     @Override

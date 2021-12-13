@@ -41,7 +41,7 @@ public class CalendarWidget extends Composite {
      */
     private boolean in_GUI_update = false;
 
-    private ArrayList<CalendarWidgetListener> listeners = new ArrayList<CalendarWidgetListener>();
+    private ArrayList<CalendarWidgetListener> listeners = new ArrayList<>();
 
     /**
      * Construct widget, initialized to the 'current' time.

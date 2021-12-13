@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.swt.widgets.figureparts;
 
+import java.util.Objects;
+
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -49,13 +51,7 @@ public class PolarPoint {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + r;
-        long temp;
-        temp = Double.doubleToLongBits(theta);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hash(r, theta);
     }
 
     @Override
@@ -100,7 +96,7 @@ public class PolarPoint {
      * @return the point in absolute coordinate system.
      */
     public Point toAbsolutePoint(Rectangle rect) {
-        var p = this.toPoint();
+        var p = toPoint();
         return p.translate(rect.width / 2, rect.height / 2).translate(rect.x, rect.y);
     }
 
@@ -113,7 +109,7 @@ public class PolarPoint {
      * @return the point in relative coordinate system.
      */
     public Point toRelativePoint(Rectangle rect) {
-        var p = this.toPoint();
+        var p = toPoint();
         return p.translate(rect.width / 2, rect.height / 2);
     }
 
@@ -132,7 +128,7 @@ public class PolarPoint {
 
         var r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-        var theta = Math.acos((double) x / r);
+        var theta = Math.acos(x / r);
         if (y > 0) {
             theta = 2 * Math.PI - theta;
         }

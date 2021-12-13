@@ -183,10 +183,10 @@ public class OPIView extends ViewPart implements IOPIRuntime {
      */
     private MPlaceholder findPlaceholder() {
         // do not remove casting - RAP 3.0 still needs it
-        var localContext = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
+        var localContext = getViewSite().getService(IEclipseContext.class);
         var part = localContext.get(MPart.class);
-        var service = (EModelService) PlatformUI.getWorkbench().getService(EModelService.class);
-        var globalContext = (IEclipseContext) PlatformUI.getWorkbench().getService(IEclipseContext.class);
+        var service = PlatformUI.getWorkbench().getService(EModelService.class);
+        var globalContext = PlatformUI.getWorkbench().getService(IEclipseContext.class);
         var app = globalContext.get(MApplication.class);
         var phs = service.findElements(app, null, MPlaceholder.class, null);
         for (var ph : phs) {
@@ -296,7 +296,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
 
         // Obtain E4 model element for E3 view,
         // based on http://www.vogella.com/tutorials/EclipsePlugIn/article.html#eclipsecontext
-        var context = (IEclipseContext) getViewSite().getService(IEclipseContext.class);
+        var context = getViewSite().getService(IEclipseContext.class);
         var model = context.get(MPart.class);
 
         // Based on org.eclipse.ui.internal.ViewReference#persist():

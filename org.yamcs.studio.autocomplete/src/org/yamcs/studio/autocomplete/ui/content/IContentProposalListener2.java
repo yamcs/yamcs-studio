@@ -19,7 +19,7 @@ public interface IContentProposalListener2 {
      * @param adapter
      *            the ContentProposalAdapter which is providing content proposal behavior to a control
      */
-    public void proposalPopupOpened(ContentProposalAdapter adapter);
+    void proposalPopupOpened(ContentProposalAdapter adapter);
 
     /**
      * A content proposal popup has been closed.
@@ -27,5 +27,5 @@ public interface IContentProposalListener2 {
      * @param adapter
      *            the ContentProposalAdapter which is providing content proposal behavior to a control
      */
-    public void proposalPopupClosed(ContentProposalAdapter adapter);
+    void proposalPopupClosed(ContentProposalAdapter adapter);
 }

@@ -138,7 +138,7 @@ public class ImportCommandsHandler extends AbstractHandler {
     /**
      * Reports on batches of commands. Useful for limiting GUI updates.
      */
-    private static interface BulkCommandListener {
+    private interface BulkCommandListener {
         void processCommands(List<Command> commands);
     }
 }

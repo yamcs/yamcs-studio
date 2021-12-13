@@ -21,28 +21,28 @@ public interface VImage extends VType, Alarm, Time {
      *
      * @return image height
      */
-    public int getHeight();
+    int getHeight();
 
     /**
      * Width of the image in pixels.
      *
      * @return image width
      */
-    public int getWidth();
+    int getWidth();
 
     /**
      * Image data;
      *
      * @return image data
      */
-    public ListNumber getData();
+    ListNumber getData();
 
     /**
      * Describes the type in which the data is stored {@link VImageDataType}
      * 
      * @return image data type
      */
-    public VImageDataType getDataType();
+    VImageDataType getDataType();
 
     /**
      * Returns the image type, The image type describes the mechanism in which the data is encoded and how it can be
@@ -50,5 +50,5 @@ public interface VImage extends VType, Alarm, Time {
      * 
      * @return the image type {@link VImageType}
      */
-    public VImageType getVImageType();
+    VImageType getVImageType();
 }

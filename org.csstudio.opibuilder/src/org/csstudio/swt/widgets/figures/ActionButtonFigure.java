@@ -328,7 +328,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             }
         };
         if (path != null && !path.isEmpty()) {
-            this.imagePath = path;
+            imagePath = path;
             ResourceUtil.pathToInputStreamInJob(path, uiTask, "Load Action Button Icon...", exception -> {
                 image = null;
                 OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to load image from path" + path, exception);
@@ -382,7 +382,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * BOTTOM)
      */
     public void setTextAlignment(int alignment) {
-        this.textAlignment = alignment;
+        textAlignment = alignment;
         if (alignment >= 0 && alignment < alignments.length) {
             if (alignments[alignment] == PositionConstants.LEFT || alignments[alignment] == PositionConstants.RIGHT) {
                 label.setTextPlacement(PositionConstants.NORTH);
@@ -448,7 +448,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     }
 
     public interface ButtonActionListener extends EventListener {
-        public void actionPerformed(int i);
+        void actionPerformed(int i);
     }
 
     /**

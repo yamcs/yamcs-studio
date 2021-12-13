@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.widgets;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.BooleanProperty;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.swt.widgets.symbol.SymbolImage;
 import org.eclipse.draw2d.IFigure;
@@ -37,12 +36,9 @@ public class FigureTransparencyHelper {
 
     public static void addHandler(AbstractBaseEditPart editPart, IFigure figure) {
         editPart.setPropertyChangeHandler(FigureTransparencyHelper.PROP_TRANSPARENCY,
-                new IWidgetPropertyChangeHandler() {
-                    @Override
-                    public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                        figure.repaint();
-                        return true;
-                    }
+                (oldValue, newValue, figure1) -> {
+                    figure1.repaint();
+                    return true;
                 });
     }
 

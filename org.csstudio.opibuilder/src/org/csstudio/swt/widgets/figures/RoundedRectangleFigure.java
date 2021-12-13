@@ -20,7 +20,6 @@ import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RoundedRectangle;
-import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -178,7 +177,7 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
     }
 
     public void setBackGradientStartColor(Color gradientStartColor) {
-        this.backGradientStartColor = gradientStartColor;
+        backGradientStartColor = gradientStartColor;
         repaint();
     }
 
@@ -234,7 +233,7 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
      * Sets the orientation (horizontal==true | vertical==false).
      */
     public void setHorizontalFill(boolean horizontal) {
-        this.horizontalFill = horizontal;
+        horizontalFill = horizontal;
         repaint();
     }
 

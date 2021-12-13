@@ -19,15 +19,15 @@ import org.yamcs.studio.autocomplete.parser.ContentType;
 public interface IAutoCompleteProvider {
 
     /** @return <code>true</code> if provider handles this type of content */
-    public boolean accept(ContentType type);
+    boolean accept(ContentType type);
 
     /**
      * @return {@link AutoCompleteResult} matching the provided {@link ContentDescriptor}
      */
-    public AutoCompleteResult listResult(ContentDescriptor desc, int limit);
+    AutoCompleteResult listResult(ContentDescriptor desc, int limit);
 
     /**
      * Called by {@link AutoCompleteService} when the task is canceled.
      */
-    public void cancel();
+    void cancel();
 }

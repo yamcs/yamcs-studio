@@ -38,7 +38,7 @@ public class ChangeOrientationAction extends SelectionAction {
         private String label;
         private String iconPath;
 
-        private OrientationType(String label, String iconPath) {
+        OrientationType(String label, String iconPath) {
             this.label = label;
             this.iconPath = iconPath;
         }
@@ -78,7 +78,7 @@ public class ChangeOrientationAction extends SelectionAction {
     protected final List<AbstractWidgetModel> getSelectedWidgetModels() {
         List<?> selection = getSelectedObjects();
 
-        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
+        List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<>();
 
         for (var o : selection) {
             if (o instanceof AbstractBaseEditPart) {

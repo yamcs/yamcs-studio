@@ -48,9 +48,9 @@ public abstract class FormulaFunctionSet {
      *            the description of the function set
      */
     public FormulaFunctionSet(FormulaFunctionSetDescription functionSetDescription) {
-        this.name = functionSetDescription.name;
-        this.description = functionSetDescription.description;
-        this.formulaFunctions = Collections.unmodifiableSet(new HashSet<>(functionSetDescription.formulaFunctions));
+        name = functionSetDescription.name;
+        description = functionSetDescription.description;
+        formulaFunctions = Collections.unmodifiableSet(new HashSet<>(functionSetDescription.formulaFunctions));
     }
 
     /**

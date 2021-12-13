@@ -42,12 +42,12 @@ public class MacrosInputDialog extends Dialog {
 
     protected MacrosInputDialog(Shell parentShell, MacrosInput macrosInput, String dialogTitle) {
         super(parentShell);
-        this.title = dialogTitle;
-        this.contents = new ArrayList<String[]>();
+        title = dialogTitle;
+        contents = new ArrayList<>();
         for (var key : macrosInput.getMacrosMap().keySet()) {
-            this.contents.add(new String[] { key, macrosInput.getMacrosMap().get(key) });
+            contents.add(new String[] { key, macrosInput.getMacrosMap().get(key) });
         }
-        this.includeParentMacros = macrosInput.isInclude_parent_macros();
+        includeParentMacros = macrosInput.isInclude_parent_macros();
 
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);

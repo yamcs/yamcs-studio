@@ -13,7 +13,7 @@ import org.eclipse.swt.graphics.Color;
 
 public interface ICSSHandler {
 
-    public void updateCSSColor(Color colorToChange, Color newColor);
+    void updateCSSColor(Color colorToChange, Color newColor);
 
-    public void resetCSSStyle();
+    void resetCSSStyle();
 }

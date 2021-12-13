@@ -165,7 +165,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
             for (var pval : values) {
                 var pvs = pvsById.get(pval.getId());
                 if (pvs != null) {
-                    pvs.forEach(pv -> pv.notifyValueChange());
+                    pvs.forEach(IPV::notifyValueChange);
                 }
             }
             parameterValueListeners.forEach(l -> l.onData(values));
@@ -202,7 +202,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     }
 
     @FunctionalInterface
-    public static interface ParameterValueListener {
+    public interface ParameterValueListener {
         void onData(List<ParameterValue> values);
     }
 }

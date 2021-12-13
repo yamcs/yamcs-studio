@@ -118,7 +118,7 @@ public class ParameterTableEditor extends EditorPart {
         var input = getEditorInput();
         try {
             if (input.exists()) {
-                var file = (IFile) input.getAdapter(IFile.class);
+                var file = input.getAdapter(IFile.class);
                 var out = new ByteArrayOutputStream();
                 saveToStream(monitor, tableViewer.getParameters(), out);
                 file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);

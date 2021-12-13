@@ -23,7 +23,7 @@ public class TooltipDataHandler {
     private List<TooltipData> tooltipDataList;
 
     public TooltipDataHandler() {
-        this.tooltipDataList = Collections.synchronizedList(new ArrayList<TooltipData>());
+        tooltipDataList = Collections.synchronizedList(new ArrayList<TooltipData>());
     }
 
     public void addData(TooltipData data) {

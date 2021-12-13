@@ -11,6 +11,7 @@ package org.yamcs.studio.autocomplete.sim;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Definition for a function that can be integrated in the data source language.
@@ -43,13 +44,12 @@ public class DSFunction implements Comparable<DSFunction> {
     private List<DSFunction> polymorphicFunctions;
 
     public DSFunction(String name, Class<?> returnType, boolean isPure, boolean isVarArgs) {
-        super();
         this.name = name;
         this.returnType = returnType;
         this.isPure = isPure;
         this.isVarArgs = isVarArgs;
-        argumentNames = new ArrayList<String>();
-        argumentTypes = new ArrayList<Class<?>>();
+        argumentNames = new ArrayList<>();
+        argumentTypes = new ArrayList<>();
         polymorphicFunctions = new ArrayList<>();
     }
 
@@ -116,10 +116,7 @@ public class DSFunction implements Comparable<DSFunction> {
 
     @Override
     public int hashCode() {
-        var prime = 31;
-        var result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return Objects.hash(name);
     }
 
     @Override
@@ -134,11 +131,7 @@ public class DSFunction implements Comparable<DSFunction> {
             return false;
         }
         var other = (DSFunction) obj;
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
+        if (!Objects.equals(name, other.name)) {
             return false;
         }
         return true;

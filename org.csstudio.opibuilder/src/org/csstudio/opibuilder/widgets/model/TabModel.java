@@ -40,8 +40,8 @@ public class TabModel extends AbstractContainerModel {
         public String propIDPre;
         public String description;
 
-        private TabProperty(String propertyIDPrefix, String description) {
-            this.propIDPre = propertyIDPrefix;
+        TabProperty(String propertyIDPrefix, String description) {
+            propIDPre = propertyIDPrefix;
             this.description = description;
         }
 
@@ -53,9 +53,9 @@ public class TabModel extends AbstractContainerModel {
 
     public interface ITabItemHandler {
 
-        public void addTab(int index, TabItem tabItem);
+        void addTab(int index, TabItem tabItem);
 
-        public void removeTab(int index);
+        void removeTab(int index);
     }
 
     public static final String PROP_TAB_COUNT = "tab_count";

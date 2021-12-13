@@ -170,9 +170,9 @@ public final class Range {
     @Override
     public int hashCode() {
         var hash = 7;
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.min) ^ (Double.doubleToLongBits(this.min) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.max) ^ (Double.doubleToLongBits(this.max) >>> 32));
-        hash = 97 * hash + (this.reversed ? 1 : 0);
+        hash = 97 * hash + (int) (Double.doubleToLongBits(min) ^ (Double.doubleToLongBits(min) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(max) ^ (Double.doubleToLongBits(max) >>> 32));
+        hash = 97 * hash + (reversed ? 1 : 0);
         return hash;
     }
 

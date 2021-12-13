@@ -33,7 +33,7 @@ public class AutoCompleteHistory {
 
     public AutoCompleteHistory(Control control, IControlContentAdapter adapter) {
         this.control = control;
-        this.controlContentAdapter = adapter;
+        controlContentAdapter = adapter;
 
         installListener(control);
     }

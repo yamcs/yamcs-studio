@@ -37,7 +37,7 @@ public enum BasicDataType {
 
     private String description;
 
-    private BasicDataType(String description) {
+    BasicDataType(String description) {
         this.description = description;
     }
 

@@ -187,7 +187,6 @@ public final class ResourceAndContainerGroup implements Listener {
      */
     public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel, String resourceType,
             boolean showClosedProjects, int heightHint) {
-        super();
         _resourceType = resourceType;
         _showClosedProjects = showClosedProjects;
         createContents(parent, resourceFieldLabel, heightHint);
@@ -261,7 +260,7 @@ public final class ResourceAndContainerGroup implements Listener {
         data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         _fullPathLabel.setLayoutData(data);
-        this.refreshFullPath();
+        refreshFullPath();
         validateControls();
     }
 
@@ -313,7 +312,7 @@ public final class ResourceAndContainerGroup implements Listener {
     @Override
     public void handleEvent(Event e) {
         validateControls();
-        this.refreshFullPath();
+        refreshFullPath();
         if (_client != null) {
             _client.handleEvent(e);
         }
@@ -483,7 +482,7 @@ public final class ResourceAndContainerGroup implements Listener {
             buffer.append(_containerGroup.getFullPath());
             buffer.append("/");
             if (_resourceNameField.getText() != null && _resourceNameField.getText().trim().length() > 0) {
-                buffer.append(this.getResourceNameWithExtension());
+                buffer.append(getResourceNameWithExtension());
             }
         }
         _fullPathLabel.setText(buffer.toString());

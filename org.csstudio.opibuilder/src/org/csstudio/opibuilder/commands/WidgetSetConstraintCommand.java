@@ -32,7 +32,7 @@ public class WidgetSetConstraintCommand extends Command {
         if (widgetModel == null || newBounds == null) {
             throw new IllegalArgumentException();
         }
-        this.widget = widgetModel;
+        widget = widgetModel;
         this.newBounds = newBounds;
         // this.request = req;
         setLabel("move/resize");

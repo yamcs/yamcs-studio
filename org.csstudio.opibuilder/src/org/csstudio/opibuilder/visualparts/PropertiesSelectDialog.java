@@ -17,8 +17,6 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
@@ -44,7 +42,7 @@ public class PropertiesSelectDialog extends Dialog {
         super(parentShell);
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        selectedProps = new ArrayList<String>();
+        selectedProps = new ArrayList<>();
         this.widgetModel = widgetModel;
     }
 
@@ -101,12 +99,7 @@ public class PropertiesSelectDialog extends Dialog {
                 selectedProps = ((StructuredSelection) viewer.getSelection()).toList();
             }
         });
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                okPressed();
-            }
-        });
+        viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
     }
 

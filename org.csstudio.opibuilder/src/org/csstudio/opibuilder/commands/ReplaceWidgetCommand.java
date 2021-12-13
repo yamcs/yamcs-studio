@@ -48,7 +48,7 @@ public class ReplaceWidgetCommand extends Command {
     }
 
     private List<ConnectionModel> getAllConnections(AbstractWidgetModel widget, boolean source) {
-        List<ConnectionModel> result = new ArrayList<ConnectionModel>();
+        List<ConnectionModel> result = new ArrayList<>();
         result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
         if (widget instanceof AbstractContainerModel) {
             for (var child : ((AbstractContainerModel) widget).getAllDescendants()) {

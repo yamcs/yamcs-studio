@@ -25,7 +25,7 @@ public class FunctionTreeContentProvider implements ITreeContentProvider {
     @Override
     @SuppressWarnings("unchecked")
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        this.functionSets = (List<FormulaFunctionSet>) newInput;
+        functionSets = (List<FormulaFunctionSet>) newInput;
     }
 
     @Override

@@ -44,8 +44,6 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Image;
@@ -170,12 +168,9 @@ public final class OPIShell implements IOPIRuntime {
                 activeShell = OPIShell.this;
             }
         });
-        shell.addDisposeListener(new DisposeListener() {
-            @Override
-            public void widgetDisposed(DisposeEvent e) {
-                if (!icon.isDisposed()) {
-                    icon.dispose();
-                }
+        shell.addDisposeListener(e -> {
+            if (!icon.isDisposed()) {
+                icon.dispose();
             }
         });
 
@@ -194,12 +189,7 @@ public final class OPIShell implements IOPIRuntime {
         shell.setVisible(true);
 
         // Resize shell correctly after opening.
-        UIBundlingThread.getInstance().addRunnable(new Runnable() {
-            @Override
-            public void run() {
-                resizeToContents();
-            }
-        });
+        UIBundlingThread.getInstance().addRunnable(this::resizeToContents);
     }
 
     /**
@@ -237,8 +227,8 @@ public final class OPIShell implements IOPIRuntime {
         var equal = false;
         if (o instanceof OPIShell) {
             var opiShell = (OPIShell) o;
-            equal = opiShell.getMacrosInput().equals(this.getMacrosInput());
-            equal &= opiShell.getPath().equals(this.path);
+            equal = opiShell.getMacrosInput().equals(getMacrosInput());
+            equal &= opiShell.getPath().equals(path);
         }
         return equal;
     }
@@ -368,7 +358,7 @@ public final class OPIShell implements IOPIRuntime {
      */
     private static void sendUpdateCommand() {
         IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-        var commandService = (ICommandService) serviceLocator.getService(ICommandService.class);
+        var commandService = serviceLocator.getService(ICommandService.class);
         try {
             var command = commandService.getCommand(OPI_SHELLS_CHANGED_ID);
             command.executeWithChecks(new ExecutionEvent());
@@ -433,13 +423,13 @@ public final class OPIShell implements IOPIRuntime {
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == ActionRegistry.class) {
-            return adapter.cast(this.actionRegistry);
+            return adapter.cast(actionRegistry);
         }
         if (adapter == GraphicalViewer.class) {
-            return adapter.cast(this.viewer);
+            return adapter.cast(viewer);
         }
         if (adapter == CommandStack.class) {
-            return adapter.cast(this.viewer.getEditDomain().getCommandStack());
+            return adapter.cast(viewer.getEditDomain().getCommandStack());
         }
         return null;
     }
@@ -459,10 +449,10 @@ public final class OPIShell implements IOPIRuntime {
             // added afterwards, because they don't evaluate as equal.
             openShells.remove(this);
             if (input instanceof IFileEditorInput) {
-                this.path = ((IFileEditorInput) input).getFile().getFullPath();
+                path = ((IFileEditorInput) input).getFile().getFullPath();
             } else if (input instanceof RunnerInput) {
-                this.path = ((RunnerInput) input).getPath();
-                this.macrosInput = ((RunnerInput) input).getMacrosInput();
+                path = ((RunnerInput) input).getPath();
+                macrosInput = ((RunnerInput) input).getMacrosInput();
             }
             displayModel = createDisplayModel();
             setTitle();

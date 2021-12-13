@@ -56,8 +56,8 @@ public class RunModeService {
 
         private String description;
 
-        private DisplayMode(String desc) {
-            this.description = desc;
+        DisplayMode(String desc) {
+            description = desc;
         }
 
         public static String[] stringValues() {

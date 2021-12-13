@@ -201,7 +201,7 @@ abstract class AbstractPolyFeedbackFactory implements IGraphicalFeedbackFactory 
 
         // create some custom handles, which enable the user to drag arround
         // single points of the polyline
-        List<Handle> handles = new ArrayList<Handle>();
+        List<Handle> handles = new ArrayList<>();
 
         var abstractPolyElement = (AbstractPolyModel) hostEP.getModel();
 

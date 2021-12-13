@@ -23,7 +23,6 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Ellipse;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -182,7 +181,7 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
                     oldValuePosition = ((RoundScale) scale).getValuePosition(value, true);
                     fireManualValueChange(value);
-                    KnobFigure.this.revalidate();
+                    revalidate();
                     KnobFigure.this.repaint();
                 }
                 me.consume();
@@ -281,10 +280,9 @@ public class KnobFigure extends AbstractRoundRampedFigure {
     /**
      * Listeners that react on slider events.
      */
-    private List<IManualValueChangeListener> knobListeners = new ArrayList<IManualValueChangeListener>();
+    private List<IManualValueChangeListener> knobListeners = new ArrayList<>();
 
     public KnobFigure() {
-        super();
         transparent = true;
         scale.setScaleLineVisible(false);
         ramp.setRampWidth(12);
@@ -301,12 +299,9 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         add(valueLabel, KnobLayout.VALUE_LABEL);
 
         add(thumb, KnobLayout.THUMB);
-        addFigureListener(new FigureListener() {
-            @Override
-            public void figureMoved(IFigure source) {
-                ramp.setDirty(true);
-                revalidate();
-            }
+        addFigureListener(source -> {
+            ramp.setDirty(true);
+            revalidate();
         });
     }
 

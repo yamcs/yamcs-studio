@@ -43,42 +43,42 @@ public interface FormulaFunction {
      *
      * @return true if the function can accept a variable number of arguments
      */
-    public boolean isVarArgs();
+    boolean isVarArgs();
 
     /**
      * Return the name of the function.
      *
      * @return the function name
      */
-    public String getName();
+    String getName();
 
     /**
      * Return the description of the function.
      *
      * @return the function description
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      * The ordered list of the arguments type.
      *
      * @return the types of the arguments
      */
-    public List<Class<?>> getArgumentTypes();
+    List<Class<?>> getArgumentTypes();
 
     /**
      * The ordered list of the argument names.
      *
      * @return the names of the names
      */
-    public List<String> getArgumentNames();
+    List<String> getArgumentNames();
 
     /**
      * The type of the function result.
      *
      * @return the result type
      */
-    public Class<?> getReturnType();
+    Class<?> getReturnType();
 
     /**
      * Calculate the result of the function given the arguments.
@@ -87,7 +87,7 @@ public interface FormulaFunction {
      *            the argument list
      * @return the result of the function
      */
-    public Object calculate(List<Object> args);
+    Object calculate(List<Object> args);
 
     /**
      * Returns the time with latest valid timestamp or now.
@@ -96,7 +96,7 @@ public interface FormulaFunction {
      *            a list of values
      * @return the latest time; can't be null
      */
-    public default Time latestValidTimeOrNowOf(List<Object> args) {
+    default Time latestValidTimeOrNowOf(List<Object> args) {
         Time finalTime = null;
 
         // Give priority to parameter time to prevent issues with sysdate associated to constants
@@ -139,7 +139,7 @@ public interface FormulaFunction {
      *            whether to consider null values
      * @return the highest alarm; can't be null
      */
-    public default Alarm highestSeverityOf(List<Object> args, boolean considerNull) {
+    default Alarm highestSeverityOf(List<Object> args, boolean considerNull) {
         var finalAlarm = ValueFactory.alarmNone();
         for (var object : args) {
             Alarm newAlarm;

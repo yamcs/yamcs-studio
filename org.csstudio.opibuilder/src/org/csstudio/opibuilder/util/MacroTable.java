@@ -29,7 +29,7 @@ public class MacroTable implements IMacroTableProvider {
      */
     public MacroTable(Map<String, String> macros) {
         if (macros == null) {
-            this.macros = new HashMap<String, String>(0);
+            this.macros = new HashMap<>(0);
         } else {
             this.macros = macros;
         }
@@ -44,7 +44,7 @@ public class MacroTable implements IMacroTableProvider {
      *             on malformed input
      */
     public MacroTable(String names_and_values) throws Exception {
-        macros = new HashMap<String, String>();
+        macros = new HashMap<>();
         var pairs = StringSplitter.splitIgnoreInQuotes(names_and_values, ',', true);
         for (var pair : pairs) {
             var name_value = StringSplitter.splitIgnoreInQuotes(pair, '=', true);

@@ -69,7 +69,7 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
      */
     public ResourceSelectionDialog(Shell parentShell, String dialogMessage, String[] fileExtensions) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
+        setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
         _message = dialogMessage;
         _fileExtensions = fileExtensions;
     }

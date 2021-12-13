@@ -29,7 +29,7 @@ public class CommandStack {
     public int fixDelayMs = 100;
 
     public AutoMode getAutoMode() {
-        return this.autoMode;
+        return autoMode;
     }
 
     public int getAutoFixDelayMs() {
@@ -50,7 +50,7 @@ public class CommandStack {
         }
 
         public int index() {
-            return this.index;
+            return index;
         }
     }
 
@@ -64,7 +64,7 @@ public class CommandStack {
         }
 
         public int index() {
-            return this.index;
+            return index;
         }
     }
 
@@ -104,9 +104,7 @@ public class CommandStack {
     public List<String> getErrorMessages() {
         var msgs = new ArrayList<String>();
         for (var cmd : commands) {
-            for (var msg : cmd.getMessages()) {
-                msgs.add(msg);
-            }
+            msgs.addAll(cmd.getMessages());
         }
 
         return msgs;
@@ -135,7 +133,7 @@ public class CommandStack {
     }
 
     public void resetExecutionState() {
-        commands.forEach(c -> c.resetExecutionState());
+        commands.forEach(StackedCommand::resetExecutionState);
     }
 
     public boolean isEmpty() {

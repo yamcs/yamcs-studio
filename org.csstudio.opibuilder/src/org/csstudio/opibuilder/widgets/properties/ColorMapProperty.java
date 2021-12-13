@@ -111,7 +111,7 @@ public class ColorMapProperty extends AbstractWidgetProperty<ColorMap> {
 
     @Override
     public void writeToXML(Element propElement) {
-        var colorMap = (ColorMap) getPropertyValue();
+        var colorMap = getPropertyValue();
         var interpolateElement = new Element(XML_ELEMENT_INTERPOLATE);
         interpolateElement.setText(Boolean.toString(colorMap.isInterpolate()));
         var autoScaleElement = new Element(XML_ELEMENT_AUTOSCALE);

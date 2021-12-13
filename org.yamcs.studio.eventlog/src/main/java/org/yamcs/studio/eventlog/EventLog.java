@@ -136,7 +136,7 @@ public class EventLog extends Composite implements YamcsAware {
             var min = tableViewer.getTable().getVerticalBar().getMinimum();
             var max = tableViewer.getTable().getVerticalBar().getMaximum();
 
-            var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+            var service = PlatformUI.getWorkbench().getService(ICommandService.class);
             var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
             var lockState = command.getState(RegistryToggleState.STATE_ID);
             var locked = ((Boolean) lockState.getValue()).booleanValue();
@@ -216,7 +216,7 @@ public class EventLog extends Composite implements YamcsAware {
     }
 
     private void updateState() {
-        var service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        var service = PlatformUI.getWorkbench().getService(ICommandService.class);
         var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
         var state = command.getState(EventLog.STATE_SCROLL_LOCK);
         enableScrollLock((Boolean) state.getValue());
@@ -319,9 +319,7 @@ public class EventLog extends Composite implements YamcsAware {
         var comparator = tableViewer.getComparator();
 
         var allItems = tableContentProvider.getElements(null);
-        Arrays.sort(allItems, (o1, o2) -> {
-            return comparator.compare(tableViewer, o1, o2);
-        });
+        Arrays.sort(allItems, (o1, o2) -> comparator.compare(tableViewer, o1, o2));
 
         return Arrays.asList(allItems).stream().map(item -> item.event).collect(Collectors.toList());
     }

@@ -32,9 +32,9 @@ public class DisplayOpenManager {
     private IOPIRuntime opiRuntime;
 
     public DisplayOpenManager(IOPIRuntime opiRuntime) {
-        backStack = new SizeLimitedStack<IRunnerInput>(STACK_SIZE);
-        forwardStack = new SizeLimitedStack<IRunnerInput>(STACK_SIZE);
-        listeners = new ArrayList<IDisplayOpenManagerListener>();
+        backStack = new SizeLimitedStack<>(STACK_SIZE);
+        forwardStack = new SizeLimitedStack<>(STACK_SIZE);
+        listeners = new ArrayList<>();
         this.opiRuntime = opiRuntime;
     }
 

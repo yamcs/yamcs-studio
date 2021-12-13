@@ -69,6 +69,6 @@ public class MenuButtonFigure extends Label implements ITextFigure {
          * of the label then adding an appropriate gap so that the text looks as
          * if it has been centred.
          */
-        setIconTextGap((getBounds().width - this.getTextBounds().width - ICON_WIDTH) / 2);
+        setIconTextGap((getBounds().width - getTextBounds().width - ICON_WIDTH) / 2);
     }
 }

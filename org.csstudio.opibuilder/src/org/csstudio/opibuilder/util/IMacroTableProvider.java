@@ -20,5 +20,5 @@ public interface IMacroTableProvider {
      *            the name of the macro
      * @return the value of the macro, null if no such macro exists.
      */
-    public String getMacroValue(String macroName);
+    String getMacroValue(String macroName);
 }

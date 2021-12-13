@@ -85,7 +85,7 @@ public abstract class AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunct
 
         this.name = name;
         this.description = description;
-        this.argumentNames = Arrays.asList(arg1Name, arg2Name);
+        argumentNames = Arrays.asList(arg1Name, arg2Name);
     }
 
     @Override

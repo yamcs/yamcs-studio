@@ -116,7 +116,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
         var dotIndex = sysDesc.getValue().indexOf(SYSTEM_SEPARATOR);
         var propValue = sysDesc.getValue().substring(dotIndex + 1);
         var regex = propValue.replaceAll("\\.", "\\\\.");
-        ;
+
         regex = regex.replaceAll("\\*", ".*");
         regex = regex.replaceAll("\\?", ".");
         Pattern valuePattern = null;

@@ -78,7 +78,7 @@ public class PVInfoDialog extends Dialog {
         if (combo != null) {
             var finalCombo = combo; // Grrr
             finalCombo.addListener(SWT.Selection, evt -> {
-                var pvComposites = new ArrayList<Composite>(pvCompositesByDisplayname.values());
+                var pvComposites = new ArrayList<>(pvCompositesByDisplayname.values());
                 for (var i = 0; i < pvComposites.size(); i++) {
                     var data = ((GridData) pvComposites.get(i).getLayoutData());
 

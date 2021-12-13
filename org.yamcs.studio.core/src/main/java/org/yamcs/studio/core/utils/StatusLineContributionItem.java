@@ -202,7 +202,7 @@ public class StatusLineContributionItem extends ContributionItem {
     }
 
     public void addClickListener(Listener listener) {
-        this.clickListener = listener;
+        clickListener = listener;
         if (label != null && !label.isDisposed()) {
             label.addListener(SWT.MouseDown, listener);
         }
@@ -232,7 +232,7 @@ public class StatusLineContributionItem extends ContributionItem {
     }
 
     private void updateManager() {
-        if (this.text.length() == 0) {
+        if (text.length() == 0) {
             if (isVisible()) {
                 setVisible(false);
                 var contributionManager = getParent();

@@ -64,7 +64,7 @@ public class StringTableFieldEditor extends FieldEditor {
         this.editable = editable;
         this.columnsMinWidth = columnsMinWidth;
         this.rowEditDialog = rowEditDialog;
-        this.items = new ArrayList<String[]>();
+        items = new ArrayList<>();
         createControl(parent);
     }
 

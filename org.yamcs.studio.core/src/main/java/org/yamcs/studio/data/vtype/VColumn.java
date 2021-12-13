@@ -112,7 +112,7 @@ public class VColumn {
 
                 var rowIndex = index - offsets.getInt(tableIndex);
                 // TODO: mismatched type should be handled better
-                if (!ListNumber.class.isInstance(columns.get(tableIndex).getData())) {
+                if (!(columns.get(tableIndex).getData() instanceof ListNumber)) {
                     return Double.NaN;
                 }
                 @SuppressWarnings("unchecked")
