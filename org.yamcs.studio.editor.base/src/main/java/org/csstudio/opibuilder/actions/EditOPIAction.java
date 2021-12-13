@@ -74,7 +74,7 @@ public class EditOPIAction extends Action implements IWorkbenchWindowActionDeleg
         }
 
         IWorkbenchWindow targetWindow = null;
-        for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+        for (var window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
             if (window.getActivePage().getPerspective().getId().equals(OPIEditorPerspective.ID)) {
                 targetWindow = window;
             }

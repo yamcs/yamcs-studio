@@ -10,10 +10,8 @@
 package org.csstudio.swt.widgets.introspection;
 
 import java.beans.BeanInfo;
-import java.beans.EventSetDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,14 +32,14 @@ public class DefaultWidgetIntrospector {
         Introspector.flushFromCaches(beanClass);
         var bi = Introspector.getBeanInfo(beanClass);
         var bd = bi.getBeanDescriptor();
-        MethodDescriptor mds[] = bi.getMethodDescriptors();
-        EventSetDescriptor esds[] = bi.getEventSetDescriptors();
-        PropertyDescriptor pds[] = bi.getPropertyDescriptors();
+        var mds = bi.getMethodDescriptors();
+        var esds = bi.getEventSetDescriptors();
+        var pds = bi.getPropertyDescriptors();
 
-        List<PropertyDescriptor> filteredPDList = new ArrayList<PropertyDescriptor>();
+        var filteredPDList = new ArrayList<PropertyDescriptor>();
 
         List<String> nonPropList = Arrays.asList(getNonProperties());
-        for (PropertyDescriptor pd : pds) {
+        for (var pd : pds) {
             if (!nonPropList.contains(pd.getName()) && pd.getWriteMethod() != null && pd.getReadMethod() != null) {
                 filteredPDList.add(pd);
             }
@@ -52,7 +50,6 @@ public class DefaultWidgetIntrospector {
 
         return new GenericBeanInfo(bd, esds, defaultEvent,
                 filteredPDList.toArray(new PropertyDescriptor[filteredPDList.size()]), defaultProperty, mds, null);
-
     }
 
     public String[] getNonProperties() {
@@ -65,5 +62,4 @@ public class DefaultWidgetIntrospector {
         System.arraycopy(B, 0, C, A.length, B.length);
         return C;
     }
-
 }

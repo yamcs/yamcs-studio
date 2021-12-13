@@ -38,7 +38,6 @@ public class PatchedScalableFreeformRootEditPart extends ScalableFreeformRootEdi
                     return super.getZoomLevelsAsText();
                 }
             }
-
         };
     }
 
@@ -46,5 +45,4 @@ public class PatchedScalableFreeformRootEditPart extends ScalableFreeformRootEdi
     public ZoomManager getZoomManager() {
         return zoomManager;
     }
-
 }

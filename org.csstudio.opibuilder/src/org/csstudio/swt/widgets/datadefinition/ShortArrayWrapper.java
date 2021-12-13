@@ -33,5 +33,4 @@ public class ShortArrayWrapper implements IPrimaryArrayWrapper {
     public int getSize() {
         return data.length;
     }
-
 }

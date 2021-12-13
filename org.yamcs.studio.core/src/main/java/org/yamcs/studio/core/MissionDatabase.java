@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Mdb.MemberInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -35,7 +34,7 @@ public class MissionDatabase {
         parameters.add(parameter);
         var id = NamedObjectId.newBuilder().setName(parameter.getQualifiedName()).build();
         parametersById.put(id, parameter);
-        for (NamedObjectId alias : parameter.getAliasList()) {
+        for (var alias : parameter.getAliasList()) {
             parametersById.put(alias, parameter);
         }
 
@@ -117,7 +116,7 @@ public class MissionDatabase {
         } else if (qualifiedNameWithSuffix.matches(parentName)) {
             return parent;
         } else {
-            for (MemberInfo member : parent.getMemberList()) {
+            for (var member : parent.getMemberList()) {
                 var memberType = member.getType();
                 var name = parentName + "." + member.getName();
                 var match = findMatchingParameterType(memberType, name, qualifiedNameWithSuffix);

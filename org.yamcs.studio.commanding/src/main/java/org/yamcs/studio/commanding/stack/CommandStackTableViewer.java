@@ -12,7 +12,6 @@ package org.yamcs.studio.commanding.stack;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.utils.RCPUtils;
@@ -201,8 +199,8 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getText(Object element) {
                 var cmd = (StackedCommand) element;
-                long timeout = -1;
-                for (TransmissionConstraintInfo constraint : cmd.getMetaCommand().getConstraintList()) {
+                var timeout = -1L;
+                for (var constraint : cmd.getMetaCommand().getConstraintList()) {
                     timeout = Math.max(timeout, constraint.getTimeout());
                 }
 
@@ -349,7 +347,7 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(commentColumn.getColumn(), new ColumnPixelData(80));
 
         // Common properties to all columns
-        List<TableViewerColumn> columns = new ArrayList<>();
+        var columns = new ArrayList<TableViewerColumn>();
         columns.add(rowIdColumn);
         columns.add(nameColumn);
         columns.add(significanceColumn);
@@ -361,7 +359,7 @@ public class CommandStackTableViewer extends TableViewer {
         columns.add(sColumn);
         columns.add(stateColumn);
         columns.add(commentColumn);
-        for (TableViewerColumn column : columns) {
+        for (var column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {
                 @Override

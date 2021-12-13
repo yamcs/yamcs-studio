@@ -73,10 +73,10 @@ public class SpinnerModel extends LabelModel {
     protected void configureProperties() {
         pvModel = true;
         super.configureProperties();
-        removeProperty(LabelModel.PROP_AUTOSIZE);
-        removeProperty(LabelModel.PROP_SHOW_SCROLLBAR);
-        removeProperty(LabelModel.PROP_WRAP_WORDS);
-        setPropertyVisible(LabelModel.PROP_TEXT, false);
+        removeProperty(PROP_AUTOSIZE);
+        removeProperty(PROP_SHOW_SCROLLBAR);
+        removeProperty(PROP_WRAP_WORDS);
+        setPropertyVisible(PROP_TEXT, false);
         addProperty(new DoubleProperty(PROP_MIN, "Minimum", WidgetPropertyCategory.Behavior, DEFAULT_MIN));
 
         addProperty(new DoubleProperty(PROP_MAX, "Maximum", WidgetPropertyCategory.Behavior, DEFAULT_MAX));
@@ -104,16 +104,10 @@ public class SpinnerModel extends LabelModel {
         addProperty(new BooleanProperty(PROP_SHOW_TEXT, "Show text", WidgetPropertyCategory.Display, true));
     }
 
-    /**
-     * @return the minimum value
-     */
     public Double getMinimum() {
         return (Double) getProperty(PROP_MIN).getPropertyValue();
     }
 
-    /**
-     * @return the maximum value
-     */
     public Double getMaximum() {
         return (Double) getProperty(PROP_MAX).getPropertyValue();
     }
@@ -122,9 +116,6 @@ public class SpinnerModel extends LabelModel {
         return (Boolean) getPropertyValue(PROP_SHOW_TEXT);
     }
 
-    /**
-     * @return the step increment
-     */
     public Double getStepIncrement() {
         return (Double) getProperty(PROP_STEP_INCREMENT).getPropertyValue();
     }
@@ -133,9 +124,6 @@ public class SpinnerModel extends LabelModel {
         return (Double) getProperty(PROP_PAGE_INCREMENT).getPropertyValue();
     }
 
-    /**
-     * @return true if limits will be load from DB, false otherwise
-     */
     public boolean isLimitsFromPV() {
         return (Boolean) getProperty(PROP_LIMITS_FROM_PV).getPropertyValue();
     }

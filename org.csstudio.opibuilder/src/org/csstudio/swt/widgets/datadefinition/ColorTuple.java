@@ -69,5 +69,4 @@ public class ColorTuple implements Comparable<ColorTuple> {
         }
         return true;
     }
-
 }

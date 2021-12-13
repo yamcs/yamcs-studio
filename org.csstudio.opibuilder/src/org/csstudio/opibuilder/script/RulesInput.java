@@ -33,7 +33,7 @@ public class RulesInput {
 
     public RulesInput getCopy() {
         var copy = new RulesInput();
-        for (RuleData ruleData : ruleDataList) {
+        for (var ruleData : ruleDataList) {
             copy.getRuleDataList().add(ruleData.getCopy());
         }
         return copy;
@@ -49,5 +49,4 @@ public class RulesInput {
         }
         return ruleDataList.size() + " rules attached";
     }
-
 }

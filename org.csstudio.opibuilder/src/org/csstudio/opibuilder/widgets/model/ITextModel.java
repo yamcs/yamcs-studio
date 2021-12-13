@@ -20,5 +20,4 @@ public interface ITextModel {
     public void setText(String text);
 
     public String getText();
-
 }

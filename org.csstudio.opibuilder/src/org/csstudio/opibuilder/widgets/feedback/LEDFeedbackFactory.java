@@ -26,5 +26,4 @@ public class LEDFeedbackFactory extends AbstractFixRatioSizeFeedbackFactory {
     public boolean isSquareSizeRequired(AbstractWidgetModel widgetModel) {
         return !((LEDModel) widgetModel).isSquareLED();
     }
-
 }

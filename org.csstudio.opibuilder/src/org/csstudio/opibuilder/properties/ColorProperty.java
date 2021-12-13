@@ -143,7 +143,6 @@ public class ColorProperty extends AbstractWidgetProperty {
             }
             return MediaService.getInstance().getOPIColor(name);
         }
-
     }
 
     @Override
@@ -162,6 +161,5 @@ public class ColorProperty extends AbstractWidgetProperty {
 
         var rgb = opiColor.getRGBValue();
         return "ColorFontUtil.getColorFromRGB(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
-
     }
 }

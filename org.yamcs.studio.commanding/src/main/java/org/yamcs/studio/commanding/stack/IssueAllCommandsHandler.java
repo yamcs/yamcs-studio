@@ -79,7 +79,6 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
         @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
             this.monitor = monitor;
             var stack = CommandStack.getInstance();
             var startIndex = stack.getCommands().indexOf(stack.getActiveCommand());
@@ -114,7 +113,6 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             }
             monitor.done();
             stack.stackStatus = StackStatus.IDLE;
-
         }
 
         private void issueAllCommands(Shell activeShell, CommandStackView view, CommandStack stack, int commandIndex)
@@ -205,5 +203,4 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             });
         }
     }
-
 }

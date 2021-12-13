@@ -45,7 +45,7 @@ public class ColumnData {
     }
 
     public ColumnDef getColumn(String name) {
-        for (ColumnDef column : columns) {
+        for (var column : columns) {
             if (column.name.equals(name)) {
                 return column;
             }
@@ -66,6 +66,5 @@ public class ColumnData {
     }
 
     public void restore(String[] visibleColumnNames, String[] visibleWidths, String[] hiddenColumnNames) {
-
     }
 }

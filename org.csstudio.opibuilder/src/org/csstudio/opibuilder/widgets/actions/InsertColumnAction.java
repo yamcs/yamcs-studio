@@ -90,7 +90,6 @@ public class InsertColumnAction implements IObjectActionDelegate {
             if (allowedHeaders == null) {
                 var text = new Text(grpPosition, SWT.SINGLE | SWT.BORDER);
                 text.addModifyListener(new ModifyListener() {
-
                     @Override
                     public void modifyText(ModifyEvent e) {
                         columnTitle = text.getText();
@@ -147,7 +146,6 @@ public class InsertColumnAction implements IObjectActionDelegate {
                 tableEditPart.getTable().setColumnHeader(index, dialog.getColumnTitle());
             }
         }
-
     }
 
     @Override
@@ -164,5 +162,4 @@ public class InsertColumnAction implements IObjectActionDelegate {
             return null;
         }
     }
-
 }

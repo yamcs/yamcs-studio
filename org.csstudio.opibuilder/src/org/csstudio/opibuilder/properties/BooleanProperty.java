@@ -74,5 +74,4 @@ public final class BooleanProperty extends AbstractWidgetProperty {
     public String toStringInRuleScript(Object propValue) {
         return (Boolean) propValue ? "true" : "false";
     }
-
 }

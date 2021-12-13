@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import org.eclipse.jface.viewers.StyledString;
 import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
-import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.Value;
@@ -29,8 +28,6 @@ import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Keep track of the lifecycle of a stacked command.
- *
- * @see {@link CommandStack}
  */
 public class StackedCommand {
 
@@ -79,7 +76,7 @@ public class StackedCommand {
         str.append(meta.getQualifiedName(), identifierStyler);
         str.append("(", bracketStyler);
         var first = true;
-        for (TelecommandArgument arg : getEffectiveAssignments()) {
+        for (var arg : getEffectiveAssignments()) {
             var value = getAssignedStringValue(arg.getArgumentInfo());
 
             if (value == null && arg.getArgumentInfo().hasInitialValue()) {
@@ -175,8 +172,8 @@ public class StackedCommand {
 
     public Collection<TelecommandArgument> getEffectiveAssignments() {
         // We want this to be top-down, as-defined in mdb
-        Map<String, TelecommandArgument> argumentsByName = new LinkedHashMap<>();
-        List<CommandInfo> hierarchy = new ArrayList<>();
+        var argumentsByName = new LinkedHashMap<String, TelecommandArgument>();
+        var hierarchy = new ArrayList<CommandInfo>();
         hierarchy.add(meta);
         var base = meta;
         while (base.hasBaseCommand()) {
@@ -185,16 +182,16 @@ public class StackedCommand {
         }
 
         // From parent to child. Children can override initial values (= defaults)
-        for (CommandInfo cmd : hierarchy) {
+        for (var cmd : hierarchy) {
             // Set all values, even if null initial value. This gives us consistent ordering
-            for (ArgumentInfo argument : cmd.getArgumentList()) {
+            for (var argument : cmd.getArgumentList()) {
                 var editable = true;
                 argumentsByName.put(argument.getName(), new TelecommandArgument(argument, editable));
             }
 
             // Override values with actual assignments
             if (cmd.getArgumentAssignmentList() != null) {
-                for (ArgumentAssignmentInfo argumentAssignment : cmd.getArgumentAssignmentList()) {
+                for (var argumentAssignment : cmd.getArgumentAssignmentList()) {
                     var argument = argumentsByName.get(argumentAssignment.getName());
                     argument.setValue(argumentAssignment.getValue());
                     argument.setEditable(false);
@@ -210,8 +207,8 @@ public class StackedCommand {
     }
 
     public List<String> getMessages() {
-        List<String> messages = new ArrayList<>();
-        for (ArgumentInfo arg : meta.getArgumentList()) {
+        var messages = new ArrayList<String>();
+        for (var arg : meta.getArgumentList()) {
             if (!isValid(arg)) {
                 messages.add(String.format("Missing argument '%s'", arg.getName()));
             }
@@ -244,7 +241,7 @@ public class StackedCommand {
     }
 
     public boolean isValid() {
-        for (ArgumentInfo arg : meta.getArgumentList()) {
+        for (var arg : meta.getArgumentList()) {
             if (!isValid(arg)) {
                 return false;
             }
@@ -253,8 +250,8 @@ public class StackedCommand {
     }
 
     public List<ArgumentInfo> getMissingArguments() {
-        List<ArgumentInfo> res = new ArrayList<>();
-        for (ArgumentInfo arg : meta.getArgumentList()) {
+        var res = new ArrayList<ArgumentInfo>();
+        for (var arg : meta.getArgumentList()) {
             if (assignments.get(arg) == null) {
                 res.add(arg);
             }
@@ -321,7 +318,7 @@ public class StackedCommand {
         // Retrieve arguments assignment
         // TODO: write formal source grammar
         var commandArgumentsTab = commandArguments.split(",");
-        for (String commandArgument : commandArgumentsTab) {
+        for (var commandArgument : commandArgumentsTab) {
             if (commandArgument == null || commandArgument.isEmpty()) {
                 continue;
             }
@@ -330,7 +327,7 @@ public class StackedCommand {
             var value = components[1].trim();
             var foundArgument = false;
             var metaCommandArgumentsList = getAllArgumentList(commandInfo);
-            for (ArgumentInfo ai : metaCommandArgumentsList) {
+            for (var ai : metaCommandArgumentsList) {
                 foundArgument = ai.getName().toUpperCase().equals(argument.toUpperCase());
                 if (foundArgument) {
                     if (value.startsWith("\"") && value.endsWith("\"")) {

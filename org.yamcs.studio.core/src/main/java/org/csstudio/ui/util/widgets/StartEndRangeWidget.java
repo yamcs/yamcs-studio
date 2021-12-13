@@ -61,26 +61,17 @@ public class StartEndRangeWidget extends Canvas {
 
     /**
      * Adds a listener, notified if the range or the selected range changes.
-     *
-     * @param listener
-     *            a new listener.
      */
     public void addRangeListener(RangeListener listener) {
         listeners.add(listener);
     }
 
-    /**
-     * Removes a listener.
-     *
-     * @param listener
-     *            listener to be removed.
-     */
     public void removeRangeListener(RangeListener listener) {
         listeners.remove(listener);
     }
 
     private void fireRangeChanged() {
-        for (RangeListener listener : listeners) {
+        for (var listener : listeners) {
             listener.rangeChanged();
         }
     }
@@ -90,15 +81,11 @@ public class StartEndRangeWidget extends Canvas {
 
     /**
      * Create a the StartEndRangeWidget widget.
-     *
-     * @param parent
-     * @param style
      */
     public StartEndRangeWidget(Composite parent, int style) {
         super(parent, SWT.DOUBLE_BUFFERED);
 
         addControlListener(new ControlListener() {
-
             @Override
             public void controlResized(ControlEvent e) {
                 recalculateDistancePerPx();
@@ -106,14 +93,12 @@ public class StartEndRangeWidget extends Canvas {
 
             @Override
             public void controlMoved(ControlEvent e) {
-
             }
         });
         addPaintListener(paintListener);
         addMouseListener(mouseListener);
         addMouseMoveListener(mouseListener);
         addRangeListener(new RangeListener() {
-
             @Override
             public void rangeChanged() {
                 redraw();
@@ -398,7 +383,6 @@ public class StartEndRangeWidget extends Canvas {
         default:
             break;
         }
-
     }
 
     private final MouseRescale mouseListener = new MouseRescale();
@@ -411,7 +395,6 @@ public class StartEndRangeWidget extends Canvas {
         @Override
         public void mouseDoubleClick(MouseEvent e) {
             if (rangeSet) {
-
                 setRanges(min, max, min, max);
             }
         }
@@ -451,7 +434,6 @@ public class StartEndRangeWidget extends Canvas {
                 followMax = false;
                 rangeX = valueAlongOrientationAxis;
             }
-
         }
 
         @Override

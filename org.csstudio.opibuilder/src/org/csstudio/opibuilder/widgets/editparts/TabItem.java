@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.widgets.model.GroupingContainerModel;
@@ -30,10 +29,6 @@ public class TabItem {
 
     /**
      * The tab item will be initialized with the corresponding tab properties value in tab model.
-     * 
-     * @param tabModel
-     * @param index
-     * @param groupingContainerModel
      */
     public TabItem(TabModel tabModel, int index, GroupingContainerModel groupingContainerModel) {
         super();
@@ -52,7 +47,6 @@ public class TabItem {
     private TabItem(GroupingContainerModel groupingContainerModel, Map<TabProperty, Object> propertyMap) {
         this.groupingContainerModel = groupingContainerModel;
         this.propertyMap = propertyMap;
-
     }
 
     public void setPropertyValue(TabProperty tabProperty, Object value) {
@@ -60,7 +54,7 @@ public class TabItem {
             groupingContainerModel.setName((String) value);
         }
         if (tabProperty == TabProperty.ENABLED) {
-            // for (AbstractWidgetModel model : groupingContainerModel.getAllDescendants())
+            // for (var model : groupingContainerModel.getAllDescendants())
             // model.setEnabled((Boolean) value);
             groupingContainerModel.setEnabled((Boolean) value);
         }
@@ -69,12 +63,9 @@ public class TabItem {
 
     /**
      * Copy the properties from TabModel to this tab item.
-     * 
-     * @param tabModel
-     * @param index
      */
     public void injectPropertiesValue(TabModel tabModel, int index) {
-        for (TabProperty tabProperty : TabProperty.values()) {
+        for (var tabProperty : TabProperty.values()) {
             propertyMap.put(tabProperty, tabModel.getTabPropertyValue(index, tabProperty));
         }
     }
@@ -87,7 +78,7 @@ public class TabItem {
      */
     public void injectDefaultPropertiesValue(int index) {
         var tempModel = new TabModel();
-        for (TabProperty tabProperty : TabProperty.values()) {
+        for (var tabProperty : TabProperty.values()) {
             var propID = TabModel.makeTabPropID(tabProperty.propIDPre, index);
             propertyMap.put(tabProperty, tempModel.getProperty(propID).getDefaultValue());
         }
@@ -107,12 +98,9 @@ public class TabItem {
      */
     public TabItem getCopy() throws Exception {
         var xmlString = XMLUtil.widgetToXMLString(groupingContainerModel, false);
-
         var newGroupingContainerModel = (GroupingContainerModel) XMLUtil.XMLStringToWidget(xmlString);
-
-        Map<TabProperty, Object> newPropertyMap = new HashMap<TabProperty, Object>();
-
-        for (Entry<TabProperty, Object> entry : propertyMap.entrySet()) {
+        var newPropertyMap = new HashMap<TabProperty, Object>();
+        for (var entry : propertyMap.entrySet()) {
             newPropertyMap.put(entry.getKey(), entry.getValue());
         }
 
@@ -122,5 +110,4 @@ public class TabItem {
     public Object getPropertyValue(TabProperty tabProperty) {
         return propertyMap.get(tabProperty);
     }
-
 }

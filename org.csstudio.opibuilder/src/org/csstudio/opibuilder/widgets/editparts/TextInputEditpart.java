@@ -9,18 +9,31 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeListener;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_TEXT;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_WRAP_WORDS;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_LIMITS_FROM_PV;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_MAX;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_MIN;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_NEXT_FOCUS;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_PASSWORD_INPUT;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_READ_ONLY;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_SELECTOR_TYPE;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_SHOW_H_SCROLL;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_SHOW_NATIVE_BORDER;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_SHOW_V_SCROLL;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_STYLE;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_ROTATION;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
-import org.csstudio.opibuilder.scriptUtil.GUIUtil;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel.Style;
-import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextInputFigure;
@@ -40,6 +53,7 @@ import org.yamcs.studio.data.vtype.Scalar;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VNumberArray;
 import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.script.GUIUtil;
 
 public class TextInputEditpart extends TextUpdateEditPart {
 
@@ -67,7 +81,6 @@ public class TextInputEditpart extends TextUpdateEditPart {
             var textInputFigure = (TextInputFigure) createTextFigure();
             initTextFigure(textInputFigure);
             setDelegate(new Draw2DTextInputEditpartDelegate(this, getWidgetModel(), textInputFigure));
-
         } else {
             setDelegate(new NativeTextEditpartDelegate(this, getWidgetModel()));
         }
@@ -99,7 +112,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     public void activate() {
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
         super.activate();
     }
 
@@ -116,7 +129,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             var model = getWidgetModel();
             if (model.isLimitsFromPV()) {
-                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener() {
@@ -128,8 +141,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
                                         // Update min/max from the control range of the PV
-                                        model.setPropertyValue(TextInputModel.PROP_MAX, meta.getUpperCtrlLimit());
-                                        model.setPropertyValue(TextInputModel.PROP_MIN, meta.getLowerCtrlLimit());
+                                        model.setPropertyValue(PROP_MAX, meta.getUpperCtrlLimit());
+                                        model.setPropertyValue(PROP_MIN, meta.getLowerCtrlLimit());
                                     }
                                 }
                             }
@@ -155,7 +168,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
             } else {
                 result = parseString(text);
             }
-            setPVValue(AbstractPVWidgetModel.PROP_PVNAME, result);
+            setPVValue(PROP_PVNAME, result);
         } catch (Exception e) {
             var msg = NLS.bind("Failed to write value to PV {0} from widget {1}.\nIllegal input : {2} \n",
                     new String[] { getPVName(), getWidgetModel().getName(), text }) + e.toString();
@@ -167,8 +180,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-            removeAllPropertyChangeHandlers(LabelModel.PROP_TEXT);
-            IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+            removeAllPropertyChangeHandlers(PROP_TEXT);
+            setPropertyChangeHandler(PROP_TEXT, (oldValue, newValue, figure) -> {
                 var text = (String) newValue;
 
                 if (getPV() == null) {
@@ -180,26 +193,18 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 // Output pv value even if pv name is empty, so setPVValuelistener can be triggered.
                 outputPVValue(text);
                 return false;
-            };
-            setPropertyChangeHandler(LabelModel.PROP_TEXT, handler);
+            });
         }
 
-        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVNAME, (oldValue, newValue, figure) -> {
             registerLoadLimitsListener();
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
+        });
 
-        PropertyChangeListener updatePropSheetListener = arg0 -> updatePropSheet();
-        getWidgetModel().getProperty(TextInputModel.PROP_LIMITS_FROM_PV)
-                .addPropertyChangeListener(updatePropSheetListener);
+        getWidgetModel().getProperty(PROP_LIMITS_FROM_PV).addPropertyChangeListener(evt -> updatePropSheet());
+        getWidgetModel().getProperty(PROP_SELECTOR_TYPE).addPropertyChangeListener(evt -> updatePropSheet());
 
-        getWidgetModel().getProperty(TextInputModel.PROP_SELECTOR_TYPE)
-                .addPropertyChangeListener(updatePropSheetListener);
-
-        PropertyChangeListener reCreateWidgetListener = evt -> reCreateWidget();
-
-        getWidgetModel().getProperty(TextInputModel.PROP_STYLE).addPropertyChangeListener(reCreateWidgetListener);
+        getWidgetModel().getProperty(PROP_STYLE).addPropertyChangeListener(evt -> reCreateWidget());
 
         delegate.registerPropertyChangeHandlers();
     }
@@ -252,7 +257,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
      */
     private Object parseStringArray(String text) throws ParseException {
         var texts = text.split(" +");
-        var pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+        var pvValue = getPVValue(PROP_PVNAME);
         if (pvValue instanceof VNumberArray) {
             var result = new double[texts.length];
             for (var i = 0; i < texts.length; i++) {
@@ -277,7 +282,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @throws ParseException
      */
     private Object parseString(String text) throws ParseException {
-        var pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+        var pvValue = getPVValue(PROP_PVNAME);
         var formatEnum = getWidgetModel().getFormat();
 
         if (pvValue == null) {
@@ -285,7 +290,6 @@ public class TextInputEditpart extends TextUpdateEditPart {
         }
 
         return parseStringForPVManagerPV(formatEnum, text, pvValue);
-
     }
 
     private Object parseStringForPVManagerPV(FormatEnum formatEnum, String text, VType pvValue) throws ParseException {
@@ -528,30 +532,29 @@ public class TextInputEditpart extends TextUpdateEditPart {
     @Override
     protected String formatValue(Object newValue, String propId) {
         var text = super.formatValue(newValue, propId);
-        getWidgetModel().setPropertyValue(TextInputModel.PROP_TEXT, text, false);
+        getWidgetModel().setPropertyValue(PROP_TEXT, text, false);
         return text;
-
     }
 
     protected void updatePropSheet() {
         var model = getWidgetModel();
-        model.setPropertyVisible(TextInputModel.PROP_MAX, !getWidgetModel().isLimitsFromPV());
-        model.setPropertyVisible(TextInputModel.PROP_MIN, !getWidgetModel().isLimitsFromPV());
+        model.setPropertyVisible(PROP_MAX, !getWidgetModel().isLimitsFromPV());
+        model.setPropertyVisible(PROP_MIN, !getWidgetModel().isLimitsFromPV());
 
         // set native text related properties visibility
         var isNative = delegate instanceof NativeTextEditpartDelegate;
-        model.setPropertyVisible(TextInputModel.PROP_SHOW_NATIVE_BORDER, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_PASSWORD_INPUT, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_READ_ONLY, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_SHOW_H_SCROLL, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_SHOW_V_SCROLL, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_NEXT_FOCUS, isNative);
-        model.setPropertyVisible(TextInputModel.PROP_WRAP_WORDS, isNative);
+        model.setPropertyVisible(PROP_SHOW_NATIVE_BORDER, isNative);
+        model.setPropertyVisible(PROP_PASSWORD_INPUT, isNative);
+        model.setPropertyVisible(PROP_READ_ONLY, isNative);
+        model.setPropertyVisible(PROP_SHOW_H_SCROLL, isNative);
+        model.setPropertyVisible(PROP_SHOW_V_SCROLL, isNative);
+        model.setPropertyVisible(PROP_NEXT_FOCUS, isNative);
+        model.setPropertyVisible(PROP_WRAP_WORDS, isNative);
 
         // set classic text figure related properties visibility
-        model.setPropertyVisible(TextInputModel.PROP_TRANSPARENT, !isNative);
-        model.setPropertyVisible(TextInputModel.PROP_ROTATION, !isNative);
-        model.setPropertyVisible(TextInputModel.PROP_SELECTOR_TYPE, !isNative);
+        model.setPropertyVisible(PROP_TRANSPARENT, !isNative);
+        model.setPropertyVisible(PROP_ROTATION, !isNative);
+        model.setPropertyVisible(PROP_SELECTOR_TYPE, !isNative);
 
         delegate.updatePropSheet();
     }
@@ -582,5 +585,4 @@ public class TextInputEditpart extends TextUpdateEditPart {
             return super.getValue();
         }
     }
-
 }

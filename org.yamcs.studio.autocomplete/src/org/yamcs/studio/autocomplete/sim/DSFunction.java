@@ -148,5 +148,4 @@ public class DSFunction implements Comparable<DSFunction> {
     public int compareTo(DSFunction arg0) {
         return name.compareTo(arg0.getName());
     }
-
 }

@@ -44,8 +44,6 @@ import org.yamcs.studio.core.YamcsPlugin;
  * error details viewer when pressed by the user.
  * <p>
  * Taken from http://rubenlaguna.com/wp/2007/07/25/eclipse-error-reporting-exception-stacktrace-details/ and modified.
- *
- * @see org.eclipse.core.runtime.IStatus
  */
 public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     /**
@@ -121,7 +119,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      *            the error to show to the user
      * @param displayMask
      *            the mask to use to filter the displaying of child items, as per <code>IStatus.matches</code>
-     * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     public ExceptionDetailsErrorDialog(Shell parentShell, String dialogTitle, String message, IStatus status,
             int displayMask) {
@@ -203,9 +200,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         return composite;
     }
 
-    /*
-     * @see IconAndMessageDialog#createDialogAndButtonArea(Composite)
-     */
     @Override
     protected void createDialogAndButtonArea(Composite parent) {
         super.createDialogAndButtonArea(parent);
@@ -254,17 +248,11 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         var copyMenu = new Menu(text);
         var copyItem = new MenuItem(copyMenu, SWT.NONE);
         copyItem.addSelectionListener(new SelectionListener() {
-            /*
-             * @see SelectionListener.widgetSelected (SelectionEvent)
-             */
             @Override
             public void widgetSelected(SelectionEvent e) {
                 copyToClipboard();
             }
 
-            /*
-             * @see SelectionListener.widgetDefaultSelected(SelectionEvent)
-             */
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 copyToClipboard();
@@ -334,7 +322,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      * @return the code of the button that was pressed that resulted in this dialog closing. This will be
      *         <code>Dialog.OK</code> if the OK button was pressed, or <code>Dialog.CANCEL</code> if this dialog's close
      *         window decoration or the ESC key was used.
-     * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     public static int openError(Shell parentShell, String title, String message, IStatus status, int displayMask) {
         var dialog = new ExceptionDetailsErrorDialog(parentShell, title, message, status, displayMask);
@@ -438,7 +425,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      * @param mask
      *            a mask as per <code>IStatus.matches</code>
      * @return <code>true</code> if the given status should be displayed, and <code>false</code> otherwise
-     * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     protected static boolean shouldDisplay(IStatus status, int mask) {
         var children = status.getChildren();
@@ -529,8 +515,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      * invoked after the control of the dialog has been set. In other words, after the <code>createContents</code>
      * method has been invoked and has returned the control for the content area of the dialog. Invoking the method
      * before the content area has been set or after the dialog has been disposed will have no effect.
-     *
-     * @since 3.1
      */
     protected void showDetailsArea() {
         if (!listCreated) {
@@ -545,9 +529,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      * Return whether the Details button should be included. This method is invoked once when the dialog is built. By
      * default, the Details button is only included if the status used when creating the dialog was a multi-status or if
      * the status contains an exception. Subclasses may override.
-     *
-     * @return whether the Details button should be included
-     * @since 3.1
      */
     protected boolean shouldShowDetailsButton() {
         return status.isMultiStatus() || status.getException() != null;
@@ -559,7 +540,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      *
      * @param status
      *            the status to be displayed in the details list
-     * @since 3.1
      */
     protected void setStatus(IStatus status) {
         if (this.status != status) {

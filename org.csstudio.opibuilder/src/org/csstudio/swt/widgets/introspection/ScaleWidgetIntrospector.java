@@ -22,5 +22,4 @@ public class ScaleWidgetIntrospector extends DefaultWidgetIntrospector {
 
         return concatenateStringArrays(super.getNonProperties(), SCALE_WIDGET_NON_PROPERTIES);
     }
-
 }

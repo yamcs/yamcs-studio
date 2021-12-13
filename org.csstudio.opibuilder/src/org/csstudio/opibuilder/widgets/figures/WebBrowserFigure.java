@@ -62,7 +62,6 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
             graphics.drawText(errorMassage, clientArea.x, clientArea.y);
             graphics.popState();
         }
-
     }
 
     @Override
@@ -82,7 +81,5 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
             ErrorHandlerUtil.handleError(errorMassage, e);
         }
         return browserViewer;
-
     }
-
 }

@@ -40,7 +40,6 @@ public class ArrayFigure extends Figure implements Introspectable {
     class ArrayLayout extends XYLayout {
 
         public ArrayLayout() {
-
         }
 
         @Override
@@ -177,7 +176,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         setArrayLength(100);
         setHorizontal(false);
         spinner.addManualValueChangeListener(new IManualValueChangeListener() {
-
             @Override
             public void manualValueChanged(double newValue) {
                 setIndex((int) newValue);
@@ -186,7 +184,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         });
 
         scrollbar.addManualValueChangeListener(new IManualValueChangeListener() {
-
             @Override
             public void manualValueChanged(double newValue) {
                 setIndex((int) newValue);
@@ -194,7 +191,6 @@ public class ArrayFigure extends Figure implements Introspectable {
                 // spinner.setValue((int) newValue);
             }
         });
-
     }
 
     public void addIndexChangeListener(IManualValueChangeListener listener) {
@@ -202,7 +198,7 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     protected void fireIndexChanged(int newIndex) {
-        for (Object listener : listeners.getListeners()) {
+        for (var listener : listeners.getListeners()) {
             ((IManualValueChangeListener) listener).manualValueChanged(newIndex);
         }
     }
@@ -249,7 +245,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         int r;
         if (horizontal) {
             r = Math.round(clientArea.width / elementSize.width);
-
         } else {
             r = Math.round(clientArea.height / elementSize.height);
         }
@@ -277,7 +272,6 @@ public class ArrayFigure extends Figure implements Introspectable {
             r.width += delta1;
             delta2 = elementSize.height - clientArea.height;
             r.height += delta2;
-
         } else {
             delta1 = elementSize.height * visibleElementsCount - clientArea.height;
             r.height += delta1;
@@ -315,8 +309,6 @@ public class ArrayFigure extends Figure implements Introspectable {
 
     /**
      * Calculate the preferred size based current layout and elements' size.
-     *
-     * @see org.eclipse.draw2d.XYLayout#calculatePreferredSize(org.eclipse.draw2d.IFigure, int, int)
      */
     protected Dimension calculatePreferredSize() {
         var result = new Dimension();
@@ -396,7 +388,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         pane.setEnabled(value);
         enabilityDirty = true;
         updateElementsEnability();
-
     }
 
     public void setHorizontal(boolean horizontal) {
@@ -424,7 +415,7 @@ public class ArrayFigure extends Figure implements Introspectable {
         }
         enabilityDirty = false;
         if (!pane.isEnabled()) {
-            for (Object child : pane.getChildren()) {
+            for (var child : pane.getChildren()) {
                 ((IFigure) child).setEnabled(false);
             }
             return;
@@ -458,5 +449,4 @@ public class ArrayFigure extends Figure implements Introspectable {
         this.spinnerWidth = spinnerWidth;
         revalidate();
     }
-
 }

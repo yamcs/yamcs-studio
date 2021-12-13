@@ -49,7 +49,6 @@ public class FilePathProperty extends AbstractWidgetProperty {
     public FilePathProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
             String[] fileExtensions) {
         this(prop_id, description, category, defaultValue, fileExtensions, true);
-
     }
 
     /**
@@ -92,7 +91,7 @@ public class FilePathProperty extends AbstractWidgetProperty {
             var idx = path.lastIndexOf('.');
             var dotExt = (idx != -1) ? path.substring(idx) : "";
             if (fileExtensions != null && fileExtensions.length > 0) {
-                for (String extension : fileExtensions) {
+                for (var extension : fileExtensions) {
                     if (("." + extension).equalsIgnoreCase(dotExt)) {
                         acceptedValue = path;
                     }

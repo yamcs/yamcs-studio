@@ -51,7 +51,6 @@ public class MultilineTextEditDialog extends Dialog {
         text.setSelection(0, contents.length());
         text.setLayoutData(gridData);
         text.addKeyListener(new KeyListener() {
-
             @Override
             public void keyReleased(KeyEvent e) {
             }

@@ -86,7 +86,7 @@ public class AnimatedSVGCache {
     public void dispose() {
         stopProcessing();
         synchronized (entries) {
-            for (Entry entry : entries) {
+            for (var entry : entries) {
                 entry.dispose();
             }
         }
@@ -110,7 +110,7 @@ public class AnimatedSVGCache {
         repeatCount = 0;
         initialized = false;
         Runnable flushTask = () -> {
-            for (Entry entry : entriesCopy) {
+            for (var entry : entriesCopy) {
                 entry.dispose();
             }
             entriesCopy.clear();
@@ -129,7 +129,7 @@ public class AnimatedSVGCache {
         Image image = null;
         var currentWaitTime = Long.MAX_VALUE;
         if (!initialized) { // Initialize
-            for (TimedElement te : timedDocumentRoot.getChildren()) {
+            for (var te : timedDocumentRoot.getChildren()) {
                 timeHandlers.put(te, new TimedElementHandler(te));
             }
             entries.clear();
@@ -138,7 +138,7 @@ public class AnimatedSVGCache {
             initialized = true;
         } else {
             // Compare time of each element with previous call
-            for (TimedElement te : timedDocumentRoot.getChildren()) {
+            for (var te : timedDocumentRoot.getChildren()) {
                 if (timeHandlers.get(te) != null && timeHandlers.get(te).update(te)
                         && timeHandlers.get(te).getWaitTime() < currentWaitTime) {
                     // Take the minimum
@@ -152,7 +152,7 @@ public class AnimatedSVGCache {
                 repeatCount++;
                 // Reset time counters
                 timeHandlers.clear();
-                for (TimedElement te : timedDocumentRoot.getChildren()) {
+                for (var te : timedDocumentRoot.getChildren()) {
                     timeHandlers.put(te, new TimedElementHandler(te));
                 }
                 filled = false;
@@ -177,7 +177,7 @@ public class AnimatedSVGCache {
         if (!initialized) {
             return false; // case of flush
         }
-        for (TimedElement te : timedDocumentRoot.getChildren()) {
+        for (var te : timedDocumentRoot.getChildren()) {
             if (timeHandlers.get(te) != null && !timeHandlers.get(te).hasRepeated()) {
                 return false;
             }
@@ -301,7 +301,6 @@ public class AnimatedSVGCache {
         public String toString() {
             return "Entry [waitTime=" + waitTime + "]";
         }
-
     }
 
     /**
@@ -356,6 +355,5 @@ public class AnimatedSVGCache {
                     + simpleDur + ", repeated=" + repeated + ", currentWaitTime=" + currentWaitTime + ", waitTimeSum="
                     + waitTimeSum + "]";
         }
-
     }
 }

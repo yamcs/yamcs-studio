@@ -95,7 +95,6 @@ public class VTypeHelper {
                 return (String) value;
             }
         } else if (vValue instanceof Array) {
-
             if (vValue instanceof VNumberArray) {
                 return formatNumberArray(formatEnum, (VNumberArray) vValue, precision);
             } else {
@@ -491,7 +490,6 @@ public class VTypeHelper {
             }
             return sb.toString();
         }
-
     }
 
     private static String formatObjectArray(Object[] array) {
@@ -817,5 +815,4 @@ public class VTypeHelper {
 
         return builder.toString();
     }
-
 }

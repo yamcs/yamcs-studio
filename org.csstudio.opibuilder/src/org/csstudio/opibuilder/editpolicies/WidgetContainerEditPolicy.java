@@ -42,5 +42,4 @@ public class WidgetContainerEditPolicy extends ContainerEditPolicy {
 
         return result.unwrap();
     }
-
 }

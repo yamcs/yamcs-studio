@@ -308,5 +308,4 @@ public class ExprLexer {
     public int getCurrentIndex() {
         return reader.getCurrentIndex();
     }
-
 }

@@ -20,5 +20,4 @@ public class KnobFeedbackFactory extends AbstractFixRatioSizeFeedbackFactory {
     public int getMinimumWidth() {
         return KnobModel.MINIMUM_SIZE;
     }
-
 }

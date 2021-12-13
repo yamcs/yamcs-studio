@@ -91,7 +91,6 @@ class StringMultiColumnsEditor extends EditingSupport {
         default:
             return new TextCellEditor(parent);
         }
-
     }
 
     @SuppressWarnings("unchecked")

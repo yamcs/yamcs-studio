@@ -9,10 +9,14 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.GaugeModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.GaugeModel.PROP_NEEDLE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.GaugeModel.PROP_RAMP_GRADIENT;
+
 import java.beans.PropertyChangeListener;
 
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.GaugeModel;
@@ -37,7 +41,6 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         gauge.setGradient(model.isRampGradient());
 
         return gauge;
-
     }
 
     @Override
@@ -49,60 +52,34 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // needle Color
-        IWidgetPropertyChangeHandler needleColorColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var gauge = (GaugeFigure) refreshableFigure;
-                gauge.setNeedleColor(((OPIColor) newValue).getSWTColor());
-                return false;
+        setPropertyChangeHandler(PROP_NEEDLE_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var gauge = (GaugeFigure) refreshableFigure;
+            gauge.setNeedleColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
+            var gauge = (GaugeFigure) refreshableFigure;
+            gauge.setEffect3D((Boolean) newValue);
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_RAMP_GRADIENT, (oldValue, newValue, refreshableFigure) -> {
+            var gauge = (GaugeFigure) refreshableFigure;
+            gauge.setGradient((Boolean) newValue);
+            return false;
+        });
+
+        IWidgetPropertyChangeHandler sizeHandler = (oldValue, newValue, figure) -> {
+            if (((Integer) newValue) < GaugeModel.MINIMUM_SIZE) {
+                newValue = GaugeModel.MINIMUM_SIZE;
             }
+            getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
+            return false;
         };
-        setPropertyChangeHandler(GaugeModel.PROP_NEEDLE_COLOR, needleColorColorHandler);
-
-        // effect 3D
-        IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var gauge = (GaugeFigure) refreshableFigure;
-                gauge.setEffect3D((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(GaugeModel.PROP_EFFECT3D, effect3DHandler);
-
-        // Ramp gradient
-        IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var gauge = (GaugeFigure) refreshableFigure;
-                gauge.setGradient((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(GaugeModel.PROP_RAMP_GRADIENT, gradientHandler);
-
-        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (((Integer) newValue) < GaugeModel.MINIMUM_SIZE) {
-                    newValue = GaugeModel.MINIMUM_SIZE;
-                }
-                getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
-                return false;
-            }
-        };
-        PropertyChangeListener sizeListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-            }
-        };
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(sizeListener);
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(sizeListener);
-
+        PropertyChangeListener sizeListener = evt -> sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(),
+                getFigure());
+        getWidgetModel().getProperty(PROP_WIDTH).addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(PROP_HEIGHT).addPropertyChangeListener(sizeListener);
     }
-
 }

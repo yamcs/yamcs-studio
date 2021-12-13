@@ -123,5 +123,4 @@ public final class NumberFormats {
         }
         return new DecimalFormat(sb.toString(), symbols);
     }
-
 }

@@ -99,11 +99,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
             if (((value >> ii) & 0x1) == 1) {
                 led.setBooleanValue(true);
             } else {
-
                 led.setBooleanValue(false);
             }
         }
-
     }
 
     /**
@@ -251,14 +249,14 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
                     ledHeight = ledWidth;
                 }
 
-                for (LEDFigure led : ledFigures) {
+                for (var led : ledFigures) {
                     led.setSize(ledWidth, ledHeight);
                     led.setLocation(new Point(startX, clientArea.y));
                     startX += ledSpacing;
                 }
 
                 startX = clientArea.x;
-                for (TextFigure text : textFigures) {
+                for (var text : textFigures) {
                     if (squareLED) {
                         text.setBounds(new Rectangle(startX, clientArea.y, ledWidth, ledHeight));
                     } else {
@@ -279,14 +277,14 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
                     ledWidth = ledHeight;
                 }
 
-                for (LEDFigure led : ledFigures) {
+                for (var led : ledFigures) {
                     led.setSize(ledWidth, ledHeight);
                     led.setLocation(new Point(clientArea.x, startY));
                     startY += ledSpacing;
                 }
 
                 startY = clientArea.y;
-                for (TextFigure text : textFigures) {
+                for (var text : textFigures) {
                     if (squareLED) {
                         text.setBounds(new Rectangle(clientArea.x, startY, ledWidth, ledHeight));
                     } else {
@@ -310,7 +308,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
             return;
         }
         this.effect3D = newValue;
-        for (LEDFigure bulb : ledFigures) {
+        for (var bulb : ledFigures) {
             bulb.setEffect3D(this.effect3D);
         }
         repaint();
@@ -329,7 +327,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
         }
         this.isHorizontal = isHorizontal;
 
-        for (TextFigure text : textFigures) {
+        for (var text : textFigures) {
             alignText(text);
         }
 
@@ -374,7 +372,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
             return;
         }
         this.offColor = rgb;
-        for (LEDFigure led : ledFigures) {
+        for (var led : ledFigures) {
             led.setOffColor(rgb);
         }
     }
@@ -390,7 +388,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
             return;
         }
         this.onColor = rgb;
-        for (LEDFigure led : ledFigures) {
+        for (var led : ledFigures) {
             led.setOnColor(rgb);
         }
     }
@@ -423,10 +421,10 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
         }
 
         this.squareLED = squareLED;
-        for (LEDFigure bulb : ledFigures) {
+        for (var bulb : ledFigures) {
             bulb.setSquareLED(this.squareLED);
         }
-        for (TextFigure text : textFigures) {
+        for (var text : textFigures) {
             alignText(text);
         }
         revalidate();
@@ -468,7 +466,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
 
         ledBorderWidth = value;
 
-        for (LEDFigure bulb : ledFigures) {
+        for (var bulb : ledFigures) {
             bulb.setBulbBorderWidth(ledBorderWidth);
         }
         revalidate();
@@ -485,7 +483,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
 
         ledBorderColor = value;
 
-        for (LEDFigure bulb : ledFigures) {
+        for (var bulb : ledFigures) {
             bulb.setBulbBorderColor(ledBorderColor);
         }
         revalidate();

@@ -73,7 +73,7 @@ public class FormulaRegistry {
      */
     public void registerFormulaFunctionSet(FormulaFunctionSet functionSet) {
         functionSets.put(functionSet.getName(), functionSet);
-        for (FormulaFunction formulaFunction : functionSet.getFunctions()) {
+        for (var formulaFunction : functionSet.getFunctions()) {
             registerFormulaFunction(formulaFunction);
         }
     }
@@ -138,9 +138,9 @@ public class FormulaRegistry {
      * @return the matched functions
      */
     public Collection<FormulaFunction> findFunctions(String functionName, Integer nArguments) {
-        Set<FormulaFunction> functions = new HashSet<>();
-        for (FormulaFunctionSet formulaFunctionSet : functionSets.values()) {
-            for (FormulaFunction formulaFunction : formulaFunctionSet.getFunctions()) {
+        var functions = new HashSet<FormulaFunction>();
+        for (var formulaFunctionSet : functionSets.values()) {
+            for (var formulaFunction : formulaFunctionSet.getFunctions()) {
                 if (formulaFunction.getName().equals(functionName)
                         && FormulaFunctions.matchArgumentCount(nArguments, formulaFunction)) {
                     functions.add(formulaFunction);

@@ -192,11 +192,11 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
      *             on error
      */
     private String checkForWorkspacesInSubdirs(File dir) {
-        File subdirs[] = dir.listFiles();
+        var subdirs = dir.listFiles();
         if (subdirs == null) {
             return null;
         }
-        for (File subdir : subdirs) {
+        for (var subdir : subdirs) {
             if (!subdir.isDirectory()) {
                 continue;
             }

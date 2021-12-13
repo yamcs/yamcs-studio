@@ -42,5 +42,4 @@ public class DropPVtoPVWidgetEditPolicy extends AbstractEditPolicy {
         }
         return super.getTargetEditPart(request);
     }
-
 }

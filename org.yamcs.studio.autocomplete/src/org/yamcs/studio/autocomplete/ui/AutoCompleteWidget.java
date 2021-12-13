@@ -61,7 +61,7 @@ public class AutoCompleteWidget {
     public AutoCompleteWidget(Control control, String type, List<Control> historyHandlers) {
         this(control, type);
         if (historyHandlers != null) {
-            for (Control handler : historyHandlers) {
+            for (var handler : historyHandlers) {
                 getHistory().installListener(handler);
             }
         }
@@ -95,7 +95,7 @@ public class AutoCompleteWidget {
     public AutoCompleteWidget(CellEditor cellEditor, String type, List<Control> historyHandlers) {
         this(cellEditor, type);
         if (historyHandlers != null) {
-            for (Control handler : historyHandlers) {
+            for (var handler : historyHandlers) {
                 getHistory().installListener(handler);
             }
         }
@@ -133,19 +133,15 @@ public class AutoCompleteWidget {
 
     private void enableContentProposal() {
         if (control instanceof Combo) {
-
             var combo = (Combo) control;
             provider = new AutoCompleteProposalProvider(type);
             adapter = new ContentProposalAdapter(combo, new ComboContentAdapter(), provider, getActivationKeystroke(),
                     getAutoactivationChars());
-
         } else if (control instanceof Text) {
-
             var text = (Text) control;
             provider = new AutoCompleteProposalProvider(type);
             adapter = new ContentProposalAdapter(text, new TextContentAdapter(), provider, getActivationKeystroke(),
                     getAutoactivationChars());
-
         }
     }
 
@@ -156,5 +152,4 @@ public class AutoCompleteWidget {
     public AutoCompleteHistory getHistory() {
         return adapter.getHistory();
     }
-
 }

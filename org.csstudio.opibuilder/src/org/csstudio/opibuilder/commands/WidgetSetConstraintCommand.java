@@ -67,5 +67,4 @@ public class WidgetSetConstraintCommand extends Command {
         widget.setLocation(oldBounds.x, oldBounds.y);
         widget.setSize(oldBounds.width, oldBounds.height);
     }
-
 }

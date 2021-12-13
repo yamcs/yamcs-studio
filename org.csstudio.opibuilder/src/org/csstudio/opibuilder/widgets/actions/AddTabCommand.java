@@ -44,5 +44,4 @@ public class AddTabCommand extends Command {
     public void undo() {
         tabModel.removeTab(tabIndex);
     }
-
 }

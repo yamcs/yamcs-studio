@@ -42,5 +42,4 @@ public class CacheHeader {
     public Date getExpirationDate() {
         return expiration;
     }
-
 }

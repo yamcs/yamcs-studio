@@ -105,7 +105,6 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
 
         try {
             if (code == null) {
-
                 // compile
                 if (isEmbedded()) {
                     code = interpreter.compile(getScriptText());
@@ -117,7 +116,6 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             }
 
             UIBundlingThread.getInstance().addRunnable(display, () -> {
-
                 try {
                     interpreter.set(ScriptService.WIDGET, widgetEditPart);
                     interpreter.set(ScriptService.DISPLAY, displayEditpart);

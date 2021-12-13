@@ -19,9 +19,9 @@ import java.util.List;
  * 
  * <pre>
  * for (...) {
- *   for (int z = 0; z &lt; zSize; z++) {
- *     for (int y = 0; y &lt; ySize; y++) {
- *       for (int x = 0; x &lt; xSize; x++) {
+ *   for (var z = 0; z &lt; zSize; z++) {
+ *     for (var y = 0; y &lt; ySize; y++) {
+ *       for (var x = 0; x &lt; xSize; x++) {
  *          array.getData().getDouble(... + z*ySize + y*xSize + x);
  *       }
  *     }

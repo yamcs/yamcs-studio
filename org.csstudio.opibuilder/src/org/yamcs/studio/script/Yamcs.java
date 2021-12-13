@@ -10,10 +10,8 @@
 package org.yamcs.studio.script;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -37,7 +35,7 @@ public class Yamcs {
 
         var builder = processor.prepareCommand(parsed.getQualifiedName())
                 .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
-        for (Assignment arg : parsed.getAssignments()) {
+        for (var arg : parsed.getAssignments()) {
             builder.withArgument(arg.getName(), arg.getValue());
         }
         builder.issue();
@@ -57,7 +55,7 @@ public class Yamcs {
 
         var builder = processor.prepareCommand(command).withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
         if (args != null) {
-            for (Entry<String, Object> arg : args.entrySet()) {
+            for (var arg : args.entrySet()) {
                 builder.withArgument(arg.getKey(), String.valueOf(arg.getValue()));
             }
         }

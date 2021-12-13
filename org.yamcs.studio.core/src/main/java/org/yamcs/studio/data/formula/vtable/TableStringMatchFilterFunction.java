@@ -80,5 +80,4 @@ class TableStringMatchFilterFunction implements FormulaFunction {
 
         return result;
     }
-
 }

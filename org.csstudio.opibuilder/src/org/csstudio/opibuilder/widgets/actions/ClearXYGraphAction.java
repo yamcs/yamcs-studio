@@ -21,7 +21,6 @@ public class ClearXYGraphAction extends AbstractWidgetTargetAction {
     @Override
     public void run(IAction action) {
         getSelectedXYGraph().clearGraph();
-
     }
 
     /**

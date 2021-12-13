@@ -28,5 +28,4 @@ public interface IContentParser {
      *         <code>true</code>.
      */
     public ContentDescriptor parse(ContentDescriptor desc);
-
 }

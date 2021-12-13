@@ -81,13 +81,11 @@ public class ScrollEditor extends EditorPart {
         setSite(site);
 
         this.getEditorSite().getActionBarContributor();
-
     }
 
     private List<ParameterInfo> loadData() {
         List<ParameterInfo> info = new ArrayList<>();
         try {
-
             var gson = new Gson();
             var reader = new InputStreamReader(input.getFile().getContents());
             fileInput = gson.fromJson(reader, ParameterTable.class);
@@ -95,8 +93,8 @@ public class ScrollEditor extends EditorPart {
                 fileInput = new ParameterTable();
             }
 
-            for (ParameterInfo meta : YamcsPlugin.getMissionDatabase().getParameters()) {
-                for (String parameter : fileInput.getParameters()) {
+            for (var meta : YamcsPlugin.getMissionDatabase().getParameters()) {
+                for (var parameter : fileInput.getParameters()) {
                     if (parameter.contains(meta.getQualifiedName())) {
                         info.add(meta);
                     }
@@ -126,7 +124,7 @@ public class ScrollEditor extends EditorPart {
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         parameterTable = new ScrollViewer(tableWrapper);
-        for (ParameterInfo info : loadData()) {
+        for (var info : loadData()) {
             parameterTable.addParameter(info);
         }
 
@@ -167,7 +165,6 @@ public class ScrollEditor extends EditorPart {
         var out = new PrintWriter(stream);
 
         try {
-
             var gson = new Gson();
 
             fileInput.setParameters(parameters);

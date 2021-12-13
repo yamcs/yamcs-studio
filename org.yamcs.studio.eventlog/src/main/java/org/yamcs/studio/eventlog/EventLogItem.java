@@ -26,7 +26,7 @@ public class EventLogItem {
     }
 
     public void colorize(List<ColoringRule> rules) {
-        for (ColoringRule rule : rules) {
+        for (var rule : rules) {
             if (rule.matches(event)) {
                 bg = rule.bg;
                 fg = rule.fg;

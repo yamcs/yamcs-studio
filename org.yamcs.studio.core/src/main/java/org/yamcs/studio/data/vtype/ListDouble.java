@@ -17,7 +17,6 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
     @Override
     public IteratorDouble iterator() {
         return new IteratorDouble() {
-
             private int index;
 
             @Override
@@ -98,13 +97,12 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
 
         // since these lists are read-only, we precompute the size
         var size = 0;
-        for (ListNumber l : lists) {
+        for (var l : lists) {
             size += l.size();
         }
         var sizeCopy = size;
 
         return new ListDouble() {
-
             @Override
             public int size() {
                 return sizeCopy;
@@ -123,7 +121,7 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
                 // {0, 1, 2} {0, 1, 2} and they are now indexed as
                 // {0, 1, 2} {3, 4, 5}
                 var startIdx = 0;
-                for (ListNumber l : lists) {
+                for (var l : lists) {
                     var endIdx = startIdx + l.size() - 1;
                     if (startIdx <= index && index <= endIdx) {
                         return l.getDouble(index - startIdx);
@@ -183,5 +181,4 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
         builder.append(getDouble(i)).append("]");
         return builder.toString();
     }
-
 }

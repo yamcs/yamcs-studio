@@ -44,5 +44,4 @@ public class RulesPropertyDescriptor extends TextPropertyDescriptor {
         }
         return editor;
     }
-
 }

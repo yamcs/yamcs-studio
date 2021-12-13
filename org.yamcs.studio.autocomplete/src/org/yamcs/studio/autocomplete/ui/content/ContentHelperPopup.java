@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.tooltips.TooltipContent;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 import org.yamcs.studio.autocomplete.tooltips.TooltipDataHandler;
@@ -197,7 +196,7 @@ public class ContentHelperPopup extends PopupDialog {
             return;
         }
         text.setText(content.value);
-        for (ProposalStyle ps : content.styles) {
+        for (var ps : content.styles) {
             var color = control.getDisplay().getSystemColor(ps.fontColor);
             text.setStyle(color, ps.fontStyle, ps.from, ps.to - ps.from);
         }
@@ -254,8 +253,6 @@ public class ContentHelperPopup extends PopupDialog {
      * Opens this ContentHelperPopup
      *
      * @return the return code
-     *
-     * @see org.eclipse.jface.window.Window#open()
      */
     @Override
     public int open() {
@@ -341,7 +338,7 @@ public class ContentHelperPopup extends PopupDialog {
         if (dataList == null) {
             return;
         }
-        for (TooltipData data : dataList) {
+        for (var data : dataList) {
             dataHandler.addData(data);
         }
         if (control != null && !control.isDisposed()) {
@@ -356,5 +353,4 @@ public class ContentHelperPopup extends PopupDialog {
     public void clearData() {
         dataHandler.clearData();
     }
-
 }

@@ -54,7 +54,6 @@ public class StringListSelectionWidget extends Composite {
         selectButton.setSize(34, 30);
         selectButton.setText("-->");
         selectButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (unselected.getSelectionCount() != 0) {
@@ -173,7 +172,6 @@ public class StringListSelectionWidget extends Composite {
         fd_lblSelectedOptions.left = new FormAttachment(selected, 0, SWT.LEFT);
         lblSelectedOptions.setLayoutData(fd_lblSelectedOptions);
         lblSelectedOptions.setText("Selected:");
-
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -214,5 +212,4 @@ public class StringListSelectionWidget extends Composite {
         unselected.setItems(unselectedValues.toArray(new String[unselectedValues.size()]));
         changeSupport.firePropertyChange("selectedValues", oldSelectedValues, this.selectedValues);
     }
-
 }

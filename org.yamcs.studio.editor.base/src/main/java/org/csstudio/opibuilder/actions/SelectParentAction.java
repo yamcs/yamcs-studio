@@ -23,11 +23,9 @@ public class SelectParentAction extends AbstractWidgetTargetAction {
 
         var containerEditpart = getParentContainerEditpart();
         containerEditpart.getViewer().select(containerEditpart);
-
     }
 
     protected final AbstractContainerEditpart getParentContainerEditpart() {
         return (AbstractContainerEditpart) ((AbstractBaseEditPart) selection.getFirstElement()).getParent();
     }
-
 }

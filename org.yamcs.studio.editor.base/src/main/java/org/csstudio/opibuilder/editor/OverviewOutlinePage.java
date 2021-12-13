@@ -83,7 +83,6 @@ public class OverviewOutlinePage extends Page implements IContentOutlinePage {
 
     @Override
     public void addSelectionChangedListener(ISelectionChangedListener listener) {
-
     }
 
     @Override
@@ -93,11 +92,9 @@ public class OverviewOutlinePage extends Page implements IContentOutlinePage {
 
     @Override
     public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-
     }
 
     @Override
     public void setSelection(ISelection selection) {
-
     }
 }

@@ -156,5 +156,4 @@ public class LocalContentDescriptor extends ContentDescriptor {
                 + ", completingInitialValue=" + completingInitialValue + ", complete=" + complete + ", toString()="
                 + super.toString() + "]";
     }
-
 }

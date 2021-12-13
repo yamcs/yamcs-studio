@@ -33,7 +33,6 @@ public class ListMath {
      */
     public static ListDouble limit(ListDouble data, int start, int end) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data.getDouble(index + start);
@@ -61,7 +60,6 @@ public class ListMath {
      */
     public static ListNumber limit(ListNumber data, int start, int end) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data.getDouble(index + start);
@@ -87,7 +85,6 @@ public class ListMath {
      */
     public static ListLong limit(ListLong data, int start, int end) {
         return new ListLong() {
-
             @Override
             public long getLong(int index) {
                 return data.getLong(index + start);
@@ -116,7 +113,6 @@ public class ListMath {
             return add(data, offset);
         }
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return factor * data.getDouble(index) + offset;
@@ -142,7 +138,6 @@ public class ListMath {
      */
     public static ListDouble inverseRescale(ListNumber data, double numerator, double offset) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return numerator / data.getDouble(index) + offset;
@@ -166,7 +161,6 @@ public class ListMath {
      */
     public static ListDouble pow(ListNumber data, double expon) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return Math.pow(data.getDouble(index), expon);
@@ -190,7 +184,6 @@ public class ListMath {
      */
     public static ListDouble pow(double base, ListNumber expons) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return Math.pow(base, expons.getDouble(index));
@@ -214,7 +207,6 @@ public class ListMath {
      */
     public static ListDouble add(ListNumber data, double offset) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data.getDouble(index) + offset;
@@ -243,7 +235,6 @@ public class ListMath {
                     "Can't sum ListNumbers of different size (" + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data1.getDouble(index) + data2.getDouble(index);
@@ -272,7 +263,6 @@ public class ListMath {
                     "Can't subtract ListNumbers of different size (" + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data1.getDouble(index) - data2.getDouble(index);
@@ -301,7 +291,6 @@ public class ListMath {
                     + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data1.getDouble(index) * data2.getDouble(index);
@@ -330,7 +319,6 @@ public class ListMath {
                     + data1.size() + " - " + data2.size() + ")");
         }
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 return data1.getDouble(index) / data2.getDouble(index);

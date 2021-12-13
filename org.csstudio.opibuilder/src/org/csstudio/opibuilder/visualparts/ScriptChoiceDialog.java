@@ -72,5 +72,4 @@ public class ScriptChoiceDialog extends Dialog {
     public boolean isEmbedded() {
         return isEmbedded;
     }
-
 }

@@ -21,9 +21,6 @@ import org.eclipse.gef.requests.DirectEditRequest;
  */
 public class ArraySpinnerDirectEditPolicy extends DirectEditPolicy {
 
-    /**
-     * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
-     */
     @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
         var text = (String) edit.getCellEditor().getValue();
@@ -36,19 +33,14 @@ public class ArraySpinnerDirectEditPolicy extends DirectEditPolicy {
         } catch (ParseException e) {
             return null;
         }
-
     }
 
-    /**
-     * @see DirectEditPolicy#showCurrentEditValue(DirectEditRequest)
-     */
     @Override
     protected void showCurrentEditValue(DirectEditRequest request) {
         // String value = (String)request.getCellEditor().getValue();
         // ((LabelFigure)getHostFigure()).setText(value);
         // hack to prevent async layout from placing the cell editor twice.
         // getHostFigure().getUpdateManager().performUpdate();
-
     }
 
     static class ArraySpinnerEditCommand extends Command {
@@ -74,7 +66,5 @@ public class ArraySpinnerDirectEditPolicy extends DirectEditPolicy {
         public void undo() {
             arrayEditpart.getArrayFigure().setIndex(oldIndex);
         }
-
     }
-
 }

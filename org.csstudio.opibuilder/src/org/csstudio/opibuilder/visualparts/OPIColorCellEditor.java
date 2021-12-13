@@ -51,5 +51,4 @@ public class OPIColorCellEditor extends AbstractDialogCellEditor {
             opiColor = (OPIColor) value;
         }
     }
-
 }

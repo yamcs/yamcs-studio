@@ -50,7 +50,5 @@ public class DeleteColumnAction implements IObjectActionDelegate {
 
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-
     }
-
 }

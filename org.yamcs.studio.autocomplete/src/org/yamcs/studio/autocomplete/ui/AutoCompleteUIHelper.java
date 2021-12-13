@@ -32,5 +32,4 @@ public class AutoCompleteUIHelper {
     public static void handleSelectEvent(Control control, AutoCompleteWidget autocompleteWidget) {
         autocompleteWidget.getHistory().installListener(control);
     }
-
 }

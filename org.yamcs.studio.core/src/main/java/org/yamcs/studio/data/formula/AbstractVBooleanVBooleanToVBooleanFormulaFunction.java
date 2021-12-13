@@ -138,7 +138,7 @@ public abstract class AbstractVBooleanVBooleanToVBooleanFormulaFunction implemen
     public abstract boolean calculate(boolean arg1, boolean arg2);
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

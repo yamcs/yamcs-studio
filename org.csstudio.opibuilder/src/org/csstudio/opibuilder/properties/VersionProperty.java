@@ -31,5 +31,4 @@ public class VersionProperty extends UnchangableStringProperty {
     public boolean configurableByRule() {
         return false;
     }
-
 }

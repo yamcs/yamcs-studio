@@ -42,7 +42,6 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
             return null;
         }
         return super.createChangeConstraintCommand(request, child, constraint);
-
     }
 
     @Override
@@ -98,9 +97,6 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
 
     /**
      * The behavior of resizing children in an array will be determined by its editpart.
-     *
-     * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#
-     *      getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
      */
     @Override
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
@@ -133,5 +129,4 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
         }
         return command.unwrap();
     }
-
 }

@@ -57,5 +57,4 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
             colorMap = (ColorMap) value;
         }
     }
-
 }

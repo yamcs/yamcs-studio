@@ -116,7 +116,6 @@ public class MultipleSelectionCombo<T> extends Composite {
         setLayout(layout);
 
         addPropertyChangeListener(new PropertyChangeListener() {
-
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 switch (e.getPropertyName()) {
@@ -235,8 +234,8 @@ public class MultipleSelectionCombo<T> extends Composite {
      */
     public void setSelection(List<T> selection) {
         var oldValue = this.selectionIndex;
-        List<Integer> newSelectionIndex = new ArrayList<Integer>(selection.size());
-        for (T t : selection) {
+        var newSelectionIndex = new ArrayList<Integer>(selection.size());
+        for (var t : selection) {
             var index = items.indexOf(t);
             if (index >= 0) {
                 newSelectionIndex.add(items.indexOf(t));
@@ -268,7 +267,7 @@ public class MultipleSelectionCombo<T> extends Composite {
         if (selections.length > 0) {
             newSelectionIndex = new ArrayList<Integer>(selections.length);
             // Locate index for each item
-            for (String item : selections) {
+            for (var item : selections) {
                 int index = getIndex(item);
                 if (index >= 0 && index < items.size()) {
                     newSelectionIndex.add(getIndex(item));
@@ -294,7 +293,7 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @return
      */
     private Integer getIndex(String string) {
-        for (T item : items) {
+        for (var item : items) {
             if (stringRepresention(item).equals(string)) {
                 return items.indexOf(item);
             }
@@ -308,8 +307,8 @@ public class MultipleSelectionCombo<T> extends Composite {
      * @return the list of selected items
      */
     public List<T> getSelection() {
-        List<T> selection = new ArrayList<T>(this.selectionIndex.size());
-        for (int index : this.selectionIndex) {
+        var selection = new ArrayList<T>(this.selectionIndex.size());
+        for (var index : this.selectionIndex) {
             selection.add(items.get(index));
         }
         return Collections.unmodifiableList(selection);
@@ -323,7 +322,7 @@ public class MultipleSelectionCombo<T> extends Composite {
     /** Update <code>text</code> to reflect <code>selection</code> */
     private void updateText() {
         var buf = new StringBuilder();
-        for (Integer index : selectionIndex) {
+        for (var index : selectionIndex) {
             if (buf.length() > 0) {
                 buf.append(SEPARATOR);
             }
@@ -400,7 +399,6 @@ public class MultipleSelectionCombo<T> extends Composite {
         list.setSelection(intSelectionIndex);
 
         list.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.keyCode == SWT.CR) {

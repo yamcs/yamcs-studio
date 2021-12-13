@@ -73,7 +73,7 @@ public class CopyPropertiesAction extends SelectionAction {
 
                 var propertisElement = new Element(PROPID_ELEMENT);
 
-                for (String propID : propList) {
+                for (var propID : propList) {
                     propertisElement.addContent(new Element(propID));
                 }
                 var rootElement = new Element(ROOT_ELEMENT);
@@ -88,7 +88,6 @@ public class CopyPropertiesAction extends SelectionAction {
                         new Transfer[] { PropertiesCopyDataTransfer.getInstance() });
             }
         }
-
     }
 
     /**
@@ -101,12 +100,11 @@ public class CopyPropertiesAction extends SelectionAction {
 
         List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
 
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof EditPart) {
                 selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }
         }
         return selectedWidgetModels;
     }
-
 }

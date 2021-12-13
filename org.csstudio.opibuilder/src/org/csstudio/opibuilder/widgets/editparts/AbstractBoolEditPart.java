@@ -9,9 +9,21 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_BIT;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_BOOL_LABEL_POS;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_DATA_TYPE;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_OFF_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_OFF_LABEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_OFF_STATE;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_ON_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_ON_LABEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_ON_STATE;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_SHOW_BOOL_LABEL;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel;
@@ -51,7 +63,6 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
         figure.setOffColor(model.getOffColor());
         figure.setFont(CustomMediaFactory.getInstance().getFont(model.getFont().getFontData()));
         figure.setBoolLabelPosition(model.getBoolLabelPosition());
-
     }
 
     @Override
@@ -65,8 +76,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
      * {@link #registerPropertyChangeHandlers()}.
      */
     protected void registerCommonPropertyChangeHandlers() {
-        // value
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue == null || !(newValue instanceof VType)) {
                 return false;
             }
@@ -85,22 +95,18 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
             }
             updateFromValue((VType) newValue, figure);
             return true;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
+        });
 
-        // bit
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_BIT, (oldValue, newValue, refreshableFigure) -> {
             if (getWidgetModel().getDataType() != 0) {
                 return false;
             }
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setBit((Integer) newValue);
-            updateFromValue(getPVValue(AbstractPVWidgetModel.PROP_PVNAME), figure);
+            updateFromValue(getPVValue(PROP_PVNAME), figure);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_BIT, handler);
+        });
 
-        // data type
         IWidgetPropertyChangeHandler dataTypeHandler = (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             if ((Integer) newValue == 0) {
@@ -108,68 +114,54 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
             } else {
                 figure.setBit(-1);
             }
-            updateFromValue(getPVValue(AbstractPVWidgetModel.PROP_PVNAME), figure);
+            updateFromValue(getPVValue(PROP_PVNAME), figure);
             updatePropSheet((Integer) newValue);
             return true;
         };
-        getWidgetModel().getProperty(AbstractBoolWidgetModel.PROP_DATA_TYPE).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_DATA_TYPE).addPropertyChangeListener(
                 evt -> dataTypeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
 
-        // on state
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_ON_STATE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
-            updateFromValue(getPVValue(AbstractPVWidgetModel.PROP_PVNAME), figure);
+            updateFromValue(getPVValue(PROP_PVNAME), figure);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_ON_STATE, handler);
+        });
 
-        // show bool label
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_BOOL_LABEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setShowBooleanLabel((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_SHOW_BOOL_LABEL, handler);
+        });
 
-        // bool label position
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_BOOL_LABEL_POS, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setBoolLabelPosition(BoolLabelPosition.values()[(Integer) newValue]);
             return false;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_BOOL_LABEL_POS, handler);
+        });
 
-        // on label
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_ON_LABEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOnLabel((String) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_ON_LABEL, handler);
+        });
 
-        // off label
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_OFF_LABEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOffLabel((String) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_OFF_LABEL, handler);
+        });
 
-        // on color
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_ON_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOnColor(((OPIColor) newValue).getSWTColor());
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_ON_COLOR, handler);
+        });
 
-        // off color
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_OFF_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolFigure) refreshableFigure;
             figure.setOffColor(((OPIColor) newValue).getSWTColor());
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolWidgetModel.PROP_OFF_COLOR, handler);
+        });
     }
 
     @Override
@@ -205,9 +197,8 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
     }
 
     private void updatePropSheet(int dataType) {
-        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_BIT, dataType == 0);
-        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_ON_STATE, dataType == 1);
-        getWidgetModel().setPropertyVisible(AbstractBoolWidgetModel.PROP_OFF_STATE, dataType == 1);
-
+        getWidgetModel().setPropertyVisible(PROP_BIT, dataType == 0);
+        getWidgetModel().setPropertyVisible(PROP_ON_STATE, dataType == 1);
+        getWidgetModel().setPropertyVisible(PROP_OFF_STATE, dataType == 1);
     }
 }

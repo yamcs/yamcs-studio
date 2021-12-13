@@ -101,5 +101,4 @@ public class DrillDownComposite extends Composite {
     public final ToolBarManager getToolBarManager() {
         return _toolBarMgr;
     }
-
 }

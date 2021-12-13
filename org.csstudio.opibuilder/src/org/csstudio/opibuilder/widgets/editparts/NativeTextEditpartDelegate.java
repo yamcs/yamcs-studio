@@ -209,7 +209,6 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
         editpart.setPropertyChangeHandler(TextInputModel.PROP_SHOW_V_SCROLL, handler);
         editpart.setPropertyChangeHandler(TextInputModel.PROP_PASSWORD_INPUT, handler);
         editpart.setPropertyChangeHandler(TextInputModel.PROP_ALIGN_H, handler);
-
     }
 
     public void performAutoSize() {
@@ -219,5 +218,4 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
     public String getValue() {
         return text.getText();
     }
-
 }

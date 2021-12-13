@@ -41,11 +41,9 @@ public class FillParentContainerAction extends AbstractWidgetTargetAction {
         Command cmd = new SetBoundsCommand(widget.getWidgetModel(), new Rectangle(0, 0, size.width, size.height));
 
         execute(cmd);
-
     }
 
     protected final AbstractContainerEditpart getParentContainerEditpart() {
         return (AbstractContainerEditpart) ((AbstractBaseEditPart) selection.getFirstElement()).getParent();
     }
-
 }

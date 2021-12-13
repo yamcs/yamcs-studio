@@ -86,5 +86,4 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
     protected void doSetFocus() {
         // Ignore
     }
-
 }

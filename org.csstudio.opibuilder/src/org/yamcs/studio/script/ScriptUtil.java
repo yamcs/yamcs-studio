@@ -98,7 +98,6 @@ public class ScriptUtil {
                 activePage.hideView((IViewPart) activePart);
             }
         } catch (NullPointerException e) {
-
         }
     }
 

@@ -12,7 +12,6 @@ package org.yamcs.studio.autocomplete.ops;
 import java.util.regex.Pattern;
 
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.autocomplete.AutoCompleteHelper;
 import org.yamcs.studio.autocomplete.AutoCompleteResult;
 import org.yamcs.studio.autocomplete.IAutoCompleteProvider;
@@ -52,7 +51,7 @@ public class OpsContentProvider implements IAutoCompleteProvider {
         var matchCount = 0;
         var mdb = YamcsPlugin.getMissionDatabase();
         if (mdb != null) {
-            for (ParameterInfo para : mdb.getParameters()) {
+            for (var para : mdb.getParameters()) {
                 var opsname = findOpsname(para);
                 if (opsname != null) {
                     var proposalValue = OpsContentParser.OPS_SOURCE + opsname;
@@ -74,7 +73,7 @@ public class OpsContentProvider implements IAutoCompleteProvider {
     }
 
     private String findOpsname(ParameterInfo parameter) {
-        for (NamedObjectId id : parameter.getAliasList()) {
+        for (var id : parameter.getAliasList()) {
             if (id.hasNamespace() && "MDB:OPS Name".equals(id.getNamespace())) {
                 return id.getName();
             }

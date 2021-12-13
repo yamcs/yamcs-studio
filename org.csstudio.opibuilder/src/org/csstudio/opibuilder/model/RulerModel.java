@@ -116,5 +116,4 @@ public final class RulerModel implements Serializable {
     public boolean isHorizontal() {
         return _isHorizontal;
     }
-
 }

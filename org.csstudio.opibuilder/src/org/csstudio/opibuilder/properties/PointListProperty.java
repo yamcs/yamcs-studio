@@ -49,7 +49,6 @@ public class PointListProperty extends AbstractWidgetProperty {
     public PointListProperty(String prop_id, String description, WidgetPropertyCategory category,
             PointList defaultValue) {
         super(prop_id, description, category, defaultValue);
-
     }
 
     @Override
@@ -74,7 +73,7 @@ public class PointListProperty extends AbstractWidgetProperty {
     @Override
     public PointList readValueFromXML(Element propElement) {
         var result = new PointList();
-        for (Object oe : propElement.getChildren(XML_ELEMENT_POINT)) {
+        for (var oe : propElement.getChildren(XML_ELEMENT_POINT)) {
             var se = (Element) oe;
             result.addPoint(Integer.parseInt(se.getAttributeValue(XML_ATTRIBUTE_X)),
                     Integer.parseInt(se.getAttributeValue(XML_ATTRIBUTE_Y)));
@@ -93,5 +92,4 @@ public class PointListProperty extends AbstractWidgetProperty {
             propElement.addContent(pointElement);
         }
     }
-
 }

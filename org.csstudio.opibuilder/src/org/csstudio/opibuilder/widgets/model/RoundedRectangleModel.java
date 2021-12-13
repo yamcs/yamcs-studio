@@ -91,5 +91,4 @@ public class RoundedRectangleModel extends AbstractShapeModel {
     public Color getForegroundGradientStartColor() {
         return ((OPIColor) getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
-
 }

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -179,15 +178,12 @@ public class ImageStackWidget extends Composite {
         tblclmnImage.setResizable(false);
         tblclmnImage.setWidth(104);
         tableViewer.setContentProvider(new IStructuredContentProvider() {
-
             @Override
             public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
             }
 
             @Override
             public void dispose() {
-
             }
 
             @Override
@@ -285,7 +281,6 @@ public class ImageStackWidget extends Composite {
             default:
                 break;
             }
-
         });
     }
 
@@ -310,7 +305,7 @@ public class ImageStackWidget extends Composite {
     public void setImageInputStreamsMap(Map<String, InputStream> imageInputStreamsMap) throws IOException {
         var oldValue = this.imageInputStreamsMap;
         this.imageInputStreamsMap = new HashMap<>();
-        for (Entry<String, InputStream> test : imageInputStreamsMap.entrySet()) {
+        for (var test : imageInputStreamsMap.entrySet()) {
             this.imageInputStreamsMap.put(test.getKey(), read2byteArray(test.getValue()));
         }
         changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
@@ -326,7 +321,7 @@ public class ImageStackWidget extends Composite {
      * @throws IOException
      */
     public void addImage(String name, InputStream imageInputStream) throws IOException {
-        Map<String, byte[]> oldValue = new HashMap<>(this.imageInputStreamsMap);
+        var oldValue = new HashMap<>(this.imageInputStreamsMap);
         this.imageInputStreamsMap.put(name, read2byteArray(imageInputStream));
         changeSupport.firePropertyChange("imageInputStreamsMap", oldValue, this.imageInputStreamsMap);
     }

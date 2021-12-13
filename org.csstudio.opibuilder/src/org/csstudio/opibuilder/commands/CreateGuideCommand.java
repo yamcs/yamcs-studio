@@ -45,5 +45,4 @@ public final class CreateGuideCommand extends Command {
     public void redo() {
         _parent.addGuide(_guide);
     }
-
 }

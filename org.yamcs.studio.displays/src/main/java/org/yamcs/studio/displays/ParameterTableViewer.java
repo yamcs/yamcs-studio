@@ -79,7 +79,6 @@ public class ParameterTableViewer extends TableViewer {
         column.getColumn().setText(COL_NAME);
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(40));
         column.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public String getText(Object element) {
                 return (String) element;
@@ -207,7 +206,7 @@ public class ParameterTableViewer extends TableViewer {
     }
 
     public void onParameterData(ParameterData pdata) {
-        for (ParameterValue value : pdata.getParameterList()) {
+        for (var value : pdata.getParameterList()) {
             if (values.keySet().contains(value.getId().getNamespace() + "/" + value.getId().getName())) {
                 values.put(value.getId().getNamespace() + "/" + value.getId().getName(), value);
 

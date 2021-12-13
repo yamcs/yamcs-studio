@@ -19,5 +19,4 @@ public abstract class Expr {
 
     public void validate() throws ExprException {
     }
-
 }

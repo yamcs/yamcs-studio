@@ -9,14 +9,29 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_STYLE;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_WIDTH;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_FONT;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_ALIGN_H;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_ALIGN_V;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_AUTOSIZE;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_TEXT;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_WRAP_WORDS;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_FORMAT_TYPE;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_PRECISION;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_PRECISION_FROM_DB;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_ROTATION;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_SHOW_UNITS;
+
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
-import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextUpdateModel;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.swt.widgets.figures.TextFigure;
@@ -63,9 +78,6 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         labelFigure.setRotate(widgetModel.getRotationAngle());
     }
 
-    /**
-     *
-     */
     protected void initFields() {
         // Initialize frequently used variables.
         widgetModel = getWidgetModel();
@@ -114,24 +126,21 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_TEXT, (oldValue, newValue, figure) -> {
             setFigureText((String) newValue);
 
             if (isAutoSize) {
                 Display.getCurrent().timerExec(10, () -> performAutoSize());
             }
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_TEXT, handler);
+        });
 
-        IWidgetPropertyChangeHandler fontHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_FONT, (oldValue, newValue, figure) -> {
             figure.setFont(CustomMediaFactory.getInstance().getFont(((OPIFont) newValue).getFontData()));
             return true;
-        };
-        setPropertyChangeHandler(LabelModel.PROP_FONT, fontHandler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
             Display.getCurrent().timerExec(10, () -> {
                 if (getWidgetModel().isAutoSize()) {
                     performAutoSize();
@@ -141,96 +150,85 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
             return true;
         };
-        setPropertyChangeHandler(LabelModel.PROP_FONT, handler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_STYLE, handler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_WIDTH, handler);
+        setPropertyChangeHandler(PROP_FONT, handler);
+        setPropertyChangeHandler(PROP_BORDER_STYLE, handler);
+        setPropertyChangeHandler(PROP_BORDER_WIDTH, handler);
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, figure) -> {
             figure.setOpaque(!(Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(LabelModel.PROP_TRANSPARENT, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_AUTOSIZE, (oldValue, newValue, figure) -> {
             isAutoSize = (Boolean) newValue;
             if ((Boolean) newValue) {
                 performAutoSize();
                 figure.revalidate();
             }
             return true;
-        };
-        setPropertyChangeHandler(LabelModel.PROP_AUTOSIZE, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ALIGN_H, (oldValue, newValue, figure) -> {
             if (figure instanceof TextFigure) {
                 ((TextFigure) figure).setHorizontalAlignment(H_ALIGN.values()[(Integer) newValue]);
             }
             return true;
-        };
-        setPropertyChangeHandler(LabelModel.PROP_ALIGN_H, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ALIGN_V, (oldValue, newValue, figure) -> {
             if (figure instanceof TextFigure) {
                 ((TextFigure) figure).setVerticalAlignment(V_ALIGN.values()[(Integer) newValue]);
             }
             return true;
-        };
-        setPropertyChangeHandler(LabelModel.PROP_ALIGN_V, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, figure) -> {
             if (newValue == null) {
                 return false;
             }
-            formatValue(newValue, AbstractPVWidgetModel.PROP_PVVALUE);
+            formatValue(newValue, PROP_PVVALUE);
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_FORMAT_TYPE, (oldValue, newValue, figure) -> {
             format = FormatEnum.values()[(Integer) newValue];
-            formatValue(newValue, TextUpdateModel.PROP_FORMAT_TYPE);
+            formatValue(newValue, PROP_FORMAT_TYPE);
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_FORMAT_TYPE, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PRECISION, (oldValue, newValue, figure) -> {
             precision = (Integer) newValue;
-            formatValue(newValue, TextUpdateModel.PROP_PRECISION);
+            formatValue(newValue, PROP_PRECISION);
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_PRECISION, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PRECISION_FROM_DB, (oldValue, newValue, figure) -> {
             isPrecisionFromDB = (Boolean) newValue;
-            formatValue(newValue, TextUpdateModel.PROP_PRECISION_FROM_DB);
+            formatValue(newValue, PROP_PRECISION_FROM_DB);
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_PRECISION_FROM_DB, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_SHOW_UNITS, (oldValue, newValue, figure) -> {
             isShowUnits = (Boolean) newValue;
-            formatValue(newValue, TextUpdateModel.PROP_SHOW_UNITS);
+            formatValue(newValue, PROP_SHOW_UNITS);
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_SHOW_UNITS, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ROTATION, (oldValue, newValue, figure) -> {
             if (figure instanceof TextFigure) {
                 ((TextFigure) figure).setRotate((Double) newValue);
             }
             return true;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_ROTATION, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_WRAP_WORDS, (oldValue, newValue, figure) -> {
             AbstractWidgetModel model = getWidgetModel();
             var parent = model.getParent();
             parent.removeChild(model);
             parent.addChild(model);
             parent.selectWidget(model, true);
             return false;
-        };
-        setPropertyChangeHandler(TextUpdateModel.PROP_WRAP_WORDS, handler);
+        });
     }
 
     @Override
@@ -250,9 +248,6 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         }
     }
 
-    /**
-     * @param figure
-     */
     protected void performAutoSize() {
         if (figure instanceof TextFigure) {
             getWidgetModel().setSize(((TextFigure) getFigure()).getAutoSizeDimension());
@@ -261,26 +256,21 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         }
     }
 
-    /**
-     * @param newValue
-     * @return
-     */
     protected String formatValue(Object newValue, String propId) {
-
         if (getExecutionMode() != ExecutionMode.RUN_MODE) {
             return null;
         }
-        VType value = null;
 
         var tempPrecision = precision;
         if (isPrecisionFromDB) {
             tempPrecision = -1;
         }
 
-        if (propId.equals(AbstractPVWidgetModel.PROP_PVVALUE)) {
+        VType value = null;
+        if (propId.equals(PROP_PVVALUE)) {
             value = (VType) newValue;
         } else {
-            value = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+            value = getPVValue(PROP_PVNAME);
         }
 
         var text = VTypeHelper.formatValue(format, value, tempPrecision);
@@ -293,7 +283,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         }
 
         // synchronize the property value without fire listeners.
-        widgetModel.getProperty(TextUpdateModel.PROP_TEXT).setPropertyValue(text, false);
+        widgetModel.getProperty(PROP_TEXT).setPropertyValue(text, false);
         setFigureText(text);
 
         if (isAutoSize) {
@@ -315,8 +305,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     public void setValue(Object value) {
         String text;
         if (value instanceof Number) {
-            text = formatValue(ValueFactory.newVDouble(((Number) value).doubleValue()),
-                    AbstractPVWidgetModel.PROP_PVVALUE);
+            text = formatValue(ValueFactory.newVDouble(((Number) value).doubleValue()), PROP_PVVALUE);
         } else {
             text = value.toString();
         }
@@ -332,5 +321,4 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
         return super.getAdapter(key);
     }
-
 }

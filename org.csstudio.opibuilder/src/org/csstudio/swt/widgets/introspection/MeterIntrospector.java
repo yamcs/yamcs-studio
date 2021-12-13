@@ -22,5 +22,4 @@ public class MeterIntrospector extends ScaleWidgetIntrospector {
 
         return concatenateStringArrays(super.getNonProperties(), METER_WIDGET_NON_PROPERTIES);
     }
-
 }

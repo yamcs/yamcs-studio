@@ -52,5 +52,4 @@ public class ValueFilter {
         }
         throw new IllegalStateException("Unexpected error");
     }
-
 }

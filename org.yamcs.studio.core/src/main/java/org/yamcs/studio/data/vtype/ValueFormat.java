@@ -377,7 +377,7 @@ public abstract class ValueFormat extends Format {
     public ListShort parseShortArray(String source) {
         var tokens = source.split(",");
         var values = new short[tokens.length];
-        for (short i = 0; i < values.length; i++) {
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseShort(tokens[i].trim());
         }
         return new ArrayShort(values);
@@ -396,7 +396,7 @@ public abstract class ValueFormat extends Format {
     public ListByte parseByteArray(String source) {
         var tokens = source.split(",");
         var values = new byte[tokens.length];
-        for (byte i = 0; i < values.length; i++) {
+        for (var i = 0; i < values.length; i++) {
             values[i] = parseByte(tokens[i].trim());
         }
         return new ArrayByte(values);
@@ -414,8 +414,8 @@ public abstract class ValueFormat extends Format {
      */
     public List<String> parseStringArray(String source) {
         var tokens = source.split(",");
-        List<String> values = new ArrayList<>();
-        for (String token : tokens) {
+        var values = new ArrayList<String>();
+        for (var token : tokens) {
             values.add(parseString(token.trim()));
         }
         return values;
@@ -441,5 +441,4 @@ public abstract class ValueFormat extends Format {
         }
         return new ArrayInt(values);
     }
-
 }

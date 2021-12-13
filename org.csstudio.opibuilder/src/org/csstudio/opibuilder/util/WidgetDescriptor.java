@@ -152,5 +152,4 @@ public class WidgetDescriptor {
     public String getOnlineHelpHtml() {
         return onlineHelpHtml;
     }
-
 }

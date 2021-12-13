@@ -57,5 +57,4 @@ public final class ChangePolyPointsCommand extends Command {
     public void undo() {
         _polyModel.setPoints(_oldPoints, true);
     }
-
 }

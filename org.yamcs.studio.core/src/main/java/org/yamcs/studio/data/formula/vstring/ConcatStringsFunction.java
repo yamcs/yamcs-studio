@@ -75,7 +75,7 @@ class ConcatStringsFunction implements FormulaFunction {
 
         // Concatenate strings
         var sb = new StringBuilder();
-        for (Object object : args) {
+        for (var object : args) {
             var str = (VString) object;
             sb.append(str.getValue());
         }
@@ -85,7 +85,7 @@ class ConcatStringsFunction implements FormulaFunction {
     }
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

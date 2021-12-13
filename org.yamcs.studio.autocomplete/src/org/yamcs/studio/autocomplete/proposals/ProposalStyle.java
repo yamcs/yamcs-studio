@@ -50,5 +50,4 @@ public class ProposalStyle {
     public static ProposalStyle getItalic(int from, int to) {
         return new ProposalStyle(from, to, SWT.ITALIC, SWT.COLOR_GRAY);
     }
-
 }

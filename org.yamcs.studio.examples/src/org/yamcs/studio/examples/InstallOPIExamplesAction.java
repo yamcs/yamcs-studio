@@ -60,7 +60,6 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
         }
 
         var job = new Job("Import OPI Examples") {
-
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
@@ -87,11 +86,9 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
 
                 return Status.OK_STATUS;
             }
-
         };
 
         job.schedule();
-
     }
 
     private int count(File[] files) {
@@ -112,12 +109,10 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
             for (var file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
-                    if (!file.getName().equals("CVS")) {
-                        var folder = container.getFolder(new Path(file.getName()));
-                        if (!folder.exists()) {
-                            folder.create(true, true, null);
-                            copy(file.listFiles(), folder, monitor);
-                        }
+                    var folder = container.getFolder(new Path(file.getName()));
+                    if (!folder.exists()) {
+                        folder.create(true, true, null);
+                        copy(file.listFiles(), folder, monitor);
                     }
                 } else {
                     var pFile = container.getFile(new Path(file.getName()));

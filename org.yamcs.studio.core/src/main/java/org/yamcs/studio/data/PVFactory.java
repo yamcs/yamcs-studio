@@ -61,7 +61,7 @@ public class PVFactory {
      */
     public IPV createPV(String name, boolean readOnly, Executor notificationThread, ExceptionHandler exceptionHandler) {
         Datasource datasource = null;
-        for (Datasource candidate : datasources) {
+        for (var candidate : datasources) {
             if (candidate.supportsPVName(name)) {
                 datasource = candidate;
                 break;

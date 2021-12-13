@@ -9,13 +9,20 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_COLOR_BACKGROUND;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_COLOR_FOREGROUND;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ENABLED;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_VISIBLE;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.GroupingContainerModel.PROP_FORWARD_COLORS;
+import static org.csstudio.opibuilder.widgets.model.GroupingContainerModel.PROP_LOCK_CHILDREN;
+import static org.csstudio.opibuilder.widgets.model.GroupingContainerModel.PROP_SHOW_SCROLLBAR;
+import static org.csstudio.opibuilder.widgets.model.GroupingContainerModel.PROP_TRANSPARENT;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractContainerEditpart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.GroupingContainerModel;
 import org.csstudio.opibuilder.widgets.model.TabModel;
@@ -53,7 +60,6 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
     protected void createEditPolicies() {
         super.createEditPolicies();
         installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ContainerHighlightEditPolicy());
-
     }
 
     @Override
@@ -63,118 +69,76 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                figure.setOpaque(!(Boolean) newValue);
-                return true;
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, figure) -> {
+            figure.setOpaque(!(Boolean) newValue);
+            return true;
+        });
+
+        setPropertyChangeHandler(PROP_ENABLED, (oldValue, newValue, figure) -> {
+            for (var child : getWidgetModel().getChildren()) {
+                child.setEnabled((Boolean) newValue);
             }
-        };
+            return true;
+        });
 
-        setPropertyChangeHandler(GroupingContainerModel.PROP_TRANSPARENT, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
-                    child.setEnabled((Boolean) newValue);
-                }
-                return true;
-            }
-        };
-
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                lockChildren((Boolean) newValue);
-                return true;
-            }
-        };
-
-        setPropertyChangeHandler(GroupingContainerModel.PROP_LOCK_CHILDREN, handler);
+        setPropertyChangeHandler(PROP_LOCK_CHILDREN, (oldValue, newValue, figure) -> {
+            lockChildren((Boolean) newValue);
+            return true;
+        });
 
         lockChildren(getWidgetModel().isLocked());
         if (getWidgetModel().getParent() instanceof TabModel) {
-            removeAllPropertyChangeHandlers(AbstractWidgetModel.PROP_VISIBLE);
-            IWidgetPropertyChangeHandler visibilityHandler = new IWidgetPropertyChangeHandler() {
-                @Override
-                public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                    boolean visible = (Boolean) newValue;
-                    var figure = getFigure();
-                    figure.setVisible(visible);
-                    return true;
-                }
-            };
-            setPropertyChangeHandler(AbstractWidgetModel.PROP_VISIBLE, visibilityHandler);
+            removeAllPropertyChangeHandlers(PROP_VISIBLE);
+            setPropertyChangeHandler(PROP_VISIBLE, (oldValue, newValue, refreshableFigure) -> {
+                boolean visible = (Boolean) newValue;
+                var figure = getFigure();
+                figure.setVisible(visible);
+                return true;
+            });
         }
 
-        IWidgetPropertyChangeHandler showBarHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                ((GroupingContainerFigure) refreshableFigure).setShowScrollBar((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(GroupingContainerModel.PROP_SHOW_SCROLLBAR, showBarHandler);
+        setPropertyChangeHandler(PROP_SHOW_SCROLLBAR, (oldValue, newValue, refreshableFigure) -> {
+            ((GroupingContainerFigure) refreshableFigure).setShowScrollBar((Boolean) newValue);
+            return true;
+        });
 
-        IWidgetPropertyChangeHandler fowardColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                if (getWidgetModel().isForwardColors()) {
-                    forwardColors();
-                }
-                return true;
+        IWidgetPropertyChangeHandler fowardColorHandler = (oldValue, newValue, refreshableFigure) -> {
+            if (getWidgetModel().isForwardColors()) {
+                forwardColors();
             }
+            return true;
         };
-        setPropertyChangeHandler(GroupingContainerModel.PROP_FORWARD_COLORS, fowardColorHandler);
-        setPropertyChangeHandler(GroupingContainerModel.PROP_COLOR_BACKGROUND, fowardColorHandler);
-        setPropertyChangeHandler(GroupingContainerModel.PROP_COLOR_FOREGROUND, fowardColorHandler);
+        setPropertyChangeHandler(PROP_FORWARD_COLORS, fowardColorHandler);
+        setPropertyChangeHandler(PROP_COLOR_BACKGROUND, fowardColorHandler);
+        setPropertyChangeHandler(PROP_COLOR_FOREGROUND, fowardColorHandler);
 
         // use property listener because it doesn't need to be queued in GUIRefreshThread.
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH)
-                .addPropertyChangeListener(new PropertyChangeListener() {
+        getWidgetModel().getProperty(PROP_WIDTH)
+                .addPropertyChangeListener(
+                        evt -> resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), true));
 
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), true);
-
-                    }
-                });
-
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), false);
-                    }
-                });
-
+        getWidgetModel().getProperty(PROP_HEIGHT)
+                .addPropertyChangeListener(
+                        evt -> resizeChildren((Integer) (evt.getNewValue()), (Integer) (evt.getOldValue()), false));
     }
 
     private void forwardColors() {
-        for (Object o : getChildren()) {
+        for (var o : getChildren()) {
             if (o instanceof AbstractBaseEditPart) {
-                ((AbstractBaseEditPart) o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
-                        getWidgetModel().getPropertyValue(AbstractWidgetModel.PROP_COLOR_BACKGROUND));
-                ((AbstractBaseEditPart) o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_FOREGROUND,
-                        getWidgetModel().getPropertyValue(AbstractWidgetModel.PROP_COLOR_FOREGROUND));
+                ((AbstractBaseEditPart) o).setPropertyValue(PROP_COLOR_BACKGROUND,
+                        getWidgetModel().getPropertyValue(PROP_COLOR_BACKGROUND));
+                ((AbstractBaseEditPart) o).setPropertyValue(PROP_COLOR_FOREGROUND,
+                        getWidgetModel().getPropertyValue(PROP_COLOR_FOREGROUND));
 
             }
         }
     }
 
-    /**
-     * @param lock
-     *            true if the children should be locked.
-     */
     private void lockChildren(boolean lock) {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             return;
         }
-        for (Object o : getChildren()) {
+        for (var o : getChildren()) {
             if (o instanceof AbstractBaseEditPart) {
                 ((AbstractBaseEditPart) o).setSelectable(!lock);
             }
@@ -204,7 +168,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
             return;
         }
         var ratio = (newValue - oldValue) / (double) oldValue;
-        for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
+        for (var child : getWidgetModel().getChildren()) {
             if (isWidth) {
                 child.setX((int) (child.getX() * (1 + ratio)));
                 child.setWidth((int) (child.getWidth() * (1 + ratio)));
@@ -230,5 +194,4 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         }
         return super.getAdapter(adapter);
     }
-
 }

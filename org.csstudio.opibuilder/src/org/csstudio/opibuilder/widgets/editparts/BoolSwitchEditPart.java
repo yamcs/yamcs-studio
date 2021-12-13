@@ -28,7 +28,6 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
         initializeCommonFigureProperties(boolSwitch, model);
         boolSwitch.setEffect3D(model.isEffect3D());
         return boolSwitch;
-
     }
 
     @Override
@@ -50,7 +49,5 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
             }
         };
         setPropertyChangeHandler(BoolSwitchModel.PROP_EFFECT3D, handler);
-
     }
-
 }

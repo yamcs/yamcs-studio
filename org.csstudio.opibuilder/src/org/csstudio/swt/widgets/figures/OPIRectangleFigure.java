@@ -96,24 +96,17 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Gets the fill grade.
-     *
-     * @return the fill grade
      */
     public double getFill() {
         return fill;
     }
 
-    /**
-     * @return the lineColor
-     */
     public Color getLineColor() {
         return lineColor;
     }
 
     /**
      * Gets the transparent state of the background.
-     *
-     * @return the transparent state of the background
      */
     public boolean getTransparent() {
         return transparent;
@@ -121,8 +114,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Gets the orientation (horizontal==true | vertical==false).
-     *
-     * @return boolean The orientation
      */
     public boolean isHorizontalFill() {
         return horizontalFill;
@@ -139,17 +130,10 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
         return foreGradientStartColor;
     }
 
-    /**
-     * @return the gradient
-     */
     public boolean isGradient() {
         return gradient;
     }
 
-    /**
-     * @param gradient
-     *            the gradient to set
-     */
     public void setGradient(boolean gradient) {
         this.gradient = gradient;
         repaint();
@@ -157,8 +141,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Set gradient start color.
-     * 
-     * @param gradientStartColor
      */
     public void setBackGradientStartColor(Color gradientStartColor) {
         this.backGradientStartColor = gradientStartColor;
@@ -170,9 +152,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
         repaint();
     }
 
-    /**
-     * @see Shape#outlineShape(Graphics)
-     */
     @Override
     protected void outlineShape(Graphics graphics) {
         var lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
@@ -192,9 +171,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Sets the fill grade.
-     *
-     * @param fill
-     *            the fill grade.
      */
     public void setFill(double fill) {
         if (this.fill == fill) {
@@ -206,9 +182,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Sets the orientation (horizontal==true | vertical==false).
-     *
-     * @param horizontal
-     *            The orientation.
      */
     public void setHorizontalFill(boolean horizontal) {
         if (this.horizontalFill == horizontal) {
@@ -218,10 +191,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
         repaint();
     }
 
-    /**
-     * @param lineColor
-     *            the lineColor to set
-     */
     public void setLineColor(Color lineColor) {
         if (this.lineColor != null && this.lineColor.equals(lineColor)) {
             return;
@@ -232,9 +201,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     /**
      * Sets the transparent state of the background.
-     *
-     * @param transparent
-     *            the transparent state.
      */
     public void setTransparent(boolean transparent) {
         if (this.transparent == transparent) {
@@ -256,5 +222,4 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
             return super.containsPoint(x, y);
         }
     }
-
 }

@@ -47,7 +47,7 @@ public class WidgetActionFactory {
             if ("OPEN_OPI_IN_VIEW".equals(actionString)) {
                 return OPEN_DISPLAY;
             }
-            for (ActionType type : values()) {
+            for (var type : values()) {
                 if (actionString.equals(type.toString())) {
                     return type;
                 }
@@ -73,7 +73,6 @@ public class WidgetActionFactory {
             var image = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, path);
             return image;
         }
-
     }
 
     public static AbstractWidgetAction createWidgetAction(ActionType actionType) {

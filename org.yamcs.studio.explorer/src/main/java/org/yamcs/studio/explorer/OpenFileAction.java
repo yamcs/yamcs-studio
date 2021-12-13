@@ -47,7 +47,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
     public void run() {
         IPerspectiveDescriptor activePerspective = page.getPerspective();
         IStructuredSelection selection = (IStructuredSelection) selectionProvider.getSelection();
-        for (Object o : selection.toList()) {
+        for (var o : selection.toList()) {
             if (o instanceof IFile) {
                 IFile file = (IFile) o;
                 if (activePerspective.getId().equals(OPI_RUNTIME_PERSPECTIVE_ID)) {

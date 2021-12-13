@@ -23,7 +23,6 @@ public class AddTabBeforeAction extends AbstractWidgetTargetAction {
     public void run(IAction action) {
         Command command = new AddTabCommand(getSelectedTabWidget(), true);
         execute(command);
-
     }
 
     /**

@@ -57,7 +57,7 @@ public class CopyWidgetsAction extends SelectionAction {
                         && ((EditPart) getSelectedObjects().get(0)).getModel() instanceof DisplayModel) {
             return false;
         }
-        for (Object o : getSelectedObjects()) {
+        for (var o : getSelectedObjects()) {
             if (o instanceof AbstractBaseEditPart) {
                 return true;
             }
@@ -70,7 +70,7 @@ public class CopyWidgetsAction extends SelectionAction {
 
         var tempModel = new DisplayModel();
         var widgetModels = getSelectedWidgetModels();
-        for (AbstractWidgetModel widget : widgetModels) {
+        for (var widget : widgetModels) {
             tempModel.addChild(widget, false);
         }
 
@@ -79,7 +79,6 @@ public class CopyWidgetsAction extends SelectionAction {
         ((OPIEditor) getWorkbenchPart()).getClipboard().setContents(new Object[] { xml },
                 new Transfer[] { OPIWidgetsTransfer.getInstance() });
         Display.getCurrent().asyncExec(new Runnable() {
-
             @Override
             public void run() {
                 var pasteAction = ((ActionRegistry) ((OPIEditor) getWorkbenchPart()).getAdapter(ActionRegistry.class))
@@ -104,7 +103,7 @@ public class CopyWidgetsAction extends SelectionAction {
         List<AbstractWidgetModel> differentParentModels = new ArrayList<AbstractWidgetModel>();
         List<AbstractWidgetModel> result = new ArrayList<AbstractWidgetModel>();
         AbstractContainerModel parent = null;
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
                 var widgetModel = (AbstractWidgetModel) ((EditPart) o).getModel();
                 if (parent == null) {
@@ -122,7 +121,6 @@ public class CopyWidgetsAction extends SelectionAction {
             var modelArray = sameParentModels.toArray(new AbstractWidgetModel[0]);
 
             Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
-
                 @Override
                 public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
                     if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2)) {
@@ -145,5 +143,4 @@ public class CopyWidgetsAction extends SelectionAction {
 
         return sameParentModels;
     }
-
 }

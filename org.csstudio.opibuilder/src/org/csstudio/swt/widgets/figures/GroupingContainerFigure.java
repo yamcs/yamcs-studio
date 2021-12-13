@@ -78,5 +78,4 @@ public class GroupingContainerFigure extends Figure implements Introspectable {
         this.showScrollbar = show;
         scrollPane.setScrollBarVisibility(show ? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
     }
-
 }

@@ -123,5 +123,4 @@ public abstract class AbstractVNumberToVNumberFormulaFunction implements Formula
      * @return the result
      */
     public abstract double calculate(double arg);
-
 }

@@ -17,7 +17,6 @@ public abstract class ListFloat implements ListNumber, CollectionFloat {
     @Override
     public IteratorFloat iterator() {
         return new IteratorFloat() {
-
             private int index;
 
             @Override

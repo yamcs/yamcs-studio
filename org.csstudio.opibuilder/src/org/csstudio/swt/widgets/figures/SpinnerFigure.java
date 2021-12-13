@@ -51,7 +51,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (NumericFormatType f : values()) {
+            for (var f : values()) {
                 result[i++] = f.toString();
             }
             return result;
@@ -201,8 +201,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
      *            the new manual value
      */
     private void fireManualValueChange(double newManualValue) {
-
-        for (IManualValueChangeListener l : spinnerListeners) {
+        for (var l : spinnerListeners) {
             l.manualValueChanged(newManualValue);
         }
     }
@@ -315,7 +314,6 @@ public class SpinnerFigure extends Figure implements Introspectable {
         var clientArea = getClientArea();
 
         if (labelFigure.isVisible()) {
-
             if (arrowButtonsOnLeft) {
                 if (arrowButtonsHorizontal) {
                     labelFigure.setBounds(new Rectangle(clientArea.x + 1 + 2 * buttonWidth, clientArea.y,
@@ -348,7 +346,6 @@ public class SpinnerFigure extends Figure implements Introspectable {
                 }
             }
         } else {
-
             if (arrowButtonsHorizontal) {
                 buttonUp.setBounds(new Rectangle(clientArea.x, clientArea.y, clientArea.width / 2, clientArea.height));
                 buttonDown.setBounds(new Rectangle(clientArea.x + clientArea.width / 2, clientArea.y,

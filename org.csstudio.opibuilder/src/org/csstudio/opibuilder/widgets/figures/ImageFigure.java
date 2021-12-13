@@ -95,7 +95,7 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
             return;
         }
         if (image == null || image.isEmpty() || image.getImagePath() == null) {
-            String msg = "Could not load image\n" + filePath;
+            var msg = "Could not load image\n" + filePath;
             if (filePath == null || filePath.isEmpty()) {
                 msg = "No file specified";
             }

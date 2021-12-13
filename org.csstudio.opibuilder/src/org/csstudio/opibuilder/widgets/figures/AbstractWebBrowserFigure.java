@@ -25,5 +25,4 @@ public abstract class AbstractWebBrowserFigure<T extends Control> extends Abstra
     public abstract void setUrl(String url);
 
     public abstract Browser getBrowser();
-
 }

@@ -44,7 +44,6 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
             selector.setFill(true);
             add(selector);
         }
-
     }
 
     @Override
@@ -83,5 +82,4 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
         return new Dimension(getBounds().width,
                 combo.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + getInsets().getHeight());
     }
-
 }

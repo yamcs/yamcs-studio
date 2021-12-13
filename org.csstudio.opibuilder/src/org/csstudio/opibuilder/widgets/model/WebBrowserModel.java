@@ -50,5 +50,4 @@ public class WebBrowserModel extends AbstractWidgetModel {
     public boolean isShowToolBar() {
         return (Boolean) getPropertyValue(PROP_SHOW_TOOLBAR);
     }
-
 }

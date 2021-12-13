@@ -104,7 +104,6 @@ public class OPIColor implements IAdaptable {
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
-
                 @Override
                 public Object getParent(Object o) {
                     return null;
@@ -117,7 +116,6 @@ public class OPIColor implements IAdaptable {
 
                 @Override
                 public ImageDescriptor getImageDescriptor(Object object) {
-
                     var image = imageRegistry.get(getID());
                     if (image == null) {
                         image = createIcon(getRGBValue());
@@ -258,5 +256,4 @@ public class OPIColor implements IAdaptable {
     public OPIColor getCopy() {
         return new OPIColor(colorName, new RGB(colorValue.red, colorValue.green, colorValue.blue), preDefined);
     }
-
 }

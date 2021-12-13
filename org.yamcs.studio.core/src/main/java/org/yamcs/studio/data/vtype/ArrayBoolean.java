@@ -76,5 +76,4 @@ public final class ArrayBoolean extends ListBoolean implements Serializable {
     boolean[] wrappedArray() {
         return array;
     }
-
 }

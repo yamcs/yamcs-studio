@@ -55,5 +55,4 @@ public class Expression {
     public Expression getCopy() {
         return new Expression(booleanExpression, value);
     }
-
 }

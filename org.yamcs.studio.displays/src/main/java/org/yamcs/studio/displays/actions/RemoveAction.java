@@ -37,7 +37,7 @@ public class RemoveAction extends Action {
     @SuppressWarnings("unchecked")
     public void run() {
         List<String> selected = viewer.getStructuredSelection().toList();
-        for (String info : selected) {
+        for (var info : selected) {
             viewer.removeParameter(info);
         }
     }

@@ -76,5 +76,4 @@ public abstract class AbstractWidgetTargetAction implements IObjectActionDelegat
             return StructuredSelection.EMPTY;
         }
     }
-
 }

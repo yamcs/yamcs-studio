@@ -95,7 +95,6 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
         addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, false));
 
         addProperty(new BooleanProperty(PROP_SHOW_BUTTONS, "Show Buttons", WidgetPropertyCategory.Display, true));
-
     }
 
     public void setFont(OPIFont font) {

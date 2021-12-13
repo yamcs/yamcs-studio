@@ -9,8 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import java.util.List;
-
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.support.StringTablePropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
@@ -66,7 +64,6 @@ public class StringTableProperty extends AbstractWidgetProperty {
     public StringTableProperty(String prop_id, String description, WidgetPropertyCategory category,
             String[][] default_value, String[] titles) {
         this(prop_id, description, category, default_value, titles, null, null);
-
     }
 
     /**
@@ -140,32 +137,31 @@ public class StringTableProperty extends AbstractWidgetProperty {
 
     @Override
     public String[][] readValueFromXML(Element propElement) {
-        List<?> rowChildren = propElement.getChildren();
+        var rowChildren = propElement.getChildren();
         if (rowChildren.size() == 0) {
             return new String[0][0];
         }
         var result = new String[rowChildren.size()][((Element) rowChildren.get(0)).getChildren().size()];
         int i = 0, j = 0;
-        for (Object oe : rowChildren) {
+        for (var oe : rowChildren) {
             var re = (Element) oe;
             if (re.getName().equals(XML_ELEMENT_ROW)) {
                 j = 0;
-                for (Object oc : re.getChildren()) {
+                for (var oc : re.getChildren()) {
                     result[i][j++] = ((Element) oc).getText();
                 }
                 i++;
             }
         }
         return result;
-
     }
 
     @Override
     public void writeToXML(Element propElement) {
         var data = (String[][]) propertyValue;
-        for (String row[] : data) {
+        for (var row : data) {
             var rowElement = new Element(XML_ELEMENT_ROW);
-            for (String e : row) {
+            for (var e : row) {
                 var colElement = new Element(XML_ELEMENT_COLUMN);
                 colElement.setText(e);
                 rowElement.addContent(colElement);
@@ -173,5 +169,4 @@ public class StringTableProperty extends AbstractWidgetProperty {
             propElement.addContent(rowElement);
         }
     }
-
 }

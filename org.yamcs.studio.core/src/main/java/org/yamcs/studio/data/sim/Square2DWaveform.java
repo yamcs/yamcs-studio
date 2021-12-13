@@ -112,7 +112,6 @@ public class Square2DWaveform extends SimFunction<VDoubleArray> {
         var kx = Math.cos(angle * Math.PI / 180.0) * k;
         var ky = Math.sin(angle * Math.PI / 180.0) * k;
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 var x = index % xSamples;

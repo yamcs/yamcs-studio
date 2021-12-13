@@ -9,10 +9,15 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_IMAGE;
+import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_TEXT;
+import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_TOGGLE_BUTTON;
+
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
 import org.csstudio.swt.widgets.figures.ActionButtonFigure;
@@ -49,7 +54,7 @@ public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
         ((ActionButtonFigure) editpart.getFigure()).addActionListener(mouseEventState -> {
             var actions = editpart.getHookedActions();
             if (actions != null) {
-                for (AbstractWidgetAction action : actions) {
+                for (var action : actions) {
                     if (action instanceof OpenDisplayAction) {
                         ((OpenDisplayAction) action).runWithModifiers((mouseEventState & SWT.CONTROL) != 0,
                                 (mouseEventState & SWT.SHIFT) != 0);
@@ -68,18 +73,14 @@ public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
 
     @Override
     public void registerPropertyChangeHandlers() {
-
-        // text
-        IWidgetPropertyChangeHandler textHandler = (oldValue, newValue, refreshableFigure) -> {
+        editpart.setPropertyChangeHandler(PROP_TEXT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ActionButtonFigure) refreshableFigure;
             figure.setText(newValue.toString());
             figure.calculateTextPosition();
             return true;
-        };
-        editpart.setPropertyChangeHandler(ActionButtonModel.PROP_TEXT, textHandler);
+        });
 
-        // image
-        IWidgetPropertyChangeHandler imageHandler = (oldValue, newValue, refreshableFigure) -> {
+        editpart.setPropertyChangeHandler(PROP_IMAGE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ActionButtonFigure) refreshableFigure;
             var absolutePath = (String) newValue;
             if (absolutePath != null && !absolutePath.contains("://")) {
@@ -91,35 +92,29 @@ public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
             }
             figure.setImagePath(absolutePath);
             return true;
-        };
-        editpart.setPropertyChangeHandler(ActionButtonModel.PROP_IMAGE, imageHandler);
+        });
 
-        // width
-        IWidgetPropertyChangeHandler widthHandler = (oldValue, newValue, refreshableFigure) -> {
+        editpart.setPropertyChangeHandler(PROP_WIDTH, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ActionButtonFigure) refreshableFigure;
-            var height = (Integer) editpart.getPropertyValue(ActionButtonModel.PROP_HEIGHT);
+            var height = (Integer) editpart.getPropertyValue(PROP_HEIGHT);
             figure.calculateTextPosition((Integer) newValue, height);
             return true;
-        };
-        editpart.setPropertyChangeHandler(ActionButtonModel.PROP_WIDTH, widthHandler);
+        });
 
-        // height
-        IWidgetPropertyChangeHandler heightHandler = (oldValue, newValue, refreshableFigure) -> {
+        editpart.setPropertyChangeHandler(PROP_HEIGHT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ActionButtonFigure) refreshableFigure;
-            var width = (Integer) editpart.getPropertyValue(ActionButtonModel.PROP_WIDTH);
+            var width = (Integer) editpart.getPropertyValue(PROP_WIDTH);
             figure.calculateTextPosition(width, (Integer) newValue);
             return true;
-        };
-        editpart.setPropertyChangeHandler(ActionButtonModel.PROP_HEIGHT, heightHandler);
+        });
 
-        // button style
         IWidgetPropertyChangeHandler buttonStyleHandler = (oldValue, newValue, refreshableFigure) -> {
             var figure = (ActionButtonFigure) refreshableFigure;
             figure.setToggleStyle((Boolean) newValue);
             editpart.updatePropSheet();
             return true;
         };
-        editpart.getWidgetModel().getProperty(ActionButtonModel.PROP_TOGGLE_BUTTON).addPropertyChangeListener(
+        editpart.getWidgetModel().getProperty(PROP_TOGGLE_BUTTON).addPropertyChangeListener(
                 evt -> buttonStyleHandler.handleChange(evt.getOldValue(), evt.getNewValue(), editpart.getFigure()));
     }
 

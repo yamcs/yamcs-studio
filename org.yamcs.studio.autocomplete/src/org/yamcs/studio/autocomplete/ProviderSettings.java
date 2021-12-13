@@ -148,5 +148,4 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
         return "ProviderSettings [name=" + name + ", provider=" + provider + ", highLevelProvider=" + highLevelProvider
                 + ", maxResults=" + maxResults + ", index=" + index + "]";
     }
-
 }

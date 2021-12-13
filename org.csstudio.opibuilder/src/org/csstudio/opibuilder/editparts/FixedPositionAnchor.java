@@ -41,7 +41,6 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
             throw new IllegalStateException("Unknown constant of " + AnchorPosition.class.getCanonicalName() + ": "
                     + anchorPosition.toString());
         }
-
     }
 
     public FixedPositionAnchor(IFigure owner, AnchorPosition anchorPosition) {
@@ -55,7 +54,6 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
      * box.
      *
      * @return The bounds of this ChopboxAnchor's owner
-     * @since 2.0
      */
     protected Rectangle getBox() {
         return getOwner().getBounds();
@@ -145,5 +143,4 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
             return super.hashCode();
         }
     }
-
 }

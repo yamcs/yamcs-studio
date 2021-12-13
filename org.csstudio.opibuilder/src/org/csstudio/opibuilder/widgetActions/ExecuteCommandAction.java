@@ -36,7 +36,6 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
                 "$(user.home)"));
         addProperty(new IntegerProperty(PROP_WAIT_TIME, "Wait Time(s)", WidgetPropertyCategory.Basic, 10, 1,
                 Integer.MAX_VALUE));
-
     }
 
     @Override
@@ -48,7 +47,6 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
     public void run() {
         OPIBuilderPlugin.getLogger().info("Executing command: " + getCommand());
         new CommandExecutor(getCommand(), getDirectory(), getWaitTime());
-
     }
 
     public String getCommand() {

@@ -115,5 +115,4 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel {
     public boolean isShowScrollbar() {
         return (Boolean) getPropertyValue(PROP_SHOW_SCROLLBAR);
     }
-
 }

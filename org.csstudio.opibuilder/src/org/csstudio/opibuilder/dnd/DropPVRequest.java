@@ -62,5 +62,4 @@ public class DropPVRequest extends Request implements DropRequest {
     public AbstractBaseEditPart getTargetWidget() {
         return targetWidget;
     }
-
 }

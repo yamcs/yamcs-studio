@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -74,7 +73,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
         Collections.reverse(commands);
         CommandHistoryRecord rec = null;
-        for (Command command : commands) {
+        for (var command : commands) {
             if (recordsByCommandId.containsKey(command.getId())) {
                 rec = recordsByCommandId.get(command.getId());
                 rec.merge(command);
@@ -91,7 +90,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
     public void maybeSelectAndReveal(CommandHistoryRecord rec) {
         if (!scrollLock) {
-            IStructuredSelection sel = new StructuredSelection(rec);
+            var sel = new StructuredSelection(rec);
             tableViewer.setSelection(sel, true);
         }
     }

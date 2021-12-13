@@ -74,5 +74,4 @@ class RangeFormulaFunction implements FormulaFunction {
 
         return VTableFactory.range(minValue.getValue().doubleValue(), maxValue.getValue().doubleValue());
     }
-
 }

@@ -17,7 +17,6 @@ public abstract class ListByte implements ListNumber, CollectionByte {
     @Override
     public IteratorByte iterator() {
         return new IteratorByte() {
-
             private int index;
 
             @Override
@@ -126,5 +125,4 @@ public abstract class ListByte implements ListNumber, CollectionByte {
         }
         return result;
     }
-
 }

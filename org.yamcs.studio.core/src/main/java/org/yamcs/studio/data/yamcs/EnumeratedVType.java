@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.yamcs.protobuf.Mdb.EnumValue;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -54,8 +53,8 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
         }
         var enumValues = ptype.getEnumValueList();
         if (enumValues != null) {
-            List<String> labels = new ArrayList<>(enumValues.size());
-            for (EnumValue enumValue : enumValues) {
+            var labels = new ArrayList<String>(enumValues.size());
+            for (var enumValue : enumValues) {
                 labels.add(enumValue.getLabel());
             }
             return labels;

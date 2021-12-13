@@ -163,7 +163,6 @@ public class RoundScaledRamp extends Figure {
             }
             setDirty(false);
         }
-
     }
 
     @Override
@@ -179,7 +178,6 @@ public class RoundScaledRamp extends Figure {
         if (lolo.visible) {
             graphics.setBackgroundColor(lolo.color);
             graphics.fillArc(bounds, lolo.absolutePosition, min.relativePosition - lolo.relativePosition);
-
         }
         // draw lo part
         if (lo.visible) {
@@ -501,7 +499,5 @@ public class RoundScaledRamp extends Figure {
         public void setColor(RGB color) {
             this.color = CustomMediaFactory.getInstance().getColor(color);
         }
-
     }
-
 }

@@ -71,7 +71,6 @@ public class ColorMapRamp extends Figure {
         colorMapFigure.setBounds(new Rectangle(clientArea.x, scale.getValuePosition(max, false),
                 clientArea.width - scaleSize.width, scale.getTickLength()));
         super.layout();
-
     }
 
     @Override
@@ -79,7 +78,6 @@ public class ColorMapRamp extends Figure {
         var result = super.getPreferredSize(hint, hint2);
         result.width = RAMP_WIDTH + scale.getPreferredSize(hint, hint2).width;
         return result;
-
     }
 
     /**
@@ -126,7 +124,5 @@ public class ColorMapRamp extends Figure {
             graphics.drawImage(image, new Rectangle(image.getBounds()), clientArea);
             image.dispose();
         }
-
     }
-
 }

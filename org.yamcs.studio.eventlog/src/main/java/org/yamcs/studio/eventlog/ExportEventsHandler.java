@@ -63,7 +63,7 @@ public class ExportEventsHandler extends AbstractHandler {
             writer.writeHeader(new String[] { "Severity", "Message", "Type", "Source", "Generation", "Reception",
                     "Sequence Number" });
 
-            for (Event event : events) {
+            for (var event : events) {
                 var formattedGenerationTime = "";
                 if (event.hasGenerationTime()) {
                     var generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),

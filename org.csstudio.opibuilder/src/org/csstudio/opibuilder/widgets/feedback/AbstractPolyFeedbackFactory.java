@@ -92,7 +92,6 @@ abstract class AbstractPolyFeedbackFactory implements IGraphicalFeedbackFactory 
 
         // apply the scaled points
         figure.setPoints(scaledPoints);
-
     }
 
     @Override
@@ -215,5 +214,4 @@ abstract class AbstractPolyFeedbackFactory implements IGraphicalFeedbackFactory 
 
         return handles;
     }
-
 }

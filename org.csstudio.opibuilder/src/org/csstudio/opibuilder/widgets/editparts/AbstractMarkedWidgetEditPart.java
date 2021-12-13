@@ -9,10 +9,26 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_HIHI_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_HIHI_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_HI_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_HI_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_LOLO_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_LOLO_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_LO_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_LO_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_SHOW_HI;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_SHOW_HIHI;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_SHOW_LO;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_SHOW_LOLO;
+import static org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel.PROP_SHOW_MARKERS;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_MAX;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_MIN;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel;
 import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
@@ -34,11 +50,6 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
      * Sets those properties on the figure that are defined in the {@link AbstractMarkedWidgetFigure} base class. This
      * method is provided for the convenience of subclasses, which can call this method in their implementation of
      * {@link AbstractBaseEditPart#doCreateFigure()}.
-     *
-     * @param figure
-     *            the figure.
-     * @param model
-     *            the model.
      */
     protected void initializeCommonFigureProperties(AbstractMarkedWidgetFigure figure,
             AbstractMarkedWidgetModel model) {
@@ -60,7 +71,6 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
         figure.setLoColor(model.getLoColor());
         figure.setHiColor(model.getHiColor());
         figure.setHihiColor(model.getHihiColor());
-
     }
 
     @Override
@@ -69,9 +79,6 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
         registerLoadLimitsListener();
     }
 
-    /**
-     *
-     */
     private void registerLoadLimitsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             var model = (AbstractMarkedWidgetModel) getModel();
@@ -91,48 +98,42 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
                                         Double upperLimit;
                                         Double lowerLimit;
                                         if (model.isControlWidget()) {
-                                            // DRVH / DRVL
                                             upperLimit = meta.getUpperCtrlLimit();
                                             lowerLimit = meta.getLowerCtrlLimit();
                                         } else {
-                                            // HOPR / LOPR
                                             upperLimit = meta.getUpperDisplayLimit();
                                             lowerLimit = meta.getLowerDisplayLimit();
                                         }
                                         if (!Double.isNaN(upperLimit)) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_MAX, upperLimit);
+                                            model.setPropertyValue(PROP_MAX, upperLimit);
                                         }
                                         if (!Double.isNaN(lowerLimit)) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_MIN, lowerLimit);
+                                            model.setPropertyValue(PROP_MIN, lowerLimit);
                                         }
 
                                         if (Double.isNaN(meta.getUpperWarningLimit())) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HI, false);
+                                            model.setPropertyValue(PROP_SHOW_HI, false);
                                         } else {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HI, true);
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_HI_LEVEL,
-                                                    meta.getUpperWarningLimit());
+                                            model.setPropertyValue(PROP_SHOW_HI, true);
+                                            model.setPropertyValue(PROP_HI_LEVEL, meta.getUpperWarningLimit());
                                         }
                                         if (Double.isNaN(meta.getUpperAlarmLimit())) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HIHI, false);
+                                            model.setPropertyValue(PROP_SHOW_HIHI, false);
                                         } else {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_HIHI, true);
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_HIHI_LEVEL,
-                                                    meta.getUpperAlarmLimit());
+                                            model.setPropertyValue(PROP_SHOW_HIHI, true);
+                                            model.setPropertyValue(PROP_HIHI_LEVEL, meta.getUpperAlarmLimit());
                                         }
                                         if (Double.isNaN(meta.getLowerWarningLimit())) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LO, false);
+                                            model.setPropertyValue(PROP_SHOW_LO, false);
                                         } else {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LO, true);
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_LO_LEVEL,
-                                                    meta.getLowerWarningLimit());
+                                            model.setPropertyValue(PROP_SHOW_LO, true);
+                                            model.setPropertyValue(PROP_LO_LEVEL, meta.getLowerWarningLimit());
                                         }
                                         if (Double.isNaN(meta.getLowerAlarmLimit())) {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LOLO, false);
+                                            model.setPropertyValue(PROP_SHOW_LOLO, false);
                                         } else {
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_SHOW_LOLO, true);
-                                            model.setPropertyValue(AbstractMarkedWidgetModel.PROP_LOLO_LEVEL,
-                                                    meta.getLowerAlarmLimit());
+                                            model.setPropertyValue(PROP_SHOW_LOLO, true);
+                                            model.setPropertyValue(PROP_LOLO_LEVEL, meta.getLowerAlarmLimit());
                                         }
                                     }
                                 }
@@ -154,12 +155,11 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isLimitsFromPV()) {
-            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(PROP_PVNAME);
             if (pv != null && pvLoadLimitsListener != null) {
                 pv.removeListener(pvLoadLimitsListener);
             }
         }
-
     }
 
     /**
@@ -171,114 +171,87 @@ public abstract class AbstractMarkedWidgetEditPart extends AbstractScaledWidgetE
     protected void registerCommonPropertyChangeHandlers() {
         super.registerCommonPropertyChangeHandlers();
 
-        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVNAME, (oldValue, newValue, figure) -> {
             registerLoadLimitsListener();
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
+        });
 
-        // showMarkers
-        IWidgetPropertyChangeHandler showMarkersHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_MARKERS, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowMarkers((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_SHOW_MARKERS, showMarkersHandler);
+        });
 
-        // LoLo Level
-        IWidgetPropertyChangeHandler loloHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LOLO_LEVEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoloLevel((Double) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_LOLO_LEVEL, loloHandler);
+        });
 
-        // Lo Level
-        IWidgetPropertyChangeHandler loHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LO_LEVEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoLevel((Double) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_LO_LEVEL, loHandler);
+        });
 
-        // Hi Level
-        IWidgetPropertyChangeHandler hiHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HI_LEVEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHiLevel((Double) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_HI_LEVEL, hiHandler);
+        });
 
-        // HiHi Level
-        IWidgetPropertyChangeHandler hihiHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HIHI_LEVEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHihiLevel((Double) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_HIHI_LEVEL, hihiHandler);
+        });
 
-        // show lolo
-        IWidgetPropertyChangeHandler showLoloHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_LOLO, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowLolo((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_SHOW_LOLO, showLoloHandler);
+        });
 
-        // show lo
-        IWidgetPropertyChangeHandler showLoHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_LO, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowLo((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_SHOW_LO, showLoHandler);
+        });
 
-        // show Hi
-        IWidgetPropertyChangeHandler showHiHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_HI, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowHi((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_SHOW_HI, showHiHandler);
+        });
 
-        // show Hihi
-        IWidgetPropertyChangeHandler showHihiHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_HIHI, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setShowHihi((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_SHOW_HIHI, showHihiHandler);
+        });
 
-        // Lolo color
-        IWidgetPropertyChangeHandler LoloColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LOLO_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoloColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_LOLO_COLOR, LoloColorHandler);
+        });
 
-        // Lo color
-        IWidgetPropertyChangeHandler LoColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LO_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setLoColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_LO_COLOR, LoColorHandler);
+        });
 
-        // Hi color
-        IWidgetPropertyChangeHandler HiColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HI_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHiColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_HI_COLOR, HiColorHandler);
+        });
 
-        // Hihi color
-        IWidgetPropertyChangeHandler HihiColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HIHI_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractMarkedWidgetFigure) refreshableFigure;
             figure.setHihiColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(AbstractMarkedWidgetModel.PROP_HIHI_COLOR, HihiColorHandler);
+        });
     }
 }

@@ -23,5 +23,4 @@ public class ShapeWidgetIntrospector extends DefaultWidgetIntrospector {
 
         return concatenateStringArrays(super.getNonProperties(), SHAPE_WIDGET_NON_PROPERTIES);
     }
-
 }

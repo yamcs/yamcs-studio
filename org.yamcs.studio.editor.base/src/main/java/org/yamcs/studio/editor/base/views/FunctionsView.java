@@ -89,7 +89,7 @@ public class FunctionsView extends ViewPart {
         List<String> functionSetNames = new ArrayList<>(FormulaRegistry.getDefault().listFunctionSets());
         Collections.sort(functionSetNames);
         List<FormulaFunctionSet> functionSets = new ArrayList<>();
-        for (String functionSetName : functionSetNames) {
+        for (var functionSetName : functionSetNames) {
             functionSets.add(FormulaRegistry.getDefault().findFunctionSet(functionSetName));
         }
         treeViewer.setInput(functionSets);

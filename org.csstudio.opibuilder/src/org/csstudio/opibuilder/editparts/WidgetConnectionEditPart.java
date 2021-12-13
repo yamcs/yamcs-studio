@@ -9,11 +9,22 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_ANTIALIAS;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_ARROW_LENGTH;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_ARROW_TYPE;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_FILL_ARROW;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_IS_LOADED_FROM_LINKING_CONTAINER;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_COLOR;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_JUMP_ADD;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_JUMP_SIZE;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_JUMP_STYLE;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_STYLE;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_LINE_WIDTH;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_POINTS;
+import static org.csstudio.opibuilder.model.ConnectionModel.PROP_ROUTER;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 import org.csstudio.opibuilder.commands.ConnectionDeleteCommand;
@@ -65,172 +76,99 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
     public void activate() {
         if (!isActive()) {
             super.activate();
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_COLOR)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setForegroundColor(((OPIColor) evt.getNewValue()).getSWTColor());
-                        }
-                    });
+            getWidgetModel().getProperty(PROP_LINE_COLOR).addPropertyChangeListener(evt -> getConnectionFigure()
+                    .setForegroundColor(((OPIColor) evt.getNewValue()).getSWTColor()));
 
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_STYLE)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setLineStyle(getWidgetModel().getLineStyle());
-                        }
-                    });
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_WIDTH)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setLineWidth(getWidgetModel().getLineWidth());
-                        }
-                    });
-            getWidgetModel().getProperty(ConnectionModel.PROP_ROUTER)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            updateRouter(getConnectionFigure());
-                        }
-                    });
+            getWidgetModel().getProperty(PROP_LINE_STYLE).addPropertyChangeListener(
+                    evt -> getConnectionFigure().setLineStyle(getWidgetModel().getLineStyle()));
+            getWidgetModel().getProperty(PROP_LINE_WIDTH).addPropertyChangeListener(
+                    evt -> getConnectionFigure().setLineWidth(getWidgetModel().getLineWidth()));
+            getWidgetModel().getProperty(PROP_ROUTER)
+                    .addPropertyChangeListener(evt -> updateRouter(getConnectionFigure()));
 
-            getWidgetModel().getProperty(ConnectionModel.PROP_POINTS)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            if (getViewer() == null || getViewer().getControl() == null) {
-                                return;
-                            }
-                            Runnable runnable = new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    if (((PointList) evt.getOldValue()).size() != ((PointList) evt.getNewValue())
-                                            .size()) {
-                                        updateRouter(getConnectionFigure());
-                                    } else {
-                                        refreshBendpoints(getConnectionFigure());
-                                    }
-                                }
-                            };
-                            // It should update at the same rate as other widget at run time
-                            if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                                var display = getViewer().getControl().getDisplay();
-                                var task = new WidgetIgnorableUITask(
-                                        getWidgetModel().getProperty(ConnectionModel.PROP_POINTS), runnable, display);
-
-                                GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.RUN_MODE)
-                                        .addIgnorableTask(task);
+            getWidgetModel().getProperty(PROP_POINTS)
+                    .addPropertyChangeListener(evt -> {
+                        if (getViewer() == null || getViewer().getControl() == null) {
+                            return;
+                        }
+                        Runnable runnable = () -> {
+                            if (((PointList) evt.getOldValue()).size() != ((PointList) evt.getNewValue())
+                                    .size()) {
+                                updateRouter(getConnectionFigure());
                             } else {
-                                runnable.run();
+                                refreshBendpoints(getConnectionFigure());
+                            }
+                        };
+                        // It should update at the same rate as other widget at run time
+                        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+                            var display = getViewer().getControl().getDisplay();
+                            var task = new WidgetIgnorableUITask(getWidgetModel().getProperty(PROP_POINTS), runnable,
+                                    display);
+
+                            GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.RUN_MODE)
+                                    .addIgnorableTask(task);
+                        } else {
+                            runnable.run();
+                        }
+                    });
+
+            getWidgetModel().getProperty(PROP_ARROW_LENGTH)
+                    .addPropertyChangeListener(evt -> updateArrowLength(getConnectionFigure()));
+
+            getWidgetModel().getProperty(PROP_ARROW_TYPE).addPropertyChangeListener(evt -> {
+                updateDecoration(getConnectionFigure());
+                updateArrowLength(getConnectionFigure());
+            });
+
+            getWidgetModel().getProperty(PROP_FILL_ARROW).addPropertyChangeListener(evt -> {
+                updateDecoration(getConnectionFigure());
+                updateArrowLength(getConnectionFigure());
+            });
+            getWidgetModel().getProperty(PROP_ANTIALIAS)
+                    .addPropertyChangeListener(evt -> {
+                        getConnectionFigure().setAntialias(getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
+                        for (var obj : getConnectionFigure().getChildren()) {
+                            if (obj instanceof Shape) {
+                                ((Shape) obj).setAntialias(getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
                             }
                         }
                     });
+            getWidgetModel().getProperty(PROP_LINE_JUMP_ADD)
+                    .addPropertyChangeListener(evt -> {
+                        getConnectionFigure().setLineJumpAdd(getWidgetModel().getLineJumpAdd());
 
-            getWidgetModel().getProperty(ConnectionModel.PROP_ARROW_LENGTH)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            updateArrowLength(getConnectionFigure());
-                        }
-                    });
+                        var task = new WidgetIgnorableUITask(
+                                getWidgetModel().getProperty(PROP_LINE_JUMP_ADD), () -> getConnectionFigure().repaint(),
+                                getViewer().getControl().getDisplay());
+                        GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
+                                .addIgnorableTask(task);
 
-            getWidgetModel().getProperty(ConnectionModel.PROP_ARROW_TYPE)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            updateDecoration(getConnectionFigure());
-                            updateArrowLength(getConnectionFigure());
-                        }
                     });
+            getWidgetModel().getProperty(PROP_LINE_JUMP_SIZE)
+                    .addPropertyChangeListener(evt -> {
+                        getConnectionFigure().setLineJumpSize(getWidgetModel().getLineJumpSize());
 
-            getWidgetModel().getProperty(ConnectionModel.PROP_FILL_ARROW)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            updateDecoration(getConnectionFigure());
-                            updateArrowLength(getConnectionFigure());
-                        }
-                    });
-            getWidgetModel().getProperty(ConnectionModel.PROP_ANTIALIAS)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setAntialias(getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
-                            for (Object obj : getConnectionFigure().getChildren()) {
-                                if (obj instanceof Shape) {
-                                    ((Shape) obj).setAntialias(getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
-                                }
-                            }
-                        }
-                    });
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_ADD)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setLineJumpAdd(getWidgetModel().getLineJumpAdd());
+                        var task = new WidgetIgnorableUITask(
+                                getWidgetModel().getProperty(PROP_LINE_JUMP_SIZE),
+                                () -> getConnectionFigure().repaint(),
+                                getViewer().getControl().getDisplay());
+                        GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
+                                .addIgnorableTask(task);
 
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    getConnectionFigure().repaint();
-                                }
-                            };
-                            var task = new WidgetIgnorableUITask(
-                                    getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_ADD), runnable,
-                                    getViewer().getControl().getDisplay());
-                            GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
-                                    .addIgnorableTask(task);
-
-                        }
                     });
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_SIZE)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setLineJumpSize(getWidgetModel().getLineJumpSize());
+            getWidgetModel().getProperty(PROP_LINE_JUMP_STYLE)
+                    .addPropertyChangeListener(evt -> {
+                        getConnectionFigure().setLineJumpStyle(getWidgetModel().getLineJumpStyle());
 
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    getConnectionFigure().repaint();
-                                }
-                            };
-                            var task = new WidgetIgnorableUITask(
-                                    getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_SIZE), runnable,
-                                    getViewer().getControl().getDisplay());
-                            GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
-                                    .addIgnorableTask(task);
-
-                        }
+                        Runnable runnable = () -> getConnectionFigure().repaint();
+                        var task = new WidgetIgnorableUITask(
+                                getWidgetModel().getProperty(PROP_LINE_JUMP_SIZE), runnable,
+                                getViewer().getControl().getDisplay());
+                        GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
+                                .addIgnorableTask(task);
                     });
-            getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_STYLE)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            getConnectionFigure().setLineJumpStyle(getWidgetModel().getLineJumpStyle());
-
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    getConnectionFigure().repaint();
-                                }
-                            };
-                            var task = new WidgetIgnorableUITask(
-                                    getWidgetModel().getProperty(ConnectionModel.PROP_LINE_JUMP_SIZE), runnable,
-                                    getViewer().getControl().getDisplay());
-                            GUIRefreshThread.getInstance(getExecutionMode() == ExecutionMode.EDIT_MODE)
-                                    .addIgnorableTask(task);
-                        }
-                    });
-            getWidgetModel().getProperty(ConnectionModel.PROP_IS_LOADED_FROM_LINKING_CONTAINER)
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            updateRouter(getConnectionFigure());
-                        }
-                    });
+            getWidgetModel().getProperty(PROP_IS_LOADED_FROM_LINKING_CONTAINER)
+                    .addPropertyChangeListener(evt -> updateRouter(getConnectionFigure()));
         }
     }
 
@@ -306,7 +244,7 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
     }
 
     PointList getIntersectionPoints(PolylineJumpConnection connection) {
-        intersectionMap = new HashMap<Point, PointList>();
+        intersectionMap = new HashMap<>();
         var pointsInConnection = getPointListOfConnectionForConnection(connection);
         var widgetModel = getWidgetModel();
 
@@ -378,7 +316,7 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                 continue;
             }
 
-            for (ConnectionModel connModel : connectionList) {
+            for (var connModel : connectionList) {
                 if (connModel != getModel()) {
                     var widgetConnectionEditPart = (WidgetConnectionEditPart) getViewer().getEditPartRegistry()
                             .get(connModel);
@@ -493,15 +431,12 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
 
             // Edge Case: While calculating intersection points, iterating on connections does
             // not guarantee order. Sort so that points are in order.
-            Collections.sort(intersectionPointsList, new Comparator<Point>() {
-                @Override
-                public int compare(Point x1_, Point x2_) {
-                    var result = Double.compare(x1_.getDistance(x1y1), x2_.getDistance(x1y1));
-                    return result;
-                }
+            Collections.sort(intersectionPointsList, (x1_, x2_) -> {
+                var result = Double.compare(x1_.getDistance(x1y1), x2_.getDistance(x1y1));
+                return result;
             });
 
-            for (Point p : intersectionPointsList) {
+            for (var p : intersectionPointsList) {
                 intersections.addPoint(p);
             }
         }
@@ -637,7 +572,6 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
             getWidgetModel().setPoints(points);
         }
         connection.setRoutingConstraint(points);
-
     }
 
     public ConnectionModel getWidgetModel() {
@@ -649,18 +583,12 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
         return (PolylineJumpConnection) getFigure();
     }
 
-    /**
-     * @return the executionMode
-     */
     public ExecutionMode getExecutionMode() {
         return executionMode;
     }
 
     /**
      * Set execution mode, this should be set before widget is activated.
-     *
-     * @param executionMode
-     *            the executionMode to set
      */
     public void setExecutionMode(ExecutionMode executionMode) {
         this.executionMode = executionMode;
@@ -670,20 +598,16 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
         if (key == IActionFilter.class) {
-            return new IActionFilter() {
-                @Override
-                public boolean testAttribute(Object target, String name, String value) {
-                    if (name.equals("executionMode") && value.equals("EDIT_MODE")
-                            && getExecutionMode() == ExecutionMode.EDIT_MODE) {
-                        return true;
-                    }
-                    if (name.equals("executionMode") && value.equals("RUN_MODE")
-                            && getExecutionMode() == ExecutionMode.RUN_MODE) {
-                        return true;
-                    }
-                    return false;
+            return (IActionFilter) (target, name, value) -> {
+                if (name.equals("executionMode") && value.equals("EDIT_MODE")
+                        && getExecutionMode() == ExecutionMode.EDIT_MODE) {
+                    return true;
                 }
-
+                if (name.equals("executionMode") && value.equals("RUN_MODE")
+                        && getExecutionMode() == ExecutionMode.RUN_MODE) {
+                    return true;
+                }
+                return false;
             };
         }
         return super.getAdapter(key);
@@ -696,5 +620,4 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
     public HashMap<Point, PointList> getIntersectionMap() {
         return intersectionMap;
     }
-
 }

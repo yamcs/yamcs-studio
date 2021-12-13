@@ -45,5 +45,4 @@ public class RuleScriptData extends ScriptData {
     public void setPVList(List<PVTuple> pvList) {
         this.pvList = pvList;
     }
-
 }

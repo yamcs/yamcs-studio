@@ -52,7 +52,7 @@ public class ActionsInput {
      */
     public ActionsInput getCopy() {
         var copy = new ActionsInput();
-        for (AbstractWidgetAction data : actionsList) {
+        for (var data : actionsList) {
             copy.getActionsList().add(data.getCopy());
         }
         copy.setWidgetModel(widgetModel);
@@ -94,7 +94,7 @@ public class ActionsInput {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetAction action : actionsList) {
+        for (var action : actionsList) {
             action.setWidgetModel(widgetModel);
         }
     }
@@ -113,5 +113,4 @@ public class ActionsInput {
     public void setHookUpAllActionsToWidget(boolean hookUpAllActionsToWidget) {
         this.hookUpAllActionsToWidget = hookUpAllActionsToWidget;
     }
-
 }

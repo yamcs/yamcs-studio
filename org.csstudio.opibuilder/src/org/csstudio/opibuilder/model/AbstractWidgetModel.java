@@ -38,10 +38,7 @@ import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.UnchangableStringProperty;
 import org.csstudio.opibuilder.properties.UnsavableListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.script.PVTuple;
-import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.script.RulesInput;
-import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptsInput;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIColor;
@@ -335,10 +332,10 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
                 new StringProperty(PROP_WIDGET_UID, "Widget UID", WidgetPropertyCategory.Basic, new UID().toString()));
         // update the WUID saved in connections without triggering anything
         getProperty(PROP_WIDGET_UID).addPropertyChangeListener(evt -> {
-            for (ConnectionModel connection1 : sourceConnections) {
+            for (var connection1 : sourceConnections) {
                 connection1.setPropertyValue(ConnectionModel.PROP_SRC_WUID, evt.getNewValue(), false);
             }
-            for (ConnectionModel connection2 : targetConnections) {
+            for (var connection2 : targetConnections) {
                 connection2.setPropertyValue(ConnectionModel.PROP_TGT_WUID, evt.getNewValue(), false);
             }
         });
@@ -358,7 +355,6 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
         addProperty(new UnsavableListProperty(PROP_TGT_CONNECTIONS, "Target Connections",
                 WidgetPropertyCategory.Display, targetConnections));
         setPropertyVisible(PROP_TGT_CONNECTIONS, false);
-
     }
 
     /**
@@ -464,7 +460,7 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
     public IPropertyDescriptor[] getPropertyDescriptors() {
         var propArray = new IPropertyDescriptor[propertyDescriptors.size()];
         var i = 0;
-        for (IPropertyDescriptor p : propertyDescriptors.values()) {
+        for (var p : propertyDescriptors.values()) {
             propArray[i++] = p;
         }
 
@@ -630,8 +626,7 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
      * @param heightRatio
      */
     protected void scaleConnections(double widthRatio, double heightRatio) {
-        for (ConnectionModel conn : getSourceConnections()) {
-
+        for (var conn : getSourceConnections()) {
             if (conn.getPoints() != null && conn.getPoints().size() > 0) {
                 var pl = conn.getOriginPoints().getCopy();
                 for (var i = 0; i < pl.size(); i++) {
@@ -640,7 +635,6 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
                 }
                 conn.setPoints(pl);
             }
-
         }
     }
 
@@ -672,8 +666,8 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
         if (UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile) > 0) {
             if (propertyMap.containsKey(PROP_SCRIPTS)) {
                 var scriptsInput = getScriptsInput();
-                for (ScriptData sd : scriptsInput.getScriptList()) {
-                    for (PVTuple tuple : sd.getPVList()) {
+                for (var sd : scriptsInput.getScriptList()) {
+                    for (var tuple : sd.getPVList()) {
                         tuple.pvName = UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
                     }
                 }
@@ -681,15 +675,14 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
             }
             if (propertyMap.containsKey(PROP_RULES)) {
                 var rulesInput = getRulesInput();
-                for (RuleData rd : rulesInput.getRuleDataList()) {
-                    for (PVTuple tuple : rd.getPVList()) {
+                for (var rd : rulesInput.getRuleDataList()) {
+                    for (var tuple : rd.getPVList()) {
                         tuple.pvName = UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
                     }
                 }
                 setPropertyValue(PROP_RULES, rulesInput);
             }
         }
-
     }
 
     public WidgetScaleData getScaleOptions() {
@@ -729,7 +722,6 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
             }
         }
         return new Dimension(newW, newH);
-
     }
 
     public void setBackgroundColor(RGB color) {
@@ -746,7 +738,7 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
 
     public void setBorderStyle(BorderStyle borderStyle) {
         var i = 0;
-        for (BorderStyle bs : BorderStyle.values()) {
+        for (var bs : BorderStyle.values()) {
             if (borderStyle == bs) {
                 break;
             }
@@ -800,7 +792,6 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
     public void setPropertyValue(Object id, Object value) {
         checkPropertyExist(id);
         propertyMap.get(id).setPropertyValue(value);
-
     }
 
     public void setPropertyValue(Object id, Object value, boolean forceFire) {
@@ -1034,7 +1025,6 @@ public abstract class AbstractWidgetModel implements IAdaptable, IPropertySource
 
         setLocation(newX, newY);
         setSize(newW, newH);
-
     }
 
     /**

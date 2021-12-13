@@ -84,7 +84,6 @@ public class OPIRuntimeToolBarDelegate {
         bars.setGlobalActionHandler(partZoomInAction.getId(), partZoomInAction);
         bars.setGlobalActionHandler(partZoomOutAction.getId(), partZoomOutAction);
         bars.updateActionBars();
-
     }
 
     /**

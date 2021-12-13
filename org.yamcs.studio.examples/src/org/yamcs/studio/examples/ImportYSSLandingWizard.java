@@ -32,7 +32,6 @@ public class ImportYSSLandingWizard extends Wizard implements IImportWizard {
         super.addPages();
         setWindowTitle("Install YSS Landing");
         addPage(new WizardPage("YSS Landing") {
-
             @Override
             public void createControl(Composite parent) {
                 setTitle("Install YSS Landing");

@@ -74,7 +74,6 @@ public class Ranges {
                 return range2;
             }
         }
-
     }
 
     /**

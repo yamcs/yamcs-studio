@@ -46,5 +46,4 @@ public class OPIColorPropertyDescriptor extends PropertyDescriptor {
             return null;
         }
     }
-
 }

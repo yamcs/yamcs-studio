@@ -9,16 +9,23 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_INCREMENT;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_KNOB_COLOR;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_RAMP_GRADIENT;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_SHOW_VALUE_LABEL;
+import static org.csstudio.opibuilder.widgets.model.KnobModel.PROP_THUMB_COLOR;
+
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.KnobModel;
-import org.csstudio.swt.widgets.datadefinition.IManualValueChangeListener;
 import org.csstudio.swt.widgets.figures.KnobFigure;
 import org.eclipse.draw2d.IFigure;
 
@@ -42,114 +49,68 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         knob.setGradient(model.isRampGradient());
         knob.setIncrement(model.getIncrement());
 
-        knob.addManualValueChangeListener(new IManualValueChangeListener() {
-
-            @Override
-            public void manualValueChanged(double newValue) {
-                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                    setPVValue(AbstractPVWidgetModel.PROP_PVNAME, newValue);
-                }
+        knob.addManualValueChangeListener(newValue -> {
+            if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+                setPVValue(PROP_PVNAME, newValue);
             }
         });
 
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
 
         return knob;
-
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // knob color
-        IWidgetPropertyChangeHandler knobColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setBulbColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_KNOB_COLOR, knobColorHandler);
+        setPropertyChangeHandler(PROP_KNOB_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setBulbColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
 
-        // thumbColor
-        IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setThumbColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_THUMB_COLOR, thumbColorHandler);
+        setPropertyChangeHandler(PROP_THUMB_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setThumbColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
 
-        // effect 3D
-        IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setEffect3D((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_EFFECT3D, effect3DHandler);
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setEffect3D((Boolean) newValue);
+            return false;
+        });
 
-        // show value label
-        IWidgetPropertyChangeHandler valueLabelHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setValueLabelVisibility((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_SHOW_VALUE_LABEL, valueLabelHandler);
+        setPropertyChangeHandler(PROP_SHOW_VALUE_LABEL, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setValueLabelVisibility((Boolean) newValue);
+            return false;
+        });
 
-        // Ramp gradient
-        IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setGradient((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_RAMP_GRADIENT, gradientHandler);
+        setPropertyChangeHandler(PROP_RAMP_GRADIENT, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setGradient((Boolean) newValue);
+            return false;
+        });
 
-        // increment
-        IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var knob = (KnobFigure) refreshableFigure;
-                knob.setIncrement((Double) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(KnobModel.PROP_INCREMENT, incrementHandler);
+        setPropertyChangeHandler(PROP_INCREMENT, (oldValue, newValue, refreshableFigure) -> {
+            var knob = (KnobFigure) refreshableFigure;
+            knob.setIncrement((Double) newValue);
+            return false;
+        });
 
         // force square size
-        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (((Integer) newValue) < KnobModel.MINIMUM_SIZE) {
-                    newValue = KnobModel.MINIMUM_SIZE;
-                }
-                getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
-                return false;
+        IWidgetPropertyChangeHandler sizeHandler = (oldValue, newValue, figure) -> {
+            if (((Integer) newValue) < KnobModel.MINIMUM_SIZE) {
+                newValue = KnobModel.MINIMUM_SIZE;
             }
+            getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
+            return false;
         };
-        PropertyChangeListener sizeListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-            }
-        };
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(sizeListener);
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(sizeListener);
-
+        PropertyChangeListener sizeListener = evt -> sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(),
+                getFigure());
+        getWidgetModel().getProperty(PROP_WIDTH).addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(PROP_HEIGHT).addPropertyChangeListener(sizeListener);
     }
-
 }

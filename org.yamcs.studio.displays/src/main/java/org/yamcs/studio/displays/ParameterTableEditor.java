@@ -99,7 +99,7 @@ public class ParameterTableEditor extends EditorPart {
             }
             provider.setParameters(model.getParameters());
 
-            for (String parameter : model.getParameters()) {
+            for (var parameter : model.getParameters()) {
                 var id = NamedObjectId.newBuilder().setName(parameter).build();
                 var meta = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
                 if (meta != null) {

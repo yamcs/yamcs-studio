@@ -58,7 +58,7 @@ public class TextInputFigure extends TextFigure {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (SelectorType p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -82,7 +82,7 @@ public class TextInputFigure extends TextFigure {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (FileSource p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -106,7 +106,7 @@ public class TextInputFigure extends TextFigure {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (FileReturnPart p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -165,8 +165,7 @@ public class TextInputFigure extends TextFigure {
      *            the new manual value
      */
     public void fireManualValueChange(String newManualValue) {
-
-        for (IManualStringValueChangeListener l : selectorListeners) {
+        for (var l : selectorListeners) {
             l.manualValueChanged(newManualValue);
         }
     }
@@ -186,9 +185,6 @@ public class TextInputFigure extends TextFigure {
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    /**
-     * @return the startPath
-     */
     public String getStartPath() {
         return startPath;
     }
@@ -382,7 +378,7 @@ public class TextInputFigure extends TextFigure {
             }
             break;
         case LOCAL:
-            IPath paths[] = null;
+            IPath[] paths = null;
             if (getFileReturnPart() == FileReturnPart.DIRECTORY) {
                 var directoryDialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
                 directoryDialog.setFilterPath(currentPath);

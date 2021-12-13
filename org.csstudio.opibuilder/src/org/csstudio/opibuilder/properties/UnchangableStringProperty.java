@@ -51,5 +51,4 @@ public class UnchangableStringProperty extends StringProperty {
     public boolean configurableByRule() {
         return false;
     }
-
 }

@@ -26,12 +26,11 @@ public class PVWidgetAdapterFactory implements IAdapterFactory {
                 var allPVNames = ((IPVWidgetEditpart) adaptableObject).getAllPVNames();
                 var pvs = new ProcessVariable[allPVNames.length];
                 var i = 0;
-                for (String s : allPVNames) {
+                for (var s : allPVNames) {
                     pvs[i++] = new ProcessVariable(s);
                 }
                 return adapterType.cast(pvs);
             }
-
         }
         return null;
     }
@@ -40,5 +39,4 @@ public class PVWidgetAdapterFactory implements IAdapterFactory {
     public Class<?>[] getAdapterList() {
         return new Class<?>[] { ProcessVariable.class, ProcessVariable[].class };
     }
-
 }

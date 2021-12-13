@@ -162,7 +162,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     @Override
     public void onData(List<ParameterValue> values) {
         executor.execute(() -> {
-            for (ParameterValue pval : values) {
+            for (var pval : values) {
                 var pvs = pvsById.get(pval.getId());
                 if (pvs != null) {
                     pvs.forEach(pv -> pv.notifyValueChange());

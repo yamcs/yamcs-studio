@@ -100,7 +100,6 @@ public class WritePVAction extends AbstractWidgetAction {
             protected IStatus run(IProgressMonitor monitor) {
                 return writePVInSync();
             }
-
         };
 
         job.schedule();
@@ -123,7 +122,6 @@ public class WritePVAction extends AbstractWidgetAction {
             return Status.CANCEL_STATUS;
         }
         return Status.OK_STATUS;
-
     }
 
     private void popErrorDialog(Exception e) {

@@ -30,7 +30,6 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
         if (dialog.open() == Window.OK) {
             stringValue = dialog.getResult();
         }
-
     }
 
     @Override
@@ -50,7 +49,5 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
         } else {
             stringValue = value.toString();
         }
-
     }
-
 }

@@ -110,7 +110,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
         var textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         textColumn.getColumn().setText("Name");
         textColumn.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public String getText(Object element) {
                 var font = (OPIFont) element;
@@ -122,7 +121,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
         var descColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         descColumn.getColumn().setText("Font");
         descColumn.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public String getText(Object element) {
                 var font = (OPIFont) element;
@@ -161,7 +159,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
 
         addButton = createButton(box, "Add...");
         addButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 addNewFont();
@@ -182,7 +179,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
 
         removeButton = createButton(box, "Remove");
         removeButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeFont(getSelectedFont());

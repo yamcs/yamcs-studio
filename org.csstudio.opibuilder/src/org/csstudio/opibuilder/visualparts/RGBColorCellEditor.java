@@ -53,5 +53,4 @@ public class RGBColorCellEditor extends AbstractDialogCellEditor {
             rgb = (RGB) value;
         }
     }
-
 }

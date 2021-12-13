@@ -34,10 +34,6 @@ public class ChoiceButtonFigure extends AbstractChoiceFigure {
 
         /**
          * Constructs a ToggleButton with the passed string as its text.
-         *
-         * @param text
-         *            the text to be displayed on the button
-         * @since 2.0
          */
         public ColorToggleButton(String text) {
             super(text, null);
@@ -48,9 +44,6 @@ public class ChoiceButtonFigure extends AbstractChoiceFigure {
 
         /**
          * Draws a checkered pattern to emulate a toggle button that is in the selected state.
-         * 
-         * @param graphics
-         *            The Graphics object used to paint
          */
         @Override
         protected void fillCheckeredRectangle(Graphics graphics) {
@@ -61,5 +54,4 @@ public class ChoiceButtonFigure extends AbstractChoiceFigure {
             graphics.restoreState();
         }
     }
-
 }

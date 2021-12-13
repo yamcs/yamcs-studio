@@ -209,7 +209,6 @@ public class NativeTextEditpart extends TextInputEditpart {
         setPropertyChangeHandler(NativeTextModel.PROP_SHOW_V_SCROLL, handler);
         setPropertyChangeHandler(NativeTextModel.PROP_PASSWORD_INPUT, handler);
         setPropertyChangeHandler(NativeTextModel.PROP_ALIGN_H, handler);
-
     }
 
     @Override
@@ -217,7 +216,6 @@ public class NativeTextEditpart extends TextInputEditpart {
         var text = super.formatValue(newValue, propId);
         getWidgetModel().setPropertyValue(TextInputModel.PROP_TEXT, text, false);
         return text;
-
     }
 
     @Override
@@ -239,5 +237,4 @@ public class NativeTextEditpart extends TextInputEditpart {
 
         return super.getAdapter(key);
     }
-
 }

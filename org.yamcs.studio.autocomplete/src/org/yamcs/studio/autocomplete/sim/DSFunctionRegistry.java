@@ -62,5 +62,4 @@ public class DSFunctionRegistry {
     public DSFunctionSet findFunctionSet(String name) {
         return functionSets.get(name);
     }
-
 }

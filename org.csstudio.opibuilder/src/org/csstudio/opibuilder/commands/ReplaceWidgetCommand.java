@@ -51,7 +51,7 @@ public class ReplaceWidgetCommand extends Command {
         List<ConnectionModel> result = new ArrayList<ConnectionModel>();
         result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
         if (widget instanceof AbstractContainerModel) {
-            for (AbstractWidgetModel child : ((AbstractContainerModel) widget).getAllDescendants()) {
+            for (var child : ((AbstractContainerModel) widget).getAllDescendants()) {
                 result.addAll(source ? child.getSourceConnections() : child.getTargetConnections());
             }
         }
@@ -63,12 +63,12 @@ public class ReplaceWidgetCommand extends Command {
         index = container.getIndexOf(srcWidget);
         container.removeChild(srcWidget);
         container.addChild(index, targetWidget);
-        for (ConnectionModel conn : sourceConnections) {
+        for (var conn : sourceConnections) {
             if (conn.getSource() == srcWidget) {
                 conn.setSource(targetWidget);
             }
         }
-        for (ConnectionModel conn : targetConnections) {
+        for (var conn : targetConnections) {
             if (conn.getTarget() == srcWidget) {
                 conn.setTarget(targetWidget);
             }
@@ -76,13 +76,13 @@ public class ReplaceWidgetCommand extends Command {
         removeConnections(sourceConnections);
         removeConnections(targetConnections);
         var allDescendants = container.getAllDescendants();
-        for (ConnectionModel conn : sourceConnections) {
+        for (var conn : sourceConnections) {
             if (allDescendants.contains(conn.getSource())) {
                 conn.reconnect();
             }
         }
 
-        for (ConnectionModel conn : targetConnections) {
+        for (var conn : targetConnections) {
             if (allDescendants.contains(conn.getTarget())) {
                 conn.reconnect();
             }
@@ -93,12 +93,12 @@ public class ReplaceWidgetCommand extends Command {
     public void undo() {
         container.removeChild(targetWidget);
         container.addChild(index, srcWidget);
-        for (ConnectionModel conn : sourceConnections) {
+        for (var conn : sourceConnections) {
             if (conn.getSource() == targetWidget) {
                 conn.setSource(srcWidget);
             }
         }
-        for (ConnectionModel conn : targetConnections) {
+        for (var conn : targetConnections) {
             if (conn.getTarget() == targetWidget) {
                 conn.setTarget(srcWidget);
             }
@@ -110,15 +110,14 @@ public class ReplaceWidgetCommand extends Command {
     }
 
     private void removeConnections(List<ConnectionModel> connections) {
-        for (ConnectionModel conn : connections) {
+        for (var conn : connections) {
             conn.disconnect();
         }
     }
 
     private void addConnections(List<ConnectionModel> connections) {
-        for (ConnectionModel conn : connections) {
+        for (var conn : connections) {
             conn.reconnect();
         }
     }
-
 }

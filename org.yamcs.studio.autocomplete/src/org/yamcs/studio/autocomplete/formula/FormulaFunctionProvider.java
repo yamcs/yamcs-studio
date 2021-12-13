@@ -35,9 +35,9 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
 
     public FormulaFunctionProvider() {
         functions = new TreeMap<String, List<FormulaFunction>>();
-        for (String setName : FormulaRegistry.getDefault().listFunctionSets()) {
+        for (var setName : FormulaRegistry.getDefault().listFunctionSets()) {
             var set = FormulaRegistry.getDefault().findFunctionSet(setName);
-            for (FormulaFunction function : set.getFunctions()) {
+            for (var function : set.getFunctions()) {
                 var functionList = functions.get(function.getName());
                 if (functionList == null) {
                     functionList = new ArrayList<FormulaFunction>();
@@ -77,16 +77,16 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
         if (!functionDesc.hasOpenBracket()) {
             Proposal topProposal = null;
             String closestMatchingFunction = null;
-            for (String functionName : functions.keySet()) {
+            for (var functionName : functions.keySet()) {
                 if (functionName.startsWith(nameToFind)) {
                     var proposal = new Proposal(functionName + "(", false);
 
                     var description = functions.get(functionName).get(0).getDescription() + "\n\n";
-                    for (FormulaFunction ff : functions.get(functionName)) {
+                    for (var ff : functions.get(functionName)) {
                         description += generateSignature(ff);
                     }
                     proposal.setDescription(description);
-                    for (FormulaFunction ff : functions.get(functionName)) {
+                    for (var ff : functions.get(functionName)) {
                         proposal.addTooltipData(generateTooltipData(ff, 0));
                     }
 
@@ -110,9 +110,9 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
 
         // handle tooltip
         if (functionDesc.hasOpenBracket() && !functionDesc.isComplete()) {
-            for (String setName : FormulaRegistry.getDefault().listFunctionSets()) {
+            for (var setName : FormulaRegistry.getDefault().listFunctionSets()) {
                 var set = FormulaRegistry.getDefault().findFunctionSet(setName);
-                for (FormulaFunction function : set.findFunctions(nameToFind)) {
+                for (var function : set.findFunctions(nameToFind)) {
                     if (function.getName().equals(nameToFind)) {
                         if (function.getArgumentNames().size() >= functionDesc.getArgs().size()
                                 || function.isVarArgs()) {
@@ -188,5 +188,4 @@ public class FormulaFunctionProvider implements IAutoCompleteProvider {
         td.value = sb.toString();
         return td;
     }
-
 }

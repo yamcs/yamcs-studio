@@ -110,7 +110,7 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
                     List<AbstractWidgetAction> widgetActions = ai.getActionsList();
                     if (!widgetActions.isEmpty()) {
                         var actionMenu = new MenuManager("Actions", "actions");
-                        for (AbstractWidgetAction action : widgetActions) {
+                        for (var action : widgetActions) {
                             actionMenu.add(new WidgetActionMenuAction(action));
                         }
                         menu.add(actionMenu);

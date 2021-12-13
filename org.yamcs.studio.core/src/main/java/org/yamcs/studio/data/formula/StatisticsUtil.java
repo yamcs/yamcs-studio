@@ -51,7 +51,6 @@ public class StatisticsUtil {
         public double getStdDev() {
             return stdDev;
         }
-
     }
 
     /**
@@ -196,6 +195,5 @@ public class StatisticsUtil {
             calculateStats();
             return stats.getRange();
         }
-
     }
 }

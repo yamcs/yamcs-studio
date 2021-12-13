@@ -116,5 +116,4 @@ public class SymbolImageProperties {
     public void setColorToChange(Color colorToChange) {
         this.colorToChange = colorToChange;
     }
-
 }

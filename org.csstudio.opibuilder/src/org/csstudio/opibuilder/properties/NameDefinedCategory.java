@@ -23,5 +23,4 @@ public class NameDefinedCategory implements WidgetPropertyCategory {
     public String toString() {
         return name;
     }
-
 }

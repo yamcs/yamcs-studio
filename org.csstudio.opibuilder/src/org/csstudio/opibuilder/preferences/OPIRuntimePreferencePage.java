@@ -47,11 +47,10 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage implemen
         macrosEditor = new StringTableFieldEditor(PreferencesHelper.RUN_MACROS, "Macros: ", parent,
                 new String[] { "Name", "Value" }, new boolean[] { true, true }, new MacroEditDialog(parent.getShell()),
                 new int[] { 120, 120 }) {
-
             @Override
             public boolean isValid() {
                 String reason;
-                for (String[] row : items) {
+                for (var row : items) {
                     reason = Verifier.checkElementName(row[0]);
                     if (reason != null) {
                         wrongMacroName = row[0];
@@ -80,7 +79,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage implemen
                     }
                 });
                 tableEditor.getTableViewer().getTable().addFocusListener(new FocusListener() {
-
                     @Override
                     public void focusLost(FocusEvent e) {
                         var valid = isValid();
@@ -94,7 +92,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage implemen
                     }
                 });
             }
-
         };
         addField(macrosEditor);
 

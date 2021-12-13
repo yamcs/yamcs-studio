@@ -75,5 +75,4 @@ class ColumnFromVNumberArrayFunction implements FormulaFunction {
 
         return VTableFactory.column(name.getValue(), data);
     }
-
 }

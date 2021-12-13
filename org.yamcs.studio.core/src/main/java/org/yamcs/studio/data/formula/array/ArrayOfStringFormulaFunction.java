@@ -68,7 +68,7 @@ class ArrayOfStringFormulaFunction implements FormulaFunction {
     public Object calculate(List<Object> args) {
 
         List<String> data = new ArrayList<>();
-        for (Object arg : args) {
+        for (var arg : args) {
             var str = (VString) arg;
             if (str == null || str.getValue() == null) {
                 data.add(null);

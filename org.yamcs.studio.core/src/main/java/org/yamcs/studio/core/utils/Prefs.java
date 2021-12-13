@@ -48,7 +48,7 @@ public class Prefs {
 
     public void setVisiblePackets(Object[] packets) {
         var strbuf = new StringBuilder();
-        for (Object s : packets) {
+        for (var s : packets) {
             strbuf.append(" ");
             strbuf.append(s.toString());
         }

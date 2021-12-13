@@ -30,5 +30,4 @@ public interface IAutoCompleteProvider {
      * Called by {@link AutoCompleteService} when the task is canceled.
      */
     public void cancel();
-
 }

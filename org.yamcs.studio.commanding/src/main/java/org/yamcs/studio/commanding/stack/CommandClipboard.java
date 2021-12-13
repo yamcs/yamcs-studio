@@ -14,13 +14,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord;
 
 /**
@@ -49,7 +47,7 @@ public class CommandClipboard {
         }
 
         var source = "";
-        for (StackedCommand sc : scs) {
+        for (var sc : scs) {
             source += sc.getSource() + "\n";
         }
         textToClipboard(source, display);
@@ -64,18 +62,18 @@ public class CommandClipboard {
     }
 
     public static List<StackedCommand> getCopiedCommands() throws Exception {
-        List<StackedCommand> result = new ArrayList<>();
+        var result = new ArrayList<StackedCommand>();
 
         // Convert CommandHistoryRecord to new Stacked Command
         // first compute the stack delays from the cmd history generation times
-        List<CommandHistoryRecord> sortedRecords = new ArrayList<>();
+        var sortedRecords = new ArrayList<CommandHistoryRecord>();
         var commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
-        for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
+        for (var chr : copiedCommandHistoryRecords) {
             sortedRecords.add(chr);
         }
         Collections.sort(sortedRecords, new SortByGenerationTime());
         var lastTime = 0L;
-        for (CommandHistoryRecord chr : sortedRecords) {
+        for (var chr : sortedRecords) {
             var currentTime = chr.getCommand().getGenerationTime().toEpochMilli();
             if (lastTime == 0) {
                 commandHistoryRecordDelays.put(chr, 0);
@@ -86,7 +84,7 @@ public class CommandClipboard {
             lastTime = currentTime;
         }
         // then add to the result
-        for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
+        for (var chr : copiedCommandHistoryRecords) {
             var pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommand().getSource());
             pastedCommand.setComment(chr.getTextForColumn("Comment", false));
             pastedCommand.setDelayMs(commandHistoryRecordDelays.get(chr));
@@ -94,7 +92,7 @@ public class CommandClipboard {
         }
 
         // copy stacked commands
-        for (StackedCommand sc : copiedStackedCommands) {
+        for (var sc : copiedStackedCommands) {
             var copy = new StackedCommand();
             copy.setMetaCommand(sc.getMetaCommand());
             if (sc.getComment() != null) {
@@ -103,7 +101,7 @@ public class CommandClipboard {
             sc.getExtra().forEach((option, value) -> {
                 copy.setExtra(option, value);
             });
-            for (Entry<ArgumentInfo, String> entry : sc.getAssignments().entrySet()) {
+            for (var entry : sc.getAssignments().entrySet()) {
                 copy.addAssignment(entry.getKey(), entry.getValue());
             }
             copy.setDelayMs(sc.getDelayMs());
@@ -127,5 +125,4 @@ public class CommandClipboard {
         var textTransfer = TextTransfer.getInstance();
         cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });
     }
-
 }

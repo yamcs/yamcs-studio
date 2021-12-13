@@ -9,6 +9,17 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_AXIS_COUNT;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_PLOTAREA_BACKCOLOR;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_SHOW_LEGEND;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_SHOW_PLOTAREA_BORDER;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_SHOW_TOOLBAR;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_TITLE;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_TITLE_FONT;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_TRACE_COUNT;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.XYGraphModel.PROP_TRIGGER_PV_VALUE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +90,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                     xyGraphFigure.getXYGraph().addAxis(axisList.get(i));
                 }
             }
-            for (AxisProperty axisProperty : AxisProperty.values()) {
+            for (var axisProperty : AxisProperty.values()) {
                 // there is no primary and y-axis property for primary axes.
                 if (i < 2 && (axisProperty == AxisProperty.PRIMARY || axisProperty == AxisProperty.Y_AXIS)) {
                     continue;
@@ -98,7 +109,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
             var xPVPropID = XYGraphModel.makeTracePropID(TraceProperty.XPV.propIDPre, i);
             var yPVPropID = XYGraphModel.makeTracePropID(TraceProperty.YPV.propIDPre, i);
-            for (TraceProperty traceProperty : TraceProperty.values()) {
+            for (var traceProperty : TraceProperty.values()) {
                 var propID = XYGraphModel.makeTracePropID(traceProperty.propIDPre, i);
                 setTraceProperty(traceList.get(i), traceProperty, model.getProperty(propID).getPropertyValue(),
                         xPVPropID, yPVPropID);
@@ -113,66 +124,51 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         registerAxisPropertyChangeHandlers();
         registerTracePropertyChangeHandlers();
 
-        // Title
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_TITLE, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.getXYGraph().setTitle((String) newValue);
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_TITLE, handler);
+        });
 
-        // Title Font
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_TITLE_FONT, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.getXYGraph()
                     .setTitleFont(CustomMediaFactory.getInstance().getFont(((OPIFont) newValue).getFontData()));
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_TITLE_FONT, handler);
+        });
 
-        // Show plot area border
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_PLOTAREA_BORDER, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.getXYGraph().getPlotArea().setShowBorder((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_SHOW_PLOTAREA_BORDER, handler);
+        });
 
-        // Plot area background color
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PLOTAREA_BACKCOLOR, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.getXYGraph().getPlotArea()
                     .setBackgroundColor(CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_PLOTAREA_BACKCOLOR, handler);
+        });
 
-        // Transparent
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.setTransparent((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_TRANSPARENT, handler);
+        });
 
-        // Show legend
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_LEGEND, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.getXYGraph().setShowLegend((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_SHOW_LEGEND, handler);
+        });
 
-        // Show Toolbar
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_TOOLBAR, (oldValue, newValue, refreshableFigure) -> {
             var graph = (ToolbarArmedXYGraph) refreshableFigure;
             graph.setShowToolbar((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(XYGraphModel.PROP_SHOW_TOOLBAR, handler);
+        });
 
-        // trigger pv value
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_TRIGGER_PV_VALUE, (oldValue, newValue, figure) -> {
             for (var i = 0; i < getWidgetModel().getTracesAmount(); i++) {
                 var dataProvider = (CircularBufferDataProvider) traceList.get(i).getDataProvider();
                 if (dataProvider.getUpdateMode() == UpdateMode.TRIGGER) {
@@ -180,13 +176,10 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                 }
             }
             return false;
-        };
-
-        setPropertyChangeHandler(XYGraphModel.PROP_TRIGGER_PV_VALUE, handler);
+        });
 
         registerAxesAmountChangeHandler();
         registerTraceAmountChangeHandler();
-
     }
 
     private void registerAxesAmountChangeHandler() {
@@ -197,7 +190,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             // add axis
             if ((Integer) newValue > currentAxisAmount) {
                 for (var i1 = 0; i1 < (Integer) newValue - currentAxisAmount; i1++) {
-                    for (AxisProperty axisProperty1 : AxisProperty.values()) {
+                    for (var axisProperty1 : AxisProperty.values()) {
                         var propID1 = XYGraphModel.makeAxisPropID(axisProperty1.propIDPre, i1 + currentAxisAmount);
                         model.setPropertyVisible(propID1, true);
                     }
@@ -205,7 +198,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                 }
             } else if ((Integer) newValue < currentAxisAmount) { // remove axis
                 for (var i2 = 0; i2 < currentAxisAmount - (Integer) newValue; i2++) {
-                    for (AxisProperty axisProperty2 : AxisProperty.values()) {
+                    for (var axisProperty2 : AxisProperty.values()) {
                         var propID2 = XYGraphModel.makeAxisPropID(axisProperty2.propIDPre, i2 + (Integer) newValue);
                         model.setPropertyVisible(propID2, false);
                     }
@@ -214,7 +207,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
             return true;
         };
-        getWidgetModel().getProperty(XYGraphModel.PROP_AXIS_COUNT).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_AXIS_COUNT).addPropertyChangeListener(
                 evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
         // setPropertyChangeHandler(XYGraphModel.PROP_AXES_AMOUNT, handler);
     }
@@ -223,8 +216,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         var model = (XYGraphModel) getModel();
         // set prop handlers and init all the potential axes
         for (var i = 0; i < XYGraphModel.MAX_AXES_AMOUNT; i++) {
-
-            for (AxisProperty axisProperty : AxisProperty.values()) {
+            for (var axisProperty : AxisProperty.values()) {
                 // there is no primary and y-axis property for primary axes.
                 if (i < 2 && (axisProperty == AxisProperty.PRIMARY || axisProperty == AxisProperty.Y_AXIS)) {
                     continue;
@@ -236,7 +228,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         }
 
         for (var i = XYGraphModel.MAX_AXES_AMOUNT - 1; i >= model.getAxesAmount(); i--) {
-            for (AxisProperty axisProperty : AxisProperty.values()) {
+            for (var axisProperty : AxisProperty.values()) {
                 var propID = XYGraphModel.makeAxisPropID(axisProperty.propIDPre, i);
                 model.setPropertyVisible(propID, false);
             }
@@ -337,7 +329,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             // add trace
             if ((Integer) newValue > currentTracesAmount) {
                 for (var i1 = 0; i1 < (Integer) newValue - currentTracesAmount; i1++) {
-                    for (TraceProperty traceProperty1 : TraceProperty.values()) {
+                    for (var traceProperty1 : TraceProperty.values()) {
                         if (traceProperty1 == TraceProperty.XPV_VALUE || traceProperty1 == TraceProperty.YPV_VALUE) {
                             continue;
                         }
@@ -348,7 +340,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                 }
             } else if ((Integer) newValue < currentTracesAmount) { // remove trace
                 for (var i2 = 0; i2 < currentTracesAmount - (Integer) newValue; i2++) {
-                    for (TraceProperty traceProperty2 : TraceProperty.values()) {
+                    for (var traceProperty2 : TraceProperty.values()) {
                         var propID2 = XYGraphModel.makeTracePropID(traceProperty2.propIDPre, i2 + (Integer) newValue);
                         model.setPropertyVisible(propID2, false);
                     }
@@ -357,7 +349,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
             return true;
         };
-        getWidgetModel().getProperty(XYGraphModel.PROP_TRACE_COUNT).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_TRACE_COUNT).addPropertyChangeListener(
                 evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
 
         // setPropertyChangeHandler(XYGraphModel.PROP_TRACES_AMOUNT, handler);
@@ -372,7 +364,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                     .getPropertyValue();
             var xPVPropID = XYGraphModel.makeTracePropID(TraceProperty.XPV.propIDPre, i);
             var yPVPropID = XYGraphModel.makeTracePropID(TraceProperty.YPV.propIDPre, i);
-            for (TraceProperty traceProperty : TraceProperty.values()) {
+            for (var traceProperty : TraceProperty.values()) {
                 var propID = XYGraphModel.makeTracePropID(traceProperty.propIDPre, i);
                 IWidgetPropertyChangeHandler handler = new TracePropertyChangeHandler(i, traceProperty, xPVPropID,
                         yPVPropID);
@@ -392,7 +384,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
         }
         for (var i = XYGraphModel.MAX_TRACES_AMOUNT - 1; i >= model.getTracesAmount(); i--) {
-            for (TraceProperty traceProperty : TraceProperty.values()) {
+            for (var traceProperty : TraceProperty.values()) {
                 var propID = XYGraphModel.makeTracePropID(traceProperty.propIDPre, i);
                 model.setPropertyVisible(propID, false);
             }

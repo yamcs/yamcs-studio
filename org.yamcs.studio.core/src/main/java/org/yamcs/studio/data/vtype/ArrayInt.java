@@ -48,7 +48,6 @@ public final class ArrayInt extends ListInt implements Serializable {
     @Override
     public final IteratorInt iterator() {
         return new IteratorInt() {
-
             private int index;
 
             @Override

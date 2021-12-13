@@ -80,7 +80,7 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
             public void widgetSelected(SelectionEvent e) {
                 var actions = getHookedActions();
                 if (actions != null) {
-                    for (AbstractWidgetAction action : actions) {
+                    for (var action : actions) {
                         if (action instanceof OpenDisplayAction) {
                             ((OpenDisplayAction) action).runWithModifiers((e.stateMask & SWT.CTRL) != 0,
                                     (e.stateMask & SWT.SHIFT) != 0);
@@ -98,7 +98,6 @@ public final class NativeButtonEditPart extends AbstractPVWidgetEditPart {
         ActionButtonModel widgetModel = getWidgetModel();
         var isSelected = button.getSelection();
         return ActionButtonEditPart.getHookedActionsForButton(widgetModel, isSelected);
-
     }
 
     @Override

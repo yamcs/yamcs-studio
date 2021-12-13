@@ -115,5 +115,4 @@ public class ColorFontUtil {
     public final static FontData getFont(String name, int height, int style) {
         return new FontData(name, height, style);
     }
-
 }

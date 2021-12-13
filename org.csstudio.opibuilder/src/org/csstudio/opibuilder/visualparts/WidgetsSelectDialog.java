@@ -90,7 +90,7 @@ public class WidgetsSelectDialog extends Dialog {
 
         widgetsViewer = createWidgetsViewer(rightComposite);
         List<String> widgetsList = new ArrayList<String>();
-        for (String typeID : WidgetsService.getInstance().getAllWidgetTypeIDs()) {
+        for (var typeID : WidgetsService.getInstance().getAllWidgetTypeIDs()) {
             if (onlyPVWidgets && WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel()
                     .getProperty(AbstractPVWidgetModel.PROP_PVNAME) == null) {
                 continue;
@@ -129,7 +129,6 @@ public class WidgetsSelectDialog extends Dialog {
         }
 
         return parent_Composite;
-
     }
 
     private TableViewer createWidgetsViewer(Composite parent) {
@@ -139,7 +138,6 @@ public class WidgetsSelectDialog extends Dialog {
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 selectedWidget = (String) ((StructuredSelection) viewer.getSelection()).getFirstElement();
@@ -147,7 +145,6 @@ public class WidgetsSelectDialog extends Dialog {
         });
 
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 okPressed();
@@ -173,5 +170,4 @@ public class WidgetsSelectDialog extends Dialog {
             return image;
         }
     }
-
 }

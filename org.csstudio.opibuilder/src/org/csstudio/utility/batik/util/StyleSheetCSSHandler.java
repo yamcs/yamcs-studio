@@ -11,7 +11,6 @@ package org.csstudio.utility.batik.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.batik.css.engine.SVGCSSEngine;
 import org.apache.batik.css.engine.StyleDeclaration;
@@ -53,9 +52,9 @@ public class StyleSheetCSSHandler implements ICSSHandler {
         var newBlueValue = new FloatValue((short) 1, (float) newColor.getBlue());
         var newRGBColorValue = new RGBColorValue(newRedValue, newGreenValue, newBlueValue);
 
-        for (Entry<StyleRule, CloneableStyleDeclaration> entry : originalStyles.entrySet()) {
+        for (var entry : originalStyles.entrySet()) {
             var sr = entry.getKey();
-            StyleDeclaration sdClone = entry.getValue().clone();
+            var sdClone = entry.getValue().clone();
             var sdlen = sdClone.size();
             for (var sdindex = 0; sdindex < sdlen; sdindex++) {
                 var val = sdClone.getValue(sdindex);
@@ -91,7 +90,7 @@ public class StyleSheetCSSHandler implements ICSSHandler {
 
     @Override
     public void resetCSSStyle() {
-        for (Entry<StyleRule, CloneableStyleDeclaration> entry : originalStyles.entrySet()) {
+        for (var entry : originalStyles.entrySet()) {
             entry.getKey().setStyleDeclaration(entry.getValue());
         }
     }
@@ -118,6 +117,5 @@ public class StyleSheetCSSHandler implements ICSSHandler {
         public CloneableStyleDeclaration clone() {
             return new CloneableStyleDeclaration(this);
         }
-
     }
 }

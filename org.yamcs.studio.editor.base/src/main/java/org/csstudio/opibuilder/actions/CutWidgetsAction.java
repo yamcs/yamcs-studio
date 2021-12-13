@@ -36,5 +36,4 @@ public class CutWidgetsAction extends CopyWidgetsAction {
         super.run();
         deleteAction.run();
     }
-
 }

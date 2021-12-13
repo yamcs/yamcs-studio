@@ -96,8 +96,7 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
 
             var cmd = new CompoundCommand("Paste " + widgets.size() + " Widget" + (widgets.size() > 0 ? "s" : ""));
             var i = 0;
-            for (AbstractWidgetModel widgetModel : widgets) {
-
+            for (var widgetModel : widgets) {
                 // create command
                 cmd.add(new WidgetCreateCommand(widgetModel, targetModel,
                         new Rectangle(intrinsicLocations.get(i).translate(pastePoint), widgetModel.getSize()),
@@ -110,7 +109,6 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
         }
 
         return null;
-
     }
 
     /**
@@ -160,7 +158,6 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     private OPIEditor getOPIEditor() {
 
         return (OPIEditor) getWorkbenchPart();
-
     }
 
     /**
@@ -212,7 +209,6 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
             parent = parent.getParent();
         }
         return result;
-
     }
 
     private Point getCursorLocationOnDisplay(Control cursorControl) {
@@ -229,7 +225,7 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     private List<Point> getWidgetsIntrinsicRelativePositions(List<AbstractWidgetModel> widgets) {
 
         var pointList = new PointList(widgets.size());
-        for (AbstractWidgetModel widgetModel : widgets) {
+        for (var widgetModel : widgets) {
             pointList.addPoint(widgetModel.getLocation());
         }
 
@@ -249,5 +245,4 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     public void refreshEnable() {
         refresh();
     }
-
 }

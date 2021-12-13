@@ -154,7 +154,6 @@ public final class PointsUtil {
         var centerX = points.getBounds().x + points.getBounds().width / 2;
 
         return flipPointsHorizontally(points, centerX);
-
     }
 
     /**
@@ -175,7 +174,6 @@ public final class PointsUtil {
         }
 
         return newPointList;
-
     }
 
     /**
@@ -190,7 +188,6 @@ public final class PointsUtil {
         var centerY = points.getBounds().y + points.getBounds().height / 2;
 
         return flipPointsVertically(points, centerY);
-
     }
 
     /**
@@ -211,7 +208,6 @@ public final class PointsUtil {
         }
 
         return newPointList;
-
     }
 
     /**
@@ -277,5 +273,4 @@ public final class PointsUtil {
         }
         return points;
     }
-
 }

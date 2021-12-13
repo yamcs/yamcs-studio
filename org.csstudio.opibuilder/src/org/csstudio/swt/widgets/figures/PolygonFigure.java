@@ -70,7 +70,6 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
                         figureBounds.width, newH));
             }
             graphics.fillPolygon(getPoints());
-
         }
         graphics.popState();
     }

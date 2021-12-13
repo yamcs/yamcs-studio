@@ -24,5 +24,4 @@ public interface ITextInputEditPartDelegate {
     public void updatePropSheet();
 
     public void createEditPolicies();
-
 }

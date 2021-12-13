@@ -33,7 +33,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class AddParameterPage extends WizardPage {
@@ -101,7 +100,6 @@ public class AddParameterPage extends WizardPage {
                 return;
             }
             contentProvider.setNamespace((String) sel.getFirstElement());
-
         });
 
         treeViewer.setContentProvider(new NamespaceContentProvider());
@@ -142,22 +140,20 @@ public class AddParameterPage extends WizardPage {
                 setParameter(new ArrayList<>());
                 return;
             }
-            List<ParameterInfo> parameters = new ArrayList<>();
-            for (Object obj : sel.toArray()) {
+            var parameters = new ArrayList<ParameterInfo>();
+            for (var obj : sel.toArray()) {
                 parameters.add((ParameterInfo) obj);
             }
 
             setParameter(parameters);
             setPageComplete(true);
-
         });
 
         tableViewer.setContentProvider(contentProvider);
         tableViewer.setInput(contentProvider);
 
         YamcsPlugin.getMissionDatabase().getParameters().forEach(pmtr -> {
-
-            for (NamedObjectId alias : pmtr.getAliasList()) {
+            for (var alias : pmtr.getAliasList()) {
                 var namespace = alias.getNamespace();
                 if (!namespace.startsWith("/")) {
                     return;
@@ -178,7 +174,6 @@ public class AddParameterPage extends WizardPage {
                 }
 
             }
-
         });
         treeViewer.setInput(parameterInfos.keySet());
 
@@ -191,7 +186,6 @@ public class AddParameterPage extends WizardPage {
 
             }
         });
-
     }
 
     private void setParameter(List<ParameterInfo> elements) {
@@ -209,13 +203,11 @@ public class AddParameterPage extends WizardPage {
         @Override
         public void dispose() {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
@@ -231,7 +223,6 @@ public class AddParameterPage extends WizardPage {
             this.namespace = namespace;
             tableViewer.refresh();
         }
-
     }
 
     private class NamespaceContentProvider implements ITreeContentProvider {
@@ -239,20 +230,17 @@ public class AddParameterPage extends WizardPage {
         @Override
         public void dispose() {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public Object[] getElements(Object inputElement) {
-
             List<String> elements = new ArrayList<>();
-            for (String name : parameterInfos.keySet()) {
+            for (var name : parameterInfos.keySet()) {
                 if (getParent(name) == null) {
                     elements.add(name);
                 }
@@ -265,7 +253,7 @@ public class AddParameterPage extends WizardPage {
         public Object[] getChildren(Object parentElement) {
             var parent = (String) parentElement;
             List<String> children = new ArrayList<>();
-            for (String name : parameterInfos.keySet()) {
+            for (var name : parameterInfos.keySet()) {
                 if (name != parent && name.startsWith(parent)
                         && name.substring(parent.length()).lastIndexOf("/") == 0) {
                     children.add(name);
@@ -277,7 +265,6 @@ public class AddParameterPage extends WizardPage {
 
         @Override
         public Object getParent(Object element) {
-
             var namespace = (String) element;
 
             var parent = namespace.substring(0, namespace.lastIndexOf("/"));
@@ -293,7 +280,5 @@ public class AddParameterPage extends WizardPage {
         public boolean hasChildren(Object element) {
             return getChildren(element).length > 0;
         }
-
     }
-
 }

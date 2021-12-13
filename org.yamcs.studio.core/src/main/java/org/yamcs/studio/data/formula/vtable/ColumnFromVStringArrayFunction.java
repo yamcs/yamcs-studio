@@ -78,5 +78,4 @@ class ColumnFromVStringArrayFunction implements FormulaFunction {
 
         return VTableFactory.column(name.getValue(), data);
     }
-
 }

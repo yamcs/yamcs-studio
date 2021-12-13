@@ -9,9 +9,17 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_FILL_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_HORIZONTAL_FILL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_LINE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.RoundedRectangleModel.PROP_BACKGROUND_GRADIENT_START_COLOR;
+import static org.csstudio.opibuilder.widgets.model.RoundedRectangleModel.PROP_CORNER_HEIGHT;
+import static org.csstudio.opibuilder.widgets.model.RoundedRectangleModel.PROP_CORNER_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.RoundedRectangleModel.PROP_FOREGROUND_GRADIENT_START_COLOR;
+import static org.csstudio.opibuilder.widgets.model.RoundedRectangleModel.PROP_GRADIENT;
+
 import org.csstudio.opibuilder.util.OPIColor;
-import org.csstudio.opibuilder.widgets.model.AbstractShapeModel;
 import org.csstudio.opibuilder.widgets.model.RoundedRectangleModel;
 import org.csstudio.swt.widgets.figures.RoundedRectangleFigure;
 import org.eclipse.draw2d.IFigure;
@@ -46,101 +54,56 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
-        // fill
-        IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setFill((Double) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_FILL_LEVEL, fillHandler);
 
-        // fill orientaion
-        IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setHorizontalFill((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_HORIZONTAL_FILL, fillOrientHandler);
+        setPropertyChangeHandler(PROP_FILL_LEVEL, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (RoundedRectangleFigure) refreshableFigure;
+            figure.setFill((Double) newValue);
+            return true;
+        });
 
-        // transparent
-        IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setTransparent((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_TRANSPARENT, transparentHandler);
+        setPropertyChangeHandler(PROP_HORIZONTAL_FILL, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (RoundedRectangleFigure) refreshableFigure;
+            figure.setHorizontalFill((Boolean) newValue);
+            return true;
+        });
 
-        // line color
-        IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                ((RoundedRectangleFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (RoundedRectangleFigure) refreshableFigure;
+            figure.setTransparent((Boolean) newValue);
+            return true;
+        });
 
-        // corner width
-        IWidgetPropertyChangeHandler cornerWidthHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setCornerWidth((Integer) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_CORNER_WIDTH, cornerWidthHandler);
+        setPropertyChangeHandler(PROP_LINE_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            ((RoundedRectangleFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
+            return true;
+        });
 
-        // corner height
-        IWidgetPropertyChangeHandler cornerHeightHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setCornerHeight((Integer) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_CORNER_HEIGHT, cornerHeightHandler);
+        setPropertyChangeHandler(PROP_CORNER_WIDTH, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (RoundedRectangleFigure) refreshableFigure;
+            figure.setCornerWidth((Integer) newValue);
+            return true;
+        });
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_CORNER_HEIGHT, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (RoundedRectangleFigure) refreshableFigure;
+            figure.setCornerHeight((Integer) newValue);
+            return true;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure) figure).setGradient((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_GRADIENT, handler);
+        setPropertyChangeHandler(PROP_GRADIENT, (oldValue, newValue, figure) -> {
+            ((RoundedRectangleFigure) figure).setGradient((Boolean) newValue);
+            return false;
+        });
 
-        handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_BACKGROUND_GRADIENT_START_COLOR, (oldValue, newValue, figure) -> {
+            ((RoundedRectangleFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_BACKGROUND_GRADIENT_START_COLOR, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(RoundedRectangleModel.PROP_FOREGROUND_GRADIENT_START_COLOR, handler);
-
+        setPropertyChangeHandler(PROP_FOREGROUND_GRADIENT_START_COLOR, (oldValue, newValue, figure) -> {
+            ((RoundedRectangleFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
     }
 
     @Override
@@ -156,5 +119,4 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
     public Object getValue() {
         return ((RoundedRectangleFigure) getFigure()).getFill();
     }
-
 }

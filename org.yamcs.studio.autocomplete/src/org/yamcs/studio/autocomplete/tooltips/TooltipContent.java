@@ -22,5 +22,4 @@ public class TooltipContent {
     public ProposalStyle[] styles;
     public int maxLineLength;
     public int numberOfLines;
-
 }

@@ -25,6 +25,5 @@ public class ShellLauncher implements IEditorLauncher {
         // The path is an absolute system path, which needs to be transformed to workspace path
         var workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
         OPIShell.openOPIShell(workspacePath, null);
-
     }
 }

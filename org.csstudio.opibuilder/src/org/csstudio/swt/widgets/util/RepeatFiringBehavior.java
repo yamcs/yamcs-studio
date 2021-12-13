@@ -72,5 +72,4 @@ public class RepeatFiringBehavior {
             display.syncExec(runTask);
         }
     }
-
 }

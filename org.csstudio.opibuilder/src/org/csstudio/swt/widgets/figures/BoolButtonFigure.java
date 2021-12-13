@@ -160,7 +160,6 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
 
                 @Override
                 public void mouseExited(MouseEvent me) {
-
                     if (isRunMode()) {
                         SquareButton.this.setBackgroundColor(BoolButtonFigure.this.getBackgroundColor());
                     }
@@ -401,7 +400,7 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
     @Override
     public void setBackgroundColor(Color bg) {
         super.setBackgroundColor(bg);
-        for (Object child : getChildren()) {
+        for (var child : getChildren()) {
             ((Figure) child).setBackgroundColor(bg);
         }
     }
@@ -502,5 +501,4 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
         squareButtonFigure.setVisible(squareButton);
         squareButtonFigure.setEnabled(squareButton);
     }
-
 }

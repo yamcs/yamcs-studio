@@ -48,7 +48,6 @@ public final class ArrayDouble extends ListDouble implements Serializable {
     @Override
     public final IteratorDouble iterator() {
         return new IteratorDouble() {
-
             private int index;
 
             @Override

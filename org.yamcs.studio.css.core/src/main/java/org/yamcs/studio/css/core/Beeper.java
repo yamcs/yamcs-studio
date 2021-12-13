@@ -63,7 +63,7 @@ public class Beeper implements ParameterValueListener {
         }
 
         var beep = false;
-        for (ParameterValue pval : values) {
+        for (var pval : values) {
             if (!pval.hasMonitoringResult()) {
                 continue;
             }

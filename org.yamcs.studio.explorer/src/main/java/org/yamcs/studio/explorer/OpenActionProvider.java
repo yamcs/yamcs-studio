@@ -65,7 +65,6 @@ public class OpenActionProvider extends CommonActionProvider {
         if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
             theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openFileAction);
         }
-
     }
 
     private void addOpenWithMenu(IMenuManager aMenu) {

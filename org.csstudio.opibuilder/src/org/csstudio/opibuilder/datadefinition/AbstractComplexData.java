@@ -29,7 +29,6 @@ public abstract class AbstractComplexData {
         this.widgetModel = widgetModel;
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
         configureProperties();
-
     }
 
     /**
@@ -52,7 +51,7 @@ public abstract class AbstractComplexData {
     public AbstractWidgetProperty[] getAllProperties() {
         var propArray = new AbstractWidgetProperty[propertyMap.size()];
         var i = 0;
-        for (AbstractWidgetProperty p : propertyMap.values()) {
+        for (var p : propertyMap.values()) {
             propArray[i++] = p;
         }
         return propArray;
@@ -64,7 +63,7 @@ public abstract class AbstractComplexData {
 
     public AbstractComplexData getCopy() {
         var copy = createInstance();
-        for (String id : propertyMap.keySet()) {
+        for (var id : propertyMap.keySet()) {
             copy.setPropertyValue(id, getPropertyValue(id));
         }
         copy.setWidgetModel(getWidgetModel());
@@ -98,7 +97,7 @@ public abstract class AbstractComplexData {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetProperty property : getAllProperties()) {
+        for (var property : getAllProperties()) {
             property.setWidgetModel(widgetModel);
         }
     }
@@ -114,7 +113,7 @@ public abstract class AbstractComplexData {
             return false;
         }
         var objData = ((AbstractComplexData) obj);
-        for (AbstractWidgetProperty property : getAllProperties()) {
+        for (var property : getAllProperties()) {
             if (objData.getProperty(property.getPropertyID()) == null) {
                 return false;
             }
@@ -129,7 +128,7 @@ public abstract class AbstractComplexData {
     public int hashCode() {
         var properties = getAllProperties();
         var result = getClass().hashCode();
-        for (AbstractWidgetProperty p : properties) {
+        for (var p : properties) {
             result = 31 * result + p.getPropertyID().hashCode();
             result = 31 * result + (p.getPropertyValue() == null ? 0 : p.getPropertyValue().hashCode());
         }

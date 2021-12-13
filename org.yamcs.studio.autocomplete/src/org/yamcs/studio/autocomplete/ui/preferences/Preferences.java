@@ -36,5 +36,4 @@ public class Preferences {
         }
         return service.getInt(AutoCompletePlugin.PLUGIN_ID, HISTORY_SIZE, 100, null);
     }
-
 }

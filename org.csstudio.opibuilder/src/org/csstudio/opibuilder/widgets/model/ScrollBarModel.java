@@ -85,7 +85,6 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
         addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, true));
 
         addProperty(new BooleanProperty(PROP_SHOW_VALUE_TIP, "Show Value Tip", WidgetPropertyCategory.Display, true));
-
     }
 
     /**
@@ -157,5 +156,4 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
         setPropertyValue(PROP_HORIZONTAL, !isHorizontal());
         super.rotate90(true);
     }
-
 }

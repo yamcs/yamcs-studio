@@ -64,7 +64,7 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
         }
 
         var count = 0;
-        for (String entry : fifo) {
+        for (var entry : fifo) {
             var m = namePattern.matcher(entry);
             if (m.find()) {
                 if (count < limit) {
@@ -79,7 +79,7 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
         result.setCount(count);
 
         var trf = new TopProposalFinder(Preferences.getSeparators());
-        for (Proposal p : trf.getTopProposals(Pattern.quote(cleanedName), fifo)) {
+        for (var p : trf.getTopProposals(Pattern.quote(cleanedName), fifo)) {
             result.addTopProposal(p);
         }
 
@@ -89,5 +89,4 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
     @Override
     public void cancel() {
     }
-
 }

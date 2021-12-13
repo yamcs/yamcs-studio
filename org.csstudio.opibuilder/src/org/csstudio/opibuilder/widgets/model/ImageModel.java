@@ -204,7 +204,7 @@ public final class ImageModel extends AbstractWidgetModel {
 
     @Override
     public void rotate90(boolean clockwise) {
-        int index = (Integer) getPropertyValue(ImageModel.PROP_DEGREE);
+        int index = (Integer) getPropertyValue(PROP_DEGREE);
         if (clockwise) {
             if (index == allowedDegrees.length - 1) {
                 index = 0;
@@ -218,13 +218,13 @@ public final class ImageModel extends AbstractWidgetModel {
                 index--;
             }
         }
-        setPropertyValue(ImageModel.PROP_DEGREE, index);
+        setPropertyValue(PROP_DEGREE, index);
     }
 
     @Override
     public void flipHorizontally() {
-        boolean oldValue = (Boolean) getPropertyValue(ImageModel.PROP_FLIP_HORIZONTAL);
-        setPropertyValue(ImageModel.PROP_FLIP_HORIZONTAL, !oldValue);
+        boolean oldValue = (Boolean) getPropertyValue(PROP_FLIP_HORIZONTAL);
+        setPropertyValue(PROP_FLIP_HORIZONTAL, !oldValue);
     }
 
     @Override

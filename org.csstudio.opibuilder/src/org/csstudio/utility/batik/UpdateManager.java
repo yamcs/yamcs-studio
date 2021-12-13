@@ -44,5 +44,4 @@ public class UpdateManager extends org.apache.batik.bridge.UpdateManager {
     public void setGVTRoot(GraphicsNode newRoot) {
         this.graphicsNode = newRoot;
     }
-
 }

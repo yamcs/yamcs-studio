@@ -47,5 +47,4 @@ public class OPIRunnerToolBarContributor extends EditorActionBarContributor {
     public void dispose() {
         opiRuntimeToolBarDelegate.dispose();
     }
-
 }

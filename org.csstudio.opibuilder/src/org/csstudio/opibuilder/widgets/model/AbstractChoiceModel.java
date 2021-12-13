@@ -82,5 +82,4 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
     public boolean isHorizontal() {
         return (Boolean) getProperty(PROP_HORIZONTAL).getPropertyValue();
     }
-
 }

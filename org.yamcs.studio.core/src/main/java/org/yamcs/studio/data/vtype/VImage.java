@@ -51,5 +51,4 @@ public interface VImage extends VType, Alarm, Time {
      * @return the image type {@link VImageType}
      */
     public VImageType getVImageType();
-
 }

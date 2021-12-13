@@ -97,7 +97,6 @@ public class MeterWidget extends Canvas {
         // super(parent, style | SWT.NO_BACKGROUND);
         super(parent, SWT.NO_BACKGROUND);
         addDisposeListener(new DisposeListener() {
-
             @Override
             public void widgetDisposed(DisposeEvent e) {
                 invalidateScale();
@@ -215,7 +214,6 @@ public class MeterWidget extends Canvas {
         }
     }
 
-    /** @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean) */
     @Override
     public Point computeSize(int wHint, int hHint, boolean changed) {
         int width, height;

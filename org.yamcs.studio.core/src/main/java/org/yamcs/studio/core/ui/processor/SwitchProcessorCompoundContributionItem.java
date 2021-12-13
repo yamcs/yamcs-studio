@@ -63,7 +63,6 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         } catch (TimeoutException e) {
             // Ignore
         } catch (java.util.concurrent.ExecutionException e) {
-
         }
         updateSelection();
 

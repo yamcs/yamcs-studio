@@ -88,7 +88,7 @@ public class CommandStack {
     }
 
     public boolean isValid() {
-        for (StackedCommand cmd : commands) {
+        for (var cmd : commands) {
             if (!cmd.isValid()) {
                 return false;
             }
@@ -102,9 +102,9 @@ public class CommandStack {
     }
 
     public List<String> getErrorMessages() {
-        List<String> msgs = new ArrayList<>();
-        for (StackedCommand cmd : commands) {
-            for (String msg : cmd.getMessages()) {
+        var msgs = new ArrayList<String>();
+        for (var cmd : commands) {
+            for (var msg : cmd.getMessages()) {
                 msgs.add(msg);
             }
         }
@@ -113,7 +113,7 @@ public class CommandStack {
     }
 
     public StackedCommand getActiveCommand() {
-        for (StackedCommand command : commands) {
+        for (var command : commands) {
             if (command.getStackedState() != StackedState.ISSUED && command.getStackedState() != StackedState.SKIPPED) {
                 return command;
             }
@@ -127,7 +127,7 @@ public class CommandStack {
     }
 
     public void disarmArmed() {
-        for (StackedCommand command : commands) {
+        for (var command : commands) {
             if (command.isArmed()) {
                 command.setStackedState(StackedState.DISARMED);
             }

@@ -42,5 +42,4 @@ public class SVG12BridgeContext extends org.apache.batik.bridge.svg12.SVG12Bridg
         }
         return (org.apache.batik.bridge.SVGAnimationEngine) animationEngine;
     }
-
 }

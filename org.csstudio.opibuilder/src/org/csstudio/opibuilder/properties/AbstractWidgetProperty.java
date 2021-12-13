@@ -152,7 +152,7 @@ public abstract class AbstractWidgetProperty {
     }
 
     public void removeAllPropertyChangeListeners() {
-        for (PropertyChangeListener l : pcsDelegate.getPropertyChangeListeners()) {
+        for (var l : pcsDelegate.getPropertyChangeListeners()) {
             // if(l instanceof WidgetPropertyChangeListener)
             // ((WidgetPropertyChangeListener) l).removeAllHandlers();
             pcsDelegate.removePropertyChangeListener(l);
@@ -255,7 +255,6 @@ public abstract class AbstractWidgetProperty {
             }
             propertyValue = newValue;
             firePropertyChange(null, getPropertyValue());
-
         } else {
             var newValue = checkValue(value);
             if (newValue == null || newValue.equals(propertyValue)) {
@@ -362,5 +361,4 @@ public abstract class AbstractWidgetProperty {
     public String toString() {
         return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();
     }
-
 }

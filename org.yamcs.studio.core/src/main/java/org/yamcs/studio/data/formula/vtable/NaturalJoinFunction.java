@@ -69,7 +69,7 @@ class NaturalJoinFunction implements FormulaFunction {
     @Override
     public Object calculate(List<Object> args) {
         List<VTable> tables = new ArrayList<>();
-        for (Object object : args) {
+        for (var object : args) {
             if (object != null) {
                 tables.add((VTable) object);
             }
@@ -77,5 +77,4 @@ class NaturalJoinFunction implements FormulaFunction {
 
         return VTableFactory.join(tables);
     }
-
 }

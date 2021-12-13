@@ -125,7 +125,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         });
 
         addKeyListener(new KeyListener() {
-
             @Override
             public void keyPressed(KeyEvent ke) {
                 if ((ke.keycode == SWT.ARROW_DOWN && !horizontal) || (ke.keycode == SWT.ARROW_LEFT && horizontal)) {
@@ -146,7 +145,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         });
 
         addFocusListener(new FocusListener() {
-
             @Override
             public void focusGained(FocusEvent fe) {
                 repaint();
@@ -157,7 +155,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 repaint();
             }
         });
-
     }
 
     /**
@@ -219,56 +216,35 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
      */
     private void fireManualValueChange(double newManualValue) {
 
-        for (IManualValueChangeListener l : listeners) {
+        for (var l : listeners) {
             l.manualValueChanged(newManualValue);
         }
     }
 
-    /**
-     * @return the fillBackgroundColor
-     */
     public Color getFillBackgroundColor() {
         return fillBackgroundColor;
     }
 
-    /**
-     * @return the fillColor
-     */
     public Color getFillColor() {
         return fillColor;
     }
 
-    /**
-     * @return the pageIncrement
-     */
     public double getPageIncrement() {
         return pageIncrement;
     }
 
-    /**
-     * @return the stepIncrement
-     */
     public double getStepIncrement() {
         return stepIncrement;
     }
 
-    /**
-     * @return the thumbColor
-     */
     public Color getThumbColor() {
         return thumbColor;
     }
 
-    /**
-     * @return the effect3D
-     */
     public boolean isEffect3D() {
         return effect3D;
     }
 
-    /**
-     * @return the horizontal
-     */
     public boolean isHorizontal() {
         return horizontal;
     }
@@ -338,7 +314,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
     public void setEnabled(boolean value) {
         super.setEnabled(value);
         repaint();
-
     }
 
     /**
@@ -390,18 +365,10 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         this.pageIncrement = pageIncrement;
     }
 
-    /**
-     * @param stepIncrement
-     *            the stepIncrement to set
-     */
     public void setStepIncrement(double stepIncrement) {
         this.stepIncrement = stepIncrement;
     }
 
-    /**
-     * @param thumbColor
-     *            the thumbColor to set
-     */
     public void setThumbColor(Color thumbColor) {
         if (this.thumbColor != null && this.thumbColor.equals(thumbColor)) {
             return;
@@ -436,7 +403,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
             @Override
             public void mouseDoubleClicked(MouseEvent me) {
-
             }
 
             @Override
@@ -571,7 +537,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             if (effect3D && support3D) {
                 thumbPattern.dispose();
             }
-
         }
     }
 
@@ -589,7 +554,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
             setCursor(Cursors.HAND);
 
             behavior.setRunTask(new Runnable() {
-
                 @Override
                 public void run() {
                     if (pageUp) {
@@ -647,7 +611,6 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
         @Override
         protected void fillShape(Graphics graphics) {
-
             graphics.setAntialias(SWT.ON);
             var valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
             var support3D = GraphicsUtil.testPatternSupported(graphics);
@@ -890,6 +853,5 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
                 setLabel();
             }
         }
-
     }
 }

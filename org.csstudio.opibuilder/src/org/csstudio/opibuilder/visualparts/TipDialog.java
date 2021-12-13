@@ -97,5 +97,4 @@ public class TipDialog extends MessageDialog {
         }
         return dialogButtonLabels;
     }
-
 }

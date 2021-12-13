@@ -54,7 +54,6 @@ public class ChangeOrientationAction extends SelectionAction {
         public ImageDescriptor getImageDescriptor() {
             return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
-
     }
 
     private OrientationType orientationType;
@@ -70,7 +69,7 @@ public class ChangeOrientationAction extends SelectionAction {
     @Override
     public void run() {
         var compoundCommand = new CompoundCommand(orientationType.getLabel());
-        for (AbstractWidgetModel widgetModel : getSelectedWidgetModels()) {
+        for (var widgetModel : getSelectedWidgetModels()) {
             compoundCommand.add(new ChangeOrientationCommand(widgetModel, orientationType));
         }
         execute(compoundCommand);
@@ -81,7 +80,7 @@ public class ChangeOrientationAction extends SelectionAction {
 
         List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
 
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof AbstractBaseEditPart) {
                 selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }

@@ -46,6 +46,5 @@ public class DragPVSourceListener extends AbstractTransferDragSourceListener {
                 event.data = text;
             }
         }
-
     }
 }

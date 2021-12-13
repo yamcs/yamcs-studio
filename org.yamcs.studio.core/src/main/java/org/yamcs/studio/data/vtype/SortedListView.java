@@ -104,5 +104,4 @@ public class SortedListView extends ListDouble {
     private static boolean less(double x, double y) {
         return (x < y);
     }
-
 }

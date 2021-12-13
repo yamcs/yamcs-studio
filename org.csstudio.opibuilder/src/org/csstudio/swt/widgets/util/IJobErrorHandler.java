@@ -22,5 +22,4 @@ public interface IJobErrorHandler {
      *            the exception to be handled
      */
     public void handleError(Throwable exception);
-
 }

@@ -119,5 +119,4 @@ public class LocalContentParser implements IContentParser {
             }
         }
     }
-
 }

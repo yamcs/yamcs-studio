@@ -49,7 +49,5 @@ public class DeleteRowAction implements IObjectActionDelegate {
 
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-
     }
-
 }

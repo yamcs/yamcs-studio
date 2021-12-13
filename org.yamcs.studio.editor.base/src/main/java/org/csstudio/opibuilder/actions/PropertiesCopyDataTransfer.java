@@ -83,11 +83,11 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
 
             List<String> propIDList = new ArrayList<String>();
             AbstractWidgetModel widgetModel = null;
-            for (Object o : root.getChildren()) {
+            for (var o : root.getChildren()) {
                 if (o instanceof Element) {
                     var e = (Element) o;
                     if (e.getName().equals(CopyPropertiesAction.PROPID_ELEMENT)) {
-                        for (Object po : e.getChildren()) {
+                        for (var po : e.getChildren()) {
                             var pe = (Element) po;
                             propIDList.add(pe.getName());
                         }
@@ -101,7 +101,6 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
         }
         return null;
-
     }
 
     /**
@@ -117,5 +116,4 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
         }
         return input instanceof String;
     }
-
 }

@@ -51,5 +51,4 @@ public class ChangeOrderCommand extends Command {
     public void undo() {
         container.changeChildOrder(widget, oldIndex);
     }
-
 }

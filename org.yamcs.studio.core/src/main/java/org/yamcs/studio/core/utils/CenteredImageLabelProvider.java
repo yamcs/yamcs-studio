@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.TreeItem;
  * FDI's note: reconsider implementation. It causes the default selection color to be limited to the width of the actual
  * columns, rather than the full table width.
  *
- * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=26045
+ * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=26045
  */
 public abstract class CenteredImageLabelProvider extends OwnerDrawLabelProvider {
 
@@ -36,7 +36,6 @@ public abstract class CenteredImageLabelProvider extends OwnerDrawLabelProvider 
     public void paint(Event event, Object element) {
         var img = getImage(element);
         if (img != null) {
-
             Rectangle bounds;
             if (event.item instanceof TreeItem) {
                 bounds = ((TreeItem) event.item).getBounds(event.index);

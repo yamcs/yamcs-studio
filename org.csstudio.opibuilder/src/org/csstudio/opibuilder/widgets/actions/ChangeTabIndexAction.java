@@ -28,7 +28,6 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
         var activeTabIndex = getSelectedTabWidget().getActiveTabIndex();
         var newIndexDialog = new InputDialog(null, "Change Tab Index", "New Index", "" + activeTabIndex,
                 new IInputValidator() {
-
                     @Override
                     public String isValid(String newText) {
                         try {
@@ -51,7 +50,6 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
 
             }
         }
-
     }
 
     /**
@@ -62,5 +60,4 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
     protected final TabEditPart getSelectedTabWidget() {
         return (TabEditPart) selection.getFirstElement();
     }
-
 }

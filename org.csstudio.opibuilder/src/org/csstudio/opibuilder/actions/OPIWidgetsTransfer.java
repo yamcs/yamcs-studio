@@ -58,9 +58,7 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             super.javaToNative((((String) object).getBytes("UTF-8")), transferData);
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Convert to UTF-8 bytes failed", e);
-
         }
-
     }
 
     @Override
@@ -80,7 +78,6 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
         }
         return null;
-
     }
 
     /**
@@ -97,7 +94,5 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             return false;
         }
         return input instanceof String;
-
     }
-
 }

@@ -332,13 +332,13 @@ public class ValueUtil {
             throw new IllegalArgumentException("Alarm severity color map can't be null");
         }
 
-        for (AlarmSeverity alarmSeverity : AlarmSeverity.values()) {
+        for (var alarmSeverity : AlarmSeverity.values()) {
             if (!map.containsKey(alarmSeverity)) {
                 throw new IllegalArgumentException("Missing color for AlarmSeverity." + alarmSeverity);
             }
         }
 
-        Map<AlarmSeverity, Integer> colorMap = new EnumMap<>(AlarmSeverity.class);
+        var colorMap = new EnumMap<AlarmSeverity, Integer>(AlarmSeverity.class);
         colorMap.putAll(map);
         rgbSeverityColor = colorMap;
     }
@@ -523,6 +523,5 @@ public class ValueUtil {
                 Arrays.asList(ValueFactory.newDisplay(new ArrayDouble(display.getCellBoundaries().getDouble(index),
                         display.getCellBoundaries().getDouble(index + 1)), display.getUnits())),
                 array, array, array);
-
     }
 }

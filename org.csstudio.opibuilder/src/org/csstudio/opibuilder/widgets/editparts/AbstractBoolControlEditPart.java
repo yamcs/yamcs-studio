@@ -9,9 +9,16 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ENABLED;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolControlModel.PROP_CONFIRM_DIALOG;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolControlModel.PROP_CONFIRM_TIP;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolControlModel.PROP_PASSWORD;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolControlModel.PROP_TOGGLE_BUTTON;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.AbstractBoolControlModel;
 import org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel;
@@ -27,11 +34,6 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
      * Sets those properties on the figure that are defined in the {@link AbstractBoolFigure} base class. This method is
      * provided for the convenience of subclasses, which can call this method in their implementation of
      * {@link AbstractBaseEditPart#doCreateFigure()}.
-     *
-     * @param figure
-     *            the figure.
-     * @param model
-     *            the model.
      */
     protected void initializeCommonFigureProperties(AbstractBoolControlFigure figure, AbstractBoolControlModel model) {
         super.initializeCommonFigureProperties(figure, model);
@@ -43,15 +45,15 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
         figure.addManualValueChangeListener(newValue -> {
             if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                 if (getWidgetModel().getDataType() == 0) {
-                    setPVValue(AbstractBoolControlModel.PROP_PVNAME, newValue);
+                    setPVValue(PROP_PVNAME, newValue);
                 } else {
-                    setPVValue(AbstractBoolWidgetModel.PROP_PVNAME,
+                    setPVValue(PROP_PVNAME,
                             newValue <= 0.01 ? getWidgetModel().getOffState() : getWidgetModel().getOnState());
                 }
             }
         });
         delegate.setUpdateSuppressTime(-1);
-        markAsControlPV(AbstractBoolControlModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
     }
 
     /**
@@ -61,55 +63,44 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
      */
     @Override
     protected void registerCommonPropertyChangeHandlers() {
-
         configureButtonListener((AbstractBoolControlFigure) getFigure());
 
         super.registerCommonPropertyChangeHandlers();
 
-        // toggle button
         IWidgetPropertyChangeHandler toggleHandler = (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setToggle((Boolean) newValue);
             return true;
         };
-        getWidgetModel().getProperty(AbstractBoolControlModel.PROP_TOGGLE_BUTTON).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_TOGGLE_BUTTON).addPropertyChangeListener(
                 evt -> toggleHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
 
-        // setPropertyChangeHandler(AbstractBoolControlModel.PROP_TOGGLE_BUTTON, handler);
+        setPropertyChangeHandler(PROP_CONFIRM_DIALOG,
+                (oldValue, newValue, refreshableFigure) -> {
+                    var figure = (AbstractBoolControlFigure) refreshableFigure;
+                    figure.setShowConfirmDialog(getWidgetModel().getShowConfirmDialog());
+                    return true;
+                });
 
-        // show confirm dialog
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
-            var figure = (AbstractBoolControlFigure) refreshableFigure;
-            figure.setShowConfirmDialog(getWidgetModel().getShowConfirmDialog());
-            return true;
-        };
-        setPropertyChangeHandler(AbstractBoolControlModel.PROP_CONFIRM_DIALOG, handler);
-
-        // confirm tip
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_CONFIRM_TIP, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setConfirmTip((String) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolControlModel.PROP_CONFIRM_TIP, handler);
+        });
 
-        // password
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PASSWORD, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setPassword((String) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolControlModel.PROP_PASSWORD, handler);
+        });
 
         // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
         // which is not the case for the bool control widget
-        IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_ENABLED, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractBoolControlFigure) refreshableFigure;
             figure.setEnabled((Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(AbstractBoolControlModel.PROP_ENABLED, enableHandler);
-
+        });
     }
 
     @Override
@@ -119,9 +110,6 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
 
     /**
      * Configures a listener for performing a {@link AbstractWidgetActionModel}.
-     *
-     * @param figure
-     *            The figure of the widget
      */
     private void configureButtonListener(AbstractBoolControlFigure figure) {
         figure.addManualValueChangeListener(newValue -> {
@@ -131,7 +119,6 @@ public abstract class AbstractBoolControlEditPart extends AbstractBoolEditPart {
             }
 
             int actionIndex;
-
             if (figure.getBooleanValue()) {
                 actionIndex = getWidgetModel().getPushActionIndex();
             } else {

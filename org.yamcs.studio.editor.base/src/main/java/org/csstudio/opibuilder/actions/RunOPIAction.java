@@ -26,7 +26,6 @@ import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
@@ -84,7 +83,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
             }
 
             IWorkbenchWindow targetWindow = null;
-            for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (var window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
                 if (window.getActivePage().getPerspective().getId().equals(OPIRunnerPerspective.ID)) {
                     targetWindow = window;
                 }
@@ -107,7 +106,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
 
                 // If this display is already executing, update it to the new content,
                 // because RunModeService would only pop old content back to the front.
-                for (IViewReference view_ref : targetWindow.getActivePage().getViewReferences()) {
+                for (var view_ref : targetWindow.getActivePage().getViewReferences()) {
                     if (view_ref.getId().startsWith(OPIView.ID)) {
                         var view = view_ref.getView(true);
                         if (view instanceof OPIView) {

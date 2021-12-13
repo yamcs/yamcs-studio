@@ -9,8 +9,9 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.WebBrowserModel.PROP_URL;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.AbstractWebBrowserFigure;
 import org.csstudio.opibuilder.widgets.figures.WebBrowserFigure;
 import org.csstudio.opibuilder.widgets.model.WebBrowserModel;
@@ -37,13 +38,10 @@ public final class WebBrowserEditPart extends AbstractBaseEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-
-        // URL
-        IWidgetPropertyChangeHandler urlHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_URL, (oldValue, newValue, refreshableFigure) -> {
             ((AbstractWebBrowserFigure<?>) refreshableFigure).setUrl((String) newValue);
             return false;
-        };
-        setPropertyChangeHandler(WebBrowserModel.PROP_URL, urlHandler);
+        });
     }
 
     public Browser getBrowser() {

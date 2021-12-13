@@ -45,7 +45,6 @@ import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.utils.ColumnData;
-import org.yamcs.studio.core.utils.ColumnDef;
 import org.yamcs.studio.core.utils.RCPUtils;
 import org.yamcs.studio.core.utils.ViewerColumnsDialog;
 import org.yamcs.studio.data.yamcs.StringConverter;
@@ -179,7 +178,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         data.addColumn(COL_RELEASED, 50);
         data.addColumn(COL_SENT, 50);
 
-        for (String dynamicColumn : dynamicColumns) {
+        for (var dynamicColumn : dynamicColumns) {
             // Temporary. This column was erroneously added in past versions of studio.
             if (dynamicColumn.equals("Acknowledge_Released")) {
                 continue;
@@ -270,7 +269,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     }
 
     private void syncCurrentWidthsToModel() {
-        for (TableColumn column : tableViewer.getTable().getColumns()) {
+        for (var column : tableViewer.getTable().getColumns()) {
             var def = columnData.getColumn(column.getText());
             if (def != null) {
                 def.width = column.getWidth();
@@ -283,11 +282,11 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         var layout = new TableLayout();
 
         var currentColumns = tableViewer.getTable().getColumns();
-        for (TableColumn currentColumn : currentColumns) {
+        for (var currentColumn : currentColumns) {
             currentColumn.dispose();
         }
 
-        for (ColumnDef def : columnData.getVisibleColumns()) {
+        for (var def : columnData.getVisibleColumns()) {
             if (def.name.equals(COL_COMPLETION)) {
                 var completionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 completionColumn.getColumn().addControlListener(columnResizeListener);
@@ -346,7 +345,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 nameColumn.getColumn().addControlListener(columnResizeListener);
                 nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
                 nameColumn.setLabelProvider(new ColumnLabelProvider() {
-
                     @Override
                     public String getText(Object element) {
                         var rec = (CommandHistoryRecord) element;
@@ -406,7 +404,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
                 ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
                 ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
-
                     @Override
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
@@ -439,7 +436,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 queuedColumn.getColumn().addSelectionListener(getSelectionAdapter(queuedColumn.getColumn()));
                 queuedColumn.getColumn().setToolTipText("Queued acknowledgment");
                 queuedColumn.setLabelProvider(new CenteredImageLabelProvider() {
-
                     @Override
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
@@ -478,7 +474,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 releasedColumn.getColumn().addSelectionListener(getSelectionAdapter(releasedColumn.getColumn()));
                 releasedColumn.getColumn().setToolTipText("Released acknowledgment");
                 releasedColumn.setLabelProvider(new CenteredImageLabelProvider() {
-
                     @Override
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
@@ -517,7 +512,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 sentColumn.getColumn().addSelectionListener(getSelectionAdapter(sentColumn.getColumn()));
                 sentColumn.getColumn().setToolTipText("Sent acknowledgment");
                 sentColumn.setLabelProvider(new CenteredImageLabelProvider() {
-
                     @Override
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
@@ -557,7 +551,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
                 if (def.name.startsWith("Verifier_") || def.name.startsWith("Acknowledge_")) {
                     column.setLabelProvider(new CenteredImageLabelProvider() {
-
                         @Override
                         public Image getImage(Object element) {
                             var rec = (CommandHistoryRecord) element;
@@ -676,7 +669,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             }
 
             // Ensure that any newly introduced columns remain known (to the right for now)
-            for (ColumnDef def : columnData.getColumns()) {
+            for (var def : columnData.getColumns()) {
                 if (restoredData.getColumn(def.name) == null) {
                     restoredData.addColumn(def.name, def.width, def.visible, def.resizable, def.moveable);
                 }
@@ -690,7 +683,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         var archiveClient = YamcsPlugin.getArchiveClient();
         if (archiveClient != null) {
             archiveClient.listCommands().whenComplete((page, exc) -> {
-                List<Command> commands = new ArrayList<>();
+                var commands = new ArrayList<Command>();
                 page.forEach(commands::add);
 
                 Display.getDefault().asyncExec(() -> {
@@ -702,7 +695,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     public void processCommand(Command command, boolean update) {
         // Maybe we need to update structure
-        for (String acknowledgmentName : command.getAcknowledgments().keySet()) {
+        for (var acknowledgmentName : command.getAcknowledgments().keySet()) {
             if (acknowledgmentName.endsWith("_Status")) { // TODO remove once fixed on client
                 acknowledgmentName = acknowledgmentName.substring(0, acknowledgmentName.length() - 7);
             }
@@ -720,7 +713,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 }
             }
         }
-        for (String attributeName : command.getExtraAttributes().keySet()) {
+        for (var attributeName : command.getExtraAttributes().keySet()) {
             if (!dynamicColumns.contains(attributeName)) {
                 dynamicColumns.add(attributeName);
                 columnData.addColumn(attributeName, 90);
@@ -739,7 +732,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         if (tableViewer.getTable().isDisposed()) {
             return;
         }
-        for (Command command : commands) {
+        for (var command : commands) {
             processCommand(command, false);
         }
         tableContentProvider.addCommands(commands);

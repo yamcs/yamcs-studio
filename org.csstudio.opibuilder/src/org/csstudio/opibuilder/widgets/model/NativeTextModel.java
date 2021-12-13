@@ -69,7 +69,6 @@ public final class NativeTextModel extends TextInputModel {
         // so make it invisible to make sure user can get best performance.
         // Maybe border is not frequently changed?
         // setPropertyVisible(PROP_BORDER_ALARMSENSITIVE, false);
-
     }
 
     @Override

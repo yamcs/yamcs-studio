@@ -10,7 +10,6 @@
 package org.yamcs.studio.core.ui.processor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.client.InstanceFilter;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.protobuf.YamcsInstance.InstanceState;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -127,8 +125,8 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         client.listInstances(filter).whenComplete((response, exc) -> {
             parent.getDisplay().asyncExec(() -> {
                 if (exc == null) {
-                    List<ProcessorInfo> processors = new ArrayList<>();
-                    for (YamcsInstance instance : response.getInstancesList()) {
+                    var processors = new ArrayList<ProcessorInfo>();
+                    for (var instance : response.getInstancesList()) {
                         processors.addAll(instance.getProcessorsList());
                     }
                     processorsTable.setInput(processors);

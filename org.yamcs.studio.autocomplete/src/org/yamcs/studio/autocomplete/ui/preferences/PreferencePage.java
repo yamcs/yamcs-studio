@@ -74,5 +74,4 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         note.setText(
                 "The 'History size' value is the maximum number of entries in the History.\nEach entry is stored only once and the entries of the History are sorted \naccording to their occurrence.");
     }
-
 }

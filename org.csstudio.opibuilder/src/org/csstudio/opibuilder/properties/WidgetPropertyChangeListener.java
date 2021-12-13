@@ -48,7 +48,7 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
                 if (editpart == null || !editpart.isActive()) {
                     return;
                 }
-                for (IWidgetPropertyChangeHandler h : handlers) {
+                for (var h : handlers) {
                     var figure = editpart.getFigure();
                     h.handleChange(evt.getOldValue(), evt.getNewValue(), figure);
 
@@ -63,8 +63,6 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
 
     /**
      * Add handler, which is informed when a property changed.
-     * 
-     * @param handler
      */
     public void addHandler(IWidgetPropertyChangeHandler handler) {
         assert handler != null;
@@ -74,5 +72,4 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
     public void removeAllHandlers() {
         handlers.clear();
     }
-
 }

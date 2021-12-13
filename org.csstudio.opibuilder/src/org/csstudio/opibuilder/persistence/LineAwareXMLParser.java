@@ -61,7 +61,6 @@ public class LineAwareXMLParser {
             super.configureContentHandler(contentHandler);
             factory.setSAXHandler(contentHandler);
         }
-
     }
 
     private static class LineAwareFactory extends DefaultJDOMFactory {

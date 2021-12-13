@@ -196,5 +196,4 @@ public final class GuideModel implements Serializable {
     public Set<AbstractWidgetModel> getAttachedModels() {
         return getMap().keySet();
     }
-
 }

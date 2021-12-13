@@ -42,7 +42,6 @@ public class RemoveTabCommand extends Command {
             MessageDialog.openInformation(null, "Failed to Remove Tab",
                     "There must be at least one tab in the tab folder.");
         }
-
     }
 
     @Override
@@ -52,5 +51,4 @@ public class RemoveTabCommand extends Command {
         }
         executed = false;
     }
-
 }

@@ -43,7 +43,7 @@ public class StringTableEditDialog extends Dialog {
         this.cellEditorTypes = cellEditorTypes;
         this.cellEditorDatas = cellEditorDatas;
         this.contents = new ArrayList<String[]>();
-        for (String[] item : inputData) {
+        for (var item : inputData) {
             this.contents.add(item);
         }
         // Allow resize

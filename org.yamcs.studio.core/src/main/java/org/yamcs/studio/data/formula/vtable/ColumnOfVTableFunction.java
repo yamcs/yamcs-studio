@@ -111,5 +111,4 @@ class ColumnOfVTableFunction implements FormulaFunction {
 
         throw new RuntimeException("Unsupported type " + type.getSimpleName());
     }
-
 }

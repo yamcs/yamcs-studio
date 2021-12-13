@@ -34,5 +34,4 @@ public class SelectAllInGroupAction extends AbstractWidgetTargetAction {
     protected final GroupingContainerModel getContainerModel() {
         return ((GroupingContainerEditPart) selection.getFirstElement()).getWidgetModel();
     }
-
 }

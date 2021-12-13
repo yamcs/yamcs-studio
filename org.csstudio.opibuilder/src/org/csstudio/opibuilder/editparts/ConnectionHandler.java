@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.editparts;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -106,7 +105,7 @@ public class ConnectionHandler {
 
     private void refreshModelTooltip() {
         var sb = new StringBuilder();
-        for (Entry<String, IPV> entry : pvMap.entrySet()) {
+        for (var entry : pvMap.entrySet()) {
             if (!entry.getValue().isConnected()) {
                 sb.append(entry.getKey() + " is disconnected.\n");
             } else if (entry.getValue().getValue() == null) {
@@ -156,7 +155,7 @@ public class ConnectionHandler {
         }
         var allConnected = true;
         hasNullValue = false;
-        for (IPV pv2 : pvMap.values()) {
+        for (var pv2 : pvMap.values()) {
             allConnected &= pv2.isConnected();
             hasNullValue |= (pv2.getValue() == null);
         }
@@ -198,5 +197,4 @@ public class ConnectionHandler {
     public String getToolTipText() {
         return toolTipText;
     }
-
 }

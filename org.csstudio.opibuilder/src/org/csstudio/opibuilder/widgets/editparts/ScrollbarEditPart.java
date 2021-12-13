@@ -9,11 +9,19 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ENABLED;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_BAR_LENGTH;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_MAX;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_MIN;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_PAGE_INCREMENT;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_SHOW_VALUE_TIP;
+import static org.csstudio.opibuilder.widgets.model.ScrollBarModel.PROP_STEP_INCREMENT;
+
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.ScrollBarModel;
 import org.csstudio.swt.widgets.figures.ScrollbarFigure;
 import org.eclipse.draw2d.IFigure;
@@ -46,7 +54,7 @@ public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             var model = getWidgetModel();
             if (model.isLimitsFromPV()) {
-                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener() {
@@ -58,8 +66,8 @@ public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
                                     var new_meta = displayInfo;
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
-                                        model.setPropertyValue(ScrollBarModel.PROP_MAX, meta.getUpperDisplayLimit());
-                                        model.setPropertyValue(ScrollBarModel.PROP_MIN, meta.getLowerDisplayLimit());
+                                        model.setPropertyValue(PROP_MAX, meta.getUpperDisplayLimit());
+                                        model.setPropertyValue(PROP_MIN, meta.getLowerDisplayLimit());
                                     }
                                 }
                             }
@@ -85,90 +93,72 @@ public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
         scrollBar.setHorizontal(model.isHorizontal());
 
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-            scrollBar.addManualValueChangeListener(newValue -> setPVValue(ScrollBarModel.PROP_PVNAME, newValue));
+            scrollBar.addManualValueChangeListener(newValue -> setPVValue(PROP_PVNAME, newValue));
         }
 
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
         return scrollBar;
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVNAME, (oldValue, newValue, figure) -> {
             registerLoadLimitsListener();
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
+        });
 
         ((ScrollbarFigure) getFigure())
                 .setEnabled(getWidgetModel().isEnabled() && (getExecutionMode() == ExecutionMode.RUN_MODE));
 
-        removeAllPropertyChangeHandlers(AbstractWidgetModel.PROP_ENABLED);
+        removeAllPropertyChangeHandlers(PROP_ENABLED);
 
-        // enable
-        IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ENABLED, (oldValue, newValue, figure) -> {
             if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                 figure.setEnabled((Boolean) newValue);
             }
             return false;
-        };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED, enableHandler);
+        });
 
-        // value
-        IWidgetPropertyChangeHandler valueHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue == null) {
                 return false;
             }
             ((ScrollbarFigure) refreshableFigure).setValue(VTypeHelper.getDouble((VType) newValue));
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, valueHandler);
+        });
 
-        // minimum
-        IWidgetPropertyChangeHandler minimumHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_MIN, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setMinimum((Double) newValue);
 
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_MIN, minimumHandler);
+        });
 
-        // maximum
-        IWidgetPropertyChangeHandler maximumHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_MAX, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setMaximum((Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_MAX, maximumHandler);
+        });
 
-        // page increment
-        IWidgetPropertyChangeHandler pageIncrementHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PAGE_INCREMENT, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setPageIncrement((Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_PAGE_INCREMENT, pageIncrementHandler);
+        });
 
-        // step increment
-        IWidgetPropertyChangeHandler stepIncrementHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_STEP_INCREMENT, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setStepIncrement((Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_STEP_INCREMENT, stepIncrementHandler);
+        });
 
-        // bar length
-        IWidgetPropertyChangeHandler barLengthHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_BAR_LENGTH, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setExtent((Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_BAR_LENGTH, barLengthHandler);
+        });
 
-        // value tip
-        IWidgetPropertyChangeHandler valueTipHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_VALUE_TIP, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setShowValueTip((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_SHOW_VALUE_TIP, valueTipHandler);
+        });
 
-        // horizontal
-        IWidgetPropertyChangeHandler horizontalHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HORIZONTAL, (oldValue, newValue, refreshableFigure) -> {
             ((ScrollbarFigure) refreshableFigure).setHorizontal((Boolean) newValue);
             var model = getWidgetModel();
             if ((Boolean) newValue) {
@@ -181,21 +171,18 @@ public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
 
             model.setSize(model.getSize().height, model.getSize().width);
             return false;
-        };
-        setPropertyChangeHandler(ScrollBarModel.PROP_HORIZONTAL, horizontalHandler);
-
+        });
     }
 
     @Override
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isLimitsFromPV()) {
-            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(PROP_PVNAME);
             if (pv != null && pvLoadLimitsListener != null) {
                 pv.removeListener(pvLoadLimitsListener);
             }
         }
-
     }
 
     @Override

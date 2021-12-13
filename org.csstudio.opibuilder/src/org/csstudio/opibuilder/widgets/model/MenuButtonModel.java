@@ -69,7 +69,6 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
         addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
 
         setPropertyVisible(PROP_ACTIONS, !DEFAULT_ACTIONS_FROM_PV);
-
     }
 
     @Override
@@ -107,5 +106,4 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
     public boolean showDownArrow() {
         return (Boolean) getPropertyValue(PROP_SHOW_DOWN_ARROW);
     }
-
 }

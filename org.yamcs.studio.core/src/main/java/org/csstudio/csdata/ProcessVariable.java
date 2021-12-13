@@ -20,18 +20,12 @@ import java.io.Serializable;
  * proper <code>equals()</code> and <code>hashCode()</code> to support collections.
  */
 public class ProcessVariable implements Serializable {
-    /** @see Serializable */
+
     final private static long serialVersionUID = 1L;
 
     /** Process Variable name */
     private final String name;
 
-    /**
-     * Initialize
-     * 
-     * @param name
-     *            Process Variable name
-     */
     public ProcessVariable(String name) {
         if (name == null) {
             throw new IllegalArgumentException("Empty name");

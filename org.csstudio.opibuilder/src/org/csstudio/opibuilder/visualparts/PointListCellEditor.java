@@ -385,7 +385,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _viewer.setInput(_pointList.toArray(new Point[_pointList.size()]));
             _viewer.refresh();
         }
-
     }
 
     /**

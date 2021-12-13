@@ -9,6 +9,10 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractLinkingContainerModel.PROP_GROUP_NAME;
+import static org.csstudio.opibuilder.widgets.model.LinkingContainerModel.PROP_OPI_FILE;
+import static org.csstudio.opibuilder.widgets.model.LinkingContainerModel.PROP_RESIZE_BEHAVIOUR;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,11 +32,11 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.GeometryUtil;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgets.model.LinkingContainerModel;
+import org.csstudio.opibuilder.widgets.model.LinkingContainerModel.ResizeBehaviour;
 import org.csstudio.swt.widgets.figures.LinkingContainerFigure;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IPath;
@@ -69,7 +73,6 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
                 return;
             }
             getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
-
         });
         return f;
     }
@@ -94,7 +97,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_OPI_FILE, (oldValue, newValue, figure) -> {
             if (newValue != null && newValue instanceof IPath) {
                 var widgetModel = getWidgetModel();
                 var absolutePath = (IPath) newValue;
@@ -114,33 +117,29 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
                 configureDisplayModel();
             }
             return true;
-        };
-
-        setPropertyChangeHandler(LinkingContainerModel.PROP_OPI_FILE, handler);
+        });
 
         // load from group
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_GROUP_NAME, (oldValue, newValue, figure) -> {
             // loadWidgets(getWidgetModel(),true);
             configureDisplayModel();
             return false;
-        };
+        });
 
-        setPropertyChangeHandler(LinkingContainerModel.PROP_GROUP_NAME, handler);
-
-        handler = (oldValue, newValue, figure) -> {
-            if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()) {
+        setPropertyChangeHandler(PROP_RESIZE_BEHAVIOUR, (oldValue, newValue, figure) -> {
+            if ((int) newValue == ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()) {
                 ((LinkingContainerFigure) figure).setZoomToFitAll(true);
             } else {
                 ((LinkingContainerFigure) figure).setZoomToFitAll(false);
             }
             ((LinkingContainerFigure) figure).updateZoom();
 
-            if ((int) newValue == LinkingContainerModel.ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal()) {
+            if ((int) newValue == ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal()) {
                 performAutosize();
             }
             return false;
-        };
-        setPropertyChangeHandler(LinkingContainerModel.PROP_RESIZE_BEHAVIOUR, handler);
+        });
+
         // loadWidgets(getWidgetModel(),true);
         configureDisplayModel();
     }
@@ -158,7 +157,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         var childrenRange = GeometryUtil.getChildrenRange(this);
 
         if (connectionList != null) {
-            for (ConnectionModel connModel : connectionList) {
+            for (var connModel : connectionList) {
                 var connectionPoints = connModel.getPoints();
                 childrenRange.union(connectionPoints.getBounds());
             }
@@ -169,7 +168,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         getWidgetModel().setSize(new Dimension(childrenRange.width + figure.getInsets().left + figure.getInsets().right,
                 childrenRange.height + figure.getInsets().top + figure.getInsets().bottom));
 
-        for (Object editPart : getChildren()) {
+        for (var editPart : getChildren()) {
             var widget = ((AbstractBaseEditPart) editPart).getWidgetModel();
             widget.setLocation(widget.getLocation().translate(cropTranslation));
         }
@@ -303,7 +302,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         }
         scaledCropTranslation.scale(scaleFactor);
 
-        for (ConnectionModel conn : connectionList) {
+        for (var conn : connectionList) {
             var points = originalPoints.get(conn).getCopy();
             if (points == null) {
                 continue;
@@ -360,7 +359,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
             }
         }
 
-        for (ConnectionModel conn : connectionList) {
+        for (var conn : connectionList) {
             conn.setLoadedFromLinkedOpi(true);
             if (conn.getPoints() != null) {
                 originalPoints.put(conn, conn.getPoints().getCopy());
@@ -394,8 +393,8 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     public void layout() {
         var layoutter = getLayoutWidget();
         if (layoutter != null && layoutter.getWidgetModel().isEnabled()) {
-            List<AbstractWidgetModel> modelChildren = new ArrayList<>();
-            for (Object child : getChildren()) {
+            var modelChildren = new ArrayList<AbstractWidgetModel>();
+            for (var child : getChildren()) {
                 if (child instanceof AbstractBaseEditPart && !(child instanceof AbstractLayoutEditpart)) {
                     modelChildren.add(((AbstractBaseEditPart) child).getWidgetModel());
                 }
@@ -409,7 +408,6 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
         super.doRefreshVisuals(refreshableFigure);
         // update connections after the figure is repainted.
         getViewer().getControl().getDisplay().asyncExec(() -> updateConnectionList());
-
     }
 
     @Override
@@ -432,5 +430,4 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     public ScrollPane getScrollPane() {
         return ((LinkingContainerFigure) getFigure()).getScrollPane();
     }
-
 }

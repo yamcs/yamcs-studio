@@ -17,10 +17,6 @@ import org.eclipse.ui.PartInitException;
 
 public class OPIEditorMatcher implements IEditorMatchingStrategy {
 
-    /*
-     * @see org.eclipse.ui.IEditorMatchingStrategy#matches(org.eclipse.ui.
-     * IEditorReference, org.eclipse.ui.IEditorInput)
-     */
     @Override
     public boolean matches(IEditorReference editorRef, IEditorInput input) {
         try {
@@ -31,7 +27,5 @@ public class OPIEditorMatcher implements IEditorMatchingStrategy {
         } catch (PartInitException e) {
             return false;
         }
-
     }
-
 }

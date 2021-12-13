@@ -37,5 +37,4 @@ class ButtonStateTransitionListener {
 
     public void suspend() {
     }
-
 }

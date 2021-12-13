@@ -45,5 +45,4 @@ public class ExprConditionalOperator extends Expr {
     public void setValueIfFalse(Expr valueIfFalse) {
         this.valueIfFalse = valueIfFalse;
     }
-
 }

@@ -43,5 +43,4 @@ public class ChangeTabIndexCommand extends Command {
         tabModel.removeTab(newIndex);
         tabModel.addTab(oldIndex, tabItem);
     }
-
 }

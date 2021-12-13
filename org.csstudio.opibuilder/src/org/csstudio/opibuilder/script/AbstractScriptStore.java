@@ -102,7 +102,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
                 }
             });
         }
-
     }
 
     private void init() throws Exception {

@@ -53,7 +53,6 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
         childrenPropertyChangeListener = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-
                 if (evt.getOldValue() instanceof Integer) {
                     addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
                 } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
@@ -68,7 +67,6 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
             }
         };
         getWidgetModel().getChildrenProperty().addPropertyChangeListener(childrenPropertyChangeListener);
-
     }
 
     @Override
@@ -90,11 +88,10 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
     @Override
     protected void refreshVisuals() {
         super.refreshVisuals();
-        for (Object child : getChildren()) {
+        for (var child : getChildren()) {
             if (child instanceof WidgetTreeEditpart) {
                 ((WidgetTreeEditpart) child).refreshVisuals();
             }
         }
     }
-
 }

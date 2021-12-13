@@ -80,7 +80,7 @@ class NdArrayFormulaFunction implements FormulaFunction {
     }
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

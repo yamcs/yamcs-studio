@@ -96,5 +96,4 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
             element.setIcon(image_sound_on);
         }
     }
-
 }

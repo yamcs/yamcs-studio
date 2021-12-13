@@ -71,7 +71,6 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             }
             return editPart.getConnectionHandler().getToolTipText();
         }
-
     }
 
     protected boolean runmode;
@@ -154,7 +153,6 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
         // hook swt widget with GEF
         composite.getDisplay().asyncExec(new Runnable() {
-
             @Override
             public void run() {
                 // final Control swtWidget = getSWTWidget();
@@ -192,19 +190,18 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
                 // hack for composite widget with multiple children.
                 if (swtWidget instanceof Composite) {
-                    for (Control control : ((Composite) swtWidget).getChildren()) {
+                    for (var control : ((Composite) swtWidget).getChildren()) {
                         hookGEFToSWTWidget(control, menuDetectListener);
                     }
                 }
             }
         });
-
     }
 
     private void addMouseTrackListener(Control control, MouseTrackListener listener) {
         control.addMouseTrackListener(listener);
         if (control instanceof Composite) {
-            for (Control c : ((Composite) control).getChildren()) {
+            for (var c : ((Composite) control).getChildren()) {
                 addMouseTrackListener(c, listener);
             }
         }
@@ -404,7 +401,6 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                 doRelocateWidget();
             }
         }, composite.getDisplay()));
-
     }
 
     private void doRelocateWidget() {
@@ -480,7 +476,6 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                     .equals(new org.eclipse.swt.graphics.Rectangle(rect.x, rect.y, rect.width, rect.height))) {
                 getSWTWidget().setBounds(rect.x, rect.y, rect.width, rect.height);
             }
-
         }
     }
 
@@ -523,5 +518,4 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         // have been deactivated, so this should be called in next UI event.
         composite.getDisplay().asyncExec(task);
     }
-
 }

@@ -61,7 +61,6 @@ public class AckTableViewer extends TableViewer {
         var nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_NAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public String getText(Object element) {
                 var rec = (AckTableRecord) element;
@@ -73,7 +72,6 @@ public class AckTableViewer extends TableViewer {
         var statusColumn = new TableViewerColumn(this, SWT.NONE);
         statusColumn.getColumn().setText(COL_STATUS);
         statusColumn.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public Image getImage(Object element) {
                 var rec = (AckTableRecord) element;

@@ -150,7 +150,5 @@ public class AddManualEventDialog extends TitleAreaDialog {
                 });
             }
         });
-
     }
-
 }

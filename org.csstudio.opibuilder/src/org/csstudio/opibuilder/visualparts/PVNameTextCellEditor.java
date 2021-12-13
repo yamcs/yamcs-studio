@@ -29,7 +29,6 @@ public class PVNameTextCellEditor extends TextCellEditor {
         super(parent);
         var autoCompleteWidget = new AutoCompleteWidget(this, AutoCompleteTypes.Formula);
         autoCompleteWidget.getContentProposalAdapter().addContentProposalListener(new IContentProposalListener2() {
-
             @Override
             public void proposalPopupOpened(ContentProposalAdapter adapter) {
                 proposalPopuped = true;

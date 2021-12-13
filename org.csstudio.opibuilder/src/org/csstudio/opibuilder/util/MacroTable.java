@@ -45,9 +45,9 @@ public class MacroTable implements IMacroTableProvider {
      */
     public MacroTable(String names_and_values) throws Exception {
         macros = new HashMap<String, String>();
-        String pairs[] = StringSplitter.splitIgnoreInQuotes(names_and_values, ',', true);
-        for (String pair : pairs) {
-            String name_value[] = StringSplitter.splitIgnoreInQuotes(pair, '=', true);
+        var pairs = StringSplitter.splitIgnoreInQuotes(names_and_values, ',', true);
+        for (var pair : pairs) {
+            var name_value = StringSplitter.splitIgnoreInQuotes(pair, '=', true);
             if (name_value.length != 2) {
                 throw new Exception("Input '" + pair + "' does not match 'name=value'");
             }
@@ -64,8 +64,8 @@ public class MacroTable implements IMacroTableProvider {
     @Override
     public String toString() {
         var buf = new StringBuilder();
-        String names[] = macros.keySet().toArray(new String[macros.size()]);
-        for (String name : names) {
+        var names = macros.keySet().toArray(new String[macros.size()]);
+        for (var name : names) {
             if (buf.length() > 0) {
                 buf.append(", ");
             }

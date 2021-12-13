@@ -9,8 +9,6 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import java.util.List;
-
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
@@ -51,9 +49,9 @@ public class MatrixProperty extends AbstractWidgetProperty {
     @Override
     public void writeToXML(Element propElement) {
         var data = (double[][]) propertyValue;
-        for (double row[] : data) {
+        for (var row : data) {
             var rowElement = new Element(XML_ELEMENT_ROW);
-            for (double e : row) {
+            for (var e : row) {
                 var colElement = new Element(XML_ELEMENT_COLUMN);
                 colElement.setText(Double.toString(e));
                 rowElement.addContent(colElement);
@@ -64,17 +62,18 @@ public class MatrixProperty extends AbstractWidgetProperty {
 
     @Override
     public double[][] readValueFromXML(Element propElement) throws Exception {
-        List<?> rowChildren = propElement.getChildren();
+        var rowChildren = propElement.getChildren();
         if (rowChildren.size() == 0) {
             return null;
         }
         var result = new double[rowChildren.size()][((Element) rowChildren.get(0)).getChildren().size()];
-        int i = 0, j = 0;
-        for (Object oe : rowChildren) {
+        var i = 0;
+        var j = 0;
+        for (var oe : rowChildren) {
             var re = (Element) oe;
             if (re.getName().equals(XML_ELEMENT_ROW)) {
                 j = 0;
-                for (Object oc : re.getChildren()) {
+                for (var oc : re.getChildren()) {
                     result[i][j++] = Double.parseDouble(((Element) oc).getText());
                 }
                 i++;
@@ -82,5 +81,4 @@ public class MatrixProperty extends AbstractWidgetProperty {
         }
         return result;
     }
-
 }

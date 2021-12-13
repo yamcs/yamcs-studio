@@ -57,14 +57,12 @@ public class ArrayFunctionSet extends FormulaFunctionSet {
                 }).addFormulaFunction(new RescaleArrayFormulaFunction())
                 .addFormulaFunction(new AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction("arrayMult",
                         "Result[x] = array1[x] * array2[x]", "array1", "array2") {
-
                     @Override
                     public ListNumber calculate(ListNumber array1, ListNumber array2) {
                         return ListMath.multiply(array1, array2);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction("arrayDiv",
                         "Result[x] = array1[x] / array2[x]", "array1", "array2") {
-
                     @Override
                     public ListNumber calculate(ListNumber array1, ListNumber array2) {
                         return ListMath.divide(array1, array2);
@@ -74,70 +72,60 @@ public class ArrayFunctionSet extends FormulaFunctionSet {
                 .addFormulaFunction(new ElementAtStringFormulaFunction())
                 .addFormulaFunction(new AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction("+",
                         "Result[x] = array1[x] + array2[x]", "array1", "array2") {
-
                     @Override
                     public ListNumber calculate(ListNumber array1, ListNumber array2) {
                         return ListMath.add(array1, array2);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction("-",
                         "Result[x] = array1[x] - array2[x]", "array1", "array2") {
-
                     @Override
                     public ListNumber calculate(ListNumber array1, ListNumber array2) {
                         return ListMath.subtract(array1, array2);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction("arraySum",
                         "Result[x] = array[x] + offset", "array", "offset") {
-
                     @Override
                     public ListNumber calculate(ListNumber array, double offset) {
                         return ListMath.rescale(array, 1.0, offset);
                     }
                 }).addFormulaFunction(new AbstractVNumberVNumberArrayToVNumberArrayFormulaFunction("arraySum",
                         "Result[x] = offset + array[x]", "offset", "array") {
-
                     @Override
                     public ListNumber calculate(double offset, ListNumber array) {
                         return ListMath.rescale(array, 1.0, offset);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction("arraySub",
                         "Result[x] = array[x] - offset", "array", "offset") {
-
                     @Override
                     public ListNumber calculate(ListNumber array, double offset) {
                         return ListMath.rescale(array, 1.0, -offset);
                     }
                 }).addFormulaFunction(new AbstractVNumberVNumberArrayToVNumberArrayFormulaFunction("arraySub",
                         "Result[x] = offset - array[x]", "offset", "array") {
-
                     @Override
                     public ListNumber calculate(double offset, ListNumber array) {
                         return ListMath.rescale(array, -1.0, offset);
                     }
                 }).addFormulaFunction(new AbstractVNumberVNumberArrayToVNumberArrayFormulaFunction("arrayDiv",
                         "Result[x] = num / array[x]", "num", "array") {
-
                     @Override
                     public ListNumber calculate(double numerator, ListNumber array) {
                         return ListMath.inverseRescale(array, numerator, 0.0);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction("*",
                         "Result[x] = array[x] * num", "array", "num") {
-
                     @Override
                     public ListNumber calculate(ListNumber array, double num) {
                         return ListMath.rescale(array, num, 0.0);
                     }
                 }).addFormulaFunction(new AbstractVNumberVNumberArrayToVNumberArrayFormulaFunction("*",
                         "Result[x] = num * array[x]", "num", "array") {
-
                     @Override
                     public ListNumber calculate(double num, ListNumber array) {
                         return ListMath.rescale(array, num, 0.0);
                     }
                 }).addFormulaFunction(new AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction("arrayDiv",
                         "Result[x] = array[x] / num", "array", "num") {
-
                     @Override
                     public ListNumber calculate(ListNumber array, double num) {
                         return ListMath.rescale(array, (1 / num), 0.0);

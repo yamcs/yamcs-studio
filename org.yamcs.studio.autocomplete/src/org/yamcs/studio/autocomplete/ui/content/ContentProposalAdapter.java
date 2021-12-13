@@ -475,7 +475,6 @@ public class ContentProposalAdapter {
             if (popup == null) {
                 // Check whether there are any proposals to be shown.
                 getProposals(new IContentProposalSearchHandler() {
-
                     @Override
                     public void handleResult(ContentProposalList proposalList) {
                         if (isValid()) {
@@ -530,7 +529,6 @@ public class ContentProposalAdapter {
             if (adapter instanceof IControlContentAdapter2) {
                 selectionRange = ((IControlContentAdapter2) adapter).getSelection(control);
             }
-
         }
     }
 
@@ -902,7 +900,6 @@ public class ContentProposalAdapter {
      */
     public int getAutoActivationDelay() {
         return autoActivationDelay;
-
     }
 
     /**
@@ -913,7 +910,6 @@ public class ContentProposalAdapter {
      */
     public void setAutoActivationDelay(int delay) {
         autoActivationDelay = delay;
-
     }
 
     /**
@@ -978,8 +974,6 @@ public class ContentProposalAdapter {
      *            the IContentProposalListener to be added as a listener. Must not be <code>null</code>. If an attempt
      *            is made to register an instance which is already registered with this instance, this method has no
      *            effect.
-     *
-     * @see org.eclipse.jface.fieldassist.IContentProposalListener
      */
     public void addContentProposalListener(IContentProposalListener listener) {
         proposalListeners.add(listener);
@@ -993,9 +987,6 @@ public class ContentProposalAdapter {
      * @param listener
      *            the IContentProposalListener to be removed as a listener. Must not be <code>null</code>. If the
      *            listener has not already been registered, this method has no effect.
-     *
-     * @since 3.3
-     * @see org.eclipse.jface.fieldassist.IContentProposalListener
      */
     public void removeContentProposalListener(IContentProposalListener listener) {
         proposalListeners.remove(listener);
@@ -1010,9 +1001,6 @@ public class ContentProposalAdapter {
      *            the IContentProposalListener2 to be added as a listener. Must not be <code>null</code>. If an attempt
      *            is made to register an instance which is already registered with this instance, this method has no
      *            effect.
-     *
-     * @since 3.3
-     * @see org.eclipse.jface.fieldassist.IContentProposalListener2
      */
     public void addContentProposalListener(IContentProposalListener2 listener) {
         proposalListeners2.add(listener);
@@ -1026,9 +1014,6 @@ public class ContentProposalAdapter {
      * @param listener
      *            the IContentProposalListener2 to be removed as a listener. Must not be <code>null</code>. If the
      *            listener has not already been registered, this method has no effect.
-     *
-     * @since 3.3
-     * @see org.eclipse.jface.fieldassist.IContentProposalListener2
      */
     public void removeContentProposalListener(IContentProposalListener2 listener) {
         proposalListeners2.remove(listener);
@@ -1041,5 +1026,4 @@ public class ContentProposalAdapter {
     public ContentHelperPopup getHelper() {
         return helper;
     }
-
 }

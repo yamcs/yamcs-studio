@@ -9,7 +9,10 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.MeterModel.PROP_NEEDLE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.MeterModel.PROP_RAMP_GRADIENT;
+import static org.csstudio.opibuilder.widgets.model.MeterModel.PROP_SHOW_VALUE_LABEL;
+
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.MeterModel;
 import org.csstudio.swt.widgets.figures.MeterFigure;
@@ -43,39 +46,22 @@ public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // needle Color
-        IWidgetPropertyChangeHandler needleColorColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var xMeter = (MeterFigure) refreshableFigure;
-                xMeter.setNeedleColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(MeterModel.PROP_NEEDLE_COLOR, needleColorColorHandler);
+        setPropertyChangeHandler(PROP_NEEDLE_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var xMeter = (MeterFigure) refreshableFigure;
+            xMeter.setNeedleColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
 
-        // Ramp gradient
-        IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var xMeter = (MeterFigure) refreshableFigure;
-                xMeter.setGradient((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(MeterModel.PROP_RAMP_GRADIENT, gradientHandler);
+        setPropertyChangeHandler(PROP_RAMP_GRADIENT, (oldValue, newValue, refreshableFigure) -> {
+            var xMeter = (MeterFigure) refreshableFigure;
+            xMeter.setGradient((Boolean) newValue);
+            return false;
+        });
 
-        // Show Value Label
-        IWidgetPropertyChangeHandler valueLabelHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var xMeter = (MeterFigure) refreshableFigure;
-                xMeter.setValueLabelVisibility((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(MeterModel.PROP_SHOW_VALUE_LABEL, valueLabelHandler);
-
+        setPropertyChangeHandler(PROP_SHOW_VALUE_LABEL, (oldValue, newValue, refreshableFigure) -> {
+            var xMeter = (MeterFigure) refreshableFigure;
+            xMeter.setValueLabelVisibility((Boolean) newValue);
+            return false;
+        });
     }
-
 }

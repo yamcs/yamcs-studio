@@ -195,5 +195,4 @@ public abstract class AbstractPVWidgetEditPart extends AbstractBaseEditPart impl
     public void setControlEnabled(boolean enabled) {
         delegate.setControlEnabled(enabled);
     }
-
 }

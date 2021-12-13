@@ -170,5 +170,4 @@ public class VNumberFunctionSet extends FormulaFunctionSet {
                 }).addFormulaFunction(new ConditionalOperatorFormulaFunction())
                 .addFormulaFunction(new LogicalNotFormulaFunction()));
     }
-
 }

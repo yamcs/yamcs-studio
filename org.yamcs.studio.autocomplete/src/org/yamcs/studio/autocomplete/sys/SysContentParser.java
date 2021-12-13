@@ -42,5 +42,4 @@ public class SysContentParser implements IContentParser {
         currentDesc.setValue(contentToParse);
         return currentDesc;
     }
-
 }

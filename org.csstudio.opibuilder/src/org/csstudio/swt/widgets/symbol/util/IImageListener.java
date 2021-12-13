@@ -14,5 +14,4 @@ import org.eclipse.draw2d.IFigure;
 public interface IImageListener {
 
     public void imageResized(IFigure figure);
-
 }

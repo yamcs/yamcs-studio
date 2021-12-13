@@ -32,5 +32,4 @@ public class MeterFeedbackFactory extends AbstractFixRatioSizeFeedbackFactory {
     public int getWidthFromHeight(int height, AbstractWidgetModel widgetModel) {
         return (int) (height / MeterFigure.HW_RATIO);
     }
-
 }

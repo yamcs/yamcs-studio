@@ -30,11 +30,9 @@ public class AddParameterWizard extends Wizard {
     public void addPages() {
         page = new AddParameterPage();
         addPage(page);
-
     }
 
     public List<ParameterInfo> getParameter() {
         return page.getParameter();
     }
-
 }

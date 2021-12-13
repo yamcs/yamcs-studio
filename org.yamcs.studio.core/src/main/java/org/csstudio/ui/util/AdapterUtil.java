@@ -134,7 +134,7 @@ public class AdapterUtil {
             List<Object> adaptedElements = new ArrayList<Object>();
             var adaptedElementType = getComponentType(targetClass);
             Object[] savedArrayToGetType = null;
-            for (Object element : elementsToAdapt) {
+            for (var element : elementsToAdapt) {
                 // Try to use the conversion to array first
                 var newAdaptedElements = (Object[]) convert(element, targetClass);
                 if (newAdaptedElements != null) {
@@ -186,5 +186,4 @@ public class AdapterUtil {
         // Really cannot adapt, sorry!
         return null;
     }
-
 }

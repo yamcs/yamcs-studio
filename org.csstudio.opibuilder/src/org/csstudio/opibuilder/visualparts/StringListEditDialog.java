@@ -34,7 +34,7 @@ public class StringListEditDialog extends Dialog {
         super(parentShell);
         this.title = dialogTitle;
         this.contents = new ArrayList<String>();
-        for (String item : inputData) {
+        for (var item : inputData) {
             this.contents.add(item);
         }
         // Allow resize

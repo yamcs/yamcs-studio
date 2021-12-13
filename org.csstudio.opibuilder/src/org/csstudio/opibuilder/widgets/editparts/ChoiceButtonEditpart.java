@@ -29,5 +29,4 @@ public class ChoiceButtonEditpart extends AbstractChoiceEditPart {
     public ChoiceButtonModel getWidgetModel() {
         return (ChoiceButtonModel) getModel();
     }
-
 }

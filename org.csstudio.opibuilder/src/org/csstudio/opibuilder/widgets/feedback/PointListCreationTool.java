@@ -97,12 +97,8 @@ public final class PointListCreationTool extends TargetingTool {
 
     /**
      * Cast the target request to a CreateRequest and returns it.
-     *
-     * @return the target request as a CreateRequest
-     * @see TargetingTool#getTargetRequest()
      */
     protected CreateRequest getCreateRequest() {
-
         return (CreateRequest) getTargetRequest();
     }
 
@@ -113,8 +109,6 @@ public final class PointListCreationTool extends TargetingTool {
 
     /**
      * Returns the creation factory used to create the new EditParts.
-     *
-     * @return the creation factory
      */
     protected CreationFactory getFactory() {
         return _factory;
@@ -169,7 +163,6 @@ public final class PointListCreationTool extends TargetingTool {
         } else {
             // override the last point, which was the "preview" point before
             _points.setPoint(p, _points.size() - 1);
-
         }
         // add an additional point, which is just for previewing the next
         // axis in the graphical feedback

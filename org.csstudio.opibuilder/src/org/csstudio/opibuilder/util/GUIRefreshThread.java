@@ -62,7 +62,6 @@ public final class GUIRefreshThread implements Runnable {
         rcpDisplay = DisplayUtils.getDisplay();
         tasksQueue = new LinkedHashSet<>();
         resetAsyncEmpty = new Runnable() {
-
             @Override
             public void run() {
                 asyncEmpty = true;
@@ -141,7 +140,6 @@ public final class GUIRefreshThread implements Runnable {
                     // ignore
                 }
             }
-
         }
     }
 
@@ -163,7 +161,7 @@ public final class GUIRefreshThread implements Runnable {
         if (rcpDisplay == null || rcpDisplay.isDisposed()) {
             return;
         }
-        for (Object o : tasksArray) {
+        for (var o : tasksArray) {
             try {
                 rcpDisplay.asyncExec(((WidgetIgnorableUITask) o).getRunnableTask());
             } catch (Exception e) {

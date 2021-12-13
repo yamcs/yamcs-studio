@@ -33,5 +33,4 @@ public class FloatArrayWrapper implements IPrimaryArrayWrapper {
     public int getSize() {
         return data.length;
     }
-
 }

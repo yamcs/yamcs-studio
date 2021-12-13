@@ -53,7 +53,7 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (ArrayDataType f : values()) {
+            for (var f : values()) {
                 result[i++] = f.toString();
             }
             return result;
@@ -259,5 +259,4 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         // ((AbstractContainerModel) child).scaleChildren();
         // }
     }
-
 }

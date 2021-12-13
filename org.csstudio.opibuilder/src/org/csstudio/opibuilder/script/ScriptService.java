@@ -39,7 +39,7 @@ public class ScriptService {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (ScriptType p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -66,14 +66,8 @@ public class ScriptService {
 
     private Map<ScriptData, IScriptStore> scriptMap;
 
-    /**
-     * Private constructor to prevent instantiation
-     * 
-     * @see #getInstance()
-     */
     private ScriptService() {
         scriptMap = new HashMap<>();
-
     }
 
     public synchronized static ScriptService getInstance() {
@@ -85,11 +79,6 @@ public class ScriptService {
 
     /**
      * Register the script in the script service, so that it could be executed afterwards.
-     * 
-     * @param scriptData
-     * @param editpart
-     * @param pvArray
-     * @throws Exception
      */
     public void registerScript(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) {
         // UIBundlingThread.getInstance().addRunnable(new Runnable(){
@@ -104,7 +93,6 @@ public class ScriptService {
         }
         // }
         // });
-
     }
 
     public void unRegisterScript(ScriptData scriptData) {
@@ -113,5 +101,4 @@ public class ScriptService {
         }
         scriptMap.remove(scriptData);
     }
-
 }

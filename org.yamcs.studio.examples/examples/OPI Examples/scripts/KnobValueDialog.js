@@ -1,16 +1,16 @@
 var flagName = "popped";
 
-if (widget.getExternalObject(flagName) == null) {
-	widget.setExternalObject(flagName, false);	
+if (widget.getVar(flagName) == null) {
+	widget.setVar(flagName, false);	
 }
 
-var b = widget.getExternalObject(flagName);
+var b = widget.getVar(flagName);
 
 if (PVUtil.getDouble(pvs[0]) > 80) {
 		if (b == false) {
-			widget.setExternalObject(flagName, true);
+			widget.setVar(flagName, true);
 			GUIUtil.openWarningDialog("The temperature you set is too high!");
 		}
 } else if (b == true) {
-	widget.setExternalObject(flagName, false);
+	widget.setVar(flagName, false);
 }

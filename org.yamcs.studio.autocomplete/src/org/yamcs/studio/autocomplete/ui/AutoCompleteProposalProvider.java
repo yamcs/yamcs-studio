@@ -44,7 +44,6 @@ public class AutoCompleteProposalProvider implements IAutoCompleteProposalProvid
         }
         var cns = AutoCompleteService.getInstance();
         var expected = cns.get(currentId, AutoCompleteType.valueOf(type), contents, new IAutoCompleteResultListener() {
-
             @Override
             public void handleResult(Long uniqueId, Integer index, AutoCompleteResult result) {
                 if (uniqueId == currentId) {
@@ -57,7 +56,7 @@ public class AutoCompleteProposalProvider implements IAutoCompleteProposalProvid
 
                     List<Proposal> contentProposals = new ArrayList<Proposal>();
                     if (result.getProposals() != null) {
-                        for (Proposal proposal : result.getProposals()) {
+                        for (var proposal : result.getProposals()) {
                             contentProposals.add(proposal);
                         }
                     }
@@ -65,7 +64,7 @@ public class AutoCompleteProposalProvider implements IAutoCompleteProposalProvid
 
                     List<Proposal> topContentProposals = new ArrayList<Proposal>();
                     if (result.getTopProposals() != null) {
-                        for (Proposal proposal : result.getTopProposals()) {
+                        for (var proposal : result.getTopProposals()) {
                             topContentProposals.add(proposal);
                         }
                     }

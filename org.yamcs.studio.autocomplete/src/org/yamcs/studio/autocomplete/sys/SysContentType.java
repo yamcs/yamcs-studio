@@ -18,5 +18,4 @@ public class SysContentType extends ContentType {
     private SysContentType(String value) {
         super(value);
     }
-
 }

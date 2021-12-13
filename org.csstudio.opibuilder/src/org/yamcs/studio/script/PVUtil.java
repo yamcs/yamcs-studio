@@ -61,12 +61,10 @@ public class PVUtil {
         var pv = BOYPVFactory.createPV(name, 20);
         pv.start();
         widget.addEditPartListener(new EditPartListener.Stub() {
-
             @Override
             public void partDeactivated(EditPart arg0) {
                 pv.stop();
             }
-
         });
         return pv;
     }
@@ -121,8 +119,6 @@ public class PVUtil {
      *            The PV.
      * @param index
      *            The array index, 0 ... getSize()-1.
-     * @see #getSize(PV)
-     * @see #getDouble(PV)
      * @return A double, or <code>Double.NaN</code> in case the value type does not decode into a number, or
      *         <code>Double.NEGATIVE_INFINITY</code> if the value's severity indicates that there happens to be no
      *         useful value.
@@ -136,8 +132,6 @@ public class PVUtil {
      *
      * @param pv
      *            the pv.
-     * @see #getSize(IPV)
-     * @see #getDouble(IPV)
      * @return A double array, or an empty double array in case the value type does not decode into a number, or if the
      *         value's severity indicates that there happens to be no useful value.
      */
@@ -194,10 +188,6 @@ public class PVUtil {
     /**
      * Try to get an integer-typed array from the pv.
      *
-     * @param pv
-     *            the pv.
-     * @see #getSize(IPV)
-     * @see #getLong(IPV)
      * @return A long integer array, or an empty long integer array in case the value type does not decode into a
      *         number, or if the value's severity indicates that there happens to be no useful value.
      */
@@ -210,7 +200,7 @@ public class PVUtil {
         var dblArray = VTypeHelper.getDoubleArray(value);
         var longArray = new long[dblArray.length];
         var i = 0;
-        for (double d : dblArray) {
+        for (var d : dblArray) {
             longArray[i++] = (long) d;
         }
         return longArray;
@@ -219,8 +209,6 @@ public class PVUtil {
     /**
      * Get the size of the pv's value
      *
-     * @param pv
-     *            the pv.
      * @return Array length of the pv value. <code>1</code> for scalars.
      */
     public final static double getSize(IPV pv) {
@@ -233,8 +221,6 @@ public class PVUtil {
      * separator. For other types of values, the value's {@link IValue#format()} method is called and its result
      * returned.
      *
-     * @param pv
-     *            the pv.
      * @return a string representation of the value.
      */
     public final static String getString(IPV pv) {
@@ -244,8 +230,6 @@ public class PVUtil {
     /**
      * Get the timestamp string of the pv
      *
-     * @param pv
-     *            the pv
      * @return the timestamp in string.
      */
     public final static String getTimeString(IPV pv) {
@@ -284,8 +268,6 @@ public class PVUtil {
      * source might use a different epoch (example: EPICS uses 1990), because the 1970 epoch is most compatible with
      * existing programming environments.
      *
-     * @param pv
-     *            the pv
      * @return milliseconds since 1970.
      */
     public final static double getTimeInMilliseconds(IPV pv) {
@@ -299,8 +281,6 @@ public class PVUtil {
     /**
      * Get severity of the pv as an integer value.
      *
-     * @param pv
-     *            the PV.
      * @return 0:OK; -1: Invalid or Undefined; 1: Major; 2:Minor.
      */
     public final static int getSeverity(IPV pv) {
@@ -340,8 +320,6 @@ public class PVUtil {
     /**
      * Get the status text that might describe the severity.
      *
-     * @param pv
-     *            the PV.
      * @return the status string.
      * @deprecated
      */
@@ -366,7 +344,6 @@ public class PVUtil {
         Job job = new Job("Writing PV: " + pvName) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-
                 try {
                     var pv = BOYPVFactory.createPV(pvName);
                     pv.start();
@@ -387,7 +364,6 @@ public class PVUtil {
                 }
                 return Status.OK_STATUS;
             }
-
         };
 
         job.schedule();
@@ -424,5 +400,4 @@ public class PVUtil {
         }
         return new String[] {};
     }
-
 }

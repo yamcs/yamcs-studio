@@ -83,7 +83,6 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
         addProperty(new BooleanProperty(PROP_HORIZONTAL_FILL, "Horizontal Fill", WidgetPropertyCategory.Display, true));
         addProperty(new BooleanProperty(PROP_ANTIALIAS, "Anti Alias", WidgetPropertyCategory.Display, true));
         addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent", WidgetPropertyCategory.Display, false));
-
     }
 
     /**
@@ -169,5 +168,4 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
     public void setTransparent(boolean value) {
         setPropertyValue(PROP_TRANSPARENT, value);
     }
-
 }

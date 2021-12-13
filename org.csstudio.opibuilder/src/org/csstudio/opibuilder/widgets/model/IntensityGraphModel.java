@@ -288,8 +288,8 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
 
     private void addROIProperties() {
         for (var i = 0; i < MAX_ROIS_AMOUNT; i++) {
-            WidgetPropertyCategory category = new NameDefinedCategory("ROI " + i);
-            for (ROIProperty roiProperty : ROIProperty.values()) {
+            var category = new NameDefinedCategory("ROI " + i);
+            for (var roiProperty : ROIProperty.values()) {
                 addROIProperty(roiProperty, i, category);
             }
         }
@@ -332,11 +332,11 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     private void addAxisProperties() {
         WidgetPropertyCategory xCategory = new NameDefinedCategory("X Axis");
         WidgetPropertyCategory yCategory = new NameDefinedCategory("Y Axis");
-        for (AxisProperty axisProperty : AxisProperty.values()) {
+        for (var axisProperty : AxisProperty.values()) {
             addAxisProperty(X_AXIS_ID, axisProperty, xCategory);
         }
 
-        for (AxisProperty axisProperty : AxisProperty.values()) {
+        for (var axisProperty : AxisProperty.values()) {
             addAxisProperty(Y_AXIS_ID, axisProperty, yCategory);
         }
     }
@@ -499,5 +499,4 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     public boolean isSingleLineProfiling() {
         return (Boolean) getPropertyValue(PROP_SINGLE_LINE_PROFILING);
     }
-
 }

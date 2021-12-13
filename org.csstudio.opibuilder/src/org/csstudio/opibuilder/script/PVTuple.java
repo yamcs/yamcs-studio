@@ -24,5 +24,4 @@ public class PVTuple {
     public PVTuple getCopy() {
         return new PVTuple(pvName, trigger);
     }
-
 }

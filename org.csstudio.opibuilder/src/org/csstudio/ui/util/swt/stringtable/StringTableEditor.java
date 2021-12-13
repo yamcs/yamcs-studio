@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -336,9 +335,9 @@ public class StringTableEditor extends Composite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 var items = (List) tableViewer.getInput();
-                Object sel[] = ((IStructuredSelection) tableViewer.getSelection()).toArray();
+                var sel = ((IStructuredSelection) tableViewer.getSelection()).toArray();
                 var adjust = 0;
-                for (Object s : sel) {
+                for (var s : sel) {
                     var index = (Integer) s;
                     if (index == StringTableContentProvider.ADD_ELEMENT) {
                         continue;
@@ -360,7 +359,7 @@ public class StringTableEditor extends Composite {
             tableViewer.getTable().setEnabled(enabled);
             setButtonsEnable();
         } else {
-            for (Control control : this.getChildren()) {
+            for (var control : this.getChildren()) {
                 control.setEnabled(enabled);
             }
         }

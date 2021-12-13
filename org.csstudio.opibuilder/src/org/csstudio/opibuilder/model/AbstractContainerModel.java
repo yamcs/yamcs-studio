@@ -81,12 +81,11 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
             }
             childrenProperty.firePropertyChange(newIndex, child);
         }
-
     }
 
     public synchronized void addChildren(List<AbstractWidgetModel> children, boolean changeParent) {
         var oldList = new ArrayList<AbstractWidgetModel>(childrenList);
-        for (AbstractWidgetModel child : children) {
+        for (var child : children) {
             if (child != null && !childrenList.contains(child)) {
                 var newIndex = -1;
                 if (layoutWidget != null) {
@@ -165,7 +164,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     public List<AbstractWidgetModel> getAllDescendants() {
         List<AbstractWidgetModel> allDescendants = new ArrayList<AbstractWidgetModel>();
         allDescendants.addAll(getChildren());
-        for (AbstractWidgetModel widget : getChildren()) {
+        for (var widget : getChildren()) {
             if (widget instanceof AbstractContainerModel) {
                 allDescendants.addAll(((AbstractContainerModel) widget).getAllDescendants());
             }
@@ -174,7 +173,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     }
 
     public AbstractWidgetModel getChildByName(String name) {
-        for (AbstractWidgetModel child : getChildren()) {
+        for (var child : getChildren()) {
             if (child.getName().equals(name)) {
                 return child;
             }
@@ -284,7 +283,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         var size = getSize();
         var newWidthRatio = size.width / (double) getOriginSize().width;
         var newHeightRatio = size.height / (double) getOriginSize().height;
-        for (AbstractWidgetModel child : getChildren()) {
+        for (var child : getChildren()) {
             child.scale(newWidthRatio, newHeightRatio);
         }
     }

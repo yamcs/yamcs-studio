@@ -43,7 +43,6 @@ public class MacrosProperty extends AbstractWidgetProperty {
     public MacrosProperty(String prop_id, String description, WidgetPropertyCategory category,
             MacrosInput default_macros) {
         super(prop_id, description, category, default_macros);
-
     }
 
     @Override
@@ -63,7 +62,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
     public Object getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
             var value = ((MacrosInput) super.getPropertyValue()).getCopy();
-            for (String key : value.getMacrosMap().keySet()) {
+            for (var key : value.getMacrosMap().keySet()) {
                 var newS = OPIBuilderMacroUtil.replaceMacros(widgetModel, value.getMacrosMap().get(key));
                 if (!newS.equals(value.getMacrosMap().get(key))) {
                     value.getMacrosMap().put(key, newS);
@@ -84,7 +83,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
     public MacrosInput readValueFromXML(Element propElement) {
         var macros = new LinkedHashMap<String, String>();
         var b = true;
-        for (Object oe : propElement.getChildren()) {
+        for (var oe : propElement.getChildren()) {
             var se = (Element) oe;
             if (se.getName().equals(XML_ELEMENT_INCLUDE_PARENT_MACROS)) {
                 b = Boolean.parseBoolean(se.getText());
@@ -93,7 +92,6 @@ public class MacrosProperty extends AbstractWidgetProperty {
             }
         }
         return new MacrosInput(macros, b);
-
     }
 
     @Override
@@ -102,11 +100,10 @@ public class MacrosProperty extends AbstractWidgetProperty {
         var be = new Element(XML_ELEMENT_INCLUDE_PARENT_MACROS);
         be.setText("" + macros.isInclude_parent_macros());
         propElement.addContent(be);
-        for (String key : macros.getMacrosMap().keySet()) {
+        for (var key : macros.getMacrosMap().keySet()) {
             var newElement = new Element(key);
             newElement.setText(macros.getMacrosMap().get(key));
             propElement.addContent(newElement);
         }
     }
-
 }

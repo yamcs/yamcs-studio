@@ -46,7 +46,7 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (ArrowType p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -97,7 +97,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         result.addPoint(pI);
 
         return result;
-
     }
 
     public static Rectangle getPointsBoundsWithArrows(PointList points, ArrowType arrowType, int arrowLength,
@@ -286,7 +285,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         if (getFill() > 0) {
             // set clip by fill level
             if (horizontalFill) {
-
                 var newW = (int) Math.round(figureBounds.width * (getFill() / 100));
 
                 graphics.clipRect(new Rectangle(figureBounds.x, figureBounds.y, newW, figureBounds.height));
@@ -301,18 +299,10 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
             drawPolyLineWithArrow(graphics);
         }
         graphics.popState();
-
     }
 
     /**
      * Translates this Figure's bounds, without firing a move.
-     * 
-     * @param dx
-     *            The amount to translate horizontally
-     * @param dy
-     *            The amount to translate vertically
-     * @see #translate(int, int)
-     * @since 2.0
      */
     @Override
     public void primTranslate(int dx, int dy) {
@@ -384,9 +374,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 
     /**
      * Sets the orientation (horizontal==true | vertical==false).
-     *
-     * @param horizontal
-     *            The orientation.
      */
     public void setHorizontalFill(boolean horizontal) {
         if (this.horizontalFill == horizontal) {
@@ -398,9 +385,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 
     /**
      * Sets the transparent state of the background.
-     *
-     * @param transparent
-     *            the transparent state.
      */
     public void setTransparent(boolean transparent) {
         if (this.transparent == transparent) {
@@ -420,8 +404,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 
     /**
      * Override this to fix a bug in draw2d polyline: the polyline width should be considered.
-     * 
-     * @see org.eclipse.draw2d.IFigure#containsPoint(int, int)
      */
     @Override
     public boolean containsPoint(int x, int y) {

@@ -34,5 +34,4 @@ public interface IRunnerInput extends IPathEditorInput, IPersistableElement {
     public MacrosInput getMacrosInput();
 
     public InputStream getInputStream() throws Exception;
-
 }

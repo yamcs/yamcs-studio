@@ -30,5 +30,4 @@ public class TextTransferDropPVTargetListener extends AbstractDropPVTargetListen
         var pvNames = text.trim().split("\\s+");
         return pvNames;
     }
-
 }

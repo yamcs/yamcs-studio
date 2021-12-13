@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.runmode;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -189,8 +188,8 @@ public class OPIView extends ViewPart implements IOPIRuntime {
         var service = (EModelService) PlatformUI.getWorkbench().getService(EModelService.class);
         var globalContext = (IEclipseContext) PlatformUI.getWorkbench().getService(IEclipseContext.class);
         var app = globalContext.get(MApplication.class);
-        List<MPlaceholder> phs = service.findElements(app, null, MPlaceholder.class, null);
-        for (MPlaceholder ph : phs) {
+        var phs = service.findElements(app, null, MPlaceholder.class, null);
+        for (var ph : phs) {
             if (ph.getRef() == part) {
                 return ph;
             }

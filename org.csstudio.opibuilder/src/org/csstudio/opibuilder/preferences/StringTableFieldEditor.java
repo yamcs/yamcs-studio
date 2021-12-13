@@ -66,7 +66,6 @@ public class StringTableFieldEditor extends FieldEditor {
         this.rowEditDialog = rowEditDialog;
         this.items = new ArrayList<String[]>();
         createControl(parent);
-
     }
 
     @Override
@@ -91,7 +90,6 @@ public class StringTableFieldEditor extends FieldEditor {
         gd.horizontalAlignment = SWT.FILL;
         gd.verticalAlignment = SWT.FILL;
         tableEditor.setLayoutData(gd);
-
     }
 
     @Override
@@ -138,8 +136,8 @@ public class StringTableFieldEditor extends FieldEditor {
      */
     public static String flattenStringTable(List<String[]> stringTable) {
         var result = new StringBuilder("");
-        for (String[] row : stringTable) {
-            for (String item : row) {
+        for (var row : stringTable) {
+            for (var item : row) {
                 result.append(QUOTE + item + QUOTE + ITEM_SEPARATOR);
             }
             if (row.length > 0) {
@@ -154,9 +152,9 @@ public class StringTableFieldEditor extends FieldEditor {
     }
 
     public static List<String[]> decodeStringTable(String flattedString) throws Exception {
-        List<String[]> result = new ArrayList<String[]>();
+        var result = new ArrayList<String[]>();
         var rows = StringSplitter.splitIgnoreInQuotes(flattedString, ROW_SEPARATOR, false);
-        for (String rowString : rows) {
+        for (var rowString : rows) {
             // Skip empty rowString, don't split it into String[1] { "" }
             if (rowString.length() <= 0) {
                 continue;
@@ -166,5 +164,4 @@ public class StringTableFieldEditor extends FieldEditor {
         }
         return result;
     }
-
 }

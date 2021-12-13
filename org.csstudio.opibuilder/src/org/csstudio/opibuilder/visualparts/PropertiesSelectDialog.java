@@ -46,7 +46,6 @@ public class PropertiesSelectDialog extends Dialog {
         setShellStyle(getShellStyle() | SWT.RESIZE);
         selectedProps = new ArrayList<String>();
         this.widgetModel = widgetModel;
-
     }
 
     public List<String> getOutput() {
@@ -75,7 +74,7 @@ public class PropertiesSelectDialog extends Dialog {
 
         propSet.remove(AbstractPVWidgetModel.PROP_PVVALUE);
 
-        for (Object propId : propSet.toArray()) {
+        for (var propId : propSet.toArray()) {
             if (!widgetModel.getProperty(propId.toString()).isVisibleInPropSheet()) {
                 propSet.remove(propId);
             }
@@ -87,7 +86,6 @@ public class PropertiesSelectDialog extends Dialog {
         propertiesViewer.setInput(propArray);
 
         return parent_Composite;
-
     }
 
     private ListViewer createPropertiesViewer(Composite parent) {
@@ -97,7 +95,6 @@ public class PropertiesSelectDialog extends Dialog {
         viewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
             @SuppressWarnings("unchecked")
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
@@ -105,7 +102,6 @@ public class PropertiesSelectDialog extends Dialog {
             }
         });
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 okPressed();
@@ -121,5 +117,4 @@ public class PropertiesSelectDialog extends Dialog {
             return widgetModel.getProperty(propID).getDescription() + " (" + propID + ")";
         }
     }
-
 }

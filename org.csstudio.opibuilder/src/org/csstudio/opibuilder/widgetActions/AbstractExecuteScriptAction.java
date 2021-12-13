@@ -47,7 +47,6 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
         });
         addProperty(embeddedProperty);
         getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(false);
-
     }
 
     protected IPath getPath() {

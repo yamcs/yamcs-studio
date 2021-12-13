@@ -45,7 +45,6 @@ public class AddWidgetCommand extends Command {
         }
         widget.setBounds(newBounds);
         containerModel.addChild(widget);
-
     }
 
     @Override
@@ -53,5 +52,4 @@ public class AddWidgetCommand extends Command {
         widget.setBounds(oldBounds);
         containerModel.removeChild(widget);
     }
-
 }

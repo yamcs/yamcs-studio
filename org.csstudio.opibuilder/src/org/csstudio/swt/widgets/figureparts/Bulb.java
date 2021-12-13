@@ -48,7 +48,6 @@ public class Bulb extends Figure {
         }
         rect.height = rect.width;
         super.setBounds(rect);
-
     }
 
     @Override
@@ -70,7 +69,6 @@ public class Bulb extends Figure {
             } catch (Exception e) {
                 p.dispose();
             }
-
         } else {
             graphics.setBackgroundColor(bulbColor);
             graphics.fillOval(bounds);
@@ -114,5 +112,4 @@ public class Bulb extends Figure {
         this.effect3D = effect3D;
         repaint();
     }
-
 }

@@ -68,7 +68,6 @@ public class RoundScale extends AbstractScale {
         add(tickMarks);
         add(tickLabels);
         // setFont(DEFAULT_FONT);
-
     }
 
     private void calcEstimatedDonutWidth() {
@@ -117,7 +116,6 @@ public class RoundScale extends AbstractScale {
         hHint = wHint;
         var size = new Dimension(wHint, hHint);
         return size;
-
     }
 
     /**
@@ -194,7 +192,6 @@ public class RoundScale extends AbstractScale {
         var area = getClientArea();
         tickLabels.setBounds(area);
         tickMarks.setBounds(area);
-
     }
 
     @Override
@@ -215,7 +212,6 @@ public class RoundScale extends AbstractScale {
         }
         tickLabels.setFont(font);
         super.setFont(font);
-
     }
 
     @Override
@@ -261,7 +257,6 @@ public class RoundScale extends AbstractScale {
 
             setDirty(false);
         }
-
     }
 
     /**

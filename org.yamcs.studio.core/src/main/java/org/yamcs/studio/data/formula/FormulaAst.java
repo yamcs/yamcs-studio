@@ -131,7 +131,7 @@ public class FormulaAst {
     private void listChannelNames(List<String> names) {
         switch (getType()) {
         case OP:
-            for (FormulaAst child : getChildren()) {
+            for (var child : getChildren()) {
                 child.listChannelNames(names);
             }
             break;
@@ -371,7 +371,6 @@ public class FormulaAst {
         switch (getType()) {
         case OP:
             return FormulaFunctions.format((String) getValue(), new AbstractList<String>() {
-
                 @Override
                 public String get(int index) {
                     return getChildren().get(index).toString();

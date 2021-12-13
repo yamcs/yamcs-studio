@@ -56,7 +56,7 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction {
                         new Dimension(childrenRange.width + figure.getInsets().left + figure.getInsets().right,
                                 childrenRange.height + figure.getInsets().top + figure.getInsets().bottom))));
 
-        for (Object editpart : containerEditpart.getChildren()) {
+        for (var editpart : containerEditpart.getChildren()) {
             var widget = ((AbstractBaseEditPart) editpart).getWidgetModel();
             compoundCommand.add(new SetBoundsCommand(widget,
                     new Rectangle(widget.getLocation().translate(tranlateSize.getNegated()), widget.getSize())));
@@ -71,7 +71,6 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction {
         }
 
         execute(compoundCommand);
-
     }
 
     /**
@@ -91,5 +90,4 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction {
     protected final IFigure getContainerFigure() {
         return ((AbstractContainerEditpart) selection.getFirstElement()).getFigure();
     }
-
 }

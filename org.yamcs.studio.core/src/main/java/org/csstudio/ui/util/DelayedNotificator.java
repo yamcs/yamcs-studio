@@ -65,12 +65,10 @@ public class DelayedNotificator {
         }
 
         future = exec.schedule(new Runnable() {
-
             @Override
             public void run() {
                 widget.getDisplay().asyncExec(command);
             }
         }, delay, unit);
     }
-
 }

@@ -103,7 +103,6 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
         addProperty(
                 new ColorProperty(PROP_HIHI_COLOR, "Color HIHI", WidgetPropertyCategory.Display, DEFAULT_HIHI_COLOR));
         addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV", WidgetPropertyCategory.Behavior, true));
-
     }
 
     /**

@@ -86,7 +86,6 @@ public abstract class AbstractBoolWidgetModel extends AbstractPVWidgetModel {
         addProperty(new StringProperty(PROP_OFF_STATE, "Off State", WidgetPropertyCategory.Behavior, ""));
         addProperty(new ComboProperty(PROP_BOOL_LABEL_POS, "Boolean Label Position", WidgetPropertyCategory.Display,
                 BoolLabelPosition.stringValues(), 0));
-
     }
 
     /**
@@ -146,5 +145,4 @@ public abstract class AbstractBoolWidgetModel extends AbstractPVWidgetModel {
     public BoolLabelPosition getBoolLabelPosition() {
         return BoolLabelPosition.values()[(Integer) getPropertyValue(PROP_BOOL_LABEL_POS)];
     }
-
 }

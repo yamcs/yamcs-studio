@@ -82,7 +82,6 @@ class DftFormulaFunction implements FormulaFunction {
         var real = fft.get(0);
         var imaginary = fft.get(1);
         ListNumber modulus = new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 var x = real.getDouble(index);
@@ -100,7 +99,6 @@ class DftFormulaFunction implements FormulaFunction {
             }
         };
         ListNumber phase = new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 var x = real.getDouble(index);

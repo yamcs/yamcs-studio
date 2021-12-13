@@ -15,7 +15,6 @@ import java.util.Map;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractLayoutModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.util.SchemaService;
 import org.eclipse.draw2d.geometry.PointList;
@@ -87,7 +86,7 @@ public class WidgetCreateCommand extends Command {
     private void generateNewWUID(AbstractWidgetModel widgetModel) {
         widgetModel.generateNewWUID();
         if (widgetModel instanceof AbstractContainerModel) {
-            for (AbstractWidgetModel child : ((AbstractContainerModel) widgetModel).getChildren()) {
+            for (var child : ((AbstractContainerModel) widgetModel).getChildren()) {
                 generateNewWUID(child);
             }
         }
@@ -98,7 +97,7 @@ public class WidgetCreateCommand extends Command {
         oldBounds = newWidget.getBounds();
         generateNewWUID(newWidget);
         // If the new created widget has connections on it, remove their points.
-        for (ConnectionModel conn : newWidget.getSourceConnections()) {
+        for (var conn : newWidget.getSourceConnections()) {
             conn.setPoints(new PointList());
         }
         redo();
@@ -119,14 +118,14 @@ public class WidgetCreateCommand extends Command {
             }
         }
         var autoName = false;
-        for (AbstractWidgetModel child : container.getChildren()) {
+        for (var child : container.getChildren()) {
             if (child.getName().equals(newWidget.getName())) {
                 autoName = true;
             }
         }
         if (autoName) {
             Map<String, Integer> nameMap = new HashMap<String, Integer>();
-            for (AbstractWidgetModel child : container.getChildren()) {
+            for (var child : container.getChildren()) {
                 var key = child.getName();
                 var tailNo = 0;
                 if (key.matches(".*_\\d+")) {
@@ -166,5 +165,4 @@ public class WidgetCreateCommand extends Command {
     public void setIndex(int index) {
         this.index = index;
     }
-
 }

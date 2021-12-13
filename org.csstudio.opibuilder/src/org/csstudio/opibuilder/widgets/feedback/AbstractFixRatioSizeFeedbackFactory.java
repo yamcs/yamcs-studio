@@ -189,7 +189,6 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             }
             this.widget = widgetModel;
             this.newBounds = newBounds;
-
         }
 
         @Override
@@ -224,7 +223,6 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             widget.setLocation(oldBounds.x, oldBounds.y);
             widget.setSize(oldBounds.width, oldBounds.height);
         }
-
     }
 
     class InitialSquareBoundsCommand extends Command {
@@ -241,7 +239,6 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             }
             this.widget = widgetModel;
             this.newBounds = newBounds;
-
         }
 
         @Override
@@ -273,7 +270,5 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
             widget.setLocation(oldBounds.x, oldBounds.y);
             widget.setSize(oldBounds.width, oldBounds.height);
         }
-
     }
-
 }

@@ -50,7 +50,7 @@ public class SVGAnimateElementValuesHandler implements ICSSHandler {
         var sb = new StringBuilder();
         var values = originalValues.split(";");
         var rgbPattern = Pattern.compile("rgb\\(([^\\)]+)\\)");
-        for (String value : values) {
+        for (var value : values) {
             var newValue = value.trim();
             var matcher = rgbPattern.matcher(value.trim());
             if (matcher.matches()) {
@@ -116,5 +116,4 @@ public class SVGAnimateElementValuesHandler implements ICSSHandler {
         element.setAttribute("values", originalValuesStr);
         ((SVGOMAnimateElement) element).setSVGContext(null);
     }
-
 }

@@ -54,7 +54,6 @@ public class LabelFigure extends Figure implements Introspectable {
         var textSize = getTextSize();
         var x = 0;
         if (clientArea.width > textSize.width) {
-
             switch (horizontalAlignment) {
             case CENTER:
                 x = (clientArea.width - textSize.width) / 2;
@@ -128,7 +127,6 @@ public class LabelFigure extends Figure implements Introspectable {
     @Override
     public Dimension getPreferredSize(int wHint, int hHint) {
         return getTextSize();
-
     }
 
     public String getText() {
@@ -242,7 +240,7 @@ public class LabelFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (H_ALIGN h : values()) {
+            for (var h : values()) {
                 result[i++] = h.toString();
             }
             return result;
@@ -266,7 +264,7 @@ public class LabelFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (V_ALIGN h : values()) {
+            for (var h : values()) {
                 result[i++] = h.toString();
             }
             return result;
@@ -283,5 +281,4 @@ public class LabelFigure extends Figure implements Introspectable {
             return descripion;
         }
     }
-
 }

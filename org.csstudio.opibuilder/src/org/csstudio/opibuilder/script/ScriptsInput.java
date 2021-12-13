@@ -41,7 +41,7 @@ public class ScriptsInput {
      */
     public ScriptsInput getCopy() {
         var copy = new ScriptsInput();
-        for (ScriptData data : scriptList) {
+        for (var data : scriptList) {
             copy.getScriptList().add(data.getCopy());
         }
         return copy;
@@ -60,5 +60,4 @@ public class ScriptsInput {
         }
         return scriptList.size() + " scripts attached";
     }
-
 }

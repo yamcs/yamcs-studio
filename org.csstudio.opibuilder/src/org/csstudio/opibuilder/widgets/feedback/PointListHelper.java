@@ -23,7 +23,6 @@ public final class PointListHelper {
      *
      */
     private PointListHelper() {
-
     }
 
     /**
@@ -107,6 +106,5 @@ public final class PointListHelper {
         result = scaleToSize(result, targetBounds.width, targetBounds.height);
 
         return result;
-
     }
 }

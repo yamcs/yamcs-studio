@@ -52,7 +52,7 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
     public void layout(List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds) {
         var i = 0;
         var newBounds = getNewBounds(widgetModelList, containerBounds);
-        for (AbstractWidgetModel model : widgetModelList) {
+        for (var model : widgetModelList) {
             model.setBounds(newBounds.get(i));
             i++;
         }

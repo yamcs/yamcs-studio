@@ -48,5 +48,4 @@ public class BridgeContext extends org.apache.batik.bridge.BridgeContext {
         }
         return (org.apache.batik.bridge.SVGAnimationEngine) animationEngine;
     }
-
 }

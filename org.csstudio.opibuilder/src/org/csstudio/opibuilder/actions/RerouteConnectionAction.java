@@ -42,5 +42,4 @@ public class RerouteConnectionAction extends AbstractWidgetTargetAction {
         Connection figure = getSelectedConnection().getConnectionFigure();
         action.setEnabled(figure != null && figure.getConnectionRouter() instanceof FixedPointsConnectionRouter);
     }
-
 }

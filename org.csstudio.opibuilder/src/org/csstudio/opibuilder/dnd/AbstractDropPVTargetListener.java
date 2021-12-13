@@ -36,7 +36,6 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
         if (getTargetEditPart() instanceof AbstractBaseEditPart) {
             ((DropPVRequest) getTargetRequest()).setTargetWidget((AbstractBaseEditPart) getTargetEditPart());
         }
-
     }
 
     @Override
@@ -64,5 +63,4 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
      * @return the PV Name array from transfer.
      */
     protected abstract String[] getPVNamesFromTransfer();
-
 }

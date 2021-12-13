@@ -56,5 +56,4 @@ public interface IPVWidgetModel {
     public boolean isAlarmPulsing();
 
     public String getPVName();
-
 }

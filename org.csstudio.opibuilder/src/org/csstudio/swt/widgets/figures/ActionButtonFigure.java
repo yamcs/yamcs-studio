@@ -136,7 +136,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
                 }
             }
-
         };
         label.setBorder(new ButtonBorder());
         add(label);
@@ -183,21 +182,15 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      *
      */
     protected void fireActionPerformed(int i) {
-        for (ButtonActionListener listener : listeners) {
+        for (var listener : listeners) {
             listener.actionPerformed(i);
         }
     }
 
-    /**
-     * @return the imagePath
-     */
     public String getImagePath() {
         return imagePath;
     }
 
-    /**
-     * @return the textAlignment
-     */
     public int getTextAlignment() {
         return textAlignment;
     }
@@ -205,10 +198,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * Adds the given {@link ButtonEventHandler} to this button. A {@link ButtonEventHandler} should be a MouseListener,
      * MouseMotionListener, KeyListener, and FocusListener.
-     *
-     * @param handler
-     *            The new event handler
-     * @since 2.0
      */
     protected void hookEventHandler(ButtonEventHandler handler) {
         if (handler == null) {
@@ -233,9 +222,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         return false;
     }
 
-    /**
-     * @return the runMode
-     */
     public boolean isRunMode() {
         return runMode;
     }
@@ -247,9 +233,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         return selected;
     }
 
-    /**
-     * @return true if the button is toggled. false otherwise.
-     */
     public boolean isToggled() {
         return toggled;
     }
@@ -261,10 +244,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * Paints the area of this figure excluded by the borders. Induces a (1,1) pixel shift in the painting if the mouse
      * is armed, giving it the pressed appearance.
-     *
-     * @param graphics
-     *            Graphics handle for painting
-     * @since 2.0
      */
     @Override
     protected void paintClientArea(Graphics graphics) {
@@ -287,8 +266,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     /**
      * Set the armed status of the button.
-     * 
-     * @param armed
      */
     protected void setArmed(boolean armed) {
         this.armed = armed;
@@ -332,7 +309,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     public void setImagePath(String path) {
         dispose();
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
-
             @Override
             public void runWithInputStream(InputStream stream) {
                 image = new Image(null, stream);
@@ -374,10 +350,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         this.mousePressed = mousePressed;
     }
 
-    /**
-     * @param runMode
-     *            the runMode to set
-     */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
@@ -392,9 +364,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     /**
      * Sets the text for the Button.
-     * 
-     * @param s
-     *            The text for the button
      */
     public void setText(String s) {
         label.setText(s);
@@ -411,9 +380,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * Sets the alignment of the buttons text. The parameter is a {@link PositionConstants} (LEFT, RIGHT, TOP, CENTER,
      * BOTTOM)
-     * 
-     * @param alignment
-     *            The alignment for the text
      */
     public void setTextAlignment(int alignment) {
         this.textAlignment = alignment;
@@ -466,7 +432,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      */
     public void setToggleStyle(boolean style) {
         toggleStyle = style;
-
     }
 
     // Need this as label has repaint bug so it doesn't always change colour when its parent does
@@ -496,7 +461,8 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
          * {@link SchemeBorder.Scheme Scheme} it supports an extra set of borders for the pressed states.
          */
         class ButtonScheme extends Scheme {
-            private Color highlightPressed[] = null, shadowPressed[] = null;
+            private Color[] highlightPressed = null;
+            private Color[] shadowPressed = null;
 
             /**
              * Constructs a new button scheme where the input colors are the colors for the top-left and bottom-right
@@ -507,7 +473,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              *            Colors for the top-left sides of the border
              * @param shadow
              *            Colors for the bottom-right sides of the border
-             * @since 2.0
              */
             public ButtonScheme(Color[] highlight, Color[] shadow) {
                 highlightPressed = this.highlight = highlight;
@@ -528,7 +493,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              *            Colors for the top-left sides of the border when figure is pressed
              * @param shp
              *            Colors for the bottom-right sides of the border when figure is pressed
-             * @since 2.0
              */
             public ButtonScheme(Color[] hl, Color[] sh, Color[] hlp, Color[] shp) {
                 highlight = hl;
@@ -543,7 +507,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              * pressed, highlight and shadow colors.
              *
              * @return The insets for this border
-             * @since 2.0
              */
             @Override
             protected Insets calculateInsets() {
@@ -565,7 +528,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              * This is done so that the entire region under the figure is properly covered.
              *
              * @return The opaque state of this border
-             * @since 2.0
              */
             @Override
             protected boolean calculateOpaque() {
@@ -595,9 +557,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
             /**
              * Returns the pressed highlight colors of this border.
-             *
-             * @return Colors as an array of Colors
-             * @since 2.0
              */
             protected Color[] getHighlightPressed() {
                 return highlightPressed;
@@ -605,9 +564,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
             /**
              * Returns the pressed highlight colors of this border.
-             *
-             * @return Colors as an array of Colors
-             * @since 2.0
              */
             protected Color[] getHighlightReleased() {
                 return getHighlight();
@@ -615,9 +571,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
             /**
              * Returns the pressed shadow colors of this border.
-             *
-             * @return Colors as an array of Colors
-             * @since 2.0
              */
             protected Color[] getShadowPressed() {
                 return shadowPressed;
@@ -625,9 +578,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
             /**
              * Returns the pressed shadow colors of this border.
-             *
-             * @return Colors as an array of Colors
-             * @since 2.0
              */
             protected Color[] getShadowReleased() {
                 return getShadow();
@@ -642,8 +592,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
         /**
          * Constructs a ButtonBorder with a predefined button scheme set as its default.
-         *
-         * @since 2.0
          */
         public ButtonBorder() {
             setScheme(BUTTON);
@@ -652,17 +600,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         /**
          * Paints this border with the help of the set scheme, the model of the clickable figure, and other inputs. The
          * scheme is used in conjunction with the state of the model to get the appropriate colors for the border.
-         *
-         * @param figure
-         *            The Clickable that this border belongs to
-         * @param graphics
-         *            The graphics used for painting
-         * @param insets
-         *            The insets
          */
         @Override
         public void paint(IFigure figure, Graphics graphics, Insets insets) {
-
             var colorScheme = (ButtonScheme) getScheme();
 
             Color tl[], br[];
@@ -676,7 +616,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
             paint(graphics, figure, insets, tl, br);
         }
-
     }
 
     class ButtonEventHandler extends MouseMotionListener.Stub implements MouseListener, KeyListener, FocusListener {
@@ -721,7 +660,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                 }
                 setArmed(false);
             }
-
         }
 
         @Override

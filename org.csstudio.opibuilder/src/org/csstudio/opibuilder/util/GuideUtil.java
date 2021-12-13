@@ -115,5 +115,4 @@ public final class GuideUtil {
         }
         return _verticalGuides.get(model);
     }
-
 }

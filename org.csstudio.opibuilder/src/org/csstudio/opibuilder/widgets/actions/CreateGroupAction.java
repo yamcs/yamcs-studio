@@ -46,27 +46,25 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
         selectedWidgets.addAll(originalSelectedWidgets);
 
         // remove the selected widgets which are children of another selected widget.
-        for (AbstractWidgetModel widget : originalSelectedWidgets) {
+        for (var widget : originalSelectedWidgets) {
             if (widget instanceof DisplayModel) {
                 selectedWidgets.remove(widget);
                 continue;
             }
             if (widget instanceof AbstractContainerModel) {
-                for (AbstractWidgetModel child : originalSelectedWidgets) {
+                for (var child : originalSelectedWidgets) {
                     if (((AbstractContainerModel) widget).getChildren().contains(child)) {
                         selectedWidgets.remove(child);
                     }
                 }
             }
-
         }
 
         var minDepth = Integer.MAX_VALUE;
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
         var minDepthWidget = selectedWidgets.get(0);
 
-        for (AbstractWidgetModel widget : selectedWidgets) {
-
+        for (var widget : selectedWidgets) {
             var leftX = widget.getLocation().x;
             var upY = widget.getLocation().y;
             var rightX = widget.getLocation().x + widget.getSize().width;
@@ -88,7 +86,6 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
                 minDepth = depth;
                 minDepthWidget = widget;
             }
-
         }
 
         // Orphan order should be reversed so that undo operation has the correct order.
@@ -114,7 +111,7 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
         compoundCommand.add(new WidgetCreateCommand(groupingContainerModel, parent,
                 new Rectangle(minX, minY, maxX - minX + borderWidth, maxY - minY + borderWidth), false));
 
-        for (AbstractWidgetModel widget : selectedWidgets) {
+        for (var widget : selectedWidgets) {
             compoundCommand.add(new AddWidgetCommand(groupingContainerModel, widget,
                     new Rectangle(widget.getLocation().translate(-minX, -minY), widget.getSize())));
         }
@@ -131,7 +128,7 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
     //
     // List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
     //
-    // for (Object o : selection.toList()) {
+    // for (var o : selection.toList()) {
     // if (o instanceof AbstractBaseEditPart) {
     // selectedWidgetModels.add(((AbstractBaseEditPart) o)
     // .getWidgetModel());
@@ -152,7 +149,7 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
         List<AbstractWidgetModel> differentParentModels = new ArrayList<AbstractWidgetModel>();
         List<AbstractWidgetModel> result = new ArrayList<AbstractWidgetModel>();
         AbstractContainerModel parent = null;
-        for (Object o : selection.toList()) {
+        for (var o : selection.toList()) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
                 var widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
                 if (parent == null) {
@@ -170,7 +167,6 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
             var modelArray = sameParentModels.toArray(new AbstractWidgetModel[0]);
 
             Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
-
                 @Override
                 public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
                     if (o1.getParent().getChildren().indexOf(o1) > o2.getParent().getChildren().indexOf(o2)) {
@@ -193,5 +189,4 @@ public class CreateGroupAction extends AbstractWidgetTargetAction {
 
         return sameParentModels;
     }
-
 }

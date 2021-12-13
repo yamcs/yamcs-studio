@@ -238,7 +238,6 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
     @Override
     public Dimension getPreferredSize(int wHint, int hHint) {
         return getTextSize(getFont());
-
     }
 
     @Override
@@ -428,7 +427,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (H_ALIGN h : values()) {
+            for (var h : values()) {
                 result[i++] = h.toString();
             }
             return result;
@@ -452,7 +451,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (V_ALIGN h : values()) {
+            for (var h : values()) {
                 result[i++] = h.toString();
             }
             return result;
@@ -469,5 +468,4 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure {
             return descripion;
         }
     }
-
 }

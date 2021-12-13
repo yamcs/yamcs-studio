@@ -75,11 +75,10 @@ public class CustomMediaFactory {
 
         // dispose all images from the image cache, when the display is disposed
         display.addListener(SWT.Dispose, event -> {
-            for (Image img : imageCache.values()) {
+            for (var img : imageCache.values()) {
                 img.dispose();
             }
         });
-
     }
 
     public static synchronized CustomMediaFactory getInstance() {

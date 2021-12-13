@@ -63,5 +63,4 @@ public class UnsavableListProperty extends AbstractWidgetProperty {
     public boolean isSavable() {
         return false;
     }
-
 }

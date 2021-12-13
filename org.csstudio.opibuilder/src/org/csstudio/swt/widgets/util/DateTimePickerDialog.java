@@ -70,5 +70,4 @@ public class DateTimePickerDialog extends Dialog {
     public Date getDateTime() {
         return calendarWidget.getCalendar().getTime();
     }
-
 }

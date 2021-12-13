@@ -29,5 +29,4 @@ public class IVDoubleArray extends IVNumberArray implements VDoubleArray {
     public ListDouble getData() {
         return data;
     }
-
 }

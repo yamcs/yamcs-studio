@@ -100,7 +100,6 @@ public final class Range {
      */
     public boolean contains(Range range) {
         return getMinimum() <= range.getMinimum() && getMaximum() >= range.getMaximum();
-
     }
 
     /**
@@ -196,5 +195,4 @@ public final class Range {
         }
         return new Range(minValue, maxValue, false);
     }
-
 }

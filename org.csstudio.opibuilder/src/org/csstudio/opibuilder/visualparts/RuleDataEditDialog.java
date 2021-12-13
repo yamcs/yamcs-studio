@@ -17,7 +17,6 @@ import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.script.Expression;
-import org.csstudio.opibuilder.script.PVTuple;
 import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
@@ -85,10 +84,10 @@ public class RuleDataEditDialog extends TrayDialog {
 
         var propIDSet = ruleData.getWidgetModel().getAllPropertyIDs();
 
-        for (String p : UNCHANGEABLE_PROPERTIES) {
+        for (var p : UNCHANGEABLE_PROPERTIES) {
             propIDSet.remove(p);
         }
-        for (String id : propIDSet.toArray(new String[0])) {
+        for (var id : propIDSet.toArray(new String[0])) {
             var prop = ruleData.getWidgetModel().getProperty(id);
             if (prop.configurableByRule()) {
                 continue;
@@ -99,13 +98,12 @@ public class RuleDataEditDialog extends TrayDialog {
         var propArray = propIDSet.toArray(new String[0]);
         Arrays.sort(propArray);
         propIDList = Arrays.asList(propArray);
-
     }
 
     @Override
     protected void okPressed() {
         var hasTrigger = false;
-        for (PVTuple pvTuple : ruleData.getPVList()) {
+        for (var pvTuple : ruleData.getPVList()) {
             hasTrigger |= pvTuple.trigger;
         }
         if (!hasTrigger) {
@@ -117,9 +115,6 @@ public class RuleDataEditDialog extends TrayDialog {
         super.okPressed();
     }
 
-    /**
-     * @return the ruleData.
-     */
     public final RuleData getOutput() {
         return ruleData;
     }
@@ -129,7 +124,6 @@ public class RuleDataEditDialog extends TrayDialog {
         super.configureShell(shell);
 
         shell.setText("Edit Rule");
-
     }
 
     /**
@@ -173,7 +167,7 @@ public class RuleDataEditDialog extends TrayDialog {
         propCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
         var comboItems = new String[propIDList.size()];
         var i = 0;
-        for (String id : propIDList) {
+        for (var id : propIDList) {
             comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() + " (" + id + ")";
         }
         propCombo.setItems(comboItems);
@@ -193,7 +187,7 @@ public class RuleDataEditDialog extends TrayDialog {
                     ruleData.setOutputExpValue(true);
                     outPutExpButton.setSelection(true);
                     outPutExpButton.setEnabled(false);
-                    for (Expression exp : expressionList) {
+                    for (var exp : expressionList) {
                         exp.setValue("");
                     }
                     valueColumn.getColumn().setText("Output Expression");
@@ -201,7 +195,7 @@ public class RuleDataEditDialog extends TrayDialog {
                     outPutExpButton.setEnabled(true);
                 }
                 if (!ruleData.isOutputExpValue()) {
-                    for (Expression exp : expressionList) {
+                    for (var exp : expressionList) {
                         exp.setValue(ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
                     }
                 }
@@ -224,7 +218,7 @@ public class RuleDataEditDialog extends TrayDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 ruleData.setOutputExpValue(outPutExpButton.getSelection());
-                for (Expression exp : expressionList) {
+                for (var exp : expressionList) {
                     exp.setValue(ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
                 }
                 valueColumn.getColumn().setText(ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
@@ -323,7 +317,6 @@ public class RuleDataEditDialog extends TrayDialog {
         removeAction.setEnabled(enabled);
         moveUpAction.setEnabled(enabled);
         moveDownAction.setEnabled(enabled);
-
     }
 
     private void setExpressionViewerSelection(Expression expression) {
@@ -351,7 +344,6 @@ public class RuleDataEditDialog extends TrayDialog {
         expressionColumn.getColumn().setMoveable(false);
         expressionColumn.getColumn().setWidth(200);
         expressionColumn.setEditingSupport(new EditingSupport(viewer) {
-
             @Override
             protected void setValue(Object element, Object value) {
                 if (element instanceof Expression) {
@@ -384,7 +376,6 @@ public class RuleDataEditDialog extends TrayDialog {
         valueColumn.getColumn().setMoveable(false);
         valueColumn.getColumn().setWidth(200);
         EditingSupport editingSupport = new EditingSupport(viewer) {
-
             @Override
             protected void setValue(Object element, Object value) {
                 if (element instanceof Expression) {

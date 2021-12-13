@@ -65,7 +65,6 @@ public class PVValueProperty extends AbstractWidgetProperty {
 
             acceptableValue = ValueFactory.newVInt(r, ValueFactory.alarmNone(), ValueFactory.timeNow(),
                     ValueFactory.displayNone());
-
         }
 
         return acceptableValue;
@@ -94,5 +93,4 @@ public class PVValueProperty extends AbstractWidgetProperty {
     public boolean onlyAcceptExpressionInRule() {
         return true;
     }
-
 }

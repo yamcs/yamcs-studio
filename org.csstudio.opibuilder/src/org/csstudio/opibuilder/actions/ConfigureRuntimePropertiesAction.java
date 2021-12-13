@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.actions;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.datadefinition.PropertyData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.visualparts.RuntimePropertiesEditDialog;
 import org.csstudio.ui.util.CustomMediaFactory;
@@ -38,10 +37,9 @@ public class ConfigureRuntimePropertiesAction extends Action {
     public void run() {
         var dialog = new RuntimePropertiesEditDialog(shell, widgetModel);
         if (dialog.open() == Window.OK) {
-            for (PropertyData p : dialog.getOutput()) {
+            for (var p : dialog.getOutput()) {
                 widgetModel.setPropertyValue(p.property.getPropertyID(), p.tmpValue);
             }
         }
     }
-
 }

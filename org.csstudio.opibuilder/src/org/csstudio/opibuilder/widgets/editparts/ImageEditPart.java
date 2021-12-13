@@ -9,6 +9,23 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_STYLE;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_WIDTH;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_ALIGN_TO_NEAREST_SECOND;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_AUTOSIZE;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_BOTTOMCROP;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_DEGREE;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_FLIP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_FLIP_VERTICAL;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_IMAGE_FILE;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_LEFTCROP;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_NO_ANIMATION;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_RIGHTCROP;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_STRETCH;
+import static org.csstudio.opibuilder.widgets.model.ImageModel.PROP_TOPCROP;
+
 import org.csstudio.opibuilder.editparts.AbstractWidgetEditPart;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ResourceUtil;
@@ -47,18 +64,18 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
         });
 
         // Image default parameters
-        var sip = new SymbolImageProperties();
-        sip.setTopCrop(model.getTopCrop());
-        sip.setBottomCrop(model.getBottomCrop());
-        sip.setLeftCrop(model.getLeftCrop());
-        sip.setRightCrop(model.getRightCrop());
-        sip.setStretch(model.getStretch());
-        sip.setAutoSize(model.isAutoSize());
-        sip.setMatrix(model.getPermutationMatrix());
-        sip.setAlignedToNearestSecond(model.isAlignedToNearestSecond());
-        sip.setBackgroundColor(new Color(Display.getDefault(), model.getBackgroundColor()));
-        sip.setAnimationDisabled(model.isStopAnimation());
-        figure.setSymbolProperties(sip, model);
+        var props = new SymbolImageProperties();
+        props.setTopCrop(model.getTopCrop());
+        props.setBottomCrop(model.getBottomCrop());
+        props.setLeftCrop(model.getLeftCrop());
+        props.setRightCrop(model.getRightCrop());
+        props.setStretch(model.getStretch());
+        props.setAutoSize(model.isAutoSize());
+        props.setMatrix(model.getPermutationMatrix());
+        props.setAlignedToNearestSecond(model.isAlignedToNearestSecond());
+        props.setBackgroundColor(new Color(Display.getDefault(), model.getBackgroundColor()));
+        props.setAnimationDisabled(model.isStopAnimation());
+        figure.setSymbolProperties(props, model);
 
         figure.setFilePath(model.getFilename());
         return figure;
@@ -68,47 +85,38 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
      * Register change handlers for the four crop properties.
      */
     protected void registerCropPropertyHandlers() {
-        // top
-        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_TOPCROP, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setTopCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_TOPCROP, handle);
+        });
 
-        // bottom
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_BOTTOMCROP, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setBottomCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_BOTTOMCROP, handle);
+        });
 
-        // left
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_LEFTCROP, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setLeftCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_LEFTCROP, handle);
+        });
 
-        // right
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_RIGHTCROP, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setRightCrop((Integer) newValue);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_RIGHTCROP, handle);
+        });
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        // changes to the filename property
-        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_IMAGE_FILE, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
@@ -121,20 +129,16 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             imageFigure.setFilePath(absolutePath);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_IMAGE_FILE, handle);
+        });
 
-        // changes to the stretch property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_STRETCH, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setStretch((Boolean) newValue);
             autoSizeWidget(imageFigure);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_STRETCH, handle);
+        });
 
-        // changes to the autosize property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_AUTOSIZE, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setAutoSize((Boolean) newValue);
             var model = (ImageModel) getModel();
@@ -143,34 +147,29 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
                 model.setSize(d.width, d.height);
             }
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_AUTOSIZE, handle);
+        });
 
-        // changes to the stop animation property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_NO_ANIMATION, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setAnimationDisabled((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_NO_ANIMATION, handle);
+        });
 
-        // changes to the align to nearest second property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ALIGN_TO_NEAREST_SECOND, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.setAlignedToNearestSecond((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ImageModel.PROP_ALIGN_TO_NEAREST_SECOND, handle);
+        });
 
         // changes to the border width property
-        handle = (oldValue, newValue, figure) -> {
+        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
             var imageFigure = (ImageFigure) figure;
             imageFigure.resizeImage();
             autoSizeWidget(imageFigure);
             return false;
         };
-        setPropertyChangeHandler(ImageModel.PROP_BORDER_WIDTH, handle);
-        setPropertyChangeHandler(ImageModel.PROP_BORDER_STYLE, handle);
+        setPropertyChangeHandler(PROP_BORDER_WIDTH, handle);
+        setPropertyChangeHandler(PROP_BORDER_STYLE, handle);
 
         // size change handlers - so we can stretch accordingly
         handle = (oldValue, newValue, figure) -> {
@@ -179,8 +178,8 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             autoSizeWidget(imageFigure);
             return false;
         };
-        setPropertyChangeHandler(ImageModel.PROP_HEIGHT, handle);
-        setPropertyChangeHandler(ImageModel.PROP_WIDTH, handle);
+        setPropertyChangeHandler(PROP_HEIGHT, handle);
+        setPropertyChangeHandler(PROP_WIDTH, handle);
 
         FigureTransparencyHelper.addHandler(this, figure);
 
@@ -240,13 +239,13 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(ImageModel.PROP_DEGREE, (Integer) newValue);
+            setPropertyValue(PROP_DEGREE, (Integer) newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
 
             return false;
         };
-        setPropertyChangeHandler(ImageModel.PROP_DEGREE, handler);
+        setPropertyChangeHandler(PROP_DEGREE, handler);
 
         // flip horizontal rotation property
         handler = (oldValue, newValue, figure) -> {
@@ -264,12 +263,12 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(ImageModel.PROP_FLIP_HORIZONTAL, (Boolean) newValue);
+            setPropertyValue(PROP_FLIP_HORIZONTAL, (Boolean) newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
             return false;
         };
-        setPropertyChangeHandler(ImageModel.PROP_FLIP_HORIZONTAL, handler);
+        setPropertyChangeHandler(PROP_FLIP_HORIZONTAL, handler);
 
         // flip vertical rotation property
         handler = (oldValue, newValue, figure) -> {
@@ -287,11 +286,11 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
             result.roundToIntegers();
 
             setPropertyValue(ImageModel.PERMUTATION_MATRIX, result.getMatrix());
-            setPropertyValue(ImageModel.PROP_FLIP_VERTICAL, (Boolean) newValue);
+            setPropertyValue(PROP_FLIP_VERTICAL, (Boolean) newValue);
             imageFigure.setPermutationMatrix(result);
             autoSizeWidget(imageFigure);
             return false;
         };
-        setPropertyChangeHandler(ImageModel.PROP_FLIP_VERTICAL, handler);
+        setPropertyChangeHandler(PROP_FLIP_VERTICAL, handler);
     }
 }

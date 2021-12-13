@@ -86,7 +86,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     private List<IPath> findAllDeltaPaths(IResourceDelta delta) {
         List<IPath> combined = new ArrayList<>();
         combined.add(delta.getFullPath());
-        for (IResourceDelta child : delta.getAffectedChildren()) {
+        for (var child : delta.getAffectedChildren()) {
             combined.addAll(findAllDeltaPaths(child));
         }
         return combined;
@@ -109,8 +109,8 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
             return new ArrayList<>(0);
         }
 
-        List<NamedColor> colors = new ArrayList<>();
-        for (String colorString : joined.split(";")) {
+        var colors = new ArrayList<NamedColor>();
+        for (var colorString : joined.split(";")) {
             var parts = colorString.split("@");
             var rgb = StringConverter.asRGB(parts[1]);
             colors.add(new NamedColor(parts[0], rgb));
@@ -123,7 +123,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         var buf = new StringBuilder();
         var first = true;
-        for (NamedColor color : colors) {
+        for (var color : colors) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter
             }
@@ -152,8 +152,8 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
             return new ArrayList<>(0);
         }
 
-        List<OPIFont> fonts = new ArrayList<>();
-        for (String colorString : joined.split(";")) {
+        var fonts = new ArrayList<OPIFont>();
+        for (var colorString : joined.split(";")) {
             var parts = colorString.split("@");
             var fontData = StringConverter.asFontData(parts[1]);
             var font = new OPIFont(parts[0], fontData);
@@ -168,7 +168,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         var buf = new StringBuilder();
         var first = true;
-        for (OPIFont font : fonts) {
+        for (var font : fonts) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter
             }

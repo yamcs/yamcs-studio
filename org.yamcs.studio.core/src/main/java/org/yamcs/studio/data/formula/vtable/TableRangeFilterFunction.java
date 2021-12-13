@@ -82,5 +82,4 @@ class TableRangeFilterFunction implements FormulaFunction {
 
         return result;
     }
-
 }

@@ -59,7 +59,6 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
 
         public LockIndicatorHandle(GraphicalEditPart owner) {
             super(owner, new Locator() {
-
                 @Override
                 public void relocate(IFigure target) {
                     var ownerFigure = owner.getFigure();
@@ -73,7 +72,6 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
             });
             setCursor(Cursors.HAND);
             setToolTip(new Label("Click to Lock/Unlock"));
-
         }
 
         private Dimension getTextExtent() {
@@ -90,7 +88,6 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
             DragEditPartsTracker tracker = new DragEditPartsTracker(getOwner()) {
                 @Override
                 protected boolean handleButtonDown(int button) {
-
                     if ((button == 1 || button == 3) && getOwner() instanceof GroupingContainerEditPart) {
                         var activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                                 .getActivePart();
@@ -126,7 +123,6 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
                     getTextExtent().height);
             graphics.setAlpha(250);
             graphics.drawText(locked ? LOCKED : UNLOCKED, textLocation);
-
         }
 
         private Point getTextLocation() {
@@ -142,7 +138,5 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
         public Dimension getPreferredSize(int wHint, int hHint) {
             return getTextExtent();
         }
-
     }
-
 }

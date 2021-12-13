@@ -83,7 +83,6 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
         cmd.setLabel(label);
         cmd.setIndex(index);
         return cmd;
-
     }
 
     protected boolean isAncestor(EditPart source, EditPart target) {

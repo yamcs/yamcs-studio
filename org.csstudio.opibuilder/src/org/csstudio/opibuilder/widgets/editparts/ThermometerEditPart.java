@@ -9,7 +9,13 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_FILLBACKGROUND_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_FILLCOLOR_ALARM_SENSITIVE;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_FILL_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_SHOW_BULB;
+import static org.csstudio.opibuilder.widgets.model.ThermometerModel.PROP_UNIT;
+
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.ThermometerModel;
 import org.csstudio.swt.widgets.figures.ThermometerFigure;
@@ -35,7 +41,6 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
         thermometer.setFillBackgroundColor(model.getFillbackgroundColor());
         thermometer.setEffect3D(model.isEffect3D());
         return thermometer;
-
     }
 
     @Override
@@ -47,54 +52,43 @@ public final class ThermometerEditPart extends AbstractMarkedWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // fillColor
-        IWidgetPropertyChangeHandler fillColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILL_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setFillColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_FILL_COLOR, fillColorHandler);
+        });
 
-        // fillBackgroundColor
-        IWidgetPropertyChangeHandler fillBackColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILLBACKGROUND_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_FILLBACKGROUND_COLOR, fillBackColorHandler);
+        });
 
-        // show bulb
-        IWidgetPropertyChangeHandler showBulbHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_BULB, (oldValue, newValue, refreshableFigure) -> {
             var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setShowBulb((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_SHOW_BULB, showBulbHandler);
+        });
 
-        // unit
-        IWidgetPropertyChangeHandler fahrenheitHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_UNIT, (oldValue, newValue, refreshableFigure) -> {
             var thermometer = (ThermometerFigure) refreshableFigure;
             thermometer.setTemperatureUnit(TemperatureUnit.values()[(Integer) newValue]);
             return false;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_UNIT, fahrenheitHandler);
+        });
 
-        // effect 3D
-        IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
             var thermo = (ThermometerFigure) refreshableFigure;
             thermo.setEffect3D((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_EFFECT3D, effect3DHandler);
+        });
 
         // Change fill color when "FillColor Alarm Sensitive" property changes.
-        IWidgetPropertyChangeHandler fillColorAlarmSensitiveHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILLCOLOR_ALARM_SENSITIVE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ThermometerFigure) refreshableFigure;
             boolean sensitive = (Boolean) newValue;
             figure.setFillColor(delegate.calculateAlarmColor(sensitive, getWidgetModel().getFillColor()));
             return true;
-        };
-        setPropertyChangeHandler(ThermometerModel.PROP_FILLCOLOR_ALARM_SENSITIVE, fillColorAlarmSensitiveHandler);
+        });
 
         // Change fill color when alarm severity changes.
         delegate.addAlarmSeverityListener((severity, figure) -> {

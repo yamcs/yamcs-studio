@@ -108,11 +108,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         }
     }
 
-    /**
-     * @param graphics
-     * @param figureBounds
-     * @return
-     */
     protected Pattern setGradientPattern(Graphics graphics, Rectangle figureBounds, Color gradientStartColor,
             Color fillColor) {
         Pattern pattern;
@@ -147,24 +142,17 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     /**
      * Gets the fill grade.
-     *
-     * @return the fill grade
      */
     public double getFill() {
         return fill;
     }
 
-    /**
-     * @return the lineColor
-     */
     public Color getLineColor() {
         return lineColor;
     }
 
     /**
      * Gets the transparent state of the background.
-     *
-     * @return the transparent state of the background
      */
     public boolean getTransparent() {
         return transparent;
@@ -172,16 +160,11 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     /**
      * Gets the orientation (horizontal==true | vertical==false).
-     *
-     * @return boolean The orientation
      */
     public boolean isHorizontalFill() {
         return horizontalFill;
     }
 
-    /**
-     * @return the gradientStartColor
-     */
     public Color getBackGradientStartColor() {
         return backGradientStartColor;
     }
@@ -190,17 +173,10 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         return foreGradientStartColor;
     }
 
-    /**
-     * @return the gradient
-     */
     public boolean isGradient() {
         return gradient;
     }
 
-    /**
-     * @param gradientStartColor
-     *            the gradientStartColor to set
-     */
     public void setBackGradientStartColor(Color gradientStartColor) {
         this.backGradientStartColor = gradientStartColor;
         repaint();
@@ -211,18 +187,11 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         repaint();
     }
 
-    /**
-     * @param gradient
-     *            the gradient to set
-     */
     public void setGradient(boolean gradient) {
         this.gradient = gradient;
         repaint();
     }
 
-    /**
-     * @see Shape#outlineShape(Graphics)
-     */
     @Override
     protected void outlineShape(Graphics graphics) {
         var lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
@@ -255,9 +224,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     /**
      * Sets the fill grade.
-     *
-     * @param fill
-     *            the fill grade.
      */
     public void setFill(double fill) {
         this.fill = fill;
@@ -266,9 +232,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     /**
      * Sets the orientation (horizontal==true | vertical==false).
-     *
-     * @param horizontal
-     *            The orientation.
      */
     public void setHorizontalFill(boolean horizontal) {
         this.horizontalFill = horizontal;
@@ -282,13 +245,9 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     /**
      * Sets the transparent state of the background.
-     *
-     * @param transparent
-     *            the transparent state.
      */
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
         repaint();
     }
-
 }

@@ -45,7 +45,6 @@ public class ChangeOrientationCommand extends Command {
         default:
             break;
         }
-
     }
 
     @Override
@@ -67,5 +66,4 @@ public class ChangeOrientationCommand extends Command {
             break;
         }
     }
-
 }

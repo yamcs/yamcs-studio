@@ -52,9 +52,9 @@ public class ReplaceWidgetsAction extends SelectionAction {
     public Command createReplaceWidgetCommand(String typeID) {
         var cmd = new CompoundCommand("Replace widgets");
 
-        for (AbstractWidgetModel targetWidget : getSelectedWidgetModels()) {
+        for (var targetWidget : getSelectedWidgetModels()) {
             var widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
-            for (String prop_id : targetWidget.getAllPropertyIDs()) {
+            for (var prop_id : targetWidget.getAllPropertyIDs()) {
                 if (widgetModel.getProperty(prop_id) == null || prop_id.equals(AbstractWidgetModel.PROP_WIDGET_TYPE)) {
                     continue;
                 }
@@ -64,7 +64,6 @@ public class ReplaceWidgetsAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     @Override
@@ -87,7 +86,7 @@ public class ReplaceWidgetsAction extends SelectionAction {
 
         List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
 
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof EditPart) {
                 selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }

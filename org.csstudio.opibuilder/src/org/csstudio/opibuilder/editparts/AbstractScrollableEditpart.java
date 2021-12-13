@@ -21,5 +21,4 @@ public abstract class AbstractScrollableEditpart extends AbstractContainerEditpa
      * @return The {@link ScrollPane} of this scrollable EditPart
      */
     public abstract ScrollPane getScrollPane();
-
 }

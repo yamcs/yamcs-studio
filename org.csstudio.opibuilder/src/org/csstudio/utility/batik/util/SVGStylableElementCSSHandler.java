@@ -106,7 +106,5 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
         public CloneableStyleDeclaration clone() {
             return new CloneableStyleDeclaration(this);
         }
-
     }
-
 }

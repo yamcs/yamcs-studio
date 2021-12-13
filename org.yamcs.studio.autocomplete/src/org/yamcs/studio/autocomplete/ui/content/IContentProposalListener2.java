@@ -11,8 +11,6 @@ package org.yamcs.studio.autocomplete.ui.content;
 
 /**
  * This interface is used to listen to additional notifications from a {@link ContentProposalAdapter}.
- *
- * @since 3.3
  */
 public interface IContentProposalListener2 {
     /**

@@ -158,7 +158,6 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
         if (!isAutoFit()) {
             scaleChildren();
         }
-
     }
 
     @Override
@@ -214,10 +213,9 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
                     newHeightRatio = minHeight / (double) getOriginSize().height;
                 }
             }
-
         }
         if (allowScale) {
-            for (Object child : editpart.getChildren()) {
+            for (var child : editpart.getChildren()) {
                 ((AbstractBaseEditPart) child).getWidgetModel().scale(newWidthRatio, newHeightRatio);
             }
         }

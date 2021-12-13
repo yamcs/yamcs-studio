@@ -58,7 +58,6 @@ public class DisplayOpenManager {
         }
 
         openOPI(backStack.pop());
-
     }
 
     private IRunnerInput getCurrentRunnerInputInEditor() {
@@ -73,12 +72,10 @@ public class DisplayOpenManager {
         } else {
             return new RunnerInput(getCurrentPathInEditor(), opiRuntime.getAdapter(DisplayOpenManager.class));
         }
-
     }
 
     private IPath getCurrentPathInEditor() {
         return ResourceUtil.getPathInEditor(opiRuntime.getOPIInput());
-
     }
 
     /** @param input */
@@ -103,12 +100,10 @@ public class DisplayOpenManager {
         }
 
         openOPI(forwardStack.pop());
-
     }
 
     public void goBack(int index) {
         if (backStack.size() > index) {
-
             var input = getCurrentRunnerInputInEditor();
             if (input != null) {
                 forwardStack.push(input);
@@ -124,7 +119,6 @@ public class DisplayOpenManager {
 
     public void goForward(int index) {
         if (forwardStack.size() > index) {
-
             var input = getCurrentRunnerInputInEditor();
             if (input != null) {
                 backStack.push(input);
@@ -149,7 +143,7 @@ public class DisplayOpenManager {
     }
 
     private void fireOperationsHistoryChanged() {
-        for (IDisplayOpenManagerListener listener : listeners) {
+        for (var listener : listeners) {
             listener.displayOpenHistoryChanged(this);
         }
     }

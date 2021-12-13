@@ -93,7 +93,6 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
                 parent.getShell().setSize(bounds.width + trimWidth, bounds.height + trimHeight);
             }
         });
-
     }
 
     @Override
@@ -109,7 +108,6 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
             }
         }
         return super.getAdapter(adapter);
-
     }
 
     @Override

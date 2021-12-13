@@ -110,5 +110,4 @@ public class TankModel extends AbstractMarkedWidgetModel {
     public Color getFillbackgroundColor() {
         return getSWTColorFromColorProperty(PROP_FILLBACKGROUND_COLOR);
     }
-
 }

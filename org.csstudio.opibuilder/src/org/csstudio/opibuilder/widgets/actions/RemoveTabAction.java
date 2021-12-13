@@ -23,7 +23,6 @@ public class RemoveTabAction extends AbstractWidgetTargetAction {
     public void run(IAction action) {
         Command command = new RemoveTabCommand(getSelectedTabWidget());
         execute(command);
-
     }
 
     /**

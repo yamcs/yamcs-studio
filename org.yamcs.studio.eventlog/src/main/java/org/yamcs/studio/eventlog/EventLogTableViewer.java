@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.ColumnData;
-import org.yamcs.studio.core.utils.ColumnDef;
 import org.yamcs.studio.core.utils.ViewerColumnsDialog;
 
 public class EventLogTableViewer extends TableViewer {
@@ -172,7 +171,7 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     private void syncCurrentWidthsToModel() {
-        for (TableColumn column : getTable().getColumns()) {
+        for (var column : getTable().getColumns()) {
             var def = columnData.getColumn(column.getText());
             if (def != null) {
                 def.width = column.getWidth();
@@ -185,11 +184,11 @@ public class EventLogTableViewer extends TableViewer {
         var layout = new TableLayout();
 
         var currentColumns = getTable().getColumns();
-        for (TableColumn currentColumn : currentColumns) {
+        for (var currentColumn : currentColumns) {
             currentColumn.dispose();
         }
 
-        for (ColumnDef def : columnData.getVisibleColumns()) {
+        for (var def : columnData.getVisibleColumns()) {
             if (def.name.equals(COL_SEVERITY)) {
                 var severityColumn = new TableViewerColumn(this, SWT.CENTER);
                 severityColumn.getColumn().setText(COL_SEVERITY);
@@ -197,7 +196,6 @@ public class EventLogTableViewer extends TableViewer {
                 severityColumn.getColumn().addSelectionListener(getSelectionAdapter(severityColumn.getColumn()));
                 severityColumn.getColumn().setToolTipText("Severity Level");
                 severityColumn.setLabelProvider(new EventLogColumnLabelProvider() {
-
                     @Override
                     public Image getImage(Object element) {
                         var event = ((EventLogItem) element).event;
@@ -409,7 +407,7 @@ public class EventLogTableViewer extends TableViewer {
             }
 
             // Ensure that any newly introduced columns remain known (to the right for now)
-            for (ColumnDef def : columnData.getColumns()) {
+            for (var def : columnData.getColumns()) {
                 if (restoredData.getColumn(def.name) == null) {
                     restoredData.addColumn(def.name, def.width, def.visible, def.resizable, def.moveable);
                 }

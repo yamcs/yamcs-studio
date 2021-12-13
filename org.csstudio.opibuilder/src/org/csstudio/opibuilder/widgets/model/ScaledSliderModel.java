@@ -101,7 +101,6 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel {
 
         setPropertyValue(PROP_LO_COLOR, new OPIColor(255, 128, 0));
         setPropertyValue(PROP_HI_COLOR, new OPIColor(255, 128, 0));
-
     }
 
     @Override

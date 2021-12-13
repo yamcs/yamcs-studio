@@ -38,7 +38,6 @@ public class SashContainerFigure extends Figure implements Introspectable {
     private class Sash extends Figure {
 
         class SashDragger extends MouseMotionListener.Stub implements MouseListener {
-
             private Point start;
 
             private double startSashPosition;
@@ -49,7 +48,6 @@ public class SashContainerFigure extends Figure implements Introspectable {
 
             @Override
             public void mouseDoubleClicked(MouseEvent me) {
-
             }
 
             @Override
@@ -117,7 +115,6 @@ public class SashContainerFigure extends Figure implements Introspectable {
                 armed = false;
                 me.consume();
             }
-
         }
 
         public Sash() {
@@ -200,7 +197,6 @@ public class SashContainerFigure extends Figure implements Introspectable {
             }
             graphics.popState();
         }
-
     }
 
     /**
@@ -234,7 +230,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (SashStyle p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -250,7 +246,6 @@ public class SashContainerFigure extends Figure implements Introspectable {
         public String toString() {
             return description;
         }
-
     }
 
     private IFigure pane;
@@ -467,5 +462,4 @@ public class SashContainerFigure extends Figure implements Introspectable {
         this.sashWidth = sashWidth;
         revalidate();
     }
-
 }

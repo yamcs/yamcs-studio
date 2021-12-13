@@ -41,7 +41,6 @@ public class EqualValueFilter {
                     throw new IllegalArgumentException("Column types must match for natural join");
                 }
             }
-
         }
     }
 

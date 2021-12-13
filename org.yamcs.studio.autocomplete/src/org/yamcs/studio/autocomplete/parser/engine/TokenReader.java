@@ -84,5 +84,4 @@ public class TokenReader extends Reader {
     public int getCurrentIndex() {
         return currentIndex;
     }
-
 }

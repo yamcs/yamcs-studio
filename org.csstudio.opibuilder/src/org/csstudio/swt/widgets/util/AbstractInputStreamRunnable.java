@@ -35,5 +35,4 @@ public abstract class AbstractInputStreamRunnable implements Runnable {
     public void run() {
         runWithInputStream(inputStream);
     }
-
 }

@@ -105,7 +105,6 @@ public class ColoringRulesFieldEditor extends FieldEditor {
         });
 
         tableViewer.getTable().addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseDoubleClick(MouseEvent e) {
                 var item = tableViewer.getTable().getItem(new Point(e.x, e.y));
@@ -133,7 +132,6 @@ public class ColoringRulesFieldEditor extends FieldEditor {
 
         addButton = createButton(box, "Add...");
         addButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 addNewRule();
@@ -154,7 +152,6 @@ public class ColoringRulesFieldEditor extends FieldEditor {
 
         removeButton = createButton(box, "Remove");
         removeButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeRule(getSelectedRule());

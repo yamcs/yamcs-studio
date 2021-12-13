@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.visualparts;
 
 import org.csstudio.opibuilder.datadefinition.PropertyData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -44,14 +43,14 @@ public class RuntimePropertiesEditDialog extends Dialog {
         var runningPropertyList = widgetModel.getRuntimePropertyList();
         if (runningPropertyList != null) {
             var i = 0;
-            for (AbstractWidgetProperty prop : runningPropertyList) {
+            for (var prop : runningPropertyList) {
                 if (prop.isVisibleInPropSheet()) {
                     i++;
                 }
             }
             propertyDataArray = new PropertyData[i];
             i = 0;
-            for (AbstractWidgetProperty prop : runningPropertyList) {
+            for (var prop : runningPropertyList) {
                 if (prop.isVisibleInPropSheet()) {
                     propertyDataArray[i++] = new PropertyData(prop, prop.getPropertyValue());
                 }
@@ -87,7 +86,6 @@ public class RuntimePropertiesEditDialog extends Dialog {
         propertiesViewer.setInput(propertyDataArray);
 
         return parent_Composite;
-
     }
 
     private TableViewer createPropertiesViewer(Composite parent) {
@@ -110,7 +108,6 @@ public class RuntimePropertiesEditDialog extends Dialog {
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
-
 }
 
 /**
@@ -184,7 +181,6 @@ class PropertyDataLabelProvider extends LabelProvider implements ITableLabelProv
                 return propertyData.property.getPropertyDescriptor().getLabelProvider().getImage(propertyData.tmpValue);
             } catch (NullPointerException e) {
             }
-
         }
         return null;
     }

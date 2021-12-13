@@ -430,7 +430,6 @@ public class RoundScaleTickLabels extends Figure {
                 tickStep = minBigger ? tickStep.divide(pow(10, 1)) : tickStep.multiply(pow(10, 1));
                 firstPosition = minBigger ? pow(10, i - 1) : tickStep.add(pow(10, i));
             }
-
         }
 
         // add max
@@ -454,7 +453,7 @@ public class RoundScaleTickLabels extends Figure {
         var maxRight = 0;
         var minUp = 0;
         var maxDown = 0;
-        for (Rectangle rect : tickLabelAreas) {
+        for (var rect : tickLabelAreas) {
             if (rect.x < minLeft) {
                 minLeft = rect.x;
             }
@@ -471,7 +470,6 @@ public class RoundScaleTickLabels extends Figure {
 
         tickLabelMaxOutLength = Math.max(Math.max(maxRight - scale.getBounds().width, -minLeft),
                 Math.max(maxDown - scale.getBounds().height, -minUp));
-
     }
 
     private void updateTickLabelVisibility() {
@@ -488,7 +486,6 @@ public class RoundScaleTickLabels extends Figure {
         var previousArea = tickLabelAreas.get(0);
         String previousLabel = null;
         for (var i = 0; i < tickLabelPositions.size(); i++) {
-
             // check if it has space to draw
             var hasSpaceToDraw = true;
             if (i != 0) {
@@ -548,7 +545,5 @@ public class RoundScaleTickLabels extends Figure {
         updateTickLabelAreas();
         updateTickLabelMaxOutLength();
         updateTickLabelVisibility();
-
     }
-
 }

@@ -187,5 +187,4 @@ public class FontProperty extends AbstractWidgetProperty {
                     + fontData.getStyle() + ")";
         }
     }
-
 }

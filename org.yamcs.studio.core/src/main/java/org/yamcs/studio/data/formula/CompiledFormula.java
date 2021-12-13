@@ -67,8 +67,8 @@ public class CompiledFormula {
         var cardinality = argNodes.size();
         var functions = registry.findFunctions(func, cardinality);
 
-        List<Object> argumentValues = new ArrayList<>(cardinality);
-        for (FormulaAst argNode : argNodes) {
+        var argumentValues = new ArrayList<Object>(cardinality);
+        for (var argNode : argNodes) {
             argumentValues.add(executeExpression(argNode));
         }
 

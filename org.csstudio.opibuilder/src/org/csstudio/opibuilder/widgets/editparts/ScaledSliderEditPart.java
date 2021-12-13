@@ -9,12 +9,20 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ENABLED;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_FILLBACKGROUND_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_FILL_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_PAGE_INCREMENT;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_STEP_INCREMENT;
+import static org.csstudio.opibuilder.widgets.model.ScaledSliderModel.PROP_THUMB_COLOR;
+
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.ScaledSliderModel;
-import org.csstudio.swt.widgets.datadefinition.IManualValueChangeListener;
 import org.csstudio.swt.widgets.figures.ScaledSliderFigure;
 import org.eclipse.draw2d.IFigure;
 
@@ -38,19 +46,14 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         slider.setHorizontal(model.isHorizontal());
         slider.setStepIncrement(model.getStepIncrement());
         slider.setPageIncrement(model.getPageIncrement());
-        slider.addManualValueChangeListener(new IManualValueChangeListener() {
-
-            @Override
-            public void manualValueChanged(double newValue) {
-                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                    setPVValue(ScaledSliderModel.PROP_PVNAME, newValue);
-                }
+        slider.addManualValueChangeListener(newValue -> {
+            if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+                setPVValue(PROP_PVNAME, newValue);
             }
         });
 
-        markAsControlPV(ScaledSliderModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
         return slider;
-
     }
 
     @Override
@@ -62,105 +65,66 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // fillColor
-        IWidgetPropertyChangeHandler fillColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setFillColor(((OPIColor) newValue).getSWTColor());
-                return false;
+        setPropertyChangeHandler(PROP_FILL_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setFillColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_FILLBACKGROUND_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_THUMB_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setThumbColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setEffect3D((Boolean) newValue);
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_HORIZONTAL, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setHorizontal((Boolean) newValue);
+            var model = (ScaledSliderModel) getModel();
+
+            if ((Boolean) newValue) {
+                model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
+                        model.getLocation().y + model.getSize().height / 2 - model.getSize().width / 2);
+            } else {
+                model.setLocation(model.getLocation().x + model.getSize().width / 2 - model.getSize().height / 2,
+                        model.getLocation().y - model.getSize().width / 2 + model.getSize().height / 2);
             }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_FILL_COLOR, fillColorHandler);
 
-        // fillBackgroundColor
-        IWidgetPropertyChangeHandler fillBackColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_FILLBACKGROUND_COLOR, fillBackColorHandler);
+            model.setSize(model.getSize().height, model.getSize().width);
 
-        // thumbColor
-        IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setThumbColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_THUMB_COLOR, thumbColorHandler);
-
-        // effect 3D
-        IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setEffect3D((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_EFFECT3D, effect3DHandler);
-
-        // horizontal
-        IWidgetPropertyChangeHandler horizontalHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setHorizontal((Boolean) newValue);
-                var model = (ScaledSliderModel) getModel();
-
-                if ((Boolean) newValue) {
-                    model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
-                            model.getLocation().y + model.getSize().height / 2 - model.getSize().width / 2);
-                } else {
-                    model.setLocation(model.getLocation().x + model.getSize().width / 2 - model.getSize().height / 2,
-                            model.getLocation().y - model.getSize().width / 2 + model.getSize().height / 2);
-                }
-
-                model.setSize(model.getSize().height, model.getSize().width);
-
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_HORIZONTAL, horizontalHandler);
+            return false;
+        });
 
         // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
         // which is not the case for the scaled slider
-        IWidgetPropertyChangeHandler enableHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setEnabled((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_ENABLED, enableHandler);
+        setPropertyChangeHandler(PROP_ENABLED, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setEnabled((Boolean) newValue);
+            return false;
+        });
 
-        IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setStepIncrement((Double) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_STEP_INCREMENT, incrementHandler);
+        setPropertyChangeHandler(PROP_STEP_INCREMENT, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setStepIncrement((Double) newValue);
+            return false;
+        });
 
-        IWidgetPropertyChangeHandler pageIncrementHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setPageIncrement((Double) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(ScaledSliderModel.PROP_PAGE_INCREMENT, pageIncrementHandler);
-
+        setPropertyChangeHandler(PROP_PAGE_INCREMENT, (oldValue, newValue, refreshableFigure) -> {
+            var slider = (ScaledSliderFigure) refreshableFigure;
+            slider.setPageIncrement((Double) newValue);
+            return false;
+        });
     }
-
 }

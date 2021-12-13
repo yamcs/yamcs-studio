@@ -102,14 +102,14 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 part.getWidgetModel().getSourceConnections());
         allConnections.addAll(part.getWidgetModel().getTargetConnections());
         if (part.getWidgetModel() instanceof AbstractContainerModel) {
-            for (AbstractWidgetModel d : ((AbstractContainerModel) part.getWidgetModel()).getAllDescendants()) {
+            for (var d : ((AbstractContainerModel) part.getWidgetModel()).getAllDescendants()) {
                 allConnections.addAll(d.getSourceConnections());
                 allConnections.addAll(d.getTargetConnections());
             }
         }
         if (allConnections.size() > 0) {
             var reRouteCmd = new CompoundCommand();
-            for (ConnectionModel srcConn : allConnections) {
+            for (var srcConn : allConnections) {
                 reRouteCmd.add(new SetWidgetPropertyCommand(srcConn, ConnectionModel.PROP_POINTS, new PointList()));
             }
             cmd = cmd.chain(reRouteCmd);
@@ -168,7 +168,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         }
 
         return cmd;
-
     }
 
     @Override
@@ -242,7 +241,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
             }
         }
         return super.createSizeOnDropFeedback(request);
-
     }
 
     @Override
@@ -260,7 +258,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         } else {
             super.showSizeOnDropFeedback(request);
         }
-
     }
 
     /**
@@ -364,7 +361,7 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     protected Command getCloneCommand(ChangeBoundsRequest request) {
         var clone = new CloneCommand((AbstractContainerModel) getHost().getModel());
 
-        for (AbstractBaseEditPart part : sortSelectedWidgets(request.getEditParts())) {
+        for (var part : sortSelectedWidgets(request.getEditParts())) {
             clone.addPart((AbstractWidgetModel) part.getModel(), (Rectangle) getConstraintForClone(part, request));
         }
 
@@ -394,7 +391,7 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         List<AbstractBaseEditPart> differentParentWidgets = new ArrayList<AbstractBaseEditPart>();
         List<AbstractBaseEditPart> result = new ArrayList<AbstractBaseEditPart>();
         AbstractContainerModel parent = null;
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof AbstractBaseEditPart && !(o instanceof DisplayEditpart)) {
                 var widgetModel = ((AbstractBaseEditPart) o).getWidgetModel();
                 if (parent == null) {
@@ -412,7 +409,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
             var modelArray = sameParentWidgets.toArray(new AbstractBaseEditPart[0]);
 
             Arrays.sort(modelArray, new Comparator<AbstractBaseEditPart>() {
-
                 @Override
                 public int compare(AbstractBaseEditPart o1, AbstractBaseEditPart o2) {
                     if (o1.getWidgetModel().getParent().getChildren().indexOf(o1.getWidgetModel()) > o2.getWidgetModel()
@@ -489,5 +485,4 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         rect.translate(getLayoutOrigin().getNegated());
         return getConstraintFor(rect);
     }
-
 }

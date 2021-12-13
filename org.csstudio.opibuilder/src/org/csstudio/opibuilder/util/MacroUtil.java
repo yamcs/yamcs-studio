@@ -141,7 +141,6 @@ public class MacroUtil {
 
         var innerStart = -1;
         for (var i = 0; i < input.length(); i++) {
-
             if (input.charAt(i) == '$' && i < input.length() - 1 && MacroUtil.isStart(input.charAt(i + 1))) {
                 innerStart = i;
                 continue;
@@ -170,5 +169,4 @@ public class MacroUtil {
         }
         return result;
     }
-
 }

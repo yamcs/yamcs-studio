@@ -15,9 +15,6 @@ package org.csstudio.opibuilder.properties;
  */
 public interface WidgetPropertyCategory {
 
-    /**
-     * Image category.
-     */
     public final static WidgetPropertyCategory Image = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -25,9 +22,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Behavior category.
-     */
     public final static WidgetPropertyCategory Behavior = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -35,9 +29,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Display category.
-     */
     public final static WidgetPropertyCategory Display = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -45,9 +36,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Position category.
-     */
     public final static WidgetPropertyCategory Position = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -55,9 +43,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Misc category.
-     */
     public final static WidgetPropertyCategory Misc = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -65,9 +50,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Border category.
-     */
     public final static WidgetPropertyCategory Border = new WidgetPropertyCategory() {
         @Override
         public String toString() {
@@ -75,9 +57,6 @@ public interface WidgetPropertyCategory {
         }
     };
 
-    /**
-     * Misc category.
-     */
     public final static WidgetPropertyCategory Basic = new WidgetPropertyCategory() {
         @Override
         public String toString() {

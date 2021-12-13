@@ -113,5 +113,4 @@ public class AWT2SWTImageConverter {
         }
         return null;
     }
-
 }

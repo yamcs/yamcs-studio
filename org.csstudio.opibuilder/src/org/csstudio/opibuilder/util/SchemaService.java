@@ -76,7 +76,7 @@ public final class SchemaService {
     }
 
     private void loadModelFromContainer(AbstractContainerModel containerModel) {
-        for (AbstractWidgetModel model : containerModel.getChildren()) {
+        for (var model : containerModel.getChildren()) {
             // always add only the first model of its type that is found
             // the main container might contain several instances of the same widget
             // (e.g. GroupingContainer can appear multiple times; it is by default the base
@@ -96,7 +96,7 @@ public final class SchemaService {
         }
         if (schemaWidgetsMap.containsKey(widgetModel.getTypeID())) {
             var schemaWidgetModel = schemaWidgetsMap.get(widgetModel.getTypeID());
-            for (String id : schemaWidgetModel.getAllPropertyIDs()) {
+            for (var id : schemaWidgetModel.getAllPropertyIDs()) {
                 widgetModel.setPropertyValue(id, schemaWidgetModel.getPropertyValue(id), false);
             }
         }
@@ -123,5 +123,4 @@ public final class SchemaService {
         }
         return null;
     }
-
 }

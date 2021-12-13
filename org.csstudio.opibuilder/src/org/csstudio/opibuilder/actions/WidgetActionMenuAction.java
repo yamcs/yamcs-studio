@@ -42,6 +42,5 @@ public final class WidgetActionMenuAction extends Action {
     @Override
     public void run() {
         _widgetAction.run();
-
     }
 }

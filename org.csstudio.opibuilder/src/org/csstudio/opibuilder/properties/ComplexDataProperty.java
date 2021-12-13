@@ -96,12 +96,11 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
     @Override
     public void writeToXML(Element propElement) {
         var data = (AbstractComplexData) getPropertyValue();
-        for (AbstractWidgetProperty property : data.getAllProperties()) {
+        for (var property : data.getAllProperties()) {
             var propEle = new Element(property.getPropertyID());
             property.writeToXML(propEle);
             propElement.addContent(propEle);
         }
-
     }
 
     @Override
@@ -109,5 +108,4 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
         super.setWidgetModel(widgetModel);
         ((AbstractComplexData) getPropertyValue()).setWidgetModel(widgetModel);
     }
-
 }

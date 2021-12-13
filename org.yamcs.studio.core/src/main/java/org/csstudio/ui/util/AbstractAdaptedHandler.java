@@ -72,5 +72,4 @@ public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
      *            event of the command
      */
     protected abstract void execute(List<T> data, ExecutionEvent event) throws Exception;
-
 }

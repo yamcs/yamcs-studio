@@ -85,11 +85,11 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
             var entries = forward ? manager.getForwardStackEntries() : manager.getBackStackEntries();
             var runnerInputArray = new RunnerInput[entries.length];
             var i = entries.length - 1;
-            for (Object o : entries) {
+            for (var o : entries) {
                 runnerInputArray[i--] = (RunnerInput) o;
             }
 
-            for (RunnerInput input : runnerInputArray) {
+            for (var input : runnerInputArray) {
                 var menuItem = new MenuItem(menu, SWT.None);
                 menuItem.setText(input.getName());
                 menuItem.addSelectionListener(new SelectionAdapter() {
@@ -204,5 +204,4 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
     public void dispose() {
         setDisplayOpenManager(null);
     }
-
 }

@@ -39,7 +39,7 @@ public class DropPVtoXYGraphEditPolicy extends AbstractEditPolicy {
                 command.add(new SetWidgetPropertyCommand(xyGraphModel, XYGraphModel.PROP_TRACE_COUNT,
                         dropPVRequest.getPvNames().length + existTraces));
                 var i = existTraces;
-                for (String pvName : dropPVRequest.getPvNames()) {
+                for (var pvName : dropPVRequest.getPvNames()) {
                     command.add(new SetWidgetPropertyCommand(xyGraphModel,
                             XYGraphModel.makeTracePropID(XYGraphModel.TraceProperty.YPV.propIDPre, i), pvName));
                     command.add(new SetWidgetPropertyCommand(xyGraphModel,
@@ -50,7 +50,6 @@ public class DropPVtoXYGraphEditPolicy extends AbstractEditPolicy {
                 }
                 return command;
             }
-
         }
         return super.getCommand(request);
     }
@@ -62,5 +61,4 @@ public class DropPVtoXYGraphEditPolicy extends AbstractEditPolicy {
         }
         return super.getTargetEditPart(request);
     }
-
 }

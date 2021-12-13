@@ -234,7 +234,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (symbolProperties != null) {
             symbolProperties.setStretch(strech);
         }
-        for (SymbolImage si : getAllImages()) {
+        for (var si : getAllImages()) {
             si.setStretch(strech);
         }
         repaint();
@@ -252,7 +252,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (symbolProperties != null) {
             symbolProperties.setBackgroundColor(backgroundColor);
         }
-        for (SymbolImage si : getAllImages()) {
+        for (var si : getAllImages()) {
             si.setBackgroundColor(backgroundColor);
         }
         repaint();
@@ -277,7 +277,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (symbolProperties != null) {
             symbolProperties.setAnimationDisabled(stop);
         }
-        for (SymbolImage asi : getAllImages()) {
+        for (var asi : getAllImages()) {
             asi.setAnimationDisabled(stop);
         }
         repaint();
@@ -287,7 +287,7 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
         if (symbolProperties != null) {
             symbolProperties.setAlignedToNearestSecond(aligned);
         }
-        for (SymbolImage asi : getAllImages()) {
+        for (var asi : getAllImages()) {
             asi.setAlignedToNearestSecond(aligned);
         }
         repaint();
@@ -320,5 +320,4 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements 
             imageListener.imageResized(this);
         }
     }
-
 }

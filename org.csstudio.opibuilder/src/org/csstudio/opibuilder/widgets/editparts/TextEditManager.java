@@ -39,7 +39,14 @@ public class TextEditManager extends DirectEditManager {
 
     private IActionBars actionBars;
     private CellEditorActionHandler actionHandler;
-    private IAction copy, cut, paste, undo, redo, find, selectAll, delete;
+    private IAction copy;
+    private IAction cut;
+    private IAction paste;
+    private IAction undo;
+    private IAction redo;
+    private IAction find;
+    private IAction selectAll;
+    private IAction delete;
     private double cachedZoom = -1.0;
     private Font scaledFont;
     private boolean multiLine = true;
@@ -56,9 +63,6 @@ public class TextEditManager extends DirectEditManager {
         this(source, locator, true);
     }
 
-    /**
-     * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
-     */
     @Override
     protected void bringDown() {
         var zoomMgr = (ZoomManager) getEditPart().getViewer().getProperty(ZoomManager.class.toString());
@@ -83,9 +87,7 @@ public class TextEditManager extends DirectEditManager {
 
     @Override
     protected CellEditor createCellEditorOn(Composite composite) {
-        CloseableTextCellEditor editor = new CloseableTextCellEditor(composite,
-                (multiLine ? SWT.MULTI : SWT.SINGLE) | SWT.WRAP) {
-
+        var editor = new CloseableTextCellEditor(composite, (multiLine ? SWT.MULTI : SWT.SINGLE) | SWT.WRAP) {
             @Override
             protected void focusLost() {
                 // in run mode, if the widget has a PV attached,
@@ -125,8 +127,8 @@ public class TextEditManager extends DirectEditManager {
             }
         };
 
-        Runnable acceptDirectEdit = editor::acceptValue;
-        editor.getControl().setData(ActionButtonFigure.SWT_KEY_BEFORE_ACTION_RUNNABLE, acceptDirectEdit);
+        editor.getControl().setData(ActionButtonFigure.SWT_KEY_BEFORE_ACTION_RUNNABLE,
+                (Runnable) () -> editor.acceptValue());
         editor.getControl().moveAbove(null);
         return editor;
     }
@@ -143,7 +145,7 @@ public class TextEditManager extends DirectEditManager {
         // update text
         var textFigure = getEditPart().getAdapter(ITextFigure.class);
 
-        // AbstractWidgetModel labelModel = (AbstractWidgetModel) getEditPart().getModel();
+        // var labelModel = (AbstractWidgetModel) getEditPart().getModel();
         getCellEditor().setValue(textFigure.getText());
         if (textFigure.isOpaque() || textFigure.getBorder() instanceof AbstractBackground) {
             getCellEditor().getControl().setBackground(textFigure.getBackgroundColor());
@@ -214,5 +216,4 @@ public class TextEditManager extends DirectEditManager {
             text.setFont(scaledFont = new Font(null, fd));
         }
     }
-
 }

@@ -158,5 +158,4 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     public String getValueLabelFormat() {
         return (String) getPropertyValue(PROP_VALUE_LABEL_FORMAT);
     }
-
 }

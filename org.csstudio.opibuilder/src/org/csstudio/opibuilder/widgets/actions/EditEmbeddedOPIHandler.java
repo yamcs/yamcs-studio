@@ -64,5 +64,4 @@ public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler 
         // required return value
         return null;
     }
-
 }

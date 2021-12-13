@@ -42,7 +42,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (TemperatureUnit t : values()) {
+            for (var t : values()) {
                 result[i++] = t.toString();
             }
             return result;
@@ -355,7 +355,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
                         bounds.width - 2 * lineWidth, bounds.height - (valuePosition - bounds.y)), FILL_CORNER,
                         FILL_CORNER);
             }
-
         }
 
         public Dimension getCorner() {
@@ -366,7 +365,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         public Dimension getPreferredSize(int wHint, int hHint) {
             return new Dimension(PIPE_WIDTH, hHint + 2 * corner.height);
         }
-
     }
 
     static class ThermoLayout extends AbstractLayout {
@@ -464,6 +462,5 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
                 bulbLabel = child;
             }
         }
-
     }
 }

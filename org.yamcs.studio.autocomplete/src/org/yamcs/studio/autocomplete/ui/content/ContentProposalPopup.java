@@ -91,7 +91,6 @@ public class ContentProposalPopup extends PopupDialog {
 
         @Override
         public void handleEvent(Event e) {
-
             // If focus is leaving an important widget or the field's
             // shell is deactivating
             if (e.type == SWT.FocusOut) {
@@ -180,7 +179,6 @@ public class ContentProposalPopup extends PopupDialog {
             }
 
             if (control != null && !control.isDisposed()) {
-
                 control.removeListener(SWT.MouseDoubleClick, this);
                 control.removeListener(SWT.MouseDown, this);
                 control.removeListener(SWT.Dispose, this);
@@ -996,7 +994,7 @@ public class ContentProposalPopup extends PopupDialog {
                     item.setFont(font);
 
                     index++;
-                    for (Proposal proposal : newProposalList.getProposals(provider)) {
+                    for (var proposal : newProposalList.getProposals(provider)) {
                         item.setText("  " + getString(proposal));
                         item.setImage(getImage(proposal, false));
                         item.setData(proposal);
@@ -1153,8 +1151,6 @@ public class ContentProposalPopup extends PopupDialog {
      * opened and to invoke the secondary popup if applicable.
      *
      * @return the return code
-     *
-     * @see org.eclipse.jface.window.Window#open()
      */
     @Override
     public int open() {
@@ -1289,7 +1285,6 @@ public class ContentProposalPopup extends PopupDialog {
             }
             var currentId = new Long(uniqueId);
             control.getDisplay().asyncExec(() -> adapter.getProposals(new IContentProposalSearchHandler() {
-
                 @Override
                 public void handleResult(ContentProposalList proposalList) {
                     if (control != null && !control.isDisposed()) {

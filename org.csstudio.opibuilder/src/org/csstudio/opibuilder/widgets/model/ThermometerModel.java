@@ -87,7 +87,6 @@ public class ThermometerModel extends AbstractMarkedWidgetModel {
 
         setPropertyValue(PROP_LO_COLOR, new RGB(255, 128, 0));
         setPropertyValue(PROP_HI_COLOR, new RGB(255, 128, 0));
-
     }
 
     @Override
@@ -138,5 +137,4 @@ public class ThermometerModel extends AbstractMarkedWidgetModel {
     public Color getFillbackgroundColor() {
         return getSWTColorFromColorProperty(PROP_FILLBACKGROUND_COLOR);
     }
-
 }

@@ -9,7 +9,9 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import java.beans.PropertyChangeEvent;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_NAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.actions.ShowIndexInTreeViewAction;
@@ -41,22 +43,15 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
     @Override
     public void activate() {
         super.activate();
-        PropertyChangeListener visualListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                refreshVisuals();
-            }
-        };
-        var nameProperty = getWidgetModel().getProperty(AbstractWidgetModel.PROP_NAME);
+        PropertyChangeListener visualListener = evt -> refreshVisuals();
+        var nameProperty = getWidgetModel().getProperty(PROP_NAME);
         if (nameProperty != null) {
             nameProperty.addPropertyChangeListener(visualListener);
         }
-        var pvNameProperty = getWidgetModel().getProperty(AbstractPVWidgetModel.PROP_PVNAME);
+        var pvNameProperty = getWidgetModel().getProperty(PROP_PVNAME);
         if (pvNameProperty != null) {
             pvNameProperty.addPropertyChangeListener(visualListener);
         }
-
     }
 
     public WidgetTreeEditpart(AbstractWidgetModel model) {
@@ -108,5 +103,4 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
         }
         super.refreshVisuals();
     }
-
 }

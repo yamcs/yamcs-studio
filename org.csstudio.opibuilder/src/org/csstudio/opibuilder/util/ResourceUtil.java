@@ -193,7 +193,6 @@ public class ResourceUtil {
         // return false;
         // }
         // return true;
-
     }
 
     // TODO Check handling of "absolute" path and search path.

@@ -58,7 +58,6 @@ public class ChangeOrderAction extends SelectionAction {
         public ImageDescriptor getImageDescriptor() {
             return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
-
     }
 
     private static class IndexedWidget implements Comparable<IndexedWidget> {
@@ -88,7 +87,6 @@ public class ChangeOrderAction extends SelectionAction {
 
         @Override
         public int compareTo(IndexedWidget o) {
-
             return index.compareTo(Integer.valueOf(o.getIndex()));
         }
 
@@ -121,7 +119,6 @@ public class ChangeOrderAction extends SelectionAction {
             }
             return true;
         }
-
     }
 
     private OrderType orderType;
@@ -146,7 +143,7 @@ public class ChangeOrderAction extends SelectionAction {
         fillWidgetMap(widgetMap);
 
         // create compound command
-        for (Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
+        for (var entry : widgetMap.entrySet()) {
             // sort the list in map by the widget's original order in its container
             var container = entry.getKey();
             var widgetList = entry.getValue();
@@ -171,7 +168,7 @@ public class ChangeOrderAction extends SelectionAction {
             if (newIndex > container.getChildren().size() - 1 || newIndex < 0) {
                 return false;
             }
-            for (IndexedWidget indexedWidget : widgetList) {
+            for (var indexedWidget : widgetList) {
                 if (container.getIndexOf(indexedWidget.getWidget()) != newIndex) {
                     return true;
                 }
@@ -188,7 +185,7 @@ public class ChangeOrderAction extends SelectionAction {
         var compoundCommand = new CompoundCommand(orderType.getLabel());
 
         // create compound command
-        for (Map.Entry<AbstractContainerModel, List<IndexedWidget>> entry : widgetMap.entrySet()) {
+        for (var entry : widgetMap.entrySet()) {
             // sort the list in map by the widget's original order in its container
             var container = entry.getKey();
             var widgetList = entry.getValue();
@@ -215,7 +212,7 @@ public class ChangeOrderAction extends SelectionAction {
             switch (orderType) {
             case TO_FRONT:
             case STEP_FRONT:
-                for (IndexedWidget indexedWidget : widgetList) {
+                for (var indexedWidget : widgetList) {
                     compoundCommand.add(new ChangeOrderCommand(newIndex, container, indexedWidget.getWidget()));
                 }
                 break;
@@ -237,7 +234,7 @@ public class ChangeOrderAction extends SelectionAction {
      */
     private void fillWidgetMap(Map<AbstractContainerModel, List<IndexedWidget>> widgetMap) {
 
-        for (Object selection : getSelectedObjects()) {
+        for (var selection : getSelectedObjects()) {
             if (selection instanceof AbstractBaseEditPart) {
                 var widgetEditpart = (AbstractBaseEditPart) selection;
                 var widgetModel = (AbstractWidgetModel) widgetEditpart.getModel();
@@ -253,5 +250,4 @@ public class ChangeOrderAction extends SelectionAction {
             }
         }
     }
-
 }

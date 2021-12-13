@@ -211,7 +211,6 @@ public class OPIColorDialog extends TrayDialog {
         blueSpinner.addSelectionListener(new RGBEditListener(2));
 
         rgbGroup.setTabList(new Control[] { redScale, greenScale, blueScale, redSpinner, greenSpinner, blueSpinner });
-
     }
 
     /**
@@ -247,7 +246,6 @@ public class OPIColorDialog extends TrayDialog {
             setRGBEditValue(opiColor.getRGBValue());
             outputTextLabel.setText(opiColor.getColorName());
             colorCanvas.setBackground(CustomMediaFactory.getInstance().getColor(opiColor.getRGBValue()));
-
         }
     }
 
@@ -298,7 +296,6 @@ public class OPIColorDialog extends TrayDialog {
                 scale = blueScale;
                 spinner = blueSpinner;
             }
-
         }
 
         @Override

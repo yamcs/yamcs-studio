@@ -42,7 +42,6 @@ public class JythonScriptStore extends AbstractScriptStore {
         // Add the path of script to python module search path
         state = Py.getSystemState();
         if (scriptPath != null && !scriptPath.isEmpty()) {
-
             // If it is a workspace file.
             if (ResourceUtil.isExistingWorkspaceFile(scriptPath)) {
                 var folderPath = scriptPath.removeLastSegments(1);

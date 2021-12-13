@@ -62,7 +62,6 @@ public class PolylineJumpConnection extends PolylineConnection {
         graphics.setClip(getBounds().expand(lineJumpSize * 2, lineJumpSize * 2));
         // then original implementation is called to take care of painting figure, client area, children, and border
         super.paint(graphics);
-
     }
 
     @Override
@@ -93,7 +92,7 @@ public class PolylineJumpConnection extends PolylineConnection {
             graphics.setLineWidth(getLineWidth());
             graphics.setLineStyle(getLineStyle());
 
-            for (Entry<Point, PointList> currentEntry : intersectionMap.entrySet()) {
+            for (var currentEntry : intersectionMap.entrySet()) {
                 switch (lineJumpStyle) {
                 case ARC:
                     drawArc(currentEntry, graphics);

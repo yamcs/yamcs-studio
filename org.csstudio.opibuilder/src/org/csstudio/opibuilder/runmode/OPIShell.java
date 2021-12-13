@@ -200,7 +200,6 @@ public final class OPIShell implements IOPIRuntime {
                 resizeToContents();
             }
         });
-
     }
 
     /**
@@ -289,7 +288,7 @@ public final class OPIShell implements IOPIRuntime {
             macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
         }
         var alreadyOpen = false;
-        for (OPIShell opiShell : openShells) {
+        for (var opiShell : openShells) {
             if (opiShell.getPath().equals(path) && opiShell.getMacrosInput().equals(macrosInput)) {
                 opiShell.raiseToTop();
                 alreadyOpen = true;
@@ -308,14 +307,13 @@ public final class OPIShell implements IOPIRuntime {
                 log.log(Level.WARNING, "Failed to create new OPIShell.", e);
             }
         }
-
     }
 
     /**
      * Close all open OPIShells. Use getAllShells() for a copy of the set, to avoid removing items during iteration.
      */
     public static void closeAll() {
-        for (OPIShell s : getAllShells()) {
+        for (var s : getAllShells()) {
             s.close();
         }
     }
@@ -324,7 +322,7 @@ public final class OPIShell implements IOPIRuntime {
      * Show all open OPIShells.
      */
     public static void showAll() {
-        for (OPIShell s : getAllShells()) {
+        for (var s : getAllShells()) {
             s.raiseToTop();
         }
     }
@@ -337,7 +335,7 @@ public final class OPIShell implements IOPIRuntime {
     public static OPIShell getOPIShellForShell(Shell target) {
         OPIShell foundShell = null;
         if (target != null) {
-            for (OPIShell os : openShells) {
+            for (var os : openShells) {
                 if (os.shell == target) {
                     foundShell = os;
                     break;

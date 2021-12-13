@@ -38,7 +38,7 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
     public AutoCompleteTextCellEditor(Composite parent, String type, List<Control> historyHandlers) {
         this(parent, type);
         if (historyHandlers != null) {
-            for (Control handler : historyHandlers) {
+            for (var handler : historyHandlers) {
                 getHistory().installListener(handler);
             }
         }
@@ -49,7 +49,6 @@ public class AutoCompleteTextCellEditor extends TextCellEditor {
         // Listen for popup open/close events to be able to handle focus events
         // correctly
         contentProposalAdapter.addContentProposalListener(new IContentProposalListener2() {
-
             @Override
             public void proposalPopupClosed(ContentProposalAdapter adapter) {
                 popupOpen = false;

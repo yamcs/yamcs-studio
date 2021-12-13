@@ -59,8 +59,8 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
     }
 
     public static Collection<Transfer> getTransfers(Collection<String> classeNames) {
-        Collection<Transfer> transfers = new ArrayList<Transfer>();
-        for (String className : classeNames) {
+        var transfers = new ArrayList<Transfer>();
+        for (var className : classeNames) {
             transfers.add(getTransfer(className));
         }
         return transfers;

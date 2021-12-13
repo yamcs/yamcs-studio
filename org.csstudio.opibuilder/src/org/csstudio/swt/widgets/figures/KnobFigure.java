@@ -147,7 +147,6 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
             @Override
             public void mouseDoubleClicked(MouseEvent me) {
-
             }
 
             @Override
@@ -309,7 +308,6 @@ public class KnobFigure extends AbstractRoundRampedFigure {
                 revalidate();
             }
         });
-
     }
 
     /**
@@ -339,7 +337,6 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
             change = oldValue * (Math.pow(10, -difference / c) - 1);
         } else {
-
             change = -(scale.getRange().getUpper() - scale.getRange().getLower()) * difference / dragRange;
         }
         return change;
@@ -353,7 +350,7 @@ public class KnobFigure extends AbstractRoundRampedFigure {
      */
     private void fireManualValueChange(double newManualValue) {
 
-        for (IManualValueChangeListener l : knobListeners) {
+        for (var l : knobListeners) {
             l.manualValueChanged(newManualValue);
         }
     }
@@ -481,5 +478,4 @@ public class KnobFigure extends AbstractRoundRampedFigure {
     public void setValueLabelVisibility(boolean visible) {
         valueLabel.setVisible(visible);
     }
-
 }

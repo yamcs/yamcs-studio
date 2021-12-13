@@ -110,11 +110,9 @@ public class MacrosInput {
             } else {
                 return false;
             }
-
         } else {
             return false;
         }
-
     }
 
     /**
@@ -123,7 +121,7 @@ public class MacrosInput {
     public String toPersistenceString() {
         var result = new StringBuilder();
         result.append(QUOTE + Boolean.toString(include_parent_macros) + QUOTE);
-        for (String key : macrosMap.keySet()) {
+        for (var key : macrosMap.keySet()) {
             result.append(ITEM_SEPARATOR + "" + QUOTE + key + MACRO_SEPARATOR + macrosMap.get(key) + QUOTE);
         }
         return result.toString();
@@ -154,5 +152,4 @@ public class MacrosInput {
         }
         return macrosInput;
     }
-
 }

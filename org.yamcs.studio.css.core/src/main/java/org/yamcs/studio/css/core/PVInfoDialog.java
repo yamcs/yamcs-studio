@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -31,7 +30,7 @@ public class PVInfoDialog extends Dialog {
 
     public PVInfoDialog(Shell parentShell, List<PVInfo> pvInfos) {
         super(parentShell);
-        for (PVInfo pvInfo : pvInfos) {
+        for (var pvInfo : pvInfos) {
             pvInfoByDisplayname.put(pvInfo.getDisplayName(), pvInfo);
         }
         setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER);
@@ -59,7 +58,7 @@ public class PVInfoDialog extends Dialog {
             var gd = new GridData(GridData.FILL_HORIZONTAL);
             combo.setLayoutData(gd);
 
-            for (Entry<String, PVInfo> entry : pvInfoByDisplayname.entrySet()) {
+            for (var entry : pvInfoByDisplayname.entrySet()) {
                 combo.add(entry.getKey());
             }
         }
@@ -71,7 +70,7 @@ public class PVInfoDialog extends Dialog {
         pvInfoComposite.setLayout(new GridLayout());
 
         var first = true;
-        for (Entry<String, PVInfo> entry : pvInfoByDisplayname.entrySet()) {
+        for (var entry : pvInfoByDisplayname.entrySet()) {
             pvCompositesByDisplayname.put(entry.getKey(), createPVComposite(pvInfoComposite, entry.getValue(), first));
             first = false;
         }
@@ -79,7 +78,7 @@ public class PVInfoDialog extends Dialog {
         if (combo != null) {
             var finalCombo = combo; // Grrr
             finalCombo.addListener(SWT.Selection, evt -> {
-                List<Composite> pvComposites = new ArrayList<>(pvCompositesByDisplayname.values());
+                var pvComposites = new ArrayList<Composite>(pvCompositesByDisplayname.values());
                 for (var i = 0; i < pvComposites.size(); i++) {
                     var data = ((GridData) pvComposites.get(i).getLayoutData());
 
@@ -125,7 +124,7 @@ public class PVInfoDialog extends Dialog {
     @Override
     public boolean close() {
         var ret = super.close();
-        for (Composite composite : pvCompositesByDisplayname.values()) {
+        for (var composite : pvCompositesByDisplayname.values()) {
             composite.dispose();
         }
         pvCompositesByDisplayname.clear();

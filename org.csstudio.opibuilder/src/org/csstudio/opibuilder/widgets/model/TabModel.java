@@ -102,7 +102,7 @@ public class TabModel extends AbstractContainerModel {
 
     private void addTabsProperties() {
         for (var i = 0; i < MAX_TABS_AMOUNT; i++) {
-            for (TabProperty tabProperty : TabProperty.values()) {
+            for (var tabProperty : TabProperty.values()) {
                 addTabProperty(tabProperty, i);
             }
         }

@@ -51,9 +51,6 @@ public final class PolyPointLocator implements Locator {
     /**
      * Returns the Reference Box in the Reference Figure's coordinate system. The returned Rectangle may be by
      * reference, and should <b>not</b> be modified.
-     *
-     * @return the reference box
-     * @since 2.0
      */
     protected Rectangle getReferenceBox() {
         if (_referenceFigure instanceof HandleBounds) {
@@ -76,7 +73,5 @@ public final class PolyPointLocator implements Locator {
 
         relativeBounds.setSize(targetSize);
         target.setBounds(relativeBounds);
-
     }
-
 }

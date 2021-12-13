@@ -78,7 +78,7 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
         a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/ruler.png"));
         addRetargetAction(a);
 
-        for (DistributeType dt : DistributeType.values()) {
+        for (var dt : DistributeType.values()) {
             if (dt != DistributeType.HORIZONTAL_GAP) {
                 a = new RetargetAction(dt.getActionID(), dt.getLabel());
                 a.setImageDescriptor(dt.getImageDescriptor());
@@ -103,7 +103,7 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
                     return menu;
                 }
                 var manager = new MenuManager();
-                for (DistributeType dt : DistributeType.values()) {
+                for (var dt : DistributeType.values()) {
                     if (dt != DistributeType.HORIZONTAL_GAP) {
                         manager.add(getAction(dt.getActionID()));
                     }
@@ -169,5 +169,4 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
         addGlobalActionKey(OrderType.STEP_BACK.getActionID());
         addGlobalActionKey(OrderType.STEP_FRONT.getActionID());
     }
-
 }

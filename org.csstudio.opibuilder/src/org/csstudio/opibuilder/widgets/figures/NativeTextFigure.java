@@ -52,12 +52,10 @@ public class NativeTextFigure extends AbstractSWTWidgetFigure<Text> implements I
                 getSWTWidget().setEditable(value);
             }
         }
-
     }
 
     @Override
     public String getText() {
         return text.getText();
     }
-
 }

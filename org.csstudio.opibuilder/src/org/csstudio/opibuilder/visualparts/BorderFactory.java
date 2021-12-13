@@ -80,7 +80,6 @@ public class BorderFactory {
     private static AbstractBorder createEmptyBorder(int width) {
         if (width > 0) {
             return new AbstractBorder() {
-
                 @Override
                 public Insets getInsets(IFigure figure) {
                     return new Insets(width);
@@ -135,5 +134,4 @@ public class BorderFactory {
         var border = new RoundRectangleBackgroundBorder(color, width);
         return border;
     }
-
 }

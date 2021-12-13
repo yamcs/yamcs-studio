@@ -53,7 +53,7 @@ public class ConnectionModel extends AbstractWidgetModel {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (RouterType p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -72,7 +72,7 @@ public class ConnectionModel extends AbstractWidgetModel {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (ArrowType p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -101,7 +101,7 @@ public class ConnectionModel extends AbstractWidgetModel {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (LineJumpAdd p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -125,7 +125,7 @@ public class ConnectionModel extends AbstractWidgetModel {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (LineJumpStyle p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -359,7 +359,6 @@ public class ConnectionModel extends AbstractWidgetModel {
         removeProperty(PROP_COLOR_BACKGROUND);
         removeProperty(PROP_COLOR_FOREGROUND);
         removeProperty(PROP_SCALE_OPTIONS);
-
     }
 
     private AbstractWidgetModel getTerminal(AbstractContainerModel root, List<String> paths, String wuid) {
@@ -373,7 +372,7 @@ public class ConnectionModel extends AbstractWidgetModel {
 
         var widget = root;
         var tempId = paths.get(0);
-        for (AbstractWidgetModel w : widget.getChildren()) {
+        for (var w : widget.getChildren()) {
             if (w instanceof AbstractContainerModel && w.getWUID().equals(tempId)) {
                 var tempResult = getTerminal((AbstractContainerModel) w, paths.subList(1, paths.size()), wuid);
                 if (tempResult != null) {
@@ -386,7 +385,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private AbstractWidgetModel getTerminal(AbstractContainerModel model, String wuid) {
-        for (AbstractWidgetModel w : model.getChildren()) {
+        for (var w : model.getChildren()) {
             if (w.getWUID().equals(wuid)) {
                 return w;
             }

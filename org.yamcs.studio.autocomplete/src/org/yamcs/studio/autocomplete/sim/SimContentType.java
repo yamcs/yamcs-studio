@@ -18,5 +18,4 @@ public class SimContentType extends ContentType {
     private SimContentType(String value) {
         super(value);
     }
-
 }

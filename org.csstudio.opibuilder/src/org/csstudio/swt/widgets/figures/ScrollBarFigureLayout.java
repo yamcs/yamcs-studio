@@ -44,18 +44,11 @@ public class ScrollBarFigureLayout extends AbstractLayout {
     /**
      * Constructs a ScrollBarLayout. If the given Transposer is enabled, the Scrollbar will be horizontally oriented.
      * Otherwise, the ScrollBar will be vertically oriented.
-     *
-     * @param t
-     *            the Transposer
-     * @since 2.0
      */
     public ScrollBarFigureLayout(Transposer t) {
         transposer = t;
     }
 
-    /**
-     * @see AbstractLayout#setConstraint(IFigure, Object)
-     */
     @Override
     public void setConstraint(IFigure figure, Object constraint) {
         if (constraint.equals(UP_ARROW)) {
@@ -71,9 +64,6 @@ public class ScrollBarFigureLayout extends AbstractLayout {
         }
     }
 
-    /**
-     * @see AbstractLayout#calculatePreferredSize(IFigure, int, int)
-     */
     @Override
     protected Dimension calculatePreferredSize(IFigure parent, int w, int h) {
         var insets = transposer.t(parent.getInsets());
@@ -82,9 +72,6 @@ public class ScrollBarFigureLayout extends AbstractLayout {
         return transposer.t(d);
     }
 
-    /**
-     * @see LayoutManager#layout(IFigure)
-     */
     @Override
     public void layout(IFigure parent) {
         var scrollBar = (ScrollbarFigure) parent;
@@ -154,7 +141,6 @@ public class ScrollBarFigureLayout extends AbstractLayout {
      * @param scrollBar
      *            the scrollbar whose buttons are being layed out
      * @return the Rectangle into which the track should be placed
-     * @since 2.0
      */
     protected Rectangle layoutButtons(ScrollbarFigure scrollBar) {
         var bounds = transposer.t(scrollBar.getClientArea());
@@ -174,9 +160,6 @@ public class ScrollBarFigureLayout extends AbstractLayout {
         return trackBounds;
     }
 
-    /**
-     * @see LayoutManager#remove(IFigure)
-     */
     @Override
     public void remove(IFigure child) {
         if (child == up) {

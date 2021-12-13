@@ -84,7 +84,7 @@ class TableOfFormulaFunction implements FormulaFunction {
         // one column must be fixed size.
         if (removedNull) {
             var allGenerated = true;
-            for (Object object : argsNoNull) {
+            for (var object : argsNoNull) {
                 var column = (Column) object;
                 if (!column.isGenerated()) {
                     allGenerated = false;
@@ -99,5 +99,4 @@ class TableOfFormulaFunction implements FormulaFunction {
 
         return VTableFactory.newVTable(columns);
     }
-
 }

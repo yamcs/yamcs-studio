@@ -36,7 +36,6 @@ public class ImportOPIExamplesWizard extends Wizard implements IImportWizard {
         super.addPages();
         setWindowTitle("Install OPI Examples");
         addPage(new WizardPage("OPI Examples") {
-
             @Override
             public void createControl(Composite parent) {
                 setTitle("Install OPI Examples");

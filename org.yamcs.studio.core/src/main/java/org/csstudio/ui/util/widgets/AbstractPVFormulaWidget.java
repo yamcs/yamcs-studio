@@ -52,5 +52,4 @@ public class AbstractPVFormulaWidget extends Composite {
         this.pvFormula = pvFormula;
         changeSupport.firePropertyChange("pvFormula", oldValue, pvFormula);
     }
-
 }

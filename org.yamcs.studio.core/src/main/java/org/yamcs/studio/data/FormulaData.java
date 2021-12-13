@@ -27,7 +27,7 @@ public class FormulaData implements IPVListener {
 
     public FormulaData(String formulaString) {
         formula = new CompiledFormula(formulaString);
-        for (String pvName : formula.getDependencies()) {
+        for (var pvName : formula.getDependencies()) {
             var pv = PVFactory.getInstance().createPV(pvName);
             pv.addListener(this);
             inputs.add(pv);
@@ -39,7 +39,7 @@ public class FormulaData implements IPVListener {
     }
 
     public boolean isConnected() {
-        for (IPV input : inputs) {
+        for (var input : inputs) {
             if (!input.isConnected()) {
                 return false;
             }
@@ -61,7 +61,7 @@ public class FormulaData implements IPVListener {
         }
 
         if (startInputPVs) {
-            for (IPV input : inputs) {
+            for (var input : inputs) {
                 input.addListener(this);
                 input.start();
             }
@@ -73,7 +73,7 @@ public class FormulaData implements IPVListener {
 
         // Cleanup
         if (pvs.isEmpty()) {
-            for (IPV input : inputs) {
+            for (var input : inputs) {
                 input.removeListener(this);
                 input.stop();
             }

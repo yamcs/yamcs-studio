@@ -272,7 +272,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 getCommandStack().execute(
                         new SetWidgetPropertyCommand(displayModel, DisplayModel.PROP_SHOW_RULER, !isChecked()));
             }
-
         };
         getActionRegistry().registerAction(action);
 
@@ -288,14 +287,12 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 getCommandStack().execute(
                         new SetWidgetPropertyCommand(displayModel, DisplayModel.PROP_SNAP_GEOMETRY, !isChecked()));
             }
-
         };
         getActionRegistry().registerAction(geometryAction);
 
         // configure zoom actions
         var zm = root.getZoomManager();
         if (zm != null) {
-
             List<String> zoomLevels = new ArrayList<>(3);
             zoomLevels.add(ZoomManager.FIT_ALL);
             zoomLevels.add(ZoomManager.FIT_WIDTH);
@@ -326,7 +323,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     private void updateStatusLine(IStatusLineManager statusLine) {
         List<AbstractBaseEditPart> selectedWidgets = new ArrayList<>();
-        for (Object editpart : getGraphicalViewer().getSelectedEditParts()) {
+        for (var editpart : getGraphicalViewer().getSelectedEditParts()) {
             if (editpart instanceof AbstractBaseEditPart && !(editpart instanceof DisplayEditpart)) {
                 selectedWidgets.add((AbstractBaseEditPart) editpart);
             }
@@ -433,19 +430,19 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         registry.registerAction(action);
         getSelectionActions().add(action.getId());
 
-        for (DistributeType dt : DistributeType.values()) {
+        for (var dt : DistributeType.values()) {
             action = new DistributeWidgetsAction((IWorkbenchPart) this, dt);
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
         }
 
-        for (OrderType orderType : OrderType.values()) {
+        for (var orderType : OrderType.values()) {
             action = new ChangeOrderAction((IWorkbenchPart) this, orderType);
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
         }
 
-        for (OrientationType orientationType : OrientationType.values()) {
+        for (var orientationType : OrientationType.values()) {
             action = new ChangeOrientationAction(this, orientationType);
             registry.registerAction(action);
             getSelectionActions().add(action.getId());
@@ -481,7 +478,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         initializeGraphicalViewer();
 
         rulerComposite.setGraphicalViewer((ScrollingGraphicalViewer) getGraphicalViewer());
-
     }
 
     @Override
@@ -503,8 +499,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
     /**
      * Create a transfer drop target listener. When using a CombinedTemplateCreationEntry tool in the palette, this will
      * enable model element creation by dragging from the palette.
-     * 
-     * @see #createPaletteViewerProvider()
      */
     private TransferDropTargetListener createTransferDropTargetListener() {
         return new TemplateTransferDropTargetListener(getGraphicalViewer()) {
@@ -803,15 +797,12 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
             ErrorHandlerUtil.handleError(message, e, true, true);
             getEditorSite().getPage().closeEditor(this, false);
         }
-
     }
 
     private IPath getOPIFilePath() {
         var editorInput = getEditorInput();
         if (editorInput instanceof FileEditorInput) {
-
             return ((FileEditorInput) editorInput).getFile().getFullPath();
-
         } else if (editorInput instanceof FileStoreEditorInput) {
             return URIUtil.toPath(((FileStoreEditorInput) editorInput).getURI());
         }
@@ -875,7 +866,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         getCommandStack().markSaveLocation();
 
         firePropertyChange(IEditorPart.PROP_DIRTY);
-
     }
 
     private void processSaveFailedError(Exception e) {
@@ -992,7 +982,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 public void widgetSelected(SelectionEvent e) {
                     var selection = getViewer().getSelection();
                     if (selection instanceof IStructuredSelection) {
-                        for (Object o : ((IStructuredSelection) selection).toArray()) {
+                        for (var o : ((IStructuredSelection) selection).toArray()) {
                             if (o instanceof EditPart) {
                                 var editPart = (EditPart) getGraphicalViewer().getEditPartRegistry()
                                         .get(((EditPart) o).getModel());

@@ -110,7 +110,7 @@ public class FormulaFunctions {
      * @return the first function that accepts the give arguments
      */
     public static FormulaFunction findFirstMatch(List<Object> arguments, Collection<FormulaFunction> formulaFunctions) {
-        for (FormulaFunction formulaFunction : formulaFunctions) {
+        for (var formulaFunction : formulaFunctions) {
             if (matchArgumentTypes(arguments, formulaFunction, true)) {
                 return formulaFunction;
             }
@@ -130,8 +130,8 @@ public class FormulaFunctions {
      */
     public static Collection<FormulaFunction> findArgTypeMatch(List<Class<?>> argTypes,
             Collection<FormulaFunction> formulaFunctions) {
-        Collection<FormulaFunction> functions = new HashSet<>();
-        for (FormulaFunction formulaFunction : formulaFunctions) {
+        var functions = new HashSet<FormulaFunction>();
+        for (var formulaFunction : formulaFunctions) {
             if (formulaFunction.getArgumentTypes().equals(argTypes)) {
                 functions.add(formulaFunction);
             }
@@ -150,7 +150,7 @@ public class FormulaFunctions {
      */
     public static String formatSignature(FormulaFunction function) {
         // Prepare arguments
-        List<String> arguments = new ArrayList<>();
+        var arguments = new ArrayList<String>();
         for (var i = 0; i < function.getArgumentTypes().size() - 1; i++) {
             arguments
                     .add(function.getArgumentTypes().get(i).getSimpleName() + " " + function.getArgumentNames().get(i));
@@ -221,7 +221,7 @@ public class FormulaFunctions {
         var sb = new StringBuilder();
         sb.append(function).append('(');
         var first = true;
-        for (String arg : args) {
+        for (var arg : args) {
             if (!first) {
                 sb.append(", ");
             } else {

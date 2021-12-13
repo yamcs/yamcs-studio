@@ -39,7 +39,6 @@ public class PlayWavFileAction extends AbstractWidgetAction {
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "WAV File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { "wav" }));
-
     }
 
     @Override
@@ -83,7 +82,6 @@ public class PlayWavFileAction extends AbstractWidgetAction {
             }
         };
         job.schedule();
-
     }
 
     private IPath getPath() {

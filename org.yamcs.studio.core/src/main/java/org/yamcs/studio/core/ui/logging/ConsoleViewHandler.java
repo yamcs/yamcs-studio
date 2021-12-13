@@ -87,8 +87,6 @@ public class ConsoleViewHandler extends Handler {
      * Initialize, hook into console view
      *
      * Private to prevent multiple instances
-     * 
-     * @see #addToLogger()
      */
     private ConsoleViewHandler(Display display) {
         this.display = display;
@@ -134,7 +132,7 @@ public class ConsoleViewHandler extends Handler {
             @Override
             public void consolesRemoved(IConsole[] consoles) {
                 // Check if it's this console
-                for (IConsole console : consoles) {
+                for (var console : consoles) {
                     if (console == ConsoleViewHandler.this.console) { // Mark as closed/detached
                         ConsoleViewHandler.this.console = null;
                         return;

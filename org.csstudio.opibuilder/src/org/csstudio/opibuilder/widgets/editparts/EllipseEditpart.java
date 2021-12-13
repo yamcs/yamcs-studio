@@ -10,9 +10,15 @@
 
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_FILL_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_HORIZONTAL_FILL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_LINE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.EllipseModel.PROP_BACKGROUND_GRADIENT_START_COLOR;
+import static org.csstudio.opibuilder.widgets.model.EllipseModel.PROP_FOREGROUND_GRADIENT_START_COLOR;
+import static org.csstudio.opibuilder.widgets.model.EllipseModel.PROP_GRADIENT;
+
 import org.csstudio.opibuilder.util.OPIColor;
-import org.csstudio.opibuilder.widgets.model.AbstractShapeModel;
 import org.csstudio.opibuilder.widgets.model.EllipseModel;
 import org.csstudio.swt.widgets.figures.EllipseFigure;
 import org.eclipse.draw2d.IFigure;
@@ -44,78 +50,44 @@ public class EllipseEditpart extends AbstractShapeEditPart {
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
-        // fill
-        IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var ellipseFigure = (EllipseFigure) refreshableFigure;
-                ellipseFigure.setFill((Double) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_FILL_LEVEL, fillHandler);
 
-        // fill orientaion
-        IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var ellipseFigure = (EllipseFigure) refreshableFigure;
-                ellipseFigure.setHorizontalFill((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_HORIZONTAL_FILL, fillOrientHandler);
+        setPropertyChangeHandler(PROP_FILL_LEVEL, (oldValue, newValue, refreshableFigure) -> {
+            var ellipseFigure = (EllipseFigure) refreshableFigure;
+            ellipseFigure.setFill((Double) newValue);
+            return true;
+        });
 
-        // transparent
-        IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var ellipseFigure = (EllipseFigure) refreshableFigure;
-                ellipseFigure.setTransparent((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_TRANSPARENT, transparentHandler);
+        setPropertyChangeHandler(PROP_HORIZONTAL_FILL, (oldValue, newValue, refreshableFigure) -> {
+            var ellipseFigure = (EllipseFigure) refreshableFigure;
+            ellipseFigure.setHorizontalFill((Boolean) newValue);
+            return true;
+        });
 
-        // line color
-        IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                ((EllipseFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
+            var ellipseFigure = (EllipseFigure) refreshableFigure;
+            ellipseFigure.setTransparent((Boolean) newValue);
+            return true;
+        });
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_LINE_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            ((EllipseFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
+            return true;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure) figure).setGradient((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(EllipseModel.PROP_GRADIENT, handler);
+        setPropertyChangeHandler(PROP_GRADIENT, (oldValue, newValue, figure) -> {
+            ((EllipseFigure) figure).setGradient((Boolean) newValue);
+            return false;
+        });
 
-        handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_BACKGROUND_GRADIENT_START_COLOR, (oldValue, newValue, figure) -> {
+            ((EllipseFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(EllipseModel.PROP_BACKGROUND_GRADIENT_START_COLOR, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
-                return false;
-            }
-        };
-        setPropertyChangeHandler(EllipseModel.PROP_FOREGROUND_GRADIENT_START_COLOR, handler);
+        setPropertyChangeHandler(PROP_FOREGROUND_GRADIENT_START_COLOR, (oldValue, newValue, figure) -> {
+            ((EllipseFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
+            return false;
+        });
     }
 
     @Override
@@ -131,5 +103,4 @@ public class EllipseEditpart extends AbstractShapeEditPart {
     public Object getValue() {
         return ((EllipseFigure) getFigure()).getFill();
     }
-
 }

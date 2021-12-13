@@ -85,7 +85,7 @@ public class DumpPVListAction implements IObjectActionDelegate {
             setShellStyle(getShellStyle() | SWT.RESIZE);
             var sb = new StringBuilder();
             var i = 0;
-            for (Object pv : allPVNames) {
+            for (var pv : allPVNames) {
                 sb.append(pv);
                 if (i < allPVNames.length - 1) {
                     sb.append("\n");
@@ -129,6 +129,5 @@ public class DumpPVListAction implements IObjectActionDelegate {
             // create OK button
             createButton(parent, IDialogConstants.OK_ID, JFaceResources.getString(IDialogLabelKeys.OK_LABEL_KEY), true);
         }
-
     }
 }

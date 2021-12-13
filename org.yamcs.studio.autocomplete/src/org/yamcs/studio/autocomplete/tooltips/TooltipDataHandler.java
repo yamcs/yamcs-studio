@@ -42,14 +42,14 @@ public class TooltipDataHandler {
         // build content
         int offset = 0, maxLineLength = 0, numberOfLines = 0;
         var sb = new StringBuilder();
-        List<ProposalStyle> styleList = new ArrayList<ProposalStyle>();
+        var styleList = new ArrayList<ProposalStyle>();
         synchronized (tooltipDataList) {
-            for (TooltipData data : tooltipDataList) {
+            for (var data : tooltipDataList) {
                 var startLength = sb.length();
                 sb.append(data.value);
                 sb.append("\n");
                 if (data.styles != null) {
-                    for (ProposalStyle style : data.styles) {
+                    for (var style : data.styles) {
                         var ps = new ProposalStyle(style);
                         ps.from += offset;
                         ps.to += offset;
@@ -76,5 +76,4 @@ public class TooltipDataHandler {
         tc.maxLineLength = maxLineLength;
         return tc;
     }
-
 }

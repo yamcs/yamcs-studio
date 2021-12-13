@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.dnd;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.csstudio.csdata.ProcessVariable;
 import org.csstudio.ui.util.dnd.SerializableItemTransfer;
@@ -31,8 +30,8 @@ public class ProcessVariableNameTransferDropPVTargetListener extends AbstractDro
             return null;
         }
         var pvArray = (ProcessVariable[]) getCurrentEvent().data;
-        List<String> pvList = new ArrayList<String>();
-        for (ProcessVariable pv : pvArray) {
+        var pvList = new ArrayList<String>();
+        for (var pv : pvArray) {
             pvList.add(pv.getName());
         }
         return pvList.toArray(new String[pvList.size()]);

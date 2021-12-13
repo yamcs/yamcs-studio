@@ -47,8 +47,6 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
 
         /**
          * Constructs a CheckBox with no text.
-         *
-         * @since 2.0
          */
         public RadioBox() {
             this("");
@@ -56,17 +54,12 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
 
         /**
          * Constructs a CheckBox with the passed text in its label.
-         * 
-         * @param text
-         *            The label text
-         * @since 2.0
          */
         public RadioBox(String text) {
             radio = new RadioFigure(text);
             setContents(radio);
             if (runMode) {
                 addMouseMotionListener(new MouseMotionListener.Stub() {
-
                     @Override
                     public void mouseEntered(MouseEvent me) {
                         var backColor = getBackgroundColor();
@@ -84,19 +77,14 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
 
         /**
          * Adjusts CheckBox's icon depending on selection status.
-         *
-         * @since 2.0
          */
         protected void handleSelectionChanged() {
             radio.setSelected(isSelected());
-
         }
 
         /**
          * Initializes this Clickable by setting a default model and adding a clickable event handler for that model.
          * Also adds a ChangeListener to update icon when selection status changes.
-         *
-         * @since 2.0
          */
         @Override
         protected void init() {
@@ -167,7 +155,6 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
             }
 
             graphics.drawText(text, circle.getRight().getTranslated(GAP, -textSize.height / 2));
-
         }
 
         public void setSelected(boolean selected) {
@@ -179,7 +166,5 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
             this.text = text;
             repaint();
         }
-
     }
-
 }

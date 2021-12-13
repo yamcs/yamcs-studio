@@ -54,7 +54,6 @@ public class IArrayDimensionDisplay implements ArrayDimensionDisplay {
             return Objects.equals(info.getSize(), getSize()) && Objects.equals(info.isReversed(), isReversed())
                     && Objects.equals(info.getUnits(), getUnits())
                     && Objects.equals(info.getCellBoundaries(), getCellBoundaries());
-
         }
 
         return false;

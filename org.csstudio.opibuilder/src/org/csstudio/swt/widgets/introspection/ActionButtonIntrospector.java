@@ -22,5 +22,4 @@ public class ActionButtonIntrospector extends DefaultWidgetIntrospector {
 
         return concatenateStringArrays(super.getNonProperties(), NON_PROPERTIES);
     }
-
 }

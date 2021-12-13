@@ -18,7 +18,6 @@ import org.csstudio.opibuilder.runmode.OPIRunnerPerspective;
 import org.csstudio.opibuilder.runmode.RunModeService;
 import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
 import org.csstudio.opibuilder.runmode.RunnerInput;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -82,7 +81,7 @@ public class DisplayOpener {
             log.info("Opening display " + finalDisplayName);
 
             IWorkbenchWindow targetWindow = null;
-            for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+            for (var window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
                 if (window.getActivePage().getPerspective().getId().equals(OPIRunnerPerspective.ID)) {
                     targetWindow = window;
                 }
@@ -100,7 +99,7 @@ public class DisplayOpener {
 
             targetWindow.getShell().setActive();
 
-            IPath path = new Path(finalDisplayName);
+            var path = new Path(finalDisplayName);
             var new_input = new RunnerInput(path, null);
 
             RunModeService.openDisplayInView(targetWindow.getActivePage(), new_input, DisplayMode.NEW_TAB);

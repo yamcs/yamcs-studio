@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.yamcs.protobuf.Mdb.MemberInfo;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.studio.autocomplete.AutoCompleteHelper;
 import org.yamcs.studio.autocomplete.AutoCompleteResult;
@@ -66,14 +64,14 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
         var matchCount = 0;
         var mdb = YamcsPlugin.getMissionDatabase();
         if (mdb != null) {
-            for (ParameterInfo para : mdb.getParameters()) {
-                List<String> pvCandidates = new ArrayList<>();
+            for (var para : mdb.getParameters()) {
+                var pvCandidates = new ArrayList<String>();
                 pvCandidates.add(para.getQualifiedName());
                 if (para.hasType()) {
                     scanTypeForPvCandidates(para.getQualifiedName(), para.getType(), pvCandidates);
                 }
 
-                for (String pvCandidate : pvCandidates) {
+                for (var pvCandidate : pvCandidates) {
                     var proposalValue = requirePrefix() ? getPrefix() + pvCandidate : pvCandidate;
                     var m = namePattern.matcher(proposalValue);
                     if (m.find()) {
@@ -98,7 +96,7 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
     }
 
     private void scanTypeForPvCandidates(String basePvName, ParameterTypeInfo type, List<String> pvCandidates) {
-        for (MemberInfo member : type.getMemberList()) {
+        for (var member : type.getMemberList()) {
             var memberPvName = basePvName + "." + member.getName();
             pvCandidates.add(memberPvName);
             if (member.hasType()) {

@@ -43,9 +43,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISourceProviderListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
@@ -327,7 +325,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             armButton.setSelection(false);
             stack.disarmArmed();
             refreshState();
-
         });
         autoOptionsCombo.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
@@ -425,7 +422,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             } catch (Exception e) {
                 log.log(Level.SEVERE, "Could not execute command", e);
             }
-
         });
 
         commandTableViewer.addSelectionChangedListener(evt -> {
@@ -540,7 +536,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
     private void updateMessagePanel(IStructuredSelection sel) {
         if (!sel.isEmpty()) {
-            for (Object element : sel.toArray()) {
+            for (var element : sel.toArray()) {
                 var cmd = (StackedCommand) element;
                 if (!cmd.isValid()) {
                     messageLabel.setText(cmd.getMessages().get(0));
@@ -671,7 +667,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
     // On the GUI thread
     private void processCommand(Command command) {
-        for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
+        for (var cmd : CommandStack.getInstance().getCommands()) {
             if (command.getId().equals(cmd.getCommandId())) {
                 cmd.updateExecutionState(command);
             }
@@ -705,8 +701,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 }
 
                 // copy each selected items
-                List<StackedCommand> scs = new ArrayList<>();
-                for (TableItem ti : selection) {
+                var scs = new ArrayList<StackedCommand>();
+                for (var ti : selection) {
                     var sc = (StackedCommand) (ti.getData());
                     if (sc == null) {
                         continue;
@@ -749,9 +745,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 }
 
                 // get commands from clipboard
-                List<StackedCommand> copyedCommands = new ArrayList<>();
+                List<StackedCommand> copiedCommands = new ArrayList<>();
                 try {
-                    copyedCommands = CommandClipboard.getCopiedCommands();
+                    copiedCommands = CommandClipboard.getCopiedCommands();
                 } catch (Exception e) {
                     var errorMessage = "Unable to build Stacked Command from the specifed source: ";
                     log.log(Level.WARNING, errorMessage, e);
@@ -764,13 +760,13 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                     });
                     return;
                 }
-                if (copyedCommands.isEmpty()) {
+                if (copiedCommands.isEmpty()) {
                     return;
                 }
 
                 // paste
                 var index = commandTableViewer.getIndex(sc);
-                for (StackedCommand pastedCommand : copyedCommands) {
+                for (var pastedCommand : copiedCommands) {
                     if (pastingType == PastingType.APPEND) {
                         commandTableViewer.addTelecommand(pastedCommand);
                     } else if (pastingType == PastingType.AFTER_ITEM) {
@@ -785,7 +781,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 CommandStack.getInstance().getCommands().removeAll(CommandClipboard.getCutCommands());
 
                 // refresh command stack view state
-                IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                var part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                         .findView(CommandStackView.ID);
                 var commandStackView = (CommandStackView) part;
                 commandStackView.refreshState();
@@ -854,7 +850,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             } else {
                 contextMenu.setVisible(false);
             }
-
         });
     }
 

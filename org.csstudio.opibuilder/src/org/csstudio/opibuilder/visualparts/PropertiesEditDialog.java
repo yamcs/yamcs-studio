@@ -37,7 +37,7 @@ public class PropertiesEditDialog extends Dialog {
         this.dialogTitle = dialogTitle;
         propertyDataArray = new PropertyData[properties.length];
         var i = 0;
-        for (AbstractWidgetProperty prop : properties) {
+        for (var prop : properties) {
             propertyDataArray[i++] = new PropertyData(prop, prop.getPropertyValue());
         }
 
@@ -69,7 +69,6 @@ public class PropertiesEditDialog extends Dialog {
         propertiesViewer.setInput(propertyDataArray);
 
         return parent_Composite;
-
     }
 
     private TableViewer createPropertiesViewer(Composite parent) {
@@ -92,7 +91,6 @@ public class PropertiesEditDialog extends Dialog {
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
-
 }
 
 //

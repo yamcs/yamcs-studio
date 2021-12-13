@@ -73,7 +73,6 @@ public class VColumn {
 
     private static Object combineStringData(int size, ListInt offsets, List<VColumn> columns) {
         return new AbstractList<String>() {
-
             @Override
             public String get(int index) {
                 var tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
@@ -104,7 +103,6 @@ public class VColumn {
 
     private static Object combineDoubleData(int size, ListInt offsets, List<VColumn> columns) {
         return new ListDouble() {
-
             @Override
             public double getDouble(int index) {
                 var tableIndex = ListNumbers.binarySearchValueOrLower(offsets, index);
@@ -132,5 +130,4 @@ public class VColumn {
             }
         };
     }
-
 }

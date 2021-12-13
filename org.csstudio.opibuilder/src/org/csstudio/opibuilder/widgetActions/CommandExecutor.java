@@ -102,7 +102,6 @@ public final class CommandExecutor {
         // Poll exit code during 'wait' time
         Integer exit_code = null;
         for (var w = 0; w < wait; ++w) {
-
             try {
                 exit_code = process.exitValue();
                 break;

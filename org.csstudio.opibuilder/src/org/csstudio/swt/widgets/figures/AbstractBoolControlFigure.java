@@ -42,7 +42,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (ShowConfirmDialog p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -187,29 +187,20 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
         booleanValue = newManualValue;
         updateValue();
         if (runMode) {
-            for (IManualValueChangeListener l : boolControlListeners) {
+            for (var l : boolControlListeners) {
                 l.manualValueChanged(value);
             }
         }
     }
 
-    /**
-     * @return the confirmTip
-     */
     public String getConfirmTip() {
         return confirmTip;
     }
 
-    /**
-     * @return the password
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * @return the runMode
-     */
     public boolean isRunMode() {
         return runMode;
     }
@@ -325,5 +316,4 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     public void setToggle(boolean toggle) {
         this.toggle = toggle;
     }
-
 }

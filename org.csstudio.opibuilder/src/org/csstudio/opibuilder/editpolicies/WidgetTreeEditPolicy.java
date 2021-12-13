@@ -40,5 +40,4 @@ public class WidgetTreeEditPolicy extends AbstractEditPolicy {
         }
         return UnexecutableCommand.INSTANCE;
     }
-
 }

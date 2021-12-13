@@ -9,10 +9,18 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_STYLE;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_WIDTH;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_FONT;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.CheckBoxModel.PROP_AUTOSIZE;
+import static org.csstudio.opibuilder.widgets.model.CheckBoxModel.PROP_BIT;
+import static org.csstudio.opibuilder.widgets.model.CheckBoxModel.PROP_LABEL;
+import static org.csstudio.opibuilder.widgets.model.CheckBoxModel.PROP_SELECTED_COLOR;
+
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.CheckBoxModel;
 import org.csstudio.swt.widgets.figures.AbstractBoolFigure.TotalBits;
@@ -36,10 +44,10 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
         figure.setSelectedColor(getWidgetModel().getSelectedColor().getSWTColor());
         figure.addManualValueChangeListener(newValue -> {
             if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                setPVValue(AbstractPVWidgetModel.PROP_PVNAME, newValue);
+                setPVValue(PROP_PVNAME, newValue);
             }
         });
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
 
         return figure;
     }
@@ -71,9 +79,7 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-
-        // value
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue == null) {
                 return false;
             }
@@ -93,19 +99,15 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
             figure.setValue(VTypeHelper.getDouble((VType) newValue));
             return true;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
+        });
 
-        // bit
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_BIT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (CheckBoxFigure) refreshableFigure;
             figure.setBit((Integer) newValue);
             return true;
-        };
-        setPropertyChangeHandler(CheckBoxModel.PROP_BIT, handler);
+        });
 
-        // label
-        handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LABEL, (oldValue, newValue, refreshableFigure) -> {
             var figure = (CheckBoxFigure) refreshableFigure;
             figure.setText((String) newValue);
             Display.getCurrent().timerExec(10, () -> {
@@ -114,25 +116,22 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
                 }
             });
             return true;
-        };
-        setPropertyChangeHandler(CheckBoxModel.PROP_LABEL, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_AUTOSIZE, (oldValue, newValue, figure) -> {
             if ((Boolean) newValue) {
                 performAutoSize(figure);
                 figure.revalidate();
             }
             return true;
-        };
-        setPropertyChangeHandler(CheckBoxModel.PROP_AUTOSIZE, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_SELECTED_COLOR, (oldValue, newValue, figure) -> {
             ((CheckBoxFigure) figure).setSelectedColor(getWidgetModel().getSelectedColor().getSWTColor());
             return true;
-        };
-        setPropertyChangeHandler(CheckBoxModel.PROP_SELECTED_COLOR, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
             Display.getCurrent().timerExec(10, () -> {
                 if (getWidgetModel().isAutoSize()) {
                     performAutoSize(figure);
@@ -142,9 +141,9 @@ public class CheckBoxEditPart extends AbstractPVWidgetEditPart {
 
             return true;
         };
-        setPropertyChangeHandler(CheckBoxModel.PROP_FONT, handler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_STYLE, handler);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_WIDTH, handler);
+        setPropertyChangeHandler(PROP_FONT, handler);
+        setPropertyChangeHandler(PROP_BORDER_STYLE, handler);
+        setPropertyChangeHandler(PROP_BORDER_WIDTH, handler);
     }
 
     private void performAutoSize(IFigure figure) {

@@ -18,5 +18,4 @@ public class AutoCompleteConstants {
     public static final String DATA_SOURCE_NAME_SEPARATOR = "://";
     public static final String WILDCARD_SINGLE_REPLACE = "?";
     public static final String WILDCARD_MULTI_REPLACE = "*";
-
 }

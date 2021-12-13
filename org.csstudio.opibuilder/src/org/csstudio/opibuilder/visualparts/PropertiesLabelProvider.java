@@ -48,5 +48,4 @@ public class PropertiesLabelProvider extends LabelProvider implements ITableLabe
         }
         return "error";
     }
-
 }

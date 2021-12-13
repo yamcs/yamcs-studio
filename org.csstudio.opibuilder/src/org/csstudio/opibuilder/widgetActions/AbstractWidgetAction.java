@@ -74,7 +74,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     public AbstractWidgetProperty[] getAllProperties() {
         var propArray = new AbstractWidgetProperty[propertyMap.size()];
         var i = 0;
-        for (AbstractWidgetProperty p : propertyMap.values()) {
+        for (var p : propertyMap.values()) {
             propArray[i++] = p;
         }
         return propArray;
@@ -94,7 +94,6 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
-
                 @Override
                 public Object getParent(Object o) {
                     return null;
@@ -122,7 +121,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     public AbstractWidgetAction getCopy() {
         var action = WidgetActionFactory.createWidgetAction(getActionType());
-        for (String id : propertyMap.keySet()) {
+        for (var id : propertyMap.keySet()) {
             action.setPropertyValue(id, getPropertyValue(id));
         }
         return action;
@@ -157,7 +156,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for (AbstractWidgetProperty property : getAllProperties()) {
+        for (var property : getAllProperties()) {
             property.setWidgetModel(widgetModel);
         }
     }
@@ -173,7 +172,5 @@ public abstract class AbstractWidgetAction implements IAdaptable {
      * Dispose of all resources allocated by this action.
      */
     public void dispose() {
-
     }
-
 }

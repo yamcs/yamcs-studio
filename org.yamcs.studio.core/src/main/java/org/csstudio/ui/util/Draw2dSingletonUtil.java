@@ -26,5 +26,4 @@ public class Draw2dSingletonUtil {
     public static Rectangle getRectangle() {
         return Rectangle.SINGLETON;
     }
-
 }

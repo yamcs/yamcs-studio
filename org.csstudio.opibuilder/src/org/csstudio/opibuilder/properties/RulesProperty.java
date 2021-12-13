@@ -78,7 +78,6 @@ public class RulesProperty extends AbstractWidgetProperty {
      */
     public RulesProperty(String prop_id, String description, WidgetPropertyCategory category) {
         super(prop_id, description, category, new RulesInput());
-
     }
 
     @Override
@@ -97,8 +96,8 @@ public class RulesProperty extends AbstractWidgetProperty {
     public Object getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
             var value = (RulesInput) super.getPropertyValue();
-            for (RuleData rd : value.getRuleDataList()) {
-                for (Object pv : rd.getPVList().toArray()) {
+            for (var rd : value.getRuleDataList()) {
+                for (var pv : rd.getPVList().toArray()) {
                     var pvTuple = (PVTuple) pv;
                     var newPV = OPIBuilderMacroUtil.replaceMacros(widgetModel, pvTuple.pvName);
                     if (!newPV.equals(pvTuple.pvName)) {
@@ -122,14 +121,14 @@ public class RulesProperty extends AbstractWidgetProperty {
     @Override
     public RulesInput readValueFromXML(Element propElement) throws Exception {
         var result = new RulesInput();
-        for (Object oe : propElement.getChildren(XML_ELEMENT_RULE)) {
+        for (var oe : propElement.getChildren(XML_ELEMENT_RULE)) {
             var se = (Element) oe;
             var ruleData = new RuleData(widgetModel);
             ruleData.setName(se.getAttributeValue(XML_ATTRIBUTE_NAME));
             ruleData.setPropId(se.getAttributeValue(XML_ATTRIBUTE_PROPID));
             ruleData.setOutputExpValue(Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_OUTPUTEXPRESSION)));
 
-            for (Object eo : se.getChildren(XML_ELEMENT_EXPRESSION)) {
+            for (var eo : se.getChildren(XML_ELEMENT_EXPRESSION)) {
                 var ee = (Element) eo;
                 var booleanExpression = ee.getAttributeValue(XML_ATTRIBUTE_BOOLEXP);
                 Object value = "null";
@@ -143,7 +142,7 @@ public class RulesProperty extends AbstractWidgetProperty {
                 ruleData.addExpression(exp);
             }
 
-            for (Object pvo : se.getChildren(XML_ELEMENT_PV)) {
+            for (var pvo : se.getChildren(XML_ELEMENT_PV)) {
                 var pve = (Element) pvo;
                 var trig = true;
                 if (pve.getAttribute(XML_ATTRIBUTE_TRIGGER) != null) {
@@ -159,13 +158,13 @@ public class RulesProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        for (RuleData ruleData : ((RulesInput) getPropertyValue()).getRuleDataList()) {
+        for (var ruleData : ((RulesInput) getPropertyValue()).getRuleDataList()) {
             var ruleElement = new Element(XML_ELEMENT_RULE);
             ruleElement.setAttribute(XML_ATTRIBUTE_NAME, ruleData.getName());
             ruleElement.setAttribute(XML_ATTRIBUTE_PROPID, ruleData.getPropId());
             ruleElement.setAttribute(XML_ATTRIBUTE_OUTPUTEXPRESSION, Boolean.toString(ruleData.isOutputExpValue()));
 
-            for (Expression exp : ruleData.getExpressionList()) {
+            for (var exp : ruleData.getExpressionList()) {
                 var expElement = new Element(XML_ELEMENT_EXPRESSION);
                 expElement.setAttribute(XML_ATTRIBUTE_BOOLEXP, exp.getBooleanExpression());
                 var valueElement = new Element(XML_ELEMENT_VALUE);
@@ -181,7 +180,7 @@ public class RulesProperty extends AbstractWidgetProperty {
                 ruleElement.addContent(expElement);
             }
 
-            for (PVTuple pv : ruleData.getPVList()) {
+            for (var pv : ruleData.getPVList()) {
                 var pvElement = new Element(XML_ELEMENT_PV);
                 pvElement.setText(pv.pvName);
                 pvElement.setAttribute(XML_ATTRIBUTE_TRIGGER, Boolean.toString(pv.trigger));
@@ -190,5 +189,4 @@ public class RulesProperty extends AbstractWidgetProperty {
             propElement.addContent(ruleElement);
         }
     }
-
 }

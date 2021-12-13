@@ -101,5 +101,4 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
         }
         return result;
     }
-
 }

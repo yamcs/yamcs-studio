@@ -19,5 +19,4 @@ import java.beans.IntrospectionException;
 public interface Introspectable {
 
     public BeanInfo getBeanInfo() throws IntrospectionException;
-
 }

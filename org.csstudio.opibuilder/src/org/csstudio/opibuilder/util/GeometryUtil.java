@@ -26,12 +26,11 @@ public class GeometryUtil {
     public static Rectangle getChildrenRange(AbstractContainerEditpart container) {
 
         var pointList = new PointList(container.getChildren().size());
-        for (Object child : container.getChildren()) {
+        for (var child : container.getChildren()) {
             var childModel = ((AbstractBaseEditPart) child).getWidgetModel();
             pointList.addPoint(childModel.getLocation());
             pointList.addPoint(childModel.getX() + childModel.getWidth(), childModel.getY() + childModel.getHeight());
         }
         return pointList.getBounds();
     }
-
 }

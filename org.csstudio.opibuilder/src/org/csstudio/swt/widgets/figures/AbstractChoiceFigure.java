@@ -83,7 +83,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     protected abstract Toggle createToggle(String text);
 
     private void fireButtonPressed(int index, String value) {
-        for (IChoiceButtonListener listener : listeners) {
+        for (var listener : listeners) {
             listener.buttonPressed(index, value);
         }
     }
@@ -92,15 +92,12 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     public void setEnabled(boolean value) {
         super.setEnabled(value);
 
-        for (Toggle toggle : toggles) {
+        for (var toggle : toggles) {
             toggle.setEnabled(value);
         }
         repaint();
     }
 
-    /**
-     * @return the selectedColor
-     */
     public Color getSelectedColor() {
         return selectedColor;
     }
@@ -109,18 +106,10 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
         return states.get(models.indexOf(buttonGroup.getSelected()));
     }
 
-    /**
-     * Get all states.
-     * 
-     * @return all states.
-     */
     public List<String> getStates() {
         return states;
     }
 
-    /**
-     * @return the isHorizontal
-     */
     public boolean isHorizontal() {
         return isHorizontal;
     }
@@ -133,14 +122,14 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
             if (isHorizontal) {
                 var avgWidth = clientArea.width / states.size();
                 var startX = clientArea.x;
-                for (Object child : getChildren()) {
+                for (var child : getChildren()) {
                     ((Figure) child).setBounds(new Rectangle(startX, clientArea.y, avgWidth, clientArea.height));
                     startX += avgWidth;
                 }
             } else {
                 var avgHeight = clientArea.height / states.size();
                 var startY = clientArea.y;
-                for (Object child : getChildren()) {
+                for (var child : getChildren()) {
                     ((Figure) child).setBounds(new Rectangle(clientArea.x, startY, clientArea.width, avgHeight));
                     startY += avgHeight;
                 }
@@ -178,7 +167,6 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
             buttonGroup.setSelected(models.get(stateIndex));
             fromSetState = false;
         }
-
     }
 
     public synchronized void setState(String state) {
@@ -193,20 +181,17 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
 
     /**
      * Set all the state string values.
-     * 
-     * @param states
-     *            the states
      */
     public void setStates(List<String> states) {
         this.states = states;
         removeAll();
-        for (Object model : buttonGroup.getElements().toArray()) {
+        for (var model : buttonGroup.getElements().toArray()) {
             buttonGroup.remove((ToggleModel) model);
         }
         toggles.clear();
         models.clear();
         var i = 0;
-        for (String state : states) {
+        for (var state : states) {
             var index = i++;
             var toggleModel = new ToggleModel();
             var toggle = createToggle(state);
@@ -214,7 +199,6 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
                 toggle.setEventHandler(null);
             }
             toggleModel.addChangeListener(new ChangeListener() {
-
                 @Override
                 public void handleStateChanged(ChangeEvent event) {
                     if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) && toggle.isSelected()) {
@@ -244,7 +228,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     @Override
     public void setFocusTraversable(boolean focusTraversable) {
         super.setFocusTraversable(focusTraversable);
-        for (Toggle toggle : toggles) {
+        for (var toggle : toggles) {
             toggle.setFocusTraversable(focusTraversable);
         }
     }
@@ -252,9 +236,8 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     @Override
     public void setRequestFocusEnabled(boolean requestFocusEnabled) {
         super.setRequestFocusEnabled(requestFocusEnabled);
-        for (Toggle toggle : toggles) {
+        for (var toggle : toggles) {
             toggle.setRequestFocusEnabled(requestFocusEnabled);
         }
     }
-
 }

@@ -56,11 +56,9 @@ public class GraphicsUtil {
      * @param weight
      *            the first color's weight from 0-1
      * @return the new color
-     * @since 2.0
      */
     public static RGB mixColors(RGB c1, RGB c2, double weight) {
         return new RGB((int) (c1.red * weight + c2.red * (1 - weight)),
                 (int) (c1.green * weight + c2.green * (1 - weight)), (int) (c1.blue * weight + c2.blue * (1 - weight)));
     }
-
 }

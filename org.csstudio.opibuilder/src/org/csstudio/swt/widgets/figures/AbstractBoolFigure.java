@@ -51,7 +51,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (BoolLabelPosition h : values()) {
+            for (var h : values()) {
                 result[i++] = h.toString();
             }
             return result;
@@ -303,7 +303,6 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
         if (!booleanValue) {
             boolLabel.setText(offLabel);
         }
-
     }
 
     /**

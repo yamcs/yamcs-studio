@@ -9,12 +9,22 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_LOG_SCALE;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_MAJOR_TICK_STEP_HINT;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_MAX;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_MIN;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_SCALE_FONT;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_SCALE_FORMAT;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_SHOW_MINOR_TICKS;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_SHOW_SCALE;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_TRANSPARENT;
+import static org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel.PROP_VALUE_LABEL_FORMAT;
+
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
 import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
@@ -51,96 +61,74 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
      * {@link #registerPropertyChangeHandlers()}.
      */
     protected void registerCommonPropertyChangeHandlers() {
-        // value
-        IWidgetPropertyChangeHandler valueHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue == null) {
                 return false;
             }
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setValue(VTypeHelper.getDouble((VType) newValue));
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, valueHandler);
+        });
 
-        // minimum
-        IWidgetPropertyChangeHandler minimumHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_MIN, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setRange((Double) newValue, ((AbstractScaledWidgetModel) getModel()).getMaximum());
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MIN, minimumHandler);
+        });
 
-        // maximum
-        IWidgetPropertyChangeHandler maximumHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_MAX, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setRange(((AbstractScaledWidgetModel) getModel()).getMinimum(), (Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MAX, maximumHandler);
+        });
 
-        // major tick step hint
-        IWidgetPropertyChangeHandler majorTickHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_MAJOR_TICK_STEP_HINT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setMajorTickMarkStepHint((Integer) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MAJOR_TICK_STEP_HINT, majorTickHandler);
+        });
 
-        // logScale
-        IWidgetPropertyChangeHandler logScaleHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LOG_SCALE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setLogScale((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_LOG_SCALE, logScaleHandler);
+        });
 
-        // showScale
-        IWidgetPropertyChangeHandler showScaleHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_SCALE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setShowScale((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SHOW_SCALE, showScaleHandler);
+        });
 
-        // showMinorTicks
-        IWidgetPropertyChangeHandler showMinorTicksHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_MINOR_TICKS, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setShowMinorTicks((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SHOW_MINOR_TICKS, showMinorTicksHandler);
+        });
 
-        // Transparent
-        IWidgetPropertyChangeHandler transparentHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.setTransparent((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_TRANSPARENT, transparentHandler);
+        });
 
-        IWidgetPropertyChangeHandler scaleFontHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SCALE_FONT, (oldValue, newValue, refreshableFigure) -> {
             var figure = (AbstractScaledWidgetFigure) refreshableFigure;
             figure.getScale().setFont(((OPIFont) newValue).getSWTFont());
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SCALE_FONT, scaleFontHandler);
+        });
 
-        // scale format
-        IWidgetPropertyChangeHandler numericFormatHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_SCALE_FORMAT, (oldValue, newValue, figure) -> {
             var scaleFigure = (AbstractScaledWidgetFigure) figure;
             setScaleFormat(scaleFigure, (String) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SCALE_FORMAT, numericFormatHandler);
+        });
 
-        // value label format
-        IWidgetPropertyChangeHandler valueFormatHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_VALUE_LABEL_FORMAT, (oldValue, newValue, figure) -> {
             var scaleFigure = (AbstractScaledWidgetFigure) figure;
             setValueLabelFormat(scaleFigure, (String) newValue);
             return false;
-        };
-        setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_VALUE_LABEL_FORMAT, valueFormatHandler);
-
+        });
     }
 
     private void setScaleFormat(AbstractScaledWidgetFigure scaleFigure, String numericFormat) {

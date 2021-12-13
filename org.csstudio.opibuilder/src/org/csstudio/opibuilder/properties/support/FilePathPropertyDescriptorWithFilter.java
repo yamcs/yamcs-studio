@@ -38,5 +38,4 @@ public class FilePathPropertyDescriptorWithFilter extends FilePathPropertyDescri
         }
         return editor;
     }
-
 }

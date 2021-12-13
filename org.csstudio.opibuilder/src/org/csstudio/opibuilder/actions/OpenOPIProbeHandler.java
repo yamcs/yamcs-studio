@@ -44,7 +44,7 @@ public class OpenOPIProbeHandler extends AbstractHandler {
         }
 
         var i = 0;
-        for (ProcessVariable pv : pvs) {
+        for (var pv : pvs) {
             macros.put(MACRO_NAME + "_" + Integer.toString(i), pv.getName());
             i++;
         }

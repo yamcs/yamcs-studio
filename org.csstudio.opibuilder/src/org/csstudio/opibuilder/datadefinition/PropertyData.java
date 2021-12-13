@@ -22,5 +22,4 @@ public class PropertyData {
         this.property = property;
         this.tmpValue = value;
     }
-
 }

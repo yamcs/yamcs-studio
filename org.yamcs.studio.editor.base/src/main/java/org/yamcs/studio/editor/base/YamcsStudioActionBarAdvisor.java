@@ -30,7 +30,6 @@ import org.eclipse.ui.actions.NewWizardMenu;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.yamcs.studio.core.ui.ConnectionStringStatusLineContributionItem;
 import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
 import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
@@ -362,7 +361,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private void removeAction(String id) {
         var reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
         var actionSets = reg.getActionSets();
-        for (IActionSetDescriptor actionSet : actionSets) {
+        for (var actionSet : actionSets) {
             if (actionSet.getId().equals(id)) {
                 var ext = actionSet.getConfigurationElement().getDeclaringExtension();
                 reg.removeExtension(ext, new Object[] { actionSet });

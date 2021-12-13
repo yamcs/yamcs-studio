@@ -26,5 +26,4 @@ public class ChoiceButtonModel extends AbstractChoiceModel {
     public String getTypeID() {
         return ID;
     }
-
 }

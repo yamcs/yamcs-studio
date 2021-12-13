@@ -37,7 +37,7 @@ public class SimData {
             }
             var newValues = function.createValues(TimeInterval.between(function.lastTime, Instant.now()));
 
-            for (VType newValue : newValues) {
+            for (var newValue : newValues) {
                 if (newValue != null) {
                     value = newValue;
                 }

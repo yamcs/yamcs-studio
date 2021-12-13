@@ -250,7 +250,6 @@ public class LEDFigure extends AbstractBoolFigure {
     protected void updateBoolValue() {
         super.updateBoolValue();
         bulb.setBulbColor(booleanValue ? onColor : offColor);
-
     }
 
     public int getNStates() {

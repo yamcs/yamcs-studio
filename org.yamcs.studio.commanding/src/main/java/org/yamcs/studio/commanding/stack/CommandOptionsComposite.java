@@ -34,9 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.yamcs.protobuf.GetServerInfoResponse.CommandOptionInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
-import org.yamcs.protobuf.Mdb.EnumValue;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -111,7 +109,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
         optionsGroup.setLayout(new GridLayout(2, false));
 
         if (YamcsPlugin.hasSystemPrivilege("CommandOptions")) {
-            for (CommandOptionInfo extra : YamcsPlugin.getServerInfo().getCommandOptionsList()) {
+            for (var extra : YamcsPlugin.getServerInfo().getCommandOptionsList()) {
                 var text = extra.hasVerboseName() ? extra.getVerboseName() : extra.getId();
                 if ("BOOLEAN".equals(extra.getType())) {
                     var label = new Label(optionsGroup, SWT.NONE);
@@ -211,7 +209,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         composite.setLayout(gl);
-        for (TelecommandArgument argument : arguments) {
+        for (var argument : arguments) {
             var argumentLabel = new Label(composite, SWT.NONE);
             argumentLabel.setText(argument.getName());
             if (argument.getArgumentInfo().hasDescription()) {
@@ -222,7 +220,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 var argumentCombo = new Combo(composite, SWT.READ_ONLY);
                 argumentCombo.setLayoutData(new GridData(150, SWT.DEFAULT));
                 argumentCombo.setData(argument);
-                for (EnumValue enumValue : argument.getArgumentInfo().getType().getEnumValueList()) {
+                for (var enumValue : argument.getArgumentInfo().getType().getEnumValueList()) {
                     argumentCombo.add(enumValue.getLabel());
                     argumentCombo.setData(enumValue.getLabel(), enumValue);
                 }
@@ -297,7 +295,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
     public void updateValidity() {
         String invalidMessage = null;
 
-        for (Control control : controls) {
+        for (var control : controls) {
             var argument = (TelecommandArgument) control.getData();
             if ("integer".equals(argument.getType())) {
                 var text = ((Text) control).getText();
@@ -355,7 +353,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
 
     public Map<ArgumentInfo, String> getAssignments() {
         Map<ArgumentInfo, String> assignments = new HashMap<>();
-        for (Control control : controls) {
+        for (var control : controls) {
             var argument = (TelecommandArgument) control.getData();
             if (control instanceof Text) {
                 var text = ((Text) control).getText();

@@ -19,7 +19,6 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.ConnectionModel.RouterType;
 import org.csstudio.opibuilder.util.SchemaService;
-import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.geometry.PointList;
@@ -65,7 +64,6 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         default:
             return super.getDummyConnectionRouter(request);
         }
-
     }
 
     @Override
@@ -148,8 +146,8 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
      * @return List of handles; cannot be <code>null</code>
      */
     protected List<AnchorHandle> createAnchorHandles() {
-        List<AnchorHandle> result = new ArrayList<>();
-        for (ConnectionAnchor anchor : getWidgetEditPart().getAnchorMap().values()) {
+        var result = new ArrayList<AnchorHandle>();
+        for (var anchor : getWidgetEditPart().getAnchorMap().values()) {
             result.add(new AnchorHandle(getWidgetEditPart(), anchor));
         }
         return result;

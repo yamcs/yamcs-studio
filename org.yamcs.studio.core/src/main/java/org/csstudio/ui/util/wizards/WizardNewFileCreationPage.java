@@ -202,7 +202,6 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param filePath
      *            the path of the file resource to create a handle for
      * @return the new file resource handle
-     * @see #createFile
      */
     protected final IFile createFileHandle(IPath filePath) {
         return ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);

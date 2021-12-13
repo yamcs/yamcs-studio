@@ -9,10 +9,25 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_OFF_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_OFF_LABEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_ON_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel.PROP_ON_LABEL;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_BULB_BORDER;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_BULB_BORDER_COLOR;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_NSTATES;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_SQUARE_LED;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_STATE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_STATE_FALLBACK_COLOR;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_STATE_FALLBACK_LABEL;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_STATE_LABEL;
+import static org.csstudio.opibuilder.widgets.model.LEDModel.PROP_STATE_VALUE;
+
 import java.beans.PropertyChangeListener;
 
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel;
@@ -37,7 +52,6 @@ public class LEDEditPart extends AbstractBoolEditPart {
         led.setEffect3D(model.isEffect3D());
         led.setSquareLED(model.isSquareLED());
         return led;
-
     }
 
     @Override
@@ -49,135 +63,77 @@ public class LEDEditPart extends AbstractBoolEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        // effect 3D
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var led = (LEDFigure) refreshableFigure;
-                led.setEffect3D((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(LEDModel.PROP_EFFECT3D, handler);
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
+            var led = (LEDFigure) refreshableFigure;
+            led.setEffect3D((Boolean) newValue);
+            return true;
+        });
 
-        // Sqaure LED
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var led = (LEDFigure) refreshableFigure;
-                led.setSquareLED((Boolean) newValue);
-                if (!(Boolean) newValue) {
-                    var width = Math.min(getWidgetModel().getWidth(), getWidgetModel().getHeight());
-                    getWidgetModel().setSize(width, width);
-                }
-                return true;
+        setPropertyChangeHandler(PROP_SQUARE_LED, (oldValue, newValue, refreshableFigure) -> {
+            var led = (LEDFigure) refreshableFigure;
+            led.setSquareLED((Boolean) newValue);
+            if (!(Boolean) newValue) {
+                var width = Math.min(getWidgetModel().getWidth(), getWidgetModel().getHeight());
+                getWidgetModel().setSize(width, width);
             }
-        };
-        setPropertyChangeHandler(LEDModel.PROP_SQUARE_LED, handler);
+            return true;
+        });
 
         // force square size
-        IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if (getWidgetModel().isSquareLED()) {
-                    return false;
-                }
-                if (((Integer) newValue) < LEDModel.MINIMUM_SIZE) {
-                    newValue = LEDModel.MINIMUM_SIZE;
-                }
-                getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
+        IWidgetPropertyChangeHandler sizeHandler = (oldValue, newValue, figure) -> {
+            if (getWidgetModel().isSquareLED()) {
                 return false;
             }
-        };
-        PropertyChangeListener sizeListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
+            if (((Integer) newValue) < LEDModel.MINIMUM_SIZE) {
+                newValue = LEDModel.MINIMUM_SIZE;
             }
+            getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
+            return false;
         };
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(sizeListener);
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(sizeListener);
+        PropertyChangeListener sizeListener = evt -> sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(),
+                getFigure());
+        getWidgetModel().getProperty(PROP_WIDTH).addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(PROP_HEIGHT).addPropertyChangeListener(sizeListener);
 
-        // nStates
-        getWidgetModel().getProperty(LEDModel.PROP_NSTATES).addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                initializeNStatesProperties((Integer) evt.getOldValue(), (Integer) evt.getNewValue(),
-                        (LEDFigure) getFigure(), getWidgetModel());
-            }
-        });
+        getWidgetModel().getProperty(PROP_NSTATES).addPropertyChangeListener(
+                evt -> initializeNStatesProperties((Integer) evt.getOldValue(), (Integer) evt.getNewValue(),
+                        (LEDFigure) getFigure(), getWidgetModel()));
 
-        // stateFallbackLabel
-        getWidgetModel().getProperty(LEDModel.PROP_STATE_FALLBACK_LABEL)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        initializeStateFallbackLabel((String) evt.getOldValue(), (String) evt.getNewValue(),
-                                (LEDFigure) getFigure(), getWidgetModel());
-                    }
-                });
+        getWidgetModel().getProperty(PROP_STATE_FALLBACK_LABEL)
+                .addPropertyChangeListener(
+                        evt -> initializeStateFallbackLabel((String) evt.getOldValue(), (String) evt.getNewValue(),
+                                (LEDFigure) getFigure(), getWidgetModel()));
 
-        // stateFallbackColor
-        getWidgetModel().getProperty(LEDModel.PROP_STATE_FALLBACK_COLOR)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        initializeStateFallbackColor(((OPIColor) evt.getOldValue()).getSWTColor(),
+        getWidgetModel().getProperty(PROP_STATE_FALLBACK_COLOR)
+                .addPropertyChangeListener(
+                        evt -> initializeStateFallbackColor(((OPIColor) evt.getOldValue()).getSWTColor(),
                                 ((OPIColor) evt.getNewValue()).getSWTColor(), (LEDFigure) getFigure(),
-                                getWidgetModel());
-                    }
-                });
+                                getWidgetModel()));
 
-        // bulbBorderWidth
-        getWidgetModel().getProperty(LEDModel.PROP_BULB_BORDER).addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                initializeStateBulbBorderWidth((Integer) evt.getNewValue(), (LEDFigure) getFigure(), getWidgetModel());
-            }
-        });
+        getWidgetModel().getProperty(PROP_BULB_BORDER)
+                .addPropertyChangeListener(evt -> initializeStateBulbBorderWidth((Integer) evt.getNewValue(),
+                        (LEDFigure) getFigure(), getWidgetModel()));
 
-        // bulbBorderColor
-        getWidgetModel().getProperty(LEDModel.PROP_BULB_BORDER_COLOR)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        initializeStateBulbBorderColor(((OPIColor) evt.getNewValue()).getSWTColor(),
-                                (LEDFigure) getFigure(), getWidgetModel());
-                    }
-                });
+        getWidgetModel().getProperty(PROP_BULB_BORDER_COLOR)
+                .addPropertyChangeListener(
+                        evt -> initializeStateBulbBorderColor(((OPIColor) evt.getNewValue()).getSWTColor(),
+                                (LEDFigure) getFigure(), getWidgetModel()));
 
         for (var idx = 0; idx < LEDFigure.MAX_NSTATES; idx++) {
             var state = idx;
-            // stateLabelN
-            getWidgetModel().getProperty(String.format(LEDModel.PROP_STATE_LABEL, state))
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            initializeStateLabel(state, (String) evt.getOldValue(), (String) evt.getNewValue(),
-                                    (LEDFigure) getFigure(), getWidgetModel());
-                        }
-                    });
-            // stateColorN
-            getWidgetModel().getProperty(String.format(LEDModel.PROP_STATE_COLOR, state))
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            initializeStateColor(state, ((OPIColor) evt.getOldValue()).getSWTColor(),
+            getWidgetModel().getProperty(String.format(PROP_STATE_LABEL, state))
+                    .addPropertyChangeListener(
+                            evt -> initializeStateLabel(state, (String) evt.getOldValue(), (String) evt.getNewValue(),
+                                    (LEDFigure) getFigure(), getWidgetModel()));
+            getWidgetModel().getProperty(String.format(PROP_STATE_COLOR, state))
+                    .addPropertyChangeListener(
+                            evt -> initializeStateColor(state, ((OPIColor) evt.getOldValue()).getSWTColor(),
                                     ((OPIColor) evt.getNewValue()).getSWTColor(), (LEDFigure) getFigure(),
-                                    getWidgetModel());
-                        }
-                    });
-            // stateValueN
-            getWidgetModel().getProperty(String.format(LEDModel.PROP_STATE_VALUE, state))
-                    .addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            initializeStateValue(state, (Double) evt.getOldValue(), (Double) evt.getNewValue(),
-                                    (LEDFigure) getFigure(), getWidgetModel());
-                        }
-                    });
+                                    getWidgetModel()));
+            getWidgetModel().getProperty(String.format(PROP_STATE_VALUE, state))
+                    .addPropertyChangeListener(
+                            evt -> initializeStateValue(state, (Double) evt.getOldValue(), (Double) evt.getNewValue(),
+                                    (LEDFigure) getFigure(), getWidgetModel()));
         }
     }
 
@@ -205,35 +161,35 @@ public class LEDEditPart extends AbstractBoolEditPart {
 
     protected void initializeNStatesProperties(int oldNStates, int newNStates, LEDFigure figure, LEDModel model) {
         if (newNStates <= 2) {
-            model.setPropertyVisible(LEDModel.PROP_ON_COLOR, true);
-            model.setPropertyVisible(LEDModel.PROP_ON_LABEL, true);
-            model.setPropertyVisible(LEDModel.PROP_OFF_COLOR, true);
-            model.setPropertyVisible(LEDModel.PROP_OFF_LABEL, true);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_NSTATES, true, false);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_COLOR, false, false);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_LABEL, false, false);
+            model.setPropertyVisible(PROP_ON_COLOR, true);
+            model.setPropertyVisible(PROP_ON_LABEL, true);
+            model.setPropertyVisible(PROP_OFF_COLOR, true);
+            model.setPropertyVisible(PROP_OFF_LABEL, true);
+            model.setPropertyVisibleAndSavable(PROP_NSTATES, true, false);
+            model.setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_COLOR, false, false);
+            model.setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_LABEL, false, false);
             for (var idx = 0; idx < oldNStates; idx++) {
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), false, false);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), false, false);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_COLOR, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_LABEL, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_VALUE, idx), false, false);
             }
         } else if (newNStates > 2) {
-            model.setPropertyVisible(LEDModel.PROP_ON_COLOR, false);
-            model.setPropertyVisible(LEDModel.PROP_ON_LABEL, false);
-            model.setPropertyVisible(LEDModel.PROP_OFF_COLOR, false);
-            model.setPropertyVisible(LEDModel.PROP_OFF_LABEL, false);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_NSTATES, true, true);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_COLOR, true, true);
-            model.setPropertyVisibleAndSavable(LEDModel.PROP_STATE_FALLBACK_LABEL, true, true);
+            model.setPropertyVisible(PROP_ON_COLOR, false);
+            model.setPropertyVisible(PROP_ON_LABEL, false);
+            model.setPropertyVisible(PROP_OFF_COLOR, false);
+            model.setPropertyVisible(PROP_OFF_LABEL, false);
+            model.setPropertyVisibleAndSavable(PROP_NSTATES, true, true);
+            model.setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_COLOR, true, true);
+            model.setPropertyVisibleAndSavable(PROP_STATE_FALLBACK_LABEL, true, true);
             for (var idx = 0; idx < newNStates; idx++) {
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), true, true);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), true, true);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), true, true);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_COLOR, idx), true, true);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_LABEL, idx), true, true);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_VALUE, idx), true, true);
             }
             for (var idx = newNStates; idx < oldNStates; idx++) {
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_COLOR, idx), false, false);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_LABEL, idx), false, false);
-                model.setPropertyVisibleAndSavable(String.format(LEDModel.PROP_STATE_VALUE, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_COLOR, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_LABEL, idx), false, false);
+                model.setPropertyVisibleAndSavable(String.format(PROP_STATE_VALUE, idx), false, false);
             }
         }
         figure.setNStates(newNStates);

@@ -52,7 +52,6 @@ public final class UIBundlingThread implements Runnable {
             }
         }
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this, 100, 20, TimeUnit.MILLISECONDS);
-
     }
 
     /**
@@ -83,7 +82,6 @@ public final class UIBundlingThread implements Runnable {
         while ((r = tasksQueue.poll()) != null) {
             display.asyncExec(r);
         }
-
     }
 
     /**
@@ -105,5 +103,4 @@ public final class UIBundlingThread implements Runnable {
     public synchronized void addRunnable(Display display, Runnable runnable) {
         addRunnable(runnable);
     }
-
 }

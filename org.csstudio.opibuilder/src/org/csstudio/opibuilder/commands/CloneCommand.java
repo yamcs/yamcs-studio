@@ -144,7 +144,7 @@ public final class CloneCommand extends Command {
         var clipboard = new Clipboard(Display.getCurrent());
         var tempModel = new DisplayModel();
 
-        for (AbstractWidgetModel widget : _models) {
+        for (var widget : _models) {
             tempModel.addChild(widget, false);
         }
 
@@ -155,7 +155,7 @@ public final class CloneCommand extends Command {
 
         _compoundCommand = new CompoundCommand();
         var i = 0;
-        for (AbstractWidgetModel widgetModel : _clonedWidgets) {
+        for (var widgetModel : _clonedWidgets) {
             if (_difference != null) {
                 widgetModel.setLocation((widgetModel.getLocation().x + _difference.width),
                         (widgetModel.getLocation().y + _difference.height));

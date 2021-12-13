@@ -34,7 +34,6 @@ public class PolyLineModel extends AbstractPolyModel {
 
     public PolyLineModel() {
         setLineWidth(1);
-
     }
 
     @Override
@@ -46,7 +45,6 @@ public class PolyLineModel extends AbstractPolyModel {
         addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow", WidgetPropertyCategory.Display, true));
         addProperty(
                 new IntegerProperty(PROP_ARROW_LENGTH, "Arrow Length", WidgetPropertyCategory.Display, 20, 1, 1000));
-
     }
 
     @Override
@@ -111,5 +109,4 @@ public class PolyLineModel extends AbstractPolyModel {
     public void setFillArrow(boolean fill) {
         setPropertyValue(PROP_FILL_ARROW, fill);
     }
-
 }

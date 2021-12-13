@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.preferences.NamedColor;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -128,7 +127,7 @@ public final class MediaService {
         colorMap.put(AlarmRepresentationScheme.DISCONNECTED,
                 new OPIColor(AlarmRepresentationScheme.DISCONNECTED, CustomMediaFactory.COLOR_X11_PURPLE, true));
 
-        for (NamedColor color : OPIBuilderPlugin.getDefault().loadColors()) {
+        for (var color : OPIBuilderPlugin.getDefault().loadColors()) {
             colorMap.put(color.name, new OPIColor(color.name, color.rgb, true));
         }
     }
@@ -151,7 +150,7 @@ public final class MediaService {
         var finePrint = new FontData(defaultFont.getName(), height - 2, SWT.NORMAL);
         fontMap.put(FINE_PRINT, new OPIFont(FINE_PRINT, finePrint));
 
-        for (OPIFont font : OPIBuilderPlugin.getDefault().loadFonts()) {
+        for (var font : OPIBuilderPlugin.getDefault().loadFonts()) {
             fontMap.put(font.getFontMacroName(), font);
         }
     }
@@ -187,7 +186,7 @@ public final class MediaService {
     public OPIColor[] getAllPredefinedColors() {
         var result = new OPIColor[colorMap.size()];
         var i = 0;
-        for (OPIColor c : colorMap.values()) {
+        for (var c : colorMap.values()) {
             result[i++] = c;
         }
         return result;
@@ -227,7 +226,7 @@ public final class MediaService {
     public OPIFont[] getAllPredefinedFonts() {
         var result = new OPIFont[fontMap.size()];
         var i = 0;
-        for (OPIFont c : fontMap.values()) {
+        for (var c : fontMap.values()) {
             result[i++] = new OPIFont(c);
         }
         return result;

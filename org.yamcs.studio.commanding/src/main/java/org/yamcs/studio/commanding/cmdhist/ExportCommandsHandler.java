@@ -21,8 +21,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class ExportCommandsHandler extends AbstractHandler {
@@ -57,7 +55,7 @@ public class ExportCommandsHandler extends AbstractHandler {
     private void writeEvents(File targetFile, Table table) throws IOException {
         try (var writer = new FileWriter(targetFile)) {
             var first = true;
-            for (TableColumn tc : table.getColumns()) {
+            for (var tc : table.getColumns()) {
                 if (!first) {
                     writer.write("\t");
                 }
@@ -65,7 +63,7 @@ public class ExportCommandsHandler extends AbstractHandler {
                 first = false;
             }
 
-            for (TableItem item : table.getItems()) {
+            for (var item : table.getItems()) {
                 var rec = new String[table.getColumnCount()];
                 for (var i = 0; i < table.getColumnCount(); i++) {
                     rec[i] = item.getText(i);

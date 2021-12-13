@@ -19,12 +19,6 @@ import org.eclipse.gef.ui.actions.ZoomOutAction;
 @SuppressWarnings("restriction")
 public class PartZoomOutAction extends PartZoomAction {
 
-    /**
-     * Constructor for ZoomInAction.
-     *
-     * @param zoomManager
-     *            the zoom manager
-     */
     public PartZoomOutAction() {
         super("Zoom &Out", InternalImages.DESC_ZOOM_OUT);
         setToolTipText("Zoom Out");
@@ -32,9 +26,6 @@ public class PartZoomOutAction extends PartZoomAction {
         setActionDefinitionId(GEFActionConstants.ZOOM_OUT);
     }
 
-    /**
-     * @see org.eclipse.jface.action.IAction#run()
-     */
     @Override
     public void run() {
         if (zoomManager != null) {
@@ -42,12 +33,8 @@ public class PartZoomOutAction extends PartZoomAction {
         }
     }
 
-    /**
-     * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
-     */
     @Override
     public void zoomChanged(double zoom) {
         setEnabled(zoomManager.canZoomOut());
     }
-
 }

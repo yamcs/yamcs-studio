@@ -208,5 +208,4 @@ public class ErrorBar extends Composite {
         this.marginRight = marginRight;
         getParent().layout();
     }
-
 }

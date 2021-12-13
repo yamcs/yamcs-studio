@@ -42,12 +42,10 @@ public class LayoutWidgetsHandler extends AbstractHandler {
                     }
                 }
             }
-
         } else {
             return null;
         }
 
         return null;
     }
-
 }

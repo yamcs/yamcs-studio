@@ -23,7 +23,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -64,7 +63,7 @@ public class RunModeService {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (DisplayMode p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.description;
             }
             return sv;
@@ -169,7 +168,7 @@ public class RunModeService {
         UIBundlingThread.getInstance().addRunnable(() -> {
             try {
                 // Check for existing view with same input.
-                for (IViewReference viewReference : page.getViewReferences()) {
+                for (var viewReference : page.getViewReferences()) {
                     if (viewReference.getId().startsWith(OPIView.ID)) {
                         var view = viewReference.getView(true);
                         if (view instanceof OPIView) {

@@ -52,7 +52,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         private int thickness;
 
         public CharBox(char ch) {
-
             var layout = new BorderLayout();
             layout.setVerticalSpacing(0);
 
@@ -61,7 +60,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             label = new Label("" + ch);
             add(label);
             setConstraint(label, BorderLayout.CENTER);
-
         }
 
         public void setBorderColor(Color color) {
@@ -99,7 +97,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             super.setEnabled(value);
             setChildrenEnabled(value);
         }
-
     }
 
     /**
@@ -119,7 +116,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         private DigitBox left = null;
 
         public DigitBox(int positionIndex, boolean isDecimal) {
-
             var layout = new BorderLayout();
             layout.setVerticalSpacing(0);
 
@@ -176,7 +172,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
 
             // Enable key operation only in run mode.
             if (runmode) {
-
                 // When the user clicks this figure, the focus is requested so that
                 // this widget can get key events.
                 addMouseListener(new MouseListener.Stub() {
@@ -298,7 +293,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         public void setRightDigitBox(DigitBox box) {
             this.right = box;
         }
-
     }
 
     public static interface WheelListener extends EventListener {
@@ -329,7 +323,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
          * @param index
          */
         void incrementIntegerPart(int index);
-
     }
 
     /**
@@ -419,7 +412,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             add(box);
             wholePart[integerDigits - i - 1] = box;
             setConstraint(box, createGridData());
-
         }
 
         dot = new CharBox(' ');
@@ -470,25 +462,25 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
     }
 
     private void fireDecrementDecimalListeners(int index) {
-        for (WheelListener listener : listeners) {
+        for (var listener : listeners) {
             listener.decrementDecimalPart(index);
         }
     }
 
     private void fireDecrementIntegerListeners(int index) {
-        for (WheelListener listener : listeners) {
+        for (var listener : listeners) {
             listener.decrementIntegerPart(index);
         }
     }
 
     private void fireIncrementDecimalListeners(int index) {
-        for (WheelListener listener : listeners) {
+        for (var listener : listeners) {
             listener.incrementDecimalPart(index);
         }
     }
 
     private void fireIncrementIntegerListeners(int index) {
-        for (WheelListener listener : listeners) {
+        for (var listener : listeners) {
             listener.incrementIntegerPart(index);
         }
     }
@@ -573,7 +565,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         }
         this.decimalDigits = decimalDigits;
         createWidgets();
-
     }
 
     public void setDecimalWheel(int index, char value) {
@@ -597,24 +588,22 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         }
         this.integerDigits = integerDigits;
         createWidgets();
-
     }
 
     public void setIntegerWheel(int index, char value) {
         var box = wholePart[index];
         box.setValue("" + value);
-
     }
 
     public void setInternalBorderColor(Color color) {
         this.internalBorderColor = color;
         var col = color;
 
-        for (DigitBox box : wholePart) {
+        for (var box : wholePart) {
             box.setBorderColor(col);
         }
 
-        for (DigitBox box : decimalPart) {
+        for (var box : decimalPart) {
             box.setBorderColor(col);
         }
 
@@ -626,11 +615,11 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         this.internalFocusedBorderColor = color;
         var col = color;
 
-        for (DigitBox box : wholePart) {
+        for (var box : wholePart) {
             box.setFocusedBorderColor(col);
         }
 
-        for (DigitBox box : decimalPart) {
+        for (var box : decimalPart) {
             box.setFocusedBorderColor(col);
         }
     }
@@ -640,11 +629,11 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             throw new IllegalArgumentException();
         }
         this.internalBorderThickness = thickness;
-        for (DigitBox box : wholePart) {
+        for (var box : wholePart) {
             box.setBorderThickness(thickness);
         }
 
-        for (DigitBox box : decimalPart) {
+        for (var box : decimalPart) {
             box.setBorderThickness(thickness);
         }
 
@@ -665,11 +654,11 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
             return;
         }
 
-        for (DigitBox box : wholePart) {
+        for (var box : wholePart) {
             box.setFont(font);
         }
 
-        for (DigitBox box : decimalPart) {
+        for (var box : decimalPart) {
             box.setFont(font);
         }
 
@@ -700,11 +689,11 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
 
         showButtons = b;
 
-        for (DigitBox box : wholePart) {
+        for (var box : wholePart) {
             box.setButtonVisibility(b);
         }
 
-        for (DigitBox box : decimalPart) {
+        for (var box : decimalPart) {
             box.setButtonVisibility(b);
         }
     }

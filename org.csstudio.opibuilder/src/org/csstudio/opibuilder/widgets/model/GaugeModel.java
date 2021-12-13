@@ -97,5 +97,4 @@ public class GaugeModel extends AbstractMarkedWidgetModel {
     public void scale(double widthRatio, double heightRatio) {
         super.scale(widthRatio, heightRatio);
     }
-
 }

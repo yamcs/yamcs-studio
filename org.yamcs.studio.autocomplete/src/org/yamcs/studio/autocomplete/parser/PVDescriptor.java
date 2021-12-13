@@ -56,5 +56,4 @@ public class PVDescriptor extends ContentDescriptor {
         return "PVDescriptor [name=" + name + ", field=" + field + ", params=" + params + ", toString()="
                 + super.toString() + "]";
     }
-
 }

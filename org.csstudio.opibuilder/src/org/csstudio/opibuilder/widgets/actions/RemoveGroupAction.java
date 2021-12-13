@@ -39,13 +39,12 @@ public class RemoveGroupAction extends AbstractWidgetTargetAction {
         }
 
         var leftCorner = containerModel.getLocation();
-        for (AbstractWidgetModel widget : containerModel.getChildren()) {
+        for (var widget : containerModel.getChildren()) {
             compoundCommand.add(new AddWidgetCommand(containerModel.getParent(), widget,
                     new Rectangle(widget.getLocation(), widget.getSize()).translate(leftCorner)));
         }
         compoundCommand.add(new WidgetDeleteCommand(containerModel.getParent(), containerModel));
         execute(compoundCommand);
-
     }
 
     /**
@@ -56,5 +55,4 @@ public class RemoveGroupAction extends AbstractWidgetTargetAction {
     protected final GroupingContainerModel getSelectedContainer() {
         return ((GroupingContainerEditPart) selection.getFirstElement()).getWidgetModel();
     }
-
 }

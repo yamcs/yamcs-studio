@@ -48,7 +48,6 @@ public final class ArrayFloat extends ListFloat implements Serializable {
     @Override
     public final IteratorFloat iterator() {
         return new IteratorFloat() {
-
             private int index;
 
             @Override

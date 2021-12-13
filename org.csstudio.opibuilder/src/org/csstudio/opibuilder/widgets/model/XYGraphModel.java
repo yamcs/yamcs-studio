@@ -191,7 +191,6 @@ public class XYGraphModel extends AbstractPVWidgetModel {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setForegroundColor(CustomMediaFactory.COLOR_BLUE);
         setTooltip("$(trace_0_y_pv)\n$(trace_0_y_pv_value)");
-
     }
 
     @Override
@@ -246,7 +245,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
             } else {
                 category = new NameDefinedCategory("Secondary Axis (" + i + ")");
             }
-            for (AxisProperty axisProperty : AxisProperty.values()) {
+            for (var axisProperty : AxisProperty.values()) {
                 addAxisProperty(axisProperty, i, category);
             }
         }
@@ -320,7 +319,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
 
     private void addTraceProperties() {
         for (var i = 0; i < MAX_TRACES_AMOUNT; i++) {
-            for (TraceProperty traceProperty : TraceProperty.values()) {
+            for (var traceProperty : TraceProperty.values()) {
                 addTraceProperty(traceProperty, i);
             }
         }
@@ -398,7 +397,6 @@ public class XYGraphModel extends AbstractPVWidgetModel {
         default:
             break;
         }
-
     }
 
     public static String makeTracePropID(String propIDPre, int index) {

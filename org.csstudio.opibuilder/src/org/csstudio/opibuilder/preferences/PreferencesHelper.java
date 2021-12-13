@@ -118,7 +118,7 @@ public class PreferencesHelper {
             try {
                 var macros = new LinkedHashMap<String, String>();
                 var items = StringTableFieldEditor.decodeStringTable(getString(RUN_MACROS));
-                for (String[] item : items) {
+                for (var item : items) {
                     if (item.length == 2) {
                         macros.put(item[0], item[1]);
                     }
@@ -166,7 +166,7 @@ public class PreferencesHelper {
         }
         var rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
         var sb = new StringBuilder();
-        for (String rawPath : rawPaths) {
+        for (var rawPath : rawPaths) {
             if (sb.length() > 0) {
                 sb.append(System.getProperty("path.separator"));
             }

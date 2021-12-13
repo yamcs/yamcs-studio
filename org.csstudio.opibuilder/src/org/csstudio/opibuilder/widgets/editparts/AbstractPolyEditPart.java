@@ -10,15 +10,14 @@
 
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.AbstractPolyModel.PROP_POINTS;
+import static org.csstudio.opibuilder.widgets.model.AbstractPolyModel.PROP_ROTATION;
+
 import java.util.HashMap;
 
 import org.csstudio.opibuilder.editparts.PolyGraphAnchor;
-import org.csstudio.opibuilder.model.ConnectionModel;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.AbstractPolyModel;
 import org.csstudio.swt.widgets.util.PointsUtil;
-import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPart;
@@ -37,57 +36,45 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
 
-        // points
-        IWidgetPropertyChangeHandler pointsHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var polyline = (Polyline) refreshableFigure;
+        setPropertyChangeHandler(PROP_POINTS, (oldValue, newValue, refreshableFigure) -> {
+            var polyline = (Polyline) refreshableFigure;
 
-                var points = (PointList) newValue;
-                if (points.size() != polyline.getPoints().size()) {
-                    anchorMap = null;
-                    // delete connections on deleted points
-                    if (points.size() < polyline.getPoints().size()) {
-                        for (ConnectionModel conn : getWidgetModel().getSourceConnections()) {
-                            if (Integer.parseInt(conn.getSourceTerminal()) >= points.size()) {
-                                conn.disconnect();
-                            }
+            var points = (PointList) newValue;
+            if (points.size() != polyline.getPoints().size()) {
+                anchorMap = null;
+                // delete connections on deleted points
+                if (points.size() < polyline.getPoints().size()) {
+                    for (var conn1 : getWidgetModel().getSourceConnections()) {
+                        if (Integer.parseInt(conn1.getSourceTerminal()) >= points.size()) {
+                            conn1.disconnect();
                         }
-                        for (ConnectionModel conn : getWidgetModel().getTargetConnections()) {
-                            if (Integer.parseInt(conn.getTargetTerminal()) >= points.size()) {
-                                conn.disconnect();
-                            }
+                    }
+                    for (var conn2 : getWidgetModel().getTargetConnections()) {
+                        if (Integer.parseInt(conn2.getTargetTerminal()) >= points.size()) {
+                            conn2.disconnect();
                         }
                     }
                 }
-                // deselect the widget (this refreshes the polypoint drag
-                // handles)
-                var selectionState = getSelected();
-                setSelected(EditPart.SELECTED_NONE);
-
-                polyline.setPoints(points);
-                doRefreshVisuals(polyline);
-
-                // restore the selection state
-                setSelected(selectionState);
-
-                return false;
             }
-        };
-        setPropertyChangeHandler(AbstractPolyModel.PROP_POINTS, pointsHandler);
+            // deselect the widget (this refreshes the polypoint drag handles)
+            var selectionState = getSelected();
+            setSelected(EditPart.SELECTED_NONE);
 
-        IWidgetPropertyChangeHandler rotationHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getWidgetModel().setPoints(
-                        PointsUtil.rotatePoints(getWidgetModel().getOriginalPoints().getCopy(), (Double) newValue),
-                        false);
-                return false;
-            }
-        };
+            polyline.setPoints(points);
+            doRefreshVisuals(polyline);
 
-        setPropertyChangeHandler(AbstractPolyModel.PROP_ROTATION, rotationHandler);
+            // restore the selection state
+            setSelected(selectionState);
 
+            return false;
+        });
+
+        setPropertyChangeHandler(PROP_ROTATION, (oldValue, newValue, figure) -> {
+            getWidgetModel().setPoints(
+                    PointsUtil.rotatePoints(getWidgetModel().getOriginalPoints().getCopy(), (Double) newValue),
+                    false);
+            return false;
+        });
     }
 
     @Override
@@ -97,7 +84,7 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
 
     @Override
     protected void fillAnchorMap() {
-        anchorMap = new HashMap<String, ConnectionAnchor>(getFigure().getPoints().size());
+        anchorMap = new HashMap<>(getFigure().getPoints().size());
         for (var i = 0; i < getFigure().getPoints().size(); i++) {
             anchorMap.put(Integer.toString(i), new PolyGraphAnchor(getFigure(), i));
         }

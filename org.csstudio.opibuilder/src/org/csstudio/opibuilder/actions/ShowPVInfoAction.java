@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.actions;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.eclipse.jface.action.IAction;
@@ -53,7 +52,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             }
             parent.setLayout(new FillLayout());
             var tabFolder = new TabFolder(parent, SWT.None);
-            for (Entry<String, IPV> entry : pvMap.entrySet()) {
+            for (var entry : pvMap.entrySet()) {
                 var tabItem = new TabItem(tabFolder, SWT.None);
                 tabItem.setText(entry.getKey());
                 var text = new Text(tabFolder, SWT.MULTI | SWT.READ_ONLY);
@@ -62,9 +61,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
             }
             return tabFolder;
-
         }
-
     }
 
     private IStructuredSelection selection;
@@ -88,7 +85,6 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
         var dialog = new PVsInfoDialog(targetPart.getSite().getShell(), "PV Info", getSelectedWidget().getAllPVs());
         dialog.open();
-
     }
 
     private String getPVInfo(IPV pv) {
@@ -152,5 +148,4 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             return null;
         }
     }
-
 }

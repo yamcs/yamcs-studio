@@ -38,5 +38,4 @@ public class SysContentDescriptor extends ContentDescriptor {
     public static String getDescription(String function) {
         return functions.get(function);
     }
-
 }

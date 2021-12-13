@@ -125,7 +125,6 @@ public class WrappableTextFigure extends TextFigure {
         var preferedSize = scrollPane.getPreferredSize();
         var x = clientArea.x;
         if (clientArea.width > preferedSize.width) {
-
             switch (horizontalAlignment) {
             case CENTER:
                 x = clientArea.x + (clientArea.width - preferedSize.width) / 2;
@@ -162,7 +161,6 @@ public class WrappableTextFigure extends TextFigure {
         // textFlow.setPreferredSize(textBounds.getSize());
 
         scrollPane.setBounds(textBounds);
-
     }
 
     @Override
@@ -215,5 +213,4 @@ public class WrappableTextFigure extends TextFigure {
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
-
 }

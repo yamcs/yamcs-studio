@@ -63,7 +63,7 @@ public class EventLogPlugin extends AbstractUIPlugin {
 
         var buf = new StringBuilder();
         var first = true;
-        for (ColoringRule rule : rules) {
+        for (var rule : rules) {
             if (!first) {
                 buf.append(";"); // Same ENTRY_SEPARATOR as used in jface PreferenceConverter
             }
@@ -94,7 +94,7 @@ public class EventLogPlugin extends AbstractUIPlugin {
         }
 
         List<ColoringRule> rules = new ArrayList<>();
-        for (String ruleString : joined.split(";")) {
+        for (var ruleString : joined.split(";")) {
             var parts = ruleString.split("@");
             var bg = StringConverter.asRGB(parts[1]);
             var fg = StringConverter.asRGB(parts[2]);

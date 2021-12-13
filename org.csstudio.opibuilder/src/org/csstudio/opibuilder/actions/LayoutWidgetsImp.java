@@ -40,13 +40,11 @@ public class LayoutWidgetsImp {
         var compoundCommand = new CompoundCommand("Layout Widgets");
 
         var i = 0;
-        for (AbstractWidgetModel model : modelChildren) {
+        for (var model : modelChildren) {
             compoundCommand.add(new SetBoundsCommand(model, newBounds.get(i)));
             i++;
         }
 
         commandStack.execute(compoundCommand);
-
     }
-
 }

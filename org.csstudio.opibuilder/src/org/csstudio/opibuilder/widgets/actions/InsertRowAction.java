@@ -114,7 +114,6 @@ public class InsertRowAction implements IObjectActionDelegate {
             var before = dialog.isBefore();
             tableEditPart.getTable().insertRow(tableEditPart.getMenuTriggeredCell().x + (before ? 0 : 1));
         }
-
     }
 
     @Override
@@ -131,5 +130,4 @@ public class InsertRowAction implements IObjectActionDelegate {
             return null;
         }
     }
-
 }

@@ -51,8 +51,8 @@ public class PastePropertiesAction extends SelectionAction {
         var propData = getPropetiesCopyDataFromClipboard();
         var cmd = new CompoundCommand("Paste Properties");
 
-        for (AbstractWidgetModel targetWidget : getSelectedWidgetModels()) {
-            for (String prop_id : propData.getPropIDList()) {
+        for (var targetWidget : getSelectedWidgetModels()) {
+            for (var prop_id : propData.getPropIDList()) {
                 if (targetWidget.getAllPropertyIDs().contains(prop_id)) {
                     cmd.add(new SetWidgetPropertyCommand(targetWidget, prop_id,
                             propData.getWidgetModel().getPropertyValue(prop_id)));
@@ -61,7 +61,6 @@ public class PastePropertiesAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     @Override
@@ -90,7 +89,6 @@ public class PastePropertiesAction extends SelectionAction {
     private OPIEditor getOPIEditor() {
 
         return (OPIEditor) getWorkbenchPart();
-
     }
 
     /**
@@ -103,7 +101,7 @@ public class PastePropertiesAction extends SelectionAction {
 
         List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
 
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof EditPart) {
                 selectedWidgetModels.add((AbstractWidgetModel) ((EditPart) o).getModel());
             }

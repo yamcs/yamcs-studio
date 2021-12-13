@@ -48,7 +48,7 @@ public class WidgetDeleteCommand extends Command {
         List<ConnectionModel> result = new ArrayList<ConnectionModel>();
         result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
         if (widget instanceof AbstractContainerModel) {
-            for (AbstractWidgetModel child : ((AbstractContainerModel) widget).getAllDescendants()) {
+            for (var child : ((AbstractContainerModel) widget).getAllDescendants()) {
                 result.addAll(source ? child.getSourceConnections() : child.getTargetConnections());
             }
         }
@@ -71,15 +71,14 @@ public class WidgetDeleteCommand extends Command {
     }
 
     private void removeConnections(List<ConnectionModel> connections) {
-        for (ConnectionModel conn : connections) {
+        for (var conn : connections) {
             conn.disconnect();
         }
     }
 
     private void addConnections(List<ConnectionModel> connections) {
-        for (ConnectionModel conn : connections) {
+        for (var conn : connections) {
             conn.reconnect();
         }
     }
-
 }

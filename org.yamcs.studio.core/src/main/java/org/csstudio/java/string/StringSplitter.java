@@ -109,7 +109,6 @@ public class StringSplitter {
 
         return source.replaceAll(ESCAPED_QUOTE, SUBSTITUTE_QUOTE).replaceAll(ESCAPED_SINGLE_QUOTE,
                 SUBSTITUTE_SINGLE_QUOTE);
-
     }
 
     /**
@@ -122,6 +121,5 @@ public class StringSplitter {
     static String revertQuoteSubsitutions(String input) {
         return input.replaceAll(SUBSTITUTE_SINGLE_QUOTE, ESCAPED_SINGLE_QUOTE).replaceAll(SUBSTITUTE_QUOTE,
                 ESCAPED_QUOTE);
-
     }
 }

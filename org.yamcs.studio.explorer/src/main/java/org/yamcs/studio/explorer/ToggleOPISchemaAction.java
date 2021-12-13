@@ -38,7 +38,7 @@ public class ToggleOPISchemaAction extends Action implements IWorkbenchAction {
         var currentSchema = ResourceUtil.getIFileFromIPath(currentSchemaPath);
 
         var selection = (IStructuredSelection) selectionProvider.getSelection();
-        for (Object o : selection.toList()) {
+        for (var o : selection.toList()) {
             if (o instanceof IFile) {
                 if (o.equals(currentSchema)) {
                     // Untoggle

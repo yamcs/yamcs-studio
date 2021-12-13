@@ -50,7 +50,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             return;
         }
 
-        List<PVInfo> pvInfos = new ArrayList<>();
+        var pvInfos = new ArrayList<PVInfo>();
         getSelectedWidget().getAllPVs().forEach((k, v) -> pvInfos.add(new PVInfo(k, v)));
         Collections.sort(pvInfos);
         loadParameterInfoAndShowDialog(pvInfos);
@@ -62,8 +62,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
      * use of a latch.
      */
     private void loadParameterInfoAndShowDialog(List<PVInfo> pvInfos) {
-        List<PVInfo> yamcsPvs = new ArrayList<>();
-        for (PVInfo pvInfo : pvInfos) {
+        var yamcsPvs = new ArrayList<PVInfo>();
+        for (var pvInfo : pvInfos) {
             if (pvInfo.isYamcsParameter()) {
                 yamcsPvs.add(pvInfo);
             }
@@ -72,13 +72,12 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
         // Start a worker thread that will show the dialog when a response for
         // all yamcs parameters arrived
         new Thread() {
-
             @Override
             public void run() {
                 var latch = new CountDownLatch(yamcsPvs.size());
 
                 // Another reason why we should have futures
-                for (PVInfo pvInfo : pvInfos) {
+                for (var pvInfo : pvInfos) {
                     if (!pvInfo.isYamcsParameter()) {
                         latch.countDown();
                         continue;

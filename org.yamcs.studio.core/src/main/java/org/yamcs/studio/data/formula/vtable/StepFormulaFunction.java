@@ -74,5 +74,4 @@ class StepFormulaFunction implements FormulaFunction {
 
         return VTableFactory.step(initialValue.getValue().doubleValue(), increment.getValue().doubleValue());
     }
-
 }

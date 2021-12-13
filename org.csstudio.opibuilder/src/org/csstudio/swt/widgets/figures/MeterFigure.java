@@ -88,7 +88,6 @@ public class MeterFigure extends AbstractRoundRampedFigure {
                 revalidate();
             }
         });
-
     }
 
     @Override
@@ -264,8 +263,6 @@ public class MeterFigure extends AbstractRoundRampedFigure {
             // center.y - area.height/4,
             // area.width/2, area.height/2));
             // }
-
         }
     }
-
 }

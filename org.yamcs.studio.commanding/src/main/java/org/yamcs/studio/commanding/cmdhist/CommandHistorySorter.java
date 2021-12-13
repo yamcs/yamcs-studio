@@ -80,7 +80,7 @@ public class CommandHistorySorter extends ViewerComparator {
             return;
         }
     
-        for (int i = 0; i < priorities.length; i++) {
+        for (var i = 0; i < priorities.length; i++) {
             settings.put("priority" + i, priorities[i]);
             settings.put("direction" + i, directions[i]);
         }
@@ -92,7 +92,7 @@ public class CommandHistorySorter extends ViewerComparator {
         }
     
         try {
-            for (int i = 0; i < priorities.length; i++) {
+            for (var i = 0; i < priorities.length; i++) {
                 priorities[i] = settings.getInt("priority" + i);
                 directions[i] = settings.getInt("direction" + i);
             }

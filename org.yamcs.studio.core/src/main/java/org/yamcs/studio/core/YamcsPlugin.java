@@ -157,7 +157,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     @SuppressWarnings("unchecked")
     public static <T extends PluginService> T getService(Class<T> clazz) {
-        for (PluginService service : plugin.pluginServices) {
+        for (var service : plugin.pluginServices) {
             if (service.getClass().isAssignableFrom(clazz)) {
                 return (T) service;
             }
@@ -222,7 +222,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         soundSystem.dispose();
-        for (PluginService pluginService : pluginServices) {
+        for (var pluginService : pluginServices) {
             pluginService.dispose();
         }
 
@@ -481,7 +481,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             // relocated directly in YamcsClient (locally call disconnect,
             // when the client is manually closed).
             log.fine("Notify downstream components of Studio disconnect");
-            for (YamcsAware l : plugin.listeners) {
+            for (var l : plugin.listeners) {
                 log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
                 l.onYamcsDisconnected();
             }

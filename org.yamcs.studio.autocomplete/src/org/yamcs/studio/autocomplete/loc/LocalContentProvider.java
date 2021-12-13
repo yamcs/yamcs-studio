@@ -48,7 +48,7 @@ public class LocalContentProvider implements IAutoCompleteProvider {
             var type = locDesc.getvType();
             Proposal topProposal = null;
             String closestMatchingType = null;
-            for (String vType : LocalContentDescriptor.listVTypes()) {
+            for (var vType : LocalContentDescriptor.listVTypes()) {
                 if (vType.startsWith(type)) {
                     var prefix = locDesc.getPvName() + LocalContentParser.VTYPE_START;
                     prefix = LocalContentParser.LOCAL_SOURCE + prefix;
@@ -93,7 +93,6 @@ public class LocalContentProvider implements IAutoCompleteProvider {
                 td.styles[0] = ProposalStyle.getError(start, end);
             }
             result.addTooltipData(td);
-
         } else if (locDesc.isCompletingVType()) {
             td = new TooltipData();
             td.value = "pvname<type>";
@@ -106,7 +105,6 @@ public class LocalContentProvider implements IAutoCompleteProvider {
             td.styles = new ProposalStyle[1];
             td.styles[0] = ProposalStyle.getDefault(6, 12);
             result.addTooltipData(td);
-
         } else {
             int from = 6, to = 12; // bold <type>
             if (locDesc.getvType() == null) { // bold pvname
@@ -138,5 +136,4 @@ public class LocalContentProvider implements IAutoCompleteProvider {
     @Override
     public void cancel() {
     }
-
 }

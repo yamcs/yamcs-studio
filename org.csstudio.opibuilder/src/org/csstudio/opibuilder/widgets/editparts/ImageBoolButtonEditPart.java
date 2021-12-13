@@ -9,8 +9,18 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_STYLE;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_WIDTH;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_ALIGN_TO_NEAREST_SECOND;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_AUTOSIZE;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_NO_ANIMATION;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_OFF_IMAGE;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_ON_IMAGE;
+import static org.csstudio.opibuilder.widgets.model.ImageBoolButtonModel.PROP_STRETCH;
+
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgets.FigureTransparencyHelper;
@@ -41,13 +51,13 @@ public final class ImageBoolButtonEditPart extends AbstractBoolControlEditPart {
         var figure = new ImageBoolButtonFigure();
         initializeCommonFigureProperties(figure, model);
 
-        var sip = new SymbolImageProperties();
-        sip.setStretch(model.isStretch());
-        sip.setAutoSize(model.isAutoSize());
-        sip.setAnimationDisabled(model.isStopAnimation());
-        sip.setAlignedToNearestSecond(model.isAlignedToNearestSecond());
-        sip.setBackgroundColor(new Color(Display.getDefault(), model.getBackgroundColor()));
-        figure.setSymbolProperties(sip, model);
+        var props = new SymbolImageProperties();
+        props.setStretch(model.isStretch());
+        props.setAutoSize(model.isAutoSize());
+        props.setAnimationDisabled(model.isStopAnimation());
+        props.setAlignedToNearestSecond(model.isAlignedToNearestSecond());
+        props.setBackgroundColor(new Color(Display.getDefault(), model.getBackgroundColor()));
+        figure.setSymbolProperties(props, model);
         figure.setImageLoadedListener(figure1 -> {
             var symbolFigure = (ImageBoolButtonFigure) figure1;
             autoSizeWidget(symbolFigure);
@@ -83,8 +93,7 @@ public final class ImageBoolButtonEditPart extends AbstractBoolControlEditPart {
         // };
         // setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
 
-        // changes to the on image property
-        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ON_IMAGE, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
@@ -97,11 +106,9 @@ public final class ImageBoolButtonEditPart extends AbstractBoolControlEditPart {
             imageFigure.setOnImagePath(absolutePath);
             autoSizeWidget(imageFigure);
             return true;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_ON_IMAGE, handle);
+        });
 
-        // changes to the off image property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_OFF_IMAGE, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             var absolutePath = (String) newValue;
             if (!absolutePath.contains("://")) {
@@ -114,52 +121,43 @@ public final class ImageBoolButtonEditPart extends AbstractBoolControlEditPart {
             imageFigure.setOffImagePath(absolutePath);
             autoSizeWidget(imageFigure);
             return true;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_OFF_IMAGE, handle);
+        });
 
-        // changes to the stretch property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_STRETCH, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setStretch((Boolean) newValue);
             autoSizeWidget(imageFigure);
             return true;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_STRETCH, handle);
+        });
 
         FigureTransparencyHelper.addHandler(this, figure);
 
-        // changes to the autosize property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_AUTOSIZE, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             autoSizeWidget(imageFigure);
             return true;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_AUTOSIZE, handle);
+        });
 
-        // changes to the stop animation property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_NO_ANIMATION, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setAnimationDisabled((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_NO_ANIMATION, handle);
+        });
 
-        // changes to the align to nearest second property
-        handle = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ALIGN_TO_NEAREST_SECOND, (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             imageFigure.setAlignedToNearestSecond((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ImageBoolButtonModel.PROP_ALIGN_TO_NEAREST_SECOND, handle);
+        });
 
         // changes to the border width property
-        handle = (oldValue, newValue, figure) -> {
+        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
             var imageFigure = (ImageBoolButtonFigure) figure;
             autoSizeWidget(imageFigure);
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_WIDTH, handle);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_STYLE, handle);
+        setPropertyChangeHandler(PROP_BORDER_WIDTH, handle);
+        setPropertyChangeHandler(PROP_BORDER_STYLE, handle);
 
         // size change handlers - so we can stretch accordingly
         handle = (oldValue, newValue, figure) -> {
@@ -167,9 +165,8 @@ public final class ImageBoolButtonEditPart extends AbstractBoolControlEditPart {
             autoSizeWidget(imageFigure);
             return true;
         };
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_HEIGHT, handle);
-        setPropertyChangeHandler(AbstractWidgetModel.PROP_WIDTH, handle);
-
+        setPropertyChangeHandler(PROP_HEIGHT, handle);
+        setPropertyChangeHandler(PROP_WIDTH, handle);
     }
 
     @Override

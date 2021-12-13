@@ -17,7 +17,6 @@ public abstract class ListLong implements ListNumber, CollectionLong {
     @Override
     public IteratorLong iterator() {
         return new IteratorLong() {
-
             private int index;
 
             @Override

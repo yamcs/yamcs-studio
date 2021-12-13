@@ -39,5 +39,4 @@ public class OrphanChildCommand extends Command {
     public void undo() {
         parent.addChild(index, child);
     }
-
 }

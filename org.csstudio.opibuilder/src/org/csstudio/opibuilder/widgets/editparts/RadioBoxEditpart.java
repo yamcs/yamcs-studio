@@ -22,5 +22,4 @@ public class RadioBoxEditpart extends AbstractChoiceEditPart {
     protected AbstractChoiceFigure createChoiceFigure() {
         return new RadioBoxFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
     }
-
 }

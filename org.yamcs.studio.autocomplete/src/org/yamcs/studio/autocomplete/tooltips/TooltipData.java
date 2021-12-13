@@ -24,5 +24,4 @@ public class TooltipData {
     public String value;
     /** SWT StyleRange that will be applied to value. */
     public ProposalStyle[] styles;
-
 }

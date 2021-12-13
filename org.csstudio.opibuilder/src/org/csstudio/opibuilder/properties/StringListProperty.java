@@ -67,7 +67,7 @@ public class StringListProperty extends AbstractWidgetProperty {
     public Object getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE) {
             List<String> result = new ArrayList<>();
-            for (String item : (List<String>) super.getPropertyValue()) {
+            for (var item : (List<String>) super.getPropertyValue()) {
                 result.add(OPIBuilderMacroUtil.replaceMacros(widgetModel, item));
             }
             return result;
@@ -84,25 +84,23 @@ public class StringListProperty extends AbstractWidgetProperty {
     @Override
     public List<String> readValueFromXML(Element propElement) {
         List<String> result = new ArrayList<>();
-        for (Object oe : propElement.getChildren()) {
+        for (var oe : propElement.getChildren()) {
             var se = (Element) oe;
             if (se.getName().equals(XML_ELEMENT_ITEM)) {
                 result.add(se.getText());
             }
         }
         return result;
-
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void writeToXML(Element propElement) {
         var data = (List<String>) propertyValue;
-        for (String item : data) {
+        for (var item : data) {
             var newElement = new Element(XML_ELEMENT_ITEM);
             newElement.setText(item);
             propElement.addContent(newElement);
         }
     }
-
 }

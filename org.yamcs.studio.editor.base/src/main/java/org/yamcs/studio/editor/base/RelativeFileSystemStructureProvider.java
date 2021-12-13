@@ -56,7 +56,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
     }
 
     public List<File> collectFiles(Object element) {
-        List<File> result = new ArrayList<>();
+        var result = new ArrayList<File>();
 
         var root = (File) element;
         if (root.isDirectory()) {
@@ -70,7 +70,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
 
     private void collectFiles(File parent, List<File> result) {
         var children = parent.listFiles();
-        for (File child : children) {
+        for (var child : children) {
             if (child.isDirectory()) {
                 collectFiles(child, result);
             } else {

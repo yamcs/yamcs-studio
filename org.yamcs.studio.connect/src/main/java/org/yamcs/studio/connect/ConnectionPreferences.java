@@ -55,7 +55,7 @@ public class ConnectionPreferences {
             var type = new TypeToken<List<YamcsConfiguration>>() {
             }.getType();
             List<YamcsConfiguration> confs = new Gson().fromJson(json, type);
-            for (YamcsConfiguration conf : confs) {
+            for (var conf : confs) {
                 conf.init();
             }
             return confs;

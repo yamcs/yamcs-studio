@@ -18,5 +18,4 @@ public class LocalContentType extends ContentType {
     private LocalContentType(String value) {
         super(value);
     }
-
 }

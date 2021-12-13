@@ -94,7 +94,6 @@ public class ContextSwitcher implements IRunnableWithProgress {
                     MessageDialog.openError(null, "Could not switch context", e.getMessage());
                 });
             }
-
         }
         monitor.done();
     }

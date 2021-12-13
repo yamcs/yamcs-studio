@@ -243,5 +243,4 @@ public class Colorizer {
         }
         return 0;
     }
-
 }

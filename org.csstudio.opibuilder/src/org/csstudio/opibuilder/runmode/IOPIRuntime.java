@@ -44,5 +44,4 @@ public interface IOPIRuntime extends IWorkbenchPart, IAdaptable {
      * @return the display model in this runtime.
      */
     public DisplayModel getDisplayModel();
-
 }

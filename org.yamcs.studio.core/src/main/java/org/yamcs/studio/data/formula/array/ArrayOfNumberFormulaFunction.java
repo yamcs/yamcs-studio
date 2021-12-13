@@ -90,7 +90,7 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
         };
 
         VNumber firstNonNull = null;
-        for (Object object : args) {
+        for (var object : args) {
             if (object != null) {
                 firstNonNull = (VNumber) object;
             }
@@ -107,7 +107,6 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
                         stats.getRange().getMaximum(), stats.getRange().getMaximum(), stats.getRange().getMaximum(),
                         stats.getRange().getMinimum(), stats.getRange().getMaximum());
             }
-
         }
 
         return ValueFactory.newVNumberArray(data, highestSeverityOf(args, false), latestValidTimeOrNowOf(args),

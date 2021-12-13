@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
 import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
@@ -82,7 +81,7 @@ public class AddToStackWizardPage1 extends WizardPage {
                     var node = (XtceCommandNode) element;
                     var cmd = node.getCommandInfo();
                     var aliases = cmd.getAliasList();
-                    for (NamedObjectId aliase : aliases) {
+                    for (var aliase : aliases) {
                         if (aliase.getNamespace().equals(namespace)) {
                             return aliase.getName();
                         }
@@ -133,7 +132,6 @@ public class AddToStackWizardPage1 extends WizardPage {
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         expandAll.addSelectionListener(new SelectionListener() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 commandsTreeTable.expandAll();
@@ -287,7 +285,7 @@ public class AddToStackWizardPage1 extends WizardPage {
         YamcsPlugin.getMissionDatabase().getCommands().forEach(cmd -> {
             if (!cmd.hasAbstract() || !cmd.getAbstract()) {
                 // add aliases columns
-                for (NamedObjectId alias : cmd.getAliasList()) {
+                for (var alias : cmd.getAliasList()) {
                     var namespace = alias.getNamespace();
                     if (!namespaces.contains(namespace) && !namespace.startsWith("/")) {
                         namespaces.add(namespace);
@@ -363,7 +361,6 @@ public class AddToStackWizardPage1 extends WizardPage {
                 buf.append(significance.getReasonForWarning());
             }
             return buf.toString();
-
         } else {
             return null;
         }

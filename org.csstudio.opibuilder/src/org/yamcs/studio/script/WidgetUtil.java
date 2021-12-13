@@ -36,5 +36,4 @@ public class WidgetUtil {
             throw new RuntimeException(NLS.bind("The widget type ID: {0} does not exist!", widgetTypeID));
         }
     }
-
 }

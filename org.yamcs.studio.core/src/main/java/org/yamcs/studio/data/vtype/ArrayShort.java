@@ -45,7 +45,6 @@ public final class ArrayShort extends ListShort implements Serializable {
     @Override
     public final IteratorShort iterator() {
         return new IteratorShort() {
-
             private int index;
 
             @Override

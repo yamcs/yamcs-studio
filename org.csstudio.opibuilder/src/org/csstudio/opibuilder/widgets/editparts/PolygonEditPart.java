@@ -10,10 +10,12 @@
 
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_FILL_LEVEL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_HORIZONTAL_FILL;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_LINE_COLOR;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_TRANSPARENT;
+
 import org.csstudio.opibuilder.util.OPIColor;
-import org.csstudio.opibuilder.widgets.model.AbstractPolyModel;
-import org.csstudio.opibuilder.widgets.model.AbstractShapeModel;
 import org.csstudio.opibuilder.widgets.model.PolygonModel;
 import org.csstudio.swt.widgets.figures.PolygonFigure;
 import org.eclipse.draw2d.IFigure;
@@ -44,49 +46,28 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
 
-        // fill
-        IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var polygon = (PolygonFigure) refreshableFigure;
-                polygon.setFill((Double) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractPolyModel.PROP_FILL_LEVEL, fillHandler);
+        setPropertyChangeHandler(PROP_FILL_LEVEL, (oldValue, newValue, refreshableFigure) -> {
+            var polygon = (PolygonFigure) refreshableFigure;
+            polygon.setFill((Double) newValue);
+            return true;
+        });
 
-        // fill orientaion
-        IWidgetPropertyChangeHandler fillOrientHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (PolygonFigure) refreshableFigure;
-                figure.setHorizontalFill((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_HORIZONTAL_FILL, fillOrientHandler);
+        setPropertyChangeHandler(PROP_HORIZONTAL_FILL, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (PolygonFigure) refreshableFigure;
+            figure.setHorizontalFill((Boolean) newValue);
+            return true;
+        });
 
-        // transparent
-        IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (PolygonFigure) refreshableFigure;
-                figure.setTransparent((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_TRANSPARENT, transparentHandler);
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (PolygonFigure) refreshableFigure;
+            figure.setTransparent((Boolean) newValue);
+            return true;
+        });
 
-        // line color
-        IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                ((PolygonFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
-                return true;
-            }
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR, lineColorHandler);
-
+        setPropertyChangeHandler(PROP_LINE_COLOR, (oldValue, newValue, refreshableFigure) -> {
+            ((PolygonFigure) refreshableFigure).setLineColor(((OPIColor) newValue).getSWTColor());
+            return true;
+        });
     }
 
     @Override

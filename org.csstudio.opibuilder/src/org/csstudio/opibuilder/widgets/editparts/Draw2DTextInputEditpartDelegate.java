@@ -9,11 +9,16 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.widgets.model.LabelModel.PROP_TEXT;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_DATETIME_FORMAT;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_FILE_RETURN_PART;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_FILE_SOURCE;
+import static org.csstudio.opibuilder.widgets.model.TextInputModel.PROP_SELECTOR_TYPE;
+
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
-import org.csstudio.swt.widgets.datadefinition.IManualStringValueChangeListener;
 import org.csstudio.swt.widgets.figures.TextInputFigure;
 import org.csstudio.swt.widgets.figures.TextInputFigure.FileReturnPart;
 import org.csstudio.swt.widgets.figures.TextInputFigure.FileSource;
@@ -30,8 +35,6 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
     private TextInputFigure textInputFigure;
 
     /**
-     * @param editpart
-     * @param model
      * @param superFigure
      *            the figure created by super.doCreateFigure().
      */
@@ -49,30 +52,21 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         textInputFigure.setFileSource(model.getFileSource());
         textInputFigure.setFileReturnPart(model.getFileReturnPart());
 
-        textInputFigure.addManualValueChangeListener(new IManualStringValueChangeListener() {
-
-            @Override
-            public void manualValueChanged(String newValue) {
-                outputText(newValue);
-            }
-
-        });
+        textInputFigure.addManualValueChangeListener(newValue -> outputText(newValue));
 
         return textInputFigure;
     }
 
     /**
      * Call this method when user hit Enter or Ctrl+Enter for multiline input.
-     * 
-     * @param newValue
      */
     protected void outputText(String newValue) {
         if (editpart.getExecutionMode() == ExecutionMode.RUN_MODE) {
-            editpart.setPVValue(TextInputModel.PROP_PVNAME, newValue);
-            model.setPropertyValue(TextInputModel.PROP_TEXT, newValue, false);
+            editpart.setPVValue(PROP_PVNAME, newValue);
+            model.setPropertyValue(PROP_TEXT, newValue, false);
         } else {
             editpart.getViewer().getEditDomain().getCommandStack()
-                    .execute(new SetWidgetPropertyCommand(model, TextInputModel.PROP_TEXT, newValue));
+                    .execute(new SetWidgetPropertyCommand(model, PROP_TEXT, newValue));
         }
     }
 
@@ -83,74 +77,47 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
 
     @Override
     public void registerPropertyChangeHandlers() {
+        editpart.setPropertyChangeHandler(PROP_SELECTOR_TYPE, (oldValue, newValue, figure) -> {
+            ((TextInputFigure) figure).setSelectorType(model.getSelectorType());
+            return false;
+        });
 
-        IWidgetPropertyChangeHandler selectorTypeHandler = new IWidgetPropertyChangeHandler() {
+        editpart.setPropertyChangeHandler(PROP_DATETIME_FORMAT, (oldValue, newValue, figure) -> {
+            ((TextInputFigure) figure).setDateTimeFormat((String) newValue);
+            return false;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((TextInputFigure) figure).setSelectorType(model.getSelectorType());
-                return false;
-            }
-        };
+        editpart.setPropertyChangeHandler(PROP_FILE_SOURCE, (oldValue, newValue, figure) -> {
+            ((TextInputFigure) figure).setFileSource(FileSource.values()[(Integer) newValue]);
+            return false;
+        });
 
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_SELECTOR_TYPE, selectorTypeHandler);
-
-        IWidgetPropertyChangeHandler dateTimeFormatHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((TextInputFigure) figure).setDateTimeFormat((String) newValue);
-                return false;
-            }
-        };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_DATETIME_FORMAT, dateTimeFormatHandler);
-
-        IWidgetPropertyChangeHandler fileSourceHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((TextInputFigure) figure).setFileSource(FileSource.values()[(Integer) newValue]);
-                return false;
-            }
-        };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_SOURCE, fileSourceHandler);
-
-        IWidgetPropertyChangeHandler fileReturnPartHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((TextInputFigure) figure).setFileReturnPart(FileReturnPart.values()[(Integer) newValue]);
-                return false;
-            }
-        };
-        editpart.setPropertyChangeHandler(TextInputModel.PROP_FILE_RETURN_PART, fileReturnPartHandler);
+        editpart.setPropertyChangeHandler(PROP_FILE_RETURN_PART, (oldValue, newValue, figure) -> {
+            ((TextInputFigure) figure).setFileReturnPart(FileReturnPart.values()[(Integer) newValue]);
+            return false;
+        });
     }
 
-    /**
-     * @param newValue
-     */
     @Override
     public void updatePropSheet() {
         switch (model.getSelectorType()) {
         case NONE:
-            model.setPropertyVisible(TextInputModel.PROP_DATETIME_FORMAT, false);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_RETURN_PART, false);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_SOURCE, false);
+            model.setPropertyVisible(PROP_DATETIME_FORMAT, false);
+            model.setPropertyVisible(PROP_FILE_RETURN_PART, false);
+            model.setPropertyVisible(PROP_FILE_SOURCE, false);
             break;
         case DATETIME:
-            model.setPropertyVisible(TextInputModel.PROP_DATETIME_FORMAT, true);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_RETURN_PART, false);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_SOURCE, false);
+            model.setPropertyVisible(PROP_DATETIME_FORMAT, true);
+            model.setPropertyVisible(PROP_FILE_RETURN_PART, false);
+            model.setPropertyVisible(PROP_FILE_SOURCE, false);
             break;
         case FILE:
-            model.setPropertyVisible(TextInputModel.PROP_DATETIME_FORMAT, false);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_RETURN_PART, true);
-            model.setPropertyVisible(TextInputModel.PROP_FILE_SOURCE, true);
+            model.setPropertyVisible(PROP_DATETIME_FORMAT, false);
+            model.setPropertyVisible(PROP_FILE_RETURN_PART, true);
+            model.setPropertyVisible(PROP_FILE_SOURCE, true);
             break;
         default:
             break;
         }
-
     }
-
 }

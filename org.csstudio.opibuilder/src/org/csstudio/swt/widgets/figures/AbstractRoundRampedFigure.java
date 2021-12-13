@@ -140,5 +140,4 @@ public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
     public boolean isGradient() {
         return gradient;
     }
-
 }

@@ -38,7 +38,7 @@ public class ExportUtil {
         var rootElement = doc.createElement("commandStack");
         doc.appendChild(rootElement);
 
-        for (StackedCommand command : stack.getCommands()) {
+        for (var command : stack.getCommands()) {
             var commandElement = doc.createElement("command");
 
             var attr = doc.createAttribute("qualifiedName");
@@ -74,7 +74,7 @@ public class ExportUtil {
                 commandElement.setAttributeNode(attr);
             }
 
-            for (TelecommandArgument arg : command.getEffectiveAssignments()) {
+            for (var arg : command.getEffectiveAssignments()) {
                 var value = command.getAssignedStringValue(arg.getArgumentInfo());
 
                 if (value == null && arg.getArgumentInfo().hasInitialValue()) {

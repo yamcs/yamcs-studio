@@ -16,5 +16,4 @@ public interface CollectionDouble extends CollectionNumber {
 
     @Override
     IteratorDouble iterator();
-
 }

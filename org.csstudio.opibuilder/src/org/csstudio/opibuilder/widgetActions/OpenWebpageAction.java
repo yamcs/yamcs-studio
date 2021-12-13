@@ -28,7 +28,6 @@ public class OpenWebpageAction extends AbstractWidgetAction {
     @Override
     protected void configureProperties() {
         addProperty(new StringProperty(PROP_HYPERLINK, "Web Address", WidgetPropertyCategory.Basic, "http://"));
-
     }
 
     @Override

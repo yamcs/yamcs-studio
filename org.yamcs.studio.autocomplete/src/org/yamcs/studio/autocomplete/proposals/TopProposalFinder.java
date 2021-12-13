@@ -39,7 +39,7 @@ public class TopProposalFinder {
         var cleanedName = AutoCompleteHelper.trimWildcards(name);
         var namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
         Proposal topProposal = null;
-        for (String proposal : proposals) {
+        for (var proposal : proposals) {
             var m = namePattern.matcher(proposal);
             if (m.find()) {
                 var start = m.end();
@@ -73,7 +73,7 @@ public class TopProposalFinder {
                 }
             }
             var hasDelimiter = false;
-            for (char d : delimiters.toCharArray()) {
+            for (var d : delimiters.toCharArray()) {
                 if (token.indexOf(d) >= 0) {
                     hasDelimiter = true;
                 }

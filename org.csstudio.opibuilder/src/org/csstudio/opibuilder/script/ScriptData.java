@@ -128,7 +128,6 @@ public class ScriptData implements IAdaptable {
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
-
                 @Override
                 public Object getParent(Object o) {
                     return null;

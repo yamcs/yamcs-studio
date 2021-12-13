@@ -147,7 +147,6 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
 
         addButton = createButton(box, "Add...");
         addButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 addNewColor();
@@ -168,7 +167,6 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
 
         removeButton = createButton(box, "Remove");
         removeButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeRule(getSelectedColor());

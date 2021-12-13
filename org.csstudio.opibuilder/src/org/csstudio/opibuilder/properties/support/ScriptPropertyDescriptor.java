@@ -43,5 +43,4 @@ public class ScriptPropertyDescriptor extends TextPropertyDescriptor {
         }
         return editor;
     }
-
 }

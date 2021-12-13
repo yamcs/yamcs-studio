@@ -181,7 +181,7 @@ public class PVTupleTableEditor extends Composite {
                 var names = txt.split("[\r\n]+");
                 var tuples = new PVTuple[names.length];
                 var i = 0;
-                for (String name : names) {
+                for (var name : names) {
                     tuples[i] = new PVTuple(name, true);
                     pvTupleList.add(tuples[i]);
                     i++;
@@ -206,7 +206,7 @@ public class PVTupleTableEditor extends Composite {
         var selection = (IStructuredSelection) pvTupleListTableViewer.getSelection();
 
         var num_tuple = 0;
-        for (Object obj : selection.toArray()) {
+        for (var obj : selection.toArray()) {
             if (obj instanceof PVTuple) {
                 num_tuple++;
             }
@@ -412,7 +412,6 @@ public class PVTupleTableEditor extends Composite {
             }
             return null;
         }
-
     }
 
     private final static class PVColumnEditingSupport extends EditingSupport {
@@ -450,7 +449,6 @@ public class PVTupleTableEditor extends Composite {
                 getViewer().refresh();
             }
         }
-
     }
 
     private final static class TriggerColumnEditingSupport extends EditingSupport {
@@ -487,7 +485,5 @@ public class PVTupleTableEditor extends Composite {
                 getViewer().refresh();
             }
         }
-
     }
-
 }

@@ -93,7 +93,6 @@ public class TabFigure extends Figure implements Introspectable {
         add(tabArea);
         tabArea.setViewport(new FreeformViewport());
         tabArea.setContents(pane);
-
     }
 
     public synchronized void addTab(String title) {
@@ -151,7 +150,7 @@ public class TabFigure extends Figure implements Introspectable {
     }
 
     private void fireActiveTabIndexChanged(int oldIndex, int newIndex) {
-        for (ITabListener listener : tabListeners) {
+        for (var listener : tabListeners) {
             listener.activeTabIndexChanged(oldIndex, newIndex);
         }
     }
@@ -193,7 +192,7 @@ public class TabFigure extends Figure implements Introspectable {
 
     public int getTabLabelHeight() {
         var h = minimumTabHeight;
-        for (Label label : tabLabelList) {
+        for (var label : tabLabelList) {
             if (label.getPreferredSize().height > h) {
                 h = label.getPreferredSize().height;
             }
@@ -203,7 +202,7 @@ public class TabFigure extends Figure implements Introspectable {
 
     public int getTabLabelWidth() {
         var h = MINIMUM_TAB_WIDTH;
-        for (Label label : tabLabelList) {
+        for (var label : tabLabelList) {
             if (label.getPreferredSize().width > h) {
                 h = label.getPreferredSize().width;
             }
@@ -220,7 +219,7 @@ public class TabFigure extends Figure implements Introspectable {
         var width = getTabLabelWidth();
         var height = getTabLabelHeight();
         var i = 0;
-        for (Label label : tabLabelList) {
+        for (var label : tabLabelList) {
             var labelSize = label.getPreferredSize();
             if (horizontal) {
                 if (getActiveTabIndex() == i) {
@@ -301,7 +300,7 @@ public class TabFigure extends Figure implements Introspectable {
         }
 
         var i = 0;
-        for (Label l : tabLabelList) {
+        for (var l : tabLabelList) {
             l.setBackgroundColor(getDarkColor(tabColorList.get(i++)));
         }
 
@@ -311,16 +310,13 @@ public class TabFigure extends Figure implements Introspectable {
         this.activeTabIndex = activeTabIndex;
         revalidate();
         repaint();
-
     }
 
     public void setIconPath(int index, IPath path, IJobErrorHandler errorHandler) {
         dispose(index);
 
         if (path != null && !path.isEmpty()) {
-
-            AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
-
+            var uiTask = new AbstractInputStreamRunnable() {
                 @Override
                 public void runWithInputStream(InputStream stream) {
                     var image = new Image(null, stream);
@@ -332,7 +328,6 @@ public class TabFigure extends Figure implements Introspectable {
                 }
             };
             ResourceUtil.pathToInputStreamInJob(path.toPortableString(), uiTask, "Loading Tab Icon...", errorHandler);
-
         }
     }
 

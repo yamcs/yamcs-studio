@@ -18,7 +18,7 @@ import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 /**
  * A custom spacer. Eclipse separators look a bit crappy, and don't even seem to work in 4.3
  * 
- * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=413213
+ * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=413213
  */
 public class ToolbarSpacer extends WorkbenchWindowControlContribution {
 

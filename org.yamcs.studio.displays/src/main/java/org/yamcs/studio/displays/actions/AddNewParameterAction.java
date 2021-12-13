@@ -17,7 +17,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.displays.AddParameterWizard;
 import org.yamcs.studio.displays.ParameterTableViewer;
 
@@ -36,7 +35,7 @@ public class AddNewParameterAction extends Action {
         var wizard = new AddParameterWizard();
         var dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK) {
-            for (ParameterInfo info : wizard.getParameter()) {
+            for (var info : wizard.getParameter()) {
                 // viewer.attachParameterInfo(info);
             }
         }

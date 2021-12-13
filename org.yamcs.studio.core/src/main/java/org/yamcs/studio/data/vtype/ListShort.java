@@ -17,7 +17,6 @@ public abstract class ListShort implements ListNumber, CollectionShort {
     @Override
     public IteratorShort iterator() {
         return new IteratorShort() {
-
             private int index;
 
             @Override
@@ -120,5 +119,4 @@ public abstract class ListShort implements ListNumber, CollectionShort {
         }
         return result;
     }
-
 }

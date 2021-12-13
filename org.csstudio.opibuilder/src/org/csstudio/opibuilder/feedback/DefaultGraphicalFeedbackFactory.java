@@ -41,7 +41,6 @@ public class DefaultGraphicalFeedbackFactory implements IGraphicalFeedbackFactor
 
         feedbackFigure.translateToRelative(bounds);
         feedbackFigure.setBounds(bounds);
-
     }
 
     @Override
@@ -56,7 +55,6 @@ public class DefaultGraphicalFeedbackFactory implements IGraphicalFeedbackFactor
         var size = request.getSize().getCopy();
         feedback.translateToRelative(size);
         feedback.setBounds(new Rectangle(p, size).expand(insets));
-
     }
 
     @Override
@@ -80,5 +78,4 @@ public class DefaultGraphicalFeedbackFactory implements IGraphicalFeedbackFactor
     public List<Handle> createCustomHandles(GraphicalEditPart editPart) {
         return null;
     }
-
 }

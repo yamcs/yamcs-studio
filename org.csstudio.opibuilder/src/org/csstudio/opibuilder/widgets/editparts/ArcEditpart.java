@@ -9,7 +9,10 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.widgets.model.ArcModel.PROP_FILL;
+import static org.csstudio.opibuilder.widgets.model.ArcModel.PROP_START_ANGLE;
+import static org.csstudio.opibuilder.widgets.model.ArcModel.PROP_TOTAL_ANGLE;
+
 import org.csstudio.opibuilder.widgets.model.ArcModel;
 import org.csstudio.swt.widgets.figures.ArcFigure;
 import org.eclipse.draw2d.IFigure;
@@ -37,39 +40,23 @@ public class ArcEditpart extends AbstractShapeEditPart {
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
-        // fill
-        IWidgetPropertyChangeHandler fillHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (ArcFigure) refreshableFigure;
-                figure.setFill((Boolean) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(ArcModel.PROP_FILL, fillHandler);
+        setPropertyChangeHandler(PROP_FILL, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (ArcFigure) refreshableFigure;
+            figure.setFill((Boolean) newValue);
+            return true;
+        });
 
-        // start angle
-        IWidgetPropertyChangeHandler startAngleHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (ArcFigure) refreshableFigure;
-                figure.setStartAngle((Integer) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(ArcModel.PROP_START_ANGLE, startAngleHandler);
+        setPropertyChangeHandler(PROP_START_ANGLE, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (ArcFigure) refreshableFigure;
+            figure.setStartAngle((Integer) newValue);
+            return true;
+        });
 
-        // total angle
-        IWidgetPropertyChangeHandler totalAngleHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                var figure = (ArcFigure) refreshableFigure;
-                figure.setTotalAngle((Integer) newValue);
-                return true;
-            }
-        };
-        setPropertyChangeHandler(ArcModel.PROP_TOTAL_ANGLE, totalAngleHandler);
-
+        setPropertyChangeHandler(PROP_TOTAL_ANGLE, (oldValue, newValue, refreshableFigure) -> {
+            var figure = (ArcFigure) refreshableFigure;
+            figure.setTotalAngle((Integer) newValue);
+            return true;
+        });
     }
 
     @Override
@@ -85,5 +72,4 @@ public class ArcEditpart extends AbstractShapeEditPart {
     public Object getValue() {
         return ((ArcFigure) getFigure()).isFill();
     }
-
 }

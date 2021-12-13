@@ -708,7 +708,6 @@ public class SVGHandler {
         @Override
         public void updateFailed(UpdateManagerEvent e) {
         }
-
     }
 
     protected void resetCache() {
@@ -732,7 +731,7 @@ public class SVGHandler {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-                for (Image entry : entriesCopy) {
+                for (var entry : entriesCopy) {
                     entry.dispose();
                 }
                 entriesCopy.clear();
@@ -781,7 +780,7 @@ public class SVGHandler {
             return;
         }
         List<?> styleSheetsList = cssEngine.getStyleSheetNodes();
-        for (Object node : styleSheetsList) {
+        for (var node : styleSheetsList) {
             if (node instanceof CSSStyleSheetNode) {
                 var cssNode = (CSSStyleSheetNode) node;
                 var styleSheet = cssNode.getCSSStyleSheet();

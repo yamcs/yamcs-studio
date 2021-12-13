@@ -146,7 +146,6 @@ public class OPIRuntimeDelegate implements IAdaptable {
             displayModel.setViewer(viewer);
         }
         ScalableFreeformRootEditPart root = new PatchedScalableFreeformRootEditPart() {
-
             // In Run mode, clicking the Display or container should de-select
             // all widgets.
             @Override
@@ -176,12 +175,10 @@ public class OPIRuntimeDelegate implements IAdaptable {
         // viewer.addDragSourceListener(new DragPVSourceListener(viewer));
         // this will make viewer as a selection provider
         EditDomain editDomain = new EditDomain() {
-
             @Override
             public void loadDefaultTool() {
                 setActiveTool(new RuntimePatchedSelectionTool());
             }
-
         };
         editDomain.addViewer(viewer);
 
@@ -235,7 +232,6 @@ public class OPIRuntimeDelegate implements IAdaptable {
         if (displayModelFilled && displayModel.isFreshRateEnabled()) {
             var updateManager = root.getFigure().getUpdateManager();
             updateManager.addUpdateListener(new UpdateListener() {
-
                 private long updateCycle = -1; // in milliseconds
                 private Date previousDate = null;
 

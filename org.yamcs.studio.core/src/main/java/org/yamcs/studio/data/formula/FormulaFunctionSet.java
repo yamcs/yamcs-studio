@@ -26,7 +26,6 @@ package org.yamcs.studio.data.formula;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -78,8 +77,8 @@ public abstract class FormulaFunctionSet {
      * @return the function names
      */
     public final Collection<String> getFunctionNames() {
-        Set<String> names = new HashSet<>();
-        for (FormulaFunction formulaFunction : formulaFunctions) {
+        var names = new HashSet<String>();
+        for (var formulaFunction : formulaFunctions) {
             names.add(formulaFunction.getName());
         }
         return names;
@@ -97,8 +96,8 @@ public abstract class FormulaFunctionSet {
             return Collections.emptyList();
         }
 
-        Set<FormulaFunction> formulas = new HashSet<>();
-        for (FormulaFunction formulaFunction : formulaFunctions) {
+        var formulas = new HashSet<FormulaFunction>();
+        for (var formulaFunction : formulaFunctions) {
             if (name.equals(formulaFunction.getName())) {
                 formulas.add(formulaFunction);
             }

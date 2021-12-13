@@ -29,9 +29,6 @@ import org.eclipse.swt.widgets.Combo;
  * <li>decide if you want to call loadSettings() to restore the saved values
  * <li>save values via saveSettings, or use the save_on_dispose option of the constructor.
  * </ul>
- *
- * @see #itemSelected(String)
- * @see #newSelection(String)
  */
 public class ComboHistoryHelper {
 
@@ -207,7 +204,7 @@ public class ComboHistoryHelper {
             if (pvs == null) {
                 return;
             }
-            String values[] = pvs.getArray(TAG);
+            var values = pvs.getArray(TAG);
             if (values != null) {
                 for (var i = values.length - 1; i >= 0; i--) {
                     // Load as if they were entered, i.e. skip duplicates

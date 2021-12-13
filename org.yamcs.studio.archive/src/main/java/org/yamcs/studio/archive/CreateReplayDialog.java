@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.CreateProcessorRequest;
 import org.yamcs.studio.core.TimeInterval;
@@ -158,7 +157,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         gd.heightHint = 5 * ppTable.getTable().getItemHeight();
         ppTable.getTable().setLayoutData(gd);
         ppTable.setInput(ppValue);
-        for (TableItem item : ppTable.getTable().getItems()) {
+        for (var item : ppTable.getTable().getItems()) {
             item.setChecked(false);
         }
 
@@ -219,7 +218,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         spec.add("packetRequest", new JsonObject());
 
         var ppFilters = new JsonArray();
-        for (TableItem item : ppTable.getTable().getItems()) {
+        for (var item : ppTable.getTable().getItems()) {
             if (item.getChecked()) {
                 ppFilters.add(item.getText());
             }

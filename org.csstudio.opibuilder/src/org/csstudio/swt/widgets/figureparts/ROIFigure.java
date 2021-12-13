@@ -72,7 +72,6 @@ public class ROIFigure extends Figure {
             }
             me.consume();
         }
-
     }
 
     class ROIRectDragger extends CommonDragger {
@@ -93,7 +92,6 @@ public class ROIFigure extends Figure {
                     startROIBounds.height);
             setROIGeoBounds(RECT_SINGLETON.x, RECT_SINGLETON.y, RECT_SINGLETON.width, RECT_SINGLETON.height);
         }
-
     }
 
     class HandlerBoundsCalulator {
@@ -138,7 +136,6 @@ public class ROIFigure extends Figure {
             case 1:
                 cursor = Cursors.SIZEN;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dy = me.y - start.y;
@@ -155,7 +152,6 @@ public class ROIFigure extends Figure {
             case 2:
                 cursor = Cursors.SIZENE;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dx = me.x - start.x;
@@ -174,7 +170,6 @@ public class ROIFigure extends Figure {
             case 3:
                 cursor = Cursors.SIZEE;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dx = me.x - start.x;
@@ -193,7 +188,6 @@ public class ROIFigure extends Figure {
             case 4:
                 cursor = Cursors.SIZESE;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dx = me.x - start.x;
@@ -212,7 +206,6 @@ public class ROIFigure extends Figure {
             case 5:
                 cursor = Cursors.SIZES;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dy = me.y - start.y;
@@ -231,7 +224,6 @@ public class ROIFigure extends Figure {
             case 6:
                 cursor = Cursors.SIZESW;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dx = me.x - start.x;
@@ -250,7 +242,6 @@ public class ROIFigure extends Figure {
             case 7:
                 cursor = Cursors.SIZEW;
                 dragger = new CommonDragger() {
-
                     @Override
                     protected void updateROIBounds(MouseEvent me) {
                         var dx = me.x - start.x;
@@ -272,13 +263,11 @@ public class ROIFigure extends Figure {
             setCursor(cursor);
             addMouseListener(dragger);
             addMouseMotionListener(dragger);
-
         }
 
         public HandlerBoundsCalulator getHandlerBoundsCalulator() {
             return handlerBoundsCalulator;
         }
-
     }
 
     private static final int HANDLERS_COUNT = 8;
@@ -352,27 +341,25 @@ public class ROIFigure extends Figure {
         addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent fe) {
-                for (Figure handler : resizeHandlers) {
+                for (var handler : resizeHandlers) {
                     handler.setVisible(true);
                 }
             }
 
             @Override
             public void focusLost(FocusEvent fe) {
-                for (Figure handler : resizeHandlers) {
+                for (var handler : resizeHandlers) {
                     handler.setVisible(false);
                 }
             }
         });
         intensityGraphFigure.addCroppedDataSizeListener(new ICroppedDataSizeListener() {
-
             @Override
             public void croppedDataSizeChanged(int croppedDataWidth, int croppedDataHeight) {
                 updateROIGeoBounds();
                 updateChildrenBounds();
             }
         });
-
     }
 
     @Override
@@ -380,7 +367,7 @@ public class ROIFigure extends Figure {
         x = x - getBounds().x;
         y = y - getBounds().y;
         var contain = false;
-        for (ResizeHandler handler : resizeHandlers) {
+        for (var handler : resizeHandlers) {
             contain = contain || handler.containsPoint(x, y);
         }
         return contain || roiRectFigure.containsPoint(x, y);
@@ -397,7 +384,6 @@ public class ROIFigure extends Figure {
         }
         updateROIGeoBounds();
         updateChildrenBounds();
-
     }
 
     @Override
@@ -413,7 +399,6 @@ public class ROIFigure extends Figure {
             graphics.popState();
         }
         super.paintFigure(graphics);
-
     }
 
     /**
@@ -421,7 +406,7 @@ public class ROIFigure extends Figure {
      */
     protected void updateChildrenBounds() {
         roiRectFigure.setBounds(roiGeoBounds);
-        for (ResizeHandler handler : resizeHandlers) {
+        for (var handler : resizeHandlers) {
             handler.setBounds(handler.getHandlerBoundsCalulator().calcBoundsFromROIBounds(roiGeoBounds));
         }
         if (roiInfoProvider != null) {

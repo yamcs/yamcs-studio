@@ -45,5 +45,4 @@ public class LockUnlockChildrenHandler extends AbstractHandler {
 
         return null;
     }
-
 }

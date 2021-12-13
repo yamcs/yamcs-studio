@@ -87,7 +87,7 @@ public class ScriptsInputDialog extends TrayDialog {
         pvsEditor.forceFocus();
         for (var scriptData : scriptDataList) {
             var hasTrigger = false;
-            for (PVTuple pvTuple : scriptData.getPVList()) {
+            for (var pvTuple : scriptData.getPVList()) {
                 hasTrigger |= pvTuple.trigger;
             }
             if (!hasTrigger) {
@@ -230,7 +230,6 @@ public class ScriptsInputDialog extends TrayDialog {
             setScriptsViewerSelection(scriptDataList.get(0));
             checkConnectivityButton.setSelection(!scriptDataList.get(0).isCheckConnectivity());
             stopExecuteOnErrorButton.setSelection(scriptDataList.get(0).isStopExecuteOnError());
-
         }
 
         optionTab.setControl(optionTabComposite);

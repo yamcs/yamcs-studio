@@ -57,7 +57,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         public ImageDescriptor getImageDescriptor() {
             return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
-
     }
 
     private DistributeType distributeType;
@@ -130,7 +129,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     private Command getVerticalGapCommand() {
@@ -151,7 +149,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     private Command getHorizontalCenterCommand() {
@@ -168,7 +165,6 @@ public class DistributeWidgetsAction extends SelectionAction {
             startX += averageGap;
         }
         return cmd;
-
     }
 
     private Command getVerticalCenterCommand() {
@@ -185,7 +181,6 @@ public class DistributeWidgetsAction extends SelectionAction {
             startX += averageGap;
         }
         return cmd;
-
     }
 
     private Command getHorizontalCompressCommand() {
@@ -199,7 +194,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     private Command getVerticalCompressCommand() {
@@ -213,7 +207,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         return cmd;
-
     }
 
     private int getCenterLoc(AbstractWidgetModel model, boolean x) {
@@ -227,7 +220,7 @@ public class DistributeWidgetsAction extends SelectionAction {
     private AbstractWidgetModel[] getSortedModelArray(boolean byHorizontal) {
         var modelArray = new AbstractWidgetModel[getSelectedWidgetModels().size()];
         var i = 0;
-        for (AbstractWidgetModel model : getSelectedWidgetModels()) {
+        for (var model : getSelectedWidgetModels()) {
             modelArray[i++] = model;
         }
         Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
@@ -263,12 +256,11 @@ public class DistributeWidgetsAction extends SelectionAction {
 
         List<AbstractWidgetModel> selectedWidgetModels = new ArrayList<AbstractWidgetModel>();
 
-        for (Object o : selection) {
+        for (var o : selection) {
             if (o instanceof AbstractBaseEditPart) {
                 selectedWidgetModels.add(((AbstractBaseEditPart) o).getWidgetModel());
             }
         }
         return selectedWidgetModels;
     }
-
 }

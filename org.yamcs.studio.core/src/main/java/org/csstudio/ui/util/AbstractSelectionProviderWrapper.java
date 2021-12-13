@@ -37,7 +37,6 @@ public abstract class AbstractSelectionProviderWrapper implements ISelectionProv
     @Override
     public void addSelectionChangedListener(ISelectionChangedListener listener) {
         wrappedProvider.addSelectionChangedListener(new ISelectionChangedListener() {
-
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 listener.selectionChanged(new SelectionChangedEvent(eventSource, getSelection()));

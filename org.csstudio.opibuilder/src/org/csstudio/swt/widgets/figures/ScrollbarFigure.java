@@ -175,7 +175,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
         initializeListeners();
         initializeParts();
-
     }
 
     public void addManualValueChangeListener(IManualValueChangeListener listener) {
@@ -186,9 +185,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Creates the default 'Down' ArrowButton for the ScrollBar.
-     *
-     * @return the down button
-     * @since 2.0
      */
     protected Clickable createDefaultDownButton() {
         Button buttonDown = new ArrowButton();
@@ -198,9 +194,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Creates the Scrollbar's "thumb", the draggable Figure that indicates the Scrollbar's position.
-     *
-     * @return the thumb figure
-     * @since 2.0
      */
     protected IFigure createDefaultThumb() {
         var thumb = new Panel();
@@ -213,9 +206,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Creates the default 'Up' ArrowButton for the ScrollBar.
-     *
-     * @return the up button
-     * @since 2.0
      */
     protected Clickable createDefaultUpButton() {
         Button buttonUp = new ArrowButton();
@@ -225,9 +215,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Creates the pagedown Figure for the Scrollbar.
-     *
-     * @return the page down figure
-     * @since 2.0
      */
     protected Clickable createPageDown() {
         return createPageUp();
@@ -235,9 +222,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Creates the pageup Figure for the Scrollbar.
-     *
-     * @return the page up figure
-     * @since 2.0
      */
     protected Clickable createPageUp() {
         var clickable = new Clickable();
@@ -257,7 +241,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     }
 
     private void fireManualValueChange(double value) {
-        for (IManualValueChangeListener listener : listeners) {
+        for (var listener : listeners) {
             listener.manualValueChanged(value);
         }
     }
@@ -271,9 +255,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         return value < minimum ? minimum : (value > maximum ? maximum : value);
     }
 
-    /**
-     * @return the extent
-     */
     public double getExtent() {
         return extent;
     }
@@ -282,30 +263,18 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         return formatPattern;
     }
 
-    /**
-     * @return the maximum
-     */
     public double getMaximum() {
         return maximum;
     }
 
-    /**
-     * @return the minimum
-     */
     public double getMinimum() {
         return minimum;
     }
 
-    /**
-     * @return the pageIncrement
-     */
     public double getPageIncrement() {
         return pageIncrement;
     }
 
-    /**
-     * @return the stepIncrement
-     */
     public double getStepIncrement() {
         return stepIncrement;
     }
@@ -316,19 +285,13 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Returns the size of the range of allowable values.
-     * 
-     * @return the value range
      */
     protected double getValueRange() {
         return getMaximum() - getExtent() - getMinimum();
     }
 
-    /**
-     * @param up
-     */
     private void hookFocusListener(Clickable up) {
         up.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent event) {
                 if (!hasFocus()) {
@@ -338,12 +301,8 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         });
     }
 
-    /**
-     *
-     */
     private void initializeListeners() {
         addKeyListener(new KeyListener() {
-
             @Override
             public void keyPressed(KeyEvent ke) {
                 if ((ke.keycode == SWT.ARROW_UP && !isHorizontal())
@@ -367,7 +326,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         });
 
         addFocusListener(new FocusListener() {
-
             @Override
             public void focusGained(FocusEvent fe) {
                 repaint();
@@ -383,8 +341,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * Initilization of the ScrollBar. Sets the Scrollbar to have a ScrollBarLayout with vertical orientation. Creates
      * the Figures that make up the components of the ScrollBar.
-     *
-     * @since 2.0
      */
     protected void initializeParts() {
         setLayoutManager(new ScrollBarFigureLayout(transposer));
@@ -405,11 +361,9 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
             var display = Display.getCurrent();
             labelTimer = new OPITimer();
             timerTask = new Runnable() {
-
                 @Override
                 public void run() {
                     display.asyncExec(new Runnable() {
-
                         @Override
                         public void run() {
                             label.setVisible(false);
@@ -420,16 +374,10 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    /**
-     * @return the horizontal
-     */
     public boolean isHorizontal() {
         return horizontal;
     }
 
-    /**
-     * @return the showValueTip
-     */
     public boolean isShowValueTip() {
         return showValueTip;
     }
@@ -452,8 +400,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Set Value from manual control of the widget. Value will be coerced in range.
-     * 
-     * @param value
      */
     public void manualSetValue(double value) {
         value = Math.max(getMinimum(), Math.min(getMaximum(), value));
@@ -473,7 +419,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
         setValue(value);
         fireManualValueChange(getValue());
-
     }
 
     public void pageDown() {
@@ -502,9 +447,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    /**
-     * @see IFigure#revalidate()
-     */
     @Override
     public void revalidate() {
         // Override default revalidate to prevent going up the parent chain. Reason for this
@@ -515,15 +457,10 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     @Override
     public void setDirection(int direction) {
-
     }
 
     /**
      * Sets the Clickable that represents the down arrow of the Scrollbar to <i>down</i>.
-     *
-     * @param down
-     *            the down button
-     * @since 2.0
      */
     public void setDownClickable(Clickable down) {
         hookFocusListener(down);
@@ -546,9 +483,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    /**
-     * @see IFigure#setEnabled(boolean)
-     */
     @Override
     public void setEnabled(boolean value) {
         if (isEnabled() == value) {
@@ -562,10 +496,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    /**
-     * @param extent
-     *            the extent to set
-     */
     public void setExtent(double extent) {
         if (this.extent == extent) {
             return;
@@ -582,19 +512,11 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * Sets the orientation of the ScrollBar. If <code>true</code>, the Scrollbar will have a horizontal orientation. If
      * <code>false</code>, the scrollBar will have a vertical orientation.
-     *
-     * @param value
-     *            <code>true</code> if the scrollbar should be horizontal
-     * @since 2.0
      */
     public void setHorizontal(boolean value) {
         setOrientation(value ? HORIZONTAL : VERTICAL);
     }
 
-    /**
-     * @param maximum
-     *            the maximum to set
-     */
     public void setMaximum(double maximum) {
         if (this.maximum == maximum) {
             return;
@@ -604,10 +526,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         revalidate();
     }
 
-    /**
-     * @param minimum
-     *            the minimum to set
-     */
     public void setMinimum(double minimum) {
         if (this.minimum == minimum) {
             return;
@@ -615,12 +533,8 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         this.minimum = minimum;
         updateFormat();
         revalidate();
-
     }
 
-    /**
-     * @see Orientable#setOrientation(int)
-     */
     @Override
     public void setOrientation(int value) {
         if ((value == HORIZONTAL) == isHorizontal()) {
@@ -636,10 +550,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * Sets the pagedown button to the passed Clickable. The pagedown button is the figure between the down arrow button
      * and the ScrollBar's thumb figure.
-     *
-     * @param down
-     *            the page down figure
-     * @since 2.0
      */
     public void setPageDown(Clickable down) {
         hookFocusListener(down);
@@ -667,10 +577,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * Sets the pageup button to the passed Clickable. The pageup button is the rectangular figure between the down
      * arrow button and the ScrollBar's thumb figure.
-     *
-     * @param up
-     *            the page up figure
-     * @since 2.0
      */
     public void setPageUp(Clickable up) {
         hookFocusListener(up);
@@ -710,10 +616,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
     /**
      * Sets the ScrollBar's thumb to the passed Figure. The thumb is the draggable component of the ScrollBar that
      * indicates the ScrollBar's position.
-     *
-     * @param figure
-     *            the thumb figure
-     * @since 2.0
      */
     public void setThumb(IFigure figure) {
         if (figure != null) {
@@ -741,10 +643,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
 
     /**
      * Sets the Clickable that represents the up arrow of the Scrollbar to <i>up</i>.
-     *
-     * @param up
-     *            the up button
-     * @since 2.0
      */
     public void setUpClickable(Clickable up) {
         hookFocusListener(up);
@@ -768,10 +666,6 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    /**
-     * @param value
-     *            the value to set
-     */
     public void setValue(double value) {
         if (this.value == value) {
             return;

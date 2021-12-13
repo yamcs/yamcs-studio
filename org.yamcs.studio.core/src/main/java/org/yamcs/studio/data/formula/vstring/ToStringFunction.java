@@ -76,7 +76,5 @@ class ToStringFunction implements FormulaFunction {
         }
 
         return ValueFactory.newVString(ValueUtil.getDefaultValueFormat().format(value), alarm, time);
-
     }
-
 }

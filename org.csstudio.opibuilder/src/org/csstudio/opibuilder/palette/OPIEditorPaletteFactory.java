@@ -9,9 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.palette;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.util.WidgetsService;
@@ -46,7 +43,6 @@ public class OPIEditorPaletteFactory {
 
         tool = new ConnectionCreationToolEntry("Connection", "Create a connection between widgets",
                 new CreationFactory() {
-
                     @Override
                     public Object getObjectType() {
                         return null;
@@ -63,16 +59,15 @@ public class OPIEditorPaletteFactory {
                         "icons/connection_s24.gif"));
         toolbar.add(tool);
         palette.add(toolbar);
-
     }
 
     private static void createPaletteContents(PaletteRoot palette) {
         var categoriesMap = WidgetsService.getInstance().getAllCategoriesMap();
         var hiddenWidgets = PreferencesHelper.getHiddenWidgets();
 
-        for (Entry<String, List<String>> entry : categoriesMap.entrySet()) {
+        for (var entry : categoriesMap.entrySet()) {
             var categoryDrawer = new PaletteDrawer(entry.getKey());
-            for (String typeId : entry.getValue()) {
+            for (var typeId : entry.getValue()) {
                 if (hiddenWidgets.contains(typeId)) {
                     continue;
                 }
@@ -92,5 +87,4 @@ public class OPIEditorPaletteFactory {
             palette.add(categoryDrawer);
         }
     }
-
 }

@@ -61,5 +61,4 @@ public class ComboModel extends AbstractPVWidgetModel {
     public String getTypeID() {
         return ID;
     }
-
 }

@@ -78,7 +78,6 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
         var widgetModel = getWidgetModel();
         var isSelected = delegate.isSelected();
         return getHookedActionsForButton(widgetModel, isSelected);
-
     }
 
     /**
@@ -136,7 +135,6 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
 
         PropertyChangeListener styleListener = new PropertyChangeListener() {
-
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 AbstractWidgetModel model = getWidgetModel();
@@ -188,5 +186,4 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
         return super.getAdapter(key);
     }
-
 }

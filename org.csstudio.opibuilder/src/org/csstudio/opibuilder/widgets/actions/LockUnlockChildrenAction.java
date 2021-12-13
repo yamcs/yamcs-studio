@@ -31,7 +31,6 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
 
         var cmd = createLockUnlockCommand(containerModel);
         execute(cmd);
-
     }
 
     public static Command createLockUnlockCommand(GroupingContainerModel containerModel) {
@@ -52,7 +51,6 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
             private void selectWidgets() {
                 // must be queued so it is executed after property has been changed.
                 GUIRefreshThread.getInstance(false).addIgnorableTask(new WidgetIgnorableUITask(this, new Runnable() {
-
                     @Override
                     public void run() {
                         // if(!containerModel.isLocked())
@@ -76,5 +74,4 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
     protected final GroupingContainerModel getSelectedContainer() {
         return ((GroupingContainerEditPart) selection.getFirstElement()).getWidgetModel();
     }
-
 }

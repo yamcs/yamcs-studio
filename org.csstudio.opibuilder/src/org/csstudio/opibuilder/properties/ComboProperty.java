@@ -36,7 +36,6 @@ public class ComboProperty extends AbstractWidgetProperty {
             int defaultValue) {
         super(prop_id, description, category, Integer.valueOf(defaultValue));
         this.labelsArray = labelsArray;
-
     }
 
     @Override

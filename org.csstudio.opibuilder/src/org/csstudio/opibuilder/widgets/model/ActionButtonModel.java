@@ -43,7 +43,7 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
         public static String[] stringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (Style f : values()) {
+            for (var f : values()) {
                 result[i++] = f.toString();
             }
             return result;
@@ -137,7 +137,6 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
         addProperty(new ActionsProperty(PROP_ACTIONS, "Actions", WidgetPropertyCategory.Behavior, false));
 
         setPropertyVisible(PROP_RELEASED_ACTION_INDEX, DEFAULT_TOGGLE_BUTTON);
-
     }
 
     /**

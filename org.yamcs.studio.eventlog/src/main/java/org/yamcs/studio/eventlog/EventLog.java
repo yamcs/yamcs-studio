@@ -121,7 +121,6 @@ public class EventLog extends Composite implements YamcsAware {
 
         // Listen to v_scroll to autotoggle scroll lock
         tableViewer.getTable().getVerticalBar().addListener(SWT.Selection, evt -> {
-
             var sortColumn = tableViewer.getTable().getSortColumn().getText();
             var up = (tableViewer.getTable().getSortDirection() == SWT.UP);
 
@@ -205,7 +204,7 @@ public class EventLog extends Composite implements YamcsAware {
         prefListener = evt -> {
             if (evt.getProperty().equals(PreferencePage.PREF_RULES)) {
                 var rules = plugin.composeColoringRules((String) evt.getNewValue());
-                for (EventLogItem item : tableContentProvider.getElements(null)) {
+                for (var item : tableContentProvider.getElements(null)) {
                     item.colorize(rules);
                 }
                 tableViewer.refresh();

@@ -9,15 +9,20 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.AbstractChoiceModel.PROP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.AbstractChoiceModel.PROP_ITEMS;
+import static org.csstudio.opibuilder.widgets.model.AbstractChoiceModel.PROP_ITEMS_FROM_PV;
+import static org.csstudio.opibuilder.widgets.model.AbstractChoiceModel.PROP_SELECTED_COLOR;
+
 import java.util.List;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractChoiceModel;
-import org.csstudio.opibuilder.widgets.model.ChoiceButtonModel;
 import org.csstudio.swt.widgets.figures.AbstractChoiceFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.IFigure;
@@ -43,7 +48,7 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
 
         choiceFigure.setFont(CustomMediaFactory.getInstance().getFont(model.getFont().getFontData()));
 
-        choiceFigure.setHorizontal((Boolean) (model.getPropertyValue(AbstractChoiceModel.PROP_HORIZONTAL)));
+        choiceFigure.setHorizontal((Boolean) (model.getPropertyValue(PROP_HORIZONTAL)));
         if (!model.isItemsFromPV() || getExecutionMode() == ExecutionMode.EDIT_MODE) {
             var items = getWidgetModel().getItems();
             if (items != null) {
@@ -51,9 +56,9 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
             }
         }
 
-        choiceFigure.addChoiceButtonListener((index, value) -> setPVValue(AbstractChoiceModel.PROP_PVNAME, value));
+        choiceFigure.addChoiceButtonListener((index, value) -> setPVValue(PROP_PVNAME, value));
 
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
 
         return choiceFigure;
     }
@@ -78,7 +83,7 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
         // load items from PV
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             if (getWidgetModel().isItemsFromPV()) {
-                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(PROP_PVNAME);
                 if (pv != null) {
                     if (loadItemsFromPVListener == null) {
                         loadItemsFromPVListener = new IPVListener() {
@@ -87,7 +92,7 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
                                 var value = pv.getValue();
                                 if (value != null && value instanceof VEnum) {
                                     var new_meta = ((VEnum) value).getLabels();
-                                    getWidgetModel().setPropertyValue(AbstractChoiceModel.PROP_ITEMS, new_meta);
+                                    getWidgetModel().setPropertyValue(PROP_ITEMS, new_meta);
                                 }
                             }
                         };
@@ -102,7 +107,7 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isItemsFromPV()) {
-            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(PROP_PVNAME);
             if (pv != null && loadItemsFromPVListener != null) {
                 pv.removeListener(loadItemsFromPVListener);
             }
@@ -110,53 +115,43 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVNAME, (oldValue, newValue, figure) -> {
             registerLoadItemsListener();
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
+        });
 
-        // PV_Value
-        IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue != null && newValue instanceof VType) {
                 var stringValue = VTypeHelper.getString((VType) newValue);
                 ((AbstractChoiceFigure) refreshableFigure).setState(stringValue);
             }
             return false;
-        };
-        setPropertyChangeHandler(AbstractChoiceModel.PROP_PVVALUE, pvhandler);
+        });
 
-        // Items
-        IWidgetPropertyChangeHandler itemsHandler = new IWidgetPropertyChangeHandler() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                if (newValue != null && newValue instanceof List) {
-                    ((AbstractChoiceFigure) refreshableFigure).setStates(((List<String>) newValue));
-                    if (getWidgetModel().isItemsFromPV()) {
-                        ((AbstractChoiceFigure) refreshableFigure)
-                                .setState(VTypeHelper.getString(getPVValue(AbstractPVWidgetModel.PROP_PVNAME)));
-                    }
+        setPropertyChangeHandler(PROP_ITEMS, (oldValue, newValue, refreshableFigure) -> {
+            if (newValue != null && newValue instanceof List) {
+                ((AbstractChoiceFigure) refreshableFigure).setStates(((List<String>) newValue));
+                if (getWidgetModel().isItemsFromPV()) {
+                    ((AbstractChoiceFigure) refreshableFigure)
+                            .setState(VTypeHelper.getString(getPVValue(PROP_PVNAME)));
                 }
-                return true;
             }
-        };
-        setPropertyChangeHandler(AbstractChoiceModel.PROP_ITEMS, itemsHandler);
+            return true;
+        });
 
         IWidgetPropertyChangeHandler selectedColorHandler = (oldValue, newValue, figure) -> {
             ((AbstractChoiceFigure) figure).setSelectedColor(((OPIColor) newValue).getSWTColor());
             return false;
         };
 
-        setPropertyChangeHandler(ChoiceButtonModel.PROP_SELECTED_COLOR, selectedColorHandler);
+        setPropertyChangeHandler(PROP_SELECTED_COLOR, selectedColorHandler);
 
-        IWidgetPropertyChangeHandler horizontalHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_HORIZONTAL, (oldValue, newValue, figure) -> {
             ((AbstractChoiceFigure) figure).setHorizontal((Boolean) newValue);
             return true;
-        };
-
-        setPropertyChangeHandler(AbstractChoiceModel.PROP_HORIZONTAL, horizontalHandler);
+        });
 
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
             if (!(Boolean) newValue) {
@@ -165,16 +160,12 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
             updatePropSheet((Boolean) newValue);
             return false;
         };
-        getWidgetModel().getProperty(AbstractChoiceModel.PROP_ITEMS_FROM_PV).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_ITEMS_FROM_PV).addPropertyChangeListener(
                 evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
-
     }
 
-    /**
-     * @param actionsFromPV
-     */
     private void updatePropSheet(boolean itemsFromPV) {
-        getWidgetModel().setPropertyVisible(AbstractChoiceModel.PROP_ITEMS, !itemsFromPV);
+        getWidgetModel().setPropertyVisible(PROP_ITEMS, !itemsFromPV);
     }
 
     @Override
@@ -192,5 +183,4 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
             super.setValue(value);
         }
     }
-
 }

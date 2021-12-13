@@ -39,7 +39,7 @@ public class CommandParser {
 
         var argString = commandString.substring(lparen + 1, commandString.length() - 1);
         var args = argString.split(",");
-        for (String arg : args) {
+        for (var arg : args) {
             arg = arg.trim();
             if (!arg.isEmpty()) {
                 var kvp = arg.split(":");

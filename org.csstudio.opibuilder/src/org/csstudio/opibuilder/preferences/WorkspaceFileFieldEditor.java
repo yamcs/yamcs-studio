@@ -72,7 +72,6 @@ public class WorkspaceFileFieldEditor extends StringButtonFieldEditor {
         } else {
             return null;
         }
-
     }
 
     private IPath getPath(IPath startPath) {
@@ -90,7 +89,6 @@ public class WorkspaceFileFieldEditor extends StringButtonFieldEditor {
     @Override
     protected boolean checkState() {
         return true;
-
     }
 
     /**

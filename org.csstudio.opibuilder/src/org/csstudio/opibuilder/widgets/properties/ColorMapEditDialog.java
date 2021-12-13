@@ -248,7 +248,6 @@ public class ColorMapEditDialog extends TrayDialog {
         });
 
         return parentComposite;
-
     }
 
     /**
@@ -291,7 +290,6 @@ public class ColorMapEditDialog extends TrayDialog {
             moveUpAction.setEnabled(true);
             moveDownAction.setEnabled(true);
             copyAction.setEnabled(true);
-
         } else {
             removeAction.setEnabled(false);
             moveUpAction.setEnabled(false);
@@ -477,7 +475,6 @@ public class ColorMapEditDialog extends TrayDialog {
             }
             return null;
         }
-
     }
 
     private final class ValueColumnEditingSupport extends EditingSupport {
@@ -520,7 +517,6 @@ public class ColorMapEditDialog extends TrayDialog {
                 }
             }
         }
-
     }
 
     private final class ColorColumnEditingSupport extends EditingSupport {

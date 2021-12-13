@@ -60,7 +60,6 @@ public class OPIBuilderMacroUtil {
         }
         return macroMap;
     }
-
 }
 
 /**

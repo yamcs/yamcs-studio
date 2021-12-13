@@ -10,7 +10,6 @@
 package org.csstudio.platform.ui.composites.resourcefilter;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,9 +78,9 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
             var container = (IContainer) element;
             if (container.isAccessible()) {
                 try {
-                    List<IResource> children = new ArrayList<IResource>();
+                    var children = new ArrayList<IResource>();
                     var members = container.members();
-                    for (IResource member : members) {
+                    for (var member : members) {
                         if (includeResource(member)) {
                             children.add(member);
                         }
@@ -107,7 +106,7 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
             // non-files are always included
             return true;
         } else {
-            for (String filter : filters) {
+            for (var filter : filters) {
                 if (resource.getName().contains(filter)) {
                     return true;
                 }

@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.widgets.model;
 
 import org.csstudio.opibuilder.model.AbstractContainerModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
@@ -136,7 +135,7 @@ public class SashContainerModel extends AbstractContainerModel {
     @Override
     public void flipVertically() {
         var centerY = getHeight() / 2;
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipVertically(centerY);
         }
     }
@@ -144,7 +143,7 @@ public class SashContainerModel extends AbstractContainerModel {
     @Override
     public void flipHorizontally() {
         var centerX = getWidth() / 2;
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipHorizontally(centerX);
         }
     }
@@ -158,5 +157,4 @@ public class SashContainerModel extends AbstractContainerModel {
     public void scaleChildren() {
         // Its children will be scaled when this widget layouts, so it needs to do nothing here
     }
-
 }

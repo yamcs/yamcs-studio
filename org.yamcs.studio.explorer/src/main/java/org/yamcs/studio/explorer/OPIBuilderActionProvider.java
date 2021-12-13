@@ -45,12 +45,11 @@ public class OPIBuilderActionProvider extends CommonActionProvider {
         IPerspectiveDescriptor perspective = viewSite.getPage().getPerspective();
         if (perspective.getId().equals("org.csstudio.opibuilder.opieditor")) {
             if (toggleSchemaAction.isEnabled()) {
-
                 toggleSchemaAction.setChecked(false);
                 IPath currentSchemaPath = PreferencesHelper.getSchemaOPIPath();
                 IFile currentSchema = ResourceUtil.getIFileFromIPath(currentSchemaPath);
                 IStructuredSelection selection = (IStructuredSelection) viewSite.getSelectionProvider().getSelection();
-                for (Object o : selection.toList()) {
+                for (var o : selection.toList()) {
                     if (o instanceof IFile) {
                         if (o.equals(currentSchema)) {
                             toggleSchemaAction.setChecked(true);

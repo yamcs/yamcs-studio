@@ -12,7 +12,6 @@ package org.yamcs.studio.autocomplete.sim;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -66,8 +65,8 @@ public class DSFunctionSet {
      * @return the function names
      */
     public final Collection<String> getFunctionNames() {
-        Set<String> names = new HashSet<>();
-        for (DSFunction formulaFunction : functions) {
+        var names = new HashSet<String>();
+        for (var formulaFunction : functions) {
             names.add(formulaFunction.getName());
         }
         return names;
@@ -84,8 +83,8 @@ public class DSFunctionSet {
         if (name == null) {
             return Collections.emptyList();
         }
-        Set<DSFunction> formulas = new HashSet<>();
-        for (DSFunction formulaFunction : functions) {
+        var formulas = new HashSet<DSFunction>();
+        for (var formulaFunction : functions) {
             if (name.equals(formulaFunction.getName())) {
                 formulas.add(formulaFunction);
             }

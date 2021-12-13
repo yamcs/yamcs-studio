@@ -45,13 +45,11 @@ public class ArcFigure extends Shape implements Introspectable {
     protected void fillShape(Graphics graphics) {
         graphics.fillArc(getClientArea().getCopy().shrink((int) (getLineWidth() * 1.5), (int) (getLineWidth() * 1.5)),
                 startAngle, totalAngle);
-
     }
 
     @Override
     protected void outlineShape(Graphics graphics) {
         graphics.drawArc(getClientArea().getCopy().shrink(getLineWidth(), getLineWidth()), startAngle, totalAngle);
-
     }
 
     public void setStartAngle(int start_angle) {

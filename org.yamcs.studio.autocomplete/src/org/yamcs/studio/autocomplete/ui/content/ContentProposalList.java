@@ -103,7 +103,7 @@ public class ContentProposalList {
                 }
             }
         } else if (maxTopProposals > 0) {
-            for (Proposal proposal : proposals) {
+            for (var proposal : proposals) {
                 if (!proposal.getValue().equals(originalValue)) {
                     var index = topProposalList.indexOf(proposal);
                     if (index == -1) {
@@ -135,7 +135,7 @@ public class ContentProposalList {
         } else {
             list.add(originalTopProposal);
             var index = 0;
-            for (Proposal tp : topProposalList) {
+            for (var tp : topProposalList) {
                 if (maxTopProposals == 0) {
                     list.add(tp);
                 } else if (index <= maxTopProposals - 1) {
@@ -148,7 +148,7 @@ public class ContentProposalList {
         // We do not display top proposals if the content match a proposal and all
         // provided top proposals match a complete proposal
         var allComplete = true;
-        for (Proposal tp : list) {
+        for (var tp : list) {
             if (tp.isPartial()) {
                 allComplete = false;
             }
@@ -161,7 +161,7 @@ public class ContentProposalList {
     }
 
     public void addProposals(String provider, Proposal[] proposals, Integer count, Integer index) {
-        for (Proposal p : proposals) {
+        for (var p : proposals) {
             p.setOriginalValue(originalValue);
             if (p.getValue().equals(originalValue)) {
                 hasContentMatchingProposal = true;
@@ -183,7 +183,7 @@ public class ContentProposalList {
 
     public List<String> getProviderList() {
         List<String> list = new ArrayList<String>();
-        for (String provider : providerMap.values()) {
+        for (var provider : providerMap.values()) {
             if (provider != null && !provider.isEmpty()) {
                 list.add(provider);
             }
@@ -234,5 +234,4 @@ public class ContentProposalList {
     public boolean allResponded() {
         return expected == responded;
     }
-
 }

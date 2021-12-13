@@ -10,7 +10,6 @@
 
 package org.csstudio.opibuilder.widgets.model;
 
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.PointListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
@@ -164,24 +163,23 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
 
     @Override
     public final synchronized void setPropertyValue(Object propertyID, Object value) {
-        if (propertyID.equals(AbstractPolyModel.PROP_POINTS)) {
+        if (propertyID.equals(PROP_POINTS)) {
             if (value instanceof PointList) {
                 this.setPoints((PointList) value, true);
             } else if (value instanceof int[]) {
                 this.setPoints(new PointList((int[]) value), true);
             }
-        } else if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) || propertyID.equals(AbstractWidgetModel.PROP_YPOS)
-                || propertyID.equals(AbstractWidgetModel.PROP_WIDTH)
-                || propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
+        } else if (propertyID.equals(PROP_XPOS) || propertyID.equals(PROP_YPOS)
+                || propertyID.equals(PROP_WIDTH) || propertyID.equals(PROP_HEIGHT)) {
             var newValue = (int) Double.parseDouble(value.toString());
-            if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) && (newValue != getPoints().getBounds().x)) {
+            if (propertyID.equals(PROP_XPOS) && (newValue != getPoints().getBounds().x)) {
                 setLocation(newValue, getLocation().y);
-            } else if (propertyID.equals(AbstractWidgetModel.PROP_YPOS) && ((newValue != getPoints().getBounds().y))) {
+            } else if (propertyID.equals(PROP_YPOS) && ((newValue != getPoints().getBounds().y))) {
                 setLocation(getLocation().x, newValue);
-            } else if (propertyID.equals(AbstractWidgetModel.PROP_WIDTH)
+            } else if (propertyID.equals(PROP_WIDTH)
                     && (newValue != getPoints().getBounds().width)) {
                 setSize(newValue, getSize().height);
-            } else if (propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)
+            } else if (propertyID.equals(PROP_HEIGHT)
                     && (newValue != getPoints().getBounds().height)) {
                 setSize(getSize().width, newValue);
             }
@@ -247,7 +245,5 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         PointsUtil.scalePoints(pl, widthRatio, heightRatio);
 
         setPoints(pl, true);
-
     }
-
 }

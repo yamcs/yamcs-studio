@@ -144,7 +144,7 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
     public abstract int calculate(int arg1, int arg2);
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

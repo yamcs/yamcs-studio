@@ -56,5 +56,4 @@ public class PropertiesCopyData {
     public void setPropIDList(List<String> propIDList) {
         this.propIDList = propIDList;
     }
-
 }

@@ -60,7 +60,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
             Proposal topProposal = null;
             DSFunction closestMatchingFunction = null;
             var offset = SimContentParser.SIM_SOURCE.length();
-            for (DSFunction function : set.getFunctions()) {
+            for (var function : set.getFunctions()) {
                 var m = valuePattern.matcher(function.getName());
                 if (m.find()) {
                     var proposalStr = function.getName();
@@ -70,7 +70,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
                     proposalStr = SimContentParser.SIM_SOURCE + proposalStr;
                     var proposal = new Proposal(proposalStr, false);
                     var description = function.getDescription() + "\n\n" + generateSignature(function);
-                    for (DSFunction poly : function.getPolymorphicFunctions()) {
+                    for (var poly : function.getPolymorphicFunctions()) {
                         description += "\n" + generateSignature(poly);
                     }
                     proposal.setDescription(description);
@@ -79,7 +79,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
                         currentArgIndex = 0;
                     }
                     proposal.addTooltipData(generateTooltipData(function, currentArgIndex));
-                    for (DSFunction poly : function.getPolymorphicFunctions()) {
+                    for (var poly : function.getPolymorphicFunctions()) {
                         proposal.addTooltipData(generateTooltipData(poly, currentArgIndex));
                     }
                     proposal.addStyle(ProposalStyle.getDefault(0, offset + m.end() - 1));
@@ -102,13 +102,13 @@ public class SimContentProvider implements IAutoCompleteProvider {
 
         // handle tooltip
         if (!functionDesc.isComplete()) {
-            for (DSFunction function : set.findFunctions(functionName)) {
+            for (var function : set.findFunctions(functionName)) {
                 // no tooltip for incomplete functions => use proposals
                 if (function.getName().equals(functionName)) {
                     if (checkToken(function, functionDesc)) {
                         result.addTooltipData(generateTooltipData(function, functionDesc.getCurrentArgIndex()));
                     }
-                    for (DSFunction poly : function.getPolymorphicFunctions()) {
+                    for (var poly : function.getPolymorphicFunctions()) {
                         if (checkToken(poly, functionDesc)) {
                             result.addTooltipData(generateTooltipData(poly, functionDesc.getCurrentArgIndex()));
                         }
@@ -147,7 +147,7 @@ public class SimContentProvider implements IAutoCompleteProvider {
         if (function.getNbArgs() == 0) {
             return false;
         }
-        for (DSFunction poly : function.getPolymorphicFunctions()) {
+        for (var poly : function.getPolymorphicFunctions()) {
             if (poly.getNbArgs() == 0) {
                 return false;
             }
@@ -216,5 +216,4 @@ public class SimContentProvider implements IAutoCompleteProvider {
 
         return td;
     }
-
 }

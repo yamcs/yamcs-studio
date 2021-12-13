@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractContainerModel.PROP_MACROS;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -37,7 +39,6 @@ import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.osgi.util.NLS;
-import org.yamcs.studio.script.WidgetUtil;
 
 /**
  * The editpart for {@link AbstractContainerModel}
@@ -145,10 +146,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
 
     /**
      * Add a child widget to the container.
-     * 
-     * @param widgetModel
-     *            model of the widget to be added.
-     * @see WidgetUtil#createWidgetModel(String)
      */
     public void addChild(AbstractWidgetModel widgetModel) {
         getWidgetModel().addChild(widgetModel);
@@ -156,10 +153,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
 
     /**
      * Add a child widget to the right of the container.
-     * 
-     * @param widgetModel
-     *            model of the widget to be added.
-     * @see WidgetUtil#createWidgetModel(String)
      */
     public void addChildToRight(AbstractWidgetModel widgetModel) {
         var range = GeometryUtil.getChildrenRange(this);
@@ -169,10 +162,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
 
     /**
      * Add a child widget to the bottom of the container.
-     * 
-     * @param widgetModel
-     *            model of the widget to be added.
-     * @see WidgetUtil#createWidgetModel(String)
      */
     public void addChildToBottom(AbstractWidgetModel widgetModel) {
         var range = GeometryUtil.getChildrenRange(this);
@@ -183,8 +172,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
     /**
      * Remove a child widget by its name.
      * 
-     * @param widgetName
-     *            name of the widget.
      * @throws RuntimeException
      *             if the widget name does not exist.
      */
@@ -226,7 +213,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
     @Override
     protected void registerBasePropertyChangeHandlers() {
         super.registerBasePropertyChangeHandlers();
-        setPropertyChangeHandler(AbstractContainerModel.PROP_MACROS, (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_MACROS, (oldValue, newValue, figure) -> {
             var macrosInput = (MacrosInput) newValue;
 
             var macrosMap = new LinkedHashMap<String, String>();
@@ -241,7 +228,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         layout();
 
         childrenPropertyChangeListener = evt -> {
-
             if (evt.getOldValue() instanceof Integer) {
                 addChild(createChild(evt.getNewValue()), ((Integer) evt.getOldValue()).intValue());
                 layout();
@@ -400,9 +386,6 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         }
     }
 
-    /**
-     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-     */
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
         // make snap to G work
@@ -436,5 +419,4 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
         }
         return super.getAdapter(adapter);
     }
-
 }

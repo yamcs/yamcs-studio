@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.visualparts;
 
 import org.csstudio.opibuilder.datadefinition.AbstractComplexData;
-import org.csstudio.opibuilder.datadefinition.PropertyData;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -32,7 +31,7 @@ public class ComplexDataCellEditor extends AbstractDialogCellEditor {
 
         if (dialog.open() == Window.OK) {
             complexData = complexData.getCopy();
-            for (PropertyData propertyData : dialog.getOutput()) {
+            for (var propertyData : dialog.getOutput()) {
                 complexData.setPropertyValue(propertyData.property.getPropertyID(), propertyData.tmpValue);
             }
         }

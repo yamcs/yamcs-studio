@@ -52,7 +52,6 @@ public class TankFigure extends AbstractLinearMarkedFigure {
         add(scale, TankLayout.SCALE);
         add(marker, TankLayout.MARKERS);
         add(tank, TankLayout.TANK);
-
     }
 
     /**
@@ -134,7 +133,6 @@ public class TankFigure extends AbstractLinearMarkedFigure {
 
         @Override
         protected void fillShape(Graphics graphics) {
-
             var fill_corner = DEFAULT_CORNER;
             // If this is more close to 1/2, more light the tank will be.
             var intersectFactor = 11d / 20d;
@@ -276,6 +274,5 @@ public class TankFigure extends AbstractLinearMarkedFigure {
                 tank = (Tank) child;
             }
         }
-
     }
 }

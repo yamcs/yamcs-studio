@@ -102,14 +102,14 @@ public interface FormulaFunction {
         // Give priority to parameter time to prevent issues with sysdate associated to constants
         // being later than parameter time in case of replays.
         var useOnlyParameterTime = false;
-        for (Object object : args) {
+        for (var object : args) {
             if (object != null && object.getClass().getName().startsWith("org.yamcs")) {
                 useOnlyParameterTime = true;
                 break;
             }
         }
 
-        for (Object object : args) {
+        for (var object : args) {
             Time newTime;
             if (object != null) {
                 if (useOnlyParameterTime && !object.getClass().getName().startsWith("org.yamcs")) {
@@ -141,7 +141,7 @@ public interface FormulaFunction {
      */
     public default Alarm highestSeverityOf(List<Object> args, boolean considerNull) {
         var finalAlarm = ValueFactory.alarmNone();
-        for (Object object : args) {
+        for (var object : args) {
             Alarm newAlarm;
             if (object == null && considerNull) {
                 newAlarm = ValueFactory.newAlarm(AlarmSeverity.UNDEFINED, "No Value");

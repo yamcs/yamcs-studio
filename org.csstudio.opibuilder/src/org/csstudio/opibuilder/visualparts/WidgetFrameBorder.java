@@ -28,8 +28,6 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
 
     /**
      * Constructs a FrameBorder with its label set to the name of the {@link TitleBarBorder} class.
-     *
-     * @since 2.0
      */
     public WidgetFrameBorder() {
     }
@@ -39,7 +37,6 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
      *
      * @param label
      *            label or title of the frame.
-     * @since 2.0
      */
     public WidgetFrameBorder(String label) {
         setLabel(label);
@@ -48,8 +45,6 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
     /**
      * Creates the necessary borders for this FrameBorder. The inner border is a {@link TitleBarBorder}. The outer
      * border is a {@link SchemeBorder}.
-     *
-     * @since 2.0
      */
     protected void createBorders() {
         inner = new TitleBarBorder();
@@ -60,7 +55,6 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
      * Returns the inner border of this FrameBorder, which contains the label for the FrameBorder.
      *
      * @return the border holding the label.
-     * @since 2.0
      */
     protected LabeledBorder getLabeledBorder() {
         return (LabeledBorder) inner;
@@ -76,9 +70,6 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
 
     /**
      * Sets the label for this border.
-     * 
-     * @param label
-     *            the label
      */
     @Override
     public void setLabel(String label) {
@@ -87,13 +78,9 @@ public class WidgetFrameBorder extends CompoundBorder implements LabeledBorder {
 
     /**
      * Sets the font for this border's label.
-     * 
-     * @param font
-     *            the font
      */
     @Override
     public void setFont(Font font) {
         getLabeledBorder().setFont(font);
     }
-
 }

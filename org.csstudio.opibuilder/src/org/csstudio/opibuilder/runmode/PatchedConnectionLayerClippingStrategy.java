@@ -47,5 +47,4 @@ public class PatchedConnectionLayerClippingStrategy extends ViewportAwareConnect
         }
         return super.getEdgeClippingRectangle(connection);
     }
-
 }

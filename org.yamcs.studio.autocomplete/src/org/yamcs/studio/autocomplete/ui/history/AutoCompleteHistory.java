@@ -10,8 +10,6 @@
 package org.yamcs.studio.autocomplete.ui.history;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
@@ -87,7 +85,7 @@ public class AutoCompleteHistory {
             return;
         }
         // Entry => type
-        Map<String, String> entries = new HashMap<>();
+        var entries = new HashMap<String, String>();
         if (newEntry.startsWith("=")) {
             entries.put(newEntry, AutoCompleteTypes.Formula);
             var quotedVariable = Pattern.compile("'([^']+)'");
@@ -98,7 +96,7 @@ public class AutoCompleteHistory {
         } else {
             entries.put(newEntry, AutoCompleteTypes.PV);
         }
-        for (Entry<String, String> entry : entries.entrySet()) {
+        for (var entry : entries.entrySet()) {
             updateHistory(entry.getKey(), entry.getValue());
         }
     }
@@ -129,5 +127,4 @@ public class AutoCompleteHistory {
         // Add at the top
         fifo.addFirst(newEntry);
     }
-
 }

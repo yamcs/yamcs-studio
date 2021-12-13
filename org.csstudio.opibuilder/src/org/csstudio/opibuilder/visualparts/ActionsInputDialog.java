@@ -304,7 +304,6 @@ public class ActionsInputDialog extends TrayDialog {
             }
         };
         addAction.setMenuCreator(new IMenuCreator() {
-
             private Menu menu;
 
             @Override
@@ -328,7 +327,6 @@ public class ActionsInputDialog extends TrayDialog {
             public Menu getMenu(Menu parent) {
                 return null;
             }
-
         });
 
         addAction.setToolTipText("Add an action");
@@ -432,7 +430,6 @@ public class ActionsInputDialog extends TrayDialog {
                 actionsInput.addAction(widgetAction);
                 refreshActionsViewer(widgetAction);
             }
-
         }
     }
 

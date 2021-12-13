@@ -9,7 +9,17 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ENABLED;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_EFFECT3D;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_FILLBACKGROUND_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_FILLCOLOR_ALARM_SENSITIVE;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_FILL_COLOR;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_INDICATOR_MODE;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_ORIGIN;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_ORIGIN_IGNORED;
+import static org.csstudio.opibuilder.widgets.model.ProgressBarModel.PROP_SHOW_LABEL;
+
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.ProgressBarModel;
 import org.csstudio.opibuilder.widgets.model.ScaledSliderModel;
@@ -39,7 +49,6 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
         bar.setOriginIgnored(model.isOriginIgnored());
         bar.setIndicatorMode(model.isIndicatorMode());
         return bar;
-
     }
 
     @Override
@@ -51,59 +60,47 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        IWidgetPropertyChangeHandler originHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ORIGIN, (oldValue, newValue, figure) -> {
             ((ProgressBarFigure) figure).setOrigin((Double) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_ORIGIN, originHandler);
+        });
 
-        IWidgetPropertyChangeHandler originIgnoredHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ORIGIN_IGNORED, (oldValue, newValue, figure) -> {
             ((ProgressBarFigure) figure).setOriginIgnored((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_ORIGIN_IGNORED, originIgnoredHandler);
+        });
 
-        // fillColor
-        IWidgetPropertyChangeHandler fillColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILL_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setFillColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_FILL_COLOR, fillColorHandler);
+        });
 
-        // fillBackgroundColor
-        IWidgetPropertyChangeHandler fillBackColorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILLBACKGROUND_COLOR, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setFillBackgroundColor(((OPIColor) newValue).getSWTColor());
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_FILLBACKGROUND_COLOR, fillBackColorHandler);
+        });
 
-        // effect 3D
-        IWidgetPropertyChangeHandler effect3DHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_EFFECT3D, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setEffect3D((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_EFFECT3D, effect3DHandler);
+        });
 
-        // effect 3D
-        IWidgetPropertyChangeHandler showLabelHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_LABEL, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setShowLabel((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_SHOW_LABEL, showLabelHandler);
+        });
 
-        IWidgetPropertyChangeHandler indicatorHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_INDICATOR_MODE, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setIndicatorMode((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_INDICATOR_MODE, indicatorHandler);
+        });
 
-        // horizontal
-        IWidgetPropertyChangeHandler horizontalHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_HORIZONTAL, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setHorizontal((Boolean) newValue);
             var model = (ProgressBarModel) getModel();
@@ -119,26 +116,23 @@ public final class ProgressBarEditPart extends AbstractMarkedWidgetEditPart {
             model.setSize(model.getSize().height, model.getSize().width);
 
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_HORIZONTAL, horizontalHandler);
+        });
 
         // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
         // which is not the case for the scaled slider
-        IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_ENABLED, (oldValue, newValue, refreshableFigure) -> {
             var slider = (ProgressBarFigure) refreshableFigure;
             slider.setEnabled((Boolean) newValue);
             return false;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_ENABLED, enableHandler);
+        });
 
         // Change fill color when "FillColor Alarm Sensitive" property changes.
-        IWidgetPropertyChangeHandler fillColorAlarmSensitiveHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_FILLCOLOR_ALARM_SENSITIVE, (oldValue, newValue, refreshableFigure) -> {
             var figure = (ProgressBarFigure) refreshableFigure;
             boolean sensitive = (Boolean) newValue;
             figure.setFillColor(delegate.calculateAlarmColor(sensitive, getWidgetModel().getFillColor()));
             return true;
-        };
-        setPropertyChangeHandler(ProgressBarModel.PROP_FILLCOLOR_ALARM_SENSITIVE, fillColorAlarmSensitiveHandler);
+        });
 
         // Change fill color when alarm severity changes.
         delegate.addAlarmSeverityListener((severity, figure) -> {

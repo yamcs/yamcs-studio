@@ -14,7 +14,6 @@ import java.util.logging.Level;
 
 import org.yamcs.studio.autocomplete.AutoCompletePlugin;
 import org.yamcs.studio.autocomplete.parser.engine.ExprParser;
-import org.yamcs.studio.autocomplete.parser.engine.expr.Expr;
 import org.yamcs.studio.autocomplete.parser.engine.expr.ExprBoolean;
 import org.yamcs.studio.autocomplete.parser.engine.expr.ExprDouble;
 import org.yamcs.studio.autocomplete.parser.engine.expr.ExprException;
@@ -59,7 +58,7 @@ public class ContentParserHelper {
         if (function.getArgs() != null) {
             token.setOpenBracket(true);
             token.setCurrentArgIndex(function.size() > 0 ? function.size() - 1 : 0);
-            for (Expr e : function.getArgs()) {
+            for (var e : function.getArgs()) {
                 switch (e.type) {
                 case Boolean:
                     token.addArgument(((ExprBoolean) e).value);

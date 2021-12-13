@@ -23,5 +23,4 @@ public class PolygonModel extends AbstractPolyModel {
     public String getTypeID() {
         return ID;
     }
-
 }

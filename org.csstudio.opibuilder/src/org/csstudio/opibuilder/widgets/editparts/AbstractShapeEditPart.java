@@ -9,9 +9,13 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_ALPHA;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_ANTIALIAS;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_LINE_STYLE;
+import static org.csstudio.opibuilder.widgets.model.AbstractShapeModel.PROP_LINE_WIDTH;
+
 import org.csstudio.opibuilder.datadefinition.LineStyle;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.AbstractShapeModel;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Shape;
@@ -46,8 +50,7 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        // line width
-        IWidgetPropertyChangeHandler lineWidthHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LINE_WIDTH, (oldValue, newValue, refreshableFigure) -> {
             var shape = (Shape) refreshableFigure;
             if (((Integer) newValue).equals(0)) {
                 shape.setOutline(false);
@@ -57,33 +60,26 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
             }
 
             return true;
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_WIDTH, lineWidthHandler);
+        });
 
-        // line style
-        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LINE_STYLE, (oldValue, newValue, refreshableFigure) -> {
             var shape = (Shape) refreshableFigure;
             shape.setLineStyle(LineStyle.values()[(Integer) newValue].getStyle());
             return true;
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_STYLE, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ANTIALIAS, (oldValue, newValue, figure) -> {
             ((Shape) figure).setAntialias(((Boolean) newValue) ? SWT.ON : null);
             return false;
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_ANTIALIAS, handler);
+        });
 
-        handler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_ALPHA, (oldValue, newValue, figure) -> {
             if ((Integer) newValue < 255) {
                 ((Shape) figure).setAlpha((Integer) newValue);
             } else {
                 ((Shape) figure).setAlpha(null);
             }
             return false;
-        };
-        setPropertyChangeHandler(AbstractShapeModel.PROP_ALPHA, handler);
-
+        });
     }
-
 }

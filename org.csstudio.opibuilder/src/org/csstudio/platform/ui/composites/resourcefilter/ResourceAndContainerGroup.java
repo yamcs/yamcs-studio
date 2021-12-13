@@ -538,5 +538,4 @@ public final class ResourceAndContainerGroup implements Listener {
             _containerGroup.setEnabled(enabled);
         }
     }
-
 }

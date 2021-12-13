@@ -46,7 +46,5 @@ public class ArrayFeedbackFactory extends DefaultGraphicalFeedbackFactory {
         }
 
         super.showChangeBoundsFeedback(widgetModel, bounds, feedbackFigure, request);
-
     }
-
 }

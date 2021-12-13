@@ -98,7 +98,7 @@ public class LinkTableViewer extends TableViewer {
         columns.add(statusColumn);
         columns.add(inColumn);
         columns.add(outColumn);
-        for (TableViewerColumn column : columns) {
+        for (var column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {
                 @Override

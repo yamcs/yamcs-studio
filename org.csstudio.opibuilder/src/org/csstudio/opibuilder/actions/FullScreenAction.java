@@ -46,19 +46,10 @@ public class FullScreenAction extends Action implements IWorkbenchWindowActionDe
     private boolean toolbarWasInvisible;
     private boolean menuBarWasInvisible;
 
-    /**
-     * Constructor.
-     * 
-     * @param part
-     *            The workbench part associated with this PrintAction
-     */
     public FullScreenAction() {
         setActionDefinitionId(ID);
     }
 
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
     @Override
     public void run() {
         if (inFullScreen) {
@@ -73,7 +64,6 @@ public class FullScreenAction extends Action implements IWorkbenchWindowActionDe
             setText(FULLSCREEN);
             setImageDescriptor(fullScreenImage);
         } else {
-
             if (PreferencesHelper.isShowFullScreenDialog()) {
                 var dialog = new TipDialog(shell, "Tip", "Press F11 to exit full screen.");
                 dialog.open();
@@ -109,7 +99,6 @@ public class FullScreenAction extends Action implements IWorkbenchWindowActionDe
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-
     }
 
     @Override
@@ -139,7 +128,5 @@ public class FullScreenAction extends Action implements IWorkbenchWindowActionDe
     @Override
     public void dispose() {
         WorkbenchWindowService.getInstance().unregisterFullScreenAction(window);
-
     }
-
 }

@@ -83,8 +83,6 @@ public class PVWidgetModelDelegate implements IPVWidgetModel {
     public void processVersionDifference(Version boyVersionOnFile) {
         if (UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile) > 0) {
             model.setPropertyValue(PROP_PVNAME, UpgradeUtil.convertUtilityPVNameToPM(getPVName()));
-
         }
     }
-
 }

@@ -104,5 +104,4 @@ public class BoolButtonModel extends AbstractBoolControlModel {
     public boolean isLabelsFromPV() {
         return (Boolean) getProperty(PROP_LABELS_FROM_PV).getPropertyValue();
     }
-
 }

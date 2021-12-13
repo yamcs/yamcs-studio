@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,7 +65,7 @@ public class Application implements IApplication {
 
         configureLogging(userDataDir);
 
-        String args[] = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+        var args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
         for (var i = 0; i < args.length; i++) {
             switch (args[i]) {
             case "-version":
@@ -135,7 +134,7 @@ public class Application implements IApplication {
         root.addHandler(fileHandler);
 
         // At this point in the startup there should be only one handler (for stdout)
-        for (Handler handler : root.getHandlers()) {
+        for (var handler : root.getHandlers()) {
             handler.setLevel(Level.FINE);
             handler.setFormatter(new LogFormatter());
         }

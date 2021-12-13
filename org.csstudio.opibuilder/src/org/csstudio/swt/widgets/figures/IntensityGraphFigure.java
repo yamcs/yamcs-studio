@@ -88,7 +88,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         public static String[] stringValues() {
             var sv = new String[values().length];
             var i = 0;
-            for (ColorDepth p : values()) {
+            for (var p : values()) {
                 sv[i++] = p.toString();
             }
             return sv;
@@ -115,8 +115,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
     /**
      * Interface for notifications about a 'Pixel'
-     * 
-     * @see IntensityGraphFigure#addPixelInfoListener
      */
     public interface IPixelInfoListener {
         /**
@@ -249,7 +247,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
             addCroppedDataSizeListener((croppedDataWidth,
                     croppedDataHeight) -> crossDataIndex = graphArea.getDataLocation(crossX, crossY));
-
         }
 
         @Override
@@ -307,7 +304,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             vLine.setPoints(new PointList(new int[] { crossX, bounds.y, crossX, bounds.y + bounds.height }));
             crossPoint.setBounds(new Rectangle(crossX - 5, crossY - 5, 10, 10));
         }
-
     }
 
     public class GraphArea extends Figure {
@@ -346,7 +342,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             if (runMode && isSingleLineProfiling()) {
                 crossHair.setBounds(clientArea);
             }
-            for (ROIFigure roiFigure : roiMap.values()) {
+            for (var roiFigure : roiMap.values()) {
                 roiFigure.setBounds(clientArea);
             }
         }
@@ -391,14 +387,12 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          *            x much be inside graph area.
          * @param y
          *            y much be inside graph area
-         * @return
          */
         public PrecisionPoint getDataLocation(double x, double y) {
             var clientArea = getClientArea();
             var hIndex = croppedDataWidth * (x - clientArea.x) / (double) clientArea.width;
             var vIndex = croppedDataHeight * (y - clientArea.y) / (double) clientArea.height;
             return new PrecisionPoint(hIndex, vIndex);
-
         }
 
         /**
@@ -408,7 +402,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          *            x index location on cropped data array
          * @param yIndex
          *            y index location on cropped data array
-         * @return
          */
         public PrecisionPoint getGeoLocation(double xIndex, double yIndex) {
             var clientArea = getClientArea();
@@ -513,7 +506,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             // System.out.println((System.nanoTime() - startTime)/1000000);
             // startTime = System.nanoTime();
             super.paintClientArea(graphics);
-
         }
 
         /**
@@ -603,7 +595,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                 setCropBottom(originalCrop.height);
                 graphArea.repaint();
             }
-
         }
 
         @Override
@@ -615,7 +606,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                 var pixel_info = graphArea.getPixelInfoForMouseLocation(me.x, me.y);
                 if (pixel_info != null) {
                     graphArea.updateTextCursor(pixel_info);
-                    for (IPixelInfoListener listener : pixelInfoListeners) {
+                    for (var listener : pixelInfoListeners) {
                         listener.pixelInfoChanged(pixel_info, false);
                     }
                 }
@@ -629,7 +620,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             var pixel_info = graphArea.getPixelInfoForMouseLocation(me.x, me.y);
             if (pixel_info != null) {
                 graphArea.updateTextCursor(pixel_info);
-                for (IPixelInfoListener listener : pixelInfoListeners) {
+                for (var listener : pixelInfoListeners) {
                     listener.pixelInfoChanged(pixel_info, false);
                 }
             }
@@ -645,7 +636,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
             var pixel_info = graphArea.getPixelInfoForMouseLocation(me.x, me.y);
             if (pixel_info != null) {
-                for (IPixelInfoListener listener : pixelInfoListeners) {
+                for (var listener : pixelInfoListeners) {
                     listener.pixelInfoChanged(pixel_info, true);
                 }
             }
@@ -667,7 +658,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             end = null;
             start = null;
         }
-
     }
 
     public interface ICroppedDataSizeListener {
@@ -861,7 +851,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                     output[i] = data.get(dataloc.y * dw + i);
                 }
             }
-
         } else {
             for (var i = 0; i < dw; i++) {
                 for (var j = 0; j < dh; j++) {
@@ -891,7 +880,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                     output[i] = data.get(dataloc.x + i * dw);
                 }
             }
-
         } else {
             for (var i = 0; i < dh; i++) {
                 for (var j = 0; j < dw; j++) {
@@ -965,7 +953,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
                 }
             }
-
         } else {
             for (var y = 0; y < dataHeight; y++) {
                 for (var x = 0; x < dataWidth; x++) {
@@ -979,13 +966,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         return imageData;
     }
 
-    /**
-     * @param dataArray
-     * @param max
-     * @param min
-     * @param index
-     * @return
-     */
     protected int calcRGBPixel(IPrimaryArrayWrapper dataArray, double max, double min, int index) {
         var r = (int) dataArray.get(index);
         var g = (int) dataArray.get(index + 1);
@@ -1034,42 +1014,27 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
         var xProfileData = calculateXProfileData(data, dw, dh);
         var yProfileData = calculateYProfileData(data, dw, dh);
-        for (IProfileDataChangeLisenter lisenter : profileListeners) {
+        for (var lisenter : profileListeners) {
             lisenter.profileDataChanged(xProfileData, yProfileData, xAxis.getRange(), yAxis.getRange());
         }
     }
 
-    /**
-     * @return the colorMap
-     */
     public ColorMap getColorMap() {
         return colorMap;
     }
 
-    /**
-     * @return the cropBottom
-     */
     public int getCropBottom() {
         return cropBottom;
     }
 
-    /**
-     * @return the cropLeft
-     */
     public int getCropLeft() {
         return cropLeft;
     }
 
-    /**
-     * @return the cropRigth
-     */
     public int getCropRight() {
         return cropRight;
     }
 
-    /**
-     * @return the cropTop
-     */
     public int getCropTop() {
         return cropTop;
     }
@@ -1082,16 +1047,10 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         return data;
     }
 
-    /**
-     * @return the dataHeight
-     */
     public int getDataHeight() {
         return dataHeight;
     }
 
-    /**
-     * @return the dataWidth
-     */
     public int getDataWidth() {
         return dataWidth;
     }
@@ -1128,36 +1087,23 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
             if (!yVisible) {
                 width += xAxis.getMargin();
             }
-
         }
 
         return new Dimension(width, height);
     }
 
-    /**
-     * @return the max
-     */
     public double getMax() {
         return max;
     }
 
-    /**
-     * @return the min
-     */
     public double getMin() {
         return min;
     }
 
-    /**
-     * @return the xAxis
-     */
     public final Axis getXAxis() {
         return xAxis;
     }
 
-    /**
-     * @return the yAxis
-     */
     public final Axis getYAxis() {
         return yAxis;
     }
@@ -1169,9 +1115,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         return inRGBMode;
     }
 
-    /**
-     * @return the runMode
-     */
     public boolean isRunMode() {
         return runMode;
     }
@@ -1216,7 +1159,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                 clientArea.x += xAxis.getMargin();
                 clientArea.width -= xAxis.getMargin() - 1;
             }
-
         }
         if (colorMapRamp.isVisible()) {
             var rampSize = colorMapRamp.getPreferredSize(clientArea.width, clientArea.height);
@@ -1240,7 +1182,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
                 }
                 clientArea.width -= xAxis.getMargin();
             }
-
         }
 
         if (yVisible) {
@@ -1255,10 +1196,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         super.layout();
     }
 
-    /**
-     * @param colorMap
-     *            the colorMap to set
-     */
     public void setColorMap(ColorMap colorMap) {
         if (colorMap == null) {
             return;
@@ -1269,10 +1206,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         repaint();
     }
 
-    /**
-     * @param cropBottom
-     *            the cropBottom to set
-     */
     public void setCropBottom(int cropBottom) {
         if (cropBottom < 0 || cropBottom + cropTop > dataHeight) {
             throw new IllegalArgumentException();
@@ -1284,13 +1217,8 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         dataDirty = true;
         updateCroppedDataSize();
         repaint();
-
     }
 
-    /**
-     * @param cropLeft
-     *            the cropLeft to set
-     */
     public void setCropLeft(int cropLeft) {
         if (cropLeft < 0 || cropLeft + cropRight > dataWidth) {
             throw new IllegalArgumentException();
@@ -1302,13 +1230,8 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         dataDirty = true;
         updateCroppedDataSize();
         repaint();
-
     }
 
-    /**
-     * @param cropRight
-     *            the cropRigth to set
-     */
     public void setCropRight(int cropRight) {
         if (cropRight < 0 || cropRight + cropLeft > dataWidth) {
             throw new IllegalArgumentException();
@@ -1322,10 +1245,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         repaint();
     }
 
-    /**
-     * @param cropTop
-     *            the cropTop to set
-     */
     public void setCropTop(int cropTop) {
         if (cropTop < 0 || cropTop + cropBottom > dataHeight) {
             throw new IllegalArgumentException();
@@ -1480,10 +1399,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         repaint();
     }
 
-    /**
-     * @param dataWidth
-     *            the dataWidth to set
-     */
     public void setDataWidth(int dataWidth) {
         if (dataWidth < 0 || dataWidth * dataHeight > MAX_ARRAY_SIZE || dataWidth * dataHeight < 0) {
             throw new IllegalArgumentException();
@@ -1542,10 +1457,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         colorMapRamp.setFont(f);
     }
 
-    /**
-     * @param min
-     *            the min to set
-     */
     public void setMin(double min) {
         if (this.min == min) {
             return;
@@ -1558,12 +1469,10 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
 
     /**
      * Set color of ROI figures.
-     * 
-     * @param roiColor
      */
     public void setROIColor(Color roiColor) {
         this.roiColor = roiColor;
-        for (ROIFigure f : roiMap.values()) {
+        for (var f : roiMap.values()) {
             f.setROIColor(roiColor);
         }
     }
@@ -1584,10 +1493,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         return roiMap.get(name);
     }
 
-    /**
-     * @param runMode
-     *            the runMode to set
-     */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
@@ -1693,7 +1598,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         if (pixelInfoProviders == null) {
             return result;
         }
-        for (IPixelInfoProvider p : pixelInfoProviders) {
+        for (var p : pixelInfoProviders) {
             result += " " + p.getPixelInfo(xIndex, yIndex, xCoordinate, yCoordinate, pixelValue);
         }
         return result;
@@ -1706,10 +1611,9 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         croppedDataWidth = dataWidth - cropLeft - cropRight;
         croppedDataHeight = dataHeight - cropTop - cropBottom;
         if (croppedDataSizeListeners != null) {
-            for (ICroppedDataSizeListener listener : croppedDataSizeListeners) {
+            for (var listener : croppedDataSizeListeners) {
                 listener.croppedDataSizeChanged(croppedDataWidth, croppedDataHeight);
             }
         }
     }
-
 }

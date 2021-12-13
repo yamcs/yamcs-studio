@@ -69,5 +69,4 @@ public final class MoveGuideCommand extends Command {
             model.setLocation(location.x, location.y);
         }
     }
-
 }

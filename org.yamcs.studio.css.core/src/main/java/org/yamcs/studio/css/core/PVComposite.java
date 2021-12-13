@@ -20,9 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.yamcs.client.ParameterSubscription;
-import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.SubscribeParametersRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -106,7 +104,7 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         createKeyValueTextPair("Engineering Type", capitalize(type.getEngType()));
         if (type.getUnitSetCount() > 0) {
             var units = "";
-            for (UnitInfo unit : type.getUnitSetList()) {
+            for (var unit : type.getUnitSetList()) {
                 units += unit.getUnit() + " ";
             }
             createKeyValueTextPair("Units", units);
@@ -129,7 +127,7 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             }
 
             // Now forwards for upper limits
-            for (AlarmRange range : defaultAlarm.getStaticAlarmRangeList()) {
+            for (var range : defaultAlarm.getStaticAlarmRangeList()) {
                 if (range.hasMaxInclusive()) {
                     var label = capitalize(range.getLevel().toString()) + " High";
                     var limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
@@ -241,7 +239,7 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             if (isDisposed()) {
                 return;
             }
-            for (ParameterValue pval : values) {
+            for (var pval : values) {
                 gentimeField.setText(Instant
                         .ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
                         .toString());
@@ -253,7 +251,7 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                 if (pvInfo.getParameterInfo().hasType()) {
                     var ptype = pvInfo.getParameterInfo().getType();
                     if (ptype.getUnitSetCount() > 0) {
-                        for (UnitInfo unitInfo : ptype.getUnitSetList()) {
+                        for (var unitInfo : ptype.getUnitSetList()) {
                             engValue += " " + unitInfo.getUnit();
                         }
                     }

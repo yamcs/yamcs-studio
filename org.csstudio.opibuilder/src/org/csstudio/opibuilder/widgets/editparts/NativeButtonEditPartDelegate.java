@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.opibuilder.widgets.figures.NativeButtonFigure;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
@@ -68,7 +67,7 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
             public void widgetSelected(SelectionEvent e) {
                 var actions = editpart.getHookedActions();
                 if (actions != null) {
-                    for (AbstractWidgetAction action : actions) {
+                    for (var action : actions) {
                         if (action instanceof OpenDisplayAction) {
                             ((OpenDisplayAction) action).runWithModifiers((e.stateMask & SWT.CTRL) != 0,
                                     (e.stateMask & SWT.SHIFT) != 0);
@@ -127,7 +126,6 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
 
     @Override
     public void deactivate() {
-
     }
 
     @Override

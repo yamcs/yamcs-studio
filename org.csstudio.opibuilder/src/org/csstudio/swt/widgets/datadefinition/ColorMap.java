@@ -58,7 +58,7 @@ public class ColorMap {
         public static String[] getStringValues() {
             var result = new String[values().length];
             var i = 0;
-            for (PredefinedColorMap m : values()) {
+            for (var m : values()) {
                 result[i++] = m.name;
             }
             return result;
@@ -76,7 +76,6 @@ public class ColorMap {
         public String toString() {
             return name;
         }
-
     }
 
     private LinkedHashMap<Double, RGB> colorMap;
@@ -242,7 +241,6 @@ public class ColorMap {
                     ;
                 }
             }
-
         } else {
             for (var y = 0; y < dataHeight; y++) {
                 for (var x = 0; x < dataWidth; x++) {
@@ -332,7 +330,7 @@ public class ColorMap {
             var colorTupleArray = new ColorTuple[colorMap.size()];
 
             var i = 0;
-            for (Double k : colorMap.keySet()) {
+            for (var k : colorMap.keySet()) {
                 colorTupleArray[i++] = new ColorTuple(k, colorMap.get(k));
             }
 
@@ -341,7 +339,7 @@ public class ColorMap {
             colorMapMin = colorTupleArray[0].value;
             colorMapMax = colorTupleArray[colorTupleArray.length - 1].value;
             if (autoScale) {
-                for (ColorTuple t : colorTupleArray) {
+                for (var t : colorTupleArray) {
                     t.value = (t.value - colorMapMin) / (colorMapMax - colorMapMin);
                 }
             }

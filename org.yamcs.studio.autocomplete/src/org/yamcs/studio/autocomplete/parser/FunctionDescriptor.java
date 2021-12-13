@@ -83,5 +83,4 @@ public class FunctionDescriptor extends ContentDescriptor {
                 + ", hasOpenBracket=" + hasOpenBracket + ", currentArgIndex=" + currentArgIndex + ", toString()="
                 + super.toString() + "]";
     }
-
 }

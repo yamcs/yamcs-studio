@@ -9,18 +9,19 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import static org.csstudio.opibuilder.widgets.model.TableModel.PROP_COLUMNS_COUNT;
+import static org.csstudio.opibuilder.widgets.model.TableModel.PROP_COLUMN_HEADERS;
+import static org.csstudio.opibuilder.widgets.model.TableModel.PROP_COLUMN_HEADER_VISIBLE;
+import static org.csstudio.opibuilder.widgets.model.TableModel.PROP_DEFAULT_CONTENT;
+import static org.csstudio.opibuilder.widgets.model.TableModel.PROP_EDITABLE;
+
 import java.util.Arrays;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.SpreadSheetTableFigure;
 import org.csstudio.opibuilder.widgets.model.TableModel;
 import org.csstudio.swt.widgets.natives.SpreadSheetTable;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IActionFilter;
 
@@ -46,7 +47,7 @@ public class TableEditPart extends AbstractBaseEditPart {
         spreadSheetTable.setColumnsCount(getWidgetModel().getColumnsCount());
         spreadSheetTable.setColumnHeaders(getWidgetModel().getColumnHeaders());
         spreadSheetTable.setColumnWidths(getWidgetModel().getColumnWidthes());
-        boolean editable[] = getWidgetModel().isColumnEditable();
+        var editable = getWidgetModel().isColumnEditable();
         var columnCellEditorTypes = getWidgetModel().getColumnCellEditorTypes();
         for (var i = 0; i < Math.min(editable.length, spreadSheetTable.getColumnCount()); i++) {
             spreadSheetTable.setColumnEditable(i, editable[i]);
@@ -55,18 +56,13 @@ public class TableEditPart extends AbstractBaseEditPart {
         spreadSheetTable.setContent(getWidgetModel().getDefaultContent());
 
         spreadSheetTable.setColumnHeaderVisible(getWidgetModel().isColumnHeaderVisible());
-        spreadSheetTable.getTableViewer().getTable().addMenuDetectListener(new MenuDetectListener() {
-
-            @Override
-            public void menuDetected(MenuDetectEvent e) {
-
-                var index = spreadSheetTable
-                        .getRowColumnIndex(spreadSheetTable.getTableViewer().getTable().toControl(e.x, e.y));
-                if (index != null) {
-                    menuTriggeredCell = new Point(index[0], index[1]);
-                } else {
-                    menuTriggeredCell = null;
-                }
+        spreadSheetTable.getTableViewer().getTable().addMenuDetectListener(e -> {
+            var index = spreadSheetTable
+                    .getRowColumnIndex(spreadSheetTable.getTableViewer().getTable().toControl(e.x, e.y));
+            if (index != null) {
+                menuTriggeredCell = new Point(index[0], index[1]);
+            } else {
+                menuTriggeredCell = null;
             }
         });
 
@@ -114,82 +110,45 @@ public class TableEditPart extends AbstractBaseEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
+        setPropertyChangeHandler(PROP_EDITABLE, (oldValue, newValue, figure) -> {
+            spreadSheetTable.setEditable((Boolean) newValue);
+            return false;
+        });
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_COLUMN_HEADER_VISIBLE, (oldValue, newValue, figure) -> {
+            spreadSheetTable.setColumnHeaderVisible((Boolean) newValue);
+            return false;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                spreadSheetTable.setEditable((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(TableModel.PROP_EDITABLE, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                spreadSheetTable.setColumnHeaderVisible((Boolean) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(TableModel.PROP_COLUMN_HEADER_VISIBLE, handler);
-
-        IWidgetPropertyChangeHandler headersHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                var s = getWidgetModel().getColumnHeaders();
-                spreadSheetTable.setColumnHeaders(s);
-                var w = getWidgetModel().getColumnWidthes();
-                spreadSheetTable.setColumnWidths(w);
-                setPropertyValue(TableModel.PROP_COLUMNS_COUNT, s.length);
-                getWidgetModel().updateContentPropertyTitles();
-                return false;
-            }
-        };
         // update prop sheet immediately
-        getWidgetModel().getProperty(TableModel.PROP_COLUMN_HEADERS)
-                .addPropertyChangeListener(new PropertyChangeListener() {
+        getWidgetModel().getProperty(PROP_COLUMN_HEADERS).addPropertyChangeListener(evt -> {
+            var s = getWidgetModel().getColumnHeaders();
+            spreadSheetTable.setColumnHeaders(s);
+            var w = getWidgetModel().getColumnWidthes();
+            spreadSheetTable.setColumnWidths(w);
+            setPropertyValue(PROP_COLUMNS_COUNT, s.length);
+            getWidgetModel().updateContentPropertyTitles();
+        });
 
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        headersHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-                    }
-                });
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                var headers = (String[][]) getPropertyValue(TableModel.PROP_COLUMN_HEADERS);
-                if (headers.length > (Integer) newValue) {
-                    var newHeaders = Arrays.copyOf(headers, (Integer) newValue);
-                    setPropertyValue(TableModel.PROP_COLUMN_HEADERS, newHeaders);
-                }
-                spreadSheetTable.setColumnsCount((Integer) newValue);
-                getWidgetModel().updateContentPropertyTitles();
-                return false;
+        setPropertyChangeHandler(PROP_COLUMNS_COUNT, (oldValue, newValue, figure) -> {
+            var headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
+            if (headers.length > (Integer) newValue) {
+                var newHeaders = Arrays.copyOf(headers, (Integer) newValue);
+                setPropertyValue(PROP_COLUMN_HEADERS, newHeaders);
             }
-        };
-        setPropertyChangeHandler(TableModel.PROP_COLUMNS_COUNT, handler);
+            spreadSheetTable.setColumnsCount((Integer) newValue);
+            getWidgetModel().updateContentPropertyTitles();
+            return false;
+        });
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                spreadSheetTable.setContent((String[][]) newValue);
-                return false;
-            }
-        };
-        setPropertyChangeHandler(TableModel.PROP_DEFAULT_CONTENT, handler);
-
+        setPropertyChangeHandler(PROP_DEFAULT_CONTENT, (oldValue, newValue, figure) -> {
+            spreadSheetTable.setContent((String[][]) newValue);
+            return false;
+        });
     }
 
     /**
      * Get the native spread sheet table held by this widget.
-     * 
-     * @return the native spread sheet table.
      */
     public SpreadSheetTable getTable() {
         return spreadSheetTable;
@@ -198,9 +157,6 @@ public class TableEditPart extends AbstractBaseEditPart {
     /**
      * Set allowed header titles. If this is set, the insert column dialog will have a combo box instead of text for
      * title input.
-     * 
-     * @param headers
-     *            the allowed header titles.
      */
     public void setAllowedHeaders(String[] headers) {
         this.allowedHeaders = headers;
@@ -209,5 +165,4 @@ public class TableEditPart extends AbstractBaseEditPart {
     public String[] getAllowedHeaders() {
         return allowedHeaders;
     }
-
 }

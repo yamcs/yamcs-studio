@@ -93,7 +93,6 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
             marker.removeMarkerElement(LO);
         }
         revalidate();
-
     }
 
     @Override
@@ -161,5 +160,4 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
         super.setLogScale(logScale);
         marker.setDirty(true);
     }
-
 }

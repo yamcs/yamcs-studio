@@ -30,5 +30,4 @@ public interface IPrimaryArrayWrapper {
      * @return size of the array.
      */
     public int getSize();
-
 }

@@ -72,11 +72,9 @@ class ConcatStringArrayFunction implements FormulaFunction {
         }
 
         var sb = new StringBuffer();
-        for (String str : stringArray.getData()) {
+        for (var str : stringArray.getData()) {
             sb.append(str);
         }
         return ValueFactory.newVString(sb.toString(), stringArray, stringArray);
-
     }
-
 }

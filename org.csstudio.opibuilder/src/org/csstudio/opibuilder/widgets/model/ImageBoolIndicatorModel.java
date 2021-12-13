@@ -148,5 +148,4 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
     public boolean isAlignedToNearestSecond() {
         return (Boolean) getProperty(PROP_ALIGN_TO_NEAREST_SECOND).getPropertyValue();
     }
-
 }

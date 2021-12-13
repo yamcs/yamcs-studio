@@ -129,5 +129,4 @@ public class IntegerProperty extends AbstractWidgetProperty {
     public boolean configurableByRule() {
         return true;
     }
-
 }

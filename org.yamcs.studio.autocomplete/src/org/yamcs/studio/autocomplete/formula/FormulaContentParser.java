@@ -154,5 +154,4 @@ public class FormulaContentParser implements IContentParser {
         currentToken.setCurrentArgIndex(-1);
         currentToken.setOpenBracket(false);
     }
-
 }

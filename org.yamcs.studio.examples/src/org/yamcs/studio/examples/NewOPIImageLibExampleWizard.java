@@ -41,7 +41,6 @@ public class NewOPIImageLibExampleWizard extends Wizard implements IImportWizard
         super.addPages();
         setWindowTitle(WINDOW_TITLE);
         addPage(new WizardPage(WIZARD_PAGE) {
-
             @Override
             public void createControl(Composite parent) {
                 setTitle(WIZARD_PAGE_TITLE);

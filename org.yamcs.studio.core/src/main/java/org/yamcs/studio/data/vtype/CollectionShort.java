@@ -13,5 +13,4 @@ public interface CollectionShort extends CollectionNumber {
 
     @Override
     IteratorShort iterator();
-
 }

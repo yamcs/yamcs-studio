@@ -26,7 +26,6 @@ public class ShowXYGraphToolbarAction extends AbstractWidgetTargetAction {
         Command command = new SetWidgetPropertyCommand(getSelectedXYGraph().getWidgetModel(),
                 XYGraphModel.PROP_SHOW_TOOLBAR, !getSelectedXYGraph().getWidgetModel().isShowToolbar());
         execute(command);
-
     }
 
     /**

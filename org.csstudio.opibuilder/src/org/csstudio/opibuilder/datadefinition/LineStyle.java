@@ -44,7 +44,7 @@ public enum LineStyle {
     public static String[] stringValues() {
         var sv = new String[values().length];
         var i = 0;
-        for (LineStyle p : values()) {
+        for (var p : values()) {
             sv[i++] = p.toString();
         }
         return sv;

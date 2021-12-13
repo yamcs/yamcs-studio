@@ -59,7 +59,6 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
 
     public PVWidgetSelectionHandle(GraphicalEditPart owner) {
         super(owner, new Locator() {
-
             @Override
             public void relocate(IFigure target) {
                 var ownerFigure = owner.getFigure();
@@ -99,12 +98,9 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
         DragEditPartsTracker tracker = new DragEditPartsTracker(getOwner()) {
             @Override
             protected boolean handleButtonDown(int button) {
-
                 if ((button == 1 || button == 3) && widgetModel instanceof IPVWidgetModel) {
-
                     DirectEditManager directEditManager = new PVNameDirectEditManager(getOwner(),
                             new CellEditorLocator() {
-
                                 @Override
                                 public void relocate(CellEditor celleditor) {
                                     Rectangle rect;
@@ -206,7 +202,6 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
             } finally {
                 // work around to make sure autocomplete widget get notified before bringdown
                 Display.getCurrent().asyncExec(new Runnable() {
-
                     @Override
                     public void run() {
                         bringDown();
@@ -240,7 +235,6 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
 
         @Override
         protected void bringDown() {
-
             if (actionHandler != null) {
                 actionHandler.dispose();
                 actionHandler = null;
@@ -252,9 +246,6 @@ public class PVWidgetSelectionHandle extends AbstractHandle {
             }
 
             super.bringDown();
-
         }
-
     }
-
 }

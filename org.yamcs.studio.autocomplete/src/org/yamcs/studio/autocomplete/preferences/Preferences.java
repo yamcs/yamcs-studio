@@ -79,5 +79,4 @@ public class Preferences {
         }
         return service.getInt(AutoCompletePlugin.PLUGIN_ID, MAX_TOP_RESULTS, 0, null);
     }
-
 }

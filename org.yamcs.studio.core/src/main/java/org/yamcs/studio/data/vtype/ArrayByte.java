@@ -48,7 +48,6 @@ public final class ArrayByte extends ListByte implements Serializable {
     @Override
     public final IteratorByte iterator() {
         return new IteratorByte() {
-
             private int index;
 
             @Override

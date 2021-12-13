@@ -155,7 +155,6 @@ public class DisplayModel extends AbstractContainerModel {
         setPropertyDescription(PROP_COLOR_FOREGROUND, "Grid Color");
         setPropertyValue(PROP_NAME, "");
         removeProperty(PROP_SCALE_OPTIONS);
-
     }
 
     /**
@@ -276,9 +275,9 @@ public class DisplayModel extends AbstractContainerModel {
      */
     public void syncConnections() {
         var allDescendants = getAllDescendants();
-        for (AbstractWidgetModel widget : allDescendants) {
+        for (var widget : allDescendants) {
             if (!widget.getSourceConnections().isEmpty()) {
-                for (ConnectionModel connectionModel : widget.getSourceConnections()) {
+                for (var connectionModel : widget.getSourceConnections()) {
                     if (!allDescendants.contains(connectionModel.getTarget())) {
                         // the target model no longer exists, perhaps it was reloaded
                         connectionModel.resync();
@@ -286,7 +285,7 @@ public class DisplayModel extends AbstractContainerModel {
                 }
             }
             if (!widget.getTargetConnections().isEmpty()) {
-                for (ConnectionModel connectionModel : widget.getTargetConnections()) {
+                for (var connectionModel : widget.getTargetConnections()) {
                     if (!allDescendants.contains(connectionModel.getSource())) {
                         connectionModel.resync();
                     }
@@ -298,16 +297,16 @@ public class DisplayModel extends AbstractContainerModel {
     private List<ConnectionModel> getConnectionList(AbstractContainerModel container) {
         Set<ConnectionModel> connectionModels = new HashSet<ConnectionModel>();
         var allDescendants = getAllDescendants();
-        for (AbstractWidgetModel widget : allDescendants) {
+        for (var widget : allDescendants) {
             if (!widget.getSourceConnections().isEmpty()) {
-                for (ConnectionModel connectionModel : widget.getSourceConnections()) {
+                for (var connectionModel : widget.getSourceConnections()) {
                     if (allDescendants.contains(connectionModel.getTarget())) {
                         connectionModels.add(connectionModel);
                     }
                 }
             }
             if (!widget.getTargetConnections().isEmpty()) {
-                for (ConnectionModel connectionModel : widget.getTargetConnections()) {
+                for (var connectionModel : widget.getTargetConnections()) {
                     if (allDescendants.contains(connectionModel.getSource())) {
                         connectionModels.add(connectionModel);
                     }
@@ -322,7 +321,7 @@ public class DisplayModel extends AbstractContainerModel {
     }
 
     private static AbstractWidgetModel getWidgetFromWUID(AbstractContainerModel container, String wuid) {
-        for (AbstractWidgetModel widget : container.getChildren()) {
+        for (var widget : container.getChildren()) {
             if (widget.getWUID().equals(wuid)) {
                 return widget;
             } else if (widget instanceof AbstractContainerModel) {
@@ -351,7 +350,7 @@ public class DisplayModel extends AbstractContainerModel {
         if (getHeight() * heightRatio < minHeight) {
             heightRatio = minHeight / (double) getHeight();
         }
-        for (AbstractWidgetModel child : getChildren()) {
+        for (var child : getChildren()) {
             child.scale(widthRatio, heightRatio);
         }
     }
@@ -383,5 +382,4 @@ public class DisplayModel extends AbstractContainerModel {
     public DisplayModel getParentDisplayModel() {
         return parentDisplayModel;
     }
-
 }

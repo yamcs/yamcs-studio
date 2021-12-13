@@ -99,5 +99,4 @@ public class MeterModel extends AbstractMarkedWidgetModel {
     public boolean isTransparent() {
         return false;
     }
-
 }

@@ -28,7 +28,6 @@ public class MacroEditDialog extends RowEditDialog {
 
     public MacroEditDialog(Shell parentShell) {
         super(parentShell);
-
     }
 
     @Override
@@ -75,5 +74,4 @@ public class MacroEditDialog extends RowEditDialog {
         rowData[1] = detailsText == null ? "" : detailsText.getText().trim();
         super.okPressed();
     }
-
 }

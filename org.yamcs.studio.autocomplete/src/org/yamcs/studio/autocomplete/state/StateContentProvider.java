@@ -60,7 +60,7 @@ public class StateContentProvider implements IAutoCompleteProvider {
         Proposal topProposal = null;
         String closestMatchingFunction = null;
         var offset = StateContentParser.STATE_SOURCE.length();
-        for (String function : StateContentDescriptor.listFunctions()) {
+        for (var function : StateContentDescriptor.listFunctions()) {
             var m = valuePattern.matcher(function);
             if (m.find()) {
                 var fctDisplay = function;

@@ -167,7 +167,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
     public void setEnabled(boolean value) {
         super.setEnabled(value);
         repaint();
-
     }
 
     /**
@@ -310,7 +309,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
             if (effect3D && support3D) {
                 thumbPattern.dispose();
             }
-
         }
     }
 
@@ -323,7 +321,6 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
 
         @Override
         protected void fillShape(Graphics graphics) {
-
             graphics.setAntialias(SWT.ON);
             var valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
             double tempOrigin;
@@ -564,6 +561,5 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
                         labelSize.height));
             }
         }
-
     }
 }

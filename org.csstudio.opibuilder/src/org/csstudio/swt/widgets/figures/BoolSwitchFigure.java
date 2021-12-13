@@ -217,7 +217,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
         public void setSmallEndBounds(Rectangle smallEndBounds) {
             this.smallEndBounds = smallEndBounds;
         }
-
     }
 
     class BoolSwitchLayout extends AbstractLayout {
@@ -297,7 +296,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                                 pedBounds.y + pedBounds.height / 2 - labelSize.height / 2),
                         new Dimension(labelSize.width, labelSize.height)));
             }
-
         }
 
         @Override
@@ -382,7 +380,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                         new Dimension(labelSize.width, labelSize.height)));
             }
         }
-
     }
 
     class Pedestal extends Figure {
@@ -419,7 +416,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
                     pattern.dispose();
                 }
             }
-
         }
     }
 
@@ -629,7 +625,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
         add(bar, BoolSwitchLayout.BAR);
         add(boolLabel, BoolSwitchLayout.BOOL_LABEL);
         cursor = Cursors.HAND;
-
     }
 
     /**

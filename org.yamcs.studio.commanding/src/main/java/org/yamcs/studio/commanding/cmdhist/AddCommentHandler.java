@@ -60,7 +60,6 @@ public class AddCommentHandler extends AbstractHandler {
 
             IInputValidator validator = newText -> null;
             InputDialog commentDialog = new InputDialog(shell, "Add Comment", dialogMessage, initialValue, validator) {
-
                 @Override
                 protected int getInputTextStyle() {
                     return SWT.MULTI | SWT.BORDER | SWT.V_SCROLL;

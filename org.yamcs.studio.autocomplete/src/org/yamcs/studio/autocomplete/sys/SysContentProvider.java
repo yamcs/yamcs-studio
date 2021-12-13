@@ -78,7 +78,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
         Proposal topProposal = null;
         String closestMatchingFunction = null;
         var offset = SysContentParser.SYS_SOURCE.length();
-        for (String function : SysContentDescriptor.listFunctions()) {
+        for (var function : SysContentDescriptor.listFunctions()) {
             var m = valuePattern.matcher(function);
             if (m.find()) {
                 var fctDisplay = function;
@@ -150,7 +150,7 @@ public class SysContentProvider implements IAutoCompleteProvider {
         }
         // handle top proposals
         var tpf = new TopProposalFinder(SYSTEM_SEPARATOR);
-        for (Proposal tp : tpf.getTopProposals(propValue, matchingProperties)) {
+        for (var tp : tpf.getTopProposals(propValue, matchingProperties)) {
             var propDisplay = SYSTEM_FUNCTION + SYSTEM_SEPARATOR + tp.getValue();
             propDisplay = SysContentParser.SYS_SOURCE + propDisplay;
             var proposal = new Proposal(propDisplay, tp.isPartial());

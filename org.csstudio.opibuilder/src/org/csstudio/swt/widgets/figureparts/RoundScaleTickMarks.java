@@ -65,7 +65,6 @@ public class RoundScaleTickMarks extends Figure {
         graphics.setAntialias(SWT.ON);
         var tickLabelPositions = scale.getScaleTickLabels().getTickLabelPositions();
         drawTickMarks(graphics, tickLabelPositions);
-
     }
 
     /**
@@ -160,7 +159,6 @@ public class RoundScaleTickMarks extends Figure {
                 graphics.setLineWidth(MINOR_LINE_WIDTH);
                 if (scale.isMinorTicksVisible()) {
                     if (i > 0) {
-
                         // draw the first grid step which is start from min value
                         // draw the first grid step which is start from min value
                         if (i == 1 && (tickLabelPositions.get(0) - tickLabelPositions.get(1)) < scale
@@ -198,7 +196,6 @@ public class RoundScaleTickMarks extends Figure {
                     bounds.y + bounds.height / 2 - scale.getRadius(), scale.getRadius() * 2, scale.getRadius() * 2),
                     (int) scale.getEndAngle(), (int) scale.getLengthInDegrees());
         }
-
     }
 
     private void drawMinorTick(Graphics graphics, int r, double t) {
@@ -211,5 +208,4 @@ public class RoundScaleTickMarks extends Figure {
         }
         graphics.drawLine(minorStartP, minorEndP);
     }
-
 }

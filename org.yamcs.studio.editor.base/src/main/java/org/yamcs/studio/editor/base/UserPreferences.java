@@ -62,7 +62,7 @@ public class UserPreferences {
         }
 
         try (var writer = Files.newBufferedWriter(getHistoryFile(), StandardCharsets.UTF_8)) {
-            for (String workspace : history) {
+            for (var workspace : history) {
                 writer.write(workspace);
                 writer.newLine();
             }

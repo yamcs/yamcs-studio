@@ -33,5 +33,4 @@ public class ByteArrayWrapper implements IPrimaryArrayWrapper {
     public int getSize() {
         return data.length;
     }
-
 }

@@ -77,7 +77,7 @@ public enum FormatEnum {
     public static String[] stringValues() {
         var result = new String[values().length];
         var i = 0;
-        for (FormatEnum f : values()) {
+        for (var f : values()) {
             result[i++] = f.toString();
         }
         return result;

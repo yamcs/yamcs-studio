@@ -31,27 +31,15 @@ public class PrintDisplayAction extends WorkbenchPartAction {
 
     public static final String ID = "org.csstudio.opibuilder.actions.print";
 
-    /**
-     * Constructor for PrintAction.
-     *
-     * @param part
-     *            The workbench part associated with this PrintAction
-     */
     public PrintDisplayAction(IWorkbenchPart part) {
         super(part);
     }
 
-    /**
-     * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#calculateEnabled()
-     */
     @Override
     protected boolean calculateEnabled() {
         return true;
     }
 
-    /**
-     * @see org.eclipse.gef.ui.actions.EditorPartAction#init()
-     */
     @Override
     protected void init() {
         super.init();
@@ -63,9 +51,6 @@ public class PrintDisplayAction extends WorkbenchPartAction {
         setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_ETOOL_PRINT_EDIT));
     }
 
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
     @Override
     public void run() {
         var viewer = getWorkbenchPart().getAdapter(GraphicalViewer.class);
@@ -76,7 +61,6 @@ public class PrintDisplayAction extends WorkbenchPartAction {
                 var loader = new ImageLoader();
                 ImageData[] imageData;
                 try {
-
                     imageData = loader.load(ResourceUtil.getScreenshotFile(viewer));
 
                     if (imageData.length > 0) {
@@ -124,7 +108,5 @@ public class PrintDisplayAction extends WorkbenchPartAction {
                 }
             }
         });
-
     }
-
 }

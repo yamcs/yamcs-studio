@@ -11,7 +11,6 @@ package org.csstudio.ui.util.dnd;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -20,7 +19,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -43,8 +41,8 @@ abstract public class ControlSystemDropTarget {
     public ControlSystemDropTarget(Control control, Class<?>... accepted) {
         target = new DropTarget(control, DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 
-        List<Transfer> supportedTransfers = new ArrayList<Transfer>();
-        for (Class<?> clazz : accepted) {
+        var supportedTransfers = new ArrayList<Transfer>();
+        for (var clazz : accepted) {
             if (clazz == String.class) {
                 supportedTransfers.add(TextTransfer.getInstance());
             }
@@ -68,8 +66,8 @@ abstract public class ControlSystemDropTarget {
                 // Seems DropTarget it is not honoring the order of the transferData:
                 // Making sure is right
                 var done = false;
-                for (Transfer transfer : target.getTransfer()) {
-                    for (TransferData data : event.dataTypes) {
+                for (var transfer : target.getTransfer()) {
+                    for (var data : event.dataTypes) {
                         if (transfer.isSupportedType(data)) {
                             event.currentDataType = data;
                             done = true;
@@ -107,5 +105,4 @@ abstract public class ControlSystemDropTarget {
      *            Control system item
      */
     abstract public void handleDrop(Object item);
-
 }

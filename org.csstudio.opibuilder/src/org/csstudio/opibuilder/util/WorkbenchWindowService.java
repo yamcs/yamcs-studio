@@ -15,7 +15,6 @@ import java.util.Map;
 import org.csstudio.opibuilder.actions.FullScreenAction;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
@@ -63,13 +62,13 @@ public final class WorkbenchWindowService {
         // window.getStatusLineManager().getControl().setVisible(visible);
 
         // A hack to set status line invisible.
-        for (Control child : window.getShell().getChildren()) {
+        for (var child : window.getShell().getChildren()) {
             if (child.isDisposed()) {
                 continue;
             } else if (child.getClass().equals(Canvas.class)) {
                 continue;
             } else if (child.getClass().equals(Composite.class)) {
-                for (Control c : ((Composite) child).getChildren()) {
+                for (var c : ((Composite) child).getChildren()) {
                     if (c.getClass().getSimpleName().contains("StatusLine")) {
                         child.setVisible(visible);
                         break;
@@ -79,10 +78,7 @@ public final class WorkbenchWindowService {
             }
 
             child.setVisible(visible);
-
         }
         window.getShell().layout();
-
     }
-
 }

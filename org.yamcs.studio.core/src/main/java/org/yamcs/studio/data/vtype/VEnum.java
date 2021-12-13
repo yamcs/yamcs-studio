@@ -25,5 +25,4 @@ public interface VEnum extends Scalar, Enum, Alarm, Time, VType {
      * @return the current index
      */
     int getIndex();
-
 }

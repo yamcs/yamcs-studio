@@ -33,5 +33,4 @@ public class InfiniteLoopException extends Exception {
     public InfiniteLoopException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

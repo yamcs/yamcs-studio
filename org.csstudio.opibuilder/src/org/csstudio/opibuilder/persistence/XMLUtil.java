@@ -86,7 +86,7 @@ public class XMLUtil {
         result.setAttribute(XMLATTR_VERSION, widgetModel.getVersion().toString());
         List<String> propIds = new ArrayList<>(widgetModel.getAllPropertyIDs());
         Collections.sort(propIds);
-        for (String propId : propIds) {
+        for (var propId : propIds) {
             if (widgetModel.getProperty(propId).isSavable()) {
                 var propElement = new Element(propId);
                 widgetModel.getProperty(propId).writeToXML(propElement);
@@ -96,14 +96,14 @@ public class XMLUtil {
 
         if (widgetModel instanceof AbstractContainerModel && !(widgetModel instanceof AbstractLinkingContainerModel)) {
             var containerModel = (AbstractContainerModel) widgetModel;
-            for (AbstractWidgetModel child : containerModel.getChildren()) {
+            for (var child : containerModel.getChildren()) {
                 result.addContent(widgetToXMLElement(child));
             }
         }
 
         // convert connections on this displayModel to xml element
         if (widgetModel instanceof DisplayModel && ((DisplayModel) widgetModel).getConnectionList() != null) {
-            for (ConnectionModel connectionModel : ((DisplayModel) widgetModel).getConnectionList()) {
+            for (var connectionModel : ((DisplayModel) widgetModel).getConnectionList()) {
                 if (!connectionModel.isLoadedFromLinkedOpi()) {
                     var connElement = widgetToXMLElement(connectionModel);
                     result.addContent(connElement);
@@ -246,7 +246,6 @@ public class XMLUtil {
                     display.asyncExec(() -> OPIBuilderPlugin.getLogger().log(Level.WARNING, message));
                 }
             }
-
         }
         inputStream.close();
     }
@@ -401,7 +400,7 @@ public class XMLUtil {
             fillLinkingContainerSub(linkingContainer, tempTrace, macrosInput_);
         }
 
-        for (AbstractWidgetModel w : container.getAllDescendants()) {
+        for (var w : container.getAllDescendants()) {
             if (w instanceof AbstractLinkingContainerModel) {
                 var linkingContainer = (AbstractLinkingContainerModel) w;
                 List<IPath> tempTrace = new ArrayList<>();
@@ -522,8 +521,8 @@ public class XMLUtil {
                 }
 
                 // mark connection as it is loaded from linked opi
-                for (AbstractWidgetModel w : inside.getAllDescendants()) {
-                    for (ConnectionModel conn : w.getSourceConnections()) {
+                for (var w : inside.getAllDescendants()) {
+                    for (var conn : w.getSourceConnections()) {
                         conn.setLoadedFromLinkedOpi(true);
                     }
                 }

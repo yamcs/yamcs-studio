@@ -92,7 +92,6 @@ public class TableModel extends AbstractWidgetModel {
                 WidgetPropertyCategory.Display, true));
 
         headersProperty.addPropertyChangeListener(new PropertyChangeListener() {
-
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 updateContentPropertyTitles();
@@ -100,13 +99,11 @@ public class TableModel extends AbstractWidgetModel {
         });
 
         columnsCountProperty.addPropertyChangeListener(new PropertyChangeListener() {
-
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 updateContentPropertyTitles();
             }
         });
-
     }
 
     public void updateContentPropertyTitles() {

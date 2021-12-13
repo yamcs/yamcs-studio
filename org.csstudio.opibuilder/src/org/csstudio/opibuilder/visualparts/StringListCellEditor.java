@@ -54,7 +54,5 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
         } else {
             data = (List<String>) value;
         }
-
     }
-
 }

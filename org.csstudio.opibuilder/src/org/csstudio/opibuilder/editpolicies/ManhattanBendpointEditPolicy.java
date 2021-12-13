@@ -51,7 +51,6 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
         for (var i = 1; i < points.size() - 2; i++) {
             handles.add(
                     new BendpointMoveHandle(getConnectionEditPart(), i - 1, new MidpointLocator(getConnection(), i)) {
-
                         @Override
                         protected Color getBorderColor() {
                             return (isPrimary()) ? ColorConstants.darkGreen : ColorConstants.white;
@@ -134,9 +133,6 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
         getConnection().setRoutingConstraint(getNewPoints(request));
     }
 
-    /**
-     * @see org.eclipse.gef.EditPolicy#eraseSourceFeedback(Request)
-     */
     @Override
     public void eraseSourceFeedback(Request request) {
         if (REQ_MOVE_BENDPOINT.equals(request.getType())) {
@@ -158,7 +154,6 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
      */
     protected void restoreOriginalConstraint() {
         getConnection().setRoutingConstraint(originalConstraint);
-
     }
 
     /**
@@ -199,5 +194,4 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
     // }
     //
     // }
-
 }

@@ -117,7 +117,6 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
             return null;
         }
         class BridgeContextEx extends BridgeContext {
-
             public BridgeContextEx() {
                 super(SimpleImageTranscoder.this.userAgent);
                 BridgeContextEx.this.setDocument(SimpleImageTranscoder.this.document);

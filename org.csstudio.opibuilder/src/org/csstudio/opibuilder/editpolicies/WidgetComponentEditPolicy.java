@@ -31,5 +31,4 @@ public class WidgetComponentEditPolicy extends ComponentEditPolicy {
         }
         return super.createDeleteCommand(deleteRequest);
     }
-
 }

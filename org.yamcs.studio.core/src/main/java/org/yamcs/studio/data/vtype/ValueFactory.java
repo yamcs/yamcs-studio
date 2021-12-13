@@ -80,7 +80,6 @@ public class ValueFactory {
      */
     public static Alarm newAlarm(AlarmSeverity alarmSeverity, String alarmName) {
         return new Alarm() {
-
             @Override
             public AlarmSeverity getAlarmSeverity() {
                 return alarmSeverity;
@@ -95,7 +94,6 @@ public class ValueFactory {
             public String toString() {
                 return VTypeToString.alarmToString(this);
             }
-
         };
     }
 
@@ -141,7 +139,6 @@ public class ValueFactory {
      */
     public static Time newTime(Instant timestamp, Integer timeUserTag, boolean timeValid) {
         return new Time() {
-
             @Override
             public Instant getTimestamp() {
                 return timestamp;
@@ -231,7 +228,6 @@ public class ValueFactory {
             public Double getUpperDisplayLimit() {
                 return upperDisplayLimit;
             }
-
         };
     }
 
@@ -597,7 +593,7 @@ public class ValueFactory {
         } else if (value instanceof List) {
             var matches = true;
             var list = (List) value;
-            for (Object object : list) {
+            for (var object : list) {
                 if (!(object instanceof String)) {
                     matches = false;
                 }

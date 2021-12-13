@@ -9,12 +9,17 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.widgets.model.SashContainerModel.PROP_HORIZONTAL;
+import static org.csstudio.opibuilder.widgets.model.SashContainerModel.PROP_SASH_POSITION;
+import static org.csstudio.opibuilder.widgets.model.SashContainerModel.PROP_SASH_STYLE;
+import static org.csstudio.opibuilder.widgets.model.SashContainerModel.PROP_SASH_WIDTH;
+import static org.csstudio.opibuilder.widgets.model.SashContainerModel.PROP_TRANSPARENT;
+
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.dnd.DropPVtoPVWidgetEditPolicy;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractContainerEditpart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
 import org.csstudio.opibuilder.widgets.model.GroupingContainerModel;
 import org.csstudio.opibuilder.widgets.model.SashContainerModel;
@@ -51,23 +56,17 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
         if (getWidgetModel().getChildren().size() == 0) {
             groupContainer1 = createGroupingContainerModel(true);
             groupContainer2 = createGroupingContainerModel(false);
-            UIBundlingThread.getInstance().addRunnable(new Runnable() {
-
-                @Override
-                public void run() {
-                    getWidgetModel().addChild(groupContainer1);
-                    getWidgetModel().addChild(groupContainer2);
-                }
+            UIBundlingThread.getInstance().addRunnable(() -> {
+                getWidgetModel().addChild(groupContainer1);
+                getWidgetModel().addChild(groupContainer2);
             });
         } else {
             groupContainer1 = (GroupingContainerModel) getWidgetModel().getChildren().get(0);
             groupContainer2 = (GroupingContainerModel) getWidgetModel().getChildren().get(1);
         }
         getSashFigure().addLayoutListener(new LayoutListener.Stub() {
-
             @Override
             public void postLayout(IFigure container) {
-
                 var bounds = getSashFigure().getSubPanelsBounds();
                 if (groupContainer1.getBounds().equals(bounds[0]) && groupContainer2.getBounds().equals(bounds[1])) {
                     return;
@@ -87,13 +86,12 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
                 }
                 if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
                     getViewer().getEditDomain().getCommandStack().execute(new SetWidgetPropertyCommand(getWidgetModel(),
-                            SashContainerModel.PROP_SASH_POSITION, getSashFigure().getSashPosition()));
+                            PROP_SASH_POSITION, getSashFigure().getSashPosition()));
                 }
             }
         });
 
         getSashFigure().setSashPosition(getWidgetModel().getSashPosition());
-
     }
 
     private GroupingContainerModel createGroupingContainerModel(boolean isPanel1) {
@@ -133,7 +131,6 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
         if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, null);
         }
-
     }
 
     @Override
@@ -143,62 +140,30 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
+        setPropertyChangeHandler(PROP_SASH_POSITION, (oldValue, newValue, figure) -> {
+            getSashFigure().setSashPosition((Double) newValue);
+            return false;
+        });
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
+        setPropertyChangeHandler(PROP_SASH_STYLE, (oldValue, newValue, figure) -> {
+            getSashFigure().setSashStyle(getWidgetModel().getSashStyle());
+            return false;
+        });
 
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setSashPosition((Double) newValue);
-                return false;
-            }
-        };
+        setPropertyChangeHandler(PROP_SASH_WIDTH, (oldValue, newValue, figure) -> {
+            getSashFigure().setSashWidth((Integer) newValue);
+            return false;
+        });
 
-        setPropertyChangeHandler(SashContainerModel.PROP_SASH_POSITION, handler);
+        setPropertyChangeHandler(PROP_HORIZONTAL, (oldValue, newValue, figure) -> {
+            getSashFigure().setHorizontal((Boolean) newValue);
+            return false;
+        });
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setSashStyle(getWidgetModel().getSashStyle());
-                return false;
-            }
-        };
-
-        setPropertyChangeHandler(SashContainerModel.PROP_SASH_STYLE, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setSashWidth((Integer) newValue);
-                return false;
-            }
-        };
-
-        setPropertyChangeHandler(SashContainerModel.PROP_SASH_WIDTH, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setHorizontal((Boolean) newValue);
-                return false;
-            }
-        };
-
-        setPropertyChangeHandler(SashContainerModel.PROP_HORIZONTAL, handler);
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setOpaque(!(Boolean) newValue);
-                return false;
-            }
-        };
-
-        setPropertyChangeHandler(SashContainerModel.PROP_TRANSPARENT, handler);
-
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, figure) -> {
+            getSashFigure().setOpaque(!(Boolean) newValue);
+            return false;
+        });
     }
 
     private SashContainerFigure getSashFigure() {
@@ -209,5 +174,4 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
     public IFigure getContentPane() {
         return getSashFigure().getContentPane();
     }
-
 }

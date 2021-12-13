@@ -84,7 +84,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         var orderMenu = new MenuManager(orderGroup, CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/shape_move_front.png"), null);
         orderMenu.add(new Separator(orderGroup));
-        for (OrderType orderType : OrderType.values()) {
+        for (var orderType : OrderType.values()) {
             orderMenu.appendToGroup(orderGroup, getAction(orderType.getActionID()));
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orderMenu);
@@ -93,9 +93,8 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         var orientationMenu = new MenuManager(orientationGroup, CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/flip_horizontal.png"), null);
         orientationMenu.add(new Separator(orientationGroup));
-        for (OrientationType orientationType : OrientationType.values()) {
+        for (var orientationType : OrientationType.values()) {
             orientationMenu.appendToGroup(orientationGroup, getAction(orientationType.getActionID()));
-
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orientationMenu);
 
@@ -107,5 +106,4 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
     private IAction getAction(String actionId) {
         return actionRegistry.getAction(actionId);
     }
-
 }

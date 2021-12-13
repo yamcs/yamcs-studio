@@ -51,6 +51,5 @@ public class ShowIndexInTreeViewAction extends Action {
             setText("Show Index");
             setImageDescriptor(showIndexImage);
         }
-
     }
 }

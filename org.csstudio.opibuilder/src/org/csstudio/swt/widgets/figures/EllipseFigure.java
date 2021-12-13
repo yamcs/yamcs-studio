@@ -181,8 +181,6 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
 
     /**
      * Outlines the ellipse.
-     * 
-     * @see org.eclipse.draw2d.Shape#outlineShape(org.eclipse.draw2d.Graphics)
      */
     @Override
     protected void outlineShape(Graphics graphics) {
@@ -267,5 +265,4 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
         this.transparent = transparent;
         repaint();
     }
-
 }

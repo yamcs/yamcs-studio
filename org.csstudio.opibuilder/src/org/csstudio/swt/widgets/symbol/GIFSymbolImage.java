@@ -81,7 +81,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         super.dispose();
         stopAnimation();
         if (imageArray != null) {
-            for (Image image : imageArray) {
+            for (var image : imageArray) {
                 if (image != null && !image.isDisposed()) {
                     image.dispose();
                 }
@@ -112,7 +112,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                 image = null;
             }
             if (imageArray != null) {
-                for (Image image : imageArray) {
+                for (var image : imageArray) {
                     if (image != null && !image.isDisposed()) {
                         image.dispose();
                     }

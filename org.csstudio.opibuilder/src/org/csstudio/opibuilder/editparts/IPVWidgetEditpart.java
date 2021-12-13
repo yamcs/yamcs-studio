@@ -22,7 +22,6 @@ public interface IPVWidgetEditpart {
          * @param value
          */
         public void beforeSetPVValue(String pvPropId, Object value);
-
     }
 
     /**
@@ -77,5 +76,4 @@ public interface IPVWidgetEditpart {
     public void setControlEnabled(boolean enabled);
 
     public boolean isPVControlWidget();
-
 }

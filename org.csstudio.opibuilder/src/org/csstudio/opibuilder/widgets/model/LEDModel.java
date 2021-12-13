@@ -104,7 +104,6 @@ public class LEDModel extends AbstractBoolWidgetModel {
                 LEDFigure.DEFAULT_BULB_BORDER_COLOR.getRGB()));
 
         for (var state = 0; state < LEDFigure.MAX_NSTATES; state++) {
-
             category = new NameDefinedCategory(String.format("State %02d", state + 1));
 
             addProperty(new StringProperty(String.format(PROP_STATE_LABEL, state), "Label", category,

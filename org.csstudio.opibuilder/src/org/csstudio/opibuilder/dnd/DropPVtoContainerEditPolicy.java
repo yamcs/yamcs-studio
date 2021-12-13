@@ -36,7 +36,6 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
             var dropPVRequest = (DropPVRequest) request;
             if (dropPVRequest.getTargetWidget() != null
                     && dropPVRequest.getTargetWidget() instanceof AbstractContainerEditpart) {
-
                 var dialog = new WidgetsSelectDialog(getHost().getViewer().getControl().getShell(),
                         dropPVRequest.getPvNames().length, true);
 
@@ -55,7 +54,7 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
                     }
                     var i = 1;
                     int lastWidth = 0, lastHeight = 0;
-                    for (String pvName : pvNames) {
+                    for (var pvName : pvNames) {
                         var widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
                         command.add(new WidgetCreateCommand(widgetModel, container,
                                 new Rectangle(location.getCopy().translate(lastWidth, lastHeight),
@@ -87,5 +86,4 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
         }
         return super.getTargetEditPart(request);
     }
-
 }

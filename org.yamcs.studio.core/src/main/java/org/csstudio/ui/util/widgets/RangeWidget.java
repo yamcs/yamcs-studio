@@ -39,26 +39,17 @@ public class RangeWidget extends Canvas {
 
     /**
      * Adds a listener, notified if the range resolution changes.
-     *
-     * @param listener
-     *            a new listener
      */
     public void addRangeListener(RangeListener listener) {
         listeners.add(listener);
     }
 
-    /**
-     * Removes a listener.
-     *
-     * @param listener
-     *            listener to be removed
-     */
     public void removeRangeListener(RangeListener listener) {
         listeners.remove(listener);
     }
 
     private void fireRangeChanged() {
-        for (RangeListener listener : listeners) {
+        for (var listener : listeners) {
             listener.rangeChanged();
         }
     }
@@ -169,7 +160,6 @@ public class RangeWidget extends Canvas {
                 }
             }
         }
-
     }
 
     /**
@@ -261,8 +251,6 @@ public class RangeWidget extends Canvas {
                     sizeIndex = 0;
                 }
             }
-
         }
     };
-
 }

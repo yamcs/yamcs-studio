@@ -9,15 +9,21 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_ACTIONS;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
+import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
+import static org.csstudio.opibuilder.widgets.model.MenuButtonModel.PROP_ACTIONS_FROM_PV;
+import static org.csstudio.opibuilder.widgets.model.MenuButtonModel.PROP_LABEL;
+import static org.csstudio.opibuilder.widgets.model.MenuButtonModel.PROP_SHOW_DOWN_ARROW;
+import static org.csstudio.opibuilder.widgets.model.MenuButtonModel.PROP_TRANSPARENT;
+
 import java.util.List;
 
 import org.csstudio.opibuilder.actions.WidgetActionMenuAction;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
-import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.WritePVAction;
 import org.csstudio.opibuilder.widgets.figures.MenuButtonFigure;
@@ -106,7 +112,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             }
         });
 
-        markAsControlPV(AbstractPVWidgetModel.PROP_PVNAME, AbstractPVWidgetModel.PROP_PVVALUE);
+        markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
         return figure;
     }
 
@@ -145,7 +151,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
         if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
             var shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
             var menuManager = new MenuManager();
-            for (AbstractWidgetAction action : getWidgetModel().getActionsInput().getActionsList()) {
+            for (var action : getWidgetModel().getActionsInput().getActionsList()) {
                 menuManager.add(new WidgetActionMenuAction(action));
             }
             var menu = menuManager.createContextMenu(shell);
@@ -163,7 +169,6 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
             menu.setLocation(x, y);
             menu.setVisible(true);
-
         }
     }
 
@@ -176,7 +181,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
     private void registerLoadActionsListener() {
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             if (getWidgetModel().isActionsFromPV()) {
-                var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+                var pv = getPV(PROP_PVNAME);
                 if (pv != null) {
                     if (loadActionsFromPVListener == null) {
                         loadActionsFromPVListener = new IPVListener() {
@@ -188,7 +193,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
                                         var actionsInput = new ActionsInput();
-                                        for (String writeValue : meta) {
+                                        for (var writeValue : meta) {
                                             var action = new WritePVAction();
                                             action.setPropertyValue(WritePVAction.PROP_PVNAME,
                                                     getWidgetModel().getPVName());
@@ -215,62 +220,52 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
     protected void doDeActivate() {
         super.doDeActivate();
         if (getWidgetModel().isActionsFromPV()) {
-            var pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
+            var pv = getPV(PROP_PVNAME);
             if (pv != null && loadActionsFromPVListener != null) {
                 pv.removeListener(loadActionsFromPVListener);
             }
         }
-
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+        setPropertyChangeHandler(PROP_PVNAME, (oldValue, newValue, figure) -> {
             registerLoadActionsListener();
             return false;
-        };
-        setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
+        });
 
-        // PV_Value
-        IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if ((newValue != null) && (newValue instanceof Scalar)) {
                 ((MenuButtonFigure) refreshableFigure).setText(VTypeHelper.getString((VType) newValue));
             }
             return true;
-        };
-        setPropertyChangeHandler(MenuButtonModel.PROP_PVVALUE, pvhandler);
+        });
 
-        // label
-        IWidgetPropertyChangeHandler labelHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_LABEL, (oldValue, newValue, refreshableFigure) -> {
             ((MenuButtonFigure) refreshableFigure).setText(newValue.toString());
             return true;
-        };
-        setPropertyChangeHandler(MenuButtonModel.PROP_LABEL, labelHandler);
+        });
 
-        // Transparent
-        IWidgetPropertyChangeHandler transparentHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_TRANSPARENT, (oldValue, newValue, refreshableFigure) -> {
             ((MenuButtonFigure) refreshableFigure).setOpaque(!(Boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(MenuButtonModel.PROP_TRANSPARENT, transparentHandler);
+        });
 
-        // Show down arrow
-        IWidgetPropertyChangeHandler downArrowHandler = (oldValue, newValue, refreshableFigure) -> {
+        setPropertyChangeHandler(PROP_SHOW_DOWN_ARROW, (oldValue, newValue, refreshableFigure) -> {
             ((MenuButtonFigure) refreshableFigure).setDownArrowVisible((boolean) newValue);
             return true;
-        };
-        setPropertyChangeHandler(MenuButtonModel.PROP_SHOW_DOWN_ARROW, downArrowHandler);
+        });
 
         IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
             updatePropSheet((Boolean) newValue);
             return false;
         };
-        getWidgetModel().getProperty(MenuButtonModel.PROP_ACTIONS_FROM_PV).addPropertyChangeListener(
+        getWidgetModel().getProperty(PROP_ACTIONS_FROM_PV).addPropertyChangeListener(
                 evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
     }
 
     private void updatePropSheet(boolean actionsFromPV) {
-        getWidgetModel().setPropertyVisible(MenuButtonModel.PROP_ACTIONS, !actionsFromPV);
+        getWidgetModel().setPropertyVisible(PROP_ACTIONS, !actionsFromPV);
     }
 
     public int size() {

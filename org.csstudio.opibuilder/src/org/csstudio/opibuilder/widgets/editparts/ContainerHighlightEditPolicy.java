@@ -73,5 +73,4 @@ public class ContainerHighlightEditPolicy extends GraphicalEditPolicy {
             showHighlight();
         }
     }
-
 }

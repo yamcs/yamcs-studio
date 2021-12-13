@@ -205,5 +205,4 @@ public class Proposal implements Comparable<Proposal> {
                 + occurrence + ", insertionPos=" + insertionPos + ", originalValue=" + originalValue + ", tooltips="
                 + tooltips + "]";
     }
-
 }

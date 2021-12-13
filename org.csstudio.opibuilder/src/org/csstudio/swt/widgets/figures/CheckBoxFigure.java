@@ -87,7 +87,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
         if (runMode) {
             addMouseMotionListener(new MouseMotionListener.Stub() {
-
                 @Override
                 public void mouseEntered(MouseEvent me) {
                     var backColor = getBackgroundColor();
@@ -131,7 +130,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         for (var l : boolControlListeners) {
             l.manualValueChanged(value);
         }
-
     }
 
     /**
@@ -256,7 +254,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         this.text = text;
         boxFigure.clearTextSize();
         repaint();
-
     }
 
     @Override

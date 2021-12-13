@@ -30,5 +30,4 @@ public class IVByte extends IVNumeric implements VByte {
     public String toString() {
         return VTypeToString.toString(this);
     }
-
 }

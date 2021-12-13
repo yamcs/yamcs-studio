@@ -23,35 +23,21 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Utility class, which provides access to images. Images returned by this utility are managed by a ImageRegistry and
  * must not explicitly be disposed, when they are not used anymore.
- *
- * @see {@link ImageRegistry}
- *
  */
 
 // TODO: Copied from org.csstudio.platform.ui. Review is needed.
 
 public final class ImageUtil {
-    /**
-     * The internal ImageRegistry.
-     */
     private ImageRegistry _imageRegistry;
 
-    /**
-     * The singleton instance.
-     */
     private static ImageUtil _instance;
 
-    /**
-     * Hidden constructor.
-     */
     private ImageUtil() {
         _imageRegistry = new ImageRegistry();
     }
 
     /**
      * Gets the singleton instance.
-     *
-     * @return the singleton instance
      */
     public static ImageUtil getInstance() {
         if (_instance == null) {
@@ -154,7 +140,6 @@ public final class ImageUtil {
      * @param imageFilePath
      *            the relative path of the image file, relative to the root of the plug-in; the path must be legal
      * @return an image descriptor, or <code>null</code> if no image could be found
-     * @since 3.0
      */
     private static ImageDescriptor imageDescriptorFromPlugin(String pluginId, String imageFilePath) {
         if (pluginId == null || imageFilePath == null) {
@@ -178,5 +163,4 @@ public final class ImageUtil {
 
         return ImageDescriptor.createFromURL(fullPathString);
     }
-
 }

@@ -65,8 +65,8 @@ public class VTableFactory {
             throw new UnsupportedOperationException("Case not implemented yet");
         }
 
-        List<EqualValueFilter> filters = new ArrayList<>();
-        for (Map.Entry<String, int[]> entry : commonColumnsIndexes.entrySet()) {
+        var filters = new ArrayList<EqualValueFilter>();
+        for (var entry : commonColumnsIndexes.entrySet()) {
             var indexes = entry.getValue();
             filters.add(new EqualValueFilter(Arrays.asList(tables), indexes));
         }
@@ -83,7 +83,7 @@ public class VTableFactory {
         var currentIndexes = new int[tables.length];
         while (!done) {
             var match = true;
-            for (EqualValueFilter filter : filters) {
+            for (var filter : filters) {
                 match = match && filter.filterRow(currentIndexes);
             }
             if (match) {
@@ -108,9 +108,9 @@ public class VTableFactory {
             }
         }
 
-        List<String> columnNames = new ArrayList<>();
-        List<Class<?>> columnTypes = new ArrayList<>();
-        List<Object> columnData = new ArrayList<>();
+        var columnNames = new ArrayList<String>();
+        var columnTypes = new ArrayList<Class<?>>();
+        var columnData = new ArrayList<Object>();
         for (var nColumn = 0; nColumn < tables[0].getColumnCount(); nColumn++) {
             columnNames.add(tables[0].getColumnName(nColumn));
             Class<?> type = tables[0].getColumnType(nColumn);
@@ -145,8 +145,8 @@ public class VTableFactory {
 
     public static VTable union(VString extraColumnName, VStringArray extraColumnData, VTable... tables) {
         // Prune nulls
-        List<String> extraColumnDataPruned = new ArrayList<>();
-        List<VTable> tablesPruned = new ArrayList<>();
+        var extraColumnDataPruned = new ArrayList<String>();
+        var tablesPruned = new ArrayList<VTable>();
 
         for (var i = 0; i < tables.length; i++) {
             var table = tables[i];
@@ -160,9 +160,9 @@ public class VTableFactory {
             return null;
         }
 
-        List<String> columnNames = new ArrayList<>();
-        List<Class<?>> columnTypes = new ArrayList<>();
-        List<Map<String, VColumn>> tableColumns = new ArrayList<>();
+        var columnNames = new ArrayList<String>();
+        var columnTypes = new ArrayList<Class<?>>();
+        var tableColumns = new ArrayList<Map<String, VColumn>>();
         if (extraColumnName != null) {
             columnNames.add(extraColumnName.getValue());
             columnTypes.add(String.class);
@@ -188,10 +188,9 @@ public class VTableFactory {
         var rowCount = currentOffset;
         ListInt offsets = new ArrayInt(tableOffsets);
 
-        List<Object> columnData = new ArrayList<>();
+        var columnData = new ArrayList<Object>();
         if (extraColumnName != null) {
             columnData.add(new AbstractList<String>() {
-
                 @Override
                 public String get(int index) {
                     var nTable = ListNumbers.binarySearchValueOrLower(offsets, index);
@@ -207,7 +206,7 @@ public class VTableFactory {
 
         for (var i = 1; i < columnNames.size(); i++) {
             var columnName = columnNames.get(i);
-            List<VColumn> columns = new ArrayList<>();
+            var columns = new ArrayList<VColumn>();
             for (var j = 0; j < tableColumns.size(); j++) {
                 columns.add(tableColumns.get(j).get(columnName));
             }
@@ -218,7 +217,7 @@ public class VTableFactory {
     }
 
     private static Object selectColumnData(VTable table, int column, ListInt indexes) {
-        Class<?> type = table.getColumnType(column);
+        var type = table.getColumnType(column);
         if (type.isPrimitive()) {
             return ListNumbers.listView((ListNumber) table.getColumnData(column), indexes);
         } else {
@@ -228,7 +227,6 @@ public class VTableFactory {
 
     private static <T> List<T> createView(List<T> list, ListInt indexes) {
         return new AbstractList<T>() {
-
             @Override
             public T get(int index) {
                 return list.get(indexes.getInt(index));
@@ -243,7 +241,7 @@ public class VTableFactory {
 
     private static Object createView(Object columnData, ListInt indexes) {
         if (columnData instanceof List) {
-            List<?> data = (List<?>) columnData;
+            var data = (List<?>) columnData;
             return createView(data, indexes);
         } else if (columnData instanceof ListNumber) {
             return ListNumbers.listView((ListNumber) columnData, indexes);
@@ -255,8 +253,7 @@ public class VTableFactory {
     public static VTable select(VTable table, ListInt indexes) {
         var names = columnNames(table);
         var types = columnTypes(table);
-        List<Object> data = new AbstractList<Object>() {
-
+        var data = new AbstractList<Object>() {
             @Override
             public Object get(int index) {
                 return selectColumnData(table, index, indexes);
@@ -326,7 +323,6 @@ public class VTableFactory {
             data = (ListDouble) numericArray.getData();
         } else {
             data = new ListDouble() {
-
                 @Override
                 public double getDouble(int index) {
                     return numericArray.getData().getDouble(index);
@@ -425,9 +421,9 @@ public class VTableFactory {
         if (vTable == null || row >= vTable.getRowCount() || row < 0) {
             return null;
         }
-        List<String> columnNames = new ArrayList<>(vTable.getColumnCount());
-        List<Class<?>> columnTypes = new ArrayList<>(vTable.getColumnCount());
-        List<Object> columnData = new ArrayList<>(vTable.getColumnCount());
+        var columnNames = new ArrayList<String>(vTable.getColumnCount());
+        var columnTypes = new ArrayList<Class<?>>(vTable.getColumnCount());
+        var columnData = new ArrayList<Object>(vTable.getColumnCount());
         for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
@@ -440,9 +436,9 @@ public class VTableFactory {
         if (vTable == null || indexes == null) {
             return null;
         }
-        List<String> columnNames = new ArrayList<>(vTable.getColumnCount());
-        List<Class<?>> columnTypes = new ArrayList<>(vTable.getColumnCount());
-        List<Object> columnData = new ArrayList<>(vTable.getColumnCount());
+        var columnNames = new ArrayList<String>(vTable.getColumnCount());
+        var columnTypes = new ArrayList<Class<?>>(vTable.getColumnCount());
+        var columnData = new ArrayList<Object>(vTable.getColumnCount());
         for (var nCol = 0; nCol < vTable.getColumnCount(); nCol++) {
             columnNames.add(vTable.getColumnName(nCol));
             columnTypes.add(vTable.getColumnType(nCol));
@@ -453,7 +449,7 @@ public class VTableFactory {
 
     private static Object extractColumnData(Object columnData, int... rows) {
         if (columnData instanceof List) {
-            List<Object> data = new ArrayList<>(rows.length);
+            var data = new ArrayList<Object>(rows.length);
             for (var i = 0; i < rows.length; i++) {
                 var j = rows[i];
                 data.add(((List<?>) columnData).get(j));
@@ -524,7 +520,7 @@ public class VTableFactory {
         }
 
         if (values.get(0) instanceof VNumber) {
-            for (VType vType : values) {
+            for (var vType : values) {
                 if (!(vType instanceof VNumber)) {
                     throw new IllegalArgumentException(
                             "Values do not match (VNumber and " + ValueUtil.typeOf(vType).getSimpleName());
@@ -539,8 +535,8 @@ public class VTableFactory {
 
     private static VTable valueNumberTable(List<String> names, List<? extends VType> values) {
         var data = new double[values.size()];
-        List<String> severity = new ArrayList<>();
-        List<String> status = new ArrayList<>();
+        var severity = new ArrayList<String>();
+        var status = new ArrayList<String>();
 
         for (var i = 0; i < values.size(); i++) {
             var vNumber = (VNumber) values.get(i);

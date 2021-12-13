@@ -59,5 +59,4 @@ public class ReflectUtil {
     public static String toArrayClass(String className) {
         return "[L" + className + ";";
     }
-
 }

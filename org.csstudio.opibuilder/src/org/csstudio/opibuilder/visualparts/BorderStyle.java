@@ -85,10 +85,9 @@ public enum BorderStyle {
     public static String[] stringValues() {
         var sv = new String[values().length];
         var i = 0;
-        for (BorderStyle p : values()) {
+        for (var p : values()) {
             sv[i++] = p.toString();
         }
         return sv;
     }
-
 }

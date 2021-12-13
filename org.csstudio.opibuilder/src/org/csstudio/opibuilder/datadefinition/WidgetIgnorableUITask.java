@@ -91,5 +91,4 @@ public class WidgetIgnorableUITask {
     public int hashCode() {
         return identifyObject.hashCode();
     }
-
 }

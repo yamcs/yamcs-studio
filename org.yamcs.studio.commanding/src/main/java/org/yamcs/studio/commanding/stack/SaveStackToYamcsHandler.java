@@ -56,7 +56,6 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
 
         var dialog = new SaveStackToYamcsDialog(shell);
         if (dialog.open() == Window.OK) {
-
             String xml;
             try {
                 xml = ExportUtil.toXML(stack);

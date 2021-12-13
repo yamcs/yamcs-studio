@@ -87,7 +87,6 @@ public class GaugeFigure extends AbstractRoundRampedFigure {
                 revalidate();
             }
         });
-
     }
 
     @Override
@@ -172,7 +171,6 @@ public class GaugeFigure extends AbstractRoundRampedFigure {
             glossyPattern.dispose();
             graphics.popState();
         }
-
     }
 
     /**
@@ -348,8 +346,6 @@ public class GaugeFigure extends AbstractRoundRampedFigure {
                 needleCenter.setBounds(new Rectangle(center.x - NeedleCenter.DIAMETER / 2,
                         center.y - NeedleCenter.DIAMETER / 2, NeedleCenter.DIAMETER, NeedleCenter.DIAMETER));
             }
-
         }
     }
-
 }

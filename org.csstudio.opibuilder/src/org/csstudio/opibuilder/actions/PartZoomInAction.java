@@ -19,12 +19,6 @@ import org.eclipse.gef.ui.actions.ZoomInAction;
 @SuppressWarnings("restriction")
 public class PartZoomInAction extends PartZoomAction {
 
-    /**
-     * Constructor for ZoomInAction.
-     *
-     * @param zoomManager
-     *            the zoom manager
-     */
     public PartZoomInAction() {
         super("Zoom &In", InternalImages.DESC_ZOOM_IN);
         setToolTipText("Zoom In");
@@ -32,9 +26,6 @@ public class PartZoomInAction extends PartZoomAction {
         setActionDefinitionId(GEFActionConstants.ZOOM_IN);
     }
 
-    /**
-     * @see org.eclipse.jface.action.IAction#run()
-     */
     @Override
     public void run() {
         if (zoomManager != null) {
@@ -42,12 +33,8 @@ public class PartZoomInAction extends PartZoomAction {
         }
     }
 
-    /**
-     * @see org.eclipse.gef.editparts.ZoomListener#zoomChanged(double)
-     */
     @Override
     public void zoomChanged(double zoom) {
         setEnabled(zoomManager.canZoomIn());
     }
-
 }

@@ -29,5 +29,4 @@ public class WidgetTreeEditpartFactory implements EditPartFactory {
         }
         return null;
     }
-
 }

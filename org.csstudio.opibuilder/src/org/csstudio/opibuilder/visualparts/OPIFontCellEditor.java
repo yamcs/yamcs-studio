@@ -52,5 +52,4 @@ public class OPIFontCellEditor extends AbstractDialogCellEditor {
             opiFont = (OPIFont) value;
         }
     }
-
 }

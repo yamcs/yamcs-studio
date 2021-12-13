@@ -71,7 +71,6 @@ public class BufferInt extends ListInt {
         if (endOffset == data.length) {
             resize();
         }
-
     }
 
     /**

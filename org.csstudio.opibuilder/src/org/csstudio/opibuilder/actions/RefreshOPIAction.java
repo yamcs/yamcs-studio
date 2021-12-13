@@ -42,5 +42,4 @@ public class RefreshOPIAction extends Action {
             ErrorHandlerUtil.handleError("Failed to refresh OPI", e);
         }
     }
-
 }

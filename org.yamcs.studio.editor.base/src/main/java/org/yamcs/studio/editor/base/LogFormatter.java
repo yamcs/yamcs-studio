@@ -46,7 +46,7 @@ public class LogFormatter extends Formatter {
     }
 
     private void addStack(StringBuilder sb, Throwable t) {
-        for (StackTraceElement ste : t.getStackTrace()) {
+        for (var ste : t.getStackTrace()) {
             sb.append("\t").append(ste.toString()).append("\n");
         }
     }

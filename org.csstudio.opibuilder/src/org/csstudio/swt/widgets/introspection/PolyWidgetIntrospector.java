@@ -22,5 +22,4 @@ public class PolyWidgetIntrospector extends ShapeWidgetIntrospector {
 
         return concatenateStringArrays(super.getNonProperties(), POLY_WIDGET_NON_PROPERTIES);
     }
-
 }

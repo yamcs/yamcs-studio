@@ -33,5 +33,4 @@ public class DoubleArrayWrapper implements IPrimaryArrayWrapper {
     public int getSize() {
         return data.length;
     }
-
 }

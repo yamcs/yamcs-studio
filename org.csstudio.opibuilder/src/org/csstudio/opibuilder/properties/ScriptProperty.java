@@ -66,7 +66,6 @@ public class ScriptProperty extends AbstractWidgetProperty {
      */
     public ScriptProperty(String prop_id, String description, WidgetPropertyCategory category) {
         super(prop_id, description, category, new ScriptsInput());
-
     }
 
     @Override
@@ -86,8 +85,8 @@ public class ScriptProperty extends AbstractWidgetProperty {
     public Object getPropertyValue() {
         if (executionMode == ExecutionMode.RUN_MODE && widgetModel != null) {
             var value = (ScriptsInput) super.getPropertyValue();
-            for (ScriptData sd : value.getScriptList()) {
-                for (Object pv : sd.getPVList().toArray()) {
+            for (var sd : value.getScriptList()) {
+                for (var pv : sd.getPVList().toArray()) {
                     var pvTuple = (PVTuple) pv;
                     var newPV = OPIBuilderMacroUtil.replaceMacros(widgetModel, pvTuple.pvName);
                     if (!newPV.equals(pvTuple.pvName)) {
@@ -111,7 +110,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
     @Override
     public ScriptsInput readValueFromXML(Element propElement) {
         var result = new ScriptsInput();
-        for (Object oe : propElement.getChildren(XML_ELEMENT_PATH)) {
+        for (var oe : propElement.getChildren(XML_ELEMENT_PATH)) {
             var se = (Element) oe;
             var sd = new ScriptData();
             if (se.getAttributeValue(XML_ATTRIBUTE_PATHSTRING).equals(EMBEDDEDJS)) {
@@ -134,7 +133,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
                 sd.setStopExecuteOnError(
                         Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR)));
             }
-            for (Object o : se.getChildren(XML_ELEMENT_PV)) {
+            for (var o : se.getChildren(XML_ELEMENT_PV)) {
                 var pve = (Element) o;
                 var trig = true;
                 if (pve.getAttribute(XML_ATTRIBUTE_TRIGGER) != null) {
@@ -149,7 +148,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        for (ScriptData scriptData : ((ScriptsInput) getPropertyValue()).getScriptList()) {
+        for (var scriptData : ((ScriptsInput) getPropertyValue()).getScriptList()) {
             var pathElement = new Element(XML_ELEMENT_PATH);
             String pathString = null;
             if (scriptData.isEmbedded()) {
@@ -171,7 +170,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
             pathElement.setAttribute(XML_ATTRIBUTE_CHECKCONNECT, Boolean.toString(scriptData.isCheckConnectivity()));
             pathElement.setAttribute(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR,
                     Boolean.toString(scriptData.isStopExecuteOnError()));
-            for (PVTuple pv : scriptData.getPVList()) {
+            for (var pv : scriptData.getPVList()) {
                 var pvElement = new Element(XML_ELEMENT_PV);
                 pvElement.setText(pv.pvName);
                 pvElement.setAttribute(XML_ATTRIBUTE_TRIGGER, Boolean.toString(pv.trigger));
@@ -180,5 +179,4 @@ public class ScriptProperty extends AbstractWidgetProperty {
             propElement.addContent(pathElement);
         }
     }
-
 }

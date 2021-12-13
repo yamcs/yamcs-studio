@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.support.ActionsPropertyDescriptor;
-import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
@@ -108,7 +107,7 @@ public class ActionsProperty extends AbstractWidgetProperty {
             result.setHookUpAllActionsToWidget(
                     Boolean.parseBoolean(propElement.getAttributeValue(XML_ATTRIBUTE_HOOK_ALL)));
         }
-        for (Object oe : propElement.getChildren(XML_ELEMENT_ACTION)) {
+        for (var oe : propElement.getChildren(XML_ELEMENT_ACTION)) {
             var se = (Element) oe;
             var action = WidgetActionFactory
                     .createWidgetAction(ActionType.parseAction(se.getAttributeValue(XML_ATTRIBUTE_ACTION_TYPE)));
@@ -144,10 +143,10 @@ public class ActionsProperty extends AbstractWidgetProperty {
         propElement.setAttribute(XML_ATTRIBUTE_HOOK_FIRST, "" + actionsInput.isFirstActionHookedUpToWidget()); //
         propElement.setAttribute(XML_ATTRIBUTE_HOOK_ALL, "" + actionsInput.isHookUpAllActionsToWidget()); //
 
-        for (AbstractWidgetAction action : actionsInput.getActionsList()) {
+        for (var action : actionsInput.getActionsList()) {
             var actionElement = new Element(XML_ELEMENT_ACTION);
             actionElement.setAttribute(XML_ATTRIBUTE_ACTION_TYPE, action.getActionType().toString());
-            for (AbstractWidgetProperty property : action.getAllProperties()) {
+            for (var property : action.getAllProperties()) {
                 var propEle = new Element(property.getPropertyID());
                 property.writeToXML(propEle);
                 actionElement.addContent(propEle);
@@ -161,5 +160,4 @@ public class ActionsProperty extends AbstractWidgetProperty {
         super.setWidgetModel(widgetModel);
         ((ActionsInput) getPropertyValue()).setWidgetModel(widgetModel);
     }
-
 }

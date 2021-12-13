@@ -10,7 +10,6 @@
 package org.csstudio.ui.util.composites;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,9 +87,9 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
             var container = (IContainer) element;
             if (container.isAccessible()) {
                 try {
-                    List<IResource> children = new ArrayList<IResource>();
+                    var children = new ArrayList<IResource>();
                     var members = container.members();
-                    for (IResource member : members) {
+                    for (var member : members) {
                         if (includeResource(member)) {
                             children.add(member);
                         }
@@ -118,7 +117,7 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
         } else {
             // files are included if their extension is in the list
             // of accepted extensions
-            for (String ext : _fileExtensions) {
+            for (var ext : _fileExtensions) {
                 if (ext != null && (ext.equals(resource.getFileExtension()) || ext.equals("*") || ext.equals("*.*"))) {
                     return true;
                 }

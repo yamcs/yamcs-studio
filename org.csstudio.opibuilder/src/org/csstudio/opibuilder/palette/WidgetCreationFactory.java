@@ -39,5 +39,4 @@ public class WidgetCreationFactory implements CreationFactory {
         Object widgetClass = widgetModel.getClass();
         return widgetClass;
     }
-
 }

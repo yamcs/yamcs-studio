@@ -28,7 +28,6 @@ public class AnchorHandle extends SquareHandle {
 
         setOwner(owner);
         setLocator(new Locator() {
-
             @Override
             public void relocate(IFigure target) {
                 var center = anchor.getLocation(null);
@@ -37,7 +36,6 @@ public class AnchorHandle extends SquareHandle {
                         DEFAULT_HANDLE_SIZE, DEFAULT_HANDLE_SIZE));
             }
         });
-
     }
 
     @Override
@@ -54,5 +52,4 @@ public class AnchorHandle extends SquareHandle {
     protected Color getFillColor() {
         return ColorConstants.red;
     }
-
 }

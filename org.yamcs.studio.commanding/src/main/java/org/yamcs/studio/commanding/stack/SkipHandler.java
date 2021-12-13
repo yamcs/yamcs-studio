@@ -26,7 +26,7 @@ public class SkipHandler extends AbstractHandler {
 
         var stack = CommandStack.getInstance();
         var sel = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-        for (Object o : sel.toArray()) {
+        for (var o : sel.toArray()) {
             ((StackedCommand) o).markSkipped();
             if (stack.hasRemaining()) {
                 commandStackView.selectActiveCommand();

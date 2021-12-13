@@ -53,7 +53,5 @@ public class MacrosCellEditor extends AbstractDialogCellEditor {
         } else {
             macrosInput = (MacrosInput) value;
         }
-
     }
-
 }

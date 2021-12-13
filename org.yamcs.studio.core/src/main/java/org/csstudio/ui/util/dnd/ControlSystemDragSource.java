@@ -106,7 +106,7 @@ abstract public class ControlSystemDragSource {
             @Override
             public void dragSetData(DragSourceEvent event) { // Drag has been performed, provide data
                 var selection = getSelection();
-                for (Transfer transfer : supportedTransfers(selection)) {
+                for (var transfer : supportedTransfers(selection)) {
                     if (transfer.isSupportedType(event.dataType)) {
                         if (transfer instanceof SerializableItemTransfer) {
                             var objectTransfer = (SerializableItemTransfer) transfer;
@@ -128,8 +128,8 @@ abstract public class ControlSystemDragSource {
     }
 
     private static Collection<String> toArrayClasses(Collection<String> classes) {
-        Collection<String> arrayClasses = new ArrayList<String>();
-        for (String clazz : classes) {
+        var arrayClasses = new ArrayList<String>();
+        for (var clazz : classes) {
             arrayClasses.add(toArrayClass(clazz));
         }
         return arrayClasses;
@@ -140,8 +140,8 @@ abstract public class ControlSystemDragSource {
     }
 
     private static List<String> arrayClasses(String[] classes) {
-        List<String> arrayClasses = new ArrayList<String>();
-        for (String clazz : classes) {
+        var arrayClasses = new ArrayList<String>();
+        for (var clazz : classes) {
             if (isArray(clazz)) {
                 arrayClasses.add(clazz);
             }
@@ -150,8 +150,8 @@ abstract public class ControlSystemDragSource {
     }
 
     private static List<String> simpleClasses(String[] classes) {
-        List<String> arrayClasses = new ArrayList<String>();
-        for (String clazz : classes) {
+        var arrayClasses = new ArrayList<String>();
+        for (var clazz : classes) {
             if (!isArray(clazz)) {
                 arrayClasses.add(clazz);
             }
@@ -164,10 +164,10 @@ abstract public class ControlSystemDragSource {
             throw new RuntimeException("Something wrong: you are asking for single transfers for an array");
         }
         var types = AdapterUtil.getAdaptableTypes(clazz);
-        List<Transfer> supportedTransfers = new ArrayList<Transfer>();
+        var supportedTransfers = new ArrayList<Transfer>();
         if (Serializable.class.isAssignableFrom(clazz)) {
             @SuppressWarnings("unchecked")
-            Class<? extends Serializable> serializableClass = (Class<? extends Serializable>) clazz;
+            var serializableClass = (Class<? extends Serializable>) clazz;
             supportedTransfers.add(SerializableItemTransfer.getTransfer(serializableClass));
         }
         supportedTransfers.addAll(SerializableItemTransfer.getTransfers(simpleClasses(types)));
@@ -180,7 +180,7 @@ abstract public class ControlSystemDragSource {
             throw new RuntimeException("Something wrong: you are asking for array transfers for an single object");
         }
         var types = AdapterUtil.getAdaptableTypes(arrayClass.getComponentType());
-        List<Transfer> supportedTransfers = new ArrayList<Transfer>();
+        var supportedTransfers = new ArrayList<Transfer>();
         if (Serializable.class.isAssignableFrom(arrayClass.getComponentType())) {
             supportedTransfers.add(SerializableItemTransfer.getTransfer(arrayClass.getName()));
         }

@@ -25,7 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,11 +50,11 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
         // get command stack object
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
+        var part = window.getActivePage().findView(CommandStackView.ID);
         var commandStackView = (CommandStackView) part;
 
         // import new commands
-        for (StackedCommand sc : parseCommandStack(shell, Paths.get(importFile))) {
+        for (var sc : parseCommandStack(shell, Paths.get(importFile))) {
             commandStackView.addTelecommand(sc);
         }
 
@@ -71,7 +70,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
             var nodes = doc.getElementsByTagName("command");
 
-            List<StackedCommand> commands = new ArrayList<>();
+            var commands = new ArrayList<StackedCommand>();
             for (var i = 0; i < nodes.getLength(); i++) {
                 var node = nodes.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -127,7 +126,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
     private ArgumentInfo getArgumentFromYamcs(CommandInfo mc, String argumentName) {
         // look for argument in the command
-        for (ArgumentInfo a : mc.getArgumentList()) {
+        for (var a : mc.getArgumentList()) {
             if (a.getName().equals(argumentName)) {
                 return a;
             }

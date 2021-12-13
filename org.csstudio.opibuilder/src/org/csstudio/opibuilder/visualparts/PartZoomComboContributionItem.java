@@ -161,9 +161,6 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
         return combo;
     }
 
-    /**
-     * @see org.eclipse.jface.action.ContributionItem#dispose()
-     */
     @Override
     public void dispose() {
         if (zoomManager != null) {
@@ -179,9 +176,6 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
      * The control item implementation of this <code>IContributionItem</code> method calls the
      * <code>createControl</code> framework method. Subclasses must implement <code>createControl</code> rather than
      * overriding this method.
-     *
-     * @param parent
-     *            The parent of the control to fill
      */
     @Override
     public void fill(Composite parent) {
@@ -191,11 +185,6 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
     /**
      * The control item implementation of this <code>IContributionItem</code> method throws an exception since controls
      * cannot be added to menus.
-     *
-     * @param parent
-     *            The menu
-     * @param index
-     *            Menu index
      */
     @Override
     public void fill(Menu parent, int index) {
@@ -206,11 +195,6 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
      * The control item implementation of this <code>IContributionItem</code> method calls the
      * <code>createControl</code> framework method to create a control under the given parent, and then creates a new
      * tool item to hold it. Subclasses must implement <code>createControl</code> rather than overriding this method.
-     *
-     * @param parent
-     *            The ToolBar to add the new control to
-     * @param index
-     *            Index
      */
     @Override
     public void fill(ToolBar parent, int index) {
@@ -219,21 +203,10 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
         toolitem.setControl(control);
     }
 
-    /**
-     * Returns the zoomManager.
-     *
-     * @return ZoomManager
-     */
     public ZoomManager getZoomManager() {
         return zoomManager;
     }
 
-    /**
-     * Sets the ZoomManager
-     *
-     * @param zm
-     *            The ZoomManager
-     */
     public void setZoomManager(ZoomManager zm) {
         if (zoomManager == zm) {
             return;
@@ -250,9 +223,6 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
         }
     }
 
-    /**
-     * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(SelectionEvent)
-     */
     private void handleWidgetDefaultSelected(SelectionEvent event) {
         if (zoomManager != null) {
             if (combo.getSelectionIndex() >= 0) {
@@ -274,18 +244,12 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
         refresh(false);
     }
 
-    /**
-     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
-     */
     private void handleWidgetSelected(SelectionEvent event) {
         forceSetText = true;
         handleWidgetDefaultSelected(event);
         forceSetText = false;
     }
 
-    /**
-     * @see ZoomListener#zoomChanged(double)
-     */
     @Override
     public void zoomChanged(double zoom) {
         refresh(false);
@@ -305,5 +269,4 @@ public class PartZoomComboContributionItem extends ContributionItem implements Z
             setZoomManager(newZoomManager);
         }
     }
-
 }

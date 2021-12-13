@@ -42,5 +42,4 @@ public class ActionsPropertyDescriptor extends TextPropertyDescriptor {
         }
         return editor;
     }
-
 }

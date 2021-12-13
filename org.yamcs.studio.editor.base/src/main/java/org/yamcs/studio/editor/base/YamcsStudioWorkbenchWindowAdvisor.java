@@ -76,7 +76,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         updateTitle();
 
         configurer.getWindow().addPerspectiveListener(new IPerspectiveListener() {
-
             @Override
             public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
                 updateTitle();
@@ -101,7 +100,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             // memory after the workbench window closes.
             var win = getWindowConfigurer().getWindow();
             var pages = win.getPages();
-            for (IWorkbenchPage p : pages) {
+            for (var p : pages) {
                 try {
                     p.close();
                 } catch (Exception e) {

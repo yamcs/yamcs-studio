@@ -50,7 +50,6 @@ public class ArcModel extends AbstractShapeModel {
         addProperty(new BooleanProperty(PROP_FILL, "Fill", WidgetPropertyCategory.Display, false));
         addProperty(new IntegerProperty(PROP_START_ANGLE, "Start Angle", WidgetPropertyCategory.Display, 0));
         addProperty(new IntegerProperty(PROP_TOTAL_ANGLE, "Total Angle", WidgetPropertyCategory.Display, 90));
-
     }
 
     @Override
@@ -133,5 +132,4 @@ public class ArcModel extends AbstractShapeModel {
         }
         return r;
     }
-
 }

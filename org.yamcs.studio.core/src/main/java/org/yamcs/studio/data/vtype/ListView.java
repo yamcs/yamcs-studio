@@ -35,7 +35,6 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 
     /**
@@ -59,7 +58,6 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 
     /**
@@ -83,7 +81,6 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 
     /**
@@ -107,7 +104,6 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 
     /**
@@ -131,7 +127,6 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 
     /**
@@ -155,6 +150,5 @@ class ListView {
         public int size() {
             return indexes.size();
         }
-
     }
 }

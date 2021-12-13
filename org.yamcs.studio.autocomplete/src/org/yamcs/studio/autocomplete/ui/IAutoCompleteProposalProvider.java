@@ -35,5 +35,4 @@ public interface IAutoCompleteProposalProvider {
 
     /** @return current type, see {@link AutoCompleteTypes}. */
     public String getType();
-
 }

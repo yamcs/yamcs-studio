@@ -76,5 +76,4 @@ class DimDisplayFormulaFunction implements FormulaFunction {
 
         return ValueFactory.newDisplay(size.getValue().intValue(), VTableFactory.step(0, 1), invert.getValue());
     }
-
 }

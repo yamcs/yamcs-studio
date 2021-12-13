@@ -136,5 +136,4 @@ public class PermutationMatrix {
         }
         return true;
     }
-
 }

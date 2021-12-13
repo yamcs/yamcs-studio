@@ -144,7 +144,7 @@ public abstract class AbstractVNumberArrayVNumberToVNumberArrayFormulaFunction i
     public abstract ListNumber calculate(ListNumber arg1, double arg2);
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

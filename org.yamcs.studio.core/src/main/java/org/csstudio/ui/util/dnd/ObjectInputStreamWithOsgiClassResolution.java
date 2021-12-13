@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.csstudio.ui.util.ReflectUtil;
-import org.osgi.framework.Bundle;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -38,7 +37,7 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
     private static Class<?> findClass(String className, String bundleName) {
         try {
             // Find the matching bundle and try to load the class
-            for (Bundle bundle : YamcsPlugin.getDefault().getContext().getBundles()) {
+            for (var bundle : YamcsPlugin.getDefault().getContext().getBundles()) {
                 if (bundle.getSymbolicName().equals(bundleName)) {
                     return bundle.loadClass(className);
                 }
@@ -62,7 +61,7 @@ public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream 
         var currentBundleName = className;
         while (currentBundleName.lastIndexOf(".") != -1) {
             currentBundleName = currentBundleName.substring(0, currentBundleName.lastIndexOf('.'));
-            Class<?> clazz = findClass(className, currentBundleName);
+            var clazz = findClass(className, currentBundleName);
             if (clazz != null) {
                 return clazz;
             }

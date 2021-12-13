@@ -44,7 +44,6 @@ public class OPIEditorPreferencePage extends FieldEditorPreferencePage implement
 
     @Override
     public void init(IWorkbench workbench) {
-
     }
 
     @Override

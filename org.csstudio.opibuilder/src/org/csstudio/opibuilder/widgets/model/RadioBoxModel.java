@@ -27,5 +27,4 @@ public class RadioBoxModel extends AbstractChoiceModel {
     public String getTypeID() {
         return ID;
     }
-
 }

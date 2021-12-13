@@ -151,5 +151,4 @@ public interface ListNumber extends CollectionNumber {
      *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
      */
     void setByte(int index, byte value);
-
 }

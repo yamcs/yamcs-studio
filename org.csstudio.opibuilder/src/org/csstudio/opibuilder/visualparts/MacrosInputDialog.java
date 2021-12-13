@@ -44,7 +44,7 @@ public class MacrosInputDialog extends Dialog {
         super(parentShell);
         this.title = dialogTitle;
         this.contents = new ArrayList<String[]>();
-        for (String key : macrosInput.getMacrosMap().keySet()) {
+        for (var key : macrosInput.getMacrosMap().keySet()) {
             this.contents.add(new String[] { key, macrosInput.getMacrosMap().get(key) });
         }
         this.includeParentMacros = macrosInput.isInclude_parent_macros();
@@ -86,7 +86,7 @@ public class MacrosInputDialog extends Dialog {
 
     public MacrosInput getResult() {
         var macrosMap = new LinkedHashMap<String, String>();
-        for (String[] row : contents) {
+        for (var row : contents) {
             macrosMap.put(row[0], row[1]);
         }
         return new MacrosInput(macrosMap, includeParentMacros);
@@ -96,7 +96,7 @@ public class MacrosInputDialog extends Dialog {
     protected void okPressed() {
         tableEditor.forceFocus(); // this can help the last edit value applied.
         String reason;
-        for (String[] row : contents) {
+        for (var row : contents) {
             reason = Verifier.checkElementName(row[0]);
             if (reason != null) {
                 MessageDialog.openError(getShell(), "Illegal Macro Name",

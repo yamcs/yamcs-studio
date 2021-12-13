@@ -9,7 +9,6 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.actions;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -39,7 +38,7 @@ public class ShowMacrosAction implements IObjectActionDelegate {
         var message = NLS.bind("The predefined macros of {0}:\n", widget.getName());
         var sb = new StringBuilder(message);
         var macroMap = OPIBuilderMacroUtil.getWidgetMacroMap(widget);
-        for (Map.Entry<String, String> entry : macroMap.entrySet()) {
+        for (var entry : macroMap.entrySet()) {
             sb.append(entry.getKey() + "=" + entry.getValue() + "\n");
         }
         sb.append("\n");

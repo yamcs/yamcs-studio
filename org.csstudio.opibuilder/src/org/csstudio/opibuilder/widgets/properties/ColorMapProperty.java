@@ -60,7 +60,6 @@ public class ColorMapProperty extends AbstractWidgetProperty {
     public ColorMapProperty(String prop_id, String description, WidgetPropertyCategory category,
             ColorMap defaultValue) {
         super(prop_id, description, category, defaultValue);
-
     }
 
     @Override
@@ -74,13 +73,12 @@ public class ColorMapProperty extends AbstractWidgetProperty {
                 acceptableValue = (ColorMap) value;
             }
         } else if (value instanceof String) {
-            for (PredefinedColorMap map : ColorMap.PredefinedColorMap.values()) {
+            for (var map : ColorMap.PredefinedColorMap.values()) {
                 if (map.toString().equals(value)) {
                     acceptableValue = new ColorMap(map, true, true);
                     break;
                 }
             }
-
         }
 
         return acceptableValue;
@@ -101,7 +99,7 @@ public class ColorMapProperty extends AbstractWidgetProperty {
             result.setPredefinedColorMap(p);
         } else {
             var map = new LinkedHashMap<Double, RGB>();
-            for (Object o : propElement.getChild(XML_ELEMENT_MAP).getChildren()) {
+            for (var o : propElement.getChild(XML_ELEMENT_MAP).getChildren()) {
                 var e = (Element) o;
                 map.put(Double.parseDouble(e.getValue()),
                         new RGB(Integer.parseInt(e.getAttributeValue(XML_ATTRIBUTE_RED)),
@@ -124,7 +122,7 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
         var preDefinedElement = new Element(XML_ELEMENT_MAP);
         if (colorMap.getPredefinedColorMap() == PredefinedColorMap.None) {
-            for (Double k : colorMap.getMap().keySet()) {
+            for (var k : colorMap.getMap().keySet()) {
                 var colorElement = new Element(XML_ELEMENT_E);
                 colorElement.setText(k.toString());
                 var color = colorMap.getMap().get(k);
@@ -150,5 +148,4 @@ public class ColorMapProperty extends AbstractWidgetProperty {
     public boolean onlyAcceptExpressionInRule() {
         return true;
     }
-
 }

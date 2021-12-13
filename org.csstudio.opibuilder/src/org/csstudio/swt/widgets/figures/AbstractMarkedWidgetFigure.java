@@ -9,6 +9,7 @@
  ********************************************************************************/
 package org.csstudio.swt.widgets.figures;
 
+import org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -288,5 +289,4 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
         this.showMarkers = showMarkers;
         repaint();
     }
-
 }

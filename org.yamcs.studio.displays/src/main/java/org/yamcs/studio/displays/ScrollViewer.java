@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class ScrollViewer extends TableViewer {
@@ -65,7 +64,6 @@ public class ScrollViewer extends TableViewer {
         timeColumn.getColumn().setText(COL_TIME);
         tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(30));
         timeColumn.setLabelProvider(new ColumnLabelProvider() {
-
             @Override
             public String getText(Object element) {
                 var pdata = (ParameterData) element;
@@ -90,7 +88,7 @@ public class ScrollViewer extends TableViewer {
             @Override
             public String getText(Object element) {
                 ParameterData data = (ParameterData) element;
-                for (ParameterValue value : data.getParameterList()) {
+                for (var value : data.getParameterList()) {
                     if (value.getId().getName().equals(info.getName())) {
                         if (valueType.equals(ENG)) {
                             return StringConverter.toString(value.getEngValue());
@@ -116,7 +114,7 @@ public class ScrollViewer extends TableViewer {
             getTable().getColumn(i).setWidth(60);
         }
 
-        for (Listener l : listeners) {
+        for (var l : listeners) {
             l.handleEvent(new Event());
         }
 
@@ -134,14 +132,14 @@ public class ScrollViewer extends TableViewer {
         getTable().getColumn(i).dispose();
         parameters.remove(info);
         var qualifiedName = "";
-        for (String qname : qualifiedNames) {
+        for (var qname : qualifiedNames) {
             if (qname.endsWith(info)) {
                 qualifiedName = qname;
                 break;
             }
         }
         qualifiedNames.remove(qualifiedName);
-        for (Listener l : listeners) {
+        for (var l : listeners) {
             l.handleEvent(new Event());
         }
         refresh();
@@ -155,7 +153,7 @@ public class ScrollViewer extends TableViewer {
         parameters.clear();
         qualifiedNames.clear();
         contentProvider.clearAll();
-        for (Listener l : listeners) {
+        for (var l : listeners) {
             l.handleEvent(new Event());
         }
         refresh();
@@ -187,7 +185,7 @@ public class ScrollViewer extends TableViewer {
         }
 
         private boolean hasData(ParameterData data) {
-            for (ParameterValue v : data.getParameterList()) {
+            for (var v : data.getParameterList()) {
                 if (parameters.contains(v.getId().getName())) {
                     return true;
                 }

@@ -11,7 +11,6 @@ package org.yamcs.studio.core.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class BringAllToFrontAction extends Action implements IWorkbenchAction {
@@ -25,7 +24,7 @@ public class BringAllToFrontAction extends Action implements IWorkbenchAction {
 
     @Override
     public void run() {
-        for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+        for (var window : workbench.getWorkbenchWindows()) {
             window.getShell().setActive();
         }
     }

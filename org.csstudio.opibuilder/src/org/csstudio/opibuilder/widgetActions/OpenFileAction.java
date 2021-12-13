@@ -99,5 +99,4 @@ public class OpenFileAction extends AbstractWidgetAction {
     public String getDefaultDescription() {
         return super.getDefaultDescription() + " " + getPath();
     }
-
 }

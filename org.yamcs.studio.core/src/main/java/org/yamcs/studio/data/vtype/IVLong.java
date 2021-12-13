@@ -30,5 +30,4 @@ class IVLong extends IVNumeric implements VLong {
     public String toString() {
         return VTypeToString.toString(this);
     }
-
 }

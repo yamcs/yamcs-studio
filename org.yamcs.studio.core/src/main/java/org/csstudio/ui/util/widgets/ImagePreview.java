@@ -109,7 +109,6 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
     // Note that this is supported by Canvas
     // public void setToolTipText(String tooltip);
 
-    /** @see Control */
     @Override
     public Point computeSize(int wHint, int hHint) {
         if (image == null) {
@@ -118,7 +117,6 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
         return new Point(200, 200);
     }
 
-    /** @see PaintListener */
     @Override
     public void paintControl(PaintEvent e) {
         var bounds = getBounds();
@@ -152,7 +150,6 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
         }
     }
 
-    /** @see DisposeListener */
     @Override
     public void widgetDisposed(DisposeEvent e) {
         if (image != null) {

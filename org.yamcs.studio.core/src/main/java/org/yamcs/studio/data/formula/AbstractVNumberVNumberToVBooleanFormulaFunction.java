@@ -139,7 +139,7 @@ public abstract class AbstractVNumberVNumberToVBooleanFormulaFunction implements
     public abstract boolean calculate(double arg1, double arg2);
 
     private static boolean containsNull(Collection<Object> args) {
-        for (Object object : args) {
+        for (var object : args) {
             if (object == null) {
                 return true;
             }

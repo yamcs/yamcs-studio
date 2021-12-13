@@ -23,11 +23,9 @@ public class LayoutWidgetsAction extends AbstractWidgetTargetAction {
         var layoutWidget = getLayoutWidget();
 
         LayoutWidgetsImp.run(layoutWidget, getCommandStack());
-
     }
 
     protected AbstractLayoutEditpart getLayoutWidget() {
         return (AbstractLayoutEditpart) selection.getFirstElement();
     }
-
 }

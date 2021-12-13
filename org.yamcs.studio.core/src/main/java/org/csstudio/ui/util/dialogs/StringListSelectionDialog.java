@@ -84,7 +84,6 @@ public class StringListSelectionDialog extends Dialog {
     private void populateInitialValues() {
         setPossibleValues(initialPossibleValues);
         setSelectedValues(initialSelectedValues);
-
     }
 
     private void setSelectedValues(List<String> selectedValues) {

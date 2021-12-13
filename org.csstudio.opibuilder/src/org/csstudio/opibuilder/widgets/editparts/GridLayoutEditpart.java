@@ -118,7 +118,5 @@ public class GridLayoutEditpart extends AbstractLayoutEditpart {
         // setPropertyChangeHandler(GridLayoutModel.PROP_FILL_GRIDS, handler);
         // setPropertyChangeHandler(GridLayoutModel.PROP_NUMBER_OF_COLUMNS, handler);
         // setPropertyChangeHandler(GridLayoutModel.PROP_GRID_GAP, handler);
-
     }
-
 }

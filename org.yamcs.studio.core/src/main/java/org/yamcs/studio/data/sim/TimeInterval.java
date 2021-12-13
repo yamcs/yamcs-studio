@@ -143,5 +143,4 @@ public class TimeInterval {
         hash = 29 * hash + (this.end != null ? this.end.hashCode() : 0);
         return hash;
     }
-
 }

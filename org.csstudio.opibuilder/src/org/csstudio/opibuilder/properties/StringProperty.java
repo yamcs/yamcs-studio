@@ -113,5 +113,4 @@ public class StringProperty extends AbstractWidgetProperty {
     public String toStringInRuleScript(Object propValue) {
         return RuleData.QUOTE + super.toStringInRuleScript(propValue) + RuleData.QUOTE;
     }
-
 }

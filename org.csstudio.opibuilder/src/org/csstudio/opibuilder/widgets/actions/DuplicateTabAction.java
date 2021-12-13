@@ -23,7 +23,6 @@ public class DuplicateTabAction extends AbstractWidgetTargetAction {
     public void run(IAction action) {
         Command command = new DuplicateTabCommand(getSelectedTabWidget());
         execute(command);
-
     }
 
     /**

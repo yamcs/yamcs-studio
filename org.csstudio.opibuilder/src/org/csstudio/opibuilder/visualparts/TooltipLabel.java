@@ -64,5 +64,4 @@ public class TooltipLabel extends Figure {
         }
         return editPart.getConnectionHandler().getToolTipText();
     }
-
 }

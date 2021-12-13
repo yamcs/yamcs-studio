@@ -10,7 +10,6 @@
 package org.csstudio.opibuilder.widgets.model;
 
 import org.csstudio.opibuilder.model.AbstractContainerModel;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.draw2d.geometry.Point;
@@ -50,7 +49,6 @@ public class GroupingContainerModel extends AbstractContainerModel {
         addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children", WidgetPropertyCategory.Behavior, false));
         addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar", WidgetPropertyCategory.Behavior, true));
         addProperty(new BooleanProperty(PROP_FORWARD_COLORS, "Forward Colors", WidgetPropertyCategory.Behavior, false));
-
     }
 
     @Override
@@ -88,7 +86,7 @@ public class GroupingContainerModel extends AbstractContainerModel {
     @Override
     public void flipVertically() {
         var centerY = getHeight() / 2;
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipVertically(centerY);
         }
     }
@@ -96,7 +94,7 @@ public class GroupingContainerModel extends AbstractContainerModel {
     @Override
     public void flipHorizontally() {
         var centerX = getWidth() / 2;
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipHorizontally(centerX);
         }
     }
@@ -106,7 +104,7 @@ public class GroupingContainerModel extends AbstractContainerModel {
         var oldLock = isLocked();
         setPropertyValue(PROP_LOCK_CHILDREN, false);
         var center = new Point(getWidth() / 2, getHeight() / 2);
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.rotate90(clockwise, center);
         }
         var oldLoc = getLocation();
@@ -116,10 +114,9 @@ public class GroupingContainerModel extends AbstractContainerModel {
         var dx = newLoc.x - oldLoc.x;
         var dy = newLoc.y - oldLoc.y;
         // move back
-        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
+        for (var abstractWidgetModel : getChildren()) {
             abstractWidgetModel.setLocation(abstractWidgetModel.getLocation().translate(-dx, -dy));
         }
         setPropertyValue(PROP_LOCK_CHILDREN, oldLock);
     }
-
 }
