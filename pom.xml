@@ -76,6 +76,25 @@
           <version>3.0.0-M1</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.3.1</version>
+          <configuration>
+            <author>false</author>
+            <breakiterator>true</breakiterator>
+            <links>
+              <link>https://help.eclipse.org/latest/topic/org.eclipse.platform.doc.isv/reference/api/</link>
+            </links>
+            <additionalOptions>
+              <additionalOption>-Xdoclint:none</additionalOption>
+              <additionalOption>-Xdoclint:html</additionalOption>
+              <additionalOption>-Xdoclint:reference</additionalOption>
+              <!-- the 'syntax' group is too strict with @param and @throws -->
+              <!-- additionalOption>-Xdoclint:syntax</additionalOption-->
+            </additionalOptions>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>3.0.0</version>
