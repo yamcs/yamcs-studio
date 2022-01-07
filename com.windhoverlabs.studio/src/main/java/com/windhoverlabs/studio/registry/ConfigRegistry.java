@@ -363,6 +363,18 @@ public abstract class ConfigRegistry {
 
     }
 
+    public LinkedHashMap<Object, Object> getAllMessages(String modulesPath) throws Exception {
+        LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
+
+        // Access the registry through the get method for error-checking
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get(modulesPath);
+        getAllTeleCommands(wholeRegistry, outCmdMap);
+        getAllTelemetry(wholeRegistry, outCmdMap);
+
+        return outCmdMap;
+
+    }
+
     /**
      * 
      * @return All of the configuration from all of the apps/modules stored in the registry in the following format:
