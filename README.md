@@ -93,7 +93,7 @@ This _will_ take a while.
 ```
 cd org.yamcs.studio.editor.product/target/products/
 mkdir  /opt/yamcs-studio
-tar -xzf yamcs-studio-1.7.0-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=1 -C "/opt/yamcs-studio/"
+tar -xzf yamcs-studio-1.7.1-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=1 -C "/opt/yamcs-studio/"
 
 ```
 
