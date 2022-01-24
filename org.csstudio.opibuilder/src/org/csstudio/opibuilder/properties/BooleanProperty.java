@@ -21,7 +21,7 @@ public final class BooleanProperty extends AbstractWidgetProperty<Boolean> {
     /**
      * Boolean Property Constructor
      *
-     * @param prop_id
+     * @param propId
      *            the property id which should be unique in a widget model.
      * @param description
      *            the description of the property, which will be shown as the property name in property sheet.

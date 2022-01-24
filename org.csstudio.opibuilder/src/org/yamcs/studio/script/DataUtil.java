@@ -49,7 +49,7 @@ public class DataUtil {
     /**
      * Convert JavaScript array to Java int array.
      * 
-     * @param jsArray
+     * @param array
      *            JavaScript array
      * @return java int array.
      */
@@ -69,7 +69,7 @@ public class DataUtil {
     /**
      * Convert JavaScript array to Java double array.
      * 
-     * @param jsArray
+     * @param array
      *            JavaScript array
      * @return java array.
      */

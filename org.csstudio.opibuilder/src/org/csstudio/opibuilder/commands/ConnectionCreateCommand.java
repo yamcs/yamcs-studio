@@ -33,7 +33,7 @@ public class ConnectionCreateCommand extends Command {
      *
      * @param source
      *            the source endpoint
-     * @param terminal
+     * @param sourceTerminal
      *            terminal on the source
      * @throws IllegalArgumentException
      *             if source is null

@@ -363,9 +363,6 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
 
     /**
      * Set the color to be displayed if a bit is 0.
-     * 
-     * @param offColor
-     *            the offColor to set
      */
     public void setOffColor(Color rgb) {
         if (offColor != null && offColor.equals(rgb)) {
@@ -379,9 +376,6 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
 
     /**
      * Set the color to be displayed if a bit is 1.
-     * 
-     * @param onColor
-     *            the onColor to set
      */
     public void setOnColor(Color rgb) {
         if (onColor != null && onColor.equals(rgb)) {

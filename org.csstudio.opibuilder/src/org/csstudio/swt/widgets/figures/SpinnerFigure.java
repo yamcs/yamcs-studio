@@ -491,7 +491,6 @@ public class SpinnerFigure extends Figure implements Introspectable {
      * 
      * @param value
      *            the value to set
-     * @return true if value changed. false otherwise.
      */
     public void setValue(double value) {
         if (this.value == value) {

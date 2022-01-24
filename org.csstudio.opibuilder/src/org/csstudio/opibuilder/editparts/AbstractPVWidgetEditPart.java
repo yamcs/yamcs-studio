@@ -139,7 +139,7 @@ public abstract class AbstractPVWidgetEditPart extends AbstractBaseEditPart impl
      * 
      * @param pvPropId
      *            the property id of the PV. It is "pv_name" for the main PV.
-     * @return the {@link IValue} of the PV.
+     * @return the IValue of the PV.
      */
     @Override
     public VType getPVValue(String pvPropId) {

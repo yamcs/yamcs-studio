@@ -41,16 +41,6 @@ public class RoundScaleTickMarks extends Figure {
 
     private int minorTicksNumber;
 
-    /**
-     * Constructor.
-     *
-     * @param chart
-     *            the chart
-     * @param style
-     *            the style
-     * @param scale
-     *            the scale
-     */
     public RoundScaleTickMarks(RoundScale scale) {
 
         this.scale = scale;

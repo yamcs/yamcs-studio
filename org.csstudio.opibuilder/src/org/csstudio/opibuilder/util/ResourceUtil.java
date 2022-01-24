@@ -105,11 +105,7 @@ public class ResourceUtil {
      *
      * @param path
      *            The {@link IPath} to the file in the workspace, the local file system, or a platform URL
-     * @param runInUIJob
-     *            true if the task should run in UIJob, which will block UI responsiveness with a progress bar on status
-     *            line. Caller must be in UI thread if this is true.
      * @return The corresponding {@link InputStream}. Never <code>null</code>
-     * @throws Exception
      */
     public static InputStream pathToInputStream(IPath path) throws Exception {
         // Try workspace location
@@ -233,10 +229,6 @@ public class ResourceUtil {
         return fullPath.makeRelativeTo(refPath);
     }
 
-    /**
-     * @return
-     * @throws FileNotFoundException
-     */
     public static IPath getPathInEditor(IEditorInput input) {
         if (input instanceof FileEditorInput) {
             return ((FileEditorInput) input).getFile().getFullPath();

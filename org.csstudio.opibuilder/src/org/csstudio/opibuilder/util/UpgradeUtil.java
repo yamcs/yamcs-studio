@@ -25,11 +25,7 @@ public final class UpgradeUtil {
     private final static String doubleArrayPattern = doublePattern + "(," + doublePattern + ")+";
 
     /**
-     * Convert utility PV name to PVMangaer PV name.
-     * 
-     * @param pvName
-     * @param oldVersion
-     * @return the converted name.
+     * Convert utility PV name to PVManager PV name.
      */
     public static String convertUtilityPVNameToPM(String pvName) {
 

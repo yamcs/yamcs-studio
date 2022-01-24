@@ -27,13 +27,6 @@ public class ConnectionReconnectCommand extends Command {
 
     /**
      * Instantiate a command that can create a connection between two widgets.
-     *
-     * @param source
-     *            the source endpoint
-     * @param terminal
-     *            terminal on the source
-     * @throws IllegalArgumentException
-     *             if source is null
      */
     public ConnectionReconnectCommand(ConnectionModel conn) {
         if (conn == null) {

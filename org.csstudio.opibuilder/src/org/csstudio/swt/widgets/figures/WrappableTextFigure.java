@@ -42,9 +42,6 @@ public class WrappableTextFigure extends TextFigure {
 
     /**
      * Creates a text figure with a flowPage containing a TextFlow with the style WORD_WRAP_SOFT.
-     *
-     * @param borderSize
-     *            the size of the MarginBorder
      */
     public WrappableTextFigure(boolean runMode) {
         super(runMode);

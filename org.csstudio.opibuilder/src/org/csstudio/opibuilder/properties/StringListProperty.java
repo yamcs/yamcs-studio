@@ -42,8 +42,8 @@ public class StringListProperty extends AbstractWidgetProperty<List<String>> {
      *            the default value when the widget is first created. It can be null.
      */
     public StringListProperty(String prop_id, String description, WidgetPropertyCategory category,
-            List<String> default_value) {
-        super(prop_id, description, category, default_value == null ? Collections.emptyList() : default_value);
+            List<String> defaultValue) {
+        super(prop_id, description, category, defaultValue == null ? Collections.emptyList() : defaultValue);
     }
 
     @Override

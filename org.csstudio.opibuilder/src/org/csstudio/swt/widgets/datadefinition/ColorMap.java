@@ -274,8 +274,6 @@ public class ColorMap {
      *            the upper limit of the data in dataArray
      * @param min
      *            the lower limit of the data in dataArray
-     * @param imageData
-     *            the imageData to be filled. null if a new instance should be created.
      * @return the image data. null if dataWidth or dataHeight is less than 1.
      */
     public ImageData drawImage(double[] dataArray, int dataWidth, int dataHeight, double max, double min) {
@@ -283,13 +281,8 @@ public class ColorMap {
     }
 
     /**
-     * @param colorTupleArray
-     * @param keyArray
      * @param value
      *            the value which has been scaled or not based on the autoScale flag.
-     * @param min
-     * @param max
-     * @return
      */
     public RGB getValueRGB(ColorTuple[] colorTupleArray, double[] keyArray, double value) {
 

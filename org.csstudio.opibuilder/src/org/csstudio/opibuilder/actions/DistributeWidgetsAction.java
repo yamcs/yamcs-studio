@@ -60,13 +60,6 @@ public class DistributeWidgetsAction extends SelectionAction {
 
     private DistributeType distributeType;
 
-    /**
-     * @param part
-     *            the OPI Editor
-     * @param pasteWidgetsAction
-     *            pass the paste action will help to update the enable state of the paste action after copy action
-     *            invoked.
-     */
     public DistributeWidgetsAction(IWorkbenchPart part, DistributeType distributeType) {
         super(part);
         this.distributeType = distributeType;

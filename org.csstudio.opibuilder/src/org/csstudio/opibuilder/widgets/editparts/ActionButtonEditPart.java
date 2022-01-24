@@ -27,7 +27,7 @@ import org.eclipse.gef.RequestConstants;
 
 /**
  * EditPart controller for the ActioButton widget. The controller mediates between {@link ActionButtonModel} and
- * {@link ActionButtonFigure2}.
+ * ActionButtonFigure2.
  */
 public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
@@ -150,9 +150,6 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
         delegate.registerPropertyChangeHandlers();
     }
 
-    /**
-     * @param newValue
-     */
     protected void updatePropSheet() {
         var isToggle = getWidgetModel().isToggleButton();
         getWidgetModel().setPropertyVisible(ActionButtonModel.PROP_RELEASED_ACTION_INDEX, isToggle);

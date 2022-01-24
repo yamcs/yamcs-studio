@@ -460,10 +460,6 @@ public class BoolButtonFigure extends AbstractBoolControlFigure {
         repaint();
     }
 
-    /**
-     * @param squareLED
-     *            the squareLED to set
-     */
     public void setSquareButton(boolean squareButton) {
         if (this.squareButton == squareButton) {
             return;

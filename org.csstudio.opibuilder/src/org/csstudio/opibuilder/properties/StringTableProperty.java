@@ -62,8 +62,8 @@ public class StringTableProperty extends AbstractWidgetProperty<String[][]> {
      *            property is not visible.
      */
     public StringTableProperty(String prop_id, String description, WidgetPropertyCategory category,
-            String[][] default_value, String[] titles) {
-        this(prop_id, description, category, default_value, titles, null, null);
+            String[][] defaultValue, String[] titles) {
+        this(prop_id, description, category, defaultValue, titles, null, null);
     }
 
     /**
@@ -82,8 +82,8 @@ public class StringTableProperty extends AbstractWidgetProperty<String[][]> {
      *            property is not visible.
      */
     public StringTableProperty(String prop_id, String description, WidgetPropertyCategory category,
-            String[][] default_value, String[] titles, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
-        super(prop_id, description, category, default_value);
+            String[][] defaultValue, String[] titles, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
+        super(prop_id, description, category, defaultValue);
         this.titles = titles;
         this.cellEditorTypes = cellEditorTypes;
         this.cellEditorDatas = cellEditorDatas;

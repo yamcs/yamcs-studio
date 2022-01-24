@@ -306,8 +306,6 @@ public class SpreadSheetTable extends Composite {
      * 
      * @param parent
      *            parent composite.
-     * @param style
-     *            the style of widget to construct
      */
     public SpreadSheetTable(Composite parent) {
         super(parent, SWT.NONE);

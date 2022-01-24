@@ -29,8 +29,6 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
      *            the id of the property
      * @param displayName
      *            the name to display for the property
-     * @param category
-     *            the category
      */
     public PointlistPropertyDescriptor(Object id, String displayName) {
         super(id, displayName);

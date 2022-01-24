@@ -45,7 +45,7 @@ public class StringSplitter {
      * Split source string into an array of elements separated by the splitting character, but ignoring split characters
      * enclosed in quotes.
      *
-     * @param trimmedSource
+     * @param source
      *            String to be split
      * @param splitChar
      *            Character used to split the source string, e.g. ',' or ' '

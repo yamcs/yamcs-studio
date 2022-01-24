@@ -39,13 +39,6 @@ public class CopyPropertiesAction extends SelectionAction {
 
     public static final String ID = "org.csstudio.opibuilder.actions.copyproperties";
 
-    /**
-     * @param part
-     *            the OPI Editor
-     * @param pasteWidgetsAction
-     *            pass the paste action will help to update the enable state of the paste action after copy action
-     *            invoked.
-     */
     public CopyPropertiesAction(OPIEditor part) {
         super(part);
         setText("Copy Properties...");

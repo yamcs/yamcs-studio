@@ -812,8 +812,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
      * 
      * @param name
      *            name of the ROI. It must be unique for this graph.
-     * @param color
-     *            color of the ROI.
      * @param roiListener
      *            listener on ROI updates. Can be null.
      * @param roiInfoProvider
@@ -1370,10 +1368,6 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
      * Set the data array wrapper for the intensity graph. It must be called in UI thread. Warning: for big image for
      * example 1024*768, it may takes several milliseconds (10-50ms) to paint the image. If this is called too fast that
      * exceeds the painting capability, it may cause memory leaking.
-     * 
-     * @param data
-     *            the dataArray to set
-     *
      */
     public synchronized void setDataArray(IPrimaryArrayWrapper dataWrapper) {
         dataArray = dataWrapper;

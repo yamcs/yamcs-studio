@@ -71,7 +71,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
     }
 
     /**
-     * @param clazz
+     * @param className
      *            Type to be transferred
      * @return Transfer for that type
      */
@@ -87,7 +87,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
     /**
      * Initialize
      * 
-     * @param clazz
+     * @param className
      *            Type handled by this Transfer
      */
     private SerializableItemTransfer(String className) {

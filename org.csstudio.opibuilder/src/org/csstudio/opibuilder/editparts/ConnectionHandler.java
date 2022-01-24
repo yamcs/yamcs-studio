@@ -122,9 +122,6 @@ public class ConnectionHandler {
 
     /**
      * Mark a widget as disconnected.
-     * 
-     * @param pvName
-     *            the name of the PV that is disconnected.
      */
     protected void markWidgetAsDisconnected(IPV pv) {
         refreshModelTooltip();
@@ -143,8 +140,6 @@ public class ConnectionHandler {
     /**
      * Update the widget when a PV' connection is recovered.
      * 
-     * @param pvName
-     *            the name of the PV whose connection is recovered.
      * @param valueChangedFromNull
      *            true if this is called because value changed from null value.
      */

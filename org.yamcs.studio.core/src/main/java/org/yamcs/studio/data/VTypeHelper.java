@@ -409,7 +409,7 @@ public class VTypeHelper {
     }
 
     /**
-     * Extract the {@link Timestamp} from the VType obj.
+     * Extract the Timestamp from the VType obj.
      * 
      * @param obj
      *            the VType object.

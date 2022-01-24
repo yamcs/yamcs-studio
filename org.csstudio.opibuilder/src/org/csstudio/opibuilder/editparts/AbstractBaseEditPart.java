@@ -455,7 +455,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     /**
-     * Hook the default {@link AbstractOpenOPIAction} with mouse click.
+     * Hook the default AbstractOpenOPIAction with mouse click.
      */
     protected void hookMouseClickAction() {
         var actions = getHookedActions();
@@ -797,7 +797,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     /**
      * Set this widget's visibility.
      * 
-     * @param enable
+     * @param visible
      *            true if the widget should be visible.
      */
     public void setVisible(boolean visible) {

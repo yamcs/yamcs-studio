@@ -178,8 +178,6 @@ public class CalendarWidget extends Composite {
 
     /**
      * Set the widget to display the given time.
-     * 
-     * @see #setNow()
      */
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;

@@ -77,10 +77,6 @@ public class Bulb extends Figure {
         super.paintClientArea(graphics);
     }
 
-    /**
-     * @param bulbColor
-     *            the bulbColor to set
-     */
     public void setBulbColor(Color color) {
         if (bulbColor != null && bulbColor.equals(color)) {
             return;

@@ -132,9 +132,6 @@ public final class ImageUtils {
 
     /**
      * Apply color change on an image.
-     *
-     * @param color
-     * @param imageData
      */
     public static ImageData changeImageColor(Color color, ImageData originalImageData) {
         if (color == null || originalImageData == null || color.getRGB().equals(new RGB(0, 0, 0))) {

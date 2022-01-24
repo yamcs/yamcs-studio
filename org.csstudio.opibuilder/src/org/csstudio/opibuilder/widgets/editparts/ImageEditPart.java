@@ -218,7 +218,7 @@ public final class ImageEditPart extends AbstractWidgetEditPart {
     }
 
     /**
-     * Registers image rotation property change handlers for the properties defined in {@link MonitorBoolSymbolModel}.
+     * Registers image rotation property change handlers for the properties defined in MonitorBoolSymbolModel
      */
     public void registerImageRotationPropertyHandlers() {
         // degree rotation property

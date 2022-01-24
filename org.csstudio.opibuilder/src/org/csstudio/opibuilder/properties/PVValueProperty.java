@@ -15,7 +15,7 @@ import org.yamcs.studio.data.vtype.VType;
 import org.yamcs.studio.data.vtype.ValueFactory;
 
 /**
- * The property which contains a {@link IValue}. This property won't be shown in property view.
+ * The property which contains a IValue. This property won't be shown in property view.
  */
 public class PVValueProperty extends AbstractWidgetProperty<VType> {
 

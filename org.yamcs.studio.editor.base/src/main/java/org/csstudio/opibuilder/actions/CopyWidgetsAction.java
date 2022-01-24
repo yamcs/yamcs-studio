@@ -33,13 +33,6 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class CopyWidgetsAction extends SelectionAction {
 
-    /**
-     * @param part
-     *            the OPI Editor
-     * @param pasteWidgetsAction
-     *            pass the paste action will help to update the enable state of the paste action after copy action
-     *            invoked.
-     */
     public CopyWidgetsAction(OPIEditor part) {
         super(part);
         setText("Copy");

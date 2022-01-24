@@ -51,8 +51,6 @@ public final class ImageUtil {
      * Gets an ImageDescriptor for an image resource which is supposed to reside in the plugin with the specified
      * pluginId under the specified path.
      *
-     * @param pluginId
-     *            the ID of the plugin that contains the image resource
      * @param fullPath
      *            the path
      * @return an ImageDescriptor or null

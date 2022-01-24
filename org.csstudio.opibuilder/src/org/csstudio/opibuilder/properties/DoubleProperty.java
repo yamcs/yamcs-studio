@@ -33,7 +33,7 @@ public final class DoubleProperty extends AbstractWidgetProperty<Double> {
     /**
      * Double Property Constructor. The property value type is double.
      *
-     * @param prop_id
+     * @param propId
      *            the property id which should be unique in a widget model.
      * @param description
      *            the description of the property, which will be shown as the property name in property sheet.
@@ -51,7 +51,7 @@ public final class DoubleProperty extends AbstractWidgetProperty<Double> {
     /**
      * Color Property Constructor. The property value type is {@link OPIColor}.
      *
-     * @param prop_id
+     * @param propId
      *            the property id which should be unique in a widget model.
      * @param description
      *            the description of the property, which will be shown as the property name in property sheet.

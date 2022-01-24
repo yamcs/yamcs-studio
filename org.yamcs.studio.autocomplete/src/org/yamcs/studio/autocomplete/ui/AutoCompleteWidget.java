@@ -69,11 +69,6 @@ public class AutoCompleteWidget {
 
     /**
      * Enable auto-completed content on the specified widget.
-     *
-     * @param control
-     *            {@link Combo} or {@link Text}
-     * @param type
-     *            see {@link AutoCompleteTypes}
      */
     public AutoCompleteWidget(CellEditor cellEditor, String type) {
         Assert.isNotNull(type);
@@ -84,9 +79,7 @@ public class AutoCompleteWidget {
 
     /**
      * Enable auto-completed content on the specified widget.
-     *
-     * @param control
-     *            {@link Combo} or {@link Text}
+     * 
      * @param type
      *            see {@link AutoCompleteTypes}
      * @param historyHandlers

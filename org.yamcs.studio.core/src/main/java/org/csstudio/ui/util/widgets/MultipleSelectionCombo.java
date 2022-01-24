@@ -89,22 +89,11 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     private volatile boolean modify = false;
 
-    /**
-     * Initialize
-     *
-     * @param parent
-     * @param style
-     */
     public MultipleSelectionCombo(Composite parent, int style) {
         super(parent, style);
         createComponents(parent);
     }
 
-    /**
-     * Create SWT components
-     *
-     * @param parent
-     */
     private void createComponents(Composite parent) {
         display = parent.getDisplay();
         var layout = new GridLayout();
@@ -195,9 +184,6 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     /**
      * Define items to be displayed in the list, and returned as the current selection when selected.
-     *
-     * @param new_items
-     *            Items to display in the list
      */
     public void setItems(List<T> items) {
         var oldValue = this.items;
@@ -219,9 +205,6 @@ public class MultipleSelectionCombo<T> extends Composite {
      *
      * <p>
      * Selected items must be on the list of items provided via <code>setItems</code>
-     *
-     * @param sel_items
-     *            Items to select in the list
      */
     public void setSelection(List<T> selection) {
         var oldValue = this.selectionIndex;
@@ -238,9 +221,9 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     /**
      * set the items to be selected, the selection is specified as a string with values separated by
-     * {@value MultipleSelectionCombo.SEPARATOR}
+     * MultipleSelectionCombo.SEPARATOR
      *
-     * @param selection_text
+     * @param selection
      *            Items to select in the list as comma-separated string
      */
     public void setSelection(String selection) {
@@ -249,8 +232,6 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     /**
      * Set the items to be selected
-     *
-     * @param selections
      */
     public void setSelection(String[] selections) {
         var oldValue = this.selectionIndex;
@@ -279,9 +260,6 @@ public class MultipleSelectionCombo<T> extends Composite {
 
     /**
      * return the index of the object in items with the string representation _string_
-     *
-     * @param string
-     * @return
      */
     private Integer getIndex(String string) {
         for (var item : items) {

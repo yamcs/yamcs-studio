@@ -218,8 +218,7 @@ public class PVUtil {
     /**
      * Converts the given pv's value into a string representation. For string values, returns the value. For numeric
      * (double and long) values, returns a non-localized string representation. Double values use a point as the decimal
-     * separator. For other types of values, the value's {@link IValue#format()} method is called and its result
-     * returned.
+     * separator. For other types of values, the value's IValue#format() method is called and its result returned.
      *
      * @return a string representation of the value.
      */

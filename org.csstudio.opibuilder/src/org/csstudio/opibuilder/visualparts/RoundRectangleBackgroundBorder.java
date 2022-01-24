@@ -27,13 +27,6 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
 
     private Color backgroundColor;
 
-    /**
-     *
-     * @param borderColor
-     *            the border color
-     * @param lineWidth
-     *            the line width in pixels.
-     */
     public RoundRectangleBackgroundBorder(Color backgroundColor, int lineWidth) {
         this.backgroundColor = backgroundColor;
         this.lineWidth = lineWidth;

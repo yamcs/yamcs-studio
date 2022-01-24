@@ -27,7 +27,7 @@ import org.eclipse.swt.SWT;
 
 /**
  * EditPart controller for the ActioButton widget. The controller mediates between {@link ActionButtonModel} and
- * {@link ActionButtonFigure2}.
+ * ActionButtonFigure2.
  */
 public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
 

@@ -305,7 +305,7 @@ public abstract class AbstractWidgetProperty<T> {
 
     /**
      * Subclass should override this method if it is configurable by rule. If this returns true, the method
-     * {@link #toStringInRuleScript()} should be properly overridden too.
+     * {@link #toStringInRuleScript(Object)} should be properly overridden too.
      * 
      * @return true if this property is configurable by rule.
      */
