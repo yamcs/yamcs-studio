@@ -659,7 +659,7 @@ public class ConnectionsDialog extends Dialog {
 
     @Override
     protected void okPressed() {
-        if (selectedConfiguration.getUser() != null) {
+        if (selectedConfiguration.getAuthType() == AuthType.STANDARD && selectedConfiguration.getUser() != null) {
             String password = null;
             if (selectedConfiguration.isSecureHint()) { // Avoid unnecessary prompts
                 try {
