@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.yamcs.protobuf.LinkInfo;
+import org.yamcs.protobuf.links.LinkInfo;
 
 public class LinkTableViewerContentProvider implements IStructuredContentProvider {
 

@@ -11,7 +11,7 @@ package org.yamcs.studio.eventlog;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
+import org.yamcs.protobuf.Event.EventSeverity;
 
 public class EventLogSeverityFilter extends ViewerFilter {
 

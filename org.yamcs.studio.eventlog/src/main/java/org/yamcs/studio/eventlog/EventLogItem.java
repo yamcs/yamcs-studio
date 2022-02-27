@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.swt.graphics.RGB;
-import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Event;
 
 public class EventLogItem {
 

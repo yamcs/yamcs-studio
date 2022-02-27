@@ -9,7 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.links;
 
-import org.yamcs.protobuf.LinkInfo;
+import org.yamcs.protobuf.links.LinkInfo;
 
 /**
  * Wrapper around LinkInfo with some extra metadata for use in the table

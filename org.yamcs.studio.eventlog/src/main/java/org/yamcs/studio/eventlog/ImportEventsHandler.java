@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.client.StreamReceiver;
-import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Event;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportEventsHandler extends AbstractHandler {

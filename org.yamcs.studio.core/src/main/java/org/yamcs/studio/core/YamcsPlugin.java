@@ -32,7 +32,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.client.ClearanceSubscription;
-import org.yamcs.client.ClientException;
 import org.yamcs.client.ConnectionListener;
 import org.yamcs.client.ProcessorSubscription;
 import org.yamcs.client.TimeSubscription;
@@ -93,7 +92,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         }
 
         @Override
-        public void connectionFailed(ClientException exception) {
+        public void connectionFailed(Throwable t) {
             // Already handled by YamcsConnector
         }
 

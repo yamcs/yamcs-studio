@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Event;
 
 /*
  * DisplayOpener on request.

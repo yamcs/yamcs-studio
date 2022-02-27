@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Event;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.CsvWriter;
 

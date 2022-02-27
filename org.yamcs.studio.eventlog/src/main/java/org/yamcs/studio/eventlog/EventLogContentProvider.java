@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Event;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
 

@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.client.LinkSubscription;
 import org.yamcs.client.MessageListener;
-import org.yamcs.protobuf.LinkEvent;
-import org.yamcs.protobuf.SubscribeLinksRequest;
+import org.yamcs.protobuf.links.LinkEvent;
+import org.yamcs.protobuf.links.SubscribeLinksRequest;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 
