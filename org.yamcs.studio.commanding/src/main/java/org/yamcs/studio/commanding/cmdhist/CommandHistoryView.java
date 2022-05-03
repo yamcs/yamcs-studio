@@ -554,13 +554,23 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                         @Override
                         public Image getImage(Object element) {
                             var rec = (CommandHistoryRecord) element;
-                            var command = rec.getCommand();
-                            if (command.isSuccess()) {
-                                return greenBubble;
-                            } else if (command.isFailure()) {
-                                return redBubble;
-                            } else {
+                            var ack = rec.getCommand().getAcknowledgment(def.name);
+                            if (ack == null) {
                                 return grayBubble;
+                            } else {
+                                switch (ack.getStatus()) {
+                                case "NEW":
+                                    return grayBubble;
+                                case "OK":
+                                    return greenBubble;
+                                case "PENDING":
+                                    return waitingImage;
+                                case "NOK":
+                                    return redBubble;
+                                default:
+                                    log.warning("Unexpected ack state " + ack.getStatus());
+                                    return grayBubble;
+                                }
                             }
                         }
 
