@@ -5,7 +5,7 @@
         "start": "npx http-server -p 8080"
     },
     "devDependencies": {
-        "@yamcs/opi": "^1.2.0",
-        "puppeteer": "^10.2.0"
+        "@yamcs/opi": "^1.2.5",
+        "puppeteer": "^14.0.0"
     }
 }
