@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.studio.languages.TMViewer;
 
 /**
  * The dialog for embedded script editing.
@@ -30,7 +31,8 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
 
     private ScriptData scriptData;
 
-    private Text nameText, scriptText;
+    private Text nameText;
+    private TMViewer scriptText;
 
     private Combo scriptTypeCombo;
 
@@ -115,17 +117,30 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
         }
 
         scriptTypeCombo.setLayoutData(gd);
-        scriptText = new Text(dialogArea, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+
+        scriptText = new TMViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        var control = scriptText.getControl();
+        gd = new GridData(GridData.FILL_BOTH);
         gd.horizontalSpan = 2;
         gd.widthHint = 400;
-        gd.heightHint = 200;
-        scriptText.setLayoutData(gd);
+        gd.heightHint = convertHeightInCharsToPixels(5);
+        control.setLayoutData(gd);
+
         if (scriptData != null) {
             scriptText.setText(scriptData.getScriptText());
         } else {
             scriptText.setText("");
         }
+        scriptText.loadJavaScriptGrammar();
+
+        scriptTypeCombo.addListener(SWT.Selection, evt -> {
+            if (scriptTypeCombo.getText().equals(ScriptType.PYTHON.toString())) {
+                scriptText.loadPythonGrammar();
+            } else {
+                scriptText.loadJavaScriptGrammar();
+            }
+        });
+
         return this.dialogArea;
     }
 }

@@ -18,7 +18,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.ide.IDE;
 
 /**
  * A wizard for creating new Javascript File.
@@ -45,9 +45,14 @@ public class NewJavaScriptWizard extends Wizard implements INewWizard {
             return false;
         }
 
+        var dw = workbench.getActiveWorkbenchWindow();
         try {
-            workbench.getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
-                    "org.csstudio.opibuilder.jseditor");
+            if (dw != null) {
+                var page = dw.getActivePage();
+                if (page != null) {
+                    IDE.openEditor(page, file, true);
+                }
+            }
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open JavaScript File error",
                     "Failed to open the newly created JavaScript File. \n" + e.getMessage());

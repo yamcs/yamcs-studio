@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.python.core.PySystemState;
+import org.python.core.RegistryKey;
 import org.python.util.PythonInterpreter;
 import org.yamcs.studio.data.IPV;
 
@@ -70,7 +70,7 @@ public class ScriptStoreFactory {
         // Disable cachedir to avoid creation of cachedir folder.
         // See http://www.jython.org/jythonbook/en/1.0/ModulesPackages.html#java-package-scanning
         // and http://wiki.python.org/jython/PackageScanning
-        props.setProperty(PySystemState.PYTHON_CACHEDIR_SKIP, "true");
+        props.setProperty(RegistryKey.PYTHON_CACHEDIR_SKIP, "true");
 
         // Jython 2.7(b2, b3) need these to set sys.prefix and sys.executable.
         // If left undefined, initialization of Lib/site.py fails with

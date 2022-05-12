@@ -15,8 +15,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.csstudio.opibuilder.properties.BooleanProperty;
+import org.csstudio.opibuilder.properties.EmbeddedScriptProperty;
 import org.csstudio.opibuilder.properties.FilePathProperty;
-import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
@@ -38,8 +38,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { getFileExtension() }, false));
-        addProperty(new StringProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, "",
-                true, true));
+        addProperty(new EmbeddedScriptProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, ""));
         var embeddedProperty = new BooleanProperty(PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
         embeddedProperty.addPropertyChangeListener(evt -> {
             getProperty(PROP_PATH).setVisibleInPropSheet(!((Boolean) evt.getNewValue()));

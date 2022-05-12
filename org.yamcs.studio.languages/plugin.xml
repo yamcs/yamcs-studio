@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright (c) 2022 Space Applications Services and others
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    https://www.eclipse.org/legal/epl-2.0/
+   
+    SPDX-License-Identifier: EPL-2.0
+ -->
+
+<plugin>
+
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            id="org.yamcs.studio.contentTypes.parent"
+            name="Yamcs Studio Language Support"
+            priority="high"/>
+      <content-type
+            base-type="org.yamcs.studio.contentTypes.parent"
+            file-extensions="js"
+            id="org.yamcs.studio.contentTypes.javascript"
+            name="JavaScript"
+            priority="high">
+      </content-type>
+      <content-type
+            base-type="org.yamcs.studio.contentTypes.parent"
+            file-extensions="py"
+            id="org.yamcs.studio.contentTypes.python"
+            name="Python"
+            priority="high">
+      </content-type>
+      <content-type
+            base-type="org.yamcs.studio.contentTypes.parent"
+            file-extensions="xml, opi"
+            id="org.yamcs.studio.contentTypes.xml"
+            name="XML"
+            priority="high">
+      </content-type>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.genericeditor.presentationReconcilers">
+      <presentationReconciler
+            class="org.eclipse.tm4e.ui.text.TMPresentationReconciler"
+            contentType="org.yamcs.studio.contentTypes.parent">
+      </presentationReconciler>
+   </extension>
+
+   <extension
+         point="org.eclipse.tm4e.registry.grammars">
+      <grammar
+            scopeName="source.js"
+            path="grammars/JavaScript.tmLanguage.json">
+      </grammar>
+      <grammar
+            scopeName="source.py"
+            path="grammars/Python.tmLanguage.json">
+      </grammar>
+      <grammar
+            scopeName="source.xml"
+            path="grammars/XML.tmLanguage.json">
+      </grammar>
+      <scopeNameContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.javascript"
+            scopeName="source.js">
+      </scopeNameContentTypeBinding>
+      <scopeNameContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.python"
+            scopeName="source.py">
+      </scopeNameContentTypeBinding>
+      <scopeNameContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.xml"
+            scopeName="source.xml">
+      </scopeNameContentTypeBinding>
+   </extension>
+
+   <extension
+         point="org.eclipse.tm4e.languageconfiguration.languageConfigurations">
+      <languageConfiguration
+            contentTypeId="org.yamcs.studio.contentTypes.javascript"
+            path="language-configurations/javascript/language-configuration.json">
+      </languageConfiguration>
+      <languageConfiguration
+            contentTypeId="org.yamcs.studio.contentTypes.python"
+            path="language-configurations/python/language-configuration.json">
+      </languageConfiguration>
+      <languageConfiguration
+            contentTypeId="org.yamcs.studio.contentTypes.xml"
+            path="language-configurations/xml/language-configuration.json">
+      </languageConfiguration>
+   </extension>
+   
+   <extension point="org.eclipse.ui.genericeditor.icons">
+     <icon contentType="org.yamcs.studio.contentTypes.javascript" icon="icons/js.png" />
+     <icon contentType="org.yamcs.studio.contentTypes.python" icon="icons/py.gif" />
+     <icon contentType="org.yamcs.studio.contentTypes.xml" icon="icons/xml.gif" />
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.editors">
+
+      <editorContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.parent"
+            editorId="org.eclipse.ui.genericeditor.GenericEditor">
+      </editorContentTypeBinding>
+   </extension>
+   
+   <extension
+         point="org.eclipse.compare.contentViewers">
+      <contentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.parent"
+            contentViewerId="org.eclipse.ui.genericeditor.compareViewer">
+      </contentTypeBinding>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <contentTypeBinding
+            contentMergeViewerId="org.eclipse.ui.genericeditor.compareViewer"
+            contentTypeId="org.yamcs.studio.contentTypes.parent">
+      </contentTypeBinding>
+   </extension>
+</plugin>

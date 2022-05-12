@@ -1053,6 +1053,6 @@
              namespace="org.csstudio.opibuilder"
              properties="isEditable"
              type="org.csstudio.opibuilder.widgets.editparts.LinkingContainerEditpart">
-     </propertyTester>
+      </propertyTester>
    </extension>
 </plugin>
