@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CommandOptionsComposite extends ScrolledComposite {
 
@@ -268,7 +269,8 @@ public class CommandOptionsComposite extends ScrolledComposite {
                     argumentText.setText(argument.getValue());
                 }
 
-                if ("integer".equals(argument.getType()) || "float".equals(argument.getType())) {
+                if ("integer".equals(argument.getType()) || "float".equals(argument.getType())
+                        || "binary".equals(argument.getType()) || "string".equals(argument.getType())) {
                     argumentText.addListener(SWT.Modify, evt -> updateValidity());
                 }
 
@@ -290,6 +292,34 @@ public class CommandOptionsComposite extends ScrolledComposite {
                     hint += "Value must be <= " + String.format(Locale.US, format, argumentType.getRangeMax());
                 } else if (argumentType.hasRangeMin()) {
                     hint += "Value must be >= " + String.format(Locale.US, format, argumentType.getRangeMin());
+                }
+            }
+            if (argumentType.hasMinBytes() || argumentType.hasMaxBytes()) {
+                if (argumentType.hasMinBytes() && argumentType.hasMaxBytes()) {
+                    if (argumentType.getMinBytes() == argumentType.getMaxBytes()) {
+                        hint += "Value must be " + argumentType.getMinBytes() + " bytes";
+                    } else {
+                        hint += "Value must be between " + argumentType.getMinBytes()
+                                + " and " + argumentType.getMaxBytes() + " bytes";
+                    }
+                } else if (argumentType.hasMaxBytes()) {
+                    hint += "Value must be <= " + argumentType.getMinBytes() + " bytes";
+                } else if (argumentType.hasMinBytes()) {
+                    hint += "Value must be >= " + argumentType.getMinBytes() + " bytes";
+                }
+            }
+            if (argumentType.hasMinChars() || argumentType.hasMaxChars()) {
+                if (argumentType.hasMinChars() && argumentType.hasMaxChars()) {
+                    if (argumentType.getMinChars() == argumentType.getMaxChars()) {
+                        hint += "Length must be " + argumentType.getMinChars() + " characters";
+                    } else {
+                        hint += "Length must be between " + argumentType.getMinChars()
+                                + " and " + argumentType.getMaxChars() + " characters";
+                    }
+                } else if (argumentType.hasMaxChars()) {
+                    hint += "Length must be <= " + argumentType.getMinChars() + " characters";
+                } else if (argumentType.hasMinChars()) {
+                    hint += "Length must be >= " + argumentType.getMinChars() + " characters";
                 }
             }
             hintLabel.setText(hint);
@@ -346,6 +376,44 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 if (argumentType.hasRangeMax()) {
                     if (value > argumentType.getRangeMax()) {
                         invalidMessage = argument.getName() + " is out of range";
+                        break;
+                    }
+                }
+            } else if ("string".equals(argument.getType())) {
+                var text = ((Text) control).getText();
+                var argumentType = argument.getArgumentInfo().getType();
+                if (argumentType.hasMinChars()) {
+                    if (text.length() < argumentType.getMinChars()) {
+                        invalidMessage = argument.getName() + " is too small";
+                        break;
+                    }
+                }
+                if (argumentType.hasMaxChars()) {
+                    if (text.length() > argumentType.getMaxChars()) {
+                        invalidMessage = argument.getName() + " is too large";
+                        break;
+                    }
+                }
+            } else if ("binary".equals(argument.getType())) {
+                var text = ((Text) control).getText();
+                byte[] bytes;
+                try {
+                    bytes = StringConverter.hexStringToArray(text);
+                } catch (NumberFormatException e) {
+                    invalidMessage = argument.getName() + " is not a valid hexstring";
+                    break;
+                }
+
+                var argumentType = argument.getArgumentInfo().getType();
+                if (argumentType.hasMinBytes()) {
+                    if (bytes.length < argumentType.getMinBytes()) {
+                        invalidMessage = argument.getName() + " is too small";
+                        break;
+                    }
+                }
+                if (argumentType.hasMaxBytes()) {
+                    if (bytes.length > argumentType.getMaxBytes()) {
+                        invalidMessage = argument.getName() + " is too large";
                         break;
                     }
                 }
