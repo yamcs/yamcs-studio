@@ -452,6 +452,10 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                                 return waitingImage;
                             case "NOK":
                                 return redBubble;
+                            case "DISABLED":
+                                return grayBubble;
+                            case "CANCELLED":
+                                return grayBubble;
                             default:
                                 log.warning("Unexpected ack state " + ack.getStatus());
                                 return grayBubble;
