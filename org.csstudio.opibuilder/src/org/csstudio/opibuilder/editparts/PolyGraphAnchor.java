@@ -13,9 +13,7 @@ import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.geometry.Point;
 
 /**
- * <p>
  * This class represents an anchor on a polygon or polyline widget.
- * </p>
  * <p>
  * On a normal widget the there are just 8 possible positions for the connector, and they are all on the widget bounding
  * box:
@@ -24,10 +22,8 @@ import org.eclipse.draw2d.geometry.Point;
  * <li>4 are on each corner of the bounding box</li>
  * </ul>
  * This is true even if the widget does not will its bounding box completely.
- * </p>
  * <p>
  * On a polyline or a polygon widget the anchors are wherever there is a bend in the polyline.
- * </p>
  */
 public class PolyGraphAnchor extends AbstractOpiBuilderAnchor {
     private int pointIndex;

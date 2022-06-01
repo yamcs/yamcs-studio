@@ -967,7 +967,6 @@ public class ContentProposalAdapter {
     /**
      * Add the specified listener to the list of content proposal listeners that are notified when content proposals are
      * chosen.
-     * </p>
      *
      * @param listener
      *            the IContentProposalListener to be added as a listener. Must not be <code>null</code>. If an attempt
@@ -981,7 +980,6 @@ public class ContentProposalAdapter {
     /**
      * Removes the specified listener from the list of content proposal listeners that are notified when content
      * proposals are chosen.
-     * </p>
      *
      * @param listener
      *            the IContentProposalListener to be removed as a listener. Must not be <code>null</code>. If the
@@ -994,7 +992,6 @@ public class ContentProposalAdapter {
     /**
      * Add the specified listener to the list of content proposal listeners that are notified when a content proposal
      * popup is opened or closed.
-     * </p>
      *
      * @param listener
      *            the IContentProposalListener2 to be added as a listener. Must not be <code>null</code>. If an attempt
@@ -1008,7 +1005,6 @@ public class ContentProposalAdapter {
     /**
      * Remove the specified listener from the list of content proposal listeners that are notified when a content
      * proposal popup is opened or closed.
-     * </p>
      *
      * @param listener
      *            the IContentProposalListener2 to be removed as a listener. Must not be <code>null</code>. If the

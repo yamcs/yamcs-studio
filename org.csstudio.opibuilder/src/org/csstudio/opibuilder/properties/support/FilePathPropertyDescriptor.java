@@ -19,15 +19,12 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
  * Descriptor for a property that has a value which should be edited with a path cell editor.
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
- * </p>
  * <p>
  * Example:
  *
  * <pre>
  * IPropertyDescriptor pd = new ResourcePropertyDescriptor(&quot;surname&quot;, &quot;Last Name&quot;);
  * </pre>
- *
- * </p>
  */
 public class FilePathPropertyDescriptor extends TextPropertyDescriptor {
 

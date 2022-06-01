@@ -22,15 +22,12 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
  * Descriptor for a property that is a boolean value which should be edited with a boolean cell editor.
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
- * </p>
  * <p>
  * Example:
  *
  * <pre>
  * IPropertyDescriptor pd = new BooleanPropertyDescriptor(&quot;fg&quot;, &quot;boolean&quot;);
  * </pre>
- *
- * </p>
  */
 public final class BooleanPropertyDescriptor extends PropertyDescriptor {
 

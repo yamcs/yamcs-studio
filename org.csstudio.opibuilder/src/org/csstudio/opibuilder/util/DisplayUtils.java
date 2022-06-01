@@ -18,8 +18,10 @@ public class DisplayUtils {
     /**
      * Returns a non-null instance of Display object. Tries to find the Display object for the current thread first and
      * if it fails tries to get:
-     * <li>Workbench display if the workbench running
-     * <li>Default display object
+     * <ul>
+     * <li>Workbench display if the workbench running</li>
+     * <li>Default display object</li>
+     * </ul>
      *
      * @return non-null Display object
      */

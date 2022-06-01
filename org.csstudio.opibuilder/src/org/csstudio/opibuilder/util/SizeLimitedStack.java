@@ -46,7 +46,7 @@ public class SizeLimitedStack<T> {
     /**
      * Removes the object at the top of this stack and returns that object as the value of this function.
      *
-     * @return The object at the top of this stack (the last item of the <tt>Vector</tt> object).
+     * @return The object at the top of this stack (the last item of the {@code Vector} object).
      * @throws NoSuchElementException
      *             if this list is empty
      */
@@ -58,7 +58,7 @@ public class SizeLimitedStack<T> {
     /**
      * Looks at the object at the top of this stack without removing it from the stack.
      *
-     * @return the object at the top of this stack (the last item of the <tt>Vector</tt> object).
+     * @return the object at the top of this stack (the last item of the {@code Vector} object).
      * @throws NoSuchElementException
      *             if this list is empty
      */
@@ -92,13 +92,12 @@ public class SizeLimitedStack<T> {
     }
 
     /**
-     * Returns <tt>true</tt> if this stack contains the specified element. More formally, returns <tt>true</tt> if and
-     * only if this stack contains at least one element <tt>e</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
+     * Returns true if this stack contains the specified element. More formally, returns true if and only if this stack
+     * contains at least one element {@code e} such that {@code (o==null ? e==null : o.equals(e))}.
      *
      * @param o
      *            element whose presence in this stack is to be tested
-     * @return <tt>true</tt> if this list contains the specified element
+     * @return true if this list contains the specified element
      */
     public boolean contains(T o) {
         return list.contains(o);

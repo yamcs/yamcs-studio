@@ -43,7 +43,7 @@ public class OPITimer {
      * @param delay
      *            delay in milliseconds before task is to be executed.
      * @throws IllegalArgumentException
-     *             if <tt>delay</tt> is negative, or <tt>delay + System.currentTimeMillis()</tt> is negative.
+     *             if {@code delay} is negative, or {@code delay + System.currentTimeMillis()} is negative.
      * @throws IllegalStateException
      *             if task was already scheduled or canceled, or timer was canceled.
      */

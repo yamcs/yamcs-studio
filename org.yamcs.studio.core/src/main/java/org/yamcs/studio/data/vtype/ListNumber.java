@@ -21,7 +21,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     double getDouble(int index);
 
@@ -32,7 +32,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     float getFloat(int index);
 
@@ -43,7 +43,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     long getLong(int index);
 
@@ -54,7 +54,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     int getInt(int index);
 
@@ -65,7 +65,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     short getShort(int index);
 
@@ -76,7 +76,7 @@ public interface ListNumber extends CollectionNumber {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     byte getByte(int index);
 
@@ -88,7 +88,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setDouble(int index, double value);
 
@@ -100,7 +100,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setFloat(int index, float value);
 
@@ -112,7 +112,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setLong(int index, long value);
 
@@ -124,7 +124,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setInt(int index, int value);
 
@@ -136,7 +136,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setShort(int index, short value);
 
@@ -148,7 +148,7 @@ public interface ListNumber extends CollectionNumber {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     void setByte(int index, byte value);
 }

@@ -35,25 +35,19 @@ import org.eclipse.swt.widgets.Listener;
  * Standard main page for a wizard that creates a file resource.
  * <p>
  * This page may be used by clients as-is; it may be also be subclassed to suit.
- * </p>
  * <p>
  * Subclasses may override
  * <ul>
  * <li><code>getInitialContents</code></li>
  * <li><code>getNewFileLabel</code></li>
  * </ul>
- * </p>
- * <p>
  * Subclasses may extend
  * <ul>
  * <li><code>handleEvent</code></li>
  * </ul>
- * </p>
  * <p>
  * <b>Code is based upon <code>org.eclipse.ui.dialogs.WizardNewFileCreationPage</code> in plugin
  * <code>org.eclipse.ui.ide</code>.</b>
- * </p>
- *
  */
 
 // TODO: Copied from org.csstudio.platform.ui. Review is needed.

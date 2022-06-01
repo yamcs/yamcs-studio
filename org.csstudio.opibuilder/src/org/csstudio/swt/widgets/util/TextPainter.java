@@ -97,8 +97,8 @@ public final class TextPainter {
     }
 
     /**
-     * Draws the given text, rotated for the specified angle (counter-clockwise).</br>
-     * The text will be rotated around the anchor.
+     * Draws the given text, rotated for the specified angle (counter-clockwise). The text will be rotated around the
+     * anchor.
      *
      * @param gfx
      *            the graphics context

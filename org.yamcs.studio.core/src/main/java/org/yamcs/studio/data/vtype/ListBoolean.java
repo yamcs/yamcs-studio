@@ -22,7 +22,7 @@ public abstract class ListBoolean {
      *            position of the element to return
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     public abstract boolean getBoolean(int index);
 
@@ -34,7 +34,7 @@ public abstract class ListBoolean {
      * @param value
      *            the new value
      * @throws IndexOutOfBoundsException
-     *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     *             if the index is out of range ({@code index < 0 || index >= size()})
      */
     public abstract void setBoolean(int index, boolean value);
 

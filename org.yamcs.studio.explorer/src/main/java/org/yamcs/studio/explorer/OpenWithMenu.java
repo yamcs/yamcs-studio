@@ -41,8 +41,8 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * A menu for opening files in the workbench.
  * <p>
- * An <code>OpenWithMenu is used to populate a menu with "Open With" actions. One action is added for each editor which
- * is applicable to the selected file. If the user selects one of these items, the corresponding editor is opened on the
+ * An OpenWithMenu is used to populate a menu with "Open With" actions. One action is added for each editor which is
+ * applicable to the selected file. If the user selects one of these items, the corresponding editor is opened on the
  * file.
  * </p>
  * <p>
@@ -79,7 +79,7 @@ public class OpenWithMenu extends ContributionItem {
     };
 
     /**
-     * Constructs a new instance of <code>OpenWithMenu.
+     * Constructs a new instance of OpenWithMenu.
      *
      * @param page
      *            the page where the editor is opened if an item within the menu is selected
