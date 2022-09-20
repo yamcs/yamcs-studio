@@ -201,6 +201,7 @@ public class RuleData implements IAdaptable {
         return result;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private String generatePropValueString(AbstractWidgetProperty property, Expression exp) {
         Object value;
         String propValue;
@@ -224,7 +225,7 @@ public class RuleData implements IAdaptable {
         return propValue;
     }
 
-    public AbstractWidgetProperty getProperty() {
+    public AbstractWidgetProperty<?> getProperty() {
         return widgetModel.getProperty(propId);
     }
 

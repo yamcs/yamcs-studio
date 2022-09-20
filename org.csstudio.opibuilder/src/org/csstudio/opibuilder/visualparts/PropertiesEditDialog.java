@@ -32,7 +32,7 @@ public class PropertiesEditDialog extends Dialog {
     private PropertyData[] propertyDataArray;
     private String dialogTitle;
 
-    public PropertiesEditDialog(Shell parentShell, AbstractWidgetProperty[] properties, String dialogTitle) {
+    public PropertiesEditDialog(Shell parentShell, AbstractWidgetProperty<?>[] properties, String dialogTitle) {
         super(parentShell);
         this.dialogTitle = dialogTitle;
         propertyDataArray = new PropertyData[properties.length];

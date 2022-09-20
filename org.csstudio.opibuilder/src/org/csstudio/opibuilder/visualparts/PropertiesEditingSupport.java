@@ -35,17 +35,17 @@ public class PropertiesEditingSupport extends EditingSupport {
 
     @Override
     protected CellEditor getCellEditor(Object element) {
-        AbstractWidgetProperty property;
+        AbstractWidgetProperty<?> property;
         if ((property = getSelectedProperty()) != null) {
             return property.getPropertyDescriptor().createPropertyEditor(table);
         }
         return null;
     }
 
-    private AbstractWidgetProperty getSelectedProperty() {
+    private AbstractWidgetProperty<?> getSelectedProperty() {
         var selection = (IStructuredSelection) getViewer().getSelection();
         if (selection.getFirstElement() instanceof AbstractWidgetProperty) {
-            var property = (AbstractWidgetProperty) selection.getFirstElement();
+            var property = (AbstractWidgetProperty<?>) selection.getFirstElement();
             return property;
         }
         return null;
@@ -54,7 +54,7 @@ public class PropertiesEditingSupport extends EditingSupport {
     @Override
     protected Object getValue(Object element) {
         if (element instanceof AbstractWidgetProperty) {
-            return ((AbstractWidgetProperty) element).getPropertyValue();
+            return ((AbstractWidgetProperty<?>) element).getPropertyValue();
         }
 
         return null;
@@ -63,7 +63,7 @@ public class PropertiesEditingSupport extends EditingSupport {
     @Override
     protected void setValue(Object element, Object value) {
         if (element instanceof AbstractWidgetProperty) {
-            var prop = (AbstractWidgetProperty) element;
+            var prop = (AbstractWidgetProperty<?>) element;
             prop.setPropertyValue(value);
             getViewer().refresh();
         }

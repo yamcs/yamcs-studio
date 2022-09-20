@@ -12,7 +12,7 @@ package org.csstudio.opibuilder.properties;
 
 import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class ComboProperty extends AbstractWidgetProperty<Integer> {
 

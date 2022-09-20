@@ -12,7 +12,7 @@ package org.csstudio.opibuilder.properties;
 import java.util.List;
 
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The widget property for list. This property is only used for property change communication between model and

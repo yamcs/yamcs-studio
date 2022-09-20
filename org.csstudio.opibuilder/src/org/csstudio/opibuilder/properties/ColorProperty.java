@@ -14,7 +14,7 @@ import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The widget property for color.

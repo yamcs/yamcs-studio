@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;

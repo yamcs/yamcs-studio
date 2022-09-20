@@ -16,7 +16,7 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The base widget property class for all kinds of widget property.

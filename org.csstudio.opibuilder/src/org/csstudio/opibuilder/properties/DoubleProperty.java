@@ -13,7 +13,7 @@ package org.csstudio.opibuilder.properties;
 import org.csstudio.opibuilder.properties.support.DoublePropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * A property, which is able to handle Double values.

@@ -170,7 +170,7 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
 
         var locationDiff = newBounds.getLocation().getDifference(oldBounds.getLocation());
         _owner.getFigure().translateToAbsolute(locationDiff);
-        var sizeDiff = newBounds.getSize().getDifference(oldBounds.getSize());
+        var sizeDiff = newBounds.getSize().getShrinked(oldBounds.getSize());
         _owner.getFigure().translateToAbsolute(sizeDiff);
 
         request.setMoveDelta(new Point(locationDiff.width, locationDiff.height));

@@ -17,7 +17,7 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.support.StringListPropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The property for string list.

@@ -15,8 +15,8 @@ import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.jdom.CDATA;
-import org.jdom.Element;
+import org.jdom2.CDATA;
+import org.jdom2.Element;
 
 /**
  * The widget property for string. It also accept macro string $(macro).

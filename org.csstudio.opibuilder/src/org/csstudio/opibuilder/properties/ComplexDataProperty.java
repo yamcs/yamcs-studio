@@ -16,7 +16,7 @@ import org.csstudio.opibuilder.datadefinition.AbstractComplexData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.support.ComplexDataPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * A property that can hold data with multiple properties.

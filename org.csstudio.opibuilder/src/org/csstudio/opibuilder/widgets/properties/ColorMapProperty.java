@@ -18,7 +18,7 @@ import org.csstudio.swt.widgets.datadefinition.ColorMap;
 import org.csstudio.swt.widgets.datadefinition.ColorMap.PredefinedColorMap;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class ColorMapProperty extends AbstractWidgetProperty<ColorMap> {
 

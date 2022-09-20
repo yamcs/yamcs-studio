@@ -169,7 +169,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
         if (!transparent) {
             graphics.setBackgroundColor(getBackgroundColor());
             var bounds = getBounds().getCopy();
-            bounds.crop(getInsets());
+            bounds.shrink(getInsets());
             graphics.fillRectangle(bounds);
         }
         super.paintFigure(graphics);

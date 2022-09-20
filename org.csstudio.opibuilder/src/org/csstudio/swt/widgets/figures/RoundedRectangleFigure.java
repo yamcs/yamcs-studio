@@ -71,7 +71,7 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
             if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, backGradientStartColor, getBackgroundColor());
             }
-            graphics.fillRoundRectangle(figureBounds, corner.width, corner.height);
+            graphics.fillRoundRectangle(figureBounds, getCornerWidth(), getCornerHeight());
             if (pattern != null) {
                 pattern.dispose();
             }
@@ -99,7 +99,7 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
             if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, foreGradientStartColor, getForegroundColor());
             }
-            graphics.fillRoundRectangle(figureBounds, corner.width, corner.height);
+            graphics.fillRoundRectangle(figureBounds, getCornerWidth(), getCornerHeight());
             if (pattern != null) {
                 pattern.dispose();
             }
@@ -132,11 +132,11 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
     }
 
     public int getCornerHeight() {
-        return corner.height;
+        return getCornerDimensions().height;
     }
 
     public int getCornerWidth() {
-        return corner.width;
+        return getCornerDimensions().width;
     }
 
     /**
@@ -206,18 +206,18 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         if (isEnabled()) {
             graphics.setForegroundColor(lineColor);
         }
-        graphics.drawRoundRectangle(r, Math.max(0, corner.width - (int) lineInset),
-                Math.max(0, corner.height - (int) lineInset));
+        graphics.drawRoundRectangle(r, Math.max(0, getCornerWidth() - (int) lineInset),
+                Math.max(0, getCornerHeight() - (int) lineInset));
         graphics.popState();
     }
 
     public void setCornerHeight(int value) {
-        setCornerDimensions(new Dimension(corner.width, value));
+        setCornerDimensions(new Dimension(getCornerWidth(), value));
         repaint();
     }
 
     public void setCornerWidth(int value) {
-        setCornerDimensions(new Dimension(value, corner.height));
+        setCornerDimensions(new Dimension(value, getCornerHeight()));
         repaint();
     }
 

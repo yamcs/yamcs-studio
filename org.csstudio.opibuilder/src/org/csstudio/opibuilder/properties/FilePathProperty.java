@@ -17,7 +17,7 @@ import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The property for file path, which is represented as a String.

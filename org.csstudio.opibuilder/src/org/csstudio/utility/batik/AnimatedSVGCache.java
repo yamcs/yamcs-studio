@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 import org.apache.batik.anim.timing.TimedDocumentRoot;
 import org.apache.batik.anim.timing.TimedElement;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.swt.graphics.Image;

@@ -153,7 +153,7 @@ public class ScrollBarFigureLayout extends AbstractLayout {
             down.setBounds(transposer.t(r));
         }
 
-        var trackBounds = bounds.getCropped(
+        var trackBounds = bounds.getShrinked(
                 new Insets((up == null) ? 0 : buttonSize.height, 0, (down == null) ? 0 : buttonSize.height, 0));
 
         return trackBounds;

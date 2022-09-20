@@ -25,7 +25,7 @@ import org.csstudio.opibuilder.util.GUIRefreshThread;
 public class WidgetPropertyChangeListener implements PropertyChangeListener {
 
     private AbstractBaseEditPart editpart;
-    private AbstractWidgetProperty widgetProperty;
+    private AbstractWidgetProperty<?> widgetProperty;
     private List<IWidgetPropertyChangeHandler> handlers;
 
     /**
@@ -34,7 +34,7 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
      * @param editpart
      *            backlint to the editpart, which uses this listener.
      */
-    public WidgetPropertyChangeListener(AbstractBaseEditPart editpart, AbstractWidgetProperty property) {
+    public WidgetPropertyChangeListener(AbstractBaseEditPart editpart, AbstractWidgetProperty<?> property) {
         this.editpart = editpart;
         widgetProperty = property;
         handlers = new ArrayList<>();

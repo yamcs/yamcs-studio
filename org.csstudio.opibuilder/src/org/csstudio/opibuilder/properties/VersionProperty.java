@@ -10,7 +10,7 @@
 package org.csstudio.opibuilder.properties;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * Version property.

@@ -22,7 +22,7 @@ public class PropertiesLabelProvider extends LabelProvider implements ITableLabe
     @Override
     public Image getColumnImage(Object element, int columnIndex) {
         if (columnIndex == 1 && element instanceof AbstractWidgetProperty) {
-            var property = (AbstractWidgetProperty) element;
+            var property = (AbstractWidgetProperty<?>) element;
 
             if (property.isVisibleInPropSheet() && property.getPropertyDescriptor().getLabelProvider() != null) {
                 return property.getPropertyDescriptor().getLabelProvider().getImage(property.getPropertyValue());
@@ -34,7 +34,7 @@ public class PropertiesLabelProvider extends LabelProvider implements ITableLabe
     @Override
     public String getColumnText(Object element, int columnIndex) {
         if (element instanceof AbstractWidgetProperty) {
-            var property = (AbstractWidgetProperty) element;
+            var property = (AbstractWidgetProperty<?>) element;
             if (columnIndex == 0) {
                 return property.getDescription();
             }

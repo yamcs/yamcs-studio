@@ -197,11 +197,11 @@ public class ProgressBarFigure extends AbstractLinearMarkedFigure {
         this.horizontal = horizontal;
         if (horizontal) {
             ((LinearScale) scale).setOrientation(Orientation.HORIZONTAL);
-            scale.setTickLableSide(LabelSide.Primary);
+            scale.setTickLabelSide(LabelSide.Primary);
             marker.setLabelSide(LabelSide.Secondary);
         } else {
             ((LinearScale) scale).setOrientation(Orientation.VERTICAL);
-            scale.setTickLableSide(LabelSide.Primary);
+            scale.setTickLabelSide(LabelSide.Primary);
             marker.setLabelSide(LabelSide.Secondary);
         }
         revalidate();

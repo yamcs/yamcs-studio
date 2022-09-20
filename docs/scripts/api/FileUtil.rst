@@ -49,7 +49,7 @@ global variable ``widget``).
     the stream when you're done.
 
 **loadXMLFile(** path [, widget] **)**
-    Return an ``org.jdom.Element`` for an XML file.
+    Return an ``org.jdom2.Element`` for an XML file.
 
     The path can be an absolute path on the local file
     system, or a relative path inside the workspace. In case

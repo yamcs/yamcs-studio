@@ -23,8 +23,8 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
 
 /**
  * The transfer for clip board related actions.

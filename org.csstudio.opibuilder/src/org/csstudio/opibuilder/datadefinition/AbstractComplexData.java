@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Assert;
  * The abstract data that holds multiple properties.
  */
 public abstract class AbstractComplexData {
-    private Map<String, AbstractWidgetProperty> propertyMap;
+    private Map<String, AbstractWidgetProperty<?>> propertyMap;
 
     private AbstractWidgetModel widgetModel;
 
@@ -37,7 +37,7 @@ public abstract class AbstractComplexData {
      * @param property
      *            the property to be added.
      */
-    public void addProperty(AbstractWidgetProperty property) {
+    public void addProperty(AbstractWidgetProperty<?> property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -48,7 +48,7 @@ public abstract class AbstractComplexData {
      */
     protected abstract void configureProperties();
 
-    public AbstractWidgetProperty[] getAllProperties() {
+    public AbstractWidgetProperty<?>[] getAllProperties() {
         var propArray = new AbstractWidgetProperty[propertyMap.size()];
         var i = 0;
         for (var p : propertyMap.values()) {
@@ -70,7 +70,7 @@ public abstract class AbstractComplexData {
         return copy;
     }
 
-    public AbstractWidgetProperty getProperty(String propId) {
+    public AbstractWidgetProperty<?> getProperty(String propId) {
         return propertyMap.get(propId);
     }
 

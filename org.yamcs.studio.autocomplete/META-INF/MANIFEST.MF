@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.yamcs.studio.core,
  org.yamcs.p2.client
 Bundle-Vendor: Space Applications Services
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.yamcs.studio.autocomplete,
  org.yamcs.studio.autocomplete.parser,
  org.yamcs.studio.autocomplete.parser.engine,

@@ -16,7 +16,7 @@ import org.csstudio.opibuilder.properties.support.MacrosPropertyDescriptor;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The property for macros.

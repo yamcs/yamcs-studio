@@ -6,7 +6,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Studio Event Log
 Bundle-SymbolicName: org.yamcs.studio.eventlog;singleton:=true
 Bundle-Vendor: Space Applications Services
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Version: 1.6.3.qualifier
 Require-Bundle: org.yamcs.studio.core,
  org.yamcs.p2.client,

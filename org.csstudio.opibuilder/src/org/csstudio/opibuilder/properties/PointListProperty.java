@@ -12,7 +12,7 @@ package org.csstudio.opibuilder.properties;
 import org.csstudio.opibuilder.properties.support.PointlistPropertyDescriptor;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The property for script.

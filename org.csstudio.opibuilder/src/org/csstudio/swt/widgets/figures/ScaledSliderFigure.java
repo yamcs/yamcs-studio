@@ -623,6 +623,7 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
                 graphics.setBackgroundColor(fillColor);
                 graphics.setForegroundColor(fillColor);
+                var lineWidth = getLineWidth();
                 if (horizontal) {
                     var fillWidth = valuePosition - bounds.x;
                     graphics.fillRectangle(new Rectangle(bounds.x, bounds.y, fillWidth, bounds.height));

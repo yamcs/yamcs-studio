@@ -142,8 +142,7 @@ public class TankFigure extends AbstractLinearMarkedFigure {
                 fill_corner = 2 * rectWidth - bounds.width;
             }
 
-            corner.height = fill_corner;
-            corner.width = fill_corner;
+            setCornerDimensions(new Dimension(fill_corner, fill_corner));
             graphics.setAntialias(SWT.ON);
             var valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
             if (support3d == null) {
@@ -151,6 +150,7 @@ public class TankFigure extends AbstractLinearMarkedFigure {
             }
 
             if (effect3D && support3d) {
+                var corner = getCornerDimensions();
                 graphics.setBackgroundColor(WHITE_COLOR);
                 super.fillShape(graphics);
                 // fill background
@@ -197,6 +197,7 @@ public class TankFigure extends AbstractLinearMarkedFigure {
                 graphics.setForegroundColor(EFFECT3D_OUTLINE_COLOR);
 
             } else {
+                var lineWidth = getLineWidth();
                 graphics.setBackgroundColor(fillBackgroundColor);
                 super.fillShape(graphics);
                 graphics.setBackgroundColor(fillColor);

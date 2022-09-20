@@ -15,10 +15,10 @@ import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
  * Hold place for temp property value.
  */
 public class PropertyData {
-    public AbstractWidgetProperty property;
+    public AbstractWidgetProperty<?> property;
     public Object tmpValue;
 
-    public PropertyData(AbstractWidgetProperty property, Object value) {
+    public PropertyData(AbstractWidgetProperty<?> property, Object value) {
         this.property = property;
         tmpValue = value;
     }

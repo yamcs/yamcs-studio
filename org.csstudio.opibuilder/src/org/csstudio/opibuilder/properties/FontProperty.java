@@ -14,7 +14,7 @@ import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class FontProperty extends AbstractWidgetProperty<OPIFont> {
 

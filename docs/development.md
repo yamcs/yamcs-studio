@@ -7,7 +7,7 @@ Yamcs Studio is an Eclipse RCP application and uses [Eclipse Tycho](https://www.
 
 ## Prerequisites
 
-You must have 64-bit OpenJDK 11 or above, Apache Maven 3.1 or above, and Git installed on your machine.
+You must have 64-bit OpenJDK 17 or above, Apache Maven 3.1 or above, and Git installed on your machine.
 
 Further your machine needs access to Internet, at least when building the first time. Your local Maven cache (`~/.m2`) will be primed with build and runtime dependencies.
 

@@ -8,7 +8,7 @@ Bundle-Activator: org.csstudio.opibuilder.OPIBuilderPlugin
 Bundle-Vendor: Space Applications Services
 Bundle-Localization: plugin
 Require-Bundle: com.google.guava,
- org.apache.commons.lang3,
+ org.apache.commons.lang,
  org.eclipse.core.filesystem,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
@@ -26,7 +26,7 @@ Require-Bundle: com.google.guava,
  org.eclipse.e4.ui.workbench,
  org.eclipse.nebula.visualization.xygraph,
  org.eclipse.swt,
- org.jdom,
+ org.jdom2,
  org.python.jython,
  org.yamcs.studio.languages,
  org.yamcs.p2.batik,
@@ -75,5 +75,5 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.swt.widgets.symbol.util,
  org.csstudio.swt.widgets.util,
  org.yamcs.studio.script
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.csstudio.opibuilder

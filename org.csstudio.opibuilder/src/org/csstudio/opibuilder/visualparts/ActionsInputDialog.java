@@ -438,7 +438,7 @@ public class ActionsInputDialog extends TrayDialog {
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof AbstractWidgetProperty[]) {
                 var oldProperties = (AbstractWidgetProperty[]) inputElement;
-                var newPropertiesList = new ArrayList<AbstractWidgetProperty>();
+                var newPropertiesList = new ArrayList<AbstractWidgetProperty<?>>();
                 for (var property : oldProperties) {
                     if (property.isVisibleInPropSheet()) {
                         newPropertiesList.add(property);

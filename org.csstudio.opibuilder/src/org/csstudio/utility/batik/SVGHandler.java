@@ -46,7 +46,7 @@ import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
 import org.apache.batik.gvt.renderer.ImageRenderer;
 import org.apache.batik.gvt.renderer.ImageRendererFactory;
 import org.apache.batik.util.SVGConstants;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.utility.batik.util.ICSSHandler;
 import org.csstudio.utility.batik.util.SVGAnimateElementValuesHandler;

@@ -28,7 +28,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  */
 public abstract class AbstractWidgetAction implements IAdaptable {
 
-    private Map<String, AbstractWidgetProperty> propertyMap;
+    private Map<String, AbstractWidgetProperty<?>> propertyMap;
 
     private boolean enabled = true;
 
@@ -47,7 +47,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
      * @param property
      *            the property to be added.
      */
-    public void addProperty(AbstractWidgetProperty property) {
+    public void addProperty(AbstractWidgetProperty<?> property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -71,7 +71,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     public abstract ActionType getActionType();
 
-    public AbstractWidgetProperty[] getAllProperties() {
+    public AbstractWidgetProperty<?>[] getAllProperties() {
         var propArray = new AbstractWidgetProperty[propertyMap.size()];
         var i = 0;
         for (var p : propertyMap.values()) {
@@ -131,7 +131,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
         return propertyMap.keySet();
     }
 
-    public AbstractWidgetProperty getProperty(String propId) {
+    public AbstractWidgetProperty<?> getProperty(String propId) {
         return propertyMap.get(propId);
     }
 

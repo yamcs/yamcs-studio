@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
@@ -440,27 +441,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
                         var ack = rec.getCommand().getQueuedAcknowledgment();
-                        if (ack == null) {
-                            return grayBubble;
-                        } else {
-                            switch (ack.getStatus()) {
-                            case "NEW":
-                                return grayBubble;
-                            case "OK":
-                                return greenBubble;
-                            case "PENDING":
-                                return waitingImage;
-                            case "NOK":
-                                return redBubble;
-                            case "DISABLED":
-                                return grayBubble;
-                            case "CANCELLED":
-                                return grayBubble;
-                            default:
-                                log.warning("Unexpected ack state " + ack.getStatus());
-                                return grayBubble;
-                            }
-                        }
+                        return getAckImage(ack);
                     }
 
                     @Override
@@ -482,23 +463,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
                         var ack = rec.getCommand().getReleasedAcknowledgment();
-                        if (ack == null) {
-                            return grayBubble;
-                        } else {
-                            switch (ack.getStatus()) {
-                            case "NEW":
-                                return grayBubble;
-                            case "OK":
-                                return greenBubble;
-                            case "PENDING":
-                                return waitingImage;
-                            case "NOK":
-                                return redBubble;
-                            default:
-                                log.warning("Unexpected ack state " + ack.getStatus());
-                                return grayBubble;
-                            }
-                        }
+                        return getAckImage(ack);
                     }
 
                     @Override
@@ -520,23 +485,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     public Image getImage(Object element) {
                         var rec = (CommandHistoryRecord) element;
                         var ack = rec.getCommand().getSentAcknowledgment();
-                        if (ack == null) {
-                            return grayBubble;
-                        } else {
-                            switch (ack.getStatus()) {
-                            case "NEW":
-                                return grayBubble;
-                            case "OK":
-                                return greenBubble;
-                            case "PENDING":
-                                return waitingImage;
-                            case "NOK":
-                                return redBubble;
-                            default:
-                                log.warning("Unexpected ack state " + ack.getStatus());
-                                return grayBubble;
-                            }
-                        }
+                        return getAckImage(ack);
                     }
 
                     @Override
@@ -559,23 +508,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                         public Image getImage(Object element) {
                             var rec = (CommandHistoryRecord) element;
                             var ack = rec.getCommand().getAcknowledgment(def.name);
-                            if (ack == null) {
-                                return grayBubble;
-                            } else {
-                                switch (ack.getStatus()) {
-                                case "NEW":
-                                    return grayBubble;
-                                case "OK":
-                                    return greenBubble;
-                                case "PENDING":
-                                    return waitingImage;
-                                case "NOK":
-                                    return redBubble;
-                                default:
-                                    log.warning("Unexpected ack state " + ack.getStatus());
-                                    return grayBubble;
-                                }
-                            }
+                            return getAckImage(ack);
                         }
 
                         @Override
@@ -614,6 +547,31 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         tableViewer.refresh(); // !! Ensures table renders correctly for old data when adding a new column
 
         saveColumnState();
+    }
+
+    private Image getAckImage(Acknowledgment ack) {
+        if (ack == null) {
+            return grayBubble;
+        } else {
+            switch (ack.getStatus()) {
+            case "NEW":
+                return grayBubble;
+            case "OK":
+                return greenBubble;
+            case "PENDING":
+                return waitingImage;
+            case "SCHEDULED":
+            case "DISABLED":
+            case "CANCELLED":
+                return grayBubble;
+            case "TIMEOUT":
+            case "NOK":
+                return redBubble;
+            default:
+                log.fine("Unexpected ack state " + ack.getStatus());
+                return redBubble;
+            }
+        }
     }
 
     private void saveColumnState() {

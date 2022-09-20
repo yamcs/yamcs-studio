@@ -14,7 +14,7 @@ import org.csstudio.opibuilder.properties.support.StringTablePropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.ui.util.swt.stringtable.StringTableEditor.CellEditorType;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * The property for string table.

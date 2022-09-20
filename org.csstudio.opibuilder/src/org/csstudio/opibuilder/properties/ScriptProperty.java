@@ -18,8 +18,8 @@ import org.csstudio.opibuilder.script.ScriptsInput;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.jdom.CDATA;
-import org.jdom.Element;
+import org.jdom2.CDATA;
+import org.jdom2.Element;
 
 /**
  * The property for script.

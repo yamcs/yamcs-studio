@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * Action for executing a display.

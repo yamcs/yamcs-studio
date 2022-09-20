@@ -23,7 +23,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.jdom.Verifier;
+import org.jdom2.Verifier;
 
 /**
  * The preference page for OPIBuilder

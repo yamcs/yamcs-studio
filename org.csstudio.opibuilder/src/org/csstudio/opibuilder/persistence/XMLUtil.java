@@ -31,7 +31,6 @@ import org.csstudio.opibuilder.model.AbstractLinkingContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.persistence.LineAwareXMLParser.LineAwareElement;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacroUtil;
@@ -41,10 +40,11 @@ import org.csstudio.opibuilder.util.WidgetsService;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.osgi.framework.Version;
 
 /**
@@ -436,10 +436,6 @@ public class XMLUtil {
         var versionOnFile = element.getAttributeValue(XMLATTR_VERSION);
         model.setVersionOnFile(Version.parseVersion(versionOnFile));
 
-        if (element instanceof LineAwareElement) {
-            model.setLineNumber(((LineAwareElement) element).getLineNumber());
-        }
-
         var children = element.getChildren();
         var iterator = children.iterator();
         var propIdSet = model.getAllPropertyIDs();
@@ -665,7 +661,7 @@ public class XMLUtil {
     }
 
     private static Element inputStreamToXML(InputStream stream) throws JDOMException, IOException {
-        var saxBuilder = LineAwareXMLParser.createBuilder();
+        var saxBuilder = new SAXBuilder();
         var doc = saxBuilder.build(stream);
         var root = doc.getRootElement();
         return root;
