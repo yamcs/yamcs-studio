@@ -19,7 +19,7 @@ See https://yamcs.org
       <vmArgs>-Xmx2048m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
--Dosgi.requiredJavaVersion=11
+-Dosgi.requiredJavaVersion=17
 -Dorg.eclipse.update.reconcile=false
 --add-modules=ALL-SYSTEM
       </vmArgs>
