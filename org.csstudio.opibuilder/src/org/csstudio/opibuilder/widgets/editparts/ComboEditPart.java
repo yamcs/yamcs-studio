@@ -19,7 +19,6 @@ import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
 import static org.csstudio.opibuilder.widgets.model.ComboModel.PROP_ITEMS;
 import static org.csstudio.opibuilder.widgets.model.ComboModel.PROP_ITEMS_FROM_PV;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
@@ -35,6 +34,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VDouble;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VType;
 
@@ -145,13 +145,36 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue != null) {
                 var stringValue = VTypeHelper.getString((VType) newValue);
-                if (Arrays.asList(combo.getItems()).contains(stringValue)) {
-                    combo.setText(stringValue);
+
+                String matchingItem = null;
+                for (var item : combo.getItems()) {
+                    if (item.equals(stringValue)) {
+                        matchingItem = item;
+                        break;
+                    }
+
+                    // Especially when connected to local PV without type information,
+                    // numeric combo items are converted to VDouble-type, which
+                    // may not necessarily match the value returned by
+                    // VTypeHelper.getString (for example: 200 becomes 200.0)
+                    // Therefore, we try to match back the item by comparing
+                    // by double value. (else the Combo would appear to lose its value)
+                    if (newValue instanceof VDouble d) {
+                        try {
+                            var itemValue = Double.valueOf(item);
+                            if (itemValue.equals(VTypeHelper.getDouble(d))) {
+                                matchingItem = item;
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+                }
+
+                if (matchingItem != null) {
+                    combo.setText(matchingItem);
                 } else {
                     combo.deselectAll();
-                    //
-                    // if(getWidgetModel().isBorderAlarmSensitve())
-                    // autoSizeWidget((ComboFigure) refreshableFigure);
                 }
             }
 
