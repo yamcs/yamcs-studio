@@ -188,7 +188,7 @@
                     "name": "punctuation.definition.string.begin.xml"
                 }
             },
-            "end": "]]>",
+            "end": "\\]\\]>",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.definition.string.end.xml"

@@ -21,9 +21,23 @@
             priority="high"/>
       <content-type
             base-type="org.yamcs.studio.contentTypes.parent"
+            file-extensions="java"
+            id="org.yamcs.studio.contentTypes.java"
+            name="Java"
+            priority="high">
+      </content-type>
+      <content-type
+            base-type="org.yamcs.studio.contentTypes.parent"
             file-extensions="js"
             id="org.yamcs.studio.contentTypes.javascript"
             name="JavaScript"
+            priority="high">
+      </content-type>
+      <content-type
+            base-type="org.yamcs.studio.contentTypes.parent"
+            file-extensions="json"
+            id="org.yamcs.studio.contentTypes.json"
+            name="JSON"
             priority="high">
       </content-type>
       <content-type
@@ -53,8 +67,16 @@
    <extension
          point="org.eclipse.tm4e.registry.grammars">
       <grammar
+            scopeName="source.java"
+            path="grammars/Java.tmLanguage.json">
+      </grammar>
+      <grammar
             scopeName="source.js"
             path="grammars/JavaScript.tmLanguage.json">
+      </grammar>
+      <grammar
+            scopeName="source.json"
+            path="grammars/JSON.tmLanguage.json">
       </grammar>
       <grammar
             scopeName="source.py"
@@ -65,8 +87,16 @@
             path="grammars/XML.tmLanguage.json">
       </grammar>
       <scopeNameContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.java"
+            scopeName="source.java">
+      </scopeNameContentTypeBinding>
+      <scopeNameContentTypeBinding
             contentTypeId="org.yamcs.studio.contentTypes.javascript"
             scopeName="source.js">
+      </scopeNameContentTypeBinding>
+      <scopeNameContentTypeBinding
+            contentTypeId="org.yamcs.studio.contentTypes.json"
+            scopeName="source.json">
       </scopeNameContentTypeBinding>
       <scopeNameContentTypeBinding
             contentTypeId="org.yamcs.studio.contentTypes.python"
@@ -81,8 +111,16 @@
    <extension
          point="org.eclipse.tm4e.languageconfiguration.languageConfigurations">
       <languageConfiguration
+            contentTypeId="org.yamcs.studio.contentTypes.java"
+            path="language-configurations/java/language-configuration.json">
+      </languageConfiguration>
+      <languageConfiguration
             contentTypeId="org.yamcs.studio.contentTypes.javascript"
             path="language-configurations/javascript/language-configuration.json">
+      </languageConfiguration>
+      <languageConfiguration
+            contentTypeId="org.yamcs.studio.contentTypes.json"
+            path="language-configurations/json/language-configuration.json">
       </languageConfiguration>
       <languageConfiguration
             contentTypeId="org.yamcs.studio.contentTypes.python"
@@ -95,7 +133,9 @@
    </extension>
    
    <extension point="org.eclipse.ui.genericeditor.icons">
+     <icon contentType="org.yamcs.studio.contentTypes.java" icon="icons/java.png" />
      <icon contentType="org.yamcs.studio.contentTypes.javascript" icon="icons/js.png" />
+     <icon contentType="org.yamcs.studio.contentTypes.json" icon="icons/json.png" />
      <icon contentType="org.yamcs.studio.contentTypes.python" icon="icons/py.gif" />
      <icon contentType="org.yamcs.studio.contentTypes.xml" icon="icons/xml.gif" />
    </extension>
