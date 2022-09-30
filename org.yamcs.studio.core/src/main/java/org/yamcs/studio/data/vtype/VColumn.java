@@ -115,7 +115,7 @@ public class VColumn {
                 if (!(columns.get(tableIndex).getData() instanceof ListNumber)) {
                     return Double.NaN;
                 }
-                @SuppressWarnings("unchecked")
+
                 var values = (ListNumber) columns.get(tableIndex).getData();
                 if (rowIndex < values.size()) {
                     return values.getDouble(rowIndex);

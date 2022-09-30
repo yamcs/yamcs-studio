@@ -27,6 +27,7 @@ public class TextUpdateModel extends LabelModel {
     public static final String PROP_PRECISION = "precision";
     public static final String PROP_PRECISION_FROM_DB = "precision_from_pv";
     public static final String PROP_SHOW_UNITS = "show_units";
+    public static final String PROP_SHOW_LOHI = "show_lohi";
     public static final String PROP_ROTATION = "rotation_angle";
 
     public TextUpdateModel() {
@@ -55,6 +56,7 @@ public class TextUpdateModel extends LabelModel {
         addProperty(new IntegerProperty(PROP_PRECISION, "Precision", category, 0, 0, 100));
         addProperty(new BooleanProperty(PROP_PRECISION_FROM_DB, "Precision from PV", category, true));
         addProperty(new BooleanProperty(PROP_SHOW_UNITS, "Show Units", category, true));
+        addProperty(new BooleanProperty(PROP_SHOW_LOHI, "Show Low/High", category, true));
         addProperty(new DoubleProperty(PROP_ROTATION, "Rotation Angle", WidgetPropertyCategory.Display, 0, 0, 360));
         setPropertyValue(PROP_TEXT, "######");
         setPropertyValue(PROP_ALIGN_H, 0);
@@ -76,6 +78,10 @@ public class TextUpdateModel extends LabelModel {
 
     public boolean isShowUnits() {
         return (Boolean) getCastedPropertyValue(PROP_SHOW_UNITS);
+    }
+
+    public boolean isShowLoHi() {
+        return (Boolean) getCastedPropertyValue(PROP_SHOW_LOHI);
     }
 
     /**

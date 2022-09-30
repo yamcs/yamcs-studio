@@ -24,6 +24,7 @@ import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_FORMAT_
 import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_PRECISION;
 import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_PRECISION_FROM_DB;
 import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_ROTATION;
+import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_SHOW_LOHI;
 import static org.csstudio.opibuilder.widgets.model.TextUpdateModel.PROP_SHOW_UNITS;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
@@ -58,11 +59,11 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     private boolean isAutoSize;
     private boolean isPrecisionFromDB;
     private boolean isShowUnits;
+    private boolean isShowLoHi;
     private int precision;
 
     @Override
     protected IFigure doCreateFigure() {
-
         initFields();
         var labelFigure = createTextFigure();
         initTextFigure(labelFigure);
@@ -85,6 +86,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         isAutoSize = widgetModel.isAutoSize();
         isPrecisionFromDB = widgetModel.isPrecisionFromDB();
         isShowUnits = widgetModel.isShowUnits();
+        isShowLoHi = widgetModel.isShowLoHi();
         precision = widgetModel.getPrecision();
     }
 
@@ -214,6 +216,12 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
             return true;
         });
 
+        setPropertyChangeHandler(PROP_SHOW_LOHI, (oldValue, newValue, figure) -> {
+            isShowLoHi = (Boolean) newValue;
+            formatValue(newValue, PROP_SHOW_LOHI);
+            return true;
+        });
+
         setPropertyChangeHandler(PROP_ROTATION, (oldValue, newValue, figure) -> {
             if (figure instanceof TextFigure) {
                 ((TextFigure) figure).setRotate((Double) newValue);
@@ -280,6 +288,10 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
             if (units != null && units.trim().length() > 0) {
                 text = text + " " + units;
             }
+        }
+
+        if (isShowLoHi) {
+            text = text += VTypeHelper.getLoHiSuffix(value);
         }
 
         // synchronize the property value without fire listeners.

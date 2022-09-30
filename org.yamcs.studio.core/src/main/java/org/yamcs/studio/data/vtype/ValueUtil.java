@@ -224,7 +224,7 @@ public class ValueUtil {
         }
 
         if (obj instanceof MultiScalar) {
-            var values = ((MultiScalar) obj).getValues();
+            var values = ((MultiScalar<?>) obj).getValues();
             if (!values.isEmpty()) {
                 return numericValueOf(values.get(0));
             }

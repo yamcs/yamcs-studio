@@ -23,4 +23,5 @@ public interface Alarm {
      * A brief text representation of the highest currently active alarm. Never null.
      */
     String getAlarmName();
+
 }

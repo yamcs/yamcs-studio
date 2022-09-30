@@ -579,6 +579,7 @@ public class ValueFactory {
      *             {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display) }
      */
     @Deprecated
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static VType wrapValue(Object value, Alarm alarm) {
         if (value instanceof Number) {
             // Special support for numbers
@@ -599,7 +600,6 @@ public class ValueFactory {
                 }
             }
             if (matches) {
-                @SuppressWarnings("unchecked")
                 var newList = list;
                 return newVStringArray(Collections.unmodifiableList(newList), alarm, timeNow());
             } else {

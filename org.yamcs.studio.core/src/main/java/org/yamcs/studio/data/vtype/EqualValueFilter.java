@@ -53,9 +53,10 @@ public class EqualValueFilter {
                 }
             }
         } else {
-            var value = ((List) tables.get(0).getColumnData(columnIndexes[0])).get(rowIndexes[0]);
+            var value = ((List<?>) tables.get(0).getColumnData(columnIndexes[0])).get(rowIndexes[0]);
             for (var i = 1; i < rowIndexes.length; i++) {
-                if (!Objects.equals(value, ((List) tables.get(i).getColumnData(columnIndexes[i])).get(rowIndexes[i]))) {
+                if (!Objects.equals(value,
+                        ((List<?>) tables.get(i).getColumnData(columnIndexes[i])).get(rowIndexes[i]))) {
                     return false;
                 }
             }

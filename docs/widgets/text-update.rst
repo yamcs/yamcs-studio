@@ -68,6 +68,7 @@ Text (``text``)
 .. include:: _props/format_type.rst
 .. include:: _props/precision.rst
 .. include:: _props/precision_from_pv.rst
+.. include:: _props/show_lohi.rst
 .. include:: _props/show_units.rst
 
 

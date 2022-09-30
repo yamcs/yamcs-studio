@@ -31,7 +31,7 @@ public class IVTable implements VTable {
 
     private static int getDataSize(Object data) {
         if (data instanceof List) {
-            return ((List) data).size();
+            return ((List<?>) data).size();
         } else if (data instanceof ListNumber) {
             return ((ListNumber) data).size();
         }

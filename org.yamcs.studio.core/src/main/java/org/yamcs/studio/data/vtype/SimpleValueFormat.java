@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * Default implementation for formatting.
  */
+@SuppressWarnings("serial")
 public class SimpleValueFormat extends ValueFormat {
 
     private int maxElements;

@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.data;
 
+import static java.lang.Double.isNaN;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Instant;
@@ -121,6 +123,27 @@ public class VTypeHelper {
         var alarmOf = ValueUtil.alarmOf(obj);
         if (alarmOf != null) {
             return alarmOf.getAlarmName();
+        }
+        return "";
+    }
+
+    public static String getLoHiSuffix(VType obj) {
+        var displayOf = ValueUtil.displayOf(obj);
+        var numberValue = getNumber(obj);
+        if (displayOf != null && numberValue != null) {
+            if (!isNaN(displayOf.getLowerWarningLimit())
+                    && numberValue.doubleValue() < displayOf.getLowerWarningLimit()) {
+                return " ↓";
+            } else if (!isNaN(displayOf.getLowerAlarmLimit())
+                    && numberValue.doubleValue() < displayOf.getLowerAlarmLimit()) {
+                return " ↓";
+            } else if (!isNaN(displayOf.getUpperWarningLimit())
+                    && numberValue.doubleValue() > displayOf.getUpperWarningLimit()) {
+                return " ↑";
+            } else if (!isNaN(displayOf.getUpperAlarmLimit())
+                    && numberValue.doubleValue() > displayOf.getUpperAlarmLimit()) {
+                return " ↑";
+            }
         }
         return "";
     }
