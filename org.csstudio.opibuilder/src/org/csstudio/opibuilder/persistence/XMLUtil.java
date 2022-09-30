@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2010, 2021 Oak Ridge National Laboratory and others
+ * Copyright (c) 2022 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -121,12 +122,8 @@ public class XMLUtil {
      * @return the XMLOutputter
      */
     private static XMLOutputter getXMLOutputter(boolean prettyFormat) {
-        var format = Format.getRawFormat();
-        if (prettyFormat) {
-            format.setIndent("  ");
-        }
-        // Always use Unix-style line endings.
-        format.setLineSeparator("\n");
+        var format = prettyFormat ? Format.getPrettyFormat() : Format.getRawFormat();
+        format.setLineSeparator("\n"); // Always use Unix-style line endings.
         var xmlOutputter = new XMLOutputter();
         xmlOutputter.setFormat(format);
         return xmlOutputter;
@@ -221,31 +218,9 @@ public class XMLUtil {
 
     private static void fillDisplayModelFromInputStreamSub(InputStream inputStream, DisplayModel displayModel,
             Display display, List<IPath> trace, MacrosInput macrosInput_) throws Exception {
-
-        if (display == null) {
-            display = Display.getCurrent();
-        }
-        var opiPath = displayModel.getOpiFilePath();
-
         var root = inputStreamToXML(inputStream);
         if (root != null) {
             XMLElementToWidgetSub(root, displayModel, trace, macrosInput_);
-
-            // check version
-            if (false && compareVersion(displayModel.getBOYVersion(),
-                    OPIBuilderPlugin.getDefault().getBundle().getVersion()) > 0) {
-                var message = displayModel.getOpiFilePath() == null ? "This OPI"
-                        : displayModel.getOpiFilePath().lastSegment() + " was created in a newer version of BOY ("
-                                + displayModel.getBOYVersion().toString() + "). It may not function properly! "
-                                + "Please update your BOY" + " ("
-                                + OPIBuilderPlugin.getDefault().getBundle().getVersion() + ") to the latest version.";
-                if (display == null) {
-                    display = Display.getDefault();
-                }
-                if (display != null) {
-                    display.asyncExec(() -> OPIBuilderPlugin.getLogger().log(Level.WARNING, message));
-                }
-            }
         }
         inputStream.close();
     }
@@ -325,7 +300,6 @@ public class XMLUtil {
      *            instead of creating a new one. If this is null, a new one will be created.
      * @throws Exception
      */
-    @SuppressWarnings("rawtypes")
     public static AbstractWidgetModel fillWidgets(Element element, DisplayModel displayModel) throws Exception {
         if (element == null) {
             return null;
@@ -410,7 +384,6 @@ public class XMLUtil {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static void fillConnections(Element element, DisplayModel displayModel) throws Exception {
         if (element.getName().equals(XMLTAG_CONNECTION)) {
             var result = new ConnectionModel(displayModel);
@@ -427,7 +400,6 @@ public class XMLUtil {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static void setPropertiesFromXML(Element element, AbstractWidgetModel model) {
         if (model == null || element == null) {
             return;
@@ -537,36 +509,6 @@ public class XMLUtil {
                 container.setDisplayModel(inside);
             }
         }
-    }
-
-    /**
-     * Compare version without comparing qualifier.
-     * 
-     * @param v1
-     * @param v2
-     * @return
-     */
-    private static int compareVersion(Version v1, Version v2) {
-        if (v2 == v1) {
-            return 0;
-        }
-
-        var result = v1.getMajor() - v2.getMajor();
-        if (result != 0) {
-            return result;
-        }
-
-        result = v1.getMinor() - v2.getMinor();
-        if (result != 0) {
-            return result;
-        }
-
-        result = v1.getMicro() - v2.getMicro();
-        if (result != 0) {
-            return result;
-        }
-
-        return 0;
     }
 
     /**
