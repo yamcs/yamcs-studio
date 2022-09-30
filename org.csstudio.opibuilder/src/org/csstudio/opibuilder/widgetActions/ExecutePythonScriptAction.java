@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
+import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
+import org.csstudio.opibuilder.properties.EmbeddedPythonScriptProperty;
+import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.script.JythonScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
@@ -45,6 +48,12 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
     @Override
     public ActionType getActionType() {
         return ActionType.EXECUTE_PYTHONSCRIPT;
+    }
+
+    @Override
+    protected AbstractWidgetProperty<?> createEmbeddedScriptProperty(String prop_id, String description,
+            WidgetPropertyCategory category, String defaultValue) {
+        return new EmbeddedPythonScriptProperty(prop_id, description, category, defaultValue);
     }
 
     @Override
@@ -86,7 +95,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             }
         }
 
-        Job job = new Job("Execute Python Script") {
+        var job = new Job("Execute Python Script") {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 var taskName = isEmbedded() ? "Execute Python Script" : "Connecting to " + getAbsolutePath();

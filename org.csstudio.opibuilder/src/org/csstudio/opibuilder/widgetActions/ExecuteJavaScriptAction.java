@@ -20,6 +20,9 @@ import javax.script.ScriptException;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
+import org.csstudio.opibuilder.properties.EmbeddedJavaScriptProperty;
+import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.script.JavaScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
@@ -34,15 +37,21 @@ import org.eclipse.core.runtime.jobs.Job;
 /**
  * The action executing javascript with the default javascript engine embedded in JDK.
  */
-class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
+public class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
 
     private ScriptEngine scriptEngine;
     private Bindings scriptScope;
     private CompiledScript script;
 
     @Override
-    protected String getFileExtension() {
-        return ScriptService.JS;
+    public ActionType getActionType() {
+        return ActionType.EXECUTE_JAVASCRIPT;
+    }
+
+    @Override
+    protected AbstractWidgetProperty<?> createEmbeddedScriptProperty(String prop_id, String description,
+            WidgetPropertyCategory category, String defaultValue) {
+        return new EmbeddedJavaScriptProperty(prop_id, description, category, defaultValue);
     }
 
     @Override
@@ -129,7 +138,7 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
     }
 
     @Override
-    public ActionType getActionType() {
-        return ActionType.EXECUTE_JAVASCRIPT;
+    protected String getFileExtension() {
+        return ScriptService.JS;
     }
 }

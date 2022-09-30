@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.BooleanProperty;
-import org.csstudio.opibuilder.properties.EmbeddedScriptProperty;
 import org.csstudio.opibuilder.properties.FilePathProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
@@ -38,7 +38,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { getFileExtension() }, false));
-        addProperty(new EmbeddedScriptProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, ""));
+        addProperty(createEmbeddedScriptProperty(PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic, ""));
         var embeddedProperty = new BooleanProperty(PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
         embeddedProperty.addPropertyChangeListener(evt -> {
             getProperty(PROP_PATH).setVisibleInPropSheet(!((Boolean) evt.getNewValue()));
@@ -63,6 +63,9 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     protected boolean isEmbedded() {
         return (Boolean) getPropertyValue(PROP_EMBEDDED);
     }
+
+    protected abstract AbstractWidgetProperty<?> createEmbeddedScriptProperty(String prop_id, String description,
+            WidgetPropertyCategory category, String defaultValue);
 
     protected String getScriptText() {
         return (String) getPropertyValue(PROP_SCRIPT_TEXT);

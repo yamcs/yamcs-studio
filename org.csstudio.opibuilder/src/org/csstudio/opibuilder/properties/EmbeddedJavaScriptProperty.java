@@ -15,9 +15,9 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 /**
  * The widget property for string. It also accept macro string $(macro).
  */
-public class EmbeddedScriptProperty extends StringProperty {
+public class EmbeddedJavaScriptProperty extends StringProperty {
 
-    public EmbeddedScriptProperty(String prop_id, String description, WidgetPropertyCategory category,
+    public EmbeddedJavaScriptProperty(String prop_id, String description, WidgetPropertyCategory category,
             String defaultValue) {
         super(prop_id, description, category, defaultValue, true, true);
     }
