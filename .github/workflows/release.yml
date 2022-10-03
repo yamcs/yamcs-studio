@@ -71,9 +71,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.zip
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.zip
-          asset_content_type: application/zip
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.tar.gz
+          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.tar.gz
+          asset_content_type: application/gzip
 
       - name: Upload macOS x64 asset
         uses: actions/upload-release-asset@v1.0.1
@@ -81,6 +81,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.zip
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.zip
-          asset_content_type: application/zip
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.tar.gz
+          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.tar.gz
+          asset_content_type: application/gzip

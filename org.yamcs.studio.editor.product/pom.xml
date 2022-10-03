@@ -41,9 +41,6 @@
               <archiveFileName>yamcs-studio-${project.version}</archiveFileName>
             </product>
           </products>
-          <formats>
-            <linux>tar.gz</linux>
-          </formats>
         </configuration>
         <executions>
           <execution>
