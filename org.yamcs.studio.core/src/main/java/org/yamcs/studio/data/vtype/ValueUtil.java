@@ -236,9 +236,9 @@ public class ValueUtil {
     /**
      * Converts a VImage to an AWT BufferedImage, so that it can be displayed. The content of the vImage buffer is
      * copied, so further changes to the VImage will not modify the BufferedImage.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param vImage
      *            the image to be converted
      * @return a new BufferedImage

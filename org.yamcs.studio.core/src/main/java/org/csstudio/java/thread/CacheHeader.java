@@ -24,7 +24,7 @@ public class CacheHeader {
 
     /**
      * Initialize
-     * 
+     *
      * @param seconds
      *            Seconds after which clients should no longer cache the HTML
      */

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.TreeItem;
 /**
  * A table column with SWT.CENTER and just an image, will not be centered on at least Windows platforms. Work around
  * this issue by custom drawing.
- * 
+ *
  * <p>
  * FDI's note: reconsider implementation. It causes the default selection color to be limited to the width of the actual
  * columns, rather than the full table width.

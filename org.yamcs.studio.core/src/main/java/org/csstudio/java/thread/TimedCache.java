@@ -36,7 +36,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
 
     /**
      * Initialize cache
-     * 
+     *
      * @param timeout_secs
      *            How long items are considered 'valid' in seconds
      */
@@ -51,7 +51,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
 
     /**
      * Get entry from cache
-     * 
+     *
      * @param key
      * @return Cached entry or <code>null</code> when not found or timed out
      */
@@ -75,7 +75,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
 
     /**
      * Get value of entry from cache
-     * 
+     *
      * @param key
      * @return Cached value or <code>null</code> when not found or timed out
      */
@@ -89,7 +89,7 @@ public class TimedCache<KEYTYPE, VALUETYPE> {
 
     /**
      * Add item to cache
-     * 
+     *
      * @param key
      * @param value
      * @return Cache entry

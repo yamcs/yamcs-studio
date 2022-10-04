@@ -86,7 +86,7 @@ public class SerializableItemTransfer extends ByteArrayTransfer {
 
     /**
      * Initialize
-     * 
+     *
      * @param className
      *            Type handled by this Transfer
      */

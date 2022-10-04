@@ -415,7 +415,7 @@ public class MeterWidget extends Canvas {
 
     /**
      * Create path for a section of the colored scale.
-     * 
+     *
      * @param device
      *            Device
      * @param x0
@@ -454,7 +454,7 @@ public class MeterWidget extends Canvas {
 
     /**
      * Add a clockwise arc from start to end angle to path.
-     * 
+     *
      * @param path
      * @param x0
      *            Center of arc

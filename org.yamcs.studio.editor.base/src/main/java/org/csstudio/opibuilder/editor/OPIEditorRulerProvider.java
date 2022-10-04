@@ -69,7 +69,7 @@ public final class OPIEditorRulerProvider extends RulerProvider {
 
     /**
      * Constructor.
-     * 
+     *
      * @param ruler
      *            The RulerModel fore this provider
      */

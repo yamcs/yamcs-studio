@@ -506,7 +506,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     /**
      * Obtain image descriptor for image in plugin
-     * 
+     *
      * @param path
      *            Path to image within plugin
      * @return {@link ImageDescriptor}

@@ -76,7 +76,7 @@ public enum VImageDataType {
 
     /**
      * Is this an unsigned integer. true if ubyte, ushort, uint, or ulong.
-     * 
+     *
      * @return true if it is an unsigned integer type
      */
     public boolean isUInteger() {
@@ -88,7 +88,7 @@ public enum VImageDataType {
 
     /**
      * Is this a Java numeric type?
-     * 
+     *
      * @return true if the type is a Java numeric type. The numeric types are byte, short, int, long, float, and double.
      */
     public boolean isNumeric() {
@@ -100,7 +100,7 @@ public enum VImageDataType {
 
     /**
      * Is this a Java primitive type?
-     * 
+     *
      * @return true if the type is a Java primitive type. The numeric types and boolean are primitive types.
      */
     public boolean isPrimitive() {
@@ -115,7 +115,7 @@ public enum VImageDataType {
 
     /**
      * Get the VImageDataType for a string defining the type.
-     * 
+     *
      * @param type
      *            a character string defining the type
      * @return the VImageDataType or null if an illegal type

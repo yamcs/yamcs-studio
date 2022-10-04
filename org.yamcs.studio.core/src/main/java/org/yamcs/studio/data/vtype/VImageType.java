@@ -75,38 +75,38 @@ public enum VImageType {
     TYPE_BYTE_INDEXED,
     /**
      * Represents an image with 8-bit RGBA color components packed into integer pixels.
-     * 
+     *
      */
     TYPE_INT_ARGB,
     /**
      * Represents an image with 8-bit RGBA color components packed into integer pixels.
-     * 
+     *
      */
     TYPE_INT_ARGB_PRE,
     /**
      * Represents an image with 8-bit RGB color components, corresponding to a Windows- or Solaris- style BGR color
      * model, with the colors Blue, Green, and Red packed into integer pixels.
-     * 
+     *
      */
     TYPE_INT_BGR,
     /**
      * Represents an image with 8-bit RGB color components packed into integer pixels.
-     * 
+     *
      */
     TYPE_INT_RGB,
     /**
      * Represents an image with 5-5-5 RGB color components (5-bits red, 5-bits green, 5-bits blue) with no alpha.
-     * 
+     *
      */
     TYPE_USHORT_555_RGB,
     /**
      * Represents an image with 5-6-5 RGB color components (5-bits red, 6-bits green, 5-bits blue) with no alpha.
-     * 
+     *
      */
     TYPE_USHORT_565_RGB,
     /**
      * Represents an unsigned short grayscale image, non-indexed).
-     * 
+     *
      */
     TYPE_USHORT_GRAY
 }

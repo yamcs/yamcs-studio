@@ -114,7 +114,7 @@ public class VTypeHelper {
 
     /**
      * Extract the alarm name from the VType obj.
-     * 
+     *
      * @param obj
      *            the VType object.
      * @return the alarm name or empty if there is no alarm info from the object.
@@ -150,7 +150,7 @@ public class VTypeHelper {
 
     /**
      * Extract the {@link AlarmSeverity} from the VType obj.
-     * 
+     *
      * @param obj
      *            the VType object.
      * @return the alarm severity or null if there is no alarm info from the object.
@@ -226,7 +226,7 @@ public class VTypeHelper {
 
     /**
      * Extract the display information from the VType obj.
-     * 
+     *
      * @param obj
      *            the VType object.
      * @return the display information or null if there is no display info from the object.
@@ -422,7 +422,7 @@ public class VTypeHelper {
 
     /**
      * Get String from a VType value.
-     * 
+     *
      * @param obj
      *            the value
      * @return the String from the VType value.
@@ -433,7 +433,7 @@ public class VTypeHelper {
 
     /**
      * Extract the Timestamp from the VType obj.
-     * 
+     *
      * @param obj
      *            the VType object.
      * @return the time or null if there is no time info in the object.
@@ -449,7 +449,7 @@ public class VTypeHelper {
     /**
      * Get wrapped array in the VNumberArray object. The wrapped array could be double[], float[], int[], long[],
      * short[], byte[] etc.
-     * 
+     *
      * @param obj
      *            the {@link VType} object.
      * @return the wrapped array or null if no array is wrapped in the object.
@@ -463,7 +463,7 @@ public class VTypeHelper {
 
     /**
      * Is an object primary array
-     * 
+     *
      * @param array
      *            the object
      * @return true if it is a primary type array, such as byte[], int[], double[] etc.

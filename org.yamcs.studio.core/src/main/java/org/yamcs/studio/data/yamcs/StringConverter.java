@@ -114,7 +114,7 @@ public class StringConverter {
     /**
      * Convert a hex string into a byte array. If the string has an odd number of hex digits, it is padded with 0 at the
      * <b>beginning</b>.
-     * 
+     *
      * @param s
      *            - string to be converted
      * @return binary array representation of the hex string

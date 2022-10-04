@@ -70,7 +70,7 @@ public final class ResourceUtil {
 
     /**
      * Creates a new Folder in the parentContainer.
-     * 
+     *
      * @param parentContainer
      *            The IContainer, where the new folder is built in
      * @param folderName
@@ -97,7 +97,7 @@ public final class ResourceUtil {
 
     /**
      * Creates a new Project.
-     * 
+     *
      * @param projectName
      *            The name of the project
      * @return int The result-status

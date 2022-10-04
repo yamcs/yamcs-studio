@@ -56,7 +56,7 @@ public class ConsoleViewHandler extends Handler {
      * <p>
      * Only the first call has an effect. Subsequent calls as they can happen when opening multiple windows of the same
      * Eclipse instance will have no effect.
-     * 
+     *
      * @return
      */
     public static synchronized ConsoleViewHandler install() {

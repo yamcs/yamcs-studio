@@ -24,7 +24,7 @@ public class EmptyEditorInput implements IEditorInput {
 
     /**
      * Initialize
-     * 
+     *
      * @param icon
      *            Desired icon
      */

@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * <p>
  * As an example, assume a TableViewer or TreeViewer where the input contains Serializable objects like ProcessVariable.
  * This would allow dragging the first of the currently selected elements:
- * 
+ *
  * <pre>
  * ...Viewer viewer = ...
  * new ControlSystemDragSource(viewer.getControl())
@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * <p>
  * In principle this would allow dagging any number of selected PVs out of the viewer:
- * 
+ *
  * <pre>
  * new ControlSystemDragSource(viewer.getControl()) {
  *     public Object getSelection() {
@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Control;
  *
  * <p>
  * .. but note that it will fail. The data needs to be serialized as the actual array type, not an Object array:
- * 
+ *
  * <pre>
  * new ControlSystemDragSource(viewer.getControl()) {
  *     public Object getSelection() {
@@ -81,7 +81,7 @@ abstract public class ControlSystemDragSource {
 
     /**
      * Initialize 'drag' source
-     * 
+     *
      * @param control
      *            Control from which the selection may be dragged
      */

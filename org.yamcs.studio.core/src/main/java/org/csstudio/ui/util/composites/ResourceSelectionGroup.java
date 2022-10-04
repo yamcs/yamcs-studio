@@ -64,7 +64,7 @@ public final class ResourceSelectionGroup extends Composite {
 
         /**
          * Constructor.
-         * 
+         *
          * @param shell
          *            The Shell for this Action
          */
@@ -391,7 +391,7 @@ public final class ResourceSelectionGroup extends Composite {
 
     /**
      * Sets the first Element of the TreeViewer as selected Item.
-     * 
+     *
      * @param viewer
      *            The TreeViewer, which selection should be set
      */
@@ -422,7 +422,7 @@ public final class ResourceSelectionGroup extends Composite {
 
     /**
      * Adds a PopupMenu to the given TreeViewer.
-     * 
+     *
      * @param viewer
      *            The TreeViewer, where the PopupMenu is added
      */

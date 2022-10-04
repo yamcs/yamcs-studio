@@ -103,7 +103,7 @@ class DrillDownComposite extends Composite {
 
     /**
      * Delivers the ToolBarManager of this DrillDownComposite.
-     * 
+     *
      * @return ToolBarManager The ToolbarManager of this DrillDownComposite
      */
     public final ToolBarManager getToolBarManager() {

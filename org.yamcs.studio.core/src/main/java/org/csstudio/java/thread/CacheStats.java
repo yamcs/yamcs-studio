@@ -17,7 +17,7 @@ public class CacheStats {
 
     /**
      * Initialize
-     * 
+     *
      * @param hits
      * @param misses
      * @param expirations

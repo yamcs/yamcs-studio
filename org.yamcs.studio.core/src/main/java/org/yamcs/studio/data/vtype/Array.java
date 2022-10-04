@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * The data is stored in a linear structure. The sizes array gives the dimensionality and size for each dimension. The
  * ordering defined by the sizes is {@code [..., zSize, ySize, xSize]}. Typical iteration is: <blockquote>
- * 
+ *
  * <pre>
  * for (...) {
  *   for (var z = 0; z &lt; zSize; z++) {
@@ -28,7 +28,7 @@ import java.util.List;
  *   }
  * }
  * </pre>
- * 
+ *
  * </blockquote>
  */
 public interface Array {

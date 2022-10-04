@@ -137,7 +137,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
 
     /**
      * check if there is error in workspace input
-     * 
+     *
      * @return true if there is no error
      */
     protected boolean checkWorkspace() {
@@ -184,7 +184,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
 
     /**
      * Check if directory or any subdirectory contains a workspace
-     * 
+     *
      * @param dir
      *            Directory where to start
      * @return Name of workspace in subdir or <code>null</code> if none found

@@ -79,18 +79,18 @@ public class CommandHistorySorter extends ViewerComparator {
         if (settings == null) {
             return;
         }
-    
+
         for (var i = 0; i < priorities.length; i++) {
             settings.put("priority" + i, priorities[i]);
             settings.put("direction" + i, directions[i]);
         }
     }
-    
+
     public void restoreState(IDialogSettings settings) {
         if (settings == null) {
             return;
         }
-    
+
         try {
             for (var i = 0; i < priorities.length; i++) {
                 priorities[i] = settings.getInt("priority" + i);
@@ -100,7 +100,7 @@ public class CommandHistorySorter extends ViewerComparator {
             resetState();
         }
     }
-    
+
     public void resetState() {
         priorities = new int[DEFAULT_PRIORITIES.length];
         System.arraycopy(DEFAULT_PRIORITIES, 0, priorities, 0, priorities.length);

@@ -20,7 +20,7 @@ public class TimedCacheEntry<VALUETYPE> {
 
     /**
      * Initialize
-     * 
+     *
      * @param value
      *            Value of this entry
      * @param valid_seconds

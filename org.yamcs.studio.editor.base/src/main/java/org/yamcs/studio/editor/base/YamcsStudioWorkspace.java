@@ -20,7 +20,7 @@ public class YamcsStudioWorkspace {
     /*-
      * In PDE/UI the default generated launch configuration will have the -data attribute set.
      * When testing code changes use these Eclipse parameters in your launch configuration:
-     * 
+     *
      * - Start without support for a workspace: -data @none
      * - Start without specifying a default path: -data @noDefault
      * - Start with a preconfigured workspace: -data /some/workspace

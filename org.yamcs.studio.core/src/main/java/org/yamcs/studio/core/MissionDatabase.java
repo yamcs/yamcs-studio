@@ -142,7 +142,7 @@ public class MissionDatabase {
 
     /**
      * Splits a PV name into the actual parameter name, and the struct or array path within that parameter.
-     * 
+     *
      * For example: "/bla/bloe.f[3].heh" becomes { "/bla/bloe", ".f[3].heh" }
      */
     private static String[] removeArrayAndAggregateOffset(String name) {

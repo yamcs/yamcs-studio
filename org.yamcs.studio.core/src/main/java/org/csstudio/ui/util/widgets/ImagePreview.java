@@ -47,7 +47,7 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
 
     /**
      * Initialize empty
-     * 
+     *
      * @param parent
      *            Parent widget
      */
@@ -59,7 +59,7 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
 
     /**
      * Set image to display
-     * 
+     *
      * @param image_filename
      *            Full path to image file or <code>null</code> for no image
      */
@@ -77,7 +77,7 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
 
     /**
      * Set image to display
-     * 
+     *
      * @param image_stream
      *            Image stream
      */
@@ -97,7 +97,7 @@ public class ImagePreview extends Canvas implements DisposeListener, PaintListen
 
     /**
      * Set a message that is displayed on top of the image
-     * 
+     *
      * @param message
      *            Message to display or <code>null</code>
      */

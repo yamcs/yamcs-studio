@@ -158,7 +158,7 @@ public class StartEndRangeWidget extends Canvas {
 
     /**
      * Returns if the widget has a valid range set.
-     * 
+     *
      * @return
      */
     public boolean isRangeSet() {
@@ -192,7 +192,7 @@ public class StartEndRangeWidget extends Canvas {
 
     /**
      * set the minimum value of the selected range.
-     * 
+     *
      * @param selectedMin
      */
     public void setSelectedMin(double selectedMin) {

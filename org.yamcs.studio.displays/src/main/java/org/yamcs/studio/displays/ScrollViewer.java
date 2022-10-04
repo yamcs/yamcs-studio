@@ -76,7 +76,7 @@ public class ScrollViewer extends TableViewer {
     }
 
     /*private void addColumn(ParameterInfo info) {
-    
+
         ParameterCatalogue.getInstance().subscribeParameters(NamedObjectList.newBuilder()
                 .addList(info.getAlias(0)).build());
         TableViewerColumn column = new TableViewerColumn(this, SWT.RIGHT);
@@ -84,7 +84,7 @@ public class ScrollViewer extends TableViewer {
         column.getColumn().setToolTipText(info.getQualifiedName());
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(20));
         column.setLabelProvider(new ColumnLabelProvider() {
-    
+
             @Override
             public String getText(Object element) {
                 ParameterData data = (ParameterData) element;
@@ -94,7 +94,7 @@ public class ScrollViewer extends TableViewer {
                             return StringConverter.toString(value.getEngValue());
                         }
                         return StringConverter.toString(value.getRawValue());
-    
+
                     }
                 }
                 return "-";

@@ -32,7 +32,7 @@ abstract public class ControlSystemDropTarget {
 
     /**
      * Initialize 'drop' target
-     * 
+     *
      * @param control
      *            Control onto which items may be dropped
      * @param accepted
