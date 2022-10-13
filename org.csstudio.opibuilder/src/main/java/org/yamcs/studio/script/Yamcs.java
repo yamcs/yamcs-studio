@@ -85,7 +85,10 @@ public class Yamcs {
     	byte[] byteArray = text.getBytes();
     	
     	var storage = YamcsPlugin.getStorageClient();
-    	storage.uploadObject(targetObject, byteArray);
+    	storage.uploadObject(targetObject, byteArray).exceptionally((ex) -> {
+    		log.warning("Recovered from\"" + ex.getMessage() + "\"");
+    		return null;
+    	});
     }
     
 }
