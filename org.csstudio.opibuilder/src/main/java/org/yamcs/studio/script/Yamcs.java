@@ -12,6 +12,8 @@ package org.yamcs.studio.script;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -61,4 +63,29 @@ public class Yamcs {
         }
         builder.issue();
     }
+    
+    /**
+     * Write a text file to a bucket.
+     * 
+     * @param bucketPath
+     *            path to the bucket. 
+     * @param fileName
+     *            file name with extension.
+     * @param text
+     *            the text to be written to the file.
+     * Sample use:
+     *
+     * Yamcs.writeTextFileToBucket("ys://bucketName", "fileName.txt", "Hello!\n");
+     * 
+     */  
+    public static void writeTextFileToBucket(String bucketUrl, String fileName, String text) {
+    	var targetUrl = bucketUrl + "/" + fileName;
+    	ObjectId targetObject = ObjectId.parseURL(targetUrl);
+    	
+    	byte[] byteArray = text.getBytes();
+    	
+    	var storage = YamcsPlugin.getStorageClient();
+    	storage.uploadObject(targetObject, byteArray);
+    }
+    
 }
