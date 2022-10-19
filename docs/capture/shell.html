@@ -6,7 +6,7 @@
     <body>
         <div id="mydisplay" style="display: inline-block"></div>
         <script type="module">
-            import { Display } from "/node_modules/@yamcs/opi/dist/opi.js";
+            import { AlarmSeverity, Display } from "/node_modules/@yamcs/opi/dist/opi.js";
             const targetEl = document.getElementById("mydisplay");
             const display = new Display(targetEl);
             
@@ -29,14 +29,14 @@
                             values.set(pvName, {
                                 time: new Date(),
                                 value: 123,
-                                severity: 1, // MINOR
+                                severity: AlarmSeverity.MINOR,
                             });
                             break;
                         case "fake://major_alarm":
                             values.set(pvName, {
                                 time: new Date(),
                                 value: 123,
-                                severity: 2, // MAJOR
+                                severity: AlarmSeverity.MAJOR,
                             });
                             break;
                         }
