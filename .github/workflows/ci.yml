@@ -13,7 +13,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Build
-        run: mvn -B --no-transfer-progress -DskipTests -Pcheck-style package
+        run: mvn -B --no-transfer-progress -DskipTests package
 
   javadoc:
     name: Javadoc
