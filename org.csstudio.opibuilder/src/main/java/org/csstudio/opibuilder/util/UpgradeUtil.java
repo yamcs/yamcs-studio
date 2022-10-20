@@ -29,30 +29,6 @@ public final class UpgradeUtil {
      */
     public static String convertUtilityPVNameToPM(String pvName) {
 
-        // convert loc://pvName(fred) to loc://pvName("fred")
-        if (pvName.startsWith("loc://")) {
-            var value_start = getFirstIndexHelper(pvName, 0);
-            if (value_start > 0) {
-                if (!pvName.matches(".+[^$]\\(.*\\)")) {
-                    return pvName;
-                }
-                var value_end = pvName.lastIndexOf(')');
-                if (value_end > 0) {
-                    var value_text = pvName.substring(value_start + 1, value_end);
-                    if (!value_text.matches("\".*\"") && !value_text.matches(doubleArrayPattern)) { // if it is not
-                                                                                                    // number array
-                        try {
-                            Double.parseDouble(value_text);
-                        } catch (Exception e) {
-                            return pvName.substring(0, value_start + 1) + "\""
-                                    + pvName.substring(value_start + 1, value_end) + "\"" + pvName.substring(value_end);
-                        }
-                    }
-                }
-            }
-            return pvName;
-        }
-
         if (pvName.startsWith("const://")) {
             // Old format example:
             // const://$(DID)_name_$(DID)(123, 456, $(M), 789)")
