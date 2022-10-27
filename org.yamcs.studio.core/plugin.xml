@@ -226,8 +226,12 @@
       <sourceProvider provider="org.yamcs.studio.core.ui.processor.ProcessorStateProvider">
          <variable name="org.yamcs.studio.core.ui.processor.state.name" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.core.ui.processor.state.processing" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.protected" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.core.ui.processor.state.replay" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.loop" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.core.ui.processor.state.speed" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.start" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.stop" priorityLevel="workbench" />
       </sourceProvider>
    </extension>
 </plugin>

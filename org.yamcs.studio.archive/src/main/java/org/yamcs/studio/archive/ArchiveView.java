@@ -44,6 +44,7 @@ import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 public class ArchiveView extends ViewPart implements YamcsAware, ISourceProviderListener {
 
     private Timeline timeline;
+    private ReplayOverlay replayOverlay;
     private ReplayOptions replayOptions;
     private GridData replayOptionsGridData;
 
@@ -69,6 +70,7 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
 
         new MouseTracker(timeline);
         new TimeLocator(timeline, () -> YamcsPlugin.getMissionTime(true).atOffset(UTC));
+        replayOverlay = new ReplayOverlay(timeline);
         var timeRuler = new TimeRuler(timeline);
         timeRuler.setFrozen(true);
 
@@ -166,15 +168,23 @@ public class ArchiveView extends ViewPart implements YamcsAware, ISourceProvider
         // Refresh the current states
         var connected = (Boolean) connectionState.getCurrentState().get(ConnectionStateProvider.STATE_KEY_CONNECTED);
         var processing = (String) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_PROCESSING);
+        var protected_ = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_PROTECTED);
         var replay = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY);
+        var replayLoop = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_LOOP);
         var replaySpeed = (Float) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);
+        var replayStart = (String) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_START);
+        var replayStop = (String) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_STOP);
+
+        var replayStartTime = "".equals(replayStart) ? null : OffsetDateTime.parse(replayStart);
+        var replayStopTime = "".equals(replayStop) ? null : OffsetDateTime.parse(replayStop);
+        replayOverlay.setReplayRange(replayStartTime, replayStopTime, replayLoop);
 
         if (connected == null || processing == null || replay == null || replaySpeed == null) {
             return;
         }
 
         toggleReplayOptions(replay);
-        replayOptions.updateState(connected, processing, replay, replaySpeed);
+        replayOptions.updateState(connected, processing, protected_, replay, replaySpeed);
     }
 
     private void createActions() {

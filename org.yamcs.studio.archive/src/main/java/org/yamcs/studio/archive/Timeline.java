@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseListener;
@@ -101,6 +100,10 @@ public class Timeline extends Composite {
         });
 
         new EventHandler(this);
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     public void setBounds(OffsetDateTime start, OffsetDateTime stop) {
@@ -227,12 +230,16 @@ public class Timeline extends Composite {
     }
 
     public List<Histogram> getHistograms() {
-        return drawables.stream().filter(drawable -> (drawable instanceof Histogram))
-                .map(drawable -> (Histogram) drawable).collect(Collectors.toList());
+        return drawables.stream()
+                .filter(drawable -> (drawable instanceof Histogram))
+                .map(drawable -> (Histogram) drawable)
+                .toList();
     }
 
     public List<Histogram> getHistograms(HistogramKind kind) {
-        return getHistograms().stream().filter(histogram -> histogram.getKind() == kind).collect(Collectors.toList());
+        return getHistograms().stream()
+                .filter(histogram -> histogram.getKind() == kind)
+                .toList();
     }
 
     private void drawSelection(GC gc) {

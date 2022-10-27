@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.core.ui.processor;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -31,16 +33,33 @@ public class ProcessorStateProvider extends AbstractSourceProvider implements Ya
 
     public static final String STATE_KEY_NAME = "org.yamcs.studio.core.ui.processor.state.name";
     public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.core.ui.processor.state.processing";
-    public static final String STATE_KEY_REPLAY = "org.yamcs.studio.core.ui.processor.state.replay";
-    public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.core.ui.processor.state.speed";
+    public static final String STATE_KEY_PROTECTED = "org.yamcs.studio.core.ui.processor.state.protected";
 
-    private static final String[] SOURCE_NAMES = { STATE_KEY_NAME, STATE_KEY_REPLAY, STATE_KEY_PROCESSING,
-            STATE_KEY_REPLAY_SPEED };
+    public static final String STATE_KEY_REPLAY = "org.yamcs.studio.core.ui.processor.state.replay";
+    public static final String STATE_KEY_REPLAY_LOOP = "org.yamcs.studio.core.ui.processor.state.loop";
+    public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.core.ui.processor.state.speed";
+    public static final String STATE_KEY_REPLAY_START = "org.yamcs.studio.core.ui.processor.state.start";
+    public static final String STATE_KEY_REPLAY_STOP = "org.yamcs.studio.core.ui.processor.state.stop";
+
+    private static final String[] SOURCE_NAMES = {
+            STATE_KEY_NAME,
+            STATE_KEY_REPLAY,
+            STATE_KEY_PROCESSING,
+            STATE_KEY_PROTECTED,
+            STATE_KEY_REPLAY_LOOP,
+            STATE_KEY_REPLAY_SPEED,
+            STATE_KEY_REPLAY_START,
+            STATE_KEY_REPLAY_STOP,
+    };
 
     private String name = "";
+    private boolean protected_ = false;
     private boolean replay = false;
     private String processing = "";
     private float speed = 1;
+    private boolean loop = false;
+    private String start = "";
+    private String stop = "";
 
     public ProcessorStateProvider() {
         YamcsPlugin.addListener(this);
@@ -49,23 +68,35 @@ public class ProcessorStateProvider extends AbstractSourceProvider implements Ya
     @Override
     public void changeProcessorInfo(ProcessorInfo processor) {
         Display.getDefault().asyncExec(() -> {
-            if (processor == null) {
-                name = "";
-                replay = false;
-                processing = "";
-                speed = 1;
-            } else {
+            name = "";
+            processing = "";
+            protected_ = false;
+            replay = false;
+            speed = 1;
+            loop = false;
+            start = "";
+            stop = "";
+            if (processor != null) {
                 name = processor.getName();
-                replay = processor.hasReplayRequest();
                 processing = replay ? processor.getReplayState().toString() : "";
+                protected_ = processor.getProtected();
+                replay = processor.hasReplayRequest();
                 if (replay) {
-                    if (processor.getReplayRequest().getSpeed().getType() == ReplaySpeedType.STEP_BY_STEP) {
+                    var replayRequest = processor.getReplayRequest();
+                    if (replayRequest.hasStart()) {
+                        var gpbTimestamp = replayRequest.getStart();
+                        start = Instant.ofEpochSecond(gpbTimestamp.getSeconds(), gpbTimestamp.getNanos()).toString();
+                    }
+                    if (replayRequest.hasStop()) {
+                        var gpbTimestamp = replayRequest.getStop();
+                        stop = Instant.ofEpochSecond(gpbTimestamp.getSeconds(), gpbTimestamp.getNanos()).toString();
+                    }
+                    loop = replayRequest.getEndAction() == EndAction.LOOP;
+                    if (replayRequest.getSpeed().getType() == ReplaySpeedType.STEP_BY_STEP) {
                         speed = -1;
                     } else {
-                        speed = processor.getReplayRequest().getSpeed().getParam();
+                        speed = replayRequest.getSpeed().getParam();
                     }
-                } else {
-                    speed = 1;
                 }
             }
 
@@ -77,11 +108,15 @@ public class ProcessorStateProvider extends AbstractSourceProvider implements Ya
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(4);
+        Map map = new HashMap();
         map.put(STATE_KEY_NAME, name);
         map.put(STATE_KEY_REPLAY, replay);
         map.put(STATE_KEY_PROCESSING, processing);
+        map.put(STATE_KEY_PROTECTED, protected_);
+        map.put(STATE_KEY_REPLAY_LOOP, loop);
         map.put(STATE_KEY_REPLAY_SPEED, speed);
+        map.put(STATE_KEY_REPLAY_START, start);
+        map.put(STATE_KEY_REPLAY_STOP, stop);
         return map;
     }
 

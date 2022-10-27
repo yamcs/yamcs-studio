@@ -154,7 +154,7 @@ public class ReplayOptions extends Composite {
         }
     }
 
-    void updateState(boolean connected, String processing, boolean replay, float replaySpeed) {
+    void updateState(boolean connected, String processing, boolean protected_, boolean replay, float replaySpeed) {
         var playEnabled = (connected);
         playEnabled &= ("PAUSED".equals(processing));
         playEnabled &= (replay);
@@ -166,7 +166,7 @@ public class ReplayOptions extends Composite {
         var speedEnabled = (connected);
         speedEnabled &= replaySpeed > 0;
 
-        var leaveReplayEnabled = (connected);
+        var leaveReplayEnabled = (connected && !protected_);
 
         playButton.setEnabled(playEnabled || pauseEnabled);
         leaveReplayButton.setEnabled(leaveReplayEnabled);
