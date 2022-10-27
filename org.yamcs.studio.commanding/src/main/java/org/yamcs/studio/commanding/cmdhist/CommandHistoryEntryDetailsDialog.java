@@ -9,7 +9,9 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.cmdhist;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -23,6 +25,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -34,7 +37,14 @@ import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
+    // Pattern that we use to find the server name inside a cascading prefix
+    private static final Pattern CASCADING_PREFIX = Pattern.compile("yamcs<([^>]+)>_");
+
     private SashForm sashForm;
+
+    private Label recordLabel;
+    private Combo recordCombo;
+    private String[] recordComboPrefixes; // Array with same size as combo items
 
     private Text originLabel;
     private Text dateLabel;
@@ -56,6 +66,10 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     private AckTableViewer localAckTableViewer;
     private AckTableViewer extraAckTableViewer;
+
+    // If not null, the information shown is as coming from an upstream
+    // (cascaded) server.
+    private String cascadingPrefix;
 
     public CommandHistoryEntryDetailsDialog(Shell shell, CommandHistoryView commandHistoryView,
             CommandHistoryRecord rec) {
@@ -203,11 +217,23 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         textContainer.setLayout(layout);
         textContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+        recordLabel = new Label(textContainer, SWT.NONE);
+        recordLabel.setText("Record");
+        recordLabel.setLayoutData(new GridData() /* keep, we use it to exclude */);
+        recordCombo = new Combo(textContainer, SWT.READ_ONLY);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        recordCombo.setLayoutData(gd);
+        recordCombo.addListener(SWT.Selection, e -> {
+            cascadingPrefix = recordComboPrefixes[recordCombo.getSelectionIndex()];
+            updateProperties();
+        });
+
         var label = new Label(textContainer, SWT.NONE);
         label.setText("Date");
         dateLabel = new Text(textContainer, SWT.BORDER);
         dateLabel.setEditable(false);
-        var gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         dateLabel.setLayoutData(gd);
 
@@ -295,6 +321,54 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     private void updateProperties() {
         var command = rec.getCommand();
+
+        var cascadingPrefixMatched = false;
+        if (cascadingPrefix != null) {
+            for (var entry : command.getCascadedRecords().entrySet()) {
+                if (entry.getKey().equals(cascadingPrefix)) {
+                    command = entry.getValue();
+                    cascadingPrefixMatched = true;
+                    break;
+                }
+            }
+        }
+
+        // Not every record necessarily has the same prefixes.
+        // Revert back to the local record.
+        if (cascadingPrefix != null && !cascadingPrefixMatched) {
+            cascadingPrefix = null;
+            updateProperties();
+            return;
+        }
+
+        var prefixes = new ArrayList<String>();
+        prefixes.add(null);
+
+        var items = new ArrayList<String>();
+        items.add("Local");
+
+        for (var entry : rec.getCommand().getCascadedRecords().entrySet()) {
+            var prefix = entry.getKey();
+            var serverName = getLabelForCascadingPrefix(prefix);
+            prefixes.add(prefix);
+            items.add(serverName);
+        }
+        recordCombo.setItems(items.toArray(new String[0]));
+        recordComboPrefixes = prefixes.toArray(new String[0]);
+
+        var shouldSelectIdx = prefixes.indexOf(cascadingPrefix);
+        recordCombo.select(shouldSelectIdx);
+
+        var showRecordSelector = items.size() > 1;
+
+        // Most setups will not have cascaded command records, so prefer
+        // to hide it when possible.
+        ((GridData) recordLabel.getLayoutData()).exclude = !showRecordSelector;
+        ((GridData) recordCombo.getLayoutData()).exclude = !showRecordSelector;
+        recordLabel.setVisible(showRecordSelector);
+        recordCombo.setVisible(showRecordSelector);
+        recordCombo.getParent().requestLayout();
+
         dateLabel.setText(YamcsPlugin.getDefault().formatInstant(command.getGenerationTime()));
         commandStringText.setText(command.getSource());
 
@@ -330,17 +404,41 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
             binaryLabel.setText("");
         }
 
-        List<AckTableRecord> localAcks = rec.getCommand().getAcknowledgments().values().stream()
-                .filter(Acknowledgment::isLocal).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
+        var localAcks = command.getAcknowledgments().values().stream()
+                .filter(Acknowledgment::isLocal)
+                .map(ack -> new AckTableRecord(ack, rec))
+                .toList();
         localAckTableViewer.setInput(localAcks.toArray());
 
-        List<AckTableRecord> extraAcks = rec.getCommand().getAcknowledgments().values().stream()
-                .filter(ack -> !ack.isLocal()).map(ack -> new AckTableRecord(ack, rec)).collect(Collectors.toList());
+        var extraAcks = command.getAcknowledgments().values().stream()
+                .filter(ack -> !ack.isLocal())
+                .map(ack -> new AckTableRecord(ack, rec))
+                .toList();
         extraAckTableViewer.setInput(extraAcks.toArray());
     }
 
     private void updateButtonState() {
         prevButton.setEnabled(previousRec != null);
         nextButton.setEnabled(nextRec != null);
+    }
+
+    private String getLabelForCascadingPrefix(String cascadingPrefix) {
+        var matcher = CASCADING_PREFIX.matcher(cascadingPrefix);
+        var servers = new ArrayList<String>(2);
+        while (matcher.find()) {
+            servers.add(matcher.group(1));
+        }
+        String label;
+        var lastServer = servers.get(servers.size() - 1);
+        if (servers.size() == 1) {
+            label = lastServer;
+        } else {
+            Collections.reverse(servers); // From furthest to closest
+            servers.remove(0); // Furthest server, where the info really comes from
+            var otherServers = servers.stream().collect(Collectors.joining(" and "));
+            label = lastServer + " over " + otherServers;
+        }
+
+        return label;
     }
 }
