@@ -4,7 +4,7 @@ Bundle-Activator: org.yamcs.studio.languages.LanguagesPlugin
 Bundle-Name: Language Support
 Bundle-Description: Language Support
 Bundle-SymbolicName: org.yamcs.studio.languages;singleton:=true
-Bundle-Version: 1.6.3.qualifier
+Bundle-Version: 1.6.3
 Bundle-Vendor: Space Applications Services
 Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.core.runtime,
