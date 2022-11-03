@@ -60,7 +60,9 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public boolean isYamcsParameter() {
-        if (displayName.startsWith("para://") || displayName.startsWith("raw://")) {
+        if (displayName.startsWith("para://")
+                || displayName.startsWith("raw://")
+                || displayName.startsWith("ops://")) {
             return true;
         } else if (displayName.startsWith("=")) {
             return false;
@@ -72,19 +74,5 @@ public class PVInfo implements Comparable<PVInfo> {
     @Override
     public int compareTo(PVInfo other) {
         return displayName.compareTo(other.displayName);
-    }
-
-    public String getYamcsQualifiedName() {
-        if (!isYamcsParameter()) {
-            throw new UnsupportedOperationException();
-        }
-
-        if (displayName.startsWith("para://")) {
-            return displayName.substring(7);
-        } else if (displayName.startsWith("raw://")) {
-            return displayName.substring(6);
-        } else {
-            return displayName;
-        }
     }
 }

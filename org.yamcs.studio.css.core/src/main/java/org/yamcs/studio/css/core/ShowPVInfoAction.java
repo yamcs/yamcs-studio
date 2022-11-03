@@ -3,9 +3,7 @@ package org.yamcs.studio.css.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.CompletableFuture;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.eclipse.jface.action.IAction;
@@ -23,8 +21,6 @@ import org.yamcs.studio.core.YamcsPlugin;
  * If it's a yamcs parameter, the information is enriched, otherwise show the typical CS-Studio content.
  */
 public class ShowPVInfoAction implements IObjectActionDelegate {
-
-    private static final Logger log = Logger.getLogger(ShowPVInfoAction.class.getName());
 
     private IStructuredSelection selection;
     private IWorkbenchPart targetPart;
@@ -49,9 +45,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
     }
 
     /**
-     * Gets detailed information on yamcs parameters. We do this one-by-one, because otherwise we risk having one
-     * invalid parameter spoil the whole bunch. Idealy we would rewrite this API a bit on yamcs server, so we avoid the
-     * use of a latch.
+     * Gets detailed information on yamcs parameters.
      */
     private void loadParameterInfoAndShowDialog(List<PVInfo> pvInfos) {
         List<PVInfo> yamcsPvs = new ArrayList<>();
@@ -61,45 +55,39 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             }
         }
 
-        // Start a worker thread that will show the dialog when a response for
-        // all yamcs parameters arrived
-        new Thread() {
-
-            @Override
-            public void run() {
-                CountDownLatch latch = new CountDownLatch(yamcsPvs.size());
-
-                // Another reason why we should have futures
-                for (PVInfo pvInfo : pvInfos) {
-                    if (!pvInfo.isYamcsParameter()) {
-                        latch.countDown();
-                        continue;
-                    }
-
-                    MissionDatabaseClient mdbClient = YamcsPlugin.getMissionDatabaseClient();
-                    mdbClient.getParameter(pvInfo.getYamcsQualifiedName()).whenComplete((response, exc) -> {
-                        if (exc == null) {
-                            pvInfo.setParameterInfo(response);
-                            latch.countDown();
-                        } else {
-                            pvInfo.setParameterInfoException(exc.getMessage());
-                            latch.countDown();
-                        }
-                    });
-                }
-
-                try {
-                    latch.await();
-                    targetPart.getSite().getShell().getDisplay().asyncExec(() -> showDialog(pvInfos));
-                } catch (InterruptedException e) {
-                    targetPart.getSite().getShell().getDisplay().asyncExec(() -> {
-                        log.log(Level.SEVERE, "Could not fetch Yamcs parameter info", e);
-                        MessageDialog.openError(null, "Could Not Fetch Yamcs Parameter Info",
-                                "Interrupted while fetching yamcs parameter info");
-                    });
-                }
+        var futures = new ArrayList<CompletableFuture<Void>>();
+        for (var pvInfo : pvInfos) {
+            if (!pvInfo.isYamcsParameter()) {
+                continue;
             }
-        }.start();
+
+            var mdbClient = YamcsPlugin.getMissionDatabaseClient();
+            futures.add(mdbClient.getParameter(getYamcsQualifiedName(pvInfo)).handle((response, exc) -> {
+                if (exc == null) {
+                    pvInfo.setParameterInfo(response);
+                } else {
+                    pvInfo.setParameterInfoException(exc.getMessage());
+                }
+                return null;
+            }));
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).whenComplete((response, exc) -> {
+            targetPart.getSite().getShell().getDisplay().asyncExec(() -> showDialog(pvInfos));
+        });
+    }
+
+    private String getYamcsQualifiedName(PVInfo pvInfo) {
+        var displayName = pvInfo.getDisplayName();
+        if (displayName.startsWith("para://")) {
+            return displayName.substring(7);
+        } else if (displayName.startsWith("raw://")) {
+            return displayName.substring(6);
+        } else if (displayName.startsWith("ops://")) {
+            return "MDB:OPS Name/" + displayName.substring(6);
+        } else {
+            return displayName;
+        }
     }
 
     private void showDialog(List<PVInfo> pvInfos) {
