@@ -74,9 +74,14 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         if (processor != null && pvInfo.getParameterInfo() != null) {
             subscription = YamcsPlugin.getYamcsClient().createParameterSubscription();
             subscription.addListener(this);
-            subscription.sendMessage(SubscribeParametersRequest.newBuilder().setInstance(instance)
-                    .setProcessor(processor).setAbortOnInvalid(false).setUpdateOnExpiration(true).setSendFromCache(true)
-                    .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName())).build());
+            subscription.sendMessage(SubscribeParametersRequest.newBuilder()
+                    .setInstance(instance)
+                    .setProcessor(processor)
+                    .setAbortOnInvalid(false)
+                    .setUpdateOnExpiration(true)
+                    .setSendFromCache(true)
+                    .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName()))
+                    .build());
         }
     }
 
