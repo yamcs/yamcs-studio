@@ -49,8 +49,18 @@ The use of this mechanism requires extra configuration of your Yamcs Server, to 
 
 .. note::
 
-    Connection preferences are stored in a hidden folder under your home directory, and will continue functioning whenever you upgrade your copy of Yamcs Studio.
+    Connection preferences are stored at user level (not workspace), and will continue functioning whenever you upgrade your copy of Yamcs Studio.
 
+    The storage mechanism and location is different for each platform:
+
+    Linux
+       XML file at ``~/.java/.userPrefs/org/yamcs/studio/ui/connections/prefs.xml``
+    MacOS
+       Property list file at ``~/Library/Preferences/org.yamcs.studio.plist``
+    Windows
+       In the Windows Registry: ``HKEY_CURRENT_USER\Software\JavaSoft\Prefs\org\yamcs\studio\ui\connections``
+
+    Any saved passwords are stored separately from the connections using `Eclipse Secure Storage <https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Freference%2Fref-securestorage-start.htm>`_.
 
 .. |server_add| image:: _images/server_add.png
 .. |server_remove| image:: _images/server_remove.png
