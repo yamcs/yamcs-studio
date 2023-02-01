@@ -738,20 +738,6 @@ https://www.eclipse.org/legal/epl-2.0/
          unpack="false"/>
 
    <plugin
-         id="org.bouncycastle.bcpg"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcprov"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.tm4e.core"
          download-size="0"
          install-size="0"
