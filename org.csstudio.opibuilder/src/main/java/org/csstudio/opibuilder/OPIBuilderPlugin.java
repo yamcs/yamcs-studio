@@ -21,8 +21,9 @@ import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.util.SchemaService;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.ServiceCaller;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -69,17 +70,19 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
         });
 
         // Reload the schema if the change file is somehow related to the active schema
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(event -> {
-            var schemaPath = PreferencesHelper.getSchemaOPIPath();
-            if (schemaPath != null) {
-                var delta = event.getDelta();
-                if (delta != null) {
-                    var allPaths = findAllDeltaPaths(delta);
-                    if (allPaths.contains(schemaPath)) {
-                        SchemaService.getInstance().reload();
+        ServiceCaller.callOnce(getClass(), IWorkspace.class, workspace -> {
+            workspace.addResourceChangeListener(event -> {
+                var schemaPath = PreferencesHelper.getSchemaOPIPath();
+                if (schemaPath != null) {
+                    var delta = event.getDelta();
+                    if (delta != null) {
+                        var allPaths = findAllDeltaPaths(delta);
+                        if (allPaths.contains(schemaPath)) {
+                            SchemaService.getInstance().reload();
+                        }
                     }
                 }
-            }
+            });
         });
     }
 

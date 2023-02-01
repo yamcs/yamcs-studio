@@ -19,6 +19,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.editor.SchemaDecorator;
+import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class Application implements IApplication {
 
@@ -91,6 +95,16 @@ public class Application implements IApplication {
                 System.exit(0); // TODO remove?
                 return EXIT_OK;
             }
+
+            // Trigger other bundles
+            YamcsPlugin.getDefault();
+
+            OPIBuilderPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
+                if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
+                    var decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
+                    decoratorManager.update(SchemaDecorator.ID);
+                }
+            });
 
             openProjects();
 

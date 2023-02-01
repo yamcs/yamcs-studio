@@ -45,7 +45,7 @@ public class YamcsStudioWorkspace {
             // the use of -workspace instead of -data because with -data the platform
             // location cannot be changed.
             // -data is however automatically set in the PDE configuration, so we do support it.
-            // It then basically works as a kill witch for any workspace selection.
+            // It then basically works as a kill switch for any workspace selection.
             dataLocation.lock();
             return true;
         }
