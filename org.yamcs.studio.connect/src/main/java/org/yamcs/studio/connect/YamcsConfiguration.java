@@ -19,7 +19,9 @@ import java.util.UUID;
 public class YamcsConfiguration {
 
     public enum AuthType {
-        STANDARD, KERBEROS;
+        STANDARD,
+        KERBEROS,
+        BASIC_AUTH;
     }
 
     // Used for linking a password from secure storage

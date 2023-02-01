@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.client.BasicAuthCredentials;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.YamcsClient;
 import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions;
@@ -94,16 +95,26 @@ public class YamcsConnector implements IRunnableWithProgress {
             if (conf.getCaCertFile() != null) {
                 clientBuilder.withCaCertFile(Paths.get(conf.getCaCertFile()));
             }
+
+            var password = conf.getTransientPassword();
+            if (conf.getAuthType() == AuthType.BASIC_AUTH && conf.getUser() != null) {
+                if (password != null && !password.isEmpty()) {
+                    var creds = new BasicAuthCredentials(conf.getUser(), password.toCharArray());
+                    clientBuilder.withCredentials(creds);
+                } else {
+                    throw new ClientException("No password was provided");
+                }
+            }
+
             var yamcsClient = clientBuilder.build();
 
             log.info("Connecting to " + conf);
             if (conf.getAuthType() == AuthType.KERBEROS) {
                 yamcsClient.loginWithKerberos();
                 yamcsClient.connectWebSocket();
-            } else if (conf.getUser() == null) {
+            } else if (conf.getUser() == null || conf.getAuthType() == AuthType.BASIC_AUTH) {
                 yamcsClient.connectWebSocket();
             } else {
-                var password = conf.getTransientPassword();
                 if (password != null && !password.isEmpty()) {
                     yamcsClient.login(conf.getUser(), password.toCharArray());
                     yamcsClient.connectWebSocket();

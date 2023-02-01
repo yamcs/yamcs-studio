@@ -74,6 +74,7 @@ public class ConnectionsDialog extends Dialog {
     private static final Logger log = Logger.getLogger(ConnectionsDialog.class.getName());
     private static final String ITEM_STANDARD = "Standard";
     private static final String ITEM_KERBEROS = "Kerberos";
+    private static final String ITEM_BASIC_AUTH = "Basic Auth";
 
     private TableViewer connViewer;
     private Composite detailPanel;
@@ -200,7 +201,8 @@ public class ConnectionsDialog extends Dialog {
             }
 
             if (selectedConfiguration.getAuthType() == null
-                    || selectedConfiguration.getAuthType() == AuthType.STANDARD) {
+                    || selectedConfiguration.getAuthType() == AuthType.STANDARD
+                    || selectedConfiguration.getAuthType() == AuthType.BASIC_AUTH) {
                 yamcsUserLabel.setVisible(true);
                 yamcsUserText.setVisible(true);
                 yamcsPasswordLabel.setVisible(true);
@@ -446,6 +448,9 @@ public class ConnectionsDialog extends Dialog {
                 } else if (authType == AuthType.KERBEROS) {
                     authTypeCombo.select(1);
                     yamcsUserText.setText("");
+                } else if (authType == AuthType.BASIC_AUTH) {
+                    authTypeCombo.select(2);
+                    yamcsUserText.setText(forceString(conf.getUser()));
                 } else {
                     throw new IllegalArgumentException("Unexpected auth type " + authType);
                 }
@@ -566,7 +571,7 @@ public class ConnectionsDialog extends Dialog {
         lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Type:");
         authTypeCombo = new Combo(detailPanel, SWT.READ_ONLY);
-        authTypeCombo.setItems(ITEM_STANDARD, ITEM_KERBEROS);
+        authTypeCombo.setItems(ITEM_STANDARD, ITEM_KERBEROS, ITEM_BASIC_AUTH);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         authTypeCombo.setLayoutData(gd);
         authTypeCombo.addListener(SWT.Selection, evt -> {
@@ -574,6 +579,8 @@ public class ConnectionsDialog extends Dialog {
                 selectedConfiguration.setAuthType(AuthType.STANDARD);
             } else if (authTypeCombo.getSelectionIndex() == 1) {
                 selectedConfiguration.setAuthType(AuthType.KERBEROS);
+            } else if (authTypeCombo.getSelectionIndex() == 2) {
+                selectedConfiguration.setAuthType(AuthType.BASIC_AUTH);
             } else {
                 throw new IllegalArgumentException("Unexpected auth type " + authTypeCombo.getSelectionIndex());
             }
@@ -659,7 +666,9 @@ public class ConnectionsDialog extends Dialog {
 
     @Override
     protected void okPressed() {
-        if (selectedConfiguration.getAuthType() == AuthType.STANDARD && selectedConfiguration.getUser() != null) {
+        var withPassword = selectedConfiguration.getAuthType() == AuthType.STANDARD
+                || selectedConfiguration.getAuthType() == AuthType.BASIC_AUTH;
+        if (withPassword && selectedConfiguration.getUser() != null) {
             String password = null;
             if (selectedConfiguration.isSecureHint()) { // Avoid unnecessary prompts
                 try {

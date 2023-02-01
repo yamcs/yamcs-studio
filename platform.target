@@ -12,8 +12,8 @@
 <target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="198">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202210262233/" />
-            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="17.0.4.v20221004-1257" />
+            <repository location="https://dl.yamcs.org/p2/platform/202211231642/" />
+            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="17.0.5.v20221102-0933" />
             <unit id="com.google.gson" version="2.9.0.v20220704-0629" />
             <unit id="com.google.guava" version="30.1.0.v20210127-2300" />
             <unit id="org.antlr.runtime" version="3.2.0.v20220404-1927" />
@@ -26,7 +26,7 @@
             <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.500.v20220826-1025" />
             <unit id="org.eclipse.platform.ide" version="4.25.0.I20220831-1800" />
             <unit id="org.eclipse.rcp.feature.group" version="4.25.0.v20220831-1800" />
-            <unit id="org.eclipse.gef.sdk.feature.group" version="3.15.0.202210070657" />
+            <unit id="org.eclipse.gef.sdk.feature.group" version="3.15.0.202211221712" />
             <unit id="org.eclipse.emf.sdk.feature.group" version="2.31.0.v20220817-1401" />
             <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202208171809" />
             <unit id="org.eclipse.nebula.visualization.feature.feature.group" version="2.1.0.202208171809" />
@@ -45,8 +45,8 @@
             <unit id="org.sat4j.pb" version="2.3.6.v20201214" />
             <unit id="org.yaml.snakeyaml" version="1.27.0.v20201111-1638" />
             <unit id="org.yamcs.p2.batik" version="1.12.0" />
-            <unit id="org.yamcs.p2.client" version="5.7.9.20221026203501" />
-            <unit id="org.yamcs.p2.jcodec" version="0.2.6.20221026203501" />
+            <unit id="org.yamcs.p2.client" version="5.7.10.20221123154343" />
+            <unit id="org.yamcs.p2.jcodec" version="0.2.6.20221123154343" />
             <unit id="org.yamcs.p2.nashorn" version="15.4.0" />
         </location>
     </locations>
