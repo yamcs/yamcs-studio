@@ -20,7 +20,7 @@ jobs:
         run: |
           REF=${{ github.ref }}
           VERSION=${REF/refs\/tags\/v/}
-          echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Generate assets
         run: mvn -B --no-transfer-progress -DskipTests package
