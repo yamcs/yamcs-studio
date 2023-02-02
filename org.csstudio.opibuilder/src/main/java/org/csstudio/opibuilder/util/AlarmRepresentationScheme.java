@@ -26,6 +26,18 @@ public class AlarmRepresentationScheme {
     public static final String INVALID = "Invalid";
     public static final String DISCONNECTED = "Disconnected";
 
+    public static boolean isReservedColor(String colorName) {
+        switch (colorName) {
+        case DISCONNECTED:
+        case INVALID:
+        case MAJOR:
+        case MINOR:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     /**
      * Returns color of alarm severity.
      *

@@ -11,6 +11,7 @@ package org.csstudio.opibuilder.preferences;
 
 import java.util.List;
 
+import org.csstudio.opibuilder.util.AlarmRepresentationScheme;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -29,6 +30,8 @@ import org.eclipse.swt.widgets.Text;
 public class NamedColorDialog extends TitleAreaDialog {
 
     private Text nameText;
+    private boolean reservedMode;
+    private boolean editMode;
 
     private ColorSelector rgbSelector;
 
@@ -42,10 +45,13 @@ public class NamedColorDialog extends TitleAreaDialog {
         if (color != null) {
             name = color.name;
             rgb = color.rgb;
+            reservedMode = AlarmRepresentationScheme.isReservedColor(color.name);
         } else {
             name = "";
             rgb = JFaceColors.getInformationViewerBackgroundColor(parentShell.getDisplay()).getRGB();
+            reservedMode = false;
         }
+        editMode = name != null && !name.isEmpty();
         this.existingNames = existingNames;
         setHelpAvailable(false);
     }
@@ -60,13 +66,12 @@ public class NamedColorDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         var fieldArea = new Composite((Composite) super.createDialogArea(parent), SWT.NONE);
 
-        var noName = name == null;
-        var title = noName ? "Add Color" : "Edit Color";
+        var title = editMode ? "Edit Color" : "Add Color";
 
         getShell().setText(title);
         setTitle(title);
 
-        setMessage(noName ? "Enter color details." : "Edit color details.");
+        setMessage(editMode ? "Edit color details." : "Enter color details.");
 
         fieldArea.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -76,9 +81,19 @@ public class NamedColorDialog extends TitleAreaDialog {
         var label = new Label(fieldArea, SWT.NONE);
         label.setText("Name:");
         label.setLayoutData(new GridData());
-        nameText = new Text(fieldArea, SWT.BORDER);
+
+        var textOptions = SWT.BORDER;
+        if (editMode && reservedMode) {
+            textOptions |= SWT.READ_ONLY;
+        }
+
+        nameText = new Text(fieldArea, textOptions);
         if (name != null) {
             nameText.setText(name);
+        }
+        if (editMode && reservedMode) {
+            nameText.setEditable(false);
+            nameText.setEnabled(false);
         }
         nameText.setLayoutData(new GridData());
         nameText.addModifyListener(e -> updatePageComplete());
@@ -91,6 +106,7 @@ public class NamedColorDialog extends TitleAreaDialog {
         rgbSelector.setColorValue(rgb);
         var backgroundColorButton = rgbSelector.getButton();
         backgroundColorButton.setLayoutData(new GridData());
+        rgbSelector.addListener(evt -> updatePageComplete());
 
         Dialog.applyDialogFont(fieldArea);
 
@@ -102,7 +118,7 @@ public class NamedColorDialog extends TitleAreaDialog {
         if (text.equals("")) {
             setErrorMessage("Name is required");
             getButton(IDialogConstants.OK_ID).setEnabled(false);
-        } else if (existingNames.contains(text)) {
+        } else if (!reservedMode && existingNames.contains(text)) {
             setErrorMessage("Name already in use");
             getButton(IDialogConstants.OK_ID).setEnabled(false);
         } else if (text.contains(";")) {

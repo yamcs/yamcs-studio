@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.util.AlarmRepresentationScheme;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -86,6 +87,7 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
 
         tableViewer = new TableViewer(tableWrapper, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+        tableViewer.getTable().setHeaderVisible(true);
 
         tableViewer.setComparator(new ViewerComparator() {
             @Override
@@ -97,6 +99,7 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         });
 
         var colorColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        colorColumn.getColumn().setText("Color");
         colorColumn.setLabelProvider(new ColorLabelProvider() {
             @Override
             public Color getColor(Object element) {
@@ -112,6 +115,7 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         tcl.setColumnData(colorColumn.getColumn(), new ColumnWeightData(50, 50, false));
 
         var textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        textColumn.getColumn().setText("Name");
         textColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -120,6 +124,21 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
             }
         });
         tcl.setColumnData(textColumn.getColumn(), new ColumnWeightData(200, 200, true));
+
+        var infoColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        infoColumn.getColumn().setText("Info");
+        infoColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                var color = (NamedColor) element;
+                if (AlarmRepresentationScheme.isReservedColor(color.name)) {
+                    return "(reserved)";
+                } else {
+                    return null;
+                }
+            }
+        });
+        tcl.setColumnData(infoColumn.getColumn(), new ColumnWeightData(200, 200, true));
 
         tableViewer.getTable().addListener(SWT.Selection, evt -> updateButtonStatus());
 
@@ -178,16 +197,8 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private NamedColor getSelectedColor() {
-        var tableInput = getTableViewerInput();
-        if (tableInput == null) {
-            return null;
-        }
-
-        var index = tableViewer.getTable().getSelectionIndex();
-        if (index < 0) {
-            return null;
-        }
-        return tableInput.get(index);
+        var selection = tableViewer.getStructuredSelection();
+        return (NamedColor) selection.getFirstElement();
     }
 
     @SuppressWarnings("unchecked")
@@ -200,10 +211,13 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
         if (selectedRule == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
-            return;
+        } else if (AlarmRepresentationScheme.isReservedColor(selectedRule.name)) {
+            editButton.setEnabled(true);
+            removeButton.setEnabled(false);
+        } else {
+            editButton.setEnabled(true);
+            removeButton.setEnabled(true);
         }
-        editButton.setEnabled(true);
-        removeButton.setEnabled(true);
     }
 
     private void removeRule(NamedColor selectedRule) {
