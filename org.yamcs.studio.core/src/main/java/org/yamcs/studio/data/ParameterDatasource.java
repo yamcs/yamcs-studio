@@ -99,51 +99,72 @@ public class ParameterDatasource implements Datasource {
             switch (ptype.getEngType()) {
             case "string":
             case "enumeration":
-                return Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(value)).build();
+                return Value.newBuilder()
+                        .setType(Type.STRING)
+                        .setStringValue(String.valueOf(value))
+                        .build();
             case "string[]":
             case "enumeration[]":
                 var stringValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (var objectValue : (Object[]) value) {
                     stringValueArray.addArrayValue(
-                            Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(objectValue)));
+                            Value.newBuilder()
+                                    .setType(Type.STRING)
+                                    .setStringValue(String.valueOf(objectValue)));
                 }
                 return stringValueArray.build();
             case "integer":
                 if (value instanceof Double) {
-                    return Value.newBuilder().setType(Type.SINT64).setSint64Value(((Double) value).longValue()).build();
+                    return Value.newBuilder()
+                            .setType(Type.SINT64)
+                            .setSint64Value(((Double) value).longValue())
+                            .build();
                 } else {
-                    return Value.newBuilder().setType(Type.SINT64).setSint64Value(Long.parseLong(String.valueOf(value)))
+                    return Value.newBuilder()
+                            .setType(Type.SINT64)
+                            .setSint64Value(Long.parseLong(String.valueOf(value)))
                             .build();
                 }
             case "integer[]":
                 var intValueArray = Value.newBuilder().setType(Type.ARRAY);
                 if (value instanceof int[]) {
                     for (var intValue : (int[]) value) {
-                        intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(intValue));
+                        intValueArray.addArrayValue(Value.newBuilder()
+                                .setType(Type.UINT64)
+                                .setUint64Value(intValue));
                     }
                 } else {
                     for (var objectValue : (Object[]) value) {
                         var longValue = Long.parseLong(String.valueOf(objectValue));
-                        intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(longValue));
+                        intValueArray.addArrayValue(Value.newBuilder()
+                                .setType(Type.UINT64)
+                                .setUint64Value(longValue));
                     }
                 }
                 return intValueArray.build();
             case "float":
-                return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(String.valueOf(value)))
+                return Value.newBuilder()
+                        .setType(Type.DOUBLE)
+                        .setDoubleValue(Double.parseDouble(String.valueOf(value)))
                         .build();
             case "float[]":
                 var floatValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (var floatValue : (float[]) value) {
-                    floatValueArray.addArrayValue(Value.newBuilder().setType(Type.FLOAT).setFloatValue(floatValue));
+                    floatValueArray.addArrayValue(Value.newBuilder()
+                            .setType(Type.FLOAT)
+                            .setFloatValue(floatValue));
                 }
                 return floatValueArray.build();
             case "boolean":
                 var booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
-                return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+                return Value.newBuilder()
+                        .setType(Type.BOOLEAN)
+                        .setBooleanValue(booleanValue).build();
             case "boolean[]":
                 var booleanValueArray = Value.newBuilder().setType(Type.ARRAY);
                 for (var objectValue : (Object[]) value) {
-                    booleanValueArray.addArrayValue(Value.newBuilder().setType(Type.BOOLEAN)
+                    booleanValueArray.addArrayValue(Value.newBuilder()
+                            .setType(Type.BOOLEAN)
                             .setBooleanValue(TRUTHY.contains(String.valueOf(objectValue).toLowerCase())));
                 }
                 return booleanValueArray.build();

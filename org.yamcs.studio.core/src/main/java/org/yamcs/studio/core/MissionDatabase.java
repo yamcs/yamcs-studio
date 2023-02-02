@@ -45,6 +45,9 @@ public class MissionDatabase {
                 combinedUnit += " " + parameter.getType().getUnitSet(i).getUnit();
             }
             unitsById.put(id, combinedUnit);
+            for (var alias : parameter.getAliasList()) {
+                unitsById.put(alias, combinedUnit);
+            }
         }
     }
 
