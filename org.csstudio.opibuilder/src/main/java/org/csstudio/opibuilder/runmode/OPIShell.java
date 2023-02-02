@@ -11,7 +11,6 @@ package org.csstudio.opibuilder.runmode;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -472,11 +471,6 @@ public final class OPIShell implements IOPIRuntime {
     @Override
     public DisplayModel getDisplayModel() {
         return displayModel;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(OPIShell.class, macrosInput, path);
     }
 
     public boolean isDisposed() {

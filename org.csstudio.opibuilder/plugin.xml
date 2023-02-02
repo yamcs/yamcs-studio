@@ -264,14 +264,14 @@
             launcher="org.csstudio.opibuilder.runmode.DisplayLauncher"
             name="OPI Runner">
       </editor>
-      <!--editor
+      <editor
             default="false"
             extensions="opi"
             icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.ShellLauncher"
             launcher="org.csstudio.opibuilder.runmode.ShellLauncher"
             name="OPI Runner (New Window)">
-      </editor-->
+      </editor>
    </extension>
    
    <extension
@@ -1010,15 +1010,22 @@
               typeId="org.csstudio.opibuilder.widgets.groupingContainer">
         </graphicalFeedbackFactory>
      </extension>
-        <extension
+     <extension
            point="org.eclipse.ui.commands">
         <command
               description="Open embedded OPI in editor"
               id="org.csstudio.opibuilder.commands.editembeddedopi"
               name="Edit Embedded OPI">
         </command>
-        </extension>
-              <extension
+        <command
+              categoryId="org.eclipse.ui.category.views"
+              description="OPI Shell opened"
+              defaultHandler="org.csstudio.opibuilder.runmode.OPIShellsChangedHandler"
+              id="org.csstudio.opibuilder.opiShellsChanged"
+              name="OPI Shell opened">
+        </command>
+     </extension>
+     <extension
            point="org.eclipse.ui.menus">
         <menuContribution
               allPopups="false"
