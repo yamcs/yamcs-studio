@@ -122,12 +122,12 @@ public class LinkTableViewer extends TableViewer {
         mItem1.setText("Enable Link");
         mItem1.addSelectionListener(new SelectionListener() {
             @Override
-            public void widgetDefaultSelected(SelectionEvent arg0) {
-                widgetSelected(arg0);
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
             }
 
             @Override
-            public void widgetSelected(SelectionEvent arg0) {
+            public void widgetSelected(SelectionEvent e) {
                 var rec = (LinkRecord) (getTable().getSelection()[0].getData());
                 if (rec == null) {
                     return;
@@ -149,12 +149,12 @@ public class LinkTableViewer extends TableViewer {
         mItem2.setText("Disable Link");
         mItem2.addSelectionListener(new SelectionListener() {
             @Override
-            public void widgetDefaultSelected(SelectionEvent arg0) {
-                widgetSelected(arg0);
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
             }
 
             @Override
-            public void widgetSelected(SelectionEvent arg0) {
+            public void widgetSelected(SelectionEvent e) {
                 var rec = (LinkRecord) (getTable().getSelection()[0].getData());
                 if (rec == null) {
                     return;
