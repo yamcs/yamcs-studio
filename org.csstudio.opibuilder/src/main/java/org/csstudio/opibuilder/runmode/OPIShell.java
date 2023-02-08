@@ -34,6 +34,7 @@ import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.GraphicalViewer;
@@ -113,7 +114,11 @@ public final class OPIShell implements IOPIRuntime {
                 .createImage(display);
 
         shell = new Shell(display);
-        shell.setImage(icon);
+        // On macOS multiple windows use the same dock icon, which
+        // we'd like to have stay unchanged.
+        if (!Platform.getOS().equals(Platform.OS_MACOSX)) {
+            shell.setImage(icon);
+        }
         displayModel = new DisplayModel(path);
         displayModel.setOpiRuntime(this);
         actionRegistry = new ActionRegistry();
@@ -239,6 +244,9 @@ public final class OPIShell implements IOPIRuntime {
     }
 
     public void raiseToTop() {
+        if (shell.getMinimized()) {
+            shell.setMinimized(false);
+        }
         shell.forceFocus();
         shell.forceActive();
         shell.setFocus();
