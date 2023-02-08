@@ -94,7 +94,7 @@
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.python.jython" version="2.7.0.release"/>
-            <repository location="https://nexus.spaceapplications.com/repository/yamcs/p2/yamcs-studio-build-deps"/>
+            <repository location="https://dl.yamcs.org/p2/yamcs-studio-build-deps"/>
         </location>
     </locations>
 </target>

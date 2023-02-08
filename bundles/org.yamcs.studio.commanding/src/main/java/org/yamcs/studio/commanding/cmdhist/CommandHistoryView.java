@@ -519,7 +519,8 @@ public class CommandHistoryView extends ViewPart {
                 }
             } else {
                 column.setData("hidden", true);
-                column.setWidth(0);
+                // column.setWidth(0); // hide this column
+                column.setWidth(1); // workaround a weird hang when "Command History" is set to "Show key columns only" on specific Linux configs
             }
         }
 
