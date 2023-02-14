@@ -313,7 +313,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                     return (parseSexagesimal(text, true) * Math.PI / 12.0);
                 case SEXA_DMS:
                     return (parseSexagesimal(text, true) * Math.PI / 180.0);
-                case TIME:
+                case TIME_STRING:
                     return parseTime(text);
                 case DEFAULT:
                 default:
@@ -341,7 +341,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         return (parseSexagesimal(text, true) * Math.PI / 12.0);
                     case SEXA_DMS:
                         return (parseSexagesimal(text, true) * Math.PI / 180.0);
-                    case TIME:
+                    case TIME_STRING:
                         return parseTime(text);
                     case DEFAULT:
                     default:

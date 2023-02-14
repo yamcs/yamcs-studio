@@ -549,7 +549,7 @@ public class VTypeHelper {
         case HEX:
         case HEX64:
             return HEX_PREFIX + Integer.toHexString(enumValue.getIndex());
-        case TIME:
+        case TIME_STRING:
             return YamcsPlugin.getDefault()
                     .formatInstant(Instant.ofEpochMilli(enumValue.getIndex()));
         case DEFAULT:
@@ -692,7 +692,7 @@ public class VTypeHelper {
             return HEX_PREFIX + Long.toHexString(numValue.longValue());
         case STRING:
             return new String(new char[] { (char) numValue.intValue() });
-        case TIME:
+        case TIME_STRING:
             return YamcsPlugin.getDefault()
                     .formatInstant(Instant.ofEpochMilli(numValue.longValue()));
         }
