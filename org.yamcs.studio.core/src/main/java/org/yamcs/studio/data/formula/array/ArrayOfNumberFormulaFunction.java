@@ -103,7 +103,7 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
             } else {
                 var stats = StatisticsUtil.statisticsOf(data);
                 display = newDisplay(stats.getRange().getMinimum(), stats.getRange().getMinimum(),
-                        stats.getRange().getMinimum(), "", NumberFormats.toStringFormat(),
+                        stats.getRange().getMinimum(), "", NumberFormats.TO_STRING_FORMAT,
                         stats.getRange().getMaximum(), stats.getRange().getMaximum(), stats.getRange().getMaximum(),
                         stats.getRange().getMinimum(), stats.getRange().getMaximum());
             }

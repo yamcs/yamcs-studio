@@ -580,7 +580,8 @@ public class VTypeHelper {
         NumberFormat numberFormat;
 
         var displayPrecision = calculatePrecision(pmValue, precision);
-        double highDispLimit = 0.0, lowDispLimit = 0.0;
+        var highDispLimit = 0.0;
+        var lowDispLimit = 0.0;
 
         switch (formatEnum) {
         case DECIMAL:

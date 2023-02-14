@@ -307,7 +307,7 @@ public class ValueUtil {
     }
 
     private static volatile DateTimeFormatter defaultTimestampFormat = DateTimeFormatter.ISO_DATE_TIME;
-    private static volatile NumberFormat defaultNumberFormat = NumberFormats.toStringFormat();
+    private static volatile NumberFormat defaultNumberFormat = NumberFormats.TO_STRING_FORMAT;
     private static volatile ValueFormat defaultValueFormat = new SimpleValueFormat(3);
     private static volatile Map<AlarmSeverity, Integer> rgbSeverityColor = createDefaultSeverityColorMap();
 

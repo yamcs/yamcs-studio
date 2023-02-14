@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.data.vtype;
 
+import static org.yamcs.studio.data.vtype.NumberFormats.TO_STRING_FORMAT;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +29,10 @@ public class VTypeToString {
         if (!alarm.getAlarmSeverity().equals(AlarmSeverity.NONE)) {
             builder.append(", ").append(alarm.getAlarmSeverity()).append("(").append(alarm.getAlarmName()).append(")");
         }
+    }
+
+    static {
+        format.setNumberFormat(NumberFormats.TO_STRING_FORMAT);
     }
 
     /**
@@ -75,7 +81,9 @@ public class VTypeToString {
     public static String toString(VNumber vNumber) {
         var builder = new StringBuilder();
         Class<?> type = ValueUtil.typeOf(vNumber);
-        builder.append(type.getSimpleName()).append('[').append(vNumber.getValue());
+        builder.append(type.getSimpleName()).append('[')
+                .append(TO_STRING_FORMAT.format(vNumber.getValue()));
+
         appendAlarm(builder, vNumber);
         appendTime(builder, vNumber);
         builder.append(']');
@@ -132,10 +140,6 @@ public class VTypeToString {
         appendTime(builder, vEnum);
         builder.append(']');
         return builder.toString();
-    }
-
-    static {
-        format.setNumberFormat(NumberFormats.toStringFormat());
     }
 
     /**

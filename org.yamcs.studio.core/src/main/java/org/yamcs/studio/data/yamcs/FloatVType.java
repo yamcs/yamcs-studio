@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.data.yamcs;
 
+import static org.yamcs.studio.data.vtype.NumberFormats.TO_STRING_FORMAT;
+
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.VFloat;
 
@@ -25,6 +27,6 @@ public class FloatVType extends YamcsVType implements VFloat {
 
     @Override
     public String toString() {
-        return Float.toString(value.getFloatValue());
+        return TO_STRING_FORMAT.format(value.getFloatValue());
     }
 }

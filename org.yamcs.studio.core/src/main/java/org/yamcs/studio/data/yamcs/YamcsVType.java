@@ -220,7 +220,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public NumberFormat getFormat() {
-        return NumberFormats.toStringFormat();
+        return NumberFormats.TO_STRING_FORMAT;
     }
 
     /**

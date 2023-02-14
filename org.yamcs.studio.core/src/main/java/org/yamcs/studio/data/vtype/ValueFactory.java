@@ -98,7 +98,7 @@ public class ValueFactory {
     }
 
     private static final Alarm alarmNone = newAlarm(AlarmSeverity.NONE, "NONE");
-    private static final Display displayBoolean = newDisplay(0.0, 0.0, 0.0, "", NumberFormats.toStringFormat(), 1.0,
+    private static final Display displayBoolean = newDisplay(0.0, 0.0, 0.0, "", NumberFormats.TO_STRING_FORMAT, 1.0,
             1.0, 1.0, 0.0, 1.0);
 
     /**
@@ -260,7 +260,7 @@ public class ValueFactory {
     }
 
     private static final Display displayNone = newDisplay(Double.NaN, Double.NaN, Double.NaN, "",
-            NumberFormats.toStringFormat(), Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+            NumberFormats.TO_STRING_FORMAT, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
 
     /**
      * Empty display information.

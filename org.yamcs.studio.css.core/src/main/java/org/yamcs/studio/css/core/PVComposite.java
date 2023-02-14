@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.css.core;
 
+import static org.yamcs.studio.data.vtype.NumberFormats.TO_STRING_FORMAT;
+
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
@@ -27,7 +29,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.yamcs.StringConverter;
+import org.yamcs.studio.data.yamcs.YamcsVType;
 
 public class PVComposite extends Composite implements YamcsAware, ParameterSubscription.Listener {
 
@@ -107,8 +109,9 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         var type = pinfo.getType();
         createKeyValueTextPair("Data Encoding", capitalize(type.getDataEncoding().getType().toString()));
         createKeyValueTextPair("Engineering Type", capitalize(type.getEngType()));
+        String units = null;
         if (type.getUnitSetCount() > 0) {
-            var units = "";
+            units = "";
             for (var unit : type.getUnitSetList()) {
                 units += unit.getUnit() + " ";
             }
@@ -127,6 +130,9 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                 if (range.hasMinInclusive()) {
                     var label = capitalize(range.getLevel().toString()) + " Low";
                     var limit = new DecimalFormat("#.############").format(range.getMinInclusive());
+                    if (units != null) {
+                        limit += " " + units;
+                    }
                     createKeyValueTextPair(label, limit);
                 }
             }
@@ -136,6 +142,9 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                 if (range.hasMaxInclusive()) {
                     var label = capitalize(range.getLevel().toString()) + " High";
                     var limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
+                    if (units != null) {
+                        limit += " " + units;
+                    }
                     createKeyValueTextPair(label, limit);
                 }
             }
@@ -174,12 +183,18 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             if (displayInfo != null) {
                 createKeyValueTextPair("Units", displayInfo.getUnits());
                 createKeyValueTextPair("Precision", "" + displayInfo.getFormat().getMaximumFractionDigits());
-                createKeyValueTextPair("Display Low", "" + displayInfo.getLowerDisplayLimit());
-                createKeyValueTextPair("Display High", "" + displayInfo.getUpperDisplayLimit());
-                createKeyValueTextPair("Alarm Low", "" + displayInfo.getLowerAlarmLimit());
-                createKeyValueTextPair("Warning Low", "" + displayInfo.getLowerWarningLimit());
-                createKeyValueTextPair("Warning High", "" + displayInfo.getUpperWarningLimit());
-                createKeyValueTextPair("Alarm High", "" + displayInfo.getUpperAlarmLimit());
+                createKeyValueTextPair("Display Low", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getLowerDisplayLimit()));
+                createKeyValueTextPair("Display High", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getUpperDisplayLimit()));
+                createKeyValueTextPair("Alarm Low", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getLowerAlarmLimit()));
+                createKeyValueTextPair("Warning Low", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getLowerWarningLimit()));
+                createKeyValueTextPair("Warning High", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getUpperWarningLimit()));
+                createKeyValueTextPair("Alarm High", "" +
+                        TO_STRING_FORMAT.format(displayInfo.getUpperAlarmLimit()));
             }
         }
     }
@@ -252,17 +267,17 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                         .ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
                         .toString());
 
-                var engValue = StringConverter.toString(pval.getEngValue());
-                if (pvInfo.getParameterInfo().hasType()) {
-                    var ptype = pvInfo.getParameterInfo().getType();
-                    if (ptype.getUnitSetCount() > 0) {
-                        for (var unitInfo : ptype.getUnitSetList()) {
-                            engValue += " " + unitInfo.getUnit();
-                        }
+                var engValue = YamcsVType.fromYamcs(pval, false);
+
+                var text = engValue.toString();
+                if (VTypeHelper.getDisplayInfo(engValue) != null) {
+                    var units = VTypeHelper.getDisplayInfo(engValue).getUnits();
+                    if (units != null && units.trim().length() > 0) {
+                        text = text + " " + units;
                     }
                 }
-                engValueField.setText(engValue);
-                engTypeField.setText(capitalize(pval.getEngValue().getType().toString()));
+                engValueField.setText(text);
+                engTypeField.setText(pval.getEngValue().getType().toString());
 
                 if (pval.hasAcquisitionStatus()) {
                     statusField.setText(pval.getAcquisitionStatus().toString());
@@ -271,8 +286,9 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                 }
 
                 if (pval.hasRawValue()) {
-                    rawValueField.setText(StringConverter.toString(pval.getRawValue()));
-                    rawTypeField.setText(capitalize(pval.getRawValue().getType().toString()));
+                    var rawValue = YamcsVType.fromYamcs(pval, true);
+                    rawValueField.setText(rawValue.toString());
+                    rawTypeField.setText(pval.getRawValue().getType().toString());
                 } else {
                     rawValueField.setText("---");
                     rawTypeField.setText("---");

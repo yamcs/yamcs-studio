@@ -21,7 +21,7 @@ public class DisplayBuilder {
     private Double lowerAlarmLimit = Double.NaN;
     private Double lowerWarningLimit = Double.NaN;
     private String units = "";
-    private NumberFormat format = NumberFormats.toStringFormat();
+    private NumberFormat format = NumberFormats.TO_STRING_FORMAT;
     private Double upperWarningLimit = Double.NaN;
     private Double upperAlarmLimit = Double.NaN;
     private Double upperCtrlLimit = Double.NaN;

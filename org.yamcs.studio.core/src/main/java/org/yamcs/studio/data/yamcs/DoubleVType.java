@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.data.yamcs;
 
+import static org.yamcs.studio.data.vtype.NumberFormats.TO_STRING_FORMAT;
+
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.VDouble;
 
@@ -25,6 +27,6 @@ public class DoubleVType extends YamcsVType implements VDouble {
 
     @Override
     public String toString() {
-        return Double.toString(value.getDoubleValue());
+        return TO_STRING_FORMAT.format(value.getDoubleValue());
     }
 }
