@@ -9,11 +9,11 @@
  *******************************************************************************/
 package org.yamcs.studio.core;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -266,13 +266,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
      *            whether timezone offset is added to the output string.
      */
     public String formatInstant(Instant instant, boolean tzOffset) {
-        if (format == null) {
-            var store = getPreferenceStore();
-            var pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
-            setDateFormat(pattern);
-        }
+        getOrCreateDateFormat();
         var zdt = ZonedDateTime.ofInstant(instant, YamcsPlugin.getZoneId());
-        Calendar cal = GregorianCalendar.from(zdt);
+        var cal = GregorianCalendar.from(zdt);
         cal.setTimeZone(YamcsPlugin.getTimeZone());
         if (tzOffset) {
             tzFormat.setTimeZone(cal.getTimeZone());
@@ -280,6 +276,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
         } else {
             format.setTimeZone(cal.getTimeZone());
             return format.format(cal.getTime());
+        }
+    }
+
+    public Instant parseTime(String time) throws ParseException {
+        getOrCreateDateFormat();
+        var d = format.parse(time);
+        return d.toInstant();
+    }
+
+    private void getOrCreateDateFormat() {
+        if (format == null) {
+            var store = getPreferenceStore();
+            var pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+            setDateFormat(pattern);
         }
     }
 

@@ -44,6 +44,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.FormatEnum;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
@@ -312,6 +313,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                     return (parseSexagesimal(text, true) * Math.PI / 12.0);
                 case SEXA_DMS:
                     return (parseSexagesimal(text, true) * Math.PI / 180.0);
+                case TIME:
+                    return parseTime(text);
                 case DEFAULT:
                 default:
                     try {
@@ -338,6 +341,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         return (parseSexagesimal(text, true) * Math.PI / 12.0);
                     case SEXA_DMS:
                         return (parseSexagesimal(text, true) * Math.PI / 180.0);
+                    case TIME:
+                        return parseTime(text);
                     case DEFAULT:
                     default:
                         try {
@@ -442,6 +447,10 @@ public class TextInputEditpart extends TextUpdateEditPart {
             }
         }
         return (int) i; // EPICS_V3_PV doesn't support Long
+    }
+
+    private long parseTime(String text) throws ParseException {
+        return YamcsPlugin.getDefault().parseTime(text).toEpochMilli();
     }
 
     private double parseSexagesimal(String text, boolean coerce) throws ParseException {

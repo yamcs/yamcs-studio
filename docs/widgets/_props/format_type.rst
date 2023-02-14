@@ -43,3 +43,6 @@ Format Type (``format_type``)
         * - 10
           - Sexagesimal DMS
           - Same as sexagesimal, but the value is assumed to be in radians, and expressed as degrees, minutes and seconds.
+        * - 11
+          - Time String (Unix Millis)
+          - Print Unix Milliseconds as a time string. The format is specified in **Preferences > Date Format** (default: ``yyyy-MM-dd HH:mm:ss.SSS``).

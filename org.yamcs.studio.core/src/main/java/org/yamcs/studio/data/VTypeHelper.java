@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
 import org.yamcs.studio.data.vtype.Array;
 import org.yamcs.studio.data.vtype.CollectionNumbers;
@@ -548,6 +549,9 @@ public class VTypeHelper {
         case HEX:
         case HEX64:
             return HEX_PREFIX + Integer.toHexString(enumValue.getIndex());
+        case TIME:
+            return YamcsPlugin.getDefault()
+                    .formatInstant(Instant.ofEpochMilli(enumValue.getIndex()));
         case DEFAULT:
         case STRING:
         default:
@@ -687,6 +691,9 @@ public class VTypeHelper {
             return HEX_PREFIX + Long.toHexString(numValue.longValue());
         case STRING:
             return new String(new char[] { (char) numValue.intValue() });
+        case TIME:
+            return YamcsPlugin.getDefault()
+                    .formatInstant(Instant.ofEpochMilli(numValue.longValue()));
         }
     }
 

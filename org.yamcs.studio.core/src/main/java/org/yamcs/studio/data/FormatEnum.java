@@ -61,7 +61,11 @@ public enum FormatEnum {
      * Same as sexagesimal except that the number is assumed to be in radians and is expressed as degrees, minutes, and
      * seconds
      */
-    SEXA_DMS("Sexagesimal DMS");
+    SEXA_DMS("Sexagesimal DMS"),
+    /**
+     * When the value is numeric, interpret that value as unix milliseconds, and print a timestamp.
+     */
+    TIME_STRING("Time String (Unix Millis)");
 
     private String description;
 
