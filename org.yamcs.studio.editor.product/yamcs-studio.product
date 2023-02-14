@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.6.4.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.6.4.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/org.yamcs.studio.editor/icons/aboutSide.png"/>
@@ -16,6 +16,8 @@ See https://yamcs.org
    </configIni>
 
    <launcherArgs>
+      <programArgs>-nl en_US
+      </programArgs>
       <vmArgs>-Xmx2048m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
