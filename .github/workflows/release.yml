@@ -3,16 +3,17 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   publish:
     name: Create release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
+          distribution: temurin
           java-version: 17
 
       - name: Set version
@@ -26,61 +27,10 @@ jobs:
         run: mvn -B --no-transfer-progress -DskipTests package
 
       - name: Draft Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: v${{ steps.set-version.outputs.version }}
-          draft: true  # Only publish after manual trigger
-
-      - name: Upload Windows x64 asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-win32.win32.x86_64.zip
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-win32.win32.x86_64.zip
-          asset_content_type: application/zip
-
-      - name: Upload Linux aarch64 asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.aarch64.tar.gz
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.aarch64.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Linux x64 asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.x86_64.tar.gz
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.x86_64.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload macOS aarch64 asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.tar.gz
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.aarch64.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload macOS x64 asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.tar.gz
-          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.tar.gz
-          asset_content_type: application/gzip
+          draft: true # Only publish after manual trigger
+          generate_release_notes: true
+          files: |
+            org.yamcs.studio.editor.product/target/products/*.zip
+            org.yamcs.studio.editor.product/target/products/*.tar.gz
