@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>yamcs-studio</artifactId>
-    <version>1.6.4</version>
+    <version>1.6.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.links</artifactId>
