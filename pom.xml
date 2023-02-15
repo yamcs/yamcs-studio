@@ -23,7 +23,7 @@
   </organization>
 
   <properties>
-    <tycho.version>3.0.1</tycho.version>
+    <tycho.version>3.0.2</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
