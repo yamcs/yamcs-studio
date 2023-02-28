@@ -93,13 +93,10 @@ public class ArmAllCommandHandler extends AbstractHandler {
                     }
 
                     if (doArm) {
-                        log.info(String.format("Command armed %s", command));
                         command.setStackedState(StackedState.ARMED);
 
                         if (commandIndex + 1 == stack.getCommands().size()) {
                             view.refreshState();
-                            MessageDialog.openInformation(activeShell, "Automatic Command Stack Armed",
-                                    "The command stack is armed in automatic mode.");
                         } else {
                             try {
                                 armAllCommands(activeShell, view, stack, commandIndex + 1);

@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
+import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 /**
@@ -26,8 +27,14 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
     public static final String STATE_KEY_EXECUTION_STARTED = "org.yamcs.studio.commanding.stack.state.executionStarted";
     public static final String STATE_KEY_EMPTY = "org.yamcs.studio.commanding.stack.state.empty";
     public static final String STATE_KEY_ARMED = "org.yamcs.studio.commanding.stack.state.armed";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_REMAINING, STATE_KEY_EXECUTION_STARTED, STATE_KEY_EMPTY,
-            STATE_KEY_ARMED };
+    public static final String STATE_KEY_EXECUTING = "org.yamcs.studio.commanding.stack.state.executing";
+    private static final String[] SOURCE_NAMES = {
+            STATE_KEY_REMAINING,
+            STATE_KEY_EXECUTION_STARTED,
+            STATE_KEY_EMPTY,
+            STATE_KEY_ARMED,
+            STATE_KEY_EXECUTING,
+    };
 
     /**
      * Whether there's any remaining commands to be armed/executed
@@ -49,6 +56,11 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
      */
     private boolean armed = false;
 
+    /**
+     * Whether the stack is currently busy executing
+     */
+    private boolean executing = false;
+
     public void refreshState(CommandStack stack) {
         remaining = stack.hasRemaining();
         if (remaining) {
@@ -67,6 +79,8 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
             }
         }
 
+        executing = stack.getStackStatus() == StackStatus.EXECUTING;
+
         var newState = getCurrentState();
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
@@ -78,6 +92,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
         map.put(STATE_KEY_EXECUTION_STARTED, executionStarted);
         map.put(STATE_KEY_EMPTY, empty);
         map.put(STATE_KEY_ARMED, armed);
+        map.put(STATE_KEY_EXECUTING, executing);
         return map;
     }
 

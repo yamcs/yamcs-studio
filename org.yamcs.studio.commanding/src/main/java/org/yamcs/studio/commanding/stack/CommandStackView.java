@@ -54,6 +54,7 @@ import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
+import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -283,7 +284,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         fixDelaySpinner.setVisible(false);
         fixDelaySpinner.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
-            stack.fixDelayMs = fixDelaySpinner.getSelection();
+            stack.setAutoFixDelayMs(fixDelaySpinner.getSelection());
         });
 
         var labelUnit = new Label(stackParameters, SWT.NONE);
@@ -293,15 +294,13 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             var stack = CommandStack.getInstance();
             var index = advanceModeCombo.getSelectionIndex();
             if (index == StackMode.MANUAL.index()) {
-                // Manual
-                stack.stackMode = StackMode.MANUAL;
+                stack.setStackMode(StackMode.MANUAL);
                 autoOptionsCombo.setVisible(false);
                 fixDelaySpinner.setVisible(false);
                 labelUnit.setVisible(false);
                 commandTableViewer.hideDelayColumn();
             } else {
-                // Automatic
-                stack.stackMode = StackMode.AUTOMATIC;
+                stack.setStackMode(StackMode.AUTOMATIC);
                 autoOptionsCombo.setVisible(true);
                 if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                     // fix delay
@@ -328,7 +327,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         });
         autoOptionsCombo.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
-            if (stack.stackMode == StackMode.AUTOMATIC) {
+            if (stack.getStackMode() == StackMode.AUTOMATIC) {
                 if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                     // fix delay
                     fixDelaySpinner.setVisible(true);
@@ -352,11 +351,11 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 commandTableViewer.hideDelayColumn();
             }
             if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
-                stack.autoMode = AutoMode.FIX_DELAY;
+                stack.setAutoMode(AutoMode.FIX_DELAY);
             } else if (autoOptionsCombo.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
-                stack.autoMode = AutoMode.STACK_DELAYS;
+                stack.setAutoMode(AutoMode.STACK_DELAYS);
             } else {
-                stack.autoMode = AutoMode.AFAP;
+                stack.setAutoMode(AutoMode.AFAP);
             }
         });
 
@@ -370,7 +369,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 var commandService = getViewSite().getService(ICommandService.class);
                 var evaluationService = getViewSite().getService(IEvaluationService.class);
 
-                if (stack.stackMode == StackMode.AUTOMATIC) {
+                if (stack.getStackMode() == StackMode.AUTOMATIC) {
                     // automatic stack, arm all commands
                     var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
                     try {
@@ -409,7 +408,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             var evaluationService = getViewSite().getService(IEvaluationService.class);
 
             org.eclipse.core.commands.Command cmd = null;
-            if (stack.stackMode == StackMode.AUTOMATIC) {
+            if (stack.getStackMode() == StackMode.AUTOMATIC) {
                 // automatic stack - issue all commands
                 cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issueAll");
             } else {
@@ -428,13 +427,15 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             var sel = (IStructuredSelection) evt.getSelection();
             updateMessagePanel(sel);
             var stack = CommandStack.getInstance();
-            armButton.setSelection(false);
-            stack.disarmArmed();
-            if (sel.isEmpty() || !stack.isValid() || !sel.getFirstElement().equals(stack.getActiveCommand())) {
-                armButton.setEnabled(false);
-                issueButton.setEnabled(false);
-            } else if (stack.hasRemaining() && YamcsPlugin.hasAnyObjectPrivilege("Command")) {
-                armButton.setEnabled(true);
+            if (stack.getStackStatus() != StackStatus.EXECUTING) {
+                armButton.setSelection(false);
+                stack.disarmArmed();
+                if (sel.isEmpty() || !stack.isValid() || !sel.getFirstElement().equals(stack.getActiveCommand())) {
+                    armButton.setEnabled(false);
+                    issueButton.setEnabled(false);
+                } else if (stack.hasRemaining() && YamcsPlugin.hasAnyObjectPrivilege("Command")) {
+                    armButton.setEnabled(true);
+                }
             }
 
             refreshState();
@@ -624,12 +625,15 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
         var sel = (IStructuredSelection) commandTableViewer.getSelection();
         updateMessagePanel(sel);
+
         var mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
-        if (connectionStateProvider.isConnected() && !sel.isEmpty()) {
+        var executing = stack.getStackStatus() == StackStatus.EXECUTING;
+
+        if (connectionStateProvider.isConnected() && !sel.isEmpty() && !executing) {
             var selectedCommand = (StackedCommand) sel.getFirstElement();
             if (mayCommand && selectedCommand == stack.getActiveCommand()) {
-                if (stack.stackMode == StackMode.MANUAL && selectedCommand.isArmed()
-                        || stack.stackMode == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
+                if (stack.getStackMode() == StackMode.MANUAL && selectedCommand.isArmed()
+                        || stack.getStackMode() == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
                     armButton.setEnabled(true);
                     issueButton.setEnabled(armButton.getSelection());
                 } else if (stack.isValid()) {
@@ -645,14 +649,16 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 issueButton.setEnabled(false);
             }
         } else {
-            stack.disarmArmed();
+            if (stack.getStackStatus() != StackStatus.EXECUTING) {
+                stack.disarmArmed();
+            }
             armButton.setEnabled(false);
             issueButton.setEnabled(false);
         }
 
-        stackModeLabel.setEnabled(mayCommand && connectionStateProvider.isConnected());
-        advanceModeCombo.setEnabled(mayCommand && connectionStateProvider.isConnected());
-        autoOptionsCombo.setEnabled(mayCommand && connectionStateProvider.isConnected());
+        stackModeLabel.setEnabled(!executing && mayCommand && connectionStateProvider.isConnected());
+        advanceModeCombo.setEnabled(!executing && mayCommand && connectionStateProvider.isConnected());
+        autoOptionsCombo.setEnabled(!executing && mayCommand && connectionStateProvider.isConnected());
 
         // State for plugin.xml handlers
         var executionStateProvider = RCPUtils.findSourceProvider(getSite(), CommandStackStateProvider.STATE_KEY_ARMED,

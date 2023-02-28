@@ -17,6 +17,7 @@
          <variable name="org.yamcs.studio.commanding.stack.state.armed" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.commanding.stack.state.empty" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.commanding.stack.state.executionStarted" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.commanding.stack.state.executing" priorityLevel="workbench" />
       </sourceProvider>
    </extension>
 
@@ -62,6 +63,9 @@
                <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
                </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
             </and>
          </activeWhen>
       </handler>
@@ -78,6 +82,9 @@
                   <iterate ifEmpty="false">
                      <instanceof value="org.yamcs.studio.commanding.stack.StackedCommand" />
                   </iterate>
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
                </with>
             </and>
          </enabledWhen>
@@ -96,6 +103,9 @@
                      <equals value="true" />
                   </not>
                </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -110,6 +120,9 @@
                </with>
                <with variable="org.yamcs.studio.commanding.stack.state.executionStarted">
                   <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
                </with>
             </and>
          </enabledWhen>
@@ -136,6 +149,9 @@
                      </iterate>
                   </and>
                </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -147,6 +163,9 @@
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
                </with>
             </and>
          </enabledWhen>
@@ -160,6 +179,9 @@
                <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
                </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -172,6 +194,9 @@
                <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
                </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -183,6 +208,9 @@
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
                </with>
             </and>
          </enabledWhen>

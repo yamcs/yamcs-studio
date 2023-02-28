@@ -21,21 +21,6 @@ import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
  */
 public class CommandStack {
 
-    private static final CommandStack INSTANCE = new CommandStack();
-    private List<StackedCommand> commands = new ArrayList<>();
-    public StackStatus stackStatus = StackStatus.IDLE;
-    public StackMode stackMode = StackMode.MANUAL;
-    public AutoMode autoMode = AutoMode.AFAP;
-    public int fixDelayMs = 100;
-
-    public AutoMode getAutoMode() {
-        return autoMode;
-    }
-
-    public int getAutoFixDelayMs() {
-        return fixDelayMs;
-    }
-
     public enum StackStatus {
         IDLE, EXECUTING;
     }
@@ -68,7 +53,46 @@ public class CommandStack {
         }
     }
 
+    private static final CommandStack INSTANCE = new CommandStack();
+    private List<StackedCommand> commands = new ArrayList<>();
+    private StackStatus stackStatus = StackStatus.IDLE;
+    private StackMode stackMode = StackMode.MANUAL;
+    private AutoMode autoMode = AutoMode.AFAP;
+    private int fixDelayMs = 100;
+
     private CommandStack() {
+    }
+
+    public StackStatus getStackStatus() {
+        return stackStatus;
+    }
+
+    public void setStackStatus(StackStatus stackStatus) {
+        this.stackStatus = stackStatus;
+    }
+
+    public StackMode getStackMode() {
+        return stackMode;
+    }
+
+    public void setStackMode(StackMode stackMode) {
+        this.stackMode = stackMode;
+    }
+
+    public AutoMode getAutoMode() {
+        return autoMode;
+    }
+
+    public void setAutoMode(AutoMode autoMode) {
+        this.autoMode = autoMode;
+    }
+
+    public int getAutoFixDelayMs() {
+        return fixDelayMs;
+    }
+
+    public void setAutoFixDelayMs(int fixDelayMs) {
+        this.fixDelayMs = fixDelayMs;
     }
 
     public static CommandStack getInstance() {

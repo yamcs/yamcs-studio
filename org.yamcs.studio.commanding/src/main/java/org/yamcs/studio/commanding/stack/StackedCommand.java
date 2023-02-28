@@ -32,7 +32,11 @@ import org.yamcs.studio.core.YamcsPlugin;
 public class StackedCommand {
 
     public enum StackedState {
-        DISARMED("Disarmed"), ARMED("Armed"), ISSUED("Issued"), SKIPPED("Skipped"), REJECTED("Rejected");
+        DISARMED("Disarmed"),
+        ARMED("Armed"),
+        ISSUED("Issued"),
+        SKIPPED("Skipped"),
+        REJECTED("Rejected");
 
         private String text;
 
