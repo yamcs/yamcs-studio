@@ -125,7 +125,7 @@ public class StackExecutorJob extends Job {
                         issueAllCommands(activeShell, view, stack, commandIndex + 1);
                     } else {
                         // Command stack is completed
-                        log.info("Automatic Command Stack is fully issued");
+                        log.info("Done executing Command Stack");
                         monitor.done();
                         stack.setStackStatus(StackStatus.IDLE);
                         Display.getDefault().asyncExec(() -> {

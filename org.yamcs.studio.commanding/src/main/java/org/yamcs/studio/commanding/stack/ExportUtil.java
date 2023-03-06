@@ -11,7 +11,6 @@ package org.yamcs.studio.commanding.stack;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,7 +23,99 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.yamcs.studio.data.yamcs.StringConverter;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class ExportUtil {
+
+    public static JsonObject toJSON(CommandStack stack) {
+        var root = new JsonObject();
+        root.addProperty("$schema", "https://yamcs.org/schema/command-stack.schema.json");
+
+        var commandsArray = new JsonArray();
+        root.add("commands", commandsArray);
+        for (var command : stack.getCommands()) {
+            var commandObject = new JsonObject();
+            commandObject.addProperty("name", command.getMetaCommand().getQualifiedName());
+            if (command.getComment() != null) {
+                commandObject.addProperty("comment", command.getComment());
+            }
+
+            var argumentsArray = new JsonArray();
+            for (var arg : command.getEffectiveAssignments()) {
+                var value = command.getAssignedStringValue(arg.getArgumentInfo());
+
+                if (value == null && arg.getArgumentInfo().hasInitialValue()) {
+                    continue;
+                }
+                if (!arg.isEditable()) {
+                    continue;
+                }
+                if (arg.getArgumentInfo().hasInitialValue() && !command.isDefaultChanged(arg.getArgumentInfo())) {
+                    continue;
+                }
+
+                var argumentObject = new JsonObject();
+                argumentObject.addProperty("name", arg.getName());
+                if ("true".equals(value)) {
+                    argumentObject.addProperty("value", true);
+                } else if ("false".equals(value)) {
+                    argumentObject.addProperty("value", false);
+                } else {
+                    argumentObject.addProperty("value", value);
+                }
+                argumentsArray.add(argumentObject);
+            }
+            commandObject.add("arguments", argumentsArray);
+
+            if (!command.getExtra().isEmpty()) {
+                var extraOptions = new JsonArray();
+
+                command.getExtra().forEach((option, value) -> {
+                    var optionObject = new JsonObject();
+                    extraOptions.add(optionObject);
+                    optionObject.addProperty("id", option);
+                    switch (value.getType()) {
+                    case BOOLEAN:
+                        optionObject.addProperty("value", value.getBooleanValue());
+                        break;
+                    case UINT32:
+                        optionObject.addProperty("value", value.getUint32Value());
+                        break;
+                    case UINT64:
+                        optionObject.addProperty("value", value.getUint64Value());
+                        break;
+                    case SINT32:
+                        optionObject.addProperty("value", value.getSint32Value());
+                        break;
+                    case SINT64:
+                        optionObject.addProperty("value", value.getSint64Value());
+                        break;
+                    case FLOAT:
+                        optionObject.addProperty("value", value.getFloatValue());
+                        break;
+                    case DOUBLE:
+                        optionObject.addProperty("value", value.getDoubleValue());
+                        break;
+                    default:
+                        optionObject.addProperty("value", StringConverter.toString(value));
+                    }
+                });
+
+                commandObject.add("extraOptions", extraOptions);
+            }
+
+            if (command.getDelayMs() > 0) {
+                var advancementObject = new JsonObject();
+                advancementObject.addProperty("wait", command.getDelayMs());
+                commandObject.add("advancement", advancementObject);
+            }
+
+            commandsArray.add(commandObject);
+        }
+
+        return root;
+    }
 
     public static String toXML(CommandStack stack) throws IOException, TransformerException {
         var factory = DocumentBuilderFactory.newInstance();
@@ -103,7 +194,7 @@ public class ExportUtil {
             rootElement.appendChild(commandElement);
         }
 
-        try (Writer writer = new StringWriter()) {
+        try (var writer = new StringWriter()) {
             var transformerFactory = TransformerFactory.newInstance();
             var transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");

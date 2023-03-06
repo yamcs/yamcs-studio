@@ -209,17 +209,6 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(constraintsTimeOutColumn.getColumn(), new ColumnPixelData(50));
 
-        var releaseColumn = new TableViewerColumn(this, SWT.CENTER);
-        releaseColumn.getColumn().setText(COL_RELEASE);
-        releaseColumn.getColumn().setToolTipText("Release Time");
-        releaseColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return "ASAP";
-            }
-        });
-        tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
-
         var stateColumn = new TableViewerColumn(this, SWT.CENTER);
         stateColumn.getColumn().setText(COL_STATE);
         stateColumn.getColumn().setToolTipText("Stack State");
@@ -337,7 +326,7 @@ public class CommandStackTableViewer extends TableViewer {
         // column comment
         var commentColumn = new TableViewerColumn(this, SWT.LEFT);
         commentColumn.getColumn().setText(COL_COMMENT);
-        commentColumn.getColumn().setToolTipText("Free Text Comment");
+        commentColumn.getColumn().setToolTipText("Comment");
         commentColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -353,7 +342,6 @@ public class CommandStackTableViewer extends TableViewer {
         columns.add(significanceColumn);
         columns.add(constraintsColumn);
         columns.add(constraintsTimeOutColumn);
-        columns.add(releaseColumn);
         columns.add(qColumn);
         columns.add(rColumn);
         columns.add(sColumn);

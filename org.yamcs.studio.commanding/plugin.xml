@@ -32,7 +32,8 @@
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.armAll" name="Arm All Commands"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issue" name="Issue Command"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issueAll" name="Issue All Commands"></command>
-      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.export" name="Export Stack"></command>
+      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.export" name="Export Stack (XML)"></command>
+      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportYcs" name="Export Stack (YCS)"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportSpell" name="Export Stack as SPELL Procedure"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.import" name="Import a Stack"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.saveToYamcs" name="Save to Yamcs"></command>
@@ -215,7 +216,14 @@
             </and>
          </enabledWhen>
       </handler>
-      <handler class="org.yamcs.studio.commanding.stack.ExportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.export">
+      <handler class="org.yamcs.studio.commanding.stack.ExportXmlCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.export">
+         <enabledWhen>
+            <with variable="org.yamcs.studio.commanding.stack.state.empty">
+               <equals value="false" />
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler class="org.yamcs.studio.commanding.stack.ExportYcsCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.exportYcs">
          <enabledWhen>
             <with variable="org.yamcs.studio.commanding.stack.state.empty">
                <equals value="false" />
@@ -295,7 +303,7 @@
 
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="toolbar:org.yamcs.studio.commanding.stack.CommandStackView">
-         <command id="org.yamcs.studio.commanding.stack.exportDropdown" commandId="org.yamcs.studio.commanding.stack.export" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export Stack" style="pulldown" />
+         <command id="org.yamcs.studio.commanding.stack.exportDropdown" commandId="org.yamcs.studio.commanding.stack.exportYcs" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export Stack" style="pulldown" />
          <command commandId="org.yamcs.studio.commanding.stack.import" icon="icons/elcl16/import_log.png" disabledIcon="icons/dlcl16/import_log.png" label="Import a Stack" style="push" />
          <control class="org.yamcs.studio.core.utils.ToolbarSpacer" />
          <command commandId="org.yamcs.studio.commanding.stack.add" icon="icons/elcl16/new_command.png" disabledIcon="icons/dlcl16/new_command.png" label="New Command" style="push" />
@@ -308,7 +316,8 @@
       </menuContribution>
 
       <menuContribution locationURI="menu:org.yamcs.studio.commanding.stack.exportDropdown">
-         <command commandId="org.yamcs.studio.commanding.stack.export" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to XML..." style="push" />
+         <command commandId="org.yamcs.studio.commanding.stack.export" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to XML (deprecated)..." style="push" />
+         <command commandId="org.yamcs.studio.commanding.stack.exportYcs" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to YCS..." style="push" />
          <command commandId="org.yamcs.studio.commanding.stack.exportSpell" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to SPELL procedure..." style="push" />
          <separator name="org.yamcs.studio.commanding.stack.separator1" visible="true" />
          <command commandId="org.yamcs.studio.commanding.stack.saveToYamcs" label="Save to Yamcs..." style="push" />

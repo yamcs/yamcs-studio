@@ -26,9 +26,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class ExportCommandStackHandler extends AbstractHandler {
+public class ExportXmlCommandStackHandler extends AbstractHandler {
 
-    private static final Logger log = Logger.getLogger(ExportCommandStackHandler.class.getName());
+    private static final Logger log = Logger.getLogger(ExportXmlCommandStackHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

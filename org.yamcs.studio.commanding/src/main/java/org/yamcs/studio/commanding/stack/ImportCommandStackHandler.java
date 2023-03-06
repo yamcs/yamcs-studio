@@ -9,8 +9,9 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,6 +33,9 @@ import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.studio.core.YamcsPlugin;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 public class ImportCommandStackHandler extends AbstractHandler {
 
     private static final Logger log = Logger.getLogger(ImportCommandStackHandler.class.getName());
@@ -40,10 +44,9 @@ public class ImportCommandStackHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var shell = HandlerUtil.getActiveShell(event);
         var dialog = new FileDialog(shell, SWT.OPEN);
-        dialog.setFilterExtensions(new String[] { "*.xml" });
+        dialog.setFilterExtensions(new String[] { "*.xml;*.ycs" });
         var importFile = dialog.open();
         if (importFile == null) {
-            // cancelled
             return null;
         }
         log.info("Importing command stack from file: " + importFile);
@@ -53,15 +56,90 @@ public class ImportCommandStackHandler extends AbstractHandler {
         var part = window.getActivePage().findView(CommandStackView.ID);
         var commandStackView = (CommandStackView) part;
 
-        // import new commands
-        for (var sc : parseCommandStack(shell, Paths.get(importFile))) {
-            commandStackView.addTelecommand(sc);
+        if (importFile.toLowerCase().endsWith(".xml")) {
+            for (var sc : parseXmlCommandStack(shell, Path.of(importFile))) {
+                commandStackView.addTelecommand(sc);
+            }
+        } else if (importFile.toLowerCase().endsWith(".ycs")) {
+            for (var sc : parseYcsCommandStack(shell, Path.of(importFile))) {
+                commandStackView.addTelecommand(sc);
+            }
         }
 
         return null;
     }
 
-    private List<StackedCommand> parseCommandStack(Shell shell, Path file) {
+    private List<StackedCommand> parseYcsCommandStack(Shell shell, Path file) {
+        var commands = new ArrayList<StackedCommand>();
+        var gson = new Gson();
+        JsonObject stackObject;
+        try (var reader = Files.newBufferedReader(file)) {
+            stackObject = gson.fromJson(reader, JsonObject.class);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Unable to import command stack:" + e, e);
+            MessageDialog.openError(shell, "Import Command Stack",
+                    "Unable to import command stack. Details:\n" + e);
+            return null;
+        }
+
+        if (stackObject.has("commands")) {
+            for (var commandEl : stackObject.getAsJsonArray("commands")) {
+                var commandObject = commandEl.getAsJsonObject();
+                var qname = commandObject.get("name").getAsString();
+
+                var mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qname);
+                if (mdbInfo == null) {
+                    MessageDialog.openError(shell, "Import Command Stack",
+                            "Command " + qname + " does not exist in MDB.");
+                    return null;
+                }
+
+                var command = new StackedCommand();
+                command.setMetaCommand(mdbInfo);
+                if (commandObject.has("comment")) {
+                    var comment = commandObject.get("comment").getAsString();
+                    command.setComment(comment);
+                }
+                if (commandObject.has("advancement")) {
+                    var advancementObject = commandObject.get("advancement").getAsJsonObject();
+                    if (advancementObject.has("wait")) {
+                        var wait = commandObject.get("delayMs").getAsInt();
+                        command.setDelayMs(wait);
+                    }
+                }
+                if (commandObject.has("arguments")) {
+                    var argumentsArray = commandObject.get("arguments").getAsJsonArray();
+                    for (var argumentEl : argumentsArray) {
+                        var argumentObject = argumentEl.getAsJsonObject();
+
+                        var argName = argumentObject.get("name").getAsString();
+                        var argValue = argumentObject.get("value");
+                        var argInfo = getArgumentFromYamcs(mdbInfo, argName);
+                        if (argInfo == null) {
+                            MessageDialog.openError(shell, "Import Command Stack",
+                                    "In command " + qname + ", argument " + argName + " does not exist in MDB.");
+                            return null;
+                        }
+                        if (argValue.isJsonNull()) {
+                            command.addAssignment(argInfo, null);
+                        } else if (argValue.isJsonPrimitive()) {
+                            command.addAssignment(argInfo, argValue.getAsString());
+                        } else if (argValue.isJsonArray()) {
+                            command.addAssignment(argInfo, argValue.getAsJsonArray().toString());
+                        } else if (argValue.isJsonObject()) {
+                            command.addAssignment(argInfo, argValue.getAsJsonObject().toString());
+                        } else {
+                            throw new IllegalArgumentException("Unexpected value: " + argValue);
+                        }
+                    }
+                }
+            }
+        }
+
+        return commands;
+    }
+
+    private List<StackedCommand> parseXmlCommandStack(Shell shell, Path file) {
         try {
             var dbFactory = DocumentBuilderFactory.newInstance();
             var dBuilder = dbFactory.newDocumentBuilder();
