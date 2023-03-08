@@ -9,16 +9,20 @@
  *******************************************************************************/
 package org.yamcs.studio.script;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class Yamcs {
 
-    public static Logger log = Logger.getLogger(Yamcs.class.getName());
+    public static final Logger log = Logger.getLogger(Yamcs.class.getName());
 
     /**
      * Sample use:
@@ -39,7 +43,14 @@ public class Yamcs {
         for (var arg : parsed.getAssignments()) {
             builder.withArgument(arg.getName(), arg.getValue());
         }
-        builder.issue();
+        builder.issue().whenComplete((result, t) -> {
+            if (t != null) {
+                log.log(Level.SEVERE, "Failed to issue command: " + t, t);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(null, "Failed to issue command", t.getMessage());
+                });
+            }
+        });
     }
 
     /**
@@ -60,32 +71,40 @@ public class Yamcs {
                 builder.withArgument(arg.getKey(), String.valueOf(arg.getValue()));
             }
         }
-        builder.issue();
+        builder.issue().whenComplete((result, t) -> {
+            if (t != null) {
+                log.log(Level.SEVERE, "Failed to issue command: " + t, t);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(null, "Failed to issue command", t.getMessage());
+                });
+            }
+        });
     }
 
     /**
      * Write a text file to a bucket.
      * <p>
-     * Sample use: Yamcs.writeTextFileToBucket("ys://bucketName", "fileName.txt", "Hello!\n");
+     * Sample use: Yamcs.writeTextFileToBucket("bucketName", "some/file.txt", "Hello!\n");
      *
-     * @param bucketUrl
-     *            bucket URL.
-     * @param fileName
-     *            file name with extension.
+     * @param bucket
+     *            target bucket.
+     * @param objectName
+     *            target object name.
      * @param text
-     *            the text to be written to the file.
+     *            the text to be written to the object.
      */
-    public static void writeTextFileToBucket(String bucketUrl, String fileName, String text) {
-        var targetUrl = bucketUrl + "/" + fileName;
-        ObjectId targetObject = ObjectId.parseURL(targetUrl);
-
-        byte[] byteArray = text.getBytes();
+    public static void writeTextFileToBucket(String bucket, String objectName, String text) {
+        var objectId = ObjectId.of(bucket, objectName);
 
         var storage = YamcsPlugin.getStorageClient();
-        storage.uploadObject(targetObject, byteArray).exceptionally((ex) -> {
-            log.warning("Recovered from \"" + ex.getMessage() + "\"");
-            return null;
+        var bytes = text.getBytes(StandardCharsets.UTF_8);
+        storage.uploadObject(objectId, bytes).whenComplete((result, t) -> {
+            if (t != null) {
+                log.log(Level.SEVERE, "Failed to write to " + objectId + "\": " + t, t);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(null, "Failed to write to " + objectId, t.getMessage());
+                });
+            }
         });
     }
-
 }
