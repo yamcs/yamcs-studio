@@ -94,7 +94,7 @@ public class PVUtil {
      * @throws NullPointerException
      *             if value is null
      */
-    protected static VType checkPVValue(IPV pv) {
+    public static VType checkPVValue(IPV pv) {
         return Objects.requireNonNull(pv.getValue(), () -> "PV " + pv.getName() + " has no value.");
     }
 
@@ -317,14 +317,28 @@ public class PVUtil {
     }
 
     /**
-     * Get the status text that might describe the severity.
+     * Get the status text that might describe the severity specific to the type of PV.
+     * <p>
+     * For a Yamcs parameter this can be the value LOW or HIGH.
      *
      * @return the status string.
-     * @deprecated
      */
-    @Deprecated
     public final static String getStatus(IPV pv) {
         return VTypeHelper.getAlarmName(checkPVValue(pv));
+    }
+
+    /**
+     * Try to get the units from the PV.
+     */
+    public static String getUnits(IPV pv) {
+        var display = VTypeHelper.getDisplayInfo(checkPVValue(pv));
+        if (display != null) {
+            var units = display.getUnits();
+            if (units != null && !"".equals(units)) {
+                return units;
+            }
+        }
+        return null;
     }
 
     /**
@@ -390,7 +404,6 @@ public class PVUtil {
      * @return the list of values into a string array
      */
     public final static String[] getLabels(IPV pv) {
-
         var value = checkPVValue(pv);
 
         if (value instanceof VEnum) {

@@ -80,6 +80,9 @@ Helper methods for working with PV objects.
     Return the array length of the current PV value. If the
     current value is not an array, returns ``1``.
 
+**getUnits(** pv **)**
+    Returns the units text for a PV value.
+
 **writePV(** pvName, value [, timeout] **)**
     Write a value to a specific PV Name. In the background
     this will create a temporary PV object, write to it,
