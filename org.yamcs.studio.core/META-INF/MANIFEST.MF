@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio Core
 Bundle-SymbolicName: org.yamcs.studio.core;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Bundle-Version: 1.6.5.qualifier
+Bundle-Version: 1.6.5
 Require-Bundle: com.google.gson,
  org.antlr.runtime;bundle-version="[3.2,4)",
  org.eclipse.core.expressions,
