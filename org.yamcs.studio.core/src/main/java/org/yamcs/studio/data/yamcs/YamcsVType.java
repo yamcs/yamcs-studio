@@ -17,6 +17,7 @@ import java.time.Instant;
 import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -78,6 +79,13 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public String getAlarmName() {
+        if (pval != null && pval.hasRangeCondition()) {
+            if (pval.getRangeCondition() == RangeCondition.LOW) {
+                return "LOW";
+            } else if (pval.getRangeCondition() == RangeCondition.HIGH) {
+                return "HIGH";
+            }
+        }
         return "";
     }
 

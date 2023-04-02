@@ -76,6 +76,11 @@ Helper methods for working with PV objects.
 **getLabels(** pv **)**
     Returns an array with all possible enum values for an enumerated PV.
 
+**getStatus(** pv **)**
+    Returns the status text that might describe the severity specific to the type of PV.
+
+    For a Yamcs parameter this can be the value LOW or HIGH.
+
 **getSize(** pv **)**
     Return the array length of the current PV value. If the
     current value is not an array, returns ``1``.
