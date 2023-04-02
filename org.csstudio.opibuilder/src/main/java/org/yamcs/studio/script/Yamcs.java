@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Display;
 import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.yamcs.YamcsVType;
 
 public class Yamcs {
 
@@ -79,6 +81,26 @@ public class Yamcs {
                 });
             }
         });
+    }
+
+    /**
+     * Returns the "monitoring result" of a Yamcs parameter. One of IN_LIMITS, DISABLED, WATCH, WARNING, DISTRESS,
+     * CRITICAL or SEVERE.
+     * <p>
+     * For PVs that are not connected to Yamcs parameters, this will always return null.
+     */
+    public static String getMonitoringResult(IPV pv) {
+        var vtype = PVUtil.checkPVValue(pv);
+        if (!(vtype instanceof YamcsVType)) {
+            throw new IllegalArgumentException("PV " + pv.getName() + " is not a Yamcs parameter PV");
+        }
+
+        var pval = ((YamcsVType) vtype).getParameterValue();
+        if (pval.hasMonitoringResult()) {
+            return pval.getMonitoringResult().toString();
+        }
+
+        return null;
     }
 
     /**

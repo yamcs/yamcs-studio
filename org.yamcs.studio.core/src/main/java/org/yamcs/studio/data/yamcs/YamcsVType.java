@@ -44,6 +44,10 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         return pval.getId();
     }
 
+    public ParameterValue getParameterValue() {
+        return pval;
+    }
+
     @Override
     public AlarmSeverity getAlarmSeverity() {
         if (pval == null) {

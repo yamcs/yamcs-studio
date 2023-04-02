@@ -7,6 +7,10 @@ The following methods are available.
     Issue a telecommand on the currently connected
     Yamcs processor.
 
+**getMonitoringResult(** pv **)**
+    Returns the *monitoring result* of a Yamcs parameter. One of ``IN_LIMITS``, ``DISABLED``, ``WATCH``, ``WARNING``, ``DISTRESS``, ``CRITICAL`` or ``SEVERE``.
+
+    For PVs that are not connected to Yamcs parameters, this will always return null.
 
 .. rubric:: Example
 
