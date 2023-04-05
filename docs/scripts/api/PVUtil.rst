@@ -79,7 +79,8 @@ Helper methods for working with PV objects.
 **getStatus(** pv **)**
     Returns the status text that might describe the severity specific to the type of PV.
 
-    For a Yamcs parameter this can be the value LOW or HIGH.
+    For a Yamcs parameter this can be the value ``LOW``, ``HIGH``,
+    ``LOLO``, ``HIHI`` or ``NONE``.
 
 **getSize(** pv **)**
     Return the array length of the current PV value. If the

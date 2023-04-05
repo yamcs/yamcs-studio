@@ -27,6 +27,7 @@ import org.yamcs.studio.data.vtype.Display;
 import org.yamcs.studio.data.vtype.NumberFormats;
 import org.yamcs.studio.data.vtype.Time;
 import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.vtype.ValueFactory;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
 
@@ -81,16 +82,39 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         }
     }
 
+    /**
+     * Return similar values as in {@link ValueFactory#newAlarm(Number, Display)
+     */
     @Override
     public String getAlarmName() {
         if (pval != null && pval.hasRangeCondition()) {
             if (pval.getRangeCondition() == RangeCondition.LOW) {
-                return "LOW";
+                switch (pval.getMonitoringResult()) {
+                case WATCH:
+                case WARNING:
+                case DISTRESS:
+                    return "LOW";
+                case CRITICAL:
+                case SEVERE:
+                    return "LOLO";
+                default:
+                    // Ignore
+                }
             } else if (pval.getRangeCondition() == RangeCondition.HIGH) {
-                return "HIGH";
+                switch (pval.getMonitoringResult()) {
+                case WATCH:
+                case WARNING:
+                case DISTRESS:
+                    return "HIGH";
+                case CRITICAL:
+                case SEVERE:
+                    return "HIHI";
+                default:
+                    // Ignore
+                }
             }
         }
-        return "";
+        return "NONE";
     }
 
     @Override
