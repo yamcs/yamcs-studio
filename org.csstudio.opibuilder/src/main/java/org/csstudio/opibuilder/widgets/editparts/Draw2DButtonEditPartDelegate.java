@@ -15,8 +15,10 @@ import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_IMAGE
 import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_TEXT;
 import static org.csstudio.opibuilder.widgets.model.ActionButtonModel.PROP_TOGGLE_BUTTON;
 
+import org.csstudio.opibuilder.datadefinition.WidgetIgnorableUITask;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
+import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
@@ -55,15 +57,34 @@ public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
             var actions = editpart.getHookedActions();
             if (actions != null) {
                 for (var action : actions) {
+                    Runnable runnable;
                     if (action instanceof OpenDisplayAction) {
-                        ((OpenDisplayAction) action).runWithModifiers((mouseEventState & SWT.CONTROL) != 0,
-                                (mouseEventState & SWT.SHIFT) != 0);
+                        runnable = () -> {
+                            ((OpenDisplayAction) action).runWithModifiers((mouseEventState & SWT.CONTROL) != 0,
+                                    (mouseEventState & SWT.SHIFT) != 0);
+                        };
                     } else {
-                        action.run();
+                        runnable = () -> action.run();
+                    }
+
+                    if (editpart.getExecutionMode() == ExecutionMode.RUN_MODE) {
+                        // This is not really an 'ignorable' task, but we want to
+                        // execute on the same thread as where input widget text
+                        // property changes are handled.
+                        //
+                        // (when an action button is clicked, should have access
+                        // to latest value of an input value)
+                        var display = editpart.getViewer().getControl().getDisplay();
+                        var task = new WidgetIgnorableUITask(this, runnable, display);
+                        GUIRefreshThread.getInstance(editpart.getExecutionMode() == ExecutionMode.RUN_MODE)
+                                .addIgnorableTask(task);
+                    } else {
+                        runnable.run();
                     }
                 }
             }
         });
+
     }
 
     @Override
