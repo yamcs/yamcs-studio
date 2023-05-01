@@ -40,7 +40,13 @@ public class Yamcs {
             return;
         }
 
-        var builder = processor.prepareCommand(parsed.getQualifiedName())
+        // Support ops:// namespace, made to look similar with ops:// parameter naming
+        var commandName = parsed.getQualifiedName();
+        if (commandName.startsWith("ops://")) {
+            commandName = commandName.replace("ops://", "MDB:OPS Name/");
+        }
+
+        var builder = processor.prepareCommand(commandName)
                 .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
         for (var arg : parsed.getAssignments()) {
             builder.withArgument(arg.getName(), arg.getValue());
@@ -65,6 +71,11 @@ public class Yamcs {
         if (processor == null) {
             log.warning("No active processor");
             return;
+        }
+
+        // Support ops:// namespace, made to look similar with ops:// parameter naming
+        if (command.startsWith("ops://")) {
+            command = command.replace("ops://", "MDB:OPS Name/");
         }
 
         var builder = processor.prepareCommand(command).withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
