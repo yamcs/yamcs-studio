@@ -1,0 +1,51 @@
+syntax = "proto2";
+
+package yamcs.protobuf.spell;
+
+option java_package = "org.yamcs.studio.spell.api";
+option java_outer_classname = "StudioSpellProto";
+option java_multiple_files = true;
+
+import "yamcs/api/annotations.proto";
+ 
+// Trimmed version of the SPELL API, containing only what
+// matters in the context of Yamcs Studio.
+
+service StudioSpellApi {
+  
+  rpc ListProcedures(ListProceduresRequest) returns (ListProceduresResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/spell/{instance}/procedures"
+    };
+  }
+
+  rpc StartProcedure(StartProcedureRequest) returns (ExecutorInfo) {
+    option (yamcs.api.route) = {
+      post: "/api/spell/{instance}/procedures/{procedure*}:start"
+      body: "*"
+    };
+  }
+}
+
+message ListProceduresRequest {
+  optional string instance = 1;
+}
+
+message ListProceduresResponse {
+  repeated ProcedureInfo procedures = 1;
+}
+
+message StartProcedureRequest {
+  optional string instance = 1;
+  optional string procedure = 2;
+  map<string, string> arguments = 3;
+}
+
+message ProcedureInfo {
+  optional string id = 1;
+  optional string name = 2;
+}
+
+message ExecutorInfo {
+  optional string id = 1;
+}

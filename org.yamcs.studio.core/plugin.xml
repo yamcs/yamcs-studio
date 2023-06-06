@@ -214,6 +214,9 @@
    </extension>
    
    <extension point="org.eclipse.ui.services">
+      <sourceProvider provider="org.yamcs.studio.core.ui.ConfigurationStateProvider">
+         <variable name="org.yamcs.studio.ui.state.spellEnabled" priorityLevel="workbench" />
+      </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.core.ui.AuthorizationStateProvider">
          <variable name="org.yamcs.studio.ui.authorization.mayCommand" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.authorization.mayReadStacks" priorityLevel="workbench" />

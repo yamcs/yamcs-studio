@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2010, 2021 Oak Ridge National Laboratory and others
+ * Copyright (c) 2023 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -21,9 +22,10 @@ public class WidgetActionFactory {
     public enum ActionType {
         OPEN_DISPLAY("Open OPI", createImage("icons/OPIRunner.png")),
         WRITE_PV("Write PV", createImage("icons/writePV.png")),
-        EXECUTE_CMD("Execute Command", createImage("icons/command.gif")),
-        EXECUTE_JAVASCRIPT("Execute Javascript", createImage("icons/exeJS.png")),
+        EXECUTE_CMD("Execute System Command", createImage("icons/command.gif")),
+        EXECUTE_JAVASCRIPT("Execute JavaScript", createImage("icons/exeJS.png")),
         EXECUTE_PYTHONSCRIPT("Execute Python Script", createImage("icons/exePy.gif")),
+        RUN_PROCEDURE("Run SPELL Procedure", createImage("icons/tc.png")),
         PLAY_SOUND("Play WAV File", createImage("icons/sound.gif")),
         OPEN_FILE("Open File", createImage("icons/openFile.png")),
         OPEN_WEBPAGE("Open Webpage", createImage("icons/hyperlink.gif"));
@@ -94,6 +96,8 @@ public class WidgetActionFactory {
             return new OpenWebpageAction();
         case PLAY_SOUND:
             return new PlayWavFileAction();
+        case RUN_PROCEDURE:
+            return new RunProcedureAction();
         default:
             break;
         }

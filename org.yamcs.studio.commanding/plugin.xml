@@ -318,7 +318,13 @@
       <menuContribution locationURI="menu:org.yamcs.studio.commanding.stack.exportDropdown">
          <command commandId="org.yamcs.studio.commanding.stack.export" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to XML (deprecated)..." style="push" />
          <command commandId="org.yamcs.studio.commanding.stack.exportYcs" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to YCS..." style="push" />
-         <command commandId="org.yamcs.studio.commanding.stack.exportSpell" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to SPELL procedure..." style="push" />
+         <command commandId="org.yamcs.studio.commanding.stack.exportSpell" icon="icons/elcl16/export_log.png" disabledIcon="icons/dlcl16/export_log.png" label="Export to SPELL procedure..." style="push">
+            <visibleWhen checkEnabled="false">
+               <with variable="org.yamcs.studio.ui.state.spellEnabled">
+                  <equals value="true" />
+               </with>
+            </visibleWhen>
+         </command>
          <separator name="org.yamcs.studio.commanding.stack.separator1" visible="true" />
          <command commandId="org.yamcs.studio.commanding.stack.saveToYamcs" label="Save to Yamcs..." style="push" />
       </menuContribution>

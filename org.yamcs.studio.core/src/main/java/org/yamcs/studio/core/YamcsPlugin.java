@@ -51,6 +51,7 @@ import org.yamcs.studio.core.ui.SoundSystem;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.data.PVFactory;
 import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
+import org.yamcs.studio.spell.api.StudioSpellApiClient;
 
 import com.google.protobuf.Empty;
 
@@ -293,6 +294,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
         }
     }
 
+    public boolean isSpellEnabled() {
+        var spellEnabled = getPreferenceStore().getBoolean("spell.enabled");
+
+        var override = SiteConfiguration.isSpellEnabled();
+        if (override.isPresent()) {
+            spellEnabled = override.get();
+        }
+        return spellEnabled;
+    }
+
     public static SoundSystem getSoundSystem() {
         return plugin.soundSystem;
     }
@@ -329,6 +340,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         var client = getYamcsClient();
         if (client != null) {
             return client.createMissionDatabaseClient(plugin.instance);
+        }
+        return null;
+    }
+
+    public static StudioSpellApiClient getSpellClient() {
+        var client = getYamcsClient();
+        if (client != null) {
+            return new StudioSpellApiClient(client.getMethodHandler());
         }
         return null;
     }

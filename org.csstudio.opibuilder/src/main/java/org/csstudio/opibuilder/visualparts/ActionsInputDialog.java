@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2006, 2021 DESY and others
+ * Copyright (c) 2023 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -43,6 +44,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * The dialog to configure actions input.
@@ -288,6 +290,9 @@ public class ActionsInputDialog extends TrayDialog {
     private Menu createMenu(Control control, boolean withRemoveAction) {
         var listMenu = new MenuManager();
         for (var type : ActionType.values()) {
+            if (type == ActionType.RUN_PROCEDURE && !YamcsPlugin.getDefault().isSpellEnabled()) {
+                continue;
+            }
             listMenu.add(new MenuAction(type));
         }
         if (withRemoveAction) {
@@ -419,7 +424,7 @@ public class ActionsInputDialog extends TrayDialog {
 
         public MenuAction(ActionType type) {
             this.type = type;
-            setText("Add " + type.getDescription());
+            setText(type.getDescription());
             setImageDescriptor(type.getIconImage());
         }
 

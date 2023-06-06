@@ -59,6 +59,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>kr.motd.maven</groupId>
+          <artifactId>os-maven-plugin</artifactId>
+          <version>1.7.1</version>
+        </plugin>
+        <plugin>
           <groupId>net.revelc.code</groupId>
           <artifactId>impsort-maven-plugin</artifactId>
           <version>1.9.0</version>
@@ -124,7 +129,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -183,6 +188,11 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-versions-plugin</artifactId>
           <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.xolstice.maven.plugins</groupId>
+          <artifactId>protobuf-maven-plugin</artifactId>
+          <version>0.6.1</version>
         </plugin>
       </plugins>
     </pluginManagement>

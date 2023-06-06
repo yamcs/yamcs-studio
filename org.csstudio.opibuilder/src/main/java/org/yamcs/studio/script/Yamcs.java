@@ -10,17 +10,24 @@
 package org.yamcs.studio.script;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.client.base.ResponseObserver;
 import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.yamcs.YamcsVType;
+import org.yamcs.studio.spell.api.ExecutorInfo;
+import org.yamcs.studio.spell.api.StartProcedureRequest;
 
 public class Yamcs {
 
@@ -90,6 +97,50 @@ public class Yamcs {
                 Display.getDefault().asyncExec(() -> {
                     MessageDialog.openError(null, "Failed to issue command", t.getMessage());
                 });
+            }
+        });
+    }
+
+    /**
+     * Submit a SPELL procedure.
+     * <p>
+     * Only useful when the connected Yamcs backend supports this (not publicly released).
+     */
+    public static void runProcedure(String procedure) {
+        runProcedure(procedure, Collections.emptyMap());
+    }
+
+    /**
+     * Submit a SPELL procedure with arguments.
+     * <p>
+     * Only useful when the connected Yamcs backend supports this (not publicly released).
+     */
+    public static void runProcedure(String procedure, Map<String, Object> args) {
+        var spellClient = YamcsPlugin.getSpellClient();
+        if (spellClient == null) {
+            log.warning("Not running procedure " + procedure + ": not connected");
+            return;
+        }
+
+        var stringArgs = new LinkedHashMap<String, String>();
+        args.forEach((k, v) -> stringArgs.put(k, "" + Objects.requireNonNull(v, "Argument cannot be null")));
+
+        var request = StartProcedureRequest.newBuilder()
+                .setInstance(YamcsPlugin.getInstance())
+                .setProcedure(procedure)
+                .putAllArguments(stringArgs)
+                .build();
+
+        var f = new CompletableFuture<ExecutorInfo>();
+        spellClient.startProcedure(null, request, new ResponseObserver<>(f));
+        f.whenComplete((executor, t) -> {
+            if (t != null) {
+                log.log(Level.SEVERE, "Failed to submit procedure: " + t, t);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(null, "Failed to submit procedure", t.getMessage());
+                });
+            } else {
+                log.log(Level.INFO, "Submitted procedure " + executor.getId());
             }
         });
     }
