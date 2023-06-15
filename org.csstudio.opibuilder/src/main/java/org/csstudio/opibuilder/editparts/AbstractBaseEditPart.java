@@ -50,7 +50,6 @@ import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.visualparts.BorderFactory;
 import org.csstudio.opibuilder.visualparts.TooltipLabel;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
-import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,8 +60,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LabeledBorder;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
@@ -73,7 +70,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.progress.UIJob;
@@ -461,22 +457,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         var actions = getHookedActions();
         if (getWidgetModel().isEnabled() && actions != null) {
             figure.setCursor(Cursors.HAND);
-            figure.addMouseListener(new MouseListener.Stub() {
-                @Override
-                public void mousePressed(MouseEvent me) {
-                    if (me.button != 1) {
-                        return;
-                    }
-                    for (var action : actions) {
-                        if (action instanceof OpenDisplayAction) {
-                            ((OpenDisplayAction) action).runWithModifiers((me.getState() & SWT.CONTROL) != 0,
-                                    (me.getState() & SWT.SHIFT) != 0);
-                        } else {
-                            action.run();
-                        }
-                    }
-                }
-            });
+            figure.addMouseListener(new HookedActionsMouseListener(actions));
         }
     }
 

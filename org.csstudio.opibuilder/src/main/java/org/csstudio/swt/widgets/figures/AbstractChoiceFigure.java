@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
+import org.csstudio.opibuilder.editparts.HookedActionsMouseListener;
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.eclipse.draw2d.ButtonGroup;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.Toggle;
 import org.eclipse.draw2d.ToggleModel;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -202,6 +204,18 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
                         fromSetState = false;
                     } else {
                         fireButtonPressed(index, state);
+                    }
+                } else if (event.getPropertyName().equals(ToggleModel.PRESSED_PROPERTY)) {
+                    // Trigger click actions (if any). Regular mouse events do not trigger
+                    // when toggles are used.
+                    if (!toggleModel.isPressed() && toggleModel.isArmed()) {
+                        var mouseListeners = getListeners(MouseListener.class);
+                        while (mouseListeners.hasNext()) {
+                            var mouseListener = (MouseListener) mouseListeners.next();
+                            if (mouseListener instanceof HookedActionsMouseListener) {
+                                ((HookedActionsMouseListener) mouseListener).runActions(false, false);
+                            }
+                        }
                     }
                 }
             });
