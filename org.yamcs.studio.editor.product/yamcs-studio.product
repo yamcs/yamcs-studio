@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.6.7" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.6.8.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/org.yamcs.studio.editor/icons/aboutSide.png"/>
@@ -65,8 +65,8 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <features>
       <feature id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped" installMode="root"/>
-      <feature id="org.yamcs.studio.core.feature" version="1.6.7"/>
-      <feature id="org.yamcs.studio.editor.feature" version="1.6.7"/>
+      <feature id="org.yamcs.studio.core.feature" version="1.6.8.qualifier"/>
+      <feature id="org.yamcs.studio.editor.feature" version="1.6.8.qualifier"/>
    </features>
 
    <configurations>
