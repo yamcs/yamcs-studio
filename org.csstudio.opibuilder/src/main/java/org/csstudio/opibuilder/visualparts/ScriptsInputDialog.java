@@ -40,7 +40,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -308,7 +307,7 @@ public class ScriptsInputDialog extends TrayDialog {
                     }
                 } else {
                     IPath path;
-                    var rsd = new RelativePathSelectionDialog(Display.getCurrent().getActiveShell(), startPath,
+                    var rsd = new RelativePathSelectionDialog(getShell(), startPath,
                             "Select a script file", new String[] { ScriptService.JS, ScriptService.PY });
                     rsd.setSelectedResource("./");
                     if (rsd.open() == Window.OK) {
