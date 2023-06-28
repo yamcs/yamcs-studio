@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +30,8 @@ import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.yamcs.YamcsVType;
 import org.yamcs.studio.spell.api.ExecutorInfo;
 import org.yamcs.studio.spell.api.StartProcedureRequest;
+
+import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class Yamcs {
 
@@ -60,9 +64,10 @@ public class Yamcs {
         }
         builder.issue().whenComplete((result, t) -> {
             if (t != null) {
-                log.log(Level.SEVERE, "Failed to issue command: " + t, t);
+                var cause = unwind(t);
+                log.log(Level.SEVERE, "Failed to issue command: " + cause, cause);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(null, "Failed to issue command", t.getMessage());
+                    MessageDialog.openError(null, "Failed to issue command", cause.getMessage());
                 });
             }
         });
@@ -93,9 +98,10 @@ public class Yamcs {
         }
         builder.issue().whenComplete((result, t) -> {
             if (t != null) {
-                log.log(Level.SEVERE, "Failed to issue command: " + t, t);
+                var cause = unwind(t);
+                log.log(Level.SEVERE, "Failed to issue command: " + cause, cause);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(null, "Failed to issue command", t.getMessage());
+                    MessageDialog.openError(null, "Failed to issue command", cause.getMessage());
                 });
             }
         });
@@ -135,9 +141,10 @@ public class Yamcs {
         spellClient.startProcedure(null, request, new ResponseObserver<>(f));
         f.whenComplete((executor, t) -> {
             if (t != null) {
-                log.log(Level.SEVERE, "Failed to submit procedure: " + t, t);
+                var cause = unwind(t);
+                log.log(Level.SEVERE, "Failed to submit procedure: " + cause, cause);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(null, "Failed to submit procedure", t.getMessage());
+                    MessageDialog.openError(null, "Failed to submit procedure", cause.getMessage());
                 });
             } else {
                 log.log(Level.INFO, "Submitted procedure " + executor.getId());
@@ -184,11 +191,21 @@ public class Yamcs {
         var bytes = text.getBytes(StandardCharsets.UTF_8);
         storage.uploadObject(objectId, bytes).whenComplete((result, t) -> {
             if (t != null) {
-                log.log(Level.SEVERE, "Failed to write to " + objectId + "\": " + t, t);
+                var cause = unwind(t);
+                log.log(Level.SEVERE, "Failed to write to " + objectId + "\": " + cause, cause);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(null, "Failed to write to " + objectId, t.getMessage());
+                    MessageDialog.openError(null, "Failed to write to " + objectId, cause.getMessage());
                 });
             }
         });
+    }
+
+    private static Throwable unwind(Throwable t) {
+        while ((t instanceof ExecutionException || t instanceof CompletionException
+                || t instanceof UncheckedExecutionException)
+                && t.getCause() != null) {
+            t = t.getCause();
+        }
+        return t;
     }
 }

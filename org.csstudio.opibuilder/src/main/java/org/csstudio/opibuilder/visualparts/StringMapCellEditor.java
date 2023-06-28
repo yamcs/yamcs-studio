@@ -12,7 +12,6 @@ package org.csstudio.opibuilder.visualparts;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.csstudio.opibuilder.util.MacrosInput;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -50,7 +49,7 @@ public class StringMapCellEditor extends AbstractDialogCellEditor {
     @Override
     @SuppressWarnings("unchecked")
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof MacrosInput)) {
+        if (value == null || !(value instanceof Map)) {
             data = new LinkedHashMap<>();
         } else {
             data = (Map<String, String>) value;

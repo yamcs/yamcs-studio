@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * Copyright (c) 2006 Stiftung Deutsches Elektronen-Synchroton
  * Copyright (c) 2021 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the

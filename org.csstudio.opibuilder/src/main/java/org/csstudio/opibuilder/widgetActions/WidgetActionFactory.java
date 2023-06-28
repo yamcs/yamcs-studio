@@ -25,6 +25,7 @@ public class WidgetActionFactory {
         EXECUTE_CMD("Execute System Command", createImage("icons/command.gif")),
         EXECUTE_JAVASCRIPT("Execute JavaScript", createImage("icons/exeJS.png")),
         EXECUTE_PYTHONSCRIPT("Execute Python Script", createImage("icons/exePy.gif")),
+        RUN_COMMAND("Run Command", createImage("icons/tc.png")),
         RUN_PROCEDURE("Run SPELL Procedure", createImage("icons/tc.png")),
         PLAY_SOUND("Play WAV File", createImage("icons/sound.gif")),
         OPEN_FILE("Open File", createImage("icons/openFile.png")),
@@ -98,6 +99,8 @@ public class WidgetActionFactory {
             return new PlayWavFileAction();
         case RUN_PROCEDURE:
             return new RunProcedureAction();
+        case RUN_COMMAND:
+            return new RunCommandAction();
         default:
             break;
         }
