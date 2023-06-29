@@ -133,6 +133,8 @@ public class ImportCommandStackHandler extends AbstractHandler {
                         }
                     }
                 }
+
+                commands.add(command);
             }
         }
 
