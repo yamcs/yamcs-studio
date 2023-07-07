@@ -8,6 +8,4 @@ clean:
 
 .PHONY: set-version
 set-version:
-	test ${VERSION} \
-	&& mvn versions:set -DnewVersion="${VERSION}" versions:commit \
-	&& mvn tycho-versions:update-eclipse-metadata
+	mvn tycho-versions:set-version -DnewVersion="${VERSION}"
