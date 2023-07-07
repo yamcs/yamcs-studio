@@ -4,31 +4,27 @@ This document describes the process for building this application on your local 
 
 Yamcs Studio is an Eclipse RCP application and uses [Eclipse Tycho](https://www.eclipse.org/tycho/) for its build workflow.
 
-
 ## Prerequisites
 
-You must have 64-bit OpenJDK 17 or above, Apache Maven 3.5.0 or above, and Git installed on your machine.
+You must have 64-bit OpenJDK 17 or above, Apache Maven 3.9.0 or above, and Git installed on your machine.
 
 Further your machine needs access to Internet, at least when building the first time. Your local Maven cache (`~/.m2`) will be primed with build and runtime dependencies.
-
 
 ## Headless Build
 
 ```
-mvn clean package -Dtycho.localArtifacts=ignore
+mvn clean package
 ```
 
-The `-Dtycho.localArtifacts=ignore` flag avoids unexpected caching issues when bundles have been installed to Maven Cache.
+Alternatively, you can avoid manual installation of maven by using the `mvnw` wrapper script. This will automatically download an appropriate version of Maven:
 
-Alternativily, you can avoid manual installation of maven by using the `mvnw` wrapper script. This will automatically download an appropriate version of Maven:
 ```
-./mvnw clean package -Dtycho.localArtifacts=ignore
+./mvnw clean package
 ```
-
 
 ## Eclipse RCP Concepts
 
-The file [platform.target](../platform.target) describes the **platform** that is used by Yamcs Studio. The platform specifies the list of binary p2 bundles (features & plugins) that are *available* during build. Platform content may or may not be used. The platform is hosted on Yamcs infrastructure (https://dl.yamcs.org). Essentially this is a self-managed mirror of various upstream Eclipse p2 repositories (e.g. Orbit), as well as the Yamcs Client dependency that is used throughout this project.
+The file [platform.target](../platform.target) describes the **platform** that is used by Yamcs Studio. The platform specifies the list of binary p2 bundles (features & plugins) that are _available_ during build. Platform content may or may not be used. The platform is hosted on Yamcs infrastructure (https://dl.yamcs.org). Essentially this is a self-managed mirror of various upstream Eclipse p2 repositories (e.g. Orbit), as well as the Yamcs Client dependency that is used throughout this project.
 
 The Yamcs Studio **product** is specified by its [product file](../org.yamcs.studio.editor.product/yamcs-studio.product). The product file is feature-based, therefore the referenced features are what eventually ends up in the application.
 
@@ -37,7 +33,6 @@ The Yamcs Studio **product** is specified by its [product file](../org.yamcs.stu
 **Plugin** projects have a file `plugin.xml` that describes the capabilities of that plugin (for example: toolbars, menus, views).
 
 When the product (Yamcs Studio) runs, all included plugins contribute additions to the RCP Workbench UI.
-
 
 ## Development inside Eclipse
 
@@ -59,16 +54,13 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - Click `Synchronize` followed by `Launch an Eclipse Application`.
 
-
-
 ## Customizing Yamcs Studio
 
 It is possible to make a custom variant of Yamcs Studio without needing to build this project, but you will need to have good understanding of Eclipse RCP. Some hints:
 
-* Whenever a release is done, binary versions of the plugins and features of that release are published publicly to a p2 site. For example: https://dl.yamcs.org/p2/studio/1.6.1/ contains bundles of Yamcs Studio v1.6.1.
-* You can include these bundles in your custom Eclipse product.
-* The plugin `org.yamcs.studio.editor.base` provides the basic framework that sets up the application. You can use or extend those classes to craft your own product.
-
+- Whenever a release is done, binary versions of the plugins and features of that release are published publicly to a p2 site. For example: https://dl.yamcs.org/p2/studio/1.6.1/ contains bundles of Yamcs Studio v1.6.1.
+- You can include these bundles in your custom Eclipse product.
+- The plugin `org.yamcs.studio.editor.base` provides the basic framework that sets up the application. You can use or extend those classes to craft your own product.
 
 ## Troubleshooting
 
@@ -94,5 +86,5 @@ A workaround is to use a custom cacerts:
    ```
    mvn -Djavax.net.ssl.trustStore=./cacerts \
        -Djavax.net.ssl.trustStorePassword="changeit" \
-       package -Dtycho.localArtifacts=ignore
+       package
    ```
