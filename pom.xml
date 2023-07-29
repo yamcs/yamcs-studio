@@ -229,7 +229,7 @@
           <target>
             <file>../platform.target</file>
           </target>
-          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full.stripped-17</executionEnvironment>
           <environments>
             <environment>
               <os>linux</os>

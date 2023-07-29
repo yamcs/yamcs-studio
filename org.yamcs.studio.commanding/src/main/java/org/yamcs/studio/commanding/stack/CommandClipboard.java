@@ -10,9 +10,6 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.dnd.Clipboard;
@@ -53,56 +50,15 @@ public class CommandClipboard {
         textToClipboard(source, display);
     }
 
-    static class SortByGenerationTime implements Comparator<CommandHistoryRecord> {
-        // Used for sorting in ascending order of roll number
-        @Override
-        public int compare(CommandHistoryRecord a, CommandHistoryRecord b) {
-            return a.getCommand().getGenerationTime().compareTo(b.getCommand().getGenerationTime());
-        }
-    }
-
     public static List<StackedCommand> getCopiedCommands() throws Exception {
         var result = new ArrayList<StackedCommand>();
 
-        // Convert CommandHistoryRecord to new Stacked Command
-        // first compute the stack delays from the cmd history generation times
-        var sortedRecords = new ArrayList<CommandHistoryRecord>();
-        var commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
-        sortedRecords.addAll(copiedCommandHistoryRecords);
-        Collections.sort(sortedRecords, new SortByGenerationTime());
-        var lastTime = 0L;
-        for (var chr : sortedRecords) {
-            var currentTime = chr.getCommand().getGenerationTime().toEpochMilli();
-            if (lastTime == 0) {
-                commandHistoryRecordDelays.put(chr, 0);
-            } else {
-                var currentDelay = (int) (currentTime - lastTime);
-                commandHistoryRecordDelays.put(chr, currentDelay);
-            }
-            lastTime = currentTime;
+        for (var rec : copiedCommandHistoryRecords) {
+            var copy = new StackedCommand(rec);
+            result.add(copy);
         }
-        // then add to the result
-        for (var chr : copiedCommandHistoryRecords) {
-            var pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommand().getSource());
-            pastedCommand.setComment(chr.getTextForColumn("Comment", false));
-            pastedCommand.setDelayMs(commandHistoryRecordDelays.get(chr));
-            result.add(pastedCommand);
-        }
-
-        // copy stacked commands
         for (var sc : copiedStackedCommands) {
-            var copy = new StackedCommand();
-            copy.setMetaCommand(sc.getMetaCommand());
-            if (sc.getComment() != null) {
-                copy.setComment(sc.getComment());
-            }
-            sc.getExtra().forEach((option, value) -> {
-                copy.setExtra(option, value);
-            });
-            for (var entry : sc.getAssignments().entrySet()) {
-                copy.addAssignment(entry.getKey(), entry.getValue());
-            }
-            copy.setDelayMs(sc.getDelayMs());
+            var copy = new StackedCommand(sc);
             result.add(copy);
         }
 
@@ -110,15 +66,14 @@ public class CommandClipboard {
     }
 
     public static List<StackedCommand> getCutCommands() {
-        List<StackedCommand> result = new ArrayList<>(cutStackedCommands);
-        return result;
+        return new ArrayList<>(cutStackedCommands);
     }
 
     public static boolean hasData() {
         return !(copiedCommandHistoryRecords.isEmpty() && copiedStackedCommands.isEmpty());
     }
 
-    static private void textToClipboard(String text, Display display) {
+    private static void textToClipboard(String text, Display display) {
         var cb = new Clipboard(display);
         var textTransfer = TextTransfer.getInstance();
         cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });

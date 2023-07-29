@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,10 +35,10 @@ public class ExportYcsCommandStackHandler extends AbstractHandler {
         var shell = HandlerUtil.getActiveShell(event);
         var stack = CommandStack.getInstance();
 
-        Collection<StackedCommand> commands = stack.getCommands();
+        var commands = stack.getCommands();
         if (commands == null || commands.isEmpty()) {
             MessageDialog.openError(shell, "Export Command Stack",
-                    "Current command stack is empty. No command to export.");
+                    "Command stack is empty. Nothing to export.");
             return null;
         }
 

@@ -21,15 +21,20 @@ import java.util.stream.Stream;
 import org.eclipse.jface.viewers.StyledString;
 import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
+import org.yamcs.client.Helpers;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.commanding.CommandingPlugin;
+import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Keep track of the lifecycle of a stacked command.
  */
 public class StackedCommand {
+
+    private static final char[] HEXCHARS = "0123456789abcdef".toCharArray();
 
     public enum StackedState {
         DISARMED("Disarmed"),
@@ -60,6 +65,48 @@ public class StackedCommand {
 
     private Command execution;
 
+    public StackedCommand() {
+    }
+
+    public StackedCommand(StackedCommand original) {
+        meta = original.getMetaCommand();
+        comment = original.getComment();
+        assignments.putAll(original.getAssignments());
+        extra.putAll(original.getExtra());
+        delayMs = original.getDelayMs();
+    }
+
+    public StackedCommand(CommandHistoryRecord rec) {
+        meta = YamcsPlugin.getMissionDatabase().getCommandInfo(rec.getCommand().getName());
+        comment = rec.getTextForColumn("Comment", false);
+        for (var assignment : rec.getCommand().getAssignments()) {
+            if (assignment.getUserInput()) {
+                var argument = assignment.getName();
+                var value = Helpers.parseValue(assignment.getValue());
+                for (var argInfo : meta.getArgumentList()) {
+                    if (argInfo.getName().equals(argument)) {
+                        if (value instanceof byte[]) {
+                            assignments.put(argInfo, ": 0x" + toHex((byte[]) value));
+                        } else {
+                            assignments.put(argInfo, value.toString());
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static String toHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEXCHARS[v >>> 4];
+            hexChars[j * 2 + 1] = HEXCHARS[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
     public void resetExecutionState() {
         state = StackedState.DISARMED;
         execution = null;
@@ -77,7 +124,19 @@ public class StackedCommand {
         var numberStyler = styleProvider != null ? styleProvider.getNumberStyler(this) : null;
 
         var str = new StyledString();
-        str.append(meta.getQualifiedName(), identifierStyler);
+
+        var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
+        var displayedName = meta.getQualifiedName();
+        if (preferredNamespace != null) {
+            for (var alias : meta.getAliasList()) {
+                if (alias.getNamespace().equals(preferredNamespace)) {
+                    displayedName = alias.getName();
+                    break;
+                }
+            }
+        }
+        str.append(displayedName, identifierStyler);
+
         str.append("(", bracketStyler);
         var first = true;
         for (var arg : getEffectiveAssignments()) {
@@ -140,6 +199,15 @@ public class StackedCommand {
 
     public String getName() {
         return meta.getQualifiedName();
+    }
+
+    public String getName(String namespace) {
+        for (var alias : meta.getAliasList()) {
+            if (alias.getNamespace().equals(namespace)) {
+                return alias.getName();
+            }
+        }
+        return null;
     }
 
     public CommandInfo getMetaCommand() {
@@ -290,73 +358,6 @@ public class StackedCommand {
     @Override
     public String toString() {
         return meta.getQualifiedName();
-    }
-
-    public static StackedCommand buildCommandFromSource(String commandSource) throws Exception {
-        var result = new StackedCommand();
-
-        // Source must follow the format:
-        // <CommandAlias>(<arg1>:<val1>, [...] , <argN>:<valN>)
-        // or
-        // <CommandAlias>()
-        if (commandSource == null) {
-            throw new Exception("No Source attached to this command");
-        }
-        commandSource = commandSource.trim();
-        if (commandSource.isEmpty()) {
-            throw new Exception("No Source attached to this command");
-        }
-        var indexStartOfArguments = commandSource.indexOf("(");
-        var indexStopOfArguments = commandSource.lastIndexOf(")");
-        var commandArguments = commandSource.substring(indexStartOfArguments + 1, indexStopOfArguments);
-        commandArguments = commandArguments.replaceAll("[\n]", "");
-        var qualifiedName = commandSource.substring(0, indexStartOfArguments);
-
-        // Retrieve meta command
-        var commandInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qualifiedName);
-        if (commandInfo == null) {
-            throw new Exception("Unable to retrieved this command in the MDB");
-        }
-        result.setMetaCommand(commandInfo);
-
-        // Retrieve arguments assignment
-        // TODO: write formal source grammar
-        var commandArgumentsTab = commandArguments.split(",");
-        for (var commandArgument : commandArgumentsTab) {
-            if (commandArgument == null || commandArgument.isEmpty()) {
-                continue;
-            }
-            var components = commandArgument.split(":");
-            var argument = components[0].trim();
-            var value = components[1].trim();
-            var foundArgument = false;
-            var metaCommandArgumentsList = getAllArgumentList(commandInfo);
-            for (var ai : metaCommandArgumentsList) {
-                foundArgument = ai.getName().toUpperCase().equals(argument.toUpperCase());
-                if (foundArgument) {
-                    if (value.startsWith("\"") && value.endsWith("\"")) {
-                        value = value.substring(1, value.length() - 1);
-                    }
-                    result.addAssignment(ai, value);
-                    break;
-                }
-            }
-            if (!foundArgument) {
-                throw new Exception("Argument " + argument + " is not part of the command definition");
-            }
-        }
-
-        return result;
-    }
-
-    private static List<ArgumentInfo> getAllArgumentList(CommandInfo commandInfo) {
-        var result = commandInfo.getArgumentList();
-        if (commandInfo.getBaseCommand() != commandInfo) {
-            return Stream.concat(result.stream(), getAllArgumentList(commandInfo.getBaseCommand()).stream())
-                    .collect(Collectors.toList());
-        } else {
-            return result;
-        }
     }
 
     public String getSource() {

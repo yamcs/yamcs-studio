@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
-import org.yamcs.client.CommandSubscription;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsAware;
@@ -67,7 +66,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     private static final int DYNAMIC_COLUMN_WIDTH = 90;
 
-    private CommandSubscription subscription;
+    private PatchedCommandSubscription subscription;
 
     private LocalResourceManager resourceManager;
 
@@ -158,12 +157,15 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         }
         if (processor != null) {
             var client = YamcsPlugin.getYamcsClient();
-            subscription = client.createCommandSubscription();
-            subscription.addListener(command -> {
-                Display.getDefault().asyncExec(() -> processCommand(command, true));
-            });
-            subscription.sendMessage(
-                    SubscribeCommandsRequest.newBuilder().setInstance(instance).setProcessor(processor).build());
+            subscription = new PatchedCommandSubscription(client.getMethodHandler());
+            subscription.addListener(command -> Display.getDefault().asyncExec(() -> {
+                processCommand(command, true);
+            }));
+
+            subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
+                    .setInstance(instance)
+                    .setProcessor(processor)
+                    .build());
         }
     }
 
@@ -349,7 +351,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getText(Object element) {
                         var rec = (CommandHistoryRecord) element;
-                        return rec.getCommand().getSource();
+                        return rec.getSource();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));

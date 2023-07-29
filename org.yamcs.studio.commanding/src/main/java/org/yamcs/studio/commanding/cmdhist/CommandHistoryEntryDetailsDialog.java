@@ -370,7 +370,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         recordCombo.getParent().requestLayout();
 
         dateLabel.setText(YamcsPlugin.getDefault().formatInstant(command.getGenerationTime()));
-        commandStringText.setText(command.getSource());
+        commandStringText.setText(rec.getSource());
 
         userLabel.setText(command.getUsername());
 

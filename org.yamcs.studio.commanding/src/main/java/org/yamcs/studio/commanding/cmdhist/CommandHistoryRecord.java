@@ -16,12 +16,17 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.yamcs.client.Command;
+import org.yamcs.client.Helpers;
+import org.yamcs.protobuf.Commanding.CommandAssignment;
 import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -43,11 +48,24 @@ public class CommandHistoryRecord {
     private static final long ONE_HOUR = 60 * ONE_MINUTE;
     private static final long ONE_DAY = 24 * ONE_HOUR;
 
+    private static final char[] HEXCHARS = "0123456789abcdef".toCharArray();
+
     private Command command;
+    private String source;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
     public CommandHistoryRecord(Command command) {
         this.command = command;
+
+        var displayedName = command.getName();
+        var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
+        if (preferredNamespace != null) {
+            var alias = command.getName(preferredNamespace);
+            if (alias != null) {
+                displayedName = alias;
+            }
+        }
+        source = buildSource(displayedName, command.getAssignments());
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -136,6 +154,37 @@ public class CommandHistoryRecord {
             return (long) props.get(KEY_ACK_DURATION);
         }
         return 0;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    private String buildSource(String name, List<CommandAssignment> assignments) {
+        StringBuilder buf = new StringBuilder(name).append("(");
+        buf.append(command.getAssignments().stream()
+                .filter(CommandAssignment::getUserInput)
+                .map(assignment -> {
+                    Object value = Helpers.parseValue(assignment.getValue());
+                    if (value instanceof String) {
+                        return assignment.getName() + ": \"" + value + "\"";
+                    } else if (value instanceof byte[]) {
+                        return assignment.getName() + ": 0x" + toHex((byte[]) value);
+                    } else {
+                        return assignment.getName() + ": " + value;
+                    }
+                }).collect(Collectors.joining(", ")));
+        return buf.append(")").toString();
+    }
+
+    private static String toHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEXCHARS[v >>> 4];
+            hexChars[j * 2 + 1] = HEXCHARS[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     private Object valueToRawValue(Value value) {

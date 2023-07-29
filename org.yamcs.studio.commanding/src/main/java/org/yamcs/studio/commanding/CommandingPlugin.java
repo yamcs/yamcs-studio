@@ -48,4 +48,10 @@ public class CommandingPlugin extends AbstractUIPlugin {
         }
         return section;
     }
+
+    public String getPreferredNamespace() {
+        var store = getPreferenceStore();
+        var preferredNamespace = store.getString(CommandingPreferencePage.PREF_PREFERRED_NAMESPACE);
+        return preferredNamespace.isEmpty() ? null : preferredNamespace;
+    }
 }

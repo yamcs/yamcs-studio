@@ -42,7 +42,7 @@ public class CopyCommandHistoryEntryHandler extends AbstractHandler {
                 recList.add(rec);
 
                 var command = rec.getCommand();
-                text.append(command.getGenerationTime()).append("\t").append(command.getSource()).append("\t")
+                text.append(command.getGenerationTime()).append("\t").append(rec.getSource()).append("\t")
                         .append(command.getUsername() + "@" + command.getOrigin()).append("\t")
                         .append(command.getSequenceNumber()).append("\n");
             }

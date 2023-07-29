@@ -28,6 +28,7 @@ public class MissionDatabase {
 
     private Map<NamedObjectId, ParameterInfo> parametersById = new LinkedHashMap<>();
     private Map<String, CommandInfo> commandsByQualifiedName = new LinkedHashMap<>();
+    private Map<String, Map<String, CommandInfo>> commandsByNamespaceAndAlias = new LinkedHashMap<>();
     private Map<NamedObjectId, String> unitsById = new ConcurrentHashMap<>();
 
     public void addParameter(ParameterInfo parameter) {
@@ -54,6 +55,11 @@ public class MissionDatabase {
     public void addCommand(CommandInfo command) {
         commands.add(command);
         commandsByQualifiedName.put(command.getQualifiedName(), command);
+        for (var id : command.getAliasList()) {
+            var namespace = id.getNamespace();
+            var commandsByAlias = commandsByNamespaceAndAlias.computeIfAbsent(namespace, info -> new LinkedHashMap<>());
+            commandsByAlias.put(id.getName(), command);
+        }
     }
 
     public int getParameterCount() {
@@ -90,6 +96,14 @@ public class MissionDatabase {
 
     public CommandInfo getCommandInfo(String qualifiedName) {
         return commandsByQualifiedName.get(qualifiedName);
+    }
+
+    public CommandInfo getCommandInfo(String namespace, String alias) {
+        var commandsByAlias = commandsByNamespaceAndAlias.get(namespace);
+        if (commandsByAlias != null) {
+            return commandsByAlias.get(alias);
+        }
+        return null;
     }
 
     /**

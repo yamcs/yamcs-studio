@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.data.yamcs.StringConverter;
 
 import com.google.gson.JsonArray;
@@ -32,11 +33,25 @@ public class ExportUtil {
         var root = new JsonObject();
         root.addProperty("$schema", "https://yamcs.org/schema/command-stack.schema.json");
 
+        var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
+
         var commandsArray = new JsonArray();
         root.add("commands", commandsArray);
         for (var command : stack.getCommands()) {
             var commandObject = new JsonObject();
-            commandObject.addProperty("name", command.getMetaCommand().getQualifiedName());
+
+            if (preferredNamespace != null) {
+                var alias = command.getName(preferredNamespace);
+                if (alias != null) {
+                    commandObject.addProperty("namespace", preferredNamespace);
+                    commandObject.addProperty("name", alias);
+                } else {
+                    commandObject.addProperty("name", command.getMetaCommand().getQualifiedName());
+                }
+            } else {
+                commandObject.addProperty("name", command.getMetaCommand().getQualifiedName());
+            }
+
             if (command.getComment() != null) {
                 commandObject.addProperty("comment", command.getComment());
             }

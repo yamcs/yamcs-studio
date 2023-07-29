@@ -85,13 +85,25 @@ public class ImportCommandStackHandler extends AbstractHandler {
         if (stackObject.has("commands")) {
             for (var commandEl : stackObject.getAsJsonArray("commands")) {
                 var commandObject = commandEl.getAsJsonObject();
-                var qname = commandObject.get("name").getAsString();
 
-                var mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qname);
-                if (mdbInfo == null) {
-                    MessageDialog.openError(shell, "Import Command Stack",
-                            "Command " + qname + " does not exist in MDB.");
-                    return null;
+                var name = commandObject.get("name").getAsString();
+
+                CommandInfo mdbInfo;
+                if (commandObject.has("namespace")) {
+                    var namespace = commandObject.get("namespace").getAsString();
+                    mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(namespace, name);
+                    if (mdbInfo == null) {
+                        MessageDialog.openError(shell, "Import Command Stack",
+                                "Command " + name + " (" + namespace + ") does not exist in MDB");
+                        return null;
+                    }
+                } else {
+                    mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(name);
+                    if (mdbInfo == null) {
+                        MessageDialog.openError(shell, "Import Command Stack",
+                                "Command " + name + " does not exist in MDB");
+                        return null;
+                    }
                 }
 
                 var command = new StackedCommand();
@@ -117,7 +129,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
                         var argInfo = getArgumentFromYamcs(mdbInfo, argName);
                         if (argInfo == null) {
                             MessageDialog.openError(shell, "Import Command Stack",
-                                    "In command " + qname + ", argument " + argName + " does not exist in MDB.");
+                                    "Argument " + argName + " does not exist in MDB for command " + name);
                             return null;
                         }
                         if (argValue.isJsonNull()) {

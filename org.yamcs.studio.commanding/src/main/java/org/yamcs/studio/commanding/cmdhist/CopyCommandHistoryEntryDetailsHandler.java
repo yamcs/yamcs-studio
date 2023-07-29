@@ -48,7 +48,7 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
                     text.append(command.getGenerationTime());
                     break;
                 case PARAM_COMMAND:
-                    text.append(command.getSource());
+                    text.append(rec.getSource());
                     break;
                 case PARAM_SOURCE:
                     text.append(command.getUsername() + "@" + command.getOrigin());

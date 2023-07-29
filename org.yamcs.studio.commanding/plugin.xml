@@ -368,4 +368,12 @@
          </menu>
       </menuContribution>
    </extension>
+
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.yamcs.studio.commanding.CommandingPreferencePage"
+            id="org.yamcs.studio.commanding.CommandingPreferencePage"
+            name="Commanding">
+      </page>
+   </extension>
 </plugin>

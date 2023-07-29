@@ -43,12 +43,14 @@ public class CommandHistorySorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
+        var rec1 = (CommandHistoryRecord) o1;
+        var rec2 = (CommandHistoryRecord) o2;
         var r1 = ((CommandHistoryRecord) o1).getCommand();
         var r2 = ((CommandHistoryRecord) o2).getCommand();
         int rc;
         switch (currentColumn) {
         case CommandHistoryView.COL_COMMAND:
-            rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
+            rc = STRING_COMPARATOR.compare(rec1.getSource(), rec2.getSource());
             break;
         case CommandHistoryView.COL_ORIGIN_ID:
             rc = INTEGER_COMPARATOR.compare(r1.getSequenceNumber(), r2.getSequenceNumber());
@@ -79,18 +81,18 @@ public class CommandHistorySorter extends ViewerComparator {
         if (settings == null) {
             return;
         }
-
+    
         for (var i = 0; i < priorities.length; i++) {
             settings.put("priority" + i, priorities[i]);
             settings.put("direction" + i, directions[i]);
         }
     }
-
+    
     public void restoreState(IDialogSettings settings) {
         if (settings == null) {
             return;
         }
-
+    
         try {
             for (var i = 0; i < priorities.length; i++) {
                 priorities[i] = settings.getInt("priority" + i);
@@ -100,7 +102,7 @@ public class CommandHistorySorter extends ViewerComparator {
             resetState();
         }
     }
-
+    
     public void resetState() {
         priorities = new int[DEFAULT_PRIORITIES.length];
         System.arraycopy(DEFAULT_PRIORITIES, 0, priorities, 0, priorities.length);
