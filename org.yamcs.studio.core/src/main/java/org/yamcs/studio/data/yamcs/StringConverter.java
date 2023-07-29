@@ -22,6 +22,8 @@ public class StringConverter {
 
     public static String toString(Value rv) {
         switch (rv.getType()) {
+        case NONE:
+            return "";
         case BINARY:
             return "0x" + arrayToHexString(rv.getBinaryValue().toByteArray());
         case DOUBLE:

@@ -24,7 +24,6 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
     private static final String ID_HELP_VIEW = "org.eclipse.help.ui.HelpView";
 
     private static final String ID_FUNCTIONS_VIEW = "org.yamcs.studio.editor.base.views.FunctionsView";
-    private static final String ID_PARAMETERS_VIEW = "org.yamcs.studio.editor.base.views.ParametersView";
     private static final String ID_EXPLORER = "org.yamcs.studio.explorer.view";
 
     @Override

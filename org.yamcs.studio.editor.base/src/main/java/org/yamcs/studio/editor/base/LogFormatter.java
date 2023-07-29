@@ -27,7 +27,7 @@ public class LogFormatter extends Formatter {
         sb.append(sdf.format(d)).append(" ");
 
         var name = r.getLoggerName();
-        sb.append(name).append(" [").append(r.getThreadID()).append("] ");
+        sb.append(name).append(" [").append(r.getLongThreadID()).append("] ");
         sb.append("[").append(r.getLevel()).append("] ").append(r.getMessage());
 
         var t = r.getThrown();
