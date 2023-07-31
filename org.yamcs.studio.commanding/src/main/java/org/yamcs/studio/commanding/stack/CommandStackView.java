@@ -136,7 +136,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         gl.verticalSpacing = 1;
         parent.setLayout(gl);
 
-        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        var resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         errorBackgroundColor = resourceManager.createColor(new RGB(255, 221, 221));
         bracketStyler = new Styler() {
             @Override
@@ -321,7 +321,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
             // disarm the stack
             issueButton.setEnabled(false);
-            armButton.setSelection(false);
             stack.disarmArmed();
             refreshState();
         });
@@ -359,46 +358,37 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
         });
 
-        armButton = new Button(bottomRight, SWT.TOGGLE);
+        armButton = new Button(bottomRight, SWT.PUSH);
         armButton.setText("1. Arm");
         armButton.setToolTipText("Arm the selected command");
         armButton.setEnabled(false);
         armButton.addListener(SWT.Selection, evt -> {
             var stack = CommandStack.getInstance();
-            if (armButton.getSelection()) {
-                var commandService = getViewSite().getService(ICommandService.class);
-                var evaluationService = getViewSite().getService(IEvaluationService.class);
+            var commandService = getViewSite().getService(ICommandService.class);
+            var evaluationService = getViewSite().getService(IEvaluationService.class);
 
-                if (stack.getStackMode() == StackMode.AUTOMATIC) {
-                    // automatic stack, arm all commands
-                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
-                    try {
-                        cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
-                                evaluationService.getCurrentState()));
-                    } catch (Exception e) {
-                        log.log(Level.SEVERE, "Could not execute command", e);
-                    }
-                } else {
-                    // manual stack, individual arm
-                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
-                    try {
-                        cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
-                                evaluationService.getCurrentState()));
-                    } catch (Exception e) {
-                        log.log(Level.SEVERE, "Could not execute command", e);
-                    }
+            if (stack.getStackMode() == StackMode.AUTOMATIC) {
+                // automatic stack, arm all commands
+                var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
+                try {
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
+                            evaluationService.getCurrentState()));
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Could not execute command", e);
                 }
-
             } else {
-                if (stack.getActiveCommand() != null && stack.getActiveCommand().isArmed()) {
-                    stack.getActiveCommand().setStackedState(StackedState.DISARMED);
-                    clearArm();
-                    refreshState();
+                // manual stack, individual arm
+                var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
+                try {
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
+                            evaluationService.getCurrentState()));
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Could not execute command", e);
                 }
             }
         });
 
-        issueButton = new Button(bottomRight, SWT.NONE);
+        issueButton = new Button(bottomRight, SWT.PUSH);
         issueButton.setText("2. Issue");
         issueButton.setToolTipText("Issue the selected command");
         issueButton.setEnabled(false);
@@ -416,7 +406,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");
             }
             try {
-                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
                         evaluationService.getCurrentState()));
             } catch (Exception e) {
                 log.log(Level.SEVERE, "Could not execute command", e);
@@ -424,20 +414,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         });
 
         commandTableViewer.addSelectionChangedListener(evt -> {
-            var sel = (IStructuredSelection) evt.getSelection();
-            updateMessagePanel(sel);
-            var stack = CommandStack.getInstance();
-            if (stack.getStackStatus() != StackStatus.EXECUTING) {
-                armButton.setSelection(false);
-                stack.disarmArmed();
-                if (sel.isEmpty() || !stack.isValid() || !sel.getFirstElement().equals(stack.getActiveCommand())) {
-                    armButton.setEnabled(false);
-                    issueButton.setEnabled(false);
-                } else if (stack.hasRemaining() && YamcsPlugin.hasAnyObjectPrivilege("Command")) {
-                    armButton.setEnabled(true);
-                }
-            }
-
             refreshState();
         });
 
@@ -527,6 +503,30 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         }
     }
 
+    public void selectNextCommand() {
+        var stack = CommandStack.getInstance();
+        if (!stack.isEmpty()) {
+            var allCommands = stack.getCommands();
+            var currentSelection = (IStructuredSelection) commandTableViewer.getSelection();
+            if (currentSelection.isEmpty()) {
+                var sel = new StructuredSelection(allCommands.get(0));
+                commandTableViewer.setSelection(sel, true);
+            } else {
+                var selected = currentSelection.toArray();
+                var lastSelected = selected[selected.length - 1];
+                var idx = allCommands.indexOf(lastSelected);
+                if (idx != -1 && idx != allCommands.size() - 1) {
+                    var sel = new StructuredSelection(allCommands.get(idx + 1));
+                    commandTableViewer.setSelection(sel, true);
+                } else {
+                    commandTableViewer.setSelection(null);
+                }
+            }
+        } else {
+            commandTableViewer.setSelection(null);
+        }
+    }
+
     public void selectActiveCommand() {
         var stack = CommandStack.getInstance();
         if (stack.hasRemaining()) {
@@ -612,13 +612,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         selectActiveCommand();
     }
 
-    /**
-     * Clear state of the arm button TODO should probably be refactored into refreshState instead
-     */
-    public void clearArm() {
-        armButton.setSelection(false);
-    }
-
     public void refreshState() {
         commandTableViewer.refresh();
         var stack = CommandStack.getInstance();
@@ -629,31 +622,53 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         var mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
         var executing = stack.getStackStatus() == StackStatus.EXECUTING;
 
+        armButton.setEnabled(false);
+        issueButton.setEnabled(false);
+        if (connectionStateProvider.isConnected() && !sel.isEmpty() && !executing) {
+            var enableArm = false;
+            var enableIssue = true;
+            // Enable arm, as soon as there's at least one command in the selection currently unarmed
+            // Enable issue, only when all selected commands are armed
+            if (stack.isValid() && !sel.isEmpty() && mayCommand) {
+                for (var o : sel.toArray()) {
+                    var command = (StackedCommand) o;
+                    if (!command.isArmed()) {
+                        enableArm = true;
+                        enableIssue = false;
+                    }
+                }
+            } else {
+                enableIssue = false;
+            }
+            armButton.setEnabled(enableArm);
+            issueButton.setEnabled(enableIssue);
+        }
+
         if (connectionStateProvider.isConnected() && !sel.isEmpty() && !executing) {
             var selectedCommand = (StackedCommand) sel.getFirstElement();
             if (mayCommand && selectedCommand == stack.getActiveCommand()) {
                 if (stack.getStackMode() == StackMode.MANUAL && selectedCommand.isArmed()
                         || stack.getStackMode() == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
-                    armButton.setEnabled(true);
-                    issueButton.setEnabled(armButton.getSelection());
+                    // armButton.setEnabled(true);
+                    // issueButton.setEnabled(armButton.getSelection());
                 } else if (stack.isValid()) {
-                    armButton.setEnabled(true);
-                    issueButton.setEnabled(false);
+                    // armButton.setEnabled(true);
+                    // issueButton.setEnabled(false);
                 } else {
-                    armButton.setEnabled(false);
-                    issueButton.setEnabled(false);
+                    // armButton.setEnabled(false);
+                    // issueButton.setEnabled(false);
                 }
             } else {
-                stack.disarmArmed();
-                armButton.setEnabled(false);
-                issueButton.setEnabled(false);
+                // stack.disarmArmed();
+                // armButton.setEnabled(false);
+                // issueButton.setEnabled(false);
             }
         } else {
             if (stack.getStackStatus() != StackStatus.EXECUTING) {
-                stack.disarmArmed();
+                // stack.disarmArmed();
             }
-            armButton.setEnabled(false);
-            issueButton.setEnabled(false);
+            // armButton.setEnabled(false);
+            // issueButton.setEnabled(false);
         }
 
         stackModeLabel.setEnabled(!executing && mayCommand && connectionStateProvider.isConnected());
@@ -661,7 +676,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         autoOptionsCombo.setEnabled(!executing && mayCommand && connectionStateProvider.isConnected());
 
         // State for plugin.xml handlers
-        var executionStateProvider = RCPUtils.findSourceProvider(getSite(), CommandStackStateProvider.STATE_KEY_ARMED,
+        var executionStateProvider = RCPUtils.findSourceProvider(getSite(), CommandStackStateProvider.STATE_KEY_EMPTY,
                 CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
     }

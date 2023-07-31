@@ -22,11 +22,13 @@ import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 public class CommandStack {
 
     public enum StackStatus {
-        IDLE, EXECUTING;
+        IDLE,
+        EXECUTING;
     }
 
     public enum StackMode {
-        MANUAL(0), AUTOMATIC(1);
+        MANUAL(0),
+        AUTOMATIC(1);
 
         private final int index;
 
@@ -40,7 +42,9 @@ public class CommandStack {
     }
 
     public enum AutoMode {
-        AFAP(0), FIX_DELAY(1), STACK_DELAYS(2);
+        AFAP(0),
+        FIX_DELAY(1),
+        STACK_DELAYS(2);
 
         private final int index;
 
@@ -119,10 +123,6 @@ public class CommandStack {
         }
 
         return true;
-    }
-
-    public int indexOf(StackedCommand command) {
-        return commands.indexOf(command);
     }
 
     public List<String> getErrorMessages() {

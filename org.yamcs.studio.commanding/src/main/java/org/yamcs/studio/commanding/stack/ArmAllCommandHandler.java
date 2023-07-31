@@ -110,7 +110,6 @@ public class ArmAllCommandHandler extends AbstractHandler {
             } else {
                 Display.getDefault().asyncExec(() -> {
                     command.setStackedState(StackedState.REJECTED);
-                    view.clearArm();
                     view.refreshState();
                 });
             }

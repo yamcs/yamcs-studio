@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -17,6 +19,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.Command;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -26,15 +29,38 @@ public class IssueCommandHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        var shell = HandlerUtil.getActiveShell(event);
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         var commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
-        var command = CommandStack.getInstance().getActiveCommand();
-        issueCommand(shell, commandStackView, command);
+        var shell = HandlerUtil.getActiveShellChecked(event);
+
+        var sel = HandlerUtil.getCurrentStructuredSelection(event);
+        var futures = new ArrayList<CompletableFuture<?>>();
+        for (var o : sel.toArray()) {
+            var command = (StackedCommand) o;
+            try {
+                var future = issueCommand(shell, commandStackView, command);
+                // Await response, also for sequence reasons
+                future.get();
+                futures.add(future);
+            } catch (java.util.concurrent.ExecutionException e) {
+                throw new ExecutionException("Failed to issue command", e.getCause());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (!futures.isEmpty()) {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0])).whenComplete((allDone, exc) -> {
+                if (exc == null) {
+                    commandStackView.selectNextCommand();
+                }
+            });
+        }
+
         return null;
     }
 
-    private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command)
+    private CompletableFuture<Command> issueCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
         var qname = command.getName();
 
@@ -53,7 +79,7 @@ public class IssueCommandHandler extends AbstractHandler {
             }
         });
 
-        builder.issue().whenComplete((response, exc) -> {
+        return builder.issue().whenComplete((response, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     log.info("Issued " + qname);
@@ -65,7 +91,6 @@ public class IssueCommandHandler extends AbstractHandler {
                         command.updateExecutionState(alreadyReceivedUpdate);
                     }
 
-                    view.selectActiveCommand();
                     view.refreshState();
                 });
             } else {

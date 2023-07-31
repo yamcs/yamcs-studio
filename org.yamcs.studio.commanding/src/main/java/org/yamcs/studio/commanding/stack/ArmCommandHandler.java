@@ -18,7 +18,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -30,19 +29,24 @@ public class ArmCommandHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
+        var part = window.getActivePage().findView(CommandStackView.ID);
         var commandStackView = (CommandStackView) part;
 
         var shell = HandlerUtil.getActiveShellChecked(event);
-        var stack = CommandStack.getInstance();
-        var command = stack.getActiveCommand();
-        armCommand(shell, commandStackView, command);
+        var sel = HandlerUtil.getCurrentStructuredSelection(event);
+        for (var o : sel.toArray()) {
+            var command = (StackedCommand) o;
+            armCommand(shell, commandStackView, command);
+        }
 
         return null;
     }
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
+        if (command.isArmed()) {
+            return;
+        }
 
         var processorClient = YamcsPlugin.getProcessorClient();
         var qname = command.getName();
@@ -99,7 +103,6 @@ public class ArmCommandHandler extends AbstractHandler {
             } else {
                 Display.getDefault().asyncExec(() -> {
                     command.setStackedState(StackedState.REJECTED);
-                    view.clearArm();
                     view.refreshState();
                 });
             }

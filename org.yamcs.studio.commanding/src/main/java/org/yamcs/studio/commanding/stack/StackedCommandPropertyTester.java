@@ -18,9 +18,20 @@ public class StackedCommandPropertyTester extends PropertyTester {
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         var cmd = (StackedCommand) receiver;
         if ("canBeSkipped".equals(property)) {
-            return cmd == CommandStack.getInstance().getActiveCommand() && cmd.getStackedState() != StackedState.ISSUED
-                    && cmd.getStackedState() != StackedState.SKIPPED;
+            return canBeSkipped(cmd);
+        } else if ("canBeIssued".equals(property)) {
+            return canBeIssued(cmd);
         }
         return false;
+    }
+
+    private boolean canBeSkipped(StackedCommand cmd) {
+        return cmd == CommandStack.getInstance().getActiveCommand()
+                && cmd.getStackedState() != StackedState.ISSUED
+                && cmd.getStackedState() != StackedState.SKIPPED;
+    }
+
+    private boolean canBeIssued(StackedCommand cmd) {
+        return cmd.isArmed();
     }
 }

@@ -215,6 +215,9 @@ public class StackedCommand {
     }
 
     public void setStackedState(StackedState state) {
+        if (state == StackedState.ARMED && state != this.state) {
+            execution = null;
+        }
         this.state = state;
     }
 
@@ -301,7 +304,7 @@ public class StackedCommand {
         if (!isAssigned(arg) && !arg.hasInitialValue()) {
             return false;
         }
-        return true; // TODO more local checks
+        return true;
     }
 
     public boolean isDefaultChanged(ArgumentInfo arg) {
