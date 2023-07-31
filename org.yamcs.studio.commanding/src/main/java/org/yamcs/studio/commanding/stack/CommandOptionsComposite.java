@@ -46,6 +46,10 @@ public class CommandOptionsComposite extends ScrolledComposite {
     private List<Control> controls = new ArrayList<>();
     private CommandOptionsValidityListener validityListener;
 
+    private Text commentText;
+    private Button overrideCheckbox;
+    private Spinner waitTimeSpinner;
+
     public CommandOptionsComposite(Composite parent, int style, StackedCommand command,
             CommandOptionsValidityListener validityListener) {
         super(parent, style | SWT.V_SCROLL);
@@ -162,34 +166,50 @@ public class CommandOptionsComposite extends ScrolledComposite {
             }
         }
 
-        // option for stack delay
-        var l0 = new Label(optionsGroup, SWT.NONE);
-        l0.setText("Issue Delay (ms)");
-        var gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
-        l0.setLayoutData(gridData);
-        var delayMs = new Spinner(optionsGroup, SWT.BORDER);
-        delayMs.setValues(command.getDelayMs(), 0, Integer.MAX_VALUE, 0, 1, 100);
-        gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        delayMs.setLayoutData(gridData);
-        delayMs.addModifyListener(evt -> {
-            command.setDelayMs(delayMs.getSelection());
-        });
-
-        // option for comment
         var l1 = new Label(optionsGroup, SWT.NONE);
         l1.setText("Comment");
-        gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
-        l1.setLayoutData(gridData);
-        var comment = new Text(optionsGroup, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
-        comment.setText(command.getComment() != null ? command.getComment() : "");
-        gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gridData.heightHint = 3 * comment.getLineHeight();
-        comment.setLayoutData(gridData);
-        comment.addModifyListener(evt -> {
-            if (comment.getText().trim().isEmpty()) {
-                command.setComment(null);
+        l1.setLayoutData(new GridData(SWT.NONE, SWT.TOP, false, false));
+        commentText = new Text(optionsGroup, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+        commentText.setText(command.getComment() != null ? command.getComment() : "");
+        var gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        gridData.heightHint = 3 * commentText.getLineHeight();
+        commentText.setLayoutData(gridData);
+
+        var advancementGroup = new Group(scrollpane, SWT.NONE);
+        advancementGroup.setText("Stack Advancement");
+        advancementGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        advancementGroup.setLayout(new GridLayout(3, false));
+
+        var l0 = new Label(advancementGroup, SWT.NONE);
+        l0.setText("Wait (ms)  ");
+        l0.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, false));
+        overrideCheckbox = new Button(advancementGroup, SWT.CHECK);
+        overrideCheckbox.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, false));
+        overrideCheckbox.setText("Override");
+        overrideCheckbox.setToolTipText("If checked, override the wait time defined at stack level");
+        waitTimeSpinner = new Spinner(advancementGroup, SWT.BORDER);
+        waitTimeSpinner.setValues(command.getWaitTime(), 0, Integer.MAX_VALUE, 0, 500, 1000);
+        waitTimeSpinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+        if (command.getWaitTime() >= 0) {
+            overrideCheckbox.setSelection(true);
+            waitTimeSpinner.setEnabled(true);
+            waitTimeSpinner.setSelection(command.getWaitTime());
+        } else {
+            overrideCheckbox.setSelection(false);
+            var stack = CommandStack.getInstance();
+            waitTimeSpinner.setEnabled(false);
+            waitTimeSpinner.setSelection(stack.getWaitTime());
+        }
+
+        overrideCheckbox.addListener(SWT.Selection, evt -> {
+            var stack = CommandStack.getInstance();
+            if (overrideCheckbox.getSelection()) {
+                waitTimeSpinner.setEnabled(true);
+                waitTimeSpinner.setSelection(stack.getWaitTime());
             } else {
-                command.setComment(comment.getText());
+                waitTimeSpinner.setEnabled(false);
+                waitTimeSpinner.setSelection(stack.getWaitTime());
             }
         });
 
@@ -423,8 +443,24 @@ public class CommandOptionsComposite extends ScrolledComposite {
         validityListener.validityUpdated(invalidMessage);
     }
 
+    public String getComment() {
+        if (commentText.getText().trim().isEmpty()) {
+            return null;
+        } else {
+            return commentText.getText();
+        }
+    }
+
+    public int getWaitTime() {
+        if (overrideCheckbox.getSelection()) {
+            return waitTimeSpinner.getSelection();
+        } else {
+            return -1;
+        }
+    }
+
     public Map<ArgumentInfo, String> getAssignments() {
-        Map<ArgumentInfo, String> assignments = new HashMap<>();
+        var assignments = new HashMap<ArgumentInfo, String>();
         for (var control : controls) {
             var argument = (TelecommandArgument) control.getData();
             if (control instanceof Text) {

@@ -48,8 +48,8 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
                 buf.append("\n");
             }
             first = false;
-            if (command.getDelayMs() > 0) {
-                var delay = command.getDelayMs() / 1000;
+            if (command.getWaitTime() > 0) {
+                var delay = command.getWaitTime() / 1000;
                 buf.append("WaitFor(").append(delay).append(" * SECOND)\n");
             }
             buf.append("Send(command=\"").append(command.getMetaCommand().getQualifiedName()).append("\"");

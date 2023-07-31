@@ -75,6 +75,14 @@ public class AddToStackWizardPage2 extends WizardPage implements CommandOptionsV
         return optionsComposite.getAssignments();
     }
 
+    public String getComment() {
+        return optionsComposite.getComment();
+    }
+
+    public int getWaitTime() {
+        return optionsComposite.getWaitTime();
+    }
+
     @Override
     public void validityUpdated(String invalidMessage) {
         setErrorMessage(invalidMessage);

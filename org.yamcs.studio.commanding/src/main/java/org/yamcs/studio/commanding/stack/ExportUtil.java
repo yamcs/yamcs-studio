@@ -33,6 +33,10 @@ public class ExportUtil {
         var root = new JsonObject();
         root.addProperty("$schema", "https://yamcs.org/schema/command-stack.schema.json");
 
+        var advancementObject = new JsonObject();
+        advancementObject.addProperty("wait", stack.getWaitTime());
+        root.add("advancement", advancementObject);
+
         var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
 
         var commandsArray = new JsonArray();
@@ -120,10 +124,10 @@ public class ExportUtil {
                 commandObject.add("extraOptions", extraOptions);
             }
 
-            if (command.getDelayMs() > 0) {
-                var advancementObject = new JsonObject();
-                advancementObject.addProperty("wait", command.getDelayMs());
-                commandObject.add("advancement", advancementObject);
+            if (command.getWaitTime() >= 0) {
+                var commandAdvancementObject = new JsonObject();
+                commandAdvancementObject.addProperty("wait", command.getWaitTime());
+                commandObject.add("advancement", commandAdvancementObject);
             }
 
             commandsArray.add(commandObject);
@@ -174,9 +178,9 @@ public class ExportUtil {
                 });
             }
 
-            if (command.getDelayMs() > 0) {
+            if (command.getWaitTime() > 0) {
                 attr = doc.createAttribute("delayMs");
-                attr.setValue(Integer.toString(command.getDelayMs()));
+                attr.setValue(Integer.toString(command.getWaitTime()));
                 commandElement.setAttributeNode(attr);
             }
 

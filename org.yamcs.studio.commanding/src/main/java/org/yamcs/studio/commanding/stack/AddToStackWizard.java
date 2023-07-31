@@ -32,6 +32,8 @@ public class AddToStackWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
+        command.setComment(page2.getComment());
+        command.setWaitTime(page2.getWaitTime());
         page2.getAssignments().forEach((argumentInfo, value) -> {
             command.addAssignment(argumentInfo, value);
         });

@@ -51,6 +51,8 @@ public class EditStackedCommandDialog extends TitleAreaDialog implements Command
         composite.getAssignments().forEach((assignmentInfo, value) -> {
             command.addAssignment(assignmentInfo, value);
         });
+        command.setComment(composite.getComment());
+        command.setWaitTime(composite.getWaitTime());
         super.okPressed();
     }
 

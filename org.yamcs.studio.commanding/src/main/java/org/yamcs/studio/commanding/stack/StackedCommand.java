@@ -40,7 +40,6 @@ public class StackedCommand {
         DISARMED("Disarmed"),
         ARMED("Armed"),
         ISSUED("Issued"),
-        SKIPPED("Skipped"),
         REJECTED("Rejected");
 
         private String text;
@@ -54,7 +53,8 @@ public class StackedCommand {
         }
     }
 
-    private int delayMs = 0;
+    // -1 means: inherit from stack
+    private int waitTime = -1;
     private CommandInfo meta;
     private Map<ArgumentInfo, String> assignments = new HashMap<>();
     private Map<String, Value> extra = new HashMap<>();
@@ -73,7 +73,7 @@ public class StackedCommand {
         comment = original.getComment();
         assignments.putAll(original.getAssignments());
         extra.putAll(original.getExtra());
-        delayMs = original.getDelayMs();
+        waitTime = original.getWaitTime();
     }
 
     public StackedCommand(CommandHistoryRecord rec) {
@@ -185,12 +185,12 @@ public class StackedCommand {
         return execution != null ? execution.getId() : null;
     }
 
-    public void setDelayMs(int delayMs) {
-        this.delayMs = delayMs;
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
     }
 
-    public int getDelayMs() {
-        return delayMs;
+    public int getWaitTime() {
+        return waitTime;
     }
 
     public void setMetaCommand(CommandInfo meta) {
@@ -332,10 +332,6 @@ public class StackedCommand {
             }
         }
         return res;
-    }
-
-    public void markSkipped() {
-        state = StackedState.SKIPPED;
     }
 
     public void setComment(String comment) {

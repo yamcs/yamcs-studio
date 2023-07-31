@@ -66,7 +66,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(4);
+        Map map = new HashMap(3);
         map.put(STATE_KEY_EXECUTION_STARTED, executionStarted);
         map.put(STATE_KEY_EMPTY, empty);
         map.put(STATE_KEY_EXECUTING, executing);

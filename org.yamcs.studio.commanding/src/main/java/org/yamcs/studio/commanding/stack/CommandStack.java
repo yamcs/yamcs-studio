@@ -62,10 +62,7 @@ public class CommandStack {
     private StackStatus stackStatus = StackStatus.IDLE;
     private StackMode stackMode = StackMode.MANUAL;
     private AutoMode autoMode = AutoMode.AFAP;
-    private int fixDelayMs = 100;
-
-    private CommandStack() {
-    }
+    private int waitTime = 0;
 
     public StackStatus getStackStatus() {
         return stackStatus;
@@ -91,12 +88,12 @@ public class CommandStack {
         this.autoMode = autoMode;
     }
 
-    public int getAutoFixDelayMs() {
-        return fixDelayMs;
+    public int getWaitTime() {
+        return waitTime;
     }
 
-    public void setAutoFixDelayMs(int fixDelayMs) {
-        this.fixDelayMs = fixDelayMs;
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
     }
 
     public static CommandStack getInstance() {
@@ -136,7 +133,7 @@ public class CommandStack {
 
     public StackedCommand getActiveCommand() {
         for (var command : commands) {
-            if (command.getStackedState() != StackedState.ISSUED && command.getStackedState() != StackedState.SKIPPED) {
+            if (command.getStackedState() != StackedState.ISSUED) {
                 return command;
             }
         }
@@ -162,21 +159,5 @@ public class CommandStack {
 
     public boolean isEmpty() {
         return commands.isEmpty();
-    }
-
-    public boolean areAllCommandsArmed() {
-        // Check all commands are armed, starting from the active command
-        var activeCommand = getActiveCommand();
-        var foundActive = false;
-        var allArmed = true;
-        for (var i = 0; i < commands.size(); i++) {
-            if (!foundActive && commands.get(i) == activeCommand) {
-                foundActive = true;
-            }
-            if (foundActive) {
-                allArmed &= commands.get(i).isArmed();
-            }
-        }
-        return allArmed;
     }
 }

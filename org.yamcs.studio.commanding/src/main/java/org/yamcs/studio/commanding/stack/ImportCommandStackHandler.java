@@ -61,7 +61,9 @@ public class ImportCommandStackHandler extends AbstractHandler {
                 commandStackView.addTelecommand(sc);
             }
         } else if (importFile.toLowerCase().endsWith(".ycs")) {
-            for (var sc : parseYcsCommandStack(shell, Path.of(importFile))) {
+            var stack = parseYcsCommandStack(shell, Path.of(importFile));
+            commandStackView.setWaitTime(stack.getWaitTime());
+            for (var sc : stack.getCommands()) {
                 commandStackView.addTelecommand(sc);
             }
         }
@@ -69,8 +71,9 @@ public class ImportCommandStackHandler extends AbstractHandler {
         return null;
     }
 
-    private List<StackedCommand> parseYcsCommandStack(Shell shell, Path file) {
-        var commands = new ArrayList<StackedCommand>();
+    private CommandStack parseYcsCommandStack(Shell shell, Path file) {
+        var stack = new CommandStack();
+
         var gson = new Gson();
         JsonObject stackObject;
         try (var reader = Files.newBufferedReader(file)) {
@@ -80,6 +83,16 @@ public class ImportCommandStackHandler extends AbstractHandler {
             MessageDialog.openError(shell, "Import Command Stack",
                     "Unable to import command stack. Details:\n" + e);
             return null;
+        }
+
+        if (stackObject.has("advancement")) {
+            var advancementObject = stackObject.get("advancement").getAsJsonObject();
+            if (advancementObject.has("wait")) {
+                var wait = stackObject.get("wait").getAsInt();
+                if (wait >= 0) {
+                    stack.setWaitTime(wait);
+                }
+            }
         }
 
         if (stackObject.has("commands")) {
@@ -115,8 +128,10 @@ public class ImportCommandStackHandler extends AbstractHandler {
                 if (commandObject.has("advancement")) {
                     var advancementObject = commandObject.get("advancement").getAsJsonObject();
                     if (advancementObject.has("wait")) {
-                        var wait = commandObject.get("delayMs").getAsInt();
-                        command.setDelayMs(wait);
+                        var wait = commandObject.get("wait").getAsInt();
+                        if (wait >= 0) {
+                            command.setWaitTime(wait);
+                        }
                     }
                 }
                 if (commandObject.has("arguments")) {
@@ -146,11 +161,11 @@ public class ImportCommandStackHandler extends AbstractHandler {
                     }
                 }
 
-                commands.add(command);
+                stack.addCommand(command);
             }
         }
 
-        return commands;
+        return stack;
     }
 
     private List<StackedCommand> parseXmlCommandStack(Shell shell, Path file) {
@@ -184,7 +199,9 @@ public class ImportCommandStackHandler extends AbstractHandler {
                     }
                     if (commandElement.hasAttribute("delayMs")) {
                         var delay = Integer.parseInt(commandElement.getAttribute("delayMs"));
-                        command.setDelayMs(delay);
+                        if (delay >= 0) {
+                            command.setWaitTime(delay);
+                        }
                     }
 
                     var argNodes = commandElement.getElementsByTagName("commandArgument");

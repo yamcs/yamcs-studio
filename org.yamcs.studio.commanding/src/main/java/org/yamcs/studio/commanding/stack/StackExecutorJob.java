@@ -58,7 +58,6 @@ public class StackExecutorJob extends Job {
                 });
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 Thread.currentThread().interrupt();
             }
         }
@@ -104,12 +103,12 @@ public class StackExecutorJob extends Job {
                                 var delayMs = 0;
                                 if (stack.getAutoMode() == AutoMode.FIX_DELAY) {
                                     // with fix delay
-                                    delayMs = stack.getAutoFixDelayMs();
+                                    delayMs = stack.getWaitTime();
                                 } else {
                                     // with stack delays
                                     var nextCommand = CommandStack.getInstance().getCommands()
                                             .get(commandIndex + 1);
-                                    delayMs = nextCommand.getDelayMs();
+                                    delayMs = nextCommand.getWaitTime();
                                 }
                                 Thread.sleep(delayMs);
                             } catch (InterruptedException e) {

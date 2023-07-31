@@ -24,12 +24,10 @@
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.add" name="New Command"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.delete" name="Delete Command"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.deleteAll" name="Delete All Commands"></command>
-      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.skip" name="Skip Command"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.restart" name="Clear Execution State"></command>
+      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.runFromHere" name="Run From Here"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.arm" name="Arm Command"></command>
-      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.armAll" name="Arm All Commands"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issue" name="Issue Command"></command>
-      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issueAll" name="Issue All Commands"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.export" name="Export Stack (XML)"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportYcs" name="Export Stack (YCS)"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportSpell" name="Export Stack as SPELL Procedure"></command>
@@ -52,7 +50,7 @@
       <propertyTester namespace="org.yamcs.studio.commanding.stack"
             class="org.yamcs.studio.commanding.stack.StackedCommandPropertyTester"
             id="org.yamcs.studio.commanding.stack.StackedCommandPropertyTester"
-            properties="canBeSkipped,canBeIssued"
+            properties="canRun"
             type="org.yamcs.studio.commanding.stack.StackedCommand" />
    </extension>
 
@@ -130,7 +128,7 @@
             </and>
          </enabledWhen>
       </handler>
-      <handler class="org.yamcs.studio.commanding.stack.SkipHandler" commandId="org.yamcs.studio.commanding.stack.skip">
+      <handler class="org.yamcs.studio.commanding.stack.RunCommandsFromHereHandler" commandId="org.yamcs.studio.commanding.stack.runFromHere">
          <enabledWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -144,7 +142,7 @@
                      <count value="1" />
                      <iterate ifEmpty="false">
                         <adapt type="org.yamcs.studio.commanding.stack.StackedCommand">
-                           <test property="org.yamcs.studio.commanding.stack.canBeSkipped" />
+                           <test property="org.yamcs.studio.commanding.stack.canRun" />
                         </adapt>
                      </iterate>
                   </and>
@@ -175,22 +173,7 @@
             </and>
          </enabledWhen>
       </handler>
-      <handler class="org.yamcs.studio.commanding.stack.ArmAllCommandHandler" commandId="org.yamcs.studio.commanding.stack.armAll">
-         <enabledWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.commanding.stack.state.executing">
-                  <equals value="false" />
-               </with>
-            </and>
-         </enabledWhen>
-      </handler>
-      <handler class="org.yamcs.studio.commanding.stack.IssueCommandHandler" commandId="org.yamcs.studio.commanding.stack.issue">
+      <handler class="org.yamcs.studio.commanding.stack.RunCommandHandler" commandId="org.yamcs.studio.commanding.stack.issue">
          <enabledWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -210,24 +193,9 @@
                <with variable="selection">
                   <iterate ifEmpty="false">
                      <adapt type="org.yamcs.studio.commanding.stack.StackedCommand">
-                        <test property="org.yamcs.studio.commanding.stack.canBeIssued" />
+                        <test property="org.yamcs.studio.commanding.stack.canRun" />
                      </adapt>
                   </iterate>
-               </with>
-            </and>
-         </enabledWhen>
-      </handler>
-      <handler class="org.yamcs.studio.commanding.stack.IssueAllCommandsHandler" commandId="org.yamcs.studio.commanding.stack.issueAll">
-         <enabledWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.commanding.stack.state.executing">
-                  <equals value="false" />
                </with>
             </and>
          </enabledWhen>
@@ -326,8 +294,8 @@
          <command commandId="org.yamcs.studio.commanding.stack.delete" icon="icons/elcl16/remove.png" disabledIcon="icons/dlcl16/remove.png" label="Delete Command" style="push" />
          <command commandId="org.yamcs.studio.commanding.stack.deleteAll" icon="icons/elcl16/removeall.png" disabledIcon="icons/dlcl16/removeall.png" label="Delete All Commands" style="push" />
          <control class="org.yamcs.studio.core.utils.ToolbarSpacer" />
-         <command commandId="org.yamcs.studio.commanding.stack.skip" icon="icons/elcl16/stepover_co.png" disabledIcon="icons/dlcl16/stepover_co.png" label="Skip Command" style="push" />
          <command commandId="org.yamcs.studio.commanding.stack.restart" icon="icons/elcl16/restart_co.png" disabledIcon="icons/dlcl16/restart_co.png" label="Clear Execution State" style="push" />
+         <command commandId="org.yamcs.studio.commanding.stack.runFromHere" icon="icons/obj16/correction_multi_fix.png" label="Run from here" style="push" />
          <control class="org.yamcs.studio.core.utils.ToolbarSpacer" />
       </menuContribution>
 

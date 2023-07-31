@@ -20,15 +20,16 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 
-public class IssueAllCommandsHandler extends AbstractHandler {
+public class RunCommandsFromHereHandler extends AbstractHandler {
 
-    private static final Logger log = Logger.getLogger(IssueAllCommandsHandler.class.getName());
+    private static final Logger log = Logger.getLogger(RunCommandsFromHereHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var shell = HandlerUtil.getActiveShell(event);
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        var commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
+        var part = window.getActivePage().findView(CommandStackView.ID);
+        var commandStackView = (CommandStackView) part;
         var commandHistoryView = (CommandHistoryView) window.getActivePage().findView(CommandHistoryView.ID);
 
         // lock scroll during command stack execution, or this would slow down the UI
@@ -44,14 +45,14 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             var job = new StackExecutorJob(shell, commandStackView);
             job.schedule();
         } catch (Exception e) {
-            log.severe("Automatic Command Stack error:" + e.getMessage());
-            MessageDialog.openError(shell, "Failed to issue commands: ", e.getMessage());
+            log.severe("Failed to run commands: " + e.getMessage());
+            MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
         }
 
-        log.info("Issue all commands execute done");
-
         // restore scroll state of the command history view
-        commandHistoryView.enableScrollLock(oldState);
+        if (commandHistoryView != null) {
+            commandHistoryView.enableScrollLock(oldState);
+        }
 
         return null;
     }

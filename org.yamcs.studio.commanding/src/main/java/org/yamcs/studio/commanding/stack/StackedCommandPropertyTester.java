@@ -10,28 +10,19 @@
 package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 public class StackedCommandPropertyTester extends PropertyTester {
 
     @Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         var cmd = (StackedCommand) receiver;
-        if ("canBeSkipped".equals(property)) {
-            return canBeSkipped(cmd);
-        } else if ("canBeIssued".equals(property)) {
-            return canBeIssued(cmd);
+        if ("canRun".equals(property)) {
+            return canRun(cmd);
         }
         return false;
     }
 
-    private boolean canBeSkipped(StackedCommand cmd) {
-        return cmd == CommandStack.getInstance().getActiveCommand()
-                && cmd.getStackedState() != StackedState.ISSUED
-                && cmd.getStackedState() != StackedState.SKIPPED;
-    }
-
-    private boolean canBeIssued(StackedCommand cmd) {
+    private boolean canRun(StackedCommand cmd) {
         return cmd.isArmed();
     }
 }

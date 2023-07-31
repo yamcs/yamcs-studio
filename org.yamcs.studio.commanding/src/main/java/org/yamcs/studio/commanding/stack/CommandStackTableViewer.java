@@ -9,12 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -31,8 +26,8 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IViewSite;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.utils.RCPUtils;
@@ -42,7 +37,6 @@ public class CommandStackTableViewer extends TableViewer {
     private static final Logger log = Logger.getLogger(CommandStackTableViewer.class.getName());
 
     public static final String COL_ROW_ID = "#";
-    public static final String COL_DELAY = "Issue Delay";
     public static final String COL_COMMAND = "Command";
     public static final String COL_SIGNIFICANCE = "Sig.";
     public static final String COL_CONSTRAINTS = "Constraints";
@@ -63,9 +57,8 @@ public class CommandStackTableViewer extends TableViewer {
     private CommandStackTableContentProvider contentProvider;
     private ResourceManager resourceManager;
 
-    private TableViewerColumn delayColumn;
-
-    public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
+    public CommandStackTableViewer(IViewSite viewSite, Composite parent, TableColumnLayout tcl,
+            CommandStackView styleProvider) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.HIDE_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
@@ -112,23 +105,6 @@ public class CommandStackTableViewer extends TableViewer {
         });
         rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
-
-        delayColumn = new TableViewerColumn(this, SWT.NONE);
-        delayColumn.getColumn().setText(COL_DELAY);
-        delayColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                var cmd = (StackedCommand) element;
-                var delayMs = cmd.getDelayMs();
-                var decimalFormat = new DecimalFormat("#,##0");
-                var numberAsString = decimalFormat.format(delayMs);
-                return (delayMs > 0) ? numberAsString + " ms" : "-";
-            }
-        });
-        // the delay column is shown when the command stack is in automatic mode with
-        // stack delays.
-        tcl.setColumnData(delayColumn.getColumn(), new ColumnPixelData(0));
-        // this.hideDelayColumn();
 
         var nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
@@ -374,50 +350,5 @@ public class CommandStackTableViewer extends TableViewer {
 
     public void insertTelecommand(StackedCommand command, int index) {
         contentProvider.insertTelecommand(command, index);
-    }
-
-    public void showDelayColumn() {
-        delayColumn.getColumn().setWidth(110);
-    }
-
-    public void hideDelayColumn() {
-        delayColumn.getColumn().setWidth(0);
-    }
-
-    // Enqueue a refresh request
-    // Restrict to no more than 1 refresh every 200 ms
-    private long refreshDelayMs = 200;
-    Date lastRefreshTime = new Date();
-    boolean refreshScheduled = false;
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    @Override
-    public void refresh() {
-        // if scheduled, skip the request
-        if (refreshScheduled) {
-            return;
-        }
-        refreshScheduled = true;
-
-        var delayMs = refreshDelayMs;
-        var currentTime = new Date();
-        var ellapsedMs = currentTime.getTime() - lastRefreshTime.getTime();
-        if (ellapsedMs > delayMs) {
-            // if last refresh if older than 200 ms, schedule the refresh now
-            delayMs = 0;
-        } else {
-            // else, schedule such that the time between the 2 refresh is 200ms
-            delayMs = delayMs - ellapsedMs;
-        }
-
-        // schedule the refresh
-        scheduler.schedule(() -> Display.getDefault().asyncExec(() -> {
-            superRefresh();
-            refreshScheduled = false;
-        }), delayMs, TimeUnit.MILLISECONDS);
-    }
-
-    private void superRefresh() {
-        super.refresh();
     }
 }
