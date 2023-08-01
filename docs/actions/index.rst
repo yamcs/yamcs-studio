@@ -24,14 +24,20 @@ Open OPI
 Write PV
     Writes the specified value to a PV. The :doc:`macro </macros/index>` ``$(pv_name)`` is automatically substituted with the PV attached to the widget.
 
-Execute Command
-    This executes a command on your operating system. It does not execute a telecommand. To execute a telecommand, select "Execute JavaScript" or "Execute Python Script". See :doc:`this example <example-action-telecommand>`.
+Execute System Command
+    This executes a command on your operating system.
 
 Execute JavaScript
     Execute a JavaScript. Link to a script file in your workspace, or alternatively embed it into the Action.
 
 Execute Python Script
     Execute some Python script. Link to a script file in your workspace, or alternatively embed it into the Action.
+
+Run Command
+    This runs a telecommand on the currently connected Yamcs processor.
+
+Run Command Stack
+    This runs all commands in a Yamcs Command Stack file (extension ``*.ycs``).
 
 Play WAV File
     Plays the specified sound file.

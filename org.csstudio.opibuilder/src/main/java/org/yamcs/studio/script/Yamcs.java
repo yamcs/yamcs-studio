@@ -20,11 +20,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.client.base.ResponseObserver;
 import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.commanding.CommandParser;
+import org.yamcs.studio.commanding.stack.CommandStackParser;
+import org.yamcs.studio.commanding.stack.RunCommandJob;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.yamcs.YamcsVType;
@@ -105,6 +109,30 @@ public class Yamcs {
                 });
             }
         });
+    }
+
+    public static void runCommandStack(String path) {
+        runCommandStack(path, null);
+    }
+
+    public static void runCommandStack(String path, AbstractBaseEditPart widget) {
+        if (YamcsPlugin.getProcessorClient() == null) {
+            log.warning("Not running stack " + path + ": not connected");
+            return;
+        }
+
+        try {
+            var abspath = FileUtil.buildAbsolutePath(path, widget);
+            var file = ResourceUtil.getFile(abspath);
+
+            var stack = CommandStackParser.parse(file.toPath());
+
+            var shell = Display.getCurrent().getActiveShell();
+            var job = new RunCommandJob(shell, stack, stack.getCommands(), null);
+            job.schedule();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Failed to run command stack: " + e, e);
+        }
     }
 
     /**

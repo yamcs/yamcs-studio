@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.ui,
  com.google.gson,
  org.eclipse.nebula.widgets.cdatetime,
  com.google.guava
-Export-Package: org.yamcs.studio.commanding
+Export-Package: org.yamcs.studio.commanding,
+ org.yamcs.studio.commanding.stack
 Automatic-Module-Name: org.yamcs.studio.commanding

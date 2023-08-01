@@ -26,6 +26,7 @@ public class WidgetActionFactory {
         EXECUTE_JAVASCRIPT("Execute JavaScript", createImage("icons/exeJS.png")),
         EXECUTE_PYTHONSCRIPT("Execute Python Script", createImage("icons/exePy.gif")),
         RUN_COMMAND("Run Command", createImage("icons/tc.png")),
+        RUN_COMMAND_STACK("Run Command Stack", createImage("icons/tc.png")),
         RUN_PROCEDURE("Run SPELL Procedure", createImage("icons/tc.png")),
         PLAY_SOUND("Play WAV File", createImage("icons/sound.gif")),
         OPEN_FILE("Open File", createImage("icons/openFile.png")),
@@ -101,6 +102,8 @@ public class WidgetActionFactory {
             return new RunProcedureAction();
         case RUN_COMMAND:
             return new RunCommandAction();
+        case RUN_COMMAND_STACK:
+            return new RunCommandStackAction();
         default:
             break;
         }
