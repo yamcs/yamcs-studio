@@ -24,7 +24,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Generate assets
-        run: mvn -B --no-transfer-progress -DskipTests package
+        run: ./mvnw -B --no-transfer-progress -DskipTests package
 
       - name: Draft Release
         uses: softprops/action-gh-release@v1
