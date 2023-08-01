@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 /**
@@ -58,7 +57,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
             }
         }
 
-        executing = stack.getStackStatus() == StackStatus.EXECUTING;
+        executing = stack.isExecuting();
 
         var newState = getCurrentState();
         fireSourceChanged(ISources.WORKBENCH, newState);

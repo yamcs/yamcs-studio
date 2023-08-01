@@ -9,17 +9,22 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 
+/**
+ * Runs commands from a single selected line
+ */
 public class RunCommandsFromHereHandler extends AbstractHandler {
 
     private static final Logger log = Logger.getLogger(RunCommandsFromHereHandler.class.getName());
@@ -29,29 +34,48 @@ public class RunCommandsFromHereHandler extends AbstractHandler {
         var shell = HandlerUtil.getActiveShell(event);
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         var part = window.getActivePage().findView(CommandStackView.ID);
-        var commandStackView = (CommandStackView) part;
-        var commandHistoryView = (CommandHistoryView) window.getActivePage().findView(CommandHistoryView.ID);
+        var view = (CommandStackView) part;
 
-        // lock scroll during command stack execution, or this would slow down the UI
-        // refresh too much
-        var service = PlatformUI.getWorkbench().getService(ICommandService.class);
-        var command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
-        var oldState = HandlerUtil.toggleCommandState(command);
-        if (commandHistoryView != null) {
-            commandHistoryView.enableScrollLock(true);
+        var sel = HandlerUtil.getCurrentStructuredSelection(event);
+        var selectedCommand = (StackedCommand) sel.getFirstElement();
+        if (selectedCommand == null) {
+            return null;
+        }
+
+        var stack = CommandStack.getInstance();
+        var allCommands = stack.getCommands();
+
+        var commandsToRun = new ArrayList<StackedCommand>();
+
+        var idx = allCommands.indexOf(selectedCommand);
+        for (; idx < allCommands.size(); idx++) {
+            var command = allCommands.get(idx);
+            if (command.isArmed()) {
+                commandsToRun.add(command);
+            } else {
+                break;
+            }
+        }
+
+        if (commandsToRun.isEmpty()) {
+            return null;
         }
 
         try {
-            var job = new StackExecutorJob(shell, commandStackView);
+            var job = new RunCommandJob(shell, stack, commandsToRun, view);
             job.schedule();
-        } catch (Exception e) {
-            log.severe("Failed to run commands: " + e.getMessage());
-            MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
-        }
 
-        // restore scroll state of the command history view
-        if (commandHistoryView != null) {
-            commandHistoryView.enableScrollLock(oldState);
+            job.addJobChangeListener(new JobChangeAdapter() {
+                @Override
+                public void done(IJobChangeEvent event) {
+                    Display.getDefault().asyncExec(() -> {
+                        view.setFocus();
+                    });
+                }
+            });
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Failed to run commands: " + e.getMessage(), e);
+            MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
         }
 
         return null;

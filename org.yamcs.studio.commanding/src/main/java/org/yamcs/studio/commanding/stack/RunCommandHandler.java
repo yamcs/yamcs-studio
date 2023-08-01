@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -26,31 +27,29 @@ public class RunCommandHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        var commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
         var shell = HandlerUtil.getActiveShellChecked(event);
+        var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        var part = window.getActivePage().findView(CommandStackView.ID);
+        var view = (CommandStackView) part;
 
         var sel = HandlerUtil.getCurrentStructuredSelection(event);
 
-        // Establish this before executing
-        var nextToSelect = commandStackView.findNextCommand();
-
         try {
+            var stack = CommandStack.getInstance();
             @SuppressWarnings("unchecked")
-            var job = new RunCommandJob(shell, commandStackView, sel.toList());
+            var job = new RunCommandJob(shell, stack, sel.toList(), view);
             job.schedule();
 
             job.addJobChangeListener(new JobChangeAdapter() {
                 @Override
                 public void done(IJobChangeEvent event) {
                     Display.getDefault().asyncExec(() -> {
-                        commandStackView.selectCommand(nextToSelect);
-                        commandStackView.setFocus();
+                        view.setFocus();
                     });
                 }
             });
         } catch (Exception e) {
-            log.severe("Failed to run commands: " + e.getMessage());
+            log.log(Level.SEVERE, "Failed to run commands: " + e.getMessage(), e);
             MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
         }
 

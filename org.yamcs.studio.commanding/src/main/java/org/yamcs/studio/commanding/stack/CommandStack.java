@@ -21,71 +21,17 @@ import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
  */
 public class CommandStack {
 
-    public enum StackStatus {
-        IDLE,
-        EXECUTING;
-    }
-
-    public enum StackMode {
-        MANUAL(0),
-        AUTOMATIC(1);
-
-        private final int index;
-
-        StackMode(int index) {
-            this.index = index;
-        }
-
-        public int index() {
-            return index;
-        }
-    }
-
-    public enum AutoMode {
-        AFAP(0),
-        FIX_DELAY(1),
-        STACK_DELAYS(2);
-
-        private final int index;
-
-        AutoMode(int index) {
-            this.index = index;
-        }
-
-        public int index() {
-            return index;
-        }
-    }
-
     private static final CommandStack INSTANCE = new CommandStack();
     private List<StackedCommand> commands = new ArrayList<>();
-    private StackStatus stackStatus = StackStatus.IDLE;
-    private StackMode stackMode = StackMode.MANUAL;
-    private AutoMode autoMode = AutoMode.AFAP;
+    private boolean executing = false;
     private int waitTime = 0;
 
-    public StackStatus getStackStatus() {
-        return stackStatus;
+    public boolean isExecuting() {
+        return executing;
     }
 
-    public void setStackStatus(StackStatus stackStatus) {
-        this.stackStatus = stackStatus;
-    }
-
-    public StackMode getStackMode() {
-        return stackMode;
-    }
-
-    public void setStackMode(StackMode stackMode) {
-        this.stackMode = stackMode;
-    }
-
-    public AutoMode getAutoMode() {
-        return autoMode;
-    }
-
-    public void setAutoMode(AutoMode autoMode) {
-        this.autoMode = autoMode;
+    public void setExecuting(boolean executing) {
+        this.executing = executing;
     }
 
     public int getWaitTime() {
@@ -129,20 +75,6 @@ public class CommandStack {
         }
 
         return msgs;
-    }
-
-    public StackedCommand getActiveCommand() {
-        for (var command : commands) {
-            if (command.getStackedState() != StackedState.ISSUED) {
-                return command;
-            }
-        }
-
-        return null;
-    }
-
-    public boolean hasRemaining() {
-        return getActiveCommand() != null;
     }
 
     public void disarmArmed() {

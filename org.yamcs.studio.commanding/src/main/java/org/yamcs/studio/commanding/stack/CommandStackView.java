@@ -51,7 +51,6 @@ import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
-import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -410,19 +409,22 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         selectCommand(next);
     }
 
+    public void selectNextCommand(StackedCommand command) {
+        var stack = CommandStack.getInstance();
+        var allCommands = stack.getCommands();
+        var idx = allCommands.indexOf(command);
+        if (idx != -1 && idx != allCommands.size() - 1) {
+            selectCommand(allCommands.get(idx + 1));
+        } else {
+            selectCommand(null);
+        }
+    }
+
     public void selectCommand(StackedCommand command) {
         if (command == null) {
             commandTableViewer.setSelection(null);
         } else {
             var sel = new StructuredSelection(command);
-            commandTableViewer.setSelection(sel, true);
-        }
-    }
-
-    public void selectActiveCommand() {
-        var stack = CommandStack.getInstance();
-        if (stack.hasRemaining()) {
-            var sel = new StructuredSelection(stack.getActiveCommand());
             commandTableViewer.setSelection(sel, true);
         }
     }
@@ -513,7 +515,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         updateMessagePanel(sel);
 
         var mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
-        var executing = stack.getStackStatus() == StackStatus.EXECUTING;
+        var executing = stack.isExecuting();
 
         armButton.setEnabled(false);
         runButton.setEnabled(false);
