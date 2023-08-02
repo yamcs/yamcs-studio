@@ -65,7 +65,9 @@ public class RunCommandJob extends Job {
             runCommands(stack);
         } catch (ExecutionException e) {
             log.log(Level.SEVERE, "Failed to run commands", e);
-            MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
+            Display.getDefault().asyncExec(() -> {
+                MessageDialog.openError(shell, "Failed to run commands: ", e.getMessage());
+            });
         } finally {
             stack.setExecuting(false);
             if (view != null) {
