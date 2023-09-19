@@ -98,6 +98,10 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart {
     @Override
     protected void registerPropertyChangeHandlers() {
         setPropertyChangeHandler(PROP_OPI_FILE, (oldValue, newValue, figure) -> {
+            if (newValue instanceof String stringValue) { // Can be string when called from script
+                newValue = ResourceUtil.getPathFromString(stringValue);
+            }
+
             if (newValue != null && newValue instanceof IPath) {
                 var widgetModel = getWidgetModel();
                 var absolutePath = (IPath) newValue;
