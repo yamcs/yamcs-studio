@@ -9,13 +9,15 @@
  *******************************************************************************/
 package org.yamcs.studio.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.jface.util.Util;
 
 public class SiteConfiguration {
 
@@ -24,16 +26,47 @@ public class SiteConfiguration {
     static {
         // Read site-specific configuration, this can be used to toggle some functionality
         // in a site-controlled manner.
-        var configLocation = ConfigurationScope.INSTANCE.getLocation().toFile();
-        var configFile = new File(configLocation, "site-config.ini");
-        if (configFile.exists()) {
-            try (var fileIn = Files.newInputStream(configFile.toPath())) {
-                props.load(fileIn);
-            } catch (IOException e) {
-                System.err.println("Failed to load site configuration");
-                e.printStackTrace();
+        var configurationDir = findInstallationConfigurationDir();
+        if (configurationDir != null) {
+            var siteConfig = configurationDir.resolve("site-config.ini");
+            if (Files.exists(siteConfig)) {
+                try (var fileIn = Files.newInputStream(siteConfig)) {
+                    props.load(fileIn);
+                } catch (IOException e) {
+                    System.err.println("Failed to load site configuration");
+                    e.printStackTrace();
+                }
             }
         }
+    }
+
+    /**
+     * Search for the location of the 'configuration' dir, under the installation root.
+     * <p>
+     * Note that we cannot use something like {@code ConfigurationScope.INSTANCE.getLocation()} because it is not
+     * reliable in package installations where the installation directory is readonly. In such cases Eclipse will return
+     * a non-shared path under {@code ~/.eclipse/} which does not help is in locating any {@code site-config.ini} file.
+     */
+    private static Path findInstallationConfigurationDir() {
+        var installDir = Path.of(Platform.getInstallLocation().getURL().getPath());
+
+        // Location on Linux/Windows
+        var configurationDir = installDir.resolve("configuration");
+        if (Files.exists(configurationDir)) {
+            return configurationDir;
+        }
+
+        // Location on macOS
+        if (Util.isMac()) {
+            var productName = Platform.getProduct().getName();
+            configurationDir = installDir.resolve(productName + ".app").resolve("Contents/Eclipse/configuration");
+            if (Files.exists(configurationDir)) {
+                return configurationDir;
+            }
+        }
+
+        // Fallback, maybe a developer build
+        return ConfigurationScope.INSTANCE.getLocation().toFile().toPath();
     }
 
     public static Optional<Boolean> isSpellEnabled() {
