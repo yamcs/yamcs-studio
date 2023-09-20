@@ -26,10 +26,9 @@ public class SiteConfiguration {
         // in a site-controlled manner.
         var configLocation = ConfigurationScope.INSTANCE.getLocation().toFile();
         var configFile = new File(configLocation, "site-config.ini");
-        var siteConfiguration = new Properties();
         if (configFile.exists()) {
             try (var fileIn = Files.newInputStream(configFile.toPath())) {
-                siteConfiguration.load(fileIn);
+                props.load(fileIn);
             } catch (IOException e) {
                 System.err.println("Failed to load site configuration");
                 e.printStackTrace();
