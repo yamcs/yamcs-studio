@@ -6,7 +6,7 @@ Bundle-Name: Yamcs Studio Displays
 Bundle-SymbolicName: org.yamcs.studio.displays;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Bundle-Version: 1.7.2
+Bundle-Version: 1.7.3.qualifier
 Require-Bundle: com.google.gson,
  org.csstudio.opibuilder,
  org.eclipse.core.runtime,
