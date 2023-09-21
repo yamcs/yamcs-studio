@@ -10,6 +10,7 @@
 package org.yamcs.studio.core;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -48,7 +49,14 @@ public class SiteConfiguration {
      * a non-shared path under {@code ~/.eclipse/} which does not help is in locating any {@code site-config.ini} file.
      */
     private static Path findInstallationConfigurationDir() {
-        var installDir = Path.of(Platform.getInstallLocation().getURL().getPath());
+        Path installDir;
+        try {
+            installDir = Path.of(Platform.getInstallLocation().getURL().toURI());
+        } catch (URISyntaxException e) {
+            System.err.println("Failed to locate install directory");
+            e.printStackTrace();
+            return null;
+        }
 
         // Location on Linux/Windows
         var configurationDir = installDir.resolve("configuration");
