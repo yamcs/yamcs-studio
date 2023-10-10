@@ -94,13 +94,14 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.0</version>
           <configuration>
             <sourceFileIncludes>
               <sourceFileInclude>**/*.java</sourceFileInclude>
             </sourceFileIncludes>
             <author>false</author>
             <breakiterator>true</breakiterator>
+            <legacyMode>true</legacyMode>
             <links>
               <link>https://help.eclipse.org/latest/topic/org.eclipse.platform.doc.isv/reference/api/</link>
               <link>https://docs.yamcs.org/javadoc/yamcs/latest/</link>
