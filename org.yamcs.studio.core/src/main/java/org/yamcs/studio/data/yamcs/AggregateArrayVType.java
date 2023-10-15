@@ -33,7 +33,8 @@ public class AggregateArrayVType extends YamcsVType implements VStringArray {
         data = new ArrayList<>();
         for (var i = 0; i < size; i++) {
             var aggregateValue = value.getArrayValue(i);
-            data.add(StringConverter.toString(aggregateValue));
+            var jsonElement = StringConverter.toJsonElement(aggregateValue);
+            data.add(jsonElement.toString());
         }
     }
 

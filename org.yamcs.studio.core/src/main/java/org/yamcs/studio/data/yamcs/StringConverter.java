@@ -16,6 +16,12 @@ import java.util.stream.IntStream;
 
 import org.yamcs.protobuf.Yamcs.Value;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 public class StringConverter {
 
     private static final BigInteger B64 = BigInteger.ZERO.setBit(64);
@@ -59,6 +65,53 @@ public class StringConverter {
             return "{" + IntStream.range(0, agg.getNameCount())
                     .mapToObj(i -> agg.getName(i) + ": " + toString(agg.getValue(i))).collect(Collectors.joining(", "))
                     + "}";
+        }
+        return null;
+    }
+
+    public static JsonElement toJsonElement(Value rv) {
+        switch (rv.getType()) {
+        case NONE:
+            return JsonNull.INSTANCE;
+        case BINARY:
+            return new JsonPrimitive("0x" + arrayToHexString(rv.getBinaryValue().toByteArray()));
+        case DOUBLE:
+            return new JsonPrimitive(rv.getDoubleValue());
+        case FLOAT:
+            return new JsonPrimitive(rv.getFloatValue());
+        case SINT32:
+            return new JsonPrimitive(rv.getSint32Value());
+        case UINT32:
+            return new JsonPrimitive(Long.toString(rv.getUint32Value() & 0xFFFFFFFFL));
+        case SINT64:
+            return new JsonPrimitive(Long.toString(rv.getSint64Value()));
+        case UINT64:
+            if (rv.getUint64Value() >= 0) {
+                return new JsonPrimitive(Long.toString(rv.getUint64Value()));
+            } else {
+                return new JsonPrimitive(BigInteger.valueOf(rv.getUint64Value()).add(B64).toString());
+            }
+        case STRING:
+            return new JsonPrimitive(rv.getStringValue());
+        case BOOLEAN:
+            return new JsonPrimitive(rv.getBooleanValue());
+        case TIMESTAMP:
+            return new JsonPrimitive(rv.getStringValue());
+        case ENUMERATED:
+            return new JsonPrimitive(rv.getStringValue());
+        case ARRAY:
+            var arr = new JsonArray();
+            for (var entry : rv.getArrayValueList()) {
+                arr.add(toJsonElement(entry));
+            }
+            return arr;
+        case AGGREGATE:
+            var obj = new JsonObject();
+            var agg = rv.getAggregateValue();
+            for (int i = 0; i < agg.getNameCount(); i++) {
+                obj.add(agg.getName(i), toJsonElement(agg.getValue(i)));
+            }
+            return obj;
         }
         return null;
     }

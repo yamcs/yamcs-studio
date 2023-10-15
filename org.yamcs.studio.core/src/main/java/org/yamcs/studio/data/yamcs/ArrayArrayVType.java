@@ -34,7 +34,8 @@ public class ArrayArrayVType extends YamcsVType implements VStringArray {
         data = new ArrayList<>();
         for (var i = 0; i < size; i++) {
             var arrayValue = value.getArrayValue(i);
-            data.add(StringConverter.toString(arrayValue));
+            var jsonElement = StringConverter.toJsonElement(arrayValue);
+            data.add(jsonElement.toString());
         }
     }
 

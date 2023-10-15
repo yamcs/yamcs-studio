@@ -20,7 +20,7 @@ public class AggregateVType extends YamcsVType implements VString {
 
     @Override
     public String getValue() {
-        return StringConverter.toString(value);
+        return StringConverter.toJsonElement(value).toString();
     }
 
     @Override
