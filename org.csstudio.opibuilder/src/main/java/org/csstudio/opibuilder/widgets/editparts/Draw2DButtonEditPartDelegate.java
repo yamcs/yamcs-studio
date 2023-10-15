@@ -75,7 +75,8 @@ public class Draw2DButtonEditPartDelegate implements IButtonEditPartDelegate {
                         // (when an action button is clicked, should have access
                         // to latest value of an input value)
                         var display = editpart.getViewer().getControl().getDisplay();
-                        var task = new WidgetIgnorableUITask(this, runnable, display);
+                        var identity = new Object(); // Avoid actions getting ignored
+                        var task = new WidgetIgnorableUITask(identity, runnable, display);
                         GUIRefreshThread.getInstance(editpart.getExecutionMode() == ExecutionMode.RUN_MODE)
                                 .addIgnorableTask(task);
                     } else {
