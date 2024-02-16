@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
@@ -22,6 +23,8 @@ import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 public class MissionDatabase {
+
+    private static final Pattern ARRAY_INDEXES = Pattern.compile("(\\[[\\d+]\\])+");
 
     private List<ParameterInfo> parameters = new ArrayList<>();
     private List<CommandInfo> commands = new ArrayList<>();
@@ -41,13 +44,27 @@ public class MissionDatabase {
 
         // Update unit index
         if (parameter.hasType() && parameter.getType().getUnitSetCount() > 0) {
-            var combinedUnit = parameter.getType().getUnitSet(0).getUnit();
-            for (var i = 1; i < parameter.getType().getUnitSetCount(); i++) {
-                combinedUnit += " " + parameter.getType().getUnitSet(i).getUnit();
-            }
-            unitsById.put(id, combinedUnit);
+            var engUnits = parameter.getType().getUnitSet(0).getUnit();
+            unitsById.put(id, engUnits);
             for (var alias : parameter.getAliasList()) {
-                unitsById.put(alias, combinedUnit);
+                unitsById.put(alias, engUnits);
+            }
+        }
+
+        if (parameter.hasType() && parameter.getType().hasArrayInfo()) {
+            var elId = NamedObjectId.newBuilder(id)
+                    .setName(id.getName() + "__el")
+                    .build();
+            var elInfo = parameter.getType().getArrayInfo();
+            if (elInfo.hasType() && elInfo.getType().getUnitSetCount() > 0) {
+                var elUnits = elInfo.getType().getUnitSet(0).getUnit();
+                unitsById.put(elId, elUnits);
+                for (var alias : parameter.getAliasList()) {
+                    var elAlias = NamedObjectId.newBuilder(alias)
+                            .setName(id.getName() + "__el")
+                            .build();
+                    unitsById.put(elAlias, elUnits);
+                }
             }
         }
     }
@@ -153,7 +170,21 @@ public class MissionDatabase {
         return null;
     }
 
-    public String getCombinedUnit(NamedObjectId id) {
+    public String getEngineeringUnits(NamedObjectId id) {
+        if (id.getName().endsWith("]")) { // Array
+            var matcher = ARRAY_INDEXES.matcher(id.getName());
+            var buf = new StringBuilder();
+            while (matcher.find()) {
+                matcher.appendReplacement(buf, "__el");
+            }
+            matcher.appendTail(buf);
+
+            var elId = NamedObjectId.newBuilder(id)
+                    .setName(buf.toString())
+                    .build();
+            return unitsById.get(elId);
+        }
+
         return unitsById.get(id);
     }
 

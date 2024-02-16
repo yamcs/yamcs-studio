@@ -247,7 +247,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         if (pval != null && !raw) {
             var mdb = YamcsPlugin.getMissionDatabase();
             if (mdb != null) {
-                var unit = mdb.getCombinedUnit(pval.getId());
+                var unit = mdb.getEngineeringUnits(pval.getId());
                 return (unit == null) ? "" : unit;
             }
         }
