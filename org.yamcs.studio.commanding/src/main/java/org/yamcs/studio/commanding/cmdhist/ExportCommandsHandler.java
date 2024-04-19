@@ -42,7 +42,7 @@ public class ExportCommandsHandler extends AbstractHandler {
 
         // Write CSV
         try {
-            writeEvents(new File(targetFile), view.getTableViewer().getTable());
+            writeCommands(new File(targetFile), view.getTableViewer().getTable());
             MessageDialog.openInformation(shell, "Export Command History", "Command History exported successfully.");
         } catch (Exception e) {
             MessageDialog.openError(shell, "Export Command History",
@@ -52,7 +52,7 @@ public class ExportCommandsHandler extends AbstractHandler {
         return null;
     }
 
-    private void writeEvents(File targetFile, Table table) throws IOException {
+    private void writeCommands(File targetFile, Table table) throws IOException {
         try (var writer = new FileWriter(targetFile)) {
             var first = true;
             for (var tc : table.getColumns()) {
@@ -62,6 +62,7 @@ public class ExportCommandsHandler extends AbstractHandler {
                 writer.write(tc.getText());
                 first = false;
             }
+            writer.write("\n");
 
             for (var item : table.getItems()) {
                 var rec = new String[table.getColumnCount()];
