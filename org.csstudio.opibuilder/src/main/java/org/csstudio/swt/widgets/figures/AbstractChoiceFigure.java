@@ -104,7 +104,12 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     }
 
     public synchronized String getState() {
-        return states.get(models.indexOf(buttonGroup.getSelected()));
+        var selected = buttonGroup.getSelected();
+        if (selected != null) {
+            return states.get(models.indexOf(selected));
+        } else {
+            return null;
+        }
     }
 
     public List<String> getStates() {
