@@ -63,8 +63,12 @@ public class YamcsConnector implements IRunnableWithProgress {
                 var instanceInfo = verifyInstance(monitor, holder.yamcsClient, conf.getInstance().trim());
                 holder.instance = instanceInfo.getName();
 
-                if (instanceInfo.getProcessorsCount() > 0) {
-                    holder.processor = instanceInfo.getProcessors(0);
+                var defaultProcessor = instanceInfo.getProcessorsList().stream()
+                        .filter(p -> p.getPersistent() && !p.getReplay())
+                        .findFirst();
+
+                if (defaultProcessor.isPresent()) {
+                    holder.processor = defaultProcessor.get();
                 } else {
                     log.warning("Instance '" + holder.instance + "' does not have any active processors");
                 }
