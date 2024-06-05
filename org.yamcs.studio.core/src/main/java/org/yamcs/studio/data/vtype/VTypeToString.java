@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class VTypeToString {
 
-    public static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     private final static ValueFormat format = new SimpleValueFormat(3);
     private static final DateTimeFormatter timeFormat = TIMESTAMP_FORMAT;

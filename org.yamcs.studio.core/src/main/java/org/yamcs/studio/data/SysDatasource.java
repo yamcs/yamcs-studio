@@ -152,7 +152,7 @@ public class SysDatasource implements Datasource {
 
     private static final class TimeSys extends SysData {
 
-        private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+        private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         TimeSys(ScheduledExecutorService executor) {
             super(executor);
