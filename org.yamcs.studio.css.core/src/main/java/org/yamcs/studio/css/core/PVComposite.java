@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Space Applications Services and others
+ * Copyright (c) 2021, 2024 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.yamcs.client.ParameterSubscription;
+import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.SubscribeParametersRequest;
@@ -33,6 +34,9 @@ import org.yamcs.studio.data.yamcs.YamcsVType;
 
 public class PVComposite extends Composite implements YamcsAware, ParameterSubscription.Listener {
 
+    // Trick to reserve space
+    private static final String NO_VALUE = "---                                             ";
+
     private PVInfo pvInfo;
 
     private StyledText gentimeField;
@@ -42,6 +46,12 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
     private StyledText engTypeField;
     private StyledText rawValueField;
     private StyledText rawTypeField;
+
+    private StyledText watchRangeField;
+    private StyledText warningRangeField;
+    private StyledText distressRangeField;
+    private StyledText criticalRangeField;
+    private StyledText severeRangeField;
 
     private ParameterSubscription subscription;
 
@@ -118,48 +128,21 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             createKeyValueTextPair("Units", units);
         }
 
-        if (type.getDefaultAlarm() != null && type.getDefaultAlarm().getStaticAlarmRangeCount() > 0) {
-            createSeparator();
-            createHeader("Default Alarm");
-            var defaultAlarm = type.getDefaultAlarm();
-            createKeyValueTextPair("Min. Violations", "" + defaultAlarm.getMinViolations());
-
-            // Backwards for lower limits
-            for (var i = defaultAlarm.getStaticAlarmRangeCount() - 1; i >= 0; i--) {
-                var range = defaultAlarm.getStaticAlarmRange(i);
-                if (range.hasMinInclusive()) {
-                    var label = capitalize(range.getLevel().toString()) + " Low";
-                    var limit = new DecimalFormat("#.############").format(range.getMinInclusive());
-                    if (units != null) {
-                        limit += " " + units;
-                    }
-                    createKeyValueTextPair(label, limit);
-                }
-            }
-
-            // Now forwards for upper limits
-            for (var range : defaultAlarm.getStaticAlarmRangeList()) {
-                if (range.hasMaxInclusive()) {
-                    var label = capitalize(range.getLevel().toString()) + " High";
-                    var limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
-                    if (units != null) {
-                        limit += " " + units;
-                    }
-                    createKeyValueTextPair(label, limit);
-                }
-            }
-        }
-
         createSeparator();
         createHeader("Last Received Value");
-        // Anybody knows better way to reserve space??
-        gentimeField = createKeyValueTextPair("Generation Time", "---                                             ");
-        rectimeField = createKeyValueTextPair("Reception Time", "---                                             ");
-        statusField = createKeyValueTextPair("Status", "---                                             ");
-        engValueField = createKeyValueTextPair("Engineering Value", "---                                             ");
-        engTypeField = createKeyValueTextPair("Engineering Type", "---                                             ");
-        rawValueField = createKeyValueTextPair("Raw Value", "---                                             ");
-        rawTypeField = createKeyValueTextPair("Raw Type", "---                                             ");
+        gentimeField = createKeyValueTextPair("Generation Time", NO_VALUE);
+        rectimeField = createKeyValueTextPair("Reception Time", NO_VALUE);
+        statusField = createKeyValueTextPair("Status", NO_VALUE);
+        engValueField = createKeyValueTextPair("Engineering Value", NO_VALUE);
+        engTypeField = createKeyValueTextPair("Engineering Type", NO_VALUE);
+        rawValueField = createKeyValueTextPair("Raw Value", NO_VALUE);
+        rawTypeField = createKeyValueTextPair("Raw Type", NO_VALUE);
+
+        watchRangeField = createKeyValueTextPair("Watch Range", NO_VALUE);
+        warningRangeField = createKeyValueTextPair("Warning Range", NO_VALUE);
+        distressRangeField = createKeyValueTextPair("Distress Range", NO_VALUE);
+        criticalRangeField = createKeyValueTextPair("Critical Range", NO_VALUE);
+        severeRangeField = createKeyValueTextPair("Severe Range", NO_VALUE);
     }
 
     private void createPVProperties(PVInfo pvInfo) {
@@ -217,6 +200,10 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
         txt.setCaret(null);
         txt.setText(value);
         txt.setWordWrap(true);
+
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        txt.setLayoutData(gd);
+
         return txt;
     }
 
@@ -269,12 +256,19 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
 
                 var engValue = YamcsVType.fromYamcs(pval, false);
 
-                var text = engValue.toString();
+                String units = null;
                 if (VTypeHelper.getDisplayInfo(engValue) != null) {
-                    var units = VTypeHelper.getDisplayInfo(engValue).getUnits();
+                    units = VTypeHelper.getDisplayInfo(engValue).getUnits();
                     if (units != null && units.trim().length() > 0) {
-                        text = text + " " + units;
+                        units = units.trim();
+                    } else {
+                        units = null;
                     }
+                }
+
+                var text = engValue.toString();
+                if (units != null) {
+                    text = text + " " + units;
                 }
                 engValueField.setText(text);
                 engTypeField.setText(pval.getEngValue().getType().toString());
@@ -293,8 +287,72 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                     rawValueField.setText("---");
                     rawTypeField.setText("---");
                 }
+
+                var watchRange = "---";
+                var warningRange = "---";
+                var distressRange = "---";
+                var criticalRange = "---";
+                var severeRange = "---";
+
+                for (var alarmRange : pval.getAlarmRangeList()) {
+                    switch (alarmRange.getLevel()) {
+                    case WATCH:
+                        watchRange = formatRange(alarmRange);
+                        break;
+                    case WARNING:
+                        warningRange = formatRange(alarmRange);
+                        break;
+                    case DISTRESS:
+                        distressRange = formatRange(alarmRange);
+                        break;
+                    case CRITICAL:
+                        criticalRange = formatRange(alarmRange);
+                        break;
+                    case SEVERE:
+                        severeRange = formatRange(alarmRange);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+
+                watchRangeField.setText(watchRange);
+                warningRangeField.setText(warningRange);
+                distressRangeField.setText(distressRange);
+                criticalRangeField.setText(criticalRange);
+                severeRangeField.setText(severeRange);
             }
         });
+    }
+
+    private String formatRange(AlarmRange range) {
+        String result = "";
+        if (range.hasMinInclusive()) {
+            result += "(-∞, ";
+            result += new DecimalFormat("#.############").format(range.getMinInclusive());
+            result += ")";
+            if (range.hasMaxInclusive() || range.hasMaxExclusive()) {
+                result += ", ";
+            }
+        } else if (range.hasMinExclusive()) {
+            result += "(-∞, ";
+            result += new DecimalFormat("#.############").format(range.getMinExclusive());
+            result += ")";
+            if (range.hasMaxInclusive() || range.hasMaxExclusive()) {
+                result += ", ";
+            }
+        }
+
+        if (range.hasMaxInclusive()) {
+            result += "(";
+            result += new DecimalFormat("#.############").format(range.getMaxInclusive());
+            result += ", +∞)";
+        } else if (range.hasMaxInclusive()) {
+            result += "[";
+            result += new DecimalFormat("#.############").format(range.getMaxInclusive());
+            result += ", +∞)";
+        }
+        return result.toString();
     }
 
     @Override
