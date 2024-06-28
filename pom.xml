@@ -23,7 +23,7 @@
   </organization>
 
   <properties>
-    <tycho.version>4.0.7</tycho.version>
+    <tycho.version>4.0.8</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -58,11 +58,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>kr.motd.maven</groupId>
-          <artifactId>os-maven-plugin</artifactId>
-          <version>1.7.1</version>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
@@ -184,9 +179,9 @@
           <version>${tycho.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.xolstice.maven.plugins</groupId>
-          <artifactId>protobuf-maven-plugin</artifactId>
-          <version>0.6.1</version>
+          <groupId>org.yamcs</groupId>
+          <artifactId>yamcs-maven-plugin</artifactId>
+          <version>1.3.0</version>
         </plugin>
       </plugins>
     </pluginManagement>

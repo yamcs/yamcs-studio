@@ -45,13 +45,12 @@
             <unit id="org.sat4j.pb" version="2.3.6.v20201214" />
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202402080000/" />
-            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="17.0.10.v20240120-1143" />
+            <repository location="https://dl.yamcs.org/p2/platform/202406281134/" />
+            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="21.0.3.v20240426-1530" />
             <unit id="org.yamcs.p2.batik" version="1.12.0" />
-            <unit id="org.yamcs.p2.client" version="5.8.9.20240207230137" />
-            <unit id="org.yamcs.p2.jcodec" version="0.2.6.20240207230137" />
+            <unit id="org.yamcs.p2.client" version="5.9.7" />
             <unit id="org.yamcs.p2.nashorn" version="15.4.0" />
-            <unit id="org.yaml.snakeyaml" version="2.0.0" />
+            <unit id="org.yaml.snakeyaml" version="2.2.0" />
         </location>
     </locations>
 </target>
