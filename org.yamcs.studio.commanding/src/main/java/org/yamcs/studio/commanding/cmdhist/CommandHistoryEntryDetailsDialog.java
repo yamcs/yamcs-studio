@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,6 +29,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.client.Acknowledgment;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -40,20 +41,19 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     // Pattern that we use to find the server name inside a cascading prefix
     private static final Pattern CASCADING_PREFIX = Pattern.compile("yamcs<([^>]+)>_");
 
-    private SashForm sashForm;
-
     private Label recordLabel;
     private Combo recordCombo;
     private String[] recordComboPrefixes; // Array with same size as combo items
 
     private Text originLabel;
     private Text dateLabel;
+    private Text commandLabel;
     private Text userLabel;
     private Label completedImageLabel;
     private Label completedLabel;
     private Text binaryLabel;
     private Text commentLabel;
-    private Text commandStringText;
+    private Text argumentsText;
 
     private Button prevButton;
     private Button nextButton;
@@ -94,7 +94,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     @Override
     public void create() {
         super.create();
-        getShell().setSize(600, 550);
+        getShell().setSize(700, 550);
 
         applyDialogFont(buttonBar);
         getButton(IDialogConstants.OK_ID).setFocus();
@@ -137,17 +137,26 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         var container = new Composite(parent, SWT.NONE);
-        var layout = new GridLayout();
-        layout.numColumns = 1;
-        container.setLayout(layout);
         var gd = new GridData(GridData.FILL_BOTH);
         container.setLayoutData(gd);
+        container.setLayout(new FillLayout());
 
-        createSashForm(container);
-        createDetailsSection(sashForm);
-        createAckSection(sashForm);
+        var tabFolder = new TabFolder(container, SWT.NONE);
 
-        sashForm.setWeights(new int[] { 300, 400 });
+        var generalTab = new TabItem(tabFolder, SWT.NONE);
+        generalTab.setText("General");
+        var generalControl = createDetailsSection(tabFolder);
+        generalTab.setControl(generalControl);
+
+        var binaryTab = new TabItem(tabFolder, SWT.NONE);
+        binaryTab.setText("Binary");
+        var binaryControl = createBinarySection(tabFolder);
+        binaryTab.setControl(binaryControl);
+
+        var ackTab = new TabItem(tabFolder, SWT.NONE);
+        ackTab.setText("Acknowledgments");
+        var ackControl = createAckSection(tabFolder);
+        ackTab.setControl(ackControl);
 
         updateProperties();
         updateButtonState();
@@ -156,19 +165,9 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         return container;
     }
 
-    private void createSashForm(Composite parent) {
-        sashForm = new SashForm(parent, SWT.VERTICAL);
-        var layout = new GridLayout();
-        layout.marginHeight = layout.marginWidth = 0;
-        sashForm.setLayout(layout);
-        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-        sashForm.setSashWidth(10);
-    }
-
-    private void createDetailsSection(Composite parent) {
+    private Control createDetailsSection(Composite parent) {
         var container = new Composite(parent, SWT.NONE);
         var layout = new GridLayout();
-        layout.marginWidth = layout.marginHeight = 0;
         layout.numColumns = 2;
         container.setLayout(layout);
         var data = new GridData(GridData.FILL_HORIZONTAL);
@@ -177,12 +176,18 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         createTextSection(container);
         createToolbarButtonBar(container);
+        return container;
     }
 
-    private void createAckSection(Composite parent) {
+    private Control createBinarySection(Composite parent) {
+        binaryLabel = new Text(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        binaryLabel.setEditable(false);
+        return binaryLabel;
+    }
+
+    private Control createAckSection(Composite parent) {
         var ackContainer = new Composite(parent, SWT.NONE);
         var layout = new GridLayout();
-        layout.marginWidth = 0;
         ackContainer.setLayout(layout);
         ackContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -193,17 +198,18 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         ackLabel = new Label(ackContainer, SWT.NONE);
         ackLabel.setText("Extra acknowledgments:");
         createExtraAckTable(ackContainer);
+        return ackContainer;
     }
 
     private void createLocalAckTable(Composite parent) {
-        var tableContainer = new Composite(parent, SWT.NONE);
+        var tableContainer = new Composite(parent, SWT.BORDER);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         localAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createExtraAckTable(Composite parent) {
-        var tableContainer = new Composite(parent, SWT.NONE);
+        var tableContainer = new Composite(parent, SWT.BORDER);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         extraAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
@@ -230,12 +236,20 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         });
 
         var label = new Label(textContainer, SWT.NONE);
-        label.setText("Date");
+        label.setText("Time");
         dateLabel = new Text(textContainer, SWT.BORDER);
         dateLabel.setEditable(false);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         dateLabel.setLayoutData(gd);
+
+        label = new Label(textContainer, SWT.NONE);
+        label.setText("Command");
+        commandLabel = new Text(textContainer, SWT.BORDER);
+        commandLabel.setEditable(false);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        commandLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Completion");
@@ -261,14 +275,6 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         originLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Binary");
-        binaryLabel = new Text(textContainer, SWT.BORDER);
-        binaryLabel.setEditable(false);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        binaryLabel.setLayoutData(gd);
-
-        label = new Label(textContainer, SWT.NONE);
         label.setText("Comment");
         commentLabel = new Text(textContainer, SWT.BORDER);
         commentLabel.setEditable(false);
@@ -277,15 +283,15 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         commentLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Command String");
+        label.setText("Arguments");
         gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         label.setLayoutData(gd);
-        commandStringText = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-        commandStringText.setEditable(false);
+        argumentsText = new Text(textContainer, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+        argumentsText.setEditable(false);
         gd = new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_VERTICAL);
         gd.horizontalSpan = 2;
         gd.grabExcessVerticalSpace = true;
-        commandStringText.setLayoutData(gd);
+        argumentsText.setLayoutData(gd);
     }
 
     private void createToolbarButtonBar(Composite parent) {
@@ -370,20 +376,21 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         recordCombo.getParent().requestLayout();
 
         dateLabel.setText(YamcsPlugin.getDefault().formatInstant(command.getGenerationTime()));
-        commandStringText.setText(rec.getSource());
+        commandLabel.setText(rec.getDisplayedName());
+        argumentsText.setText(rec.printArguments());
 
         userLabel.setText(command.getUsername());
 
         if (command.getOrigin() != null && !"".equals(command.getOrigin())) {
             originLabel.setText(command.getOrigin());
         } else {
-            originLabel.setText("-");
+            originLabel.setText("");
         }
 
         if (command.getComment() != null) {
             commentLabel.setText(command.getComment());
         } else {
-            commentLabel.setText("-");
+            commentLabel.setText("");
         }
 
         if (command.isSuccess()) {
@@ -398,7 +405,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         }
 
         if (command.getBinary() != null) {
-            var hexString = StringConverter.arrayToHexString(command.getBinary());
+            var hexString = StringConverter.arrayToHexString(command.getBinary(), true);
             binaryLabel.setText(hexString);
         } else {
             binaryLabel.setText("");

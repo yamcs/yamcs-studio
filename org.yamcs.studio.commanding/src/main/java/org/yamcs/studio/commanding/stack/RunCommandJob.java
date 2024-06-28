@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -100,9 +101,20 @@ public class RunCommandJob extends Job {
                 command.getExtra().forEach((option, value) -> {
                     builder.withExtra(option, value);
                 });
-                command.getAssignments().forEach((argument, value) -> {
-                    builder.withArgument(argument.getName(), value);
-                });
+                for (var arg : command.getEffectiveAssignments()) {
+                    var assignedValue = command.getAssignedStringValue(arg.getArgumentInfo());
+                    if (assignedValue == null) {
+                        continue;
+                    }
+                    if (!arg.isEditable()) {
+                        continue;
+                    }
+                    if (arg.getArgumentInfo().hasInitialValue() && !isDefaultChanged(command, arg.getArgumentInfo())) {
+                        continue;
+                    }
+
+                    builder.withArgument(arg.getName(), assignedValue);
+                }
 
                 try {
                     var response = builder.issue(MoreExecutors.directExecutor()).get();
@@ -147,5 +159,13 @@ public class RunCommandJob extends Job {
                 }
             }
         }
+    }
+
+    public boolean isDefaultChanged(StackedCommand command, ArgumentInfo arg) {
+        var assignment = command.getAssignedStringValue(arg);
+        if (assignment != null && arg.hasInitialValue()) {
+            return !assignment.equals(arg.getInitialValue());
+        }
+        return false;
     }
 }

@@ -16,7 +16,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -51,13 +50,16 @@ public class CommandHistoryRecord {
     private static final char[] HEXCHARS = "0123456789abcdef".toCharArray();
 
     private Command command;
+
+    private String displayedName;
     private String source;
+
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
     public CommandHistoryRecord(Command command) {
         this.command = command;
 
-        var displayedName = command.getName();
+        displayedName = command.getName();
         var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
         if (preferredNamespace != null) {
             var alias = command.getName(preferredNamespace);
@@ -65,7 +67,12 @@ public class CommandHistoryRecord {
                 displayedName = alias;
             }
         }
-        source = buildSource(displayedName, command.getAssignments());
+
+        source = buildSource();
+    }
+
+    public String getDisplayedName() {
+        return displayedName;
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -160,8 +167,8 @@ public class CommandHistoryRecord {
         return source;
     }
 
-    private String buildSource(String name, List<CommandAssignment> assignments) {
-        StringBuilder buf = new StringBuilder(name).append("(");
+    private String buildSource() {
+        StringBuilder buf = new StringBuilder(displayedName).append("(");
         buf.append(command.getAssignments().stream()
                 .filter(CommandAssignment::getUserInput)
                 .map(assignment -> {
@@ -175,6 +182,23 @@ public class CommandHistoryRecord {
                     }
                 }).collect(Collectors.joining(", ")));
         return buf.append(")").toString();
+    }
+
+    public String printArguments() {
+        var buf = new StringBuilder();
+        buf.append(command.getAssignments().stream()
+                .filter(CommandAssignment::getUserInput)
+                .map(assignment -> {
+                    Object value = Helpers.parseValue(assignment.getValue());
+                    if (value instanceof String) {
+                        return assignment.getName() + ": \"" + value + "\"";
+                    } else if (value instanceof byte[]) {
+                        return assignment.getName() + ": 0x" + toHex((byte[]) value);
+                    } else {
+                        return assignment.getName() + ": " + value;
+                    }
+                }).collect(Collectors.joining("\n")));
+        return buf.toString();
     }
 
     private static String toHex(byte[] bytes) {
