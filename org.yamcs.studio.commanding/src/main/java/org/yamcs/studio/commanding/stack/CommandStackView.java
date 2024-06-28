@@ -51,6 +51,7 @@ import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
+import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -249,7 +250,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         waitTimeSpinner = new Spinner(stackParameters, SWT.BORDER);
         waitTimeSpinner.setMinimum(0);
         waitTimeSpinner.setMaximum(Integer.MAX_VALUE);
-        waitTimeSpinner.setSelection(0);
+
+        var initialWait = CommandingPlugin.getDefault().getDefaultStackWait();
+        waitTimeSpinner.setSelection(Math.max(0, initialWait));
         waitTimeSpinner.setIncrement(500);
         waitTimeSpinner.setPageIncrement(1000);
         waitTimeSpinner.setEnabled(false);

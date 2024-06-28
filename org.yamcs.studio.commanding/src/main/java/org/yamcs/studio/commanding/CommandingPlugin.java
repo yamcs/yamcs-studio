@@ -54,4 +54,9 @@ public class CommandingPlugin extends AbstractUIPlugin {
         var preferredNamespace = store.getString(CommandingPreferencePage.PREF_PREFERRED_NAMESPACE);
         return preferredNamespace.isEmpty() ? null : preferredNamespace;
     }
+
+    public int getDefaultStackWait() {
+        var store = getPreferenceStore();
+        return store.getInt(CommandingPreferencePage.PREF_DEFAULT_STACK_WAIT);
+    }
 }
