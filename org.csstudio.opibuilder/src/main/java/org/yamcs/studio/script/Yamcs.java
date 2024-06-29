@@ -10,6 +10,7 @@
 package org.yamcs.studio.script;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -181,8 +182,8 @@ public class Yamcs {
     }
 
     /**
-     * Returns the "monitoring result" of a Yamcs parameter. One of IN_LIMITS, DISABLED, WATCH, WARNING, DISTRESS,
-     * CRITICAL or SEVERE.
+     * Returns the "monitoring result" of a Yamcs parameter. One of IN_LIMITS, WATCH, WARNING, DISTRESS, CRITICAL or
+     * SEVERE.
      * <p>
      * For PVs that are not connected to Yamcs parameters, this will always return null.
      */
@@ -198,6 +199,65 @@ public class Yamcs {
         }
 
         return null;
+    }
+
+    /**
+     * Returns an ISO-8601 string
+     */
+    public static String getGenerationTime(IPV pv) {
+        var vtype = PVUtil.checkPVValue(pv);
+        if (!(vtype instanceof YamcsVType)) {
+            throw new IllegalArgumentException("PV " + pv.getName() + " is not a Yamcs parameter PV");
+        }
+
+        var pval = ((YamcsVType) vtype).getParameterValue();
+        if (pval.hasGenerationTime()) {
+            return Instant.ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
+                    .toString();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns an ISO-8601 string
+     */
+    public static String getReceptionTime(IPV pv) {
+        var vtype = PVUtil.checkPVValue(pv);
+        if (!(vtype instanceof YamcsVType)) {
+            throw new IllegalArgumentException("PV " + pv.getName() + " is not a Yamcs parameter PV");
+        }
+
+        var pval = ((YamcsVType) vtype).getParameterValue();
+        if (pval.hasAcquisitionTime()) {
+            return Instant.ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
+                    .toString();
+        }
+
+        return null;
+    }
+
+    public static String getAcquisitionStatus(IPV pv) {
+        var vtype = PVUtil.checkPVValue(pv);
+        if (!(vtype instanceof YamcsVType)) {
+            throw new IllegalArgumentException("PV " + pv.getName() + " is not a Yamcs parameter PV");
+        }
+
+        var pval = ((YamcsVType) vtype).getParameterValue();
+        if (pval.hasAcquisitionStatus()) {
+            return pval.getAcquisitionStatus().toString();
+        }
+
+        return null;
+    }
+
+    public static ParameterInfo getParameterInfo(IPV pv) {
+        var vtype = PVUtil.checkPVValue(pv);
+        if (!(vtype instanceof YamcsVType)) {
+            throw new IllegalArgumentException("PV " + pv.getName() + " is not a Yamcs parameter PV");
+        }
+
+        return new ParameterInfo((YamcsVType) vtype);
     }
 
     /**

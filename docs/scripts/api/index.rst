@@ -36,6 +36,7 @@ The following global variables are available in all scripts:
     DataUtil
     FileUtil
     GUIUtil
+    ParameterInfo
     PVUtil
     ScriptUtil
     WidgetUtil
