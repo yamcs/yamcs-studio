@@ -1,30 +1,28 @@
 <!doctype html>
 <html>
-    <head>
-        <link rel="stylesheet" href="/node_modules/@yamcs/opi/dist/fonts/stylesheet.css">
-    </head>
-    <body>
-        <div id="mydisplay" style="display: inline-block"></div>
-        <script type="module">
-            import { AlarmSeverity, Display } from "/node_modules/@yamcs/opi/dist/opi.js";
-            const targetEl = document.getElementById("mydisplay");
-            const display = new Display(targetEl);
-            
-            /**
-             * Generate some fake PV values for the purpose
-             * of some intended screenshots.
-             */
-            const prefix = "fake://";
-            display.addProvider({
-                canProvide: pvName => {
-                    return pvName.startsWith(prefix);
-                },
-                startProviding: pvs => {
-                    const values = new Map();
-                    for (const pv of pvs) {
-                        const pvName = pv.name;
-                        const name = pvName.substr(0, prefix.length);
-                        switch (pvName) {
+
+<body>
+    <div id="mydisplay" style="display: inline-block"></div>
+    <script type="module">
+        import { AlarmSeverity, Display } from "/node_modules/@yamcs/opi/dist/opi.js";
+        const targetEl = document.getElementById("mydisplay");
+        const display = new Display(targetEl);
+
+        /**
+         * Generate some fake PV values for the purpose
+         * of some intended screenshots.
+         */
+        const prefix = "fake://";
+        display.addProvider({
+            canProvide: pvName => {
+                return pvName.startsWith(prefix);
+            },
+            startProviding: pvs => {
+                const values = new Map();
+                for (const pv of pvs) {
+                    const pvName = pv.name;
+                    const name = pvName.substr(0, prefix.length);
+                    switch (pvName) {
                         case "fake://minor_alarm":
                             values.set(pvName, {
                                 time: new Date(),
@@ -39,18 +37,60 @@
                                 severity: AlarmSeverity.MAJOR,
                             });
                             break;
-                        }
                     }
-                    display.setValues(values);
-                },
-                stopProviding: pvs => null,
-                isNavigable: () => false,
-                shutdown: () => null,
-            });
+                }
+                display.setValues(values);
+            },
+            stopProviding: pvs => null,
+            isNavigable: () => false,
+            shutdown: () => null,
+        });
 
-            const params = new URLSearchParams(window.location.search);
-            display.setSource(params.get("f"));
-            display.transparent = params.has("transparent");
-        </script>
-    </body>
+        display.setFontResolver({
+            resolve: (font) => {
+                let file;
+                if (font.name === "Liberation Sans") {
+                    file = "LiberationSans-Regular.woff2";
+                    if (font.bold && font.italic) {
+                        file = "LiberationSans-BoldItalic.woff2";
+                    } else if (font.bold) {
+                        file = "LiberationSans-Bold.woff2";
+                    } else if (font.italic) {
+                        file = "LiberationSans-Italic.woff2";
+                    }
+                } else if (font.name === "Liberation Mono") {
+                    file = "LiberationMono-Regular.woff2";
+                    if (font.bold && font.italic) {
+                        file = "LiberationMono-BoldItalic.woff2";
+                    } else if (font.bold) {
+                        file = "LiberationMono-Bold.woff2";
+                    } else if (font.italic) {
+                        file = "LiberationMono-Italic.woff2";
+                    }
+                } else if (font.name === "Liberation Serif") {
+                    file = "LiberationSerif-Regular.woff2";
+                    if (font.bold && font.italic) {
+                        file = "LiberationSerif-BoldItalic.woff2";
+                    } else if (font.bold) {
+                        file = "LiberationSerif-Bold.woff2";
+                    } else if (font.italic) {
+                        file = "LiberationSerif-Italic.woff2";
+                    }
+                }
+
+                if (file) {
+                    return new FontFace(font.name, `url(/node_modules/@yamcs/opi/dist/fonts/${file})`, {
+                        weight: font.bold ? "bold" : "normal",
+                        style: font.italic ? "italic" : "normal",
+                    });
+                }
+            },
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        display.setSource(params.get("f"));
+        display.transparent = params.has("transparent");
+    </script>
+</body>
+
 </html>
