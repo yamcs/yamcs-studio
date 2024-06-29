@@ -271,7 +271,7 @@ public class OpenWithMenu extends ContributionItem {
                 IDE.setDefaultEditor(file, editorId);
             }
         } catch (PartInitException e) {
-            DialogUtil.openError(page.getWorkbenchWindow().getShell(), "Problems Opening Editor", e.getMessage(), e);
+            DialogUtil.openError("Problems Opening Editor", e);
         }
     }
 }

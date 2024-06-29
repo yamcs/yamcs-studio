@@ -20,6 +20,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.registry.IGrammarRegistryManager;
+import org.eclipse.tm4e.registry.ITMScope;
 import org.eclipse.tm4e.registry.TMEclipseRegistryPlugin;
 import org.eclipse.tm4e.registry.WorkingCopyGrammarRegistryManager;
 import org.eclipse.tm4e.ui.text.TMPresentationReconciler;
@@ -32,6 +33,9 @@ public class TMViewer extends SourceViewer {
     private IGrammarRegistryManager grammarRegistryManager = new WorkingCopyGrammarRegistryManager(
             TMEclipseRegistryPlugin.getGrammarRegistryManager());
 
+    private ITMScope jsScope;
+    private ITMScope pyScope;
+
     public TMViewer(Composite parent, IVerticalRuler ruler, int styles) {
         this(parent, ruler, null, false, styles);
     }
@@ -40,17 +44,30 @@ public class TMViewer extends SourceViewer {
             boolean showAnnotationsOverview, int styles) {
         super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
         configure(new JavaScriptSourceViewerConfiguration());
+
+        for (var def : grammarRegistryManager.getDefinitions()) {
+            switch (def.getScope().getName()) {
+            case "source.js":
+                jsScope = def.getScope();
+                break;
+            case "source.py":
+                pyScope = def.getScope();
+                break;
+            }
+        }
     }
 
     public void loadJavaScriptGrammar() {
-        setGrammar(grammarRegistryManager.getGrammarForScope("source.js"));
+        var grammar = grammarRegistryManager.getGrammarForScope(jsScope);
+        setGrammar(grammar);
     }
 
     public void loadPythonGrammar() {
-        setGrammar(grammarRegistryManager.getGrammarForScope("source.py"));
+        var grammar = grammarRegistryManager.getGrammarForScope(pyScope);
+        setGrammar(grammar);
     }
 
-    public void setGrammar(IGrammar grammar) {
+    private void setGrammar(IGrammar grammar) {
         reconciler.setGrammar(grammar);
         if (getDocument() == null) {
             super.setDocument(new Document());
