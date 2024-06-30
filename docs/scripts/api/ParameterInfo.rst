@@ -3,7 +3,7 @@ ParameterInfo
 
 ParameterInfo objects are returned from the call ``Yamcs.getParameterInfo(pv)``.
 
-.. versionadded: 1.7.5
+.. versionadded:: 1.7.5
 
 **name**
     Short name of this parameter (relative to its parent system).
