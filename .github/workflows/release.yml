@@ -15,6 +15,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: maven
 
       - name: Set version
         id: set-version

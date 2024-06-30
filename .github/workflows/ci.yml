@@ -12,6 +12,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: maven
       - name: Build
         run: ./mvnw -B --no-transfer-progress -DskipTests package
 
