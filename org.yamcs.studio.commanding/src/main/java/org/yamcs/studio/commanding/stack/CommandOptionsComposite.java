@@ -465,8 +465,10 @@ public class CommandOptionsComposite extends ScrolledComposite {
             var argument = (TelecommandArgument) control.getData();
             if (control instanceof Text) {
                 var text = ((Text) control).getText();
-                if (text != null && !text.isEmpty()) {
-                    assignments.put(argument.getArgumentInfo(), text);
+                if (text != null) {
+                    if (mayArgumentBeEmpty(argument) || !text.isEmpty()) {
+                        assignments.put(argument.getArgumentInfo(), text);
+                    }
                 }
             } else if (control instanceof Combo) {
                 var text = ((Combo) control).getText();
@@ -486,5 +488,13 @@ public class CommandOptionsComposite extends ScrolledComposite {
             }
         }
         return assignments;
+    }
+
+    private boolean mayArgumentBeEmpty(TelecommandArgument argument) {
+        var argumentInfo = argument.getArgumentInfo();
+        if (argumentInfo.getType().getEngType().equals("string")) {
+            return true;
+        }
+        return false;
     }
 }
