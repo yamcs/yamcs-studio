@@ -186,7 +186,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             return false;
         }
 
-        return isSuperuser() || getUser().getObjectPrivilegeList().stream().map(ObjectPrivilegeInfo::getType)
+        return isSuperuser() || getUser().getObjectPrivilegesList().stream().map(ObjectPrivilegeInfo::getType)
                 .anyMatch(type -> type.equals(objectPrivilegeType));
     }
 
@@ -198,9 +198,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
             return false;
         }
 
-        return isSuperuser() || getUser().getObjectPrivilegeList().stream()
+        return isSuperuser() || getUser().getObjectPrivilegesList().stream()
                 .anyMatch(privilege -> privilege.getType().equals(objectPrivilegeType)
-                        && privilege.getObjectList().stream().anyMatch(regex -> object.matches(regex)));
+                        && privilege.getObjectsList().stream().anyMatch(regex -> object.matches(regex)));
     }
 
     public static boolean hasSystemPrivilege(String systemPrivilege) {
@@ -211,7 +211,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             return false;
         }
 
-        return isSuperuser() || getUser().getSystemPrivilegeList().contains(systemPrivilege);
+        return isSuperuser() || getUser().getSystemPrivilegesList().contains(systemPrivilege);
     }
 
     public static boolean isAuthorizationEnabled() {

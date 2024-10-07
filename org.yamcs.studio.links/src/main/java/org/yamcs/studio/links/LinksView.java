@@ -90,11 +90,6 @@ public class LinksView extends ViewPart implements YamcsAware, MessageListener<L
                 return;
             }
 
-            if (linkEvent.hasType() && linkEvent.getType() != LinkEvent.Type.UPDATE_ALL) {
-                // Ignore, legacy type
-                return;
-            }
-
             for (var link : linkEvent.getLinksList()) {
                 contentProvider.processLinkInfo(link);
             }
