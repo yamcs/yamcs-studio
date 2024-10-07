@@ -49,74 +49,86 @@ public class CommandStackParser {
             }
         }
 
-        if (stackObject.has("commands")) {
+        if (stackObject.has("steps")) { // New style stack.schema.json
+            for (var stepEl : stackObject.getAsJsonArray("steps")) {
+                var stepObject = stepEl.getAsJsonObject();
+                if (stepObject.has("type") && stepObject.get("type").getAsString().equals("command")) {
+                    var stackedCommand = parseYcsCommand(stepObject);
+                    stack.addCommand(stackedCommand);
+                }
+            }
+        } else if (stackObject.has("commands")) { // Old style command-stack.schema.json
             for (var commandEl : stackObject.getAsJsonArray("commands")) {
                 var commandObject = commandEl.getAsJsonObject();
-
-                var name = commandObject.get("name").getAsString();
-
-                CommandInfo mdbInfo;
-                if (commandObject.has("namespace")) {
-                    var namespace = commandObject.get("namespace").getAsString();
-                    mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(namespace, name);
-                    if (mdbInfo == null) {
-                        throw new CommandStackParseException(
-                                "Command " + name + " (" + namespace + ") does not exist in MDB");
-                    }
-                } else {
-                    mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(name);
-                    if (mdbInfo == null) {
-                        throw new CommandStackParseException(
-                                "Command " + name + " does not exist in MDB");
-                    }
-                }
-
-                var command = new StackedCommand();
-                command.setMetaCommand(mdbInfo);
-                if (commandObject.has("comment")) {
-                    var comment = commandObject.get("comment").getAsString();
-                    command.setComment(comment);
-                }
-                if (commandObject.has("advancement")) {
-                    var advancementObject = commandObject.get("advancement").getAsJsonObject();
-                    if (advancementObject.has("wait")) {
-                        var wait = advancementObject.get("wait").getAsInt();
-                        if (wait >= 0) {
-                            command.setWaitTime(wait);
-                        }
-                    }
-                }
-                if (commandObject.has("arguments")) {
-                    var argumentsArray = commandObject.get("arguments").getAsJsonArray();
-                    for (var argumentEl : argumentsArray) {
-                        var argumentObject = argumentEl.getAsJsonObject();
-
-                        var argName = argumentObject.get("name").getAsString();
-                        var argValue = argumentObject.get("value");
-                        var argInfo = getArgumentFromYamcs(mdbInfo, argName);
-                        if (argInfo == null) {
-                            throw new CommandStackParseException(
-                                    "Argument " + argName + " does not exist in MDB for command " + name);
-                        }
-                        if (argValue.isJsonNull()) {
-                            command.addAssignment(argInfo, null);
-                        } else if (argValue.isJsonPrimitive()) {
-                            command.addAssignment(argInfo, argValue.getAsString());
-                        } else if (argValue.isJsonArray()) {
-                            command.addAssignment(argInfo, argValue.getAsJsonArray().toString());
-                        } else if (argValue.isJsonObject()) {
-                            command.addAssignment(argInfo, argValue.getAsJsonObject().toString());
-                        } else {
-                            throw new CommandStackParseException("Unexpected value: " + argValue);
-                        }
-                    }
-                }
-
-                stack.addCommand(command);
+                var stackedCommand = parseYcsCommand(commandObject);
+                stack.addCommand(stackedCommand);
             }
         }
 
         return stack;
+    }
+
+    private static StackedCommand parseYcsCommand(JsonObject commandObject) {
+        var name = commandObject.get("name").getAsString();
+
+        CommandInfo mdbInfo;
+        if (commandObject.has("namespace")) {
+            var namespace = commandObject.get("namespace").getAsString();
+            mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(namespace, name);
+            if (mdbInfo == null) {
+                throw new CommandStackParseException(
+                        "Command " + name + " (" + namespace + ") does not exist in MDB");
+            }
+        } else {
+            mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(name);
+            if (mdbInfo == null) {
+                throw new CommandStackParseException(
+                        "Command " + name + " does not exist in MDB");
+            }
+        }
+
+        var command = new StackedCommand();
+        command.setMetaCommand(mdbInfo);
+        if (commandObject.has("comment")) {
+            var comment = commandObject.get("comment").getAsString();
+            command.setComment(comment);
+        }
+        if (commandObject.has("advancement")) {
+            var advancementObject = commandObject.get("advancement").getAsJsonObject();
+            if (advancementObject.has("wait")) {
+                var wait = advancementObject.get("wait").getAsInt();
+                if (wait >= 0) {
+                    command.setWaitTime(wait);
+                }
+            }
+        }
+        if (commandObject.has("arguments")) {
+            var argumentsArray = commandObject.get("arguments").getAsJsonArray();
+            for (var argumentEl : argumentsArray) {
+                var argumentObject = argumentEl.getAsJsonObject();
+
+                var argName = argumentObject.get("name").getAsString();
+                var argValue = argumentObject.get("value");
+                var argInfo = getArgumentFromYamcs(mdbInfo, argName);
+                if (argInfo == null) {
+                    throw new CommandStackParseException(
+                            "Argument " + argName + " does not exist in MDB for command " + name);
+                }
+                if (argValue.isJsonNull()) {
+                    command.addAssignment(argInfo, null);
+                } else if (argValue.isJsonPrimitive()) {
+                    command.addAssignment(argInfo, argValue.getAsString());
+                } else if (argValue.isJsonArray()) {
+                    command.addAssignment(argInfo, argValue.getAsJsonArray().toString());
+                } else if (argValue.isJsonObject()) {
+                    command.addAssignment(argInfo, argValue.getAsJsonObject().toString());
+                } else {
+                    throw new CommandStackParseException("Unexpected value: " + argValue);
+                }
+            }
+        }
+
+        return command;
     }
 
     private static CommandStack parseXmlCommandStack(Path file) {
