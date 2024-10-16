@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.swt.graphics.RGB;
 import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.Event.EventSeverity;
 
 public class ColoringRule {
 
@@ -47,7 +48,15 @@ public class ColoringRule {
                     boolean eq;
                     switch (property) {
                     case "severity":
-                        eq = event.hasSeverity() && event.getSeverity().toString().equals(value);
+                        if (event.hasSeverity()) {
+                            var severity = event.getSeverity();
+                            if (severity == EventSeverity.WARNING_NEW) {
+                                severity = EventSeverity.WARNING;
+                            }
+                            eq = severity.toString().equals(value);
+                        } else {
+                            eq = false;
+                        }
                         break;
                     case "type":
                         eq = event.hasType() && event.getType().equals(value);

@@ -43,11 +43,12 @@ public class EventLogSorter extends ViewerComparator {
             }
             // fall
         case WATCH:
-            if (o1 == EventSeverity.WARNING) {
+            if (o1 == EventSeverity.WARNING || o1 == EventSeverity.WARNING_NEW) {
                 return 1;
             }
             // fall
         case WARNING:
+        case WARNING_NEW:
             if (o1 == EventSeverity.DISTRESS) {
                 return 1;
             }

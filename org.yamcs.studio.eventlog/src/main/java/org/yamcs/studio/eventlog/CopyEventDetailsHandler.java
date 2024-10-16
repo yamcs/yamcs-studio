@@ -21,6 +21,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Event.EventSeverity;
 
 public class CopyEventDetailsHandler extends AbstractHandler {
 
@@ -68,7 +69,11 @@ public class CopyEventDetailsHandler extends AbstractHandler {
                     text.append(rec.getSeqNumber());
                     break;
                 case PARAM_SEVERITY:
-                    text.append(rec.getSeverity());
+                    if (rec.getSeverity() == EventSeverity.WARNING_NEW) {
+                        text.append(EventSeverity.WARNING);
+                    } else {
+                        text.append(rec.getSeverity());
+                    }
                     break;
                 default:
                     throw new IllegalStateException("Unexpected property: " + property);

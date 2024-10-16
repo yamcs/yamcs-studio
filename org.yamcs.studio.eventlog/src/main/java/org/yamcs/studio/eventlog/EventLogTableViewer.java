@@ -34,6 +34,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
+import org.yamcs.protobuf.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.ColumnData;
 import org.yamcs.studio.core.utils.ViewerColumnsDialog;
@@ -80,12 +81,12 @@ public class EventLogTableViewer extends TableViewer {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         var plugin = EventLogPlugin.getDefault();
-        infoIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level0s.png"));
-        watchIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level1s.png"));
-        warningIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level2s.png"));
-        distressIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level3s.png"));
-        criticalIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level4s.png"));
-        severeIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level5s.png"));
+        infoIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level0s.png"));
+        watchIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level1s.png"));
+        warningIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level2s.png"));
+        distressIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level3s.png"));
+        criticalIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level4s.png"));
+        severeIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level5s.png"));
 
         messageLineCount = plugin.getMessageLineCount();
 
@@ -206,6 +207,7 @@ public class EventLogTableViewer extends TableViewer {
                             case WATCH:
                                 return watchIcon;
                             case WARNING:
+                            case WARNING_NEW:
                                 return warningIcon;
                             case DISTRESS:
                                 return distressIcon;
@@ -228,7 +230,11 @@ public class EventLogTableViewer extends TableViewer {
                     public String getToolTipText(Object element) {
                         var event = ((EventLogItem) element).event;
                         if (event.hasSeverity()) {
-                            return "" + event.getSeverity();
+                            if (event.getSeverity() == EventSeverity.WARNING_NEW) {
+                                return "" + EventSeverity.WARNING;
+                            } else {
+                                return "" + event.getSeverity();
+                            }
                         } else {
                             return super.getToolTipText(element);
                         }

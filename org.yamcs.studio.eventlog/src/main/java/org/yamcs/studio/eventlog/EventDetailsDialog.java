@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.protobuf.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class EventDetailsDialog extends TrayDialog {
@@ -67,12 +68,12 @@ public class EventDetailsDialog extends TrayDialog {
         updateRecord(rec);
         resourceManager = new LocalResourceManager(JFaceResources.getResources());
         var plugin = EventLogPlugin.getDefault();
-        infoIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level0s.png"));
-        watchIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level1s.png"));
-        warningIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level2s.png"));
-        distressIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level3s.png"));
-        criticalIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level4s.png"));
-        severeIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level5s.png"));
+        infoIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level0s.png"));
+        watchIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level1s.png"));
+        warningIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level2s.png"));
+        distressIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level3s.png"));
+        criticalIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level4s.png"));
+        severeIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level5s.png"));
     }
 
     private void updateRecord(EventLogItem rec) {
@@ -251,13 +252,13 @@ public class EventDetailsDialog extends TrayDialog {
         var gd = new GridData(GridData.FILL_HORIZONTAL);
         prevButton.setLayoutData(gd);
         prevButton.setToolTipText("Previous Entry");
-        prevButton.setImage(resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_prev.png")));
+        prevButton.setImage(resourceManager.create(plugin.getImageDescriptor("icons/obj16/event_prev.png")));
 
         nextButton = createButton(container, IDialogConstants.NEXT_ID, "", false);
         gd = new GridData();
         nextButton.setLayoutData(gd);
         nextButton.setToolTipText("Next Entry");
-        nextButton.setImage(resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_next.png")));
+        nextButton.setImage(resourceManager.create(plugin.getImageDescriptor("icons/obj16/event_next.png")));
 
         layout.numColumns = 1;
     }
@@ -292,8 +293,12 @@ public class EventDetailsDialog extends TrayDialog {
         severityLabel.setText("-");
         severityImageLabel.setImage(null);
         if (rec.event.hasSeverity()) {
-            severityLabel.setText("" + rec.event.getSeverity());
-            switch (rec.event.getSeverity()) {
+            var severity = rec.event.getSeverity();
+            if (severity == EventSeverity.WARNING_NEW) {
+                severity = EventSeverity.WARNING;
+            }
+            severityLabel.setText("" + severity);
+            switch (severity) {
             case INFO:
                 severityImageLabel.setImage(infoIcon);
                 break;

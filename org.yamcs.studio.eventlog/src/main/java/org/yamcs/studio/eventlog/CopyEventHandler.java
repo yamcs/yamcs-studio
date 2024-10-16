@@ -21,6 +21,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Event.EventSeverity;
 
 public class CopyEventHandler extends AbstractHandler {
 
@@ -41,7 +42,12 @@ public class CopyEventHandler extends AbstractHandler {
                 var receptionTime = Instant.ofEpochSecond(rec.getReceptionTime().getSeconds(),
                         rec.getReceptionTime().getNanos());
 
-                text.append(rec.getSeverity()).append("\t").append(rec.getMessage()).append("\t").append(rec.getType())
+                var severity = rec.getSeverity();
+                if (severity == EventSeverity.WARNING_NEW) {
+                    severity = EventSeverity.WARNING;
+                }
+
+                text.append(severity).append("\t").append(rec.getMessage()).append("\t").append(rec.getType())
                         .append("\t").append(rec.getSource()).append("\t").append(generationTime.toString())
                         .append("\t").append(receptionTime.toString()).append("\t").append(rec.getSeqNumber())
                         .append("\n");

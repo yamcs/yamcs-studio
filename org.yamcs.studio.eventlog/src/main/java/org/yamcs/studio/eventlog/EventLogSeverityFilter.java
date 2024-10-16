@@ -34,7 +34,9 @@ public class EventLogSeverityFilter extends ViewerFilter {
                 }
                 // fall
             case WARNING:
-                if (event.getSeverity() == EventSeverity.WARNING) {
+            case WARNING_NEW:
+                if (event.getSeverity() == EventSeverity.WARNING
+                        || event.getSeverity() == EventSeverity.WARNING_NEW) {
                     return true;
                 }
                 // fall

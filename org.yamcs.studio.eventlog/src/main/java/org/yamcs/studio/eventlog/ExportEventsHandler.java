@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.CsvWriter;
 
@@ -77,7 +78,16 @@ public class ExportEventsHandler extends AbstractHandler {
                     formattedReceptionTime = YamcsPlugin.getDefault().formatInstant(receptionTime);
                 }
 
-                writer.writeRecord(new String[] { event.hasSeverity() ? "" + event.getSeverity() : "",
+                var severity = "";
+                if (event.hasSeverity()) {
+                    if (event.getSeverity() == EventSeverity.WARNING_NEW) {
+                        severity = EventSeverity.WARNING.toString();
+                    } else {
+                        severity = event.getSeverity().toString();
+                    }
+                }
+
+                writer.writeRecord(new String[] { severity,
                         event.hasMessage() ? event.getMessage() : "", event.hasType() ? event.getType() : "",
                         event.hasSource() ? event.getSource() : "", formattedGenerationTime, formattedReceptionTime,
                         event.hasSeqNumber() ? "" + event.getSeqNumber() : "" });
