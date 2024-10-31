@@ -76,7 +76,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     }
 
     public VType getValue(String pvName) {
-        var id = identityOf(pvName);
+        var id = YamcsPlugin.identityOf(pvName);
         if (subscription != null) {
             var pval = subscription.get(id);
             if (pval != null) {
@@ -129,7 +129,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async adds a Yamcs PV for receiving updates.
      */
     public void register(IPV pv) {
-        var id = identityOf(pv.getName());
+        var id = YamcsPlugin.identityOf(pv.getName());
         executor.execute(() -> {
             var pvs = pvsById.computeIfAbsent(id, x -> new HashSet<>());
             pvs.add(pv);
@@ -141,7 +141,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async removes a Yamcs PV from receiving updates.
      */
     public void unregister(IPV pv) {
-        var id = identityOf(pv.getName());
+        var id = YamcsPlugin.identityOf(pv.getName());
         executor.execute(() -> {
             var pvs = pvsById.get(id);
             if (pvs != null) {
@@ -186,19 +186,6 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 pvs.forEach(IPV::setInvalid);
             }
         });
-    }
-
-    public static NamedObjectId identityOf(String pvName) {
-        if (pvName.startsWith("ops://")) {
-            return NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(pvName.substring("ops://".length()))
-                    .build();
-        } else if (pvName.startsWith("para://")) {
-            return NamedObjectId.newBuilder().setName(pvName.substring("para://".length())).build();
-        } else if (pvName.startsWith("raw://")) {
-            return NamedObjectId.newBuilder().setName(pvName.substring("raw://".length())).build();
-        } else {
-            return NamedObjectId.newBuilder().setName(pvName).build();
-        }
     }
 
     @FunctionalInterface

@@ -47,6 +47,7 @@ import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.SubscribeProcessorsRequest;
 import org.yamcs.protobuf.SubscribeTimeRequest;
 import org.yamcs.protobuf.UserInfo;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ui.SoundSystem;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.data.PVFactory;
@@ -542,6 +543,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
      */
     public static ImageDescriptor getImageDescriptor(String path) {
         return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    public static NamedObjectId identityOf(String pvName) {
+        if (pvName.startsWith("ops://")) {
+            return NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(pvName.substring("ops://".length()))
+                    .build();
+        } else if (pvName.startsWith("para://")) {
+            return NamedObjectId.newBuilder().setName(pvName.substring("para://".length())).build();
+        } else if (pvName.startsWith("raw://")) {
+            return NamedObjectId.newBuilder().setName(pvName.substring("raw://".length())).build();
+        } else {
+            return NamedObjectId.newBuilder().setName(pvName).build();
+        }
     }
 
     public BundleContext getContext() {

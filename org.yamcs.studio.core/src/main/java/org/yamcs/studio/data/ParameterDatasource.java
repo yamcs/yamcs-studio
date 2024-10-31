@@ -50,7 +50,7 @@ public class ParameterDatasource implements Datasource {
     @Override
     public void writeValue(IPV pv, Object value, WriteCallback callback) {
         try {
-            var id = YamcsSubscriptionService.identityOf(pv.getName());
+            var id = YamcsPlugin.identityOf(pv.getName());
 
             var ptype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
             var v = toValue(ptype, value);

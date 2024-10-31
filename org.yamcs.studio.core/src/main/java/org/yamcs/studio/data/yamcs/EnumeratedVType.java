@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.VEnum;
 
@@ -37,13 +36,7 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
 
     @Override
     public List<String> getLabels() {
-
-        // TODO Get an id matching the qualified name from the info object
-        // (not e.g. the opsname)
-        // But be careful that any suffixes ('[]' or '.') are kept
-        var id = NamedObjectId.newBuilder().setName(getId().getName()).build();
-
-        var specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
+        var specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(getId());
         return getLabelsForType(specificPtype);
     }
 
