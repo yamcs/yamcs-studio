@@ -314,7 +314,7 @@ public class SpreadSheetTable extends Composite {
         tableViewer.getTable().setLinesVisible(true);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.setContentProvider(new ArrayContentProvider());
-        setInput(new ArrayList<List<String>>());
+        setInput(new ArrayList<>());
     }
 
     /**
@@ -727,7 +727,7 @@ public class SpreadSheetTable extends Composite {
     // String-based for easier use within scripting.
     public void setColumnCellEditorType(int columnIndex, String cellEditorType) {
         var type = CellEditorType.valueOf(cellEditorType);
-        setColumnCellEditorType(columnIndex, cellEditorType);
+        setColumnCellEditorType(columnIndex, type);
     }
 
     /**
