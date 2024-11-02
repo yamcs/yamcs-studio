@@ -377,17 +377,6 @@ https://www.eclipse.org/legal/epl-2.0/
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.core.filesystem.win32.x86_64"
-         os="win32"
-         arch="x86_64"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.core.net.win32"
-         os="win32"
-         version="0.0.0"/>
-
-   <plugin
          id="org.yamcs.studio.connect"
          version="0.0.0"/>
 
@@ -483,11 +472,6 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="org.apache.commons.lang"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.core.net.linux"
-         os="linux"
          version="0.0.0"/>
 
    <plugin

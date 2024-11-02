@@ -42,7 +42,7 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
     private Object originalConstraint;
 
     @Override
-    protected List<?> createSelectionHandles() {
+    protected List<BendpointHandle> createSelectionHandles() {
         List<BendpointHandle> handles = new ArrayList<>();
         var points = getConnection().getPoints();
         if (points.size() < 4) {

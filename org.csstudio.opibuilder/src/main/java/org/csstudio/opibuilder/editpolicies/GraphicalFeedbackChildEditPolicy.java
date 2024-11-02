@@ -91,9 +91,9 @@ public final class GraphicalFeedbackChildEditPolicy extends ResizableEditPolicy 
 
     @SuppressWarnings("unchecked")
     @Override
-    protected List<?> createSelectionHandles() {
+    protected List<? extends Handle> createSelectionHandles() {
         // get default handles
-        List<Handle> handleList = super.createSelectionHandles();
+        List<Handle> handleList = (List<Handle>) super.createSelectionHandles();
 
         // add contributed handles
 

@@ -22,7 +22,6 @@ import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.registry.IGrammarRegistryManager;
 import org.eclipse.tm4e.registry.ITMScope;
 import org.eclipse.tm4e.registry.TMEclipseRegistryPlugin;
-import org.eclipse.tm4e.registry.WorkingCopyGrammarRegistryManager;
 import org.eclipse.tm4e.ui.text.TMPresentationReconciler;
 import org.eclipse.tm4e.ui.themes.ITheme;
 
@@ -30,8 +29,8 @@ public class TMViewer extends SourceViewer {
 
     private final TMPresentationReconciler reconciler = new TMPresentationReconciler();
 
-    private IGrammarRegistryManager grammarRegistryManager = new WorkingCopyGrammarRegistryManager(
-            TMEclipseRegistryPlugin.getGrammarRegistryManager());
+    private IGrammarRegistryManager.EditSession grammarRegistryManager = TMEclipseRegistryPlugin
+            .getGrammarRegistryManager().newEditSession();
 
     private ITMScope jsScope;
     private ITMScope pyScope;

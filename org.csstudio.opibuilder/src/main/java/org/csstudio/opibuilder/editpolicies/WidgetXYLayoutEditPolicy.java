@@ -66,9 +66,9 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         } else {
             return new ResizableEditPolicy() {
                 @Override
-                protected List<?> createSelectionHandles() {
+                protected List<? extends Handle> createSelectionHandles() {
                     @SuppressWarnings("unchecked")
-                    List<Handle> handleList = super.createSelectionHandles();
+                    List<Handle> handleList = (List<Handle>) super.createSelectionHandles();
                     if (child.getModel() instanceof IPVWidgetModel && ((AbstractWidgetModel) (child.getModel()))
                             .getProperty(IPVWidgetModel.PROP_PVNAME).isVisibleInPropSheet()) {
                         handleList.add(new PVWidgetSelectionHandle((GraphicalEditPart) child));
@@ -304,7 +304,7 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         if (guidePos != null) {
             var alignment = ((Integer) request.getExtendedData()
                     .get(horizontal ? SnapToGuides.KEY_HORIZONTAL_ANCHOR : SnapToGuides.KEY_VERTICAL_ANCHOR))
-                    .intValue();
+                            .intValue();
             var cgm = new ChangeGuideCommand(part.getWidgetModel(), horizontal);
             cgm.setNewGuide(findGuideAt(guidePos.intValue(), horizontal), alignment);
             result = result.chain(cgm);
