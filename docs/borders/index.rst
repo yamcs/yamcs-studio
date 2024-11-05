@@ -87,7 +87,7 @@ Disconnected
     Solid pink border around the widget and the label 'Disconnected' in the top left corner (space-permitting)
 
 Expired
-    Blinking solid pink border around the widget
+    Solid pink border around the widget
 
 
 .. rubric:: Alarm-sensitivity
