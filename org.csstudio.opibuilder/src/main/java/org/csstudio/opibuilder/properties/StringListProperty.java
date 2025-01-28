@@ -18,6 +18,7 @@ import org.csstudio.opibuilder.properties.support.StringListPropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom2.Element;
+import org.openjdk.nashorn.api.scripting.ScriptObjectMirror;
 
 /**
  * The property for string list.
@@ -52,11 +53,17 @@ public class StringListProperty extends AbstractWidgetProperty<List<String>> {
         if (value == null) {
             return null;
         }
+        if (value instanceof ScriptObjectMirror scriptObj && scriptObj.isArray()) {
+            // This occurs when using something like from a JavaScript script:
+            //
+            // widget.setPropertyValue("items", ["aa", "bb", "cc"]);
+            value = scriptObj.to(List.class);
+        }
+
         List<String> acceptableValue = null;
-        if (value instanceof List) {
-            if (((List<?>) value).size() == 0
-                    || (((List<?>) value).size() > 0 && ((List<?>) value).get(0) instanceof String)) {
-                acceptableValue = (List<String>) value;
+        if (value instanceof List list) {
+            if (list.size() == 0 || (list.size() > 0 && list.get(0) instanceof String)) {
+                acceptableValue = list;
             }
         }
         return acceptableValue;
