@@ -101,16 +101,15 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     public void createPartControl(Composite parent) {
         var plugin = CommandingPlugin.getDefault();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/waiting.png"));
-        headerCompleteImage = resourceManager
-                .createImage(plugin.getImageDescriptor("/icons/obj16/header_complete.png"));
-        checkmarkImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/checkmark.gif"));
-        errorImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/error_tsk.png"));
-        prevImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/event_prev.png"));
-        nextImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/event_next.png"));
+        greenBubble = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/ok.png"));
+        redBubble = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/nok.png"));
+        grayBubble = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/undef.png"));
+        waitingImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/waiting.png"));
+        headerCompleteImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/header_complete.png"));
+        checkmarkImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/checkmark.gif"));
+        errorImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/error_tsk.png"));
+        prevImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/event_prev.png"));
+        nextImage = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/event_next.png"));
 
         createActions(parent.getShell());
 
