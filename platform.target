@@ -19,7 +19,7 @@
             <unit id="org.eclipse.gef.sdk.feature.group" version="3.20.0.202405290843" />
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202411021136/" />
+            <repository location="https://dl.yamcs.org/p2/platform/202506121611/" />
             <unit id="bcpg" version="0.0.0" />
             <unit id="bcprov" version="0.0.0" />
             <unit id="bcutil" version="0.0.0" />
