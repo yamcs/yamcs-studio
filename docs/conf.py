@@ -16,7 +16,6 @@ version = yamcs_version_el.text
 release = version
 
 extensions = [
-    "sphinxcontrib.fulltoc",
     "sphinxcontrib.yamcs",
     "sphinx.ext.intersphinx",
 ]
@@ -78,7 +77,7 @@ latex_elements = {
 latex_documents = [
     (
         "index",
-        "yamcs-studio.tex",
+        f"yamcs-studio-{version}.tex",
         "Yamcs Studio User Guide",
         "Space Applications Services",
         "manual",
