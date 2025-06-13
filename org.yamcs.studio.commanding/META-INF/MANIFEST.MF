@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio Commanding
 Bundle-SymbolicName: org.yamcs.studio.commanding;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Bundle-Version: 1.7.8.qualifier
+Bundle-Version: 1.7.8
 Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.eclipse.core.runtime,
