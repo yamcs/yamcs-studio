@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,10 +60,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         }
     }
 
-    public void addEvents(List<Event> events, boolean increment) {
-        // 'increment' makes it a LOT slower. This is especially noticeable on batch imports.
-        // Not sure if we need increment anywhere.
-
+    public void addEvents(List<Event> events) {
         if (events.isEmpty()) {
             return;
         }
@@ -74,7 +70,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         List<EventLogItem> updated = new ArrayList<>();
         List<EventLogItem> added = new ArrayList<>();
 
-        List<EventLogItem> newItems = events.stream().map(EventLogItem::new).collect(Collectors.toList());
+        List<EventLogItem> newItems = events.stream().map(EventLogItem::new).toList();
 
         newItems.forEach(newItem -> {
             newItem.colorize(plugin.loadColoringRules());
@@ -86,13 +82,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             items.add(newItem);
         });
 
-        if (increment) {
-            tableViewer.add(added.toArray());
-            tableViewer.update(updated.toArray(), null);
-        } else {
-            tableViewer.setInput("anything-except-null");
-            tableViewer.refresh();
-        }
+        tableViewer.setInput("anything-except-null");
+        tableViewer.refresh();
 
         lastAddedEvent = newItems.get(newItems.size() - 1);
 

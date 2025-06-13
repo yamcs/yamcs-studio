@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class EventLog extends Composite implements YamcsAware {
     private MenuManager menuManager;
     private IPropertyChangeListener prefListener;
 
-    private List<Event> realtimeEvents = new ArrayList<>();
+    private LinkedBlockingQueue<Event> realtimeEvents = new LinkedBlockingQueue<>();
     private ScheduledExecutorService tableUpdater = Executors.newSingleThreadScheduledExecutor();
 
     private EventSubscription subscription;
@@ -190,12 +191,13 @@ public class EventLog extends Composite implements YamcsAware {
         updateState();
 
         tableUpdater.scheduleWithFixedDelay(() -> {
-            synchronized (realtimeEvents) {
-                if (realtimeEvents.isEmpty() || isDisposed()) {
-                    return;
-                }
-                List<Event> eventBatch = new ArrayList<>(realtimeEvents);
-                realtimeEvents.clear();
+            if (realtimeEvents.isEmpty() || isDisposed()) {
+                return;
+            }
+
+            var eventBatch = new ArrayList<Event>();
+            realtimeEvents.drainTo(eventBatch);
+            if (!eventBatch.isEmpty()) {
                 Display.getDefault().syncExec(() -> addEvents(eventBatch));
             }
         }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
@@ -244,9 +246,7 @@ public class EventLog extends Composite implements YamcsAware {
                 fetchLatestEvents();
             });
             subscription = YamcsPlugin.getYamcsClient().createEventSubscription();
-            subscription.addMessageListener(event -> {
-                Display.getDefault().asyncExec(() -> processEvent(event));
-            });
+            subscription.addMessageListener(realtimeEvents::offer);
             subscription.sendMessage(SubscribeEventsRequest.newBuilder().setInstance(instance).build());
         }
     }
@@ -288,12 +288,6 @@ public class EventLog extends Composite implements YamcsAware {
         }
     }
 
-    private void processEvent(Event event) {
-        synchronized (realtimeEvents) {
-            realtimeEvents.add(event);
-        }
-    }
-
     public void enableScrollLock(boolean enabled) {
         tableContentProvider.enableScrollLock(enabled);
     }
@@ -302,7 +296,7 @@ public class EventLog extends Composite implements YamcsAware {
         if (isDisposed()) {
             return;
         }
-        tableContentProvider.addEvents(events, false);
+        tableContentProvider.addEvents(events);
     }
 
     public void clear() {
