@@ -30,21 +30,10 @@ import org.eclipse.swt.widgets.Display;
 import org.yamcs.client.storage.ObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.io.ByteStreams;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class ResourceUtil {
-
-    private static final LoadingCache<String, byte[]> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(2, TimeUnit.MINUTES).maximumSize(1000).build(new CacheLoader<String, byte[]>() {
-                @Override
-                public byte[] load(String file) throws IOException, Exception {
-                    return ByteStreams.toByteArray(pathToInputStream(file));
-                }
-            });
 
     /**
      * Convert workspace path to OS system path.
@@ -89,7 +78,8 @@ public class ResourceUtil {
                         inputStream = workspaceFileToInputStream(Path.fromPortableString(path));
                     }
                     if (inputStream == null) {
-                        inputStream = new ByteArrayInputStream(cache.getUnchecked(path));
+                        var bytes = ByteStreams.toByteArray(pathToInputStream(path));
+                        inputStream = new ByteArrayInputStream(bytes);
                     }
                     uiTask.setInputStream(inputStream);
                     display.asyncExec(uiTask);
