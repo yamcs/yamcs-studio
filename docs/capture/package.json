@@ -6,6 +6,6 @@
     },
     "devDependencies": {
         "@yamcs/opi": "^1.2.20",
-        "puppeteer": "^22.12.1"
+        "puppeteer": "^24.11.2"
     }
 }
