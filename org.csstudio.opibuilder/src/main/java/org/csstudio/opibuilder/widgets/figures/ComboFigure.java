@@ -1,85 +1,65 @@
-/********************************************************************************
- * Copyright (c) 2010, 2021 Oak Ridge National Laboratory and others
+/*******************************************************************************
+ * Copyright (c) 2025 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- ********************************************************************************/
+ *******************************************************************************/
 package org.csstudio.opibuilder.widgets.figures;
 
-import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.Triangle;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * Figure for a Combo widget.
+ * Figure for the combo widget.
  */
-public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
+public class ComboFigure extends Label implements ITextFigure {
 
-    Triangle selector;
-    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(240, 240, 240);
-    private final static Color DARK_GRAY_COLOR = CustomMediaFactory.getInstance()
-            .getColor(CustomMediaFactory.COLOR_DARK_GRAY);
+    public static final int ICON_WIDTH = 15;
 
-    private static final int SELECTOR_WIDTH = 8;
+    private static final Image downArrow = CustomMediaFactory.getInstance().getImageFromPlugin(
+            OPIBuilderPlugin.PLUGIN_ID,
+            "icons/downArrow.png");
 
-    private Combo combo;
-
-    public ComboFigure(AbstractBaseEditPart editPart) {
-        super(editPart);
-        if (!runmode) {
-            selector = new Triangle();
-            selector.setBackgroundColor(DARK_GRAY_COLOR);
-            selector.setDirection(PositionConstants.SOUTH);
-            selector.setFill(true);
-            add(selector);
-        }
+    public ComboFigure() {
+        super();
+        setIcon(downArrow);
+        setLabelAlignment(PositionConstants.RIGHT);
+        setTextPlacement(PositionConstants.WEST);
+        setOpaque(true);
+        updateLayout();
     }
 
     @Override
-    protected Combo createSWTWidget(Composite parent, int style) {
-        combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-        return combo;
+    public void setText(String s) {
+        super.setText(s);
+        updateLayout();
     }
 
     @Override
-    protected void layout() {
-        super.layout();
-        if (!runmode) {
-            var clientArea = getClientArea().getCopy().shrink(2, 2);
-            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH - 2, clientArea.y,
-                    SELECTOR_WIDTH, clientArea.height));
-        }
+    public void setBounds(Rectangle rect) {
+        super.setBounds(rect);
+        updateLayout();
     }
 
-    @Override
-    protected void paintOutlineFigure(Graphics graphics) {
-        // draw this so that it can be seen in the outline view
-        if (!runmode) {
-            var clientArea = getClientArea().getCopy().shrink(2, 2);
-            graphics.setBackgroundColor(GRAY_COLOR);
-            graphics.fillRectangle(clientArea);
-            graphics.setForegroundColor(DARK_GRAY_COLOR);
-            graphics.drawRectangle(new Rectangle(clientArea.getLocation(), clientArea.getSize().shrink(1, 1)));
-        }
-    }
-
-    public void setText(String text) {
-        combo.setText(text);
-    }
-
-    public Dimension getAutoSizeDimension() {
-        return new Dimension(getBounds().width,
-                combo.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + getInsets().getHeight());
+    /**
+     * Layout the contents of the widget so that, if an icon is displayed, it is right aligned and the text remains
+     * centred.
+     */
+    private void updateLayout() {
+        /*
+         * In Draw2d there appears to be no way adding a right aligned arrow to a
+         * label. We fake the effect here by checking the widths of the text and
+         * of the label then adding an appropriate gap so that the text looks as
+         * if it has been centred.
+         */
+        setIconTextGap((getBounds().width - getTextBounds().width - ICON_WIDTH) / 2);
     }
 }

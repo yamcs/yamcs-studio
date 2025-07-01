@@ -9,16 +9,12 @@
  *******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_STYLE;
-import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_BORDER_WIDTH;
-import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_FONT;
-import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_HEIGHT;
-import static org.csstudio.opibuilder.model.AbstractWidgetModel.PROP_WIDTH;
 import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVNAME;
 import static org.csstudio.opibuilder.model.IPVWidgetModel.PROP_PVVALUE;
 import static org.csstudio.opibuilder.widgets.model.ComboModel.PROP_ITEMS;
 import static org.csstudio.opibuilder.widgets.model.ComboModel.PROP_ITEMS_FROM_PV;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
@@ -26,11 +22,18 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.ComboFigure;
 import org.csstudio.opibuilder.widgets.model.ComboModel;
+import org.csstudio.swt.widgets.util.GraphicsUtil;
+import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseListener;
+import org.eclipse.draw2d.MouseMotionListener;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
@@ -42,19 +45,61 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
 
     private IPVListener loadItemsFromPVListener;
 
-    private Combo combo;
-    private SelectionListener comboSelectionListener;
+    private List<String> items = new ArrayList<>();
 
     @Override
     protected IFigure doCreateFigure() {
         var model = getWidgetModel();
         updatePropSheet(model.isItemsFromPV());
-        var comboFigure = new ComboFigure(this);
-        combo = comboFigure.getSWTWidget();
+        var comboFigure = new ComboFigure();
 
         var items = getWidgetModel().getItems();
-
         updateCombo(items);
+
+        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+            comboFigure.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseDoubleClicked(MouseEvent me) {
+                }
+
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if (me.button == 1 && comboFigure.containsPoint(me.getLocation())) {
+                        me.consume();
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                    // Check location to ignore bogus mouse clicks,
+                    // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
+                    if (me.button == 1 && getExecutionMode().equals(ExecutionMode.RUN_MODE)
+                            && comboFigure.containsPoint(me.getLocation())) {
+                        var cursorLocation = Display.getCurrent().getCursorLocation();
+                        showMenu(me.getLocation(), cursorLocation.x, cursorLocation.y);
+                    }
+                }
+
+            });
+        }
+        comboFigure.addMouseMotionListener(new MouseMotionListener.Stub() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
+                    var backColor = comboFigure.getBackgroundColor();
+                    var darkColor = GraphicsUtil.mixColors(backColor.getRGB(), new RGB(0, 0, 0), 0.9);
+                    comboFigure.setBackgroundColor(CustomMediaFactory.getInstance().getColor(darkColor));
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+                if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
+                    comboFigure.setBackgroundColor(
+                            CustomMediaFactory.getInstance().getColor(getWidgetModel().getBackgroundColor()));
+                }
+            }
+        });
 
         markAsControlPV(PROP_PVNAME, PROP_PVVALUE);
 
@@ -63,31 +108,53 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
 
     private void updateCombo(List<String> items) {
         if (items != null && getExecutionMode() == ExecutionMode.RUN_MODE) {
-            combo.removeAll();
-
-            for (var item : items) {
-                combo.add(item);
-            }
-
-            // write value to pv if pv name is not empty
-            if (getWidgetModel().getPVName().trim().length() > 0) {
-                if (comboSelectionListener != null) {
-                    combo.removeSelectionListener(comboSelectionListener);
-                }
-                comboSelectionListener = new SelectionAdapter() {
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        setPVValue(PROP_PVNAME, combo.getText());
-                    }
-                };
-                combo.addSelectionListener(comboSelectionListener);
-            }
+            this.items.clear();
+            this.items.addAll(items);
         }
     }
 
     @Override
     public ComboModel getWidgetModel() {
         return (ComboModel) getModel();
+    }
+
+    private ComboFigure getComboFigure() {
+        return (ComboFigure) getFigure();
+    }
+
+    /**
+     * Show Menu
+     *
+     * @param point
+     *            the location of the mouse-event in the OPI display
+     * @param absolutX
+     *            The x coordinate of the mouse on the monitor
+     * @param absolutY
+     *            The y coordinate of the mouse on the monitor
+     */
+    private void showMenu(Point point, int absolutX, int absolutY) {
+        if (getExecutionMode().equals(ExecutionMode.RUN_MODE)) {
+            var shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+            var menuManager = new MenuManager();
+            for (var item : items) {
+                menuManager.add(new SelectItemAction(item));
+            }
+            var menu = menuManager.createContextMenu(shell);
+
+            /*
+             * We need to position the menu in absolute monitor coordinates.
+             * First we calculate the coordinates of the display, then add the
+             * widget coordinates to these so that the menu opens on the
+             * bottom left of the widget.
+             */
+            var x = absolutX - point.x;
+            var y = absolutY - point.y;
+            x += getWidgetModel().getLocation().x;
+            y += getWidgetModel().getLocation().y + getWidgetModel().getSize().height;
+
+            menu.setLocation(x, y);
+            menu.setVisible(true);
+        }
     }
 
     @Override
@@ -129,7 +196,6 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
                 pv.removeListener(loadItemsFromPVListener);
             }
         }
-        // ((ComboFigure)getFigure()).dispose();
     }
 
     @Override
@@ -140,14 +206,12 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
             return false;
         });
 
-        autoSizeWidget((ComboFigure) getFigure());
-
         setPropertyChangeHandler(PROP_PVVALUE, (oldValue, newValue, refreshableFigure) -> {
             if (newValue != null) {
                 var stringValue = VTypeHelper.getString((VType) newValue);
 
                 String matchingItem = null;
-                for (var item : combo.getItems()) {
+                for (var item : items) {
                     if (item.equals(stringValue)) {
                         matchingItem = item;
                         break;
@@ -172,9 +236,9 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
                 }
 
                 if (matchingItem != null) {
-                    combo.setText(matchingItem);
+                    getComboFigure().setText(matchingItem);
                 } else {
-                    combo.deselectAll();
+                    getComboFigure().setText(null);
                 }
             }
 
@@ -185,7 +249,7 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
             if (newValue != null && newValue instanceof List) {
                 updateCombo((List<String>) newValue);
                 if (getWidgetModel().isItemsFromPV()) {
-                    combo.setText(VTypeHelper.getString(getPVValue(PROP_PVNAME)));
+                    getComboFigure().setText(VTypeHelper.getString(getPVValue(PROP_PVNAME)));
                 }
             }
             return true;
@@ -197,41 +261,49 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         };
         getWidgetModel().getProperty(PROP_ITEMS_FROM_PV).addPropertyChangeListener(
                 evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
-
-        // size change handlers--always apply the default height
-        IWidgetPropertyChangeHandler handle = (oldValue, newValue, figure) -> {
-            autoSizeWidget((ComboFigure) figure);
-            return true;
-        };
-        setPropertyChangeHandler(PROP_WIDTH, handle);
-        setPropertyChangeHandler(PROP_HEIGHT, handle);
-        setPropertyChangeHandler(PROP_BORDER_STYLE, handle);
-        setPropertyChangeHandler(PROP_BORDER_WIDTH, handle);
-        setPropertyChangeHandler(PROP_FONT, handle);
     }
 
     private void updatePropSheet(boolean itemsFromPV) {
         getWidgetModel().setPropertyVisible(PROP_ITEMS, !itemsFromPV);
     }
 
-    private void autoSizeWidget(ComboFigure comboFigure) {
-        var d = comboFigure.getAutoSizeDimension();
-        getWidgetModel().setSize(getWidgetModel().getWidth(), d.height);
-    }
-
     @Override
     public String getValue() {
-        return combo.getText();
+        return getComboFigure().getText();
     }
 
     @Override
     public void setValue(Object value) {
         if (value instanceof String) {
-            combo.setText((String) value);
+            getComboFigure().setText((String) value);
         } else if (value instanceof Number) {
-            combo.select(((Number) value).intValue());
+            var idx = ((Number) value).intValue();
+            if (idx >= 0 && idx <= items.size() - 1) {
+                var item = items.get(idx);
+                getComboFigure().setText(item);
+            }
         } else {
             super.setValue(value);
+        }
+    }
+
+    private class SelectItemAction extends Action {
+
+        private String item;
+
+        SelectItemAction(String item) {
+            this.item = item;
+            setText(item);
+        }
+
+        @Override
+        public void run() {
+            getComboFigure().setText(item);
+
+            // Write value to pv if pv name is not empty
+            if (getWidgetModel().getPVName().trim().length() > 0) {
+                setPVValue(PROP_PVNAME, item);
+            }
         }
     }
 }

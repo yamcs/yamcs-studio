@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2010, 2021 Oak Ridge National Laboratory and others
+ * Copyright (c) 2025 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,7 +17,8 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.StringListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.eclipse.swt.graphics.RGB;
+import org.csstudio.opibuilder.visualparts.BorderStyle;
+import org.csstudio.ui.util.CustomMediaFactory;
 
 /**
  * The model for combo widget.
@@ -34,16 +36,27 @@ public class ComboModel extends AbstractPVWidgetModel {
      */
     public static final String PROP_ITEMS_FROM_PV = "items_from_pv";
 
+    /**
+     * The default value of the height property.
+     */
+    private static final int DEFAULT_HEIGHT = 25;
+
+    /**
+     * The default value of the width property.
+     */
+    private static final int DEFAULT_WIDTH = 100;
+
     public ComboModel() {
-        setBackgroundColor(new RGB(255, 255, 255));
-        setForegroundColor(new RGB(0, 0, 0));
-        setScaleOptions(true, false, false);
+        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setBorderStyle(BorderStyle.BUTTON_RAISED);
+        setForegroundColor(CustomMediaFactory.COLOR_BLACK);
+        setPropertyValue(PROP_BORDER_ALARMSENSITIVE, false);
     }
 
     @Override
     protected void configureProperties() {
         addProperty(
-                new StringListProperty(PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior, new ArrayList<String>()));
+                new StringListProperty(PROP_ITEMS, "Items", WidgetPropertyCategory.Behavior, new ArrayList<>()));
 
         addProperty(new BooleanProperty(PROP_ITEMS_FROM_PV, "Items From PV", WidgetPropertyCategory.Behavior, false));
     }
