@@ -12,54 +12,93 @@ package org.csstudio.opibuilder.widgets.figures;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
+import org.eclipse.draw2d.AbstractLayout;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * Figure for the combo widget.
  */
-public class ComboFigure extends Label implements ITextFigure {
-
-    public static final int ICON_WIDTH = 15;
+public class ComboFigure extends Figure implements ITextFigure {
 
     private static final Image downArrow = CustomMediaFactory.getInstance().getImageFromPlugin(
             OPIBuilderPlugin.PLUGIN_ID,
             "icons/downArrow.png");
 
+    private Label label;
+    private ImageFigure icon;
+
     public ComboFigure() {
         super();
-        setIcon(downArrow);
-        setLabelAlignment(PositionConstants.RIGHT);
-        setTextPlacement(PositionConstants.WEST);
-        setOpaque(true);
-        updateLayout();
-    }
 
-    @Override
-    public void setText(String s) {
-        super.setText(s);
-        updateLayout();
+        setLayoutManager(new CustomComboLayout());
+
+        label = new Label();
+        label.setTextAlignment(PositionConstants.LEFT);
+
+        icon = new ImageFigure(downArrow);
+
+        add(label);
+        add(icon);
+
+        setOpaque(true);
     }
 
     @Override
     public void setBounds(Rectangle rect) {
         super.setBounds(rect);
-        updateLayout();
+        invalidateTree();
     }
 
-    /**
-     * Layout the contents of the widget so that, if an icon is displayed, it is right aligned and the text remains
-     * centred.
-     */
-    private void updateLayout() {
-        /*
-         * In Draw2d there appears to be no way adding a right aligned arrow to a
-         * label. We fake the effect here by checking the widths of the text and
-         * of the label then adding an appropriate gap so that the text looks as
-         * if it has been centred.
-         */
-        setIconTextGap((getBounds().width - getTextBounds().width - ICON_WIDTH) / 2);
+    @Override
+    public String getText() {
+        return label.getText();
+    }
+
+    public void setText(String s) {
+        label.setText(s);
+        invalidateTree();
+    }
+
+    private static class CustomComboLayout extends AbstractLayout {
+        @Override
+        protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) {
+            var textFigure = (IFigure) container.getChildren().get(0);
+            var iconFigure = (IFigure) container.getChildren().get(1);
+            var textSize = textFigure.getPreferredSize(wHint, hHint);
+            var iconSize = iconFigure.getPreferredSize(wHint, hHint);
+            // Sum widths and use maximum height
+            return new Dimension(textSize.width + iconSize.width,
+                    Math.max(textSize.height, iconSize.height));
+        }
+
+        @Override
+        public void layout(IFigure container) {
+            var bounds = container.getClientArea();
+            var textFigure = (IFigure) container.getChildren().get(0);
+            var iconFigure = (IFigure) container.getChildren().get(1);
+
+            // Place text at the left
+            var textSize = textFigure.getPreferredSize();
+            textFigure.setBounds(new Rectangle(
+                    bounds.x + 5,
+                    bounds.y + (bounds.height - textSize.height) / 2,
+                    textSize.width,
+                    textSize.height));
+
+            // Place icon at the far right
+            var iconSize = iconFigure.getPreferredSize();
+            iconFigure.setBounds(new Rectangle(
+                    bounds.x + bounds.width - iconSize.width,
+                    bounds.y + (bounds.height - iconSize.height) / 2,
+                    iconSize.width,
+                    iconSize.height));
+        }
     }
 }
