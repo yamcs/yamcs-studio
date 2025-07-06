@@ -63,13 +63,13 @@ public class CommandStackTableViewer extends TableViewer {
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         greenBubble = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
         redBubble = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/nok.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/nok.png"));
         grayBubble = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/undef.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/undef.png"));
         waitingImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/waiting.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/waiting.png"));
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -82,17 +82,17 @@ public class CommandStackTableViewer extends TableViewer {
 
     private void addFixedColumns(TableColumnLayout tcl) {
         var level0Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
         var level1Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
         var level2Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
         var level3Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
         var level4Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
         var level5Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
+                .create(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
 
         var rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);
@@ -103,7 +103,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return String.valueOf(contentProvider.indexOf(element) + 1);
             }
         });
-        rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
 
         var nameColumn = new TableViewerColumn(this, SWT.NONE);
@@ -146,7 +145,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return cmd.getMetaCommand().getSignificance().getReasonForWarning();
             }
         });
-        significanceColumn.getColumn().setWidth(50);
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
         var constraintsColumn = new TableViewerColumn(this, SWT.LEFT);
@@ -299,7 +297,6 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(sColumn.getColumn(), new ColumnPixelData(50));
 
-        // column comment
         var commentColumn = new TableViewerColumn(this, SWT.LEFT);
         commentColumn.getColumn().setText(COL_COMMENT);
         commentColumn.getColumn().setToolTipText("Comment");
