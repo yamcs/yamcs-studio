@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.CreateProcessorRequest;
-import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.gson.Gson;
@@ -204,9 +203,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
         return request;
     }
 
-    public void initialize(TimeInterval interval, List<String> pps) {
-        startTimeValue = interval.calculateStart();
-        stopTimeValue = interval.calculateStop();
+    public void initialize(Instant start, Instant stop, List<String> pps) {
+        startTimeValue = start;
+        stopTimeValue = stop;
         ppValue = pps;
     }
 

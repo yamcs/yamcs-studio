@@ -10,13 +10,12 @@
 package org.yamcs.studio.archive;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.SwingUtilities;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,7 +29,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.CreateProcessorRequest;
 import org.yamcs.studio.archive.Histogram.HistogramKind;
 import org.yamcs.studio.core.ContextSwitcher;
-import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class CreateReplayHandler extends AbstractHandler {
@@ -41,35 +39,35 @@ public class CreateReplayHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var shell = HandlerUtil.getActiveShellChecked(event);
         var part = HandlerUtil.getActivePartChecked(event);
-        SwingUtilities.invokeLater(() -> {
-            var view = (ArchiveView) part;
 
-            TimeInterval interval;
-            var selectionStart = view.getTimeline().getSelectionStart();
-            var selectionStop = view.getTimeline().getSelectionStop();
-            if (selectionStart != null) {
-                var start = selectionStart.toInstant();
-                var stop = selectionStop.toInstant();
-                interval = new TimeInterval(start, stop);
-            } else {
-                var missionTime = YamcsPlugin.getMissionTime(true);
-                interval = TimeInterval.starting(missionTime.minus(30, ChronoUnit.SECONDS));
+        var view = (ArchiveView) part;
+
+        var selectionStart = view.getTimeline().getSelectionStart();
+        var selectionStop = view.getTimeline().getSelectionStop();
+        Instant start;
+        Instant stop;
+        if (selectionStart != null) {
+            start = selectionStart.toInstant();
+            stop = selectionStop.toInstant();
+        } else {
+            var missionTime = YamcsPlugin.getMissionTime(true);
+            start = missionTime.minus(1, ChronoUnit.HOURS);
+            stop = missionTime.plus(1, ChronoUnit.HOURS);
+        }
+
+        var pps = new ArrayList<String>();
+        view.getTimeline().getHistograms(HistogramKind.PP).forEach(histogram -> {
+            pps.add(histogram.getLabel());
+        });
+        Collections.sort(pps);
+
+        Display.getDefault().asyncExec(() -> {
+            var dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
+            dialog.initialize(start, stop, pps);
+            var result = dialog.open();
+            if (result == Dialog.OK) {
+                switchToReplay(shell, dialog.getRequest());
             }
-
-            var pps = new ArrayList<String>();
-            view.getTimeline().getHistograms(HistogramKind.PP).forEach(histogram -> {
-                pps.add(histogram.getLabel());
-            });
-            Collections.sort(pps);
-
-            Display.getDefault().asyncExec(() -> {
-                var dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
-                dialog.initialize(interval, pps);
-                var result = dialog.open();
-                if (result == Dialog.OK) {
-                    switchToReplay(shell, dialog.getRequest());
-                }
-            });
         });
 
         return null;

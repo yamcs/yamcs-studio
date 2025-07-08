@@ -11,7 +11,6 @@ package org.yamcs.studio.core;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 /**
@@ -62,22 +61,6 @@ public class TimeInterval implements Serializable {
 
     public Instant getStop() {
         return stop;
-    }
-
-    public Instant calculateStart() {
-        if (start != null) {
-            return start;
-        } else {
-            return YamcsPlugin.getMissionTime(true).truncatedTo(ChronoUnit.DAYS);
-        }
-    }
-
-    public Instant calculateStop() {
-        if (stop != null) {
-            return stop;
-        } else {
-            return YamcsPlugin.getMissionTime(true).plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
-        }
     }
 
     @Override
