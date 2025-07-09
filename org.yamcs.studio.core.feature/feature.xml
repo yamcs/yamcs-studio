@@ -11,7 +11,7 @@
 <feature
       id="org.yamcs.studio.core.feature"
       label="Yamcs Studio Components"
-      version="1.7.9"
+      version="1.7.10.qualifier"
       provider-name="Space Applications Services"
       plugin="org.yamcs.studio.core">
 
