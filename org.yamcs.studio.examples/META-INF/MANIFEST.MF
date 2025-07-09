@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Example Projects
 Bundle-SymbolicName: org.yamcs.studio.examples;singleton:=true
 Bundle-Vendor: Space Applications Services
-Bundle-Version: 1.7.9.qualifier
+Bundle-Version: 1.7.9
 Bundle-Activator: org.yamcs.studio.examples.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
