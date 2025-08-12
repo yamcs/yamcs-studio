@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 Space Applications Services and others
+ * Copyright (c) 2025 Space Applications Services and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
-package org.yamcs.studio.commanding.cmdhist;
+package org.yamcs.studio.commanding.stack;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -17,19 +17,19 @@ import java.time.Instant;
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.yamcs.studio.commanding.cmdhist.AckTableContentProvider;
+import org.yamcs.studio.commanding.cmdhist.AckTableRecord;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
- * Lists acknowledgments
+ * Lists acknowledgments, optimized for use in UI Forms.
  */
-public class AckTableViewer extends TableViewer {
+public class StackAckTableViewer extends TableViewer {
 
     private static final long ONE_SECOND = 1000; // millis
     private static final long ONE_MINUTE = 60 * ONE_SECOND;
@@ -44,7 +44,7 @@ public class AckTableViewer extends TableViewer {
     private Image greenBubble;
     private Image redBubble;
 
-    public AckTableViewer(Composite parent, Image greenBubble, Image redBubble) {
+    public StackAckTableViewer(Composite parent, Image greenBubble, Image redBubble) {
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -52,15 +52,12 @@ public class AckTableViewer extends TableViewer {
         this.greenBubble = greenBubble;
         this.redBubble = redBubble;
 
-        var tl = new TableLayout();
-        getTable().setLayout(tl);
-
-        addFixedColumns(tl);
+        addFixedColumns();
 
         setContentProvider(new AckTableContentProvider());
     }
 
-    private void addFixedColumns(TableLayout tl) {
+    private void addFixedColumns() {
         var nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_NAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -70,7 +67,7 @@ public class AckTableViewer extends TableViewer {
                 return rec.acknowledgment().getName();
             }
         });
-        tl.addColumnData(new ColumnWeightData(200));
+        nameColumn.getColumn().setWidth(150);
 
         var statusColumn = new TableViewerColumn(this, SWT.NONE);
         statusColumn.getColumn().setText(COL_STATUS);
@@ -93,7 +90,7 @@ public class AckTableViewer extends TableViewer {
                 return rec.acknowledgment().getStatus();
             }
         });
-        tl.addColumnData(new ColumnWeightData(200));
+        statusColumn.getColumn().setWidth(80);
 
         var deltaColumn = new TableViewerColumn(this, SWT.NONE);
         deltaColumn.getColumn().setText(COL_DELTA);
@@ -109,20 +106,15 @@ public class AckTableViewer extends TableViewer {
                     return null;
                 }
             }
-        });
-        tl.addColumnData(new ColumnWeightData(200));
 
-        var dateColumn = new TableViewerColumn(this, SWT.NONE);
-        dateColumn.getColumn().setText(COL_DATE);
-        dateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
-            public String getText(Object element) {
+            public String getToolTipText(Object element) {
                 var rec = (AckTableRecord) element;
                 var time = rec.acknowledgment().getTime();
                 return time != null ? YamcsPlugin.getDefault().formatInstant(time) : null;
             }
         });
-        tl.addColumnData(new ColumnWeightData(200));
+        deltaColumn.getColumn().setWidth(80);
     }
 
     private String toHumanTimeDiff(Instant refTime, Instant time) {

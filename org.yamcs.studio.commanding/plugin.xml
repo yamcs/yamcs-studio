@@ -11,6 +11,10 @@
  -->
 
 <plugin>
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.yamcs.studio.commanding.PluginPreferenceInitializer" />
+   </extension>
+
    <extension point="org.eclipse.ui.services">
       <sourceProvider provider="org.yamcs.studio.commanding.stack.CommandStackStateProvider">
          <variable name="org.yamcs.studio.commanding.stack.state.empty" priorityLevel="workbench" />

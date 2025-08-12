@@ -303,7 +303,18 @@ public class CommandStackTableViewer extends TableViewer {
         commentColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((StackedCommand) element).getComment();
+                var comment = ((StackedCommand) element).getComment();
+                if (comment != null && comment.contains("\n")) {
+                    var idx = comment.indexOf("\n");
+                    return comment.substring(0, idx) + "...";
+                }
+                return comment;
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                var comment = ((StackedCommand) element).getComment();
+                return comment;
             }
         });
         tcl.setColumnData(commentColumn.getColumn(), new ColumnPixelData(80));

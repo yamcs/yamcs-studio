@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.cmdhist;
 
+import static java.util.function.Predicate.not;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
@@ -205,14 +207,20 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         var tableContainer = new Composite(parent, SWT.BORDER);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-        localAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
+        localAckTableViewer = new AckTableViewer(
+                tableContainer,
+                commandHistoryView.greenBubble,
+                commandHistoryView.redBubble);
     }
 
     private void createExtraAckTable(Composite parent) {
         var tableContainer = new Composite(parent, SWT.BORDER);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-        extraAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
+        extraAckTableViewer = new AckTableViewer(
+                tableContainer,
+                commandHistoryView.greenBubble,
+                commandHistoryView.redBubble);
     }
 
     private void createTextSection(Composite parent) {
@@ -413,13 +421,13 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         var localAcks = command.getAcknowledgments().values().stream()
                 .filter(Acknowledgment::isLocal)
-                .map(ack -> new AckTableRecord(ack, rec))
+                .map(ack -> new AckTableRecord(ack, rec.getCommand().getGenerationTime()))
                 .toList();
         localAckTableViewer.setInput(localAcks.toArray());
 
         var extraAcks = command.getAcknowledgments().values().stream()
-                .filter(ack -> !ack.isLocal())
-                .map(ack -> new AckTableRecord(ack, rec))
+                .filter(not(Acknowledgment::isLocal))
+                .map(ack -> new AckTableRecord(ack, rec.getCommand().getGenerationTime()))
                 .toList();
         extraAckTableViewer.setInput(extraAcks.toArray());
     }

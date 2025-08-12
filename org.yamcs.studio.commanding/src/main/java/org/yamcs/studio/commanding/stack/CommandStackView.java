@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,25 +18,32 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -45,6 +53,11 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.client.Command;
@@ -52,6 +65,7 @@ import org.yamcs.client.CommandSubscription;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
+import org.yamcs.studio.commanding.UIPreferences;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -81,6 +95,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         }
     };
 
+    private FormToolkit tk;
+
     private Color errorBackgroundColor;
     private Styler bracketStyler;
     private Styler argNameStyler;
@@ -100,6 +116,18 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     private Image level4Image;
     private Image level5Image;
 
+    private ScrolledForm detailForm;
+    private Label detailSystemLabel;
+    private Label detailSignificanceLabel;
+    private Composite detailArgsSectionClient;
+    private Label detailCommentSectionClient;
+    private List<Control> argsControls = new ArrayList<>();
+
+    private Image greenBubble;
+    private Image redBubble;
+    private TableViewer localAcksTable;
+    private TableViewer extraAcksTable;
+
     private Composite bottomLeft;
     private Label clearanceLabel;
     private Label clearanceImageLabel;
@@ -109,19 +137,17 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
     @Override
     public void createPartControl(Composite parent) {
+        var plugin = CommandingPlugin.getDefault();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        level0Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
-        level1Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
-        level2Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
-        level3Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
-        level4Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
-        level5Image = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
+        level0Image = resourceManager.create(plugin.getImageDescriptor("/icons/level0s.png"));
+        level1Image = resourceManager.create(plugin.getImageDescriptor("/icons/level1s.png"));
+        level2Image = resourceManager.create(plugin.getImageDescriptor("/icons/level2s.png"));
+        level3Image = resourceManager.create(plugin.getImageDescriptor("/icons/level3s.png"));
+        level4Image = resourceManager.create(plugin.getImageDescriptor("/icons/level4s.png"));
+        level5Image = resourceManager.create(plugin.getImageDescriptor("/icons/level5s.png"));
+        greenBubble = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/ok.png"));
+        redBubble = resourceManager.create(plugin.getImageDescriptor("/icons/obj16/nok.png"));
+        tk = new FormToolkit(parent.getDisplay());
 
         var gl = new GridLayout();
         gl.marginHeight = 0;
@@ -169,15 +195,17 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
         };
 
-        var tableWrapper = new Composite(parent, SWT.NONE);
+        var tableDetailSplit = new SashForm(parent, SWT.VERTICAL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(tableDetailSplit);
+
+        var tableWrapper = new Composite(tableDetailSplit, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         var tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         commandTableViewer = new CommandStackTableViewer(getViewSite(), tableWrapper, tcl, this);
         commandTableViewer.addDoubleClickListener(evt -> {
             var sel = (IStructuredSelection) evt.getSelection();
-            if (sel.getFirstElement() != null) {
-                var cmd = (StackedCommand) sel.getFirstElement();
+            if (sel.getFirstElement() instanceof StackedCommand cmd) {
                 if (cmd.getStackedState() != StackedState.ISSUED) {
                     var dialog = new EditStackedCommandDialog(parent.getShell(), cmd);
                     if (dialog.open() == Window.OK) {
@@ -186,6 +214,24 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 }
             }
         });
+
+        commandTableViewer.addSelectionChangedListener(evt -> {
+            var sel = evt.getStructuredSelection();
+            if (sel.isEmpty()) {
+                detailForm.setVisible(false);
+            } else if (sel.getFirstElement() instanceof StackedCommand cmd) {
+                detailForm.setVisible(true);
+                updateEntryDetail(cmd);
+            }
+        });
+
+        var entryDetail = new Composite(tableDetailSplit, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(entryDetail);
+        entryDetail.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        entryDetail.setLayout(new FillLayout());
+        createEntryDetail(entryDetail);
+
+        layoutSashForm(tableDetailSplit, UIPreferences.STACK_ENTRY_SPLIT);
 
         var controls = new Composite(parent, SWT.NONE);
         var gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -228,7 +274,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         gd.verticalAlignment = SWT.CENTER;
         gd.horizontalAlignment = SWT.RIGHT;
         bottomRight.setLayoutData(gd);
-        gl = new GridLayout(4, false);
+        gl = new GridLayout(1, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.horizontalSpacing = 0;
@@ -239,7 +285,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         var stackParameters = new Composite(bottomRight, SWT.NONE);
         gl = new GridLayout(2, false);
         gl.marginHeight = 0;
-        gl.marginWidth = 50;
+        gl.marginWidth = 0;
         gl.horizontalSpacing = 0;
         gl.verticalSpacing = 0;
         stackParameters.setLayout(gl);
@@ -261,41 +307,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             stack.setWaitTime(waitTimeSpinner.getSelection());
         });
 
-        armButton = new Button(bottomRight, SWT.PUSH);
-        armButton.setText("Arm");
-        armButton.setToolTipText("Arm the selected command");
-        armButton.setEnabled(false);
-        armButton.addListener(SWT.Selection, evt -> {
-            var commandService = getViewSite().getService(ICommandService.class);
-            var evaluationService = getViewSite().getService(IEvaluationService.class);
-
-            var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
-            try {
-                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
-                        evaluationService.getCurrentState()));
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "Could not run command", e);
-            }
-        });
-
-        runButton = new Button(bottomRight, SWT.PUSH);
-        runButton.setText("Run");
-        runButton.setToolTipText("Run the selected command");
-        runButton.setEnabled(false);
-        runButton.addListener(SWT.Selection, evt -> {
-            runButton.setEnabled(false);
-            var commandService = getViewSite().getService(ICommandService.class);
-            var evaluationService = getViewSite().getService(IEvaluationService.class);
-
-            var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");
-            try {
-                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
-                        evaluationService.getCurrentState()));
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "Could not run command", e);
-            }
-        });
-
         commandTableViewer.addSelectionChangedListener(evt -> {
             refreshState();
         });
@@ -313,6 +324,253 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         refreshState();
 
         YamcsPlugin.addListener(this);
+    }
+
+    private void createEntryDetail(Composite parent) {
+        detailForm = tk.createScrolledForm(parent);
+        detailForm.setVisible(false);
+
+        // Enhance toolbar styling
+        // tk.decorateFormHeading(detailForm.getForm());
+
+        var toolBarManager = detailForm.getToolBarManager();
+
+        toolBarManager.add(new ControlContribution("Arm") {
+            @Override
+            protected Control createControl(Composite parent) {
+                armButton = new Button(parent, SWT.PUSH);
+                armButton.setText("Arm");
+                armButton.setToolTipText("Arm the selected command");
+                armButton.setEnabled(false);
+                armButton.addListener(SWT.Selection, evt -> {
+                    var commandService = getViewSite().getService(ICommandService.class);
+                    var evaluationService = getViewSite().getService(IEvaluationService.class);
+
+                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
+                    try {
+                        cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
+                                evaluationService.getCurrentState()));
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, "Could not run command", e);
+                    }
+                });
+
+                return armButton;
+            }
+        });
+
+        toolBarManager.add(new ControlContribution("Issue") {
+            @Override
+            protected Control createControl(Composite parent) {
+                runButton = new Button(parent, SWT.PUSH);
+                runButton.setText("Run");
+                runButton.setToolTipText("Run the selected command");
+                runButton.setEnabled(false);
+                runButton.addListener(SWT.Selection, evt -> {
+                    runButton.setEnabled(false);
+                    var commandService = getViewSite().getService(ICommandService.class);
+                    var evaluationService = getViewSite().getService(IEvaluationService.class);
+
+                    var cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");
+                    try {
+                        cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<>(), null,
+                                evaluationService.getCurrentState()));
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, "Could not run command", e);
+                    }
+                });
+                return runButton;
+            }
+        });
+
+        // Reflect changes
+        toolBarManager.update(true);
+
+        var body = detailForm.getBody();
+        var layout = new TableWrapLayout();
+        layout.numColumns = 2;
+        layout.makeColumnsEqualWidth = true;
+        body.setLayout(layout);
+
+        var leftColumn = tk.createComposite(body, SWT.NONE);
+        leftColumn.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        layout = new TableWrapLayout();
+        layout.numColumns = 2;
+        leftColumn.setLayout(layout);
+
+        var infoSection = tk.createSection(leftColumn, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        infoSection.setText("General Information");
+        var infoSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        infoSectionData.colspan = 2;
+        infoSection.setLayoutData(infoSectionData);
+
+        var detailInfoSectionClient = tk.createComposite(infoSection);
+        var infoLayout = new TableWrapLayout();
+        infoLayout.numColumns = 2;
+        detailInfoSectionClient.setLayout(infoLayout);
+        infoSection.setClient(detailInfoSectionClient);
+
+        tk.createLabel(detailInfoSectionClient, "System:");
+        detailSystemLabel = tk.createLabel(detailInfoSectionClient, "");
+        detailSystemLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+        tk.createLabel(detailInfoSectionClient, "Significance:");
+        detailSignificanceLabel = tk.createLabel(detailInfoSectionClient, "");
+        detailSignificanceLabel.setImage(level0Image);
+        var wrapData = new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE);
+        wrapData.grabHorizontal = true;
+        wrapData.grabVertical = true;
+        detailSignificanceLabel.setLayoutData(wrapData);
+
+        var argsSection = tk.createSection(leftColumn,
+                Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        argsSection.setText("Arguments");
+        var argsSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        argsSectionData.colspan = 2;
+        argsSection.setLayoutData(argsSectionData);
+
+        detailArgsSectionClient = tk.createComposite(argsSection);
+        var argsLayout = new TableWrapLayout();
+        argsLayout.numColumns = 2;
+        detailArgsSectionClient.setLayout(argsLayout);
+        argsSection.setClient(detailArgsSectionClient);
+
+        var commentSection = tk.createSection(leftColumn, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        commentSection.setText("Comment");
+        var commentSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        commentSectionData.colspan = 2;
+        commentSection.setLayoutData(commentSectionData);
+
+        detailCommentSectionClient = tk.createLabel(commentSection, "A comment");
+        commentSection.setClient(detailCommentSectionClient);
+
+        var rightColumn = tk.createComposite(body, SWT.NONE);
+        rightColumn.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        layout = new TableWrapLayout();
+        rightColumn.setLayout(layout);
+
+        var localAcksSection = tk.createSection(rightColumn, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        localAcksSection.setText("Yamcs Acknowledgments");
+        var acksSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        localAcksSection.setLayoutData(acksSectionData);
+
+        var acksSectionClient = tk.createComposite(localAcksSection, SWT.NONE);
+        var acksSectionClientLayout = new TableWrapLayout();
+        acksSectionClientLayout.numColumns = 1;
+        acksSectionClient.setLayout(acksSectionClientLayout);
+        localAcksSection.setClient(acksSectionClient);
+
+        var tableContainer = tk.createComposite(acksSectionClient);
+        tableContainer.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        tableContainer.setLayout(new FillLayout());
+
+        localAcksTable = new StackAckTableViewer(tableContainer, greenBubble, redBubble);
+
+        var extraAcksSection = tk.createSection(rightColumn, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        extraAcksSection.setText("Extra Acknowledgments");
+        acksSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        extraAcksSection.setLayoutData(acksSectionData);
+
+        acksSectionClient = tk.createComposite(extraAcksSection, SWT.NONE);
+        acksSectionClientLayout = new TableWrapLayout();
+        acksSectionClientLayout.numColumns = 1;
+        acksSectionClient.setLayout(acksSectionClientLayout);
+        extraAcksSection.setClient(acksSectionClient);
+
+        tableContainer = tk.createComposite(acksSectionClient);
+        tableContainer.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        tableContainer.setLayout(new FillLayout());
+
+        extraAcksTable = new StackAckTableViewer(tableContainer, greenBubble, redBubble);
+    }
+
+    private void updateEntryDetail(StackedCommand cmd) {
+        var preferredNamespace = CommandingPlugin.getDefault().getPreferredNamespace();
+
+        var qname = cmd.getMetaCommand().getQualifiedName();
+
+        var displayedName = qname;
+
+        var idx = qname.lastIndexOf('/');
+        var system = qname.substring(0, idx);
+        displayedName = qname.substring(idx + 1);
+
+        if (preferredNamespace != null) {
+            for (var alias : cmd.getMetaCommand().getAliasList()) {
+                if (alias.getNamespace().equals(preferredNamespace)) {
+                    displayedName = alias.getName();
+                    break;
+                }
+            }
+        }
+
+        detailForm.setText(displayedName);
+        detailSystemLabel.setText(system);
+
+        var comment = cmd.getComment();
+        detailCommentSectionClient.setText(comment == null ? "" : comment);
+
+        var levelImage = level0Image;
+        if (cmd.getMetaCommand().hasEffectiveSignificance()) {
+            var level = cmd.getMetaCommand().getEffectiveSignificance().getConsequenceLevel();
+            switch (level) {
+            case WATCH:
+                levelImage = level1Image;
+                break;
+            case WARNING:
+                levelImage = level2Image;
+                break;
+            case DISTRESS:
+                levelImage = level3Image;
+                break;
+            case CRITICAL:
+                levelImage = level4Image;
+                break;
+            case SEVERE:
+                levelImage = level5Image;
+                break;
+            default:
+                levelImage = level0Image;
+            }
+        }
+        detailSignificanceLabel.setImage(levelImage);
+
+        // Delete existing argument controls
+        var it = argsControls.listIterator();
+        while (it.hasNext()) {
+            var control = it.next();
+            if (!control.isDisposed()) {
+                control.dispose();
+            }
+            it.remove();
+        }
+
+        for (var arg : cmd.getEffectiveAssignments()) {
+            var value = cmd.getAssignedStringValue(arg.getArgumentInfo());
+
+            if (value == null && arg.getArgumentInfo().hasInitialValue()) {
+                continue;
+            }
+            if (!arg.isEditable()) {
+                continue;
+            }
+            if (arg.getArgumentInfo().hasInitialValue() && !cmd.isDefaultChanged(arg.getArgumentInfo())) {
+                continue;
+            }
+            var lbl = tk.createLabel(detailArgsSectionClient, arg.getName() + ":");
+            argsControls.add(lbl);
+            lbl = tk.createLabel(detailArgsSectionClient, value);
+            argsControls.add(lbl);
+        }
+
+        var localAcks = cmd.getLocalAcknowledgments();
+        localAcksTable.setInput(localAcks.toArray());
+
+        var extraAcks = cmd.getExtraAcknowledgments();
+        extraAcksTable.setInput(extraAcks.toArray());
+
+        detailArgsSectionClient.layout(true, true);
+        detailForm.reflow(true); // Update scrollbars
     }
 
     @Override
@@ -514,7 +772,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         commandTableViewer.refresh();
         var stack = CommandStack.getInstance();
 
-        var sel = (IStructuredSelection) commandTableViewer.getSelection();
+        var sel = commandTableViewer.getStructuredSelection();
         updateMessagePanel(sel);
 
         var mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
@@ -552,6 +810,10 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         var executionStateProvider = RCPUtils.findSourceProvider(getSite(), CommandStackStateProvider.STATE_KEY_EMPTY,
                 CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
+
+        if (sel.getFirstElement() instanceof StackedCommand cmd) {
+            updateEntryDetail(cmd);
+        }
     }
 
     @Override
@@ -567,6 +829,11 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             }
         }
         commandTableViewer.refresh();
+
+        var sel = commandTableViewer.getStructuredSelection();
+        if (sel.getFirstElement() instanceof StackedCommand cmd) {
+            updateEntryDetail(cmd);
+        }
     }
 
     public Command getCommandExecution(String id) {
@@ -747,6 +1014,34 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         });
     }
 
+    private void layoutSashForm(SashForm sf, String key) {
+        var store = CommandingPlugin.getDefault().getPreferenceStore();
+
+        sf.addDisposeListener(e -> {
+            var w = sf.getWeights();
+            store.putValue(key, UIPreferences.intArrayToString(w));
+            saveStoreIfNeeded();
+
+        });
+        var weights = UIPreferences.stringToIntArray(store.getString(key), 2);
+        if (weights == null) {
+            // Corrupted preferences?
+            weights = UIPreferences.stringToIntArray(store.getDefaultString(key), 2);
+        }
+        sf.setWeights(weights);
+    }
+
+    private void saveStoreIfNeeded() {
+        var store = CommandingPlugin.getDefault().getPreferenceStore();
+        if (store.needsSaving() && store instanceof IPersistentPreferenceStore pStore) {
+            try {
+                pStore.save();
+            } catch (IOException e) {
+                log.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
     @Override
     public void dispose() {
         if (resourceManager != null) {
@@ -754,6 +1049,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         }
         if (subscription != null) {
             subscription.cancel(true);
+        }
+        if (tk != null) {
+            tk.dispose();
         }
         connectionStateProvider.removeSourceProviderListener(sourceProviderListener);
         YamcsPlugin.removeListener(this);

@@ -9,8 +9,11 @@
  *******************************************************************************/
 package org.yamcs.studio.commanding.stack;
 
+import static java.util.function.Predicate.not;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +29,7 @@ import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.commanding.CommandingPlugin;
+import org.yamcs.studio.commanding.cmdhist.AckTableRecord;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -155,7 +159,7 @@ public class StackedCommand {
             }
 
             if (!first) {
-                str.append("\n, ", bracketStyler);
+                str.append(", ", bracketStyler);
             }
             first = false;
             str.append(arg.getName() + ": ", argNameStyler);
@@ -235,6 +239,28 @@ public class StackedCommand {
 
     public Acknowledgment getSentState() {
         return execution != null ? execution.getSentAcknowledgment() : null;
+    }
+
+    public List<AckTableRecord> getLocalAcknowledgments() {
+        if (execution == null) {
+            return Collections.emptyList();
+        }
+
+        return execution.getAcknowledgments().values().stream()
+                .filter(Acknowledgment::isLocal)
+                .map(ack -> new AckTableRecord(ack, execution.getGenerationTime()))
+                .toList();
+    }
+
+    public List<AckTableRecord> getExtraAcknowledgments() {
+        if (execution == null) {
+            return Collections.emptyList();
+        }
+
+        return execution.getAcknowledgments().values().stream()
+                .filter(not(Acknowledgment::isLocal))
+                .map(ack -> new AckTableRecord(ack, execution.getGenerationTime()))
+                .toList();
     }
 
     public void addAssignment(ArgumentInfo arg, String value) {
