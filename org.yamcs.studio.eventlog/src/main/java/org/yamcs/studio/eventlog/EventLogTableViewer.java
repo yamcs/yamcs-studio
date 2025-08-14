@@ -56,8 +56,6 @@ public class EventLogTableViewer extends TableViewer {
     private Image criticalIcon;
     private Image severeIcon;
 
-    private int messageLineCount;
-
     private ColumnData columnData;
 
     private Map<RGB, Color> colorCache = new HashMap<>();
@@ -87,8 +85,6 @@ public class EventLogTableViewer extends TableViewer {
         distressIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level3s.png"));
         criticalIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level4s.png"));
         severeIcon = resourceManager.create(plugin.getImageDescriptor("icons/eview16/level5s.png"));
-
-        messageLineCount = plugin.getMessageLineCount();
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -297,22 +293,17 @@ public class EventLogTableViewer extends TableViewer {
                     public String getText(Object element) {
                         var event = ((EventLogItem) element).event;
                         var message = event.getMessage();
-                        if (messageLineCount > 0) {
-                            var lineSeparator = "\n";
-                            var messageLines = message.split(lineSeparator);
-                            message = "";
-                            var i = 0;
-                            for (; i < messageLineCount && i < messageLines.length; i++) {
-                                if (!message.isEmpty()) {
-                                    message += lineSeparator;
-                                }
-                                message += messageLines[i];
-                            }
-                            if (i + 1 < messageLines.length) {
-                                message += " [...]";
-                            }
+                        if (message != null && message.contains("\n")) {
+                            var idx = message.indexOf("\n");
+                            return message.substring(0, idx) + " [...]";
                         }
                         return message;
+                    }
+
+                    @Override
+                    public String getToolTipText(Object element) {
+                        var event = ((EventLogItem) element).event;
+                        return event.getMessage();
                     }
 
                     @Override

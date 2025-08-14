@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.yamcs.studio.eventlog;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,14 +19,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,6 +48,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.yamcs.client.EventSubscription;
 import org.yamcs.protobuf.Event;
@@ -53,14 +69,33 @@ public class EventLog extends Composite implements YamcsAware {
     public static final String CMD_EVENT_PROPERTIES = "org.yamcs.studio.eventlog.showDetailsCommand";
     public static final String CMDPARAM_EVENT_PROPERTY = "org.yamcs.studio.eventlog.copyDetails.property";
     public static final String STATE_SCROLL_LOCK = "org.eclipse.ui.commands.toggleState";
+    private static final Logger log = Logger.getLogger(EventLog.class.getName());
 
     private static final long TABLE_UPDATE_RATE = 1000;
 
+    private ResourceManager resourceManager;
     private EventLogTableViewer tableViewer;
     private EventLogContentProvider tableContentProvider;
     private EventLogSourceFilter sourceFilter;
     private MenuManager menuManager;
     private IPropertyChangeListener prefListener;
+
+    private FormToolkit tk;
+    private ScrolledForm detailForm;
+
+    private Label detailSeverityLabel;
+    private Label gentimeLabel;
+    private Label rectimeLabel;
+    private Label sourceLabel;
+    private Label typeLabel;
+    private Label messageLabel;
+
+    private Image level0Image;
+    private Image level1Image;
+    private Image level2Image;
+    private Image level3Image;
+    private Image level4Image;
+    private Image level5Image;
 
     private LinkedBlockingQueue<Event> realtimeEvents = new LinkedBlockingQueue<>();
     private ScheduledExecutorService tableUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -69,6 +104,17 @@ public class EventLog extends Composite implements YamcsAware {
 
     public EventLog(Composite parent, int style) {
         super(parent, style);
+
+        var plugin = EventLogPlugin.getDefault();
+        resourceManager = new LocalResourceManager(JFaceResources.getResources());
+        level0Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level0s.png"));
+        level1Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level1s.png"));
+        level2Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level2s.png"));
+        level3Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level3s.png"));
+        level4Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level4s.png"));
+        level5Image = resourceManager.create(plugin.getImageDescriptor("/icons/eview16/level5s.png"));
+        tk = new FormToolkit(parent.getDisplay());
+
         var gl = new GridLayout();
         gl.marginWidth = 0;
         gl.marginHeight = 0;
@@ -102,7 +148,10 @@ public class EventLog extends Composite implements YamcsAware {
         sourceLabel.setText("Source:");
         var sourceCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
 
-        var tableViewerWrapper = new Composite(this, SWT.NONE);
+        var tableDetailSplit = new SashForm(this, SWT.VERTICAL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(tableDetailSplit);
+
+        var tableViewerWrapper = new Composite(tableDetailSplit, SWT.NONE);
         tableViewerWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableViewerWrapper.setLayout(new FillLayout());
 
@@ -118,6 +167,16 @@ public class EventLog extends Composite implements YamcsAware {
         // Default action is to open Event properties
         tableViewer.getTable().addListener(SWT.MouseDoubleClick, evt -> {
             RCPUtils.runCommand(EventLog.CMD_EVENT_PROPERTIES);
+        });
+
+        tableViewer.addSelectionChangedListener(evt -> {
+            var sel = evt.getStructuredSelection();
+            if (sel.isEmpty()) {
+                detailForm.setVisible(false);
+            } else if (sel.getFirstElement() instanceof EventLogItem item) {
+                detailForm.setVisible(true);
+                updateEventDetail(item);
+            }
         });
 
         // Listen to v_scroll to autotoggle scroll lock
@@ -174,6 +233,14 @@ public class EventLog extends Composite implements YamcsAware {
             }
         });
 
+        // The DefaultSelection event is generated when the cancel icon
+        // is clicked.
+        searchbox.addListener(SWT.DefaultSelection, evt -> {
+            searchbox.setText("");
+            searchBoxFilter.setSearchTerm("");
+            tableViewer.refresh();
+        });
+
         var severityFilter = new EventLogSeverityFilter();
         tableViewer.addFilter(severityFilter);
         severityCombo.addListener(SWT.Selection, evt -> {
@@ -187,6 +254,14 @@ public class EventLog extends Composite implements YamcsAware {
         sourceCombo.addListener(SWT.Selection, evt -> {
             tableViewer.refresh();
         });
+
+        var entryDetail = new Composite(tableDetailSplit, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(entryDetail);
+        entryDetail.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        entryDetail.setLayout(new FillLayout());
+        createEventDetail(entryDetail);
+
+        layoutSashForm(tableDetailSplit, UIPreferences.EVENT_DETAIL_SPLIT);
 
         updateState();
 
@@ -202,7 +277,6 @@ public class EventLog extends Composite implements YamcsAware {
             }
         }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
 
-        var plugin = EventLogPlugin.getDefault();
         prefListener = evt -> {
             if (evt.getProperty().equals(PreferencePage.PREF_RULES)) {
                 var rules = plugin.composeColoringRules((String) evt.getNewValue());
@@ -215,6 +289,132 @@ public class EventLog extends Composite implements YamcsAware {
 
         YamcsPlugin.addListener(this);
         plugin.getPreferenceStore().addPropertyChangeListener(prefListener);
+    }
+
+    private void createEventDetail(Composite parent) {
+        detailForm = tk.createScrolledForm(parent);
+        detailForm.setVisible(false);
+
+        var body = detailForm.getBody();
+        var layout = new TableWrapLayout();
+        layout.numColumns = 2;
+        layout.makeColumnsEqualWidth = true;
+        body.setLayout(layout);
+
+        var leftColumn = tk.createComposite(body, SWT.NONE);
+        leftColumn.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        leftColumn.setLayout(new TableWrapLayout());
+
+        var infoSection = tk.createSection(leftColumn, Section.TITLE_BAR);
+        infoSection.setText("General Information");
+        var infoSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        infoSection.setLayoutData(infoSectionData);
+
+        var detailInfoSectionClient = tk.createComposite(infoSection);
+        var infoLayout = new TableWrapLayout();
+        infoLayout.numColumns = 2;
+        detailInfoSectionClient.setLayout(infoLayout);
+        infoSection.setClient(detailInfoSectionClient);
+
+        tk.createLabel(detailInfoSectionClient, "Severity:");
+        detailSeverityLabel = tk.createLabel(detailInfoSectionClient, "");
+        detailSeverityLabel.setImage(level0Image);
+        var wrapData = new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE);
+        wrapData.grabHorizontal = true;
+        wrapData.grabVertical = true;
+        detailSeverityLabel.setLayoutData(wrapData);
+
+        tk.createLabel(detailInfoSectionClient, "Generation Time:");
+        gentimeLabel = tk.createLabel(detailInfoSectionClient, "");
+        tk.createLabel(detailInfoSectionClient, "Reception Time:");
+        rectimeLabel = tk.createLabel(detailInfoSectionClient, "");
+        tk.createLabel(detailInfoSectionClient, "Source:");
+        sourceLabel = tk.createLabel(detailInfoSectionClient, "");
+        tk.createLabel(detailInfoSectionClient, "Type:");
+        typeLabel = tk.createLabel(detailInfoSectionClient, "");
+
+        var rightColumn = tk.createComposite(body, SWT.NONE);
+        rightColumn.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        rightColumn.setLayout(new TableWrapLayout());
+
+        var messageSection = tk.createSection(rightColumn, Section.TITLE_BAR);
+        messageSection.setText("Event Message");
+        var messageSectionData = new TableWrapData(TableWrapData.FILL_GRAB);
+        messageSection.setLayoutData(messageSectionData);
+
+        var detailMessageSectionClient = tk.createComposite(messageSection);
+        detailMessageSectionClient.setLayout(new TableWrapLayout());
+        messageSection.setClient(detailMessageSectionClient);
+        messageLabel = tk.createLabel(detailMessageSectionClient, "");
+        var terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
+        messageLabel.setFont(terminalFont);
+    }
+
+    private void updateEventDetail(EventLogItem evt) {
+        var levelImage = level0Image;
+        if (evt.event.hasSeverity()) {
+            var level = evt.event.getSeverity();
+            switch (level) {
+            case INFO:
+                levelImage = level0Image;
+                break;
+            case WATCH:
+                levelImage = level1Image;
+                break;
+            case WARNING:
+                levelImage = level2Image;
+                break;
+            case DISTRESS:
+                levelImage = level3Image;
+                break;
+            case CRITICAL:
+                levelImage = level4Image;
+                break;
+            case SEVERE:
+                levelImage = level5Image;
+                break;
+            default:
+                levelImage = level0Image;
+            }
+        }
+        detailSeverityLabel.setImage(levelImage);
+
+        if (evt.event.hasGenerationTime()) {
+            var generationTime = Instant.ofEpochSecond(evt.event.getGenerationTime().getSeconds(),
+                    evt.event.getGenerationTime().getNanos());
+            gentimeLabel.setText(YamcsPlugin.getDefault().formatInstant(generationTime));
+        } else {
+            gentimeLabel.setText("");
+        }
+
+        if (evt.event.hasReceptionTime()) {
+            var receptionTime = Instant.ofEpochSecond(evt.event.getReceptionTime().getSeconds(),
+                    evt.event.getReceptionTime().getNanos());
+            rectimeLabel.setText(YamcsPlugin.getDefault().formatInstant(receptionTime));
+        } else {
+            rectimeLabel.setText("");
+        }
+
+        if (evt.event.hasSource()) {
+            sourceLabel.setText(evt.event.getSource());
+        } else {
+            sourceLabel.setText("");
+        }
+
+        if (evt.event.hasType()) {
+            typeLabel.setText(evt.event.getType());
+        } else {
+            typeLabel.setText("");
+        }
+
+        if (evt.event.hasMessage()) {
+            messageLabel.setText(evt.event.getMessage());
+        } else {
+            messageLabel.setText("");
+        }
+
+        detailForm.layout(true, true);
+        detailForm.reflow(true);
     }
 
     private void updateState() {
@@ -322,11 +522,45 @@ public class EventLog extends Composite implements YamcsAware {
         return tableViewer;
     }
 
+    private void layoutSashForm(SashForm sf, String key) {
+        var store = EventLogPlugin.getDefault().getPreferenceStore();
+
+        sf.addDisposeListener(e -> {
+            var w = sf.getWeights();
+            store.putValue(key, UIPreferences.intArrayToString(w));
+            saveStoreIfNeeded();
+
+        });
+        var weights = UIPreferences.stringToIntArray(store.getString(key), 2);
+        if (weights == null) {
+            // Corrupted preferences?
+            weights = UIPreferences.stringToIntArray(store.getDefaultString(key), 2);
+        }
+        sf.setWeights(weights);
+    }
+
+    private void saveStoreIfNeeded() {
+        var store = EventLogPlugin.getDefault().getPreferenceStore();
+        if (store.needsSaving() && store instanceof IPersistentPreferenceStore pStore) {
+            try {
+                pStore.save();
+            } catch (IOException e) {
+                log.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
     @Override
     public void dispose() {
         tableUpdater.shutdown();
+        if (resourceManager != null) {
+            resourceManager.dispose();
+        }
         if (subscription != null) {
             subscription.cancel(true);
+        }
+        if (tk != null) {
+            tk.dispose();
         }
         EventLogPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(prefListener);
         YamcsPlugin.removeListener(this);

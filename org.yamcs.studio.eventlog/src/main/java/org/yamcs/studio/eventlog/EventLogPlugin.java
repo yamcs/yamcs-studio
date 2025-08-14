@@ -54,10 +54,6 @@ public class EventLogPlugin extends AbstractUIPlugin {
         return section;
     }
 
-    public int getMessageLineCount() {
-        return getPreferenceStore().getInt(PreferencePage.PREF_LINECOUNT);
-    }
-
     public void storeColoringRules(List<ColoringRule> rules) {
         var store = getPreferenceStore();
 

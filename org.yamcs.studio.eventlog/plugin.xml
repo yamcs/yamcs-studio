@@ -11,6 +11,10 @@
  -->
 
 <plugin>
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.yamcs.studio.eventlog.PluginPreferenceInitializer" />
+   </extension>
+
    <extension point="org.eclipse.ui.commands">
       <category id="org.yamcs.studio" name="Yamcs"></category>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.eventlog.clearCommand" name="Clear View"></command>

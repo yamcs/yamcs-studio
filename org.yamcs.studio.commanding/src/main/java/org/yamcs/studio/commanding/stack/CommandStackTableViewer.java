@@ -306,7 +306,7 @@ public class CommandStackTableViewer extends TableViewer {
                 var comment = ((StackedCommand) element).getComment();
                 if (comment != null && comment.contains("\n")) {
                     var idx = comment.indexOf("\n");
-                    return comment.substring(0, idx) + "...";
+                    return comment.substring(0, idx) + " [...]";
                 }
                 return comment;
             }

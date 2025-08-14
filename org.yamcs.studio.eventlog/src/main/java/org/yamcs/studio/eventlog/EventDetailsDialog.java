@@ -171,17 +171,10 @@ public class EventDetailsDialog extends TrayDialog {
         textContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         var label = new Label(textContainer, SWT.NONE);
-        label.setText("Type:");
-        typeLabel = new Label(textContainer, SWT.NONE);
-        var gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        typeLabel.setLayoutData(gd);
-
-        label = new Label(textContainer, SWT.NONE);
         label.setText("Severity:");
         severityImageLabel = new Label(textContainer, SWT.NONE);
         severityLabel = new Label(textContainer, SWT.NONE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
+        var gd = new GridData(GridData.FILL_HORIZONTAL);
         severityLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
@@ -204,6 +197,13 @@ public class EventDetailsDialog extends TrayDialog {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         sourceLabel.setLayoutData(gd);
+
+        label = new Label(textContainer, SWT.NONE);
+        label.setText("Type:");
+        typeLabel = new Label(textContainer, SWT.NONE);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        typeLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Sequence Number:");

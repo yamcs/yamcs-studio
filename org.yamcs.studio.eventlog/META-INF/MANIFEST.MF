@@ -12,5 +12,6 @@ Require-Bundle: org.yamcs.studio.core,
  org.yamcs.p2.client,
  org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.nebula.widgets.cdatetime
+ org.eclipse.nebula.widgets.cdatetime,
+ org.eclipse.ui.forms
 Automatic-Module-Name: org.yamcs.studio.eventlog
