@@ -53,7 +53,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.handlers.RegistryToggleState;
 import org.yamcs.client.EventSubscription;
 import org.yamcs.protobuf.Event;
 import org.yamcs.protobuf.Event.EventSeverity;
@@ -176,38 +175,6 @@ public class EventLog extends Composite implements YamcsAware {
             } else if (sel.getFirstElement() instanceof EventLogItem item) {
                 detailForm.setVisible(true);
                 updateEventDetail(item);
-            }
-        });
-
-        // Listen to v_scroll to autotoggle scroll lock
-        tableViewer.getTable().getVerticalBar().addListener(SWT.Selection, evt -> {
-            var sortColumn = tableViewer.getTable().getSortColumn().getText();
-            var up = (tableViewer.getTable().getSortDirection() == SWT.UP);
-
-            if (!EventLogTableViewer.COL_GENERATION.equals(sortColumn)) {
-                return;
-            }
-
-            // User controls sort direction, so events may be inserted anywhere really.
-            // Probably the most intuitive, is to autolock if the user is either at the very top or the very bottom of
-            // the scrollbar.
-            var sel = tableViewer.getTable().getVerticalBar().getSelection();
-            var thumb = tableViewer.getTable().getVerticalBar().getThumb();
-            var min = tableViewer.getTable().getVerticalBar().getMinimum();
-            var max = tableViewer.getTable().getVerticalBar().getMaximum();
-
-            var service = PlatformUI.getWorkbench().getService(ICommandService.class);
-            var command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
-            var lockState = command.getState(RegistryToggleState.STATE_ID);
-            var locked = ((Boolean) lockState.getValue()).booleanValue();
-            var onEdge = (sel <= min && !up) || (sel + thumb >= max && up);
-
-            if (locked && onEdge) {
-                lockState.setValue(false);
-                enableScrollLock(false);
-            } else if (!locked && !onEdge) {
-                lockState.setValue(true);
-                enableScrollLock(true);
             }
         });
 
