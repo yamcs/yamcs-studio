@@ -6,7 +6,7 @@ Bundle-Name: Yamcs Connectivity
 Bundle-SymbolicName: org.yamcs.studio.connect;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Bundle-Version: 1.7.10.qualifier
+Bundle-Version: 1.8.0
 Require-Bundle: org.yamcs.p2.client,
  org.eclipse.ui,
  org.eclipse.core.runtime,

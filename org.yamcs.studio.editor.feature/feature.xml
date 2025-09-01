@@ -12,7 +12,7 @@
 <feature
       id="org.yamcs.studio.editor.feature"
       label="Yamcs Studio Product"
-      version="1.7.10.qualifier"
+      version="1.8.0"
       provider-name="Space Applications Services">
 
    <plugin
