@@ -287,10 +287,43 @@ public class TextInputEditpart extends TextUpdateEditPart {
         var formatEnum = getWidgetModel().getFormat();
 
         if (pvValue == null) {
-            return text;
+            return coerceText(formatEnum, text);
         }
 
         return parseStringForPVManagerPV(formatEnum, text, pvValue);
+    }
+
+    /**
+     * Used when the PV has no value, or a string value. The text is then written as-is, except when it is a decimal
+     * number outside of the configured limits. This makes the limits also apply to the first write of a PV, and to a
+     * write following a non-numeric input (e.g. a local PV that holds a string).
+     */
+    private Object coerceText(FormatEnum formatEnum, String text) {
+        switch (formatEnum) {
+        case DEFAULT:
+        case DECIMAL:
+        case COMPACT:
+        case EXP:
+            double value;
+            try {
+                value = Double.parseDouble(text.trim());
+            } catch (NumberFormatException e) {
+                return text;
+            }
+            double min = getWidgetModel().getMinimum();
+            double max = getWidgetModel().getMaximum();
+            // Only apply sensible limits, not min==max==0
+            if (min < max) {
+                if (value < min) {
+                    return min;
+                } else if (value > max) {
+                    return max;
+                }
+            }
+            return text;
+        default:
+            return text;
+        }
     }
 
     private Object parseStringForPVManagerPV(FormatEnum formatEnum, String text, VType pvValue) throws ParseException {
@@ -352,7 +385,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         }
                     }
                 } else {
-                    return text;
+                    return coerceText(formatEnum, text);
                 }
             }
         } else if (pvValue instanceof Array) {
