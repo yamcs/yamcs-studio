@@ -78,10 +78,6 @@ https://www.eclipse.org/legal/epl-2.0/
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.commons.collections"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.commons.commons-io"
          version="0.0.0"/>
 
@@ -145,10 +141,6 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="org.eclipse.emf.ecore.xmi"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.equinox.concurrent"
          version="0.0.0"/>
 
    <plugin
@@ -276,10 +268,6 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="org.eclipse.osgi.services"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.osgi.util"
          version="0.0.0"/>
 
    <plugin
@@ -440,10 +428,6 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="org.joni"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.objectweb.asm"
          version="0.0.0"/>
 
    <plugin

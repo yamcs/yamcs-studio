@@ -28,7 +28,6 @@
             <unit id="javax.servlet-api" version="0.0.0" />
             <unit id="jaxen" version="0.0.0" />
             <unit id="org.antlr.runtime" version="0.0.0" />
-            <unit id="org.apache.commons.collections" version="0.0.0" />
             <unit id="org.apache.commons.commons-io" version="0.0.0" />
             <unit id="org.apache.commons.commons-logging" version="0.0.0" />
             <unit id="org.apache.commons.lang" version="0.0.0" />
@@ -53,7 +52,6 @@
             <unit id="org.jcodings" version="0.0.0" />
             <unit id="org.jdom2" version="0.0.0" />
             <unit id="org.joni" version="0.0.0" />
-            <unit id="org.objectweb.asm" version="0.0.0" />
             <unit id="org.osgi.service.http.whiteboard" version="0.0.0" />
             <unit id="org.python.jython" version="0.0.0" />
             <unit id="org.sat4j.core" version="0.0.0" />
