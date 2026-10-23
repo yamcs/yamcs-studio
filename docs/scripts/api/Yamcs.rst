@@ -20,6 +20,8 @@ The following methods are available.
 
     Returns null when no monitoring check was performed.
 
+    Throws an error if the PV is not a Yamcs Parameter PV.
+
 **getAcquisitionStatus(** pv **)**
     Returns the *acquisition status* of a Yamcs Parameter PV. One of ``ACQUIRED``, ``NOT_RECEIVED``, ``INVALID`` or ``EXPIRED``.
 

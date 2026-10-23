@@ -319,7 +319,7 @@ public class PVUtil {
     /**
      * Get the status text that might describe the severity specific to the type of PV.
      * <p>
-     * For a Yamcs parameter this can be the value LOW or HIGH.
+     * For a Yamcs parameter this can be the value LOW, HIGH, LOLO, HIHI or NONE.
      *
      * @return the status string.
      */

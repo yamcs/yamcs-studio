@@ -183,9 +183,9 @@ public class Yamcs {
 
     /**
      * Returns the "monitoring result" of a Yamcs parameter. One of IN_LIMITS, WATCH, WARNING, DISTRESS, CRITICAL or
-     * SEVERE.
+     * SEVERE, or null when no monitoring check was performed.
      * <p>
-     * For PVs that are not connected to Yamcs parameters, this will always return null.
+     * For PVs that are not connected to Yamcs parameters, this throws an {@link IllegalArgumentException}.
      */
     public static String getMonitoringResult(IPV pv) {
         var vtype = PVUtil.checkPVValue(pv);
