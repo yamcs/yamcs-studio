@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.jface.util.Util;
 
@@ -51,7 +52,7 @@ public class SiteConfiguration {
     private static Path findInstallationConfigurationDir() {
         Path installDir;
         try {
-            installDir = Path.of(Platform.getInstallLocation().getURL().toURI());
+            installDir = Path.of(URIUtil.toURI(Platform.getInstallLocation().getURL()));
         } catch (URISyntaxException e) {
             System.err.println("Failed to locate install directory");
             e.printStackTrace();
