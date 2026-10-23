@@ -10,7 +10,7 @@
 package org.csstudio.opibuilder.visualparts;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.gef.editparts.ZoomListener;
+import org.eclipse.draw2d.zoom.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomComboContributionItem;

@@ -12,17 +12,11 @@
 <target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="198">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202410071127/" />
-            <!-- Version in newer repo introduces a lot more dependencies (incl. JDT core) -->
-            <unit id="org.apache.commons.jxpath" version="1.3.0.v200911051830" />
-            <!-- Version in newer repo has an issue with one of the toolbar icons -->
-            <unit id="org.eclipse.gef.sdk.feature.group" version="3.20.0.202405290843" />
-        </location>
-        <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202506121611/" />
+            <repository location="https://dl.yamcs.org/p2/platform/202601051624/" />
             <unit id="bcpg" version="0.0.0" />
             <unit id="bcprov" version="0.0.0" />
             <unit id="bcutil" version="0.0.0" />
+            <unit id="com.github.weisj.jsvg" version="0.0.0" />
             <unit id="com.google.gson" version="0.0.0" />
             <unit id="com.google.guava.failureaccess" version="0.0.0" />
             <unit id="com.google.guava" version="0.0.0" />
@@ -36,11 +30,12 @@
             <unit id="org.antlr.runtime" version="0.0.0" />
             <unit id="org.apache.commons.collections" version="0.0.0" />
             <unit id="org.apache.commons.commons-io" version="0.0.0" />
+            <unit id="org.apache.commons.commons-logging" version="0.0.0" />
             <unit id="org.apache.commons.lang" version="0.0.0" />
-            <unit id="org.apache.commons.logging" version="0.0.0" />
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0" />
             <unit id="org.eclipse.equinox.http.service.api" version="0.0.0" />
             <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0" />
+            <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0" />
             <unit id="org.eclipse.platform.ide" version="0.0.0" />
             <unit id="org.eclipse.rcp.feature.group" version="0.0.0" />
             <unit id="org.eclipse.search.core" version="0.0.0" />

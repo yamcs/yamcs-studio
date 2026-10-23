@@ -50,10 +50,6 @@ https://www.eclipse.org/legal/epl-2.0/
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.commons.logging"
-         version="0.0.0"/>
-
-   <plugin
          id="org.yamcs.studio.examples"
          version="0.0.0"/>
 
@@ -256,10 +252,6 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="org.eclipse.gef"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.help"
          version="0.0.0"/>
 
    <plugin
@@ -514,6 +506,22 @@ https://www.eclipse.org/legal/epl-2.0/
 
    <plugin
          id="javax.servlet-api"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.github.weisj.jsvg"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.help"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.xmlgraphics"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.commons-logging"
          version="0.0.0"/>
 
 </feature>

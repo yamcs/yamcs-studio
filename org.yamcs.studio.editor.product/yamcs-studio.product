@@ -21,9 +21,10 @@ See https://yamcs.org
       <vmArgs>-Xmx2048m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
--Dosgi.requiredJavaVersion=17
+-Dosgi.requiredJavaVersion=21
 -Dorg.eclipse.update.reconcile=false
 --add-modules=ALL-SYSTEM
+--enable-native-access=ALL-UNNAMED
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
 -XstartOnFirstThread
@@ -49,6 +50,9 @@ See https://yamcs.org
    <intro introId="org.eclipse.ui.intro.universal"/>
 
    <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</windows>
    </vm>
 
    <license>
