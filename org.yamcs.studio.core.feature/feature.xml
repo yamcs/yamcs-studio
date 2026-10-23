@@ -447,10 +447,6 @@ https://www.eclipse.org/legal/epl-2.0/
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.commons.lang"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.ui.cocoa"
          os="macosx"
          ws="cocoa"

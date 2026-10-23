@@ -11,14 +11,11 @@ package org.csstudio.swt.widgets.symbol;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
@@ -348,12 +345,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             }
             var initialDelay = 100L;
             if (alignedToNearestSecond) {
-                var now = new Date();
-                var nearestSecond = DateUtils.round(now, Calendar.SECOND);
-                initialDelay = nearestSecond.getTime() - now.getTime();
-                if (initialDelay < 0) {
-                    initialDelay = MILLISEC_IN_SEC + initialDelay;
-                }
+                initialDelay = (MILLISEC_IN_SEC - System.currentTimeMillis() % MILLISEC_IN_SEC) % MILLISEC_IN_SEC;
             }
             scheduledFuture = ExecutionService.getInstance().getScheduledExecutorService()
                     .scheduleAtFixedRate(animationTask, initialDelay, 10, TimeUnit.MILLISECONDS);

@@ -17,9 +17,7 @@ import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -46,7 +44,6 @@ import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
 import org.apache.batik.gvt.renderer.ImageRenderer;
 import org.apache.batik.gvt.renderer.ImageRendererFactory;
 import org.apache.batik.util.SVGConstants;
-import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.utility.batik.util.ICSSHandler;
 import org.csstudio.utility.batik.util.SVGAnimateElementValuesHandler;
@@ -349,12 +346,7 @@ public class SVGHandler {
             if (disposed) {
                 return;
             }
-            var now = new Date();
-            var nearestSecond = DateUtils.round(now, Calendar.SECOND);
-            var initialDelay = nearestSecond.getTime() - now.getTime();
-            if (initialDelay < 0) {
-                initialDelay = MILLISEC_IN_SEC + initialDelay;
-            }
+            var initialDelay = (MILLISEC_IN_SEC - System.currentTimeMillis() % MILLISEC_IN_SEC) % MILLISEC_IN_SEC;
             try {
                 Thread.sleep(initialDelay);
             } catch (InterruptedException e) {
@@ -439,12 +431,7 @@ public class SVGHandler {
                 }
                 var initialDelay = 0L;
                 if (alignedToNearestSecond) {
-                    var now = new Date();
-                    var nearestSecond = DateUtils.round(now, Calendar.SECOND);
-                    initialDelay = nearestSecond.getTime() - now.getTime();
-                    if (initialDelay < 0) {
-                        initialDelay = MILLISEC_IN_SEC + initialDelay;
-                    }
+                    initialDelay = (MILLISEC_IN_SEC - System.currentTimeMillis() % MILLISEC_IN_SEC) % MILLISEC_IN_SEC;
                 }
                 try {
                     Thread.sleep(initialDelay);

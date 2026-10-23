@@ -30,7 +30,6 @@
             <unit id="org.antlr.runtime" version="0.0.0" />
             <unit id="org.apache.commons.commons-io" version="0.0.0" />
             <unit id="org.apache.commons.commons-logging" version="0.0.0" />
-            <unit id="org.apache.commons.lang" version="0.0.0" />
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0" />
             <unit id="org.eclipse.equinox.http.service.api" version="0.0.0" />
             <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0" />

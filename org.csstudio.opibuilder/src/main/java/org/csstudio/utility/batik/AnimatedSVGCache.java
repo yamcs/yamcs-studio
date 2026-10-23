@@ -11,9 +11,7 @@ package org.csstudio.utility.batik;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.logging.Level;
 
 import org.apache.batik.anim.timing.TimedDocumentRoot;
 import org.apache.batik.anim.timing.TimedElement;
-import org.apache.commons.lang.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.swt.graphics.Image;
@@ -241,12 +238,7 @@ public class AnimatedSVGCache {
         running = false;
         var initialDelay = 100L;
         if (alignedToNearestSecond) {
-            var now = new Date();
-            var nearestSecond = DateUtils.round(now, Calendar.SECOND);
-            initialDelay = nearestSecond.getTime() - now.getTime();
-            if (initialDelay < 0) {
-                initialDelay += 1000; // number of milliseconds in 1 seconds
-            }
+            initialDelay = (1000 - System.currentTimeMillis() % 1000) % 1000;
         }
         scheduledMain = ExecutionService.getInstance().getScheduledExecutorService().scheduleAtFixedRate(animationTask,
                 initialDelay, 10, TimeUnit.MILLISECONDS);
