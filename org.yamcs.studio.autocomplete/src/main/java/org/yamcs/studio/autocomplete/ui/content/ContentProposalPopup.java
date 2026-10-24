@@ -11,6 +11,7 @@ package org.yamcs.studio.autocomplete.ui.content;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -624,7 +625,7 @@ public class ContentProposalPopup extends PopupDialog {
     private int maxItemWidth = 0;
 
     private List<Integer> nonSelectableItems;
-    private Long uniqueId = Long.MIN_VALUE;
+    private final AtomicLong uniqueId = new AtomicLong(Long.MIN_VALUE);
 
     /**
      * Constructs a new instance of this popup, specifying the control for which this popup is showing content, and how
@@ -1276,19 +1277,13 @@ public class ContentProposalPopup extends PopupDialog {
     private void asyncRecomputeProposals() {
         footer.setText("Searching...");
         if (isValid()) {
-            synchronized (uniqueId) {
-                if (uniqueId == Long.MAX_VALUE) {
-                    uniqueId = Long.MIN_VALUE;
-                }
-                uniqueId++;
-            }
-            var currentId = new Long(uniqueId);
+            var currentId = uniqueId.incrementAndGet();
             control.getDisplay().asyncExec(() -> adapter.getProposals(new IContentProposalSearchHandler() {
                 @Override
                 public void handleResult(ContentProposalList proposalList) {
                     if (control != null && !control.isDisposed()) {
                         control.getDisplay().asyncExec(() -> {
-                            if (currentId.equals(uniqueId)) {
+                            if (currentId == uniqueId.get()) {
                                 recomputeProposals(proposalList);
                             }
                         });
