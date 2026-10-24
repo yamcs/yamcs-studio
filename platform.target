@@ -9,10 +9,10 @@
    
     SPDX-License-Identifier: EPL-2.0
  -->
-<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="198">
+<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="199">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202601051624/" />
+            <repository location="https://dl.yamcs.org/p2/platform/202610241811/" />
             <unit id="bcpg" version="0.0.0" />
             <unit id="bcprov" version="0.0.0" />
             <unit id="bcutil" version="0.0.0" />
@@ -30,7 +30,10 @@
             <unit id="org.antlr.runtime" version="0.0.0" />
             <unit id="org.apache.commons.commons-io" version="0.0.0" />
             <unit id="org.apache.commons.commons-logging" version="0.0.0" />
-            <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0" />
+            <unit id="org.eclipse.emf.common" version="0.0.0" />
+            <unit id="org.eclipse.emf.ecore" version="0.0.0" />
+            <unit id="org.eclipse.emf.ecore.change" version="0.0.0" />
+            <unit id="org.eclipse.emf.ecore.xmi" version="0.0.0" />
             <unit id="org.eclipse.equinox.http.service.api" version="0.0.0" />
             <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0" />
             <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0" />
