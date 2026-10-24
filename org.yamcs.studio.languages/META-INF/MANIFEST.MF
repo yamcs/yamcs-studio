@@ -20,5 +20,5 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.snakeyaml.engine
 Export-Package: org.yamcs.studio.languages
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.yamcs.studio.languages

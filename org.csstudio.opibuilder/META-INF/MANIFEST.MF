@@ -85,5 +85,5 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.swt.widgets.symbol.util,
  org.csstudio.swt.widgets.util,
  org.yamcs.studio.script
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.csstudio.opibuilder
