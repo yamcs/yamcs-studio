@@ -323,6 +323,10 @@ https://www.eclipse.org/legal/epl-2.0/
          version="0.0.0"/>
 
    <plugin
+         id="org.eclipse.ui.themes"
+         version="0.0.0"/>
+
+   <plugin
          id="org.eclipse.ui.views"
          version="0.0.0"/>
 
