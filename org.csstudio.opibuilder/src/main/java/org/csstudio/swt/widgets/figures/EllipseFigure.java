@@ -115,7 +115,7 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
         var alpha = getAlpha() == null ? 255 : getAlpha();
         // Workaround for the pattern zoom bug on ScaledGraphics:
         // The coordinates need to be scaled for ScaledGraphics.
-        var scale = graphics.getAbsoluteScale();
+        var scale = GraphicsUtil.getPatternScale(graphics);
         pattern = new Pattern(Display.getCurrent(), (int) (figureBounds.x * scale), (int) (figureBounds.y * scale),
                 (int) (tx * scale), (int) (ty * scale), gradientStartColor, alpha, fillColor, alpha);
         graphics.setBackgroundPattern(pattern);

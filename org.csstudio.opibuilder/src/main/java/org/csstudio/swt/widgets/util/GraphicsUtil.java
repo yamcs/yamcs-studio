@@ -10,6 +10,7 @@
 package org.csstudio.swt.widgets.util;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Pattern;
@@ -32,16 +33,27 @@ public class GraphicsUtil {
         return support3D;
     }
 
+    /**
+     * Returns the factor by which pattern coordinates need to be scaled to match the figure coordinates.
+     * <p>
+     * {@link ScaledGraphics} scales shapes but not patterns, so pattern coordinates need to be scaled manually. Other
+     * implementations (e.g. {@code SWTGraphics}) zoom through a transform that also applies to patterns.
+     */
+    @SuppressWarnings("removal")
+    public static double getPatternScale(Graphics graphics) {
+        return graphics instanceof ScaledGraphics ? graphics.getAbsoluteScale() : 1.0;
+    }
+
     public static Pattern createScaledPattern(Graphics graphics, Device device, float x1, float y1, float x2, float y2,
             Color color1, int alpha1, Color color2, int alpha2) {
-        var scale = graphics.getAbsoluteScale();
+        var scale = getPatternScale(graphics);
         return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale), (float) (x2 * scale),
                 (float) (y2 * scale), color1, alpha1, color2, alpha2);
     }
 
     public static Pattern createScaledPattern(Graphics graphics, Device device, float x1, float y1, float x2, float y2,
             Color color1, Color color2) {
-        var scale = graphics.getAbsoluteScale();
+        var scale = getPatternScale(graphics);
         return new Pattern(device, (float) (x1 * scale), (float) (y1 * scale), (float) (x2 * scale),
                 (float) (y2 * scale), color1, color2);
     }
