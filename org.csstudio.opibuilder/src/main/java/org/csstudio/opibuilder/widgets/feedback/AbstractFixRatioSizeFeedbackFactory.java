@@ -14,11 +14,12 @@ import java.util.List;
 import org.csstudio.opibuilder.feedback.IGraphicalFeedbackFactory;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.ColorProvider;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
+import org.eclipse.draw2d.colors.HSL;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
@@ -52,7 +53,7 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     public IFigure createDragSourceFeedbackFigure(AbstractWidgetModel model, Rectangle initalBounds) {
         // Use a ghost rectangle for feedback
         var r = new RectangleFigure();
-        FigureUtilities.makeGhostShape(r);
+        applyFeedbackFill(r);
         r.setLineStyle(Graphics.LINE_DOT);
         r.setForegroundColor(ColorConstants.white);
         r.setBounds(initalBounds);
@@ -138,11 +139,22 @@ public abstract class AbstractFixRatioSizeFeedbackFactory implements IGraphicalF
     protected Shape getSizeOnDropFeedback() {
         if (sizeOnDropFeedback == null) {
             sizeOnDropFeedback = new RectangleFigure();
-            FigureUtilities.makeGhostShape(sizeOnDropFeedback);
+            applyFeedbackFill(sizeOnDropFeedback);
             sizeOnDropFeedback.setLineStyle(Graphics.LINE_DASHDOT);
             sizeOnDropFeedback.setForegroundColor(ColorConstants.white);
         }
         return sizeOnDropFeedback;
+    }
+
+    /**
+     * Fills feedback shapes the same way as GEF's own edit policies. This replaces the deprecated
+     * {@code FigureUtilities.makeGhostShape}, which relies on XOR drawing that is not supported on all platforms.
+     */
+    private static void applyFeedbackFill(Shape shape) {
+        shape.setBackgroundColor(
+                HSL.fromColor(ColorProvider.SystemColorFactory.getColorProvider().getMenuBackgroundSelected())
+                        .darker(0.3).toColor());
+        shape.setAlpha(50);
     }
 
     /**
