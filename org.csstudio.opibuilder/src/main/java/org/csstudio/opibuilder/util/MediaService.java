@@ -21,6 +21,7 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
@@ -73,25 +74,25 @@ public final class MediaService {
                 var bundle = OPIBuilderPlugin.getDefault().getBundle();
 
                 var url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Regular.ttf"), null);
-                var fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
+                var fontFile = Paths.get(URIUtil.toURI(FileLocator.toFileURL(url))).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Regular'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Bold.ttf"), null);
-                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
+                fontFile = Paths.get(URIUtil.toURI(FileLocator.toFileURL(url))).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Bold'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-BoldItalic.ttf"), null);
-                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
+                fontFile = Paths.get(URIUtil.toURI(FileLocator.toFileURL(url))).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Bold Italic'");
                 }
 
                 url = FileLocator.find(bundle, new Path("fonts/LiberationSans-Italic.ttf"), null);
-                fontFile = Paths.get(FileLocator.toFileURL(url).toURI()).toFile().toString();
+                fontFile = Paths.get(URIUtil.toURI(FileLocator.toFileURL(url))).toFile().toString();
                 if (!display.loadFont(fontFile)) {
                     log.info("Could not load font 'Liberation Sans Italic'");
                 }
@@ -103,7 +104,7 @@ public final class MediaService {
 
     private static boolean isFontAvailable(Display display, String faceName) {
         var fontData = display.getFontList(faceName, true);
-        return fontData == null || fontData.length == 0;
+        return fontData != null && fontData.length > 0;
     }
 
     public synchronized static MediaService getInstance() {
