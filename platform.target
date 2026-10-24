@@ -9,10 +9,10 @@
    
     SPDX-License-Identifier: EPL-2.0
  -->
-<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="199">
+<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="200">
     <locations>
-        <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202610241811/" />
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://dl.yamcs.org/p2/platform/202610250951/" />
             <unit id="bcpg" version="0.0.0" />
             <unit id="bcprov" version="0.0.0" />
             <unit id="bcutil" version="0.0.0" />
