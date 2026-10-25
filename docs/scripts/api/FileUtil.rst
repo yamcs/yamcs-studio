@@ -19,6 +19,23 @@ global variable ``widget``).
     of a relative path, the widget argument must be provided
     as the reference for resolving the path.
 
+**readTextFileAsync(** path, widget, onSuccess [, onError] **)**
+    Reads the content of a file as a string, without blocking
+    the script.
+
+    ``onSuccess`` is a function that is called with the content
+    of the file. ``onError`` is an optional function that is
+    called with an error message if the file cannot be read.
+    Without ``onError``, errors are written to the console.
+
+    The path is interpreted as for ``readTextFile``. The
+    widget argument may be ``null`` if the path is absolute.
+
+    Unlike ``readTextFile``, this method is also supported by
+    the Yamcs web interface, where it reads files from the same
+    bucket as the display. Prefer this method for displays that
+    are used in both.
+
 **writeTextFile(** path, inWorkspace [, widget], text, append **)**
     Writes a string to a file.
 
@@ -128,7 +145,15 @@ global variable ``widget``).
     Returns the local file system path for the given workspace path.
 
 
-.. rubric:: Example
+.. rubric:: Examples
+
+.. code-block:: javascript
+
+    FileUtil.readTextFileAsync("data.txt", widget, function (text) {
+        display.getWidget("myLabel").setPropertyValue("text", text);
+    }, function (error) {
+        ConsoleUtil.writeError(error);
+    });
 
 .. code-block:: javascript
 

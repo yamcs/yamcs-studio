@@ -9,6 +9,8 @@
  ********************************************************************************/
 package org.yamcs.studio.script;
 
+import java.util.function.Consumer;
+
 import org.csstudio.opibuilder.util.DisplayUtils;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -50,6 +52,24 @@ public class GUIUtil {
     }
 
     /**
+     * Open a password dialog without blocking the calling script.
+     * <p>
+     * Unlike {@link #openPasswordDialog(String, String)}, this method shows an application dialog in the Yamcs web
+     * interface, rather than a browser dialog.
+     *
+     * @param dialogMessage
+     *            the message on the dialog.
+     * @param password
+     *            the password
+     * @param onResult
+     *            called on the UI thread with true if user has input the correct password and clicked OK button,
+     *            false otherwise.
+     */
+    public static void openPasswordDialogAsync(String dialogMessage, String password, Consumer<Boolean> onResult) {
+        DisplayUtils.getDisplay().asyncExec(() -> onResult.accept(openPasswordDialog(dialogMessage, password)));
+    }
+
+    /**
      * Open a dialog to ask for confirmation.
      *
      * @param dialogMessage
@@ -62,6 +82,21 @@ public class GUIUtil {
         mb.setText("Confirm Dialog");
         var val = mb.open();
         return val == SWT.YES;
+    }
+
+    /**
+     * Open a dialog to ask for confirmation, without blocking the calling script.
+     * <p>
+     * Unlike {@link #openConfirmDialog(String)}, this method shows an application dialog in the Yamcs web interface,
+     * rather than a browser dialog.
+     *
+     * @param dialogMessage
+     *            the message on the dialog.
+     * @param onResult
+     *            called on the UI thread with true if user has clicked the YES button, false otherwise.
+     */
+    public static void openConfirmDialogAsync(String dialogMessage, Consumer<Boolean> onResult) {
+        DisplayUtils.getDisplay().asyncExec(() -> onResult.accept(openConfirmDialog(dialogMessage)));
     }
 
     public static void openInformationDialog(String dialogMessage) {

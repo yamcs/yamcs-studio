@@ -16,8 +16,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.function.Consumer;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.util.DisplayUtils;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.OpenFileAction;
 import org.csstudio.opibuilder.widgetActions.OpenWebpageAction;
@@ -27,8 +29,12 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -166,6 +172,55 @@ public class FileUtil {
             inputStream.close();
         }
         return sb.toString();
+    }
+
+    /**
+     * Read a text file without blocking the calling script. Errors are written to the console.
+     *
+     * @see #readTextFileAsync(String, AbstractBaseEditPart, Consumer, Consumer)
+     */
+    public static void readTextFileAsync(String filePath, AbstractBaseEditPart widget, Consumer<String> onSuccess) {
+        readTextFileAsync(filePath, widget, onSuccess, null);
+    }
+
+    /**
+     * Read a text file without blocking the calling script.
+     * <p>
+     * Unlike {@link #readTextFile(String, AbstractBaseEditPart)}, this method is also supported by the Yamcs web
+     * interface.
+     *
+     * @param filePath
+     *            path of the file, as for {@link #readTextFile(String, AbstractBaseEditPart)}.
+     * @param widget
+     *            a widget in the OPI, which is used to provide relative path reference. It can be null if the path is
+     *            an absolute path.
+     * @param onSuccess
+     *            called on the UI thread with the text of the file.
+     * @param onError
+     *            called on the UI thread with an error message, if the file cannot be read. If null, the error is
+     *            written to the console.
+     */
+    public static void readTextFileAsync(String filePath, AbstractBaseEditPart widget, Consumer<String> onSuccess,
+            Consumer<String> onError) {
+        var display = DisplayUtils.getDisplay();
+        var job = new Job("Reading " + filePath) {
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    var text = readTextFile(filePath, widget);
+                    display.asyncExec(() -> onSuccess.accept(text));
+                } catch (Exception e) {
+                    var message = "Cannot read " + filePath + ": " + e.getMessage();
+                    if (onError != null) {
+                        display.asyncExec(() -> onError.accept(message));
+                    } else {
+                        ConsoleUtil.writeError(message);
+                    }
+                }
+                return Status.OK_STATUS;
+            }
+        };
+        job.schedule();
     }
 
     /**
