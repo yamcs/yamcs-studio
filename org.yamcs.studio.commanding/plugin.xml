@@ -77,12 +77,6 @@
       <handler class="org.yamcs.studio.commanding.stack.DeleteHandler" commandId="org.yamcs.studio.commanding.stack.delete">
          <enabledWhen>
             <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
-                  <equals value="true" />
-               </with>
                <with variable="selection">
                   <iterate ifEmpty="false">
                      <instanceof value="org.yamcs.studio.commanding.stack.StackedCommand" />
@@ -97,12 +91,6 @@
       <handler class="org.yamcs.studio.commanding.stack.DeleteAllHandler" commandId="org.yamcs.studio.commanding.stack.deleteAll">
          <enabledWhen>
             <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
-                  <equals value="true" />
-               </with>
                <with variable="org.yamcs.studio.commanding.stack.state.empty">
                   <not>
                      <equals value="true" />
@@ -117,12 +105,6 @@
       <handler class="org.yamcs.studio.commanding.stack.RestartHandler" commandId="org.yamcs.studio.commanding.stack.restart">
          <enabledWhen>
             <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
-                  <equals value="true" />
-               </with>
                <with variable="org.yamcs.studio.commanding.stack.state.executionStarted">
                   <equals value="true" />
                </with>
@@ -237,7 +219,18 @@
             </and>
          </activeWhen>
       </handler>
-      <handler class="org.yamcs.studio.commanding.stack.ImportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.import"></handler>
+      <handler class="org.yamcs.studio.commanding.stack.ImportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.import">
+         <enabledWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executing">
+                  <equals value="false" />
+               </with>
+            </and>
+         </enabledWhen>
+      </handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ClearCommandHistoryHandler" commandId="org.yamcs.studio.commanding.cmdhist.clearCommand"></handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ScrollLockHandler" commandId="org.yamcs.studio.commanding.cmdhist.scrollLockCommand"></handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ExportCommandsHandler" commandId="org.yamcs.studio.commanding.cmdhist.exportCommand"></handler>

@@ -117,8 +117,9 @@ public class CommandOptionsComposite extends ScrolledComposite {
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         optionsGroup.setLayout(new GridLayout(2, false));
 
-        if (YamcsPlugin.hasSystemPrivilege("CommandOptions")) {
-            for (var extra : YamcsPlugin.getServerInfo().getCommandOptionsList()) {
+        var serverInfo = YamcsPlugin.getServerInfo();
+        if (serverInfo != null && YamcsPlugin.hasSystemPrivilege("CommandOptions")) {
+            for (var extra : serverInfo.getCommandOptionsList()) {
                 var text = extra.hasVerboseName() ? extra.getVerboseName() : extra.getId();
                 if ("BOOLEAN".equals(extra.getType())) {
                     var label = new Label(optionsGroup, SWT.NONE);

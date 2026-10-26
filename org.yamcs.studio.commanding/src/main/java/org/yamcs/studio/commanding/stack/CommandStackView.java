@@ -801,8 +801,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 armButton.setEnabled(enableArm);
                 runButton.setEnabled(enableIssue);
             }
-            waitTimeSpinner.setEnabled(true);
         }
+        waitTimeSpinner.setEnabled(!executing);
 
         commandTableViewer.getTable().setEnabled(!executing);
 

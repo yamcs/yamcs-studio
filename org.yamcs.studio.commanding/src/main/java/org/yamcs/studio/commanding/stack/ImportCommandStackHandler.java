@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportCommandStackHandler extends AbstractHandler {
 
@@ -28,6 +29,15 @@ public class ImportCommandStackHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         var shell = HandlerUtil.getActiveShell(event);
+
+        // Stacked commands are resolved against the MDB, which is only available while connected
+        if (YamcsPlugin.getMissionDatabase() == null) {
+            MessageDialog.openError(shell, "Import Command Stack",
+                    "Cannot import a command stack without a Mission Database. "
+                            + "Connect to a Yamcs instance and try again.");
+            return null;
+        }
+
         var dialog = new FileDialog(shell, SWT.OPEN);
         dialog.setFilterExtensions(new String[] { "*.xml;*.ycs" });
         var importFile = dialog.open();
