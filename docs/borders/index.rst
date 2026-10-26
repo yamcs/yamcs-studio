@@ -78,16 +78,40 @@ When a widget is backed by a PV, the border transforms depending on
 the PV state.
 
 Connected
-    No decorations
+    No decorations.
 
 Connected, but no value (yet)
-    Dashed pink border around the widget
+    Dotted pink border around the widget.
 
 Disconnected
-    Solid pink border around the widget and the label 'Disconnected' in the top left corner (space-permitting)
+    Purple title bar with the label 'Disconnected' (space-permitting).
+    This happens when there is no connection to Yamcs, or when the PV
+    references a parameter that does not exist in the Mission Database.
 
-Expired
-    Solid pink border around the widget
+Invalid
+    Pink border around the widget, in the widget's own border style. Only
+    shown if the border property **Alarm Sensitive** is set (default).
+
+    For Yamcs parameters, this happens when the received value has an
+    acquisition status other than ``ACQUIRED``:
+
+    ``EXPIRED``
+        The parameter was not updated within its expected interval, for example
+        during loss of signal. The expected interval is derived from the rate
+        in stream defined in the Mission Database, multiplied by the
+        ``expirationTolerance`` option of the Yamcs processor (default: 1.9).
+
+    ``INVALID``
+        Yamcs could not process the value, for example because it is outside
+        the valid range defined in the Mission Database, or because its
+        calibration failed.
+
+The acquisition status of a Yamcs parameter is shown as **Status** in the
+**PV Info** dialog. It is only available while connected to Yamcs, and only
+for parameters that exist in the Mission Database. Scripts can read it with
+:doc:`Yamcs.getAcquisitionStatus(pv) </scripts/api/Yamcs>`.
+
+The colors are the predefined colors *Invalid* and *Disconnected*.
 
 
 .. rubric:: Alarm-sensitivity
