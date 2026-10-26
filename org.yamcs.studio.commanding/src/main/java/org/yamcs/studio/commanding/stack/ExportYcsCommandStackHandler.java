@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.commanding.CommandingPlugin;
 
 import com.google.gson.GsonBuilder;
 
@@ -44,11 +45,13 @@ public class ExportYcsCommandStackHandler extends AbstractHandler {
 
         var dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.ycs" });
+        dialog.setFilterPath(CommandingPlugin.getDefault().getStackFolder());
         var exportFile = dialog.open();
         if (exportFile == null) {
             // cancelled
             return null;
         }
+        CommandingPlugin.getDefault().setStackFolder(exportFile);
 
         try {
             var jsonObject = ExportUtil.toJSON(stack);

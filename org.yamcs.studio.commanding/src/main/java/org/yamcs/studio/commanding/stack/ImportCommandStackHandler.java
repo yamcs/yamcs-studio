@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportCommandStackHandler extends AbstractHandler {
@@ -40,10 +41,12 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
         var dialog = new FileDialog(shell, SWT.OPEN);
         dialog.setFilterExtensions(new String[] { "*.xml;*.ycs" });
+        dialog.setFilterPath(CommandingPlugin.getDefault().getStackFolder());
         var importFile = dialog.open();
         if (importFile == null) {
             return null;
         }
+        CommandingPlugin.getDefault().setStackFolder(importFile);
         log.info("Importing command stack from file: " + importFile);
 
         var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);

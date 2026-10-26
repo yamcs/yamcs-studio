@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.commanding.CommandingPlugin;
 
 public class ExportXmlCommandStackHandler extends AbstractHandler {
 
@@ -44,11 +45,13 @@ public class ExportXmlCommandStackHandler extends AbstractHandler {
 
         var dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.xml" });
+        dialog.setFilterPath(CommandingPlugin.getDefault().getStackFolder());
         var exportFile = dialog.open();
         if (exportFile == null) {
             // cancelled
             return null;
         }
+        CommandingPlugin.getDefault().setStackFolder(exportFile);
 
         try {
             var xml = ExportUtil.toXML(stack);

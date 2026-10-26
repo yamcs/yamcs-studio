@@ -104,6 +104,8 @@ Importing and Exporting a Stack
 
 When you want to save a stack for future use, you can select |export_wiz| **Export** to save your stack in XML-format in any of your drives. Likewise, reuse a stack which you set aside by selecting |import_wiz| **Import**.
 
+These dialogs initially open in the folder configured under **Preferences > Commanding > Command Stack Folder**. Subsequent dialogs reopen the folder that was last used.
+
 
 .. |export_wiz| image:: _images/export_wiz.png
 .. |import_wiz| image:: _images/import_wiz.png

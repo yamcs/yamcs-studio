@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.yamcs.studio.commanding.CommandingPlugin;
 
 public class ExportCommandStackHandlerSpell extends AbstractHandler {
 
@@ -36,10 +37,12 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
         var shell = Display.getCurrent().getActiveShell();
         var dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.py" });
+        dialog.setFilterPath(CommandingPlugin.getDefault().getStackFolder());
         var exportFile = dialog.open();
         if (exportFile == null) {
             return null; // cancelled
         }
+        CommandingPlugin.getDefault().setStackFolder(exportFile);
 
         var buf = new StringBuilder();
         var first = true;
