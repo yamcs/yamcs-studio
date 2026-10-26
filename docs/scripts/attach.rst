@@ -31,6 +31,10 @@ initializes, use a formula ``=1`` as your trigger PV.
 By default a script executes only when all of its inputs are connected and have a value,
 and one of its trigger PVs is updated.
 
+To run a script whenever the user enters a value in an input widget, such
+as a :doc:`../widgets/text-input`, bind that widget to a local PV (e.g.
+``loc://foo``) and use the same PV as the trigger.
+
 
 .. rubric:: Options
 
