@@ -10,8 +10,8 @@ jobs:
     name: Create release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
@@ -28,7 +28,7 @@ jobs:
         run: ./mvnw -B --no-transfer-progress -DskipTests package
 
       - name: Draft Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           draft: true # Only publish after manual trigger
           generate_release_notes: true
