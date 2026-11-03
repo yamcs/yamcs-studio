@@ -15,7 +15,7 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>220</height>
+  <height>230</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
@@ -28,7 +28,7 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>540</width>
+  <width>700</width>
   <wuid>28b33aa1:17b69bfcf6d:-7e18</wuid>
   <x>-1</x>
   <y>-1</y>
@@ -66,7 +66,7 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7e0d</wuid>
     <x>0</x>
@@ -106,10 +106,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7dd5</wuid>
-    <x>140</x>
+    <x>180</x>
     <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -146,10 +146,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d9f</wuid>
-    <x>280</x>
+    <x>360</x>
     <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -186,10 +186,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d7c</wuid>
-    <x>420</x>
+    <x>540</x>
     <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -226,7 +226,7 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d81</wuid>
     <x>0</x>
@@ -266,10 +266,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d86</wuid>
-    <x>140</x>
+    <x>180</x>
     <y>60</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -306,10 +306,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d8b</wuid>
-    <x>280</x>
+    <x>360</x>
     <y>60</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -346,10 +346,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d90</wuid>
-    <x>420</x>
+    <x>540</x>
     <y>60</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -386,7 +386,7 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d95</wuid>
     <x>0</x>
@@ -426,10 +426,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7d9a</wuid>
-    <x>140</x>
+    <x>180</x>
     <y>120</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -466,10 +466,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7c2c</wuid>
-    <x>280</x>
+    <x>360</x>
     <y>120</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -506,10 +506,10 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7c27</wuid>
-    <x>420</x>
+    <x>540</x>
     <y>120</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -530,7 +530,7 @@
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <height>40</height>
+    <height>50</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>Name</name>
     <rules />
@@ -546,7 +546,7 @@
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
+    <width>160</width>
     <wrap_words>false</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7c22</wuid>
     <x>0</x>
@@ -587,10 +587,11 @@ Background</text>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>120</width>
-    <wrap_words>false</wrap_words>
+    <width>160</width>
+    <show_scrollbar>false</show_scrollbar>
+    <wrap_words>true</wrap_words>
     <wuid>28b33aa1:17b69bfcf6d:-7c1d</wuid>
-    <x>140</x>
+    <x>180</x>
     <y>180</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.gridLayout" version="1.0.0">
