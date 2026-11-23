@@ -12,7 +12,7 @@
 <target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="200">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202610250951/" />
+            <repository location="https://dl.yamcs.org/p2/platform/202611230933/" />
             <unit id="bcpg" version="0.0.0" />
             <unit id="bcprov" version="0.0.0" />
             <unit id="bcutil" version="0.0.0" />
